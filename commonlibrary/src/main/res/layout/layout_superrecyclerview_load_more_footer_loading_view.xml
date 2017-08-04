@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/base_color_text_grey"
+    android:gravity="center"
+    android:padding="15dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_footer_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="正在加载....."
+        android:textColor="@color/base_color_text_grey" />
+
+
+</LinearLayout>

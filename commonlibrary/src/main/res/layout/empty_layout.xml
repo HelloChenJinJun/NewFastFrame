@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_empty_layout_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+>
+    <FrameLayout
+        android:id="@+id/fl_empty_layout_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/tv_empty_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="网络加载失败，请点击重试"
+            android:textSize="23sp"
+        />
+    </FrameLayout>
+    <LinearLayout
+        android:id="@+id/ll_empty_layout_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        />
+        <TextView
+            android:id="@+id/tv_empty_layout_loading_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在加载，请稍后.........."
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+
+
+</FrameLayout>

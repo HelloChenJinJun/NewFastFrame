@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="empty_layout">
+        <attr name="empty_bg_color" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="RoundAngleImageView">
+        <attr name="roundWidth" format="dimension"/>
+        <attr name="roundHeight" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="SwipeMenuLayout">
+        <attr name="leftViewId" format="reference" />
+        <attr name="rightViewId" format="reference" />
+        <attr name="contentViewId" format="reference" />
+    </declare-styleable>
+
+
+    <declare-styleable name="SuperRecyclerView">
+        <attr name="refreshHeaderLayout" format="reference" />
+        <attr name="loadMoreFooterLayout" format="reference" />
+        <attr name="refreshEnabled" format="boolean" />
+        <attr name="loadMoreEnabled" format="boolean" />
+        <attr name="refreshFinalMoveOffset" format="dimension" />
+    </declare-styleable>
+
+</resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="fl_empty_layout" type="id"/>
+    <item name="header_layout_id" type="id"/>
+</resources>

@@ -1,0 +1,19 @@
+package com.example.commonlibrary.net;
+
+import io.reactivex.Observable;
+import okhttp3.Response;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
+
+/**
+ * Created by COOTEK on 2017/8/3.
+ */
+
+interface DownLoadApi {
+    @Streaming
+    @GET
+    public Observable<Response>   downLoad(@Header("RANGE") String start, @Url String url);
+
+}
