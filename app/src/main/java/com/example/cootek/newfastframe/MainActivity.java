@@ -1,13 +1,36 @@
 package com.example.cootek.newfastframe;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import com.example.commonlibrary.mvp.BaseActivity;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Created by COOTEK on 2017/8/7.
+ */
+
+public class MainActivity extends BaseActivity {
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected boolean isNeedHeadLayout() {
+        return false;
+    }
+
+    @Override
+    protected boolean isNeedEmptyLayout() {
+        return false;
+    }
+
+    @Override
+    protected int getContentLayout() {
+        return 0;
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+
     }
 }

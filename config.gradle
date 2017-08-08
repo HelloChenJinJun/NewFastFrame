@@ -20,7 +20,7 @@ ext {
             loggerVersion = "1.15",
 //            eventbusVersion = "3.0.0",
             gsonVersion = "2.8.0",
-            butterknife = "8.5.1",
+            butterknife = "8.8.0",
             retrofit = "2.3.0",
             rxjava = "2.1.1",
             rxjava_android = "2.0.1",

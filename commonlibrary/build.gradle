@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'org.greenrobot.greendao'
-
+apply plugin: 'com.jakewharton.butterknife'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -94,4 +94,6 @@ dependencies {
     }
     compile rootProject.ext.dependencies.retrofit_converter_scalars
     annotationProcessor rootProject.ext.dependencies.dagger2_compiler
+    annotationProcessor rootProject.ext.dependencies.butterknife_compiler
+    compile rootProject.ext.dependencies.butterknife
 }
