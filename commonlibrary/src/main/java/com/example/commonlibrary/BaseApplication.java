@@ -14,7 +14,6 @@ import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.FileUtil;
 import com.google.gson.GsonBuilder;
-
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;

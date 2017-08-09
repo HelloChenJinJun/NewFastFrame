@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import butterknife.ButterKnife;
+
 import static android.view.View.GONE;
 
 /**
@@ -98,6 +100,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IView 
                 setContentView(getContentLayout());
             }
         }
+        ButterKnife.bind(this);
         initBaseView();
         initData();
     }
