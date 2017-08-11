@@ -68,6 +68,12 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
         container.setBackgroundColor(bgColor);
         typedArray.recycle();
         updateViewVisible();
+        setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
     }
 
     public static final int STATUS_LOADING = 0;

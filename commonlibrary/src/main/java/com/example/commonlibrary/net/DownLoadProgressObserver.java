@@ -1,16 +1,12 @@
 package com.example.commonlibrary.net;
 
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.net.db.DaoSession;
-import com.example.commonlibrary.net.db.NewFileInfo;
-import com.example.commonlibrary.net.model.DownloadStatus;
+import com.example.commonlibrary.DownloadStatus;
 
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
@@ -18,16 +14,16 @@ import io.reactivex.functions.Consumer;
  * Created by COOTEK on 2017/8/4.
  */
 
-class DownLoadProgressObserver implements Observer<NewFileInfo>, DownloadProgressListener {
+class DownLoadProgressObserver implements Observer<FileInfo>, DownloadProgressListener {
 
-    private NewFileInfo newFileInfo;
+    private FileInfo fileInfo;
     private DownloadListener listener;
-    private DaoSession daoSession;
+    private FileDAOImpl fileDAO;
 
-    public DownLoadProgressObserver(NewFileInfo newFileInfo,DownloadListener listener) {
-        this.newFileInfo = newFileInfo;
+    public DownLoadProgressObserver(FileInfo FileInfo,DownloadListener listener) {
+        this.fileInfo = FileInfo;
         this.listener=listener;
-        daoSession=BaseApplication.getAppComponent().getDaoSesion();
+        fileDAO=FileDAOImpl.getInstance();
     }
 
 
@@ -35,28 +31,28 @@ class DownLoadProgressObserver implements Observer<NewFileInfo>, DownloadProgres
 
     @Override
     public void onSubscribe(@NonNull Disposable d) {
-        newFileInfo.setStatus(DownloadStatus.START);
-        listener.onStart(newFileInfo);
-        daoSession.getNewFileInfoDao().update(newFileInfo);
+        fileInfo.setStatus(DownloadStatus.START);
+        listener.onStart(fileInfo);
+        fileDAO.update(fileInfo);
     }
 
     @Override
-    public void onNext(@NonNull NewFileInfo newFileInfo) {
-        BaseApplication.getAppComponent().getDaoSesion().getNewFileInfoDao().insertOrReplace(newFileInfo);
+    public void onNext(@NonNull FileInfo fileInfo) {
+        fileDAO.insert(fileInfo);
     }
 
     @Override
     public void onError(@NonNull Throwable e) {
-        newFileInfo.setStatus(DownloadStatus.ERROR);
-        daoSession.getNewFileInfoDao().update(newFileInfo);
-        listener.onError(newFileInfo, e.getMessage());
+        fileInfo.setStatus(DownloadStatus.ERROR);
+        fileDAO.update(fileInfo);
+        listener.onError(fileInfo, e.getMessage());
     }
 
     @Override
     public void onComplete() {
-        newFileInfo.setStatus(DownloadStatus.COMPLETE);
-        daoSession.update(newFileInfo);
-        listener.onComplete(newFileInfo);
+        fileInfo.setStatus(DownloadStatus.COMPLETE);
+        fileDAO.update(fileInfo);
+        listener.onComplete(fileInfo);
     }
 
     @Override
@@ -65,21 +61,21 @@ class DownLoadProgressObserver implements Observer<NewFileInfo>, DownloadProgres
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(@NonNull Long aLong) throws Exception {
-                        newFileInfo.setLoadBytes(aLong.intValue());
-                        newFileInfo.setTotalBytes((int) count);
-                        if (newFileInfo.getStatus() == DownloadStatus.STOP) {
-                            daoSession.getNewFileInfoDao().update(newFileInfo);
-                            listener.onStop(newFileInfo);
+                        fileInfo.setLoadBytes(aLong.intValue());
+                        fileInfo.setTotalBytes((int) count);
+                        if (fileInfo.getStatus() == DownloadStatus.STOP) {
+                            fileDAO.update(fileInfo);
+                            listener.onStop(fileInfo);
                             return;
                         }
-                        if (newFileInfo.getStatus() == DownloadStatus.CANCEL) {
-                            daoSession.getNewFileInfoDao().update(newFileInfo);
-                            listener.onCancel(newFileInfo);
+                        if (fileInfo.getStatus() == DownloadStatus.CANCEL) {
+                            fileDAO.update(fileInfo);
+                            listener.onCancel(fileInfo);
                             return;
                         }
-                        newFileInfo.setStatus(DownloadStatus.DOWNLOADING);
-                        daoSession.getNewFileInfoDao().update(newFileInfo);
-                        listener.onUpdate(newFileInfo);
+                        fileInfo.setStatus(DownloadStatus.DOWNLOADING);
+                        fileDAO.update(fileInfo);
+                        listener.onUpdate(fileInfo);
                     }
                 });
 

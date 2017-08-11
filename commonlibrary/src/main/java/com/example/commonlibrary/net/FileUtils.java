@@ -1,4 +1,4 @@
-package com.example.commonlibrary.net.model;
+package com.example.commonlibrary.net;
 
 import android.os.Build;
 import android.os.StatFs;

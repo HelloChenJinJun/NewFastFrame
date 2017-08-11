@@ -15,7 +15,7 @@ public class MainApplication extends BaseApplication {
     }
 
     private void initMain() {
-        mainComponent = DaggerMainComponent.builder().mainModule(new MainModule(this)).build();
+        mainComponent = DaggerMainComponent.builder().mainModule(new MainModule()).appComponent(getAppComponent()).build();
     }
 
 

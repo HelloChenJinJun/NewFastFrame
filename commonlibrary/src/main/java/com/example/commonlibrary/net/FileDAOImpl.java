@@ -1,10 +1,9 @@
-package com.example.commonlibrary.net.db;
+package com.example.commonlibrary.net;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.commonlibrary.net.FileDownloader;
-import com.example.commonlibrary.net.entity.FileInfo;
+import com.example.commonlibrary.BaseApplication;
 
 
 /**
@@ -18,7 +17,7 @@ public class FileDAOImpl implements FileDAO {
 
     private FileDAOImpl() {
         // 创建数据库
-        mDbHelper = new DbHelper(FileDownloader.getContext(), DB_NAME, null, 2);
+        mDbHelper = new DbHelper(BaseApplication.getInstance(),DB_NAME, null, 2);
     }
 
     private static class HolderClass {

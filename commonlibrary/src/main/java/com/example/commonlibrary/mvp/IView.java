@@ -3,7 +3,7 @@ package com.example.commonlibrary.mvp;
 
 import com.example.commonlibrary.baseadapter.EmptyLayout;
 
-public interface IView {
+public interface IView<T> {
 
     /**
      * 显示加载
@@ -19,5 +19,22 @@ public interface IView {
      * 显示信息
      */
     void showError(String message, EmptyLayout.OnRetryListener listener);
+
+
+    /**
+     * 更新数据
+     * @param t
+     */
+    void updateData(T t);
+
+
+    /**
+     * 展示空布局
+     */
+    void showEmptyView();
+
+
+
+
 
 }

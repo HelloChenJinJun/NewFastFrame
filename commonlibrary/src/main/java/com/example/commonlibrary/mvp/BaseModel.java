@@ -1,16 +1,22 @@
 package com.example.commonlibrary.mvp;
 
 
+import com.example.commonlibrary.repository.BaseRepositoryManager;
 import com.example.commonlibrary.repository.IRepositoryManager;
 
 public class BaseModel implements IModel {
 
 
-    protected IRepositoryManager repositoryManager;
+    protected BaseRepositoryManager baseRepositoryManager;
 
 
-    public BaseModel(IRepositoryManager repositoryManager) {
-        this.repositoryManager = repositoryManager;
+    public BaseModel(BaseRepositoryManager repositoryManager) {
+        this.baseRepositoryManager = repositoryManager;
+    }
+
+
+    public BaseRepositoryManager getRepositoryManager() {
+        return baseRepositoryManager;
     }
 
     @Override

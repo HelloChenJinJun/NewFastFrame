@@ -1,7 +1,6 @@
 package com.example.commonlibrary.net;
 
 
-import com.example.commonlibrary.net.db.NewFileInfo;
 
 /**
  * 下载监听器
@@ -9,32 +8,32 @@ import com.example.commonlibrary.net.db.NewFileInfo;
 public interface DownloadListener {
     /**
      * 开始下载
-     * @param NewFileInfo
+     * @param FileInfo
      */
-    void onStart(NewFileInfo NewFileInfo);
+    void onStart(FileInfo FileInfo);
     /**
      * 更新下载进度
-     * @param NewFileInfo
+     * @param FileInfo
      */
-    void onUpdate(NewFileInfo NewFileInfo);
+    void onUpdate(FileInfo FileInfo);
     /**
      * 停止下载
-     * @param NewFileInfo
+     * @param FileInfo
      */
-    void onStop(NewFileInfo NewFileInfo);
+    void onStop(FileInfo FileInfo);
     /**
      * 下载成功
-     * @param NewFileInfo
+     * @param FileInfo
      */
-    void onComplete(NewFileInfo NewFileInfo);
+    void onComplete(FileInfo FileInfo);
     /**
      * 取消下载
-     * @param NewFileInfo
+     * @param FileInfo
      */
-    void onCancel(NewFileInfo NewFileInfo);
+    void onCancel(FileInfo FileInfo);
     /**
      * 下载失败
-     * @param NewFileInfo
+     * @param FileInfo
      */
-    void onError(NewFileInfo NewFileInfo, String errorMsg);
+    void onError(FileInfo FileInfo, String errorMsg);
 }

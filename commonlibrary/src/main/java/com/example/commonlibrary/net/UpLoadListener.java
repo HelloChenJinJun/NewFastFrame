@@ -1,6 +1,5 @@
 package com.example.commonlibrary.net;
 
-import com.example.commonlibrary.net.db.NewFileInfo;
 
 /**
  * Created by COOTEK on 2017/8/4.
@@ -9,33 +8,33 @@ import com.example.commonlibrary.net.db.NewFileInfo;
 public interface UpLoadListener  {
     /**
      * 开始上传
-     * @param NewFileInfo
+     * @param fileInfo
      */
-    void onStart(NewFileInfo NewFileInfo);
+    void onStart(FileInfo fileInfo);
     /**
      * 更新上传进度
-     * @param NewFileInfo
+     * @param fileInfo
      */
-    void onUpdate(NewFileInfo NewFileInfo);
+    void onUpdate(FileInfo fileInfo);
     /**
      * 停止上传
-     * @param NewFileInfo
+     * @param fileInfo
      */
-    void onStop(NewFileInfo NewFileInfo);
+    void onStop(FileInfo fileInfo);
     /**
      * 上传成功
-     * @param NewFileInfo
+     * @param fileInfo
      */
-    void onComplete(NewFileInfo NewFileInfo);
+    void onComplete(FileInfo fileInfo);
     /**
      * 取消上传
-     * @param NewFileInfo
+     * @param fileInfo
      */
-    void onCancel(NewFileInfo NewFileInfo);
+    void onCancel(FileInfo fileInfo);
     /**
      * 上传失败
-     * @param NewFileInfo
+     * @param fileInfo
      */
-    void onError(NewFileInfo NewFileInfo, String errorMsg);
+    void onError(FileInfo fileInfo, String errorMsg);
 
 }

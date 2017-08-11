@@ -5,5 +5,5 @@ package com.example.commonlibrary.utils;
  */
 
 public class ConstantUtil {
-    public static final String BASE_URL = "";
+    public static final String BASE_URL = "https://www.baidu.com/";
 }

@@ -62,6 +62,45 @@ public class MusicManager {
         }
     }
 
+    public void playOrPause() {
+        try {
+            if (service != null) {
+                if (service.isPlaying()) {
+                    service.pause();
+                } else {
+                    service.play();
+                }
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CommonLogger.e("远程服务失败"+e.getMessage());
+        }
+    }
+
+    public void previous(boolean force){
+        try {
+            if (service != null) {
+                service.prev(force);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CommonLogger.e("远程服务失败"+e.getMessage());
+        }
+    }
+
+
+    public void next(){
+        try {
+            if (service != null) {
+                service.next();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CommonLogger.e("远程服务失败"+e.getMessage());
+        }
+    }
+
+
     /**
      * @param context
      * @param idList
@@ -71,7 +110,7 @@ public class MusicManager {
      * @param forceShuffle
      */
     public void play(Context context, long[] idList, int position, long typeId, @MusicIdType.IdType int type, boolean forceShuffle) {
-        if (idList == null || idList.length == 0) {
+        if (idList == null || idList.length == 0 || service == null) {
             return;
         }
         try {
@@ -88,7 +127,7 @@ public class MusicManager {
             }
             position = position < 0 ? 0 : position;
 //            准备资源
-            service.open(idList, forceShuffle?-1:position, typeId, type);
+            service.open(idList, forceShuffle ? -1 : position, typeId, type);
             service.play();
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -103,6 +142,18 @@ public class MusicManager {
             e.printStackTrace();
         }
         return new long[0];
+    }
+
+    public boolean isPlaying() {
+        try {
+            if (service != null) {
+                return service.isPlaying();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CommonLogger.e("远程服务失败"+e.getMessage());
+        }
+        return false;
     }
 
 

@@ -7,7 +7,6 @@ import com.example.commonlibrary.dagger.module.AppConfigModule;
 import com.example.commonlibrary.dagger.module.AppModule;
 import com.example.commonlibrary.dagger.module.NetClientModule;
 import com.example.commonlibrary.imageloader.ImageLoader;
-import com.example.commonlibrary.net.db.DaoSession;
 import com.example.commonlibrary.repository.IRepositoryManager;
 import com.google.gson.Gson;
 
@@ -32,26 +31,15 @@ public interface AppComponent {
 
     public Bundle getBundle();
 
-
-    public DaoSession getDaoSesion();
-
-
-    public IRepositoryManager getRepositoryManager();
-
-
     public ImageLoader getImageLoader();
-
 
     public Gson getGson();
 
-
     public File getCacheFile();
-
 
     public OkHttpClient getOkHttpClient();
 
     public OkHttpClient.Builder getOkHttpClientBuilder();
-
 
     public Retrofit getRetrofit();
 

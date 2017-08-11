@@ -1,15 +1,18 @@
 package com.example.cootek.newfastframe;
 
-import javax.inject.Singleton;
+import com.example.commonlibrary.dagger.component.AppComponent;
+import com.example.cootek.newfastframe.scope.PerApplication;
+
 
 import dagger.Component;
 
 /**
  * Created by COOTEK on 2017/8/8.
  */
-@Singleton
-@Component(modules = {MainModule.class})
+@PerApplication
+@Component(dependencies = AppComponent.class,modules = {MainModule.class})
 public interface MainComponent {
 
     public DaoSession getDaoSession();
+    public MainRepositoryManager getRepositoryManager();
 }

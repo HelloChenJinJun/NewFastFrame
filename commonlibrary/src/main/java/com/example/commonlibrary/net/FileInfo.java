@@ -1,11 +1,10 @@
-package com.example.commonlibrary.net.entity;
+package com.example.commonlibrary.net;
 
 import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.commonlibrary.net.FileDownloader;
-import com.example.commonlibrary.net.model.DownloadStatus;
+import com.example.commonlibrary.DownloadStatus;
 
 
 /**
@@ -28,7 +27,7 @@ public class FileInfo implements Parcelable {
         this.totalBytes = totalSize;
         this.loadBytes = 0;
         this.speed = 0;
-        this.path = FileDownloader.getDownloadDir();
+        this.path = NetManager.getInstance().getDownLoadCacheDir();
     }
 
     public FileInfo(String url, String name) {
@@ -38,7 +37,18 @@ public class FileInfo implements Parcelable {
         this.totalBytes = 0;
         this.loadBytes = 0;
         this.speed = 0;
-        this.path = FileDownloader.getDownloadDir();
+        this.path = NetManager.getInstance().getDownLoadCacheDir();
+    }
+
+
+    public FileInfo(String url,String name,int status,int totalBytes,int loadBytes,int speed,String path){
+        this.url = url;
+        this.name = name;
+        this.status = status;
+        this.totalBytes = totalBytes;
+        this.loadBytes = loadBytes;
+        this.speed = speed;
+        this.path =path;
     }
 
     public String getUrl() {

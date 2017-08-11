@@ -1,4 +1,4 @@
-package com.example.commonlibrary.net.model;
+package com.example.commonlibrary;
 
 import android.support.annotation.IntDef;
 

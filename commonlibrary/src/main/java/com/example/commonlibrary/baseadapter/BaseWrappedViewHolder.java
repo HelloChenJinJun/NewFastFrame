@@ -1,6 +1,7 @@
 package com.example.commonlibrary.baseadapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
@@ -155,7 +156,6 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
         if (getView(id) instanceof ImageView) {
             Glide.with(itemView.getContext()).load(url).into((ImageView) getView(id));
         }
-
         return this;
     }
 
@@ -163,6 +163,14 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
     public BaseWrappedViewHolder setImageUrl(int id, File file) {
         if (file.exists()) {
             Glide.with(itemView.getContext()).load(file).into((ImageView) getView(id));
+        }
+        return this;
+    }
+
+
+    public BaseWrappedViewHolder setImageUri(int id, Uri uri) {
+        if (uri != null) {
+            Glide.with(itemView.getContext()).load(uri).into((ImageView) getView(id));
         }
         return this;
     }

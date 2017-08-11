@@ -46,7 +46,7 @@ import static android.view.View.GONE;
  * QQ:             1981367757
  */
 
-public abstract class BaseActivity extends RxAppCompatActivity implements IView {
+public abstract class BaseActivity<T> extends RxAppCompatActivity implements IView<T> {
 
     //  这里的布局view可能为空，取决于子类布局中是否含有该空布局
     private EmptyLayout mEmptyLayout;
@@ -350,6 +350,12 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IView 
 
         }
 
+    }
+
+
+    @Override
+    public void showEmptyView() {
+        showEmptyLayout(EmptyLayout.STATUS_NO_DATA);
     }
 
 

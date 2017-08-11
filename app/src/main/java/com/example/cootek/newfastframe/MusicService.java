@@ -66,14 +66,14 @@ import java.util.TreeSet;
 
 public class MusicService extends Service {
 
-    private static final int MAX_HISTORY_SIZE = 1000;
+    public static final int MAX_HISTORY_SIZE = 1000;
     public static final int SHUFFLE_NORMAL = 0;
-    private static final int TRACK_END = 0;
-    private static final int NOTIFY_TYPE_NONE = 0;
-    private static final int FOCUSCHANGE = 5;
-    private static final int SERVICE_DIED = 4;
-    private static final int NEXT = 10;
-    private static final int RELEASE_WAKE_LOCK = 11;
+    public static final int TRACK_END = 0;
+    public static final int NOTIFY_TYPE_NONE = 0;
+    public static final int FOCUSCHANGE = 5;
+    public static final int SERVICE_DIED = 4;
+    public static final int NEXT = 10;
+    public static final int RELEASE_WAKE_LOCK = 11;
     public static final String MEDIA_BUTTON_PAUSE = "pause";
     public static final String MEDIA_BUTTON_ACTION = "media_button_action";
     public static final String SHUTDOWN_ACTION = "shutdown_action";
@@ -83,16 +83,20 @@ public class MusicService extends Service {
     public static final String MEDIA_BUTTON_PLAY = "play";
     public static final String MEDIA_BUTTON_NEXT = "next";
     public static final String MEDIA_BUTTON_PREVIOUS = "previous";
-    private static final String QUEUE_CHANGED = "queue_changed";
-    private static final String META_CHANGED = "meta_changed";
-    private static final String PLAYSTATE_CHANGED = "play_state_changed";
-    private static final String SHUFFLEMODE_CHANGED = "shuffle_mode_changed";
-    private static final int REPEAT_NONE = 0;
-    private static final int REPEAT_ALL = 1;
-    private static final int REPEAT_CURRENT = 2;
-    private static final int SHUFFLE_NONE = 0;
-    private static final int SHUFFLE_AUTO = 1;
-    private static final long WAKE_UP_DELAY = 5 * 60 * 1000;
+    public static final String QUEUE_CHANGED = "queue_changed";
+    public static final String META_CHANGED = "meta_changed";
+    public static final String PLAYSTATE_CHANGED = "play_state_changed";
+    public static final String SHUFFLEMODE_CHANGED = "shuffle_mode_changed";
+    public static final String POSITION_CHANGED = "position_changed";
+    public static final String REPEATMODE_CHANGED = "repeat_mode_changed";
+    public static final String REFRESH_CHANGED = "refresh";
+    public static final String PLAYLIST_CHANGED = "play_list_changed";
+    public static final int REPEAT_NONE = 0;
+    public static final int REPEAT_ALL = 1;
+    public static final int REPEAT_CURRENT = 2;
+    public static final int SHUFFLE_NONE = 0;
+    public static final int SHUFFLE_AUTO = 1;
+    public static final long WAKE_UP_DELAY = 5 * 60 * 1000;
     private static final String[] PROJECTION = new String[]{ //歌曲信息
             "audio._id AS _id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA,
@@ -109,26 +113,22 @@ public class MusicService extends Service {
             MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID,
             MediaStore.Audio.Media.ARTIST_ID
     };
-    private static final String NAME_ERROR_ACTION = "name_error_action";
-    private static final String ERROR_CODE = "ERROR_CODE";
-    private static final int FADEDOWN = 6;
-    private static final int FADEUP = 7;
-    private static final int NOTIFY_MODE_FOREGROUND = 1;
-    private static final int NOTIFY_MODE_BACKGROUND = 2;
-    private static final int NOTIFY_MODE_NONE = 0;
-    private static final String PREVIOUS_ACTION = "previous_action";
-    private static final String NEXT_ACTION = "next_action";
-    private static final String TOGGLEPAUSE_ACTION = "toggle_pause_action";
-    private static final String POSITION_CHANGED = "position_changed";
-    private static final String REPEATMODE_CHANGED = "repeat_mode_changed";
-    private static final String REFRESH = "refresh";
-    private static final String PLAYLIST_CHANGED = "play_list_changed";
-    private static final String PAUSE_ACTION = "pause_action";
-    private static final String STOP_ACTION = "stop_action";
-    private static final String REPEAT_ACTION = "repeat_action";
-    private static final String PREVIOUS_FORCE_ACTION = "previous_force_action";
-    private static final String SHUFFLE_ACTION = "shuffle_action";
-    private static final String SERVICECMD = "service_cmd";
+    public static final String NAME_ERROR_ACTION = "name_error_action";
+    public static final String ERROR_CODE = "ERROR_CODE";
+    public static final int FADEDOWN = 6;
+    public static final int FADEUP = 7;
+    public static final int NOTIFY_MODE_FOREGROUND = 1;
+    public static final int NOTIFY_MODE_BACKGROUND = 2;
+    public static final int NOTIFY_MODE_NONE = 0;
+    public static final String PREVIOUS_ACTION = "previous_action";
+    public static final String NEXT_ACTION = "next_action";
+    public static final String TOGGLEPAUSE_ACTION = "toggle_pause_action";
+    public static final String PAUSE_ACTION = "pause_action";
+    public static final String STOP_ACTION = "stop_action";
+    public static final String REPEAT_ACTION = "repeat_action";
+    public static final String PREVIOUS_FORCE_ACTION = "previous_force_action";
+    public static final String SHUFFLE_ACTION = "shuffle_action";
+    public static final String SERVICECMD = "service_cmd";
     private IBinder bind = new MusicServiceStub(this);
     private NotificationManagerCompat notificationManagerCompat;
     private DaoSession daoSession;
@@ -1517,7 +1517,7 @@ public class MusicService extends Service {
     }
 
     private void refresh() {
-        notifyChange(REFRESH);
+        notifyChange(REFRESH_CHANGED);
     }
 
     private void moveQueueItem(int index1, int index2) {
