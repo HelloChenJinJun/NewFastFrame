@@ -19,6 +19,7 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
+import com.example.cootek.newfastframe.api.DownLoadMusicBean;
 import com.example.cootek.newfastframe.dagger.BottomFragmentModule;
 import com.example.cootek.newfastframe.dagger.DaggerBottomFragmentComponent;
 import com.example.cootek.newfastframe.mvp.BottomPresenter;
@@ -40,7 +41,7 @@ import io.reactivex.functions.Consumer;
  * Created by COOTEK on 2017/8/13.
  */
 
-public class BottomFragment extends BaseFragment implements SlidingUpPanelLayout.PanelSlideListener, IBottomView {
+public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresenter> implements SlidingUpPanelLayout.PanelSlideListener, IBottomView<DownLoadMusicBean> {
 
 
     @BindView(R.id.riv_fragment_bottom_album)
@@ -77,7 +78,7 @@ public class BottomFragment extends BaseFragment implements SlidingUpPanelLayout
     private Runnable progressRun;
 
     @Override
-    public void updateData(Object o) {
+    public void updateData(DownLoadMusicBean o) {
 
     }
 
@@ -304,19 +305,5 @@ public class BottomFragment extends BaseFragment implements SlidingUpPanelLayout
         Rect bound = new Rect();
         artistName.getPaint().getTextBounds(artistName.getText().toString(), 0, artistName.getText().length(), bound);
         endArtistName = (DensityUtil.getScreenWidth(getContext()) - bound.width()) / 2 - DensityUtil.dip2px(getContext(), 80);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 }

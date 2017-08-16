@@ -10,7 +10,7 @@ import java.io.File;
  * Created by COOTEK on 2017/8/14.
  */
 
-public interface IBottomView extends IView {
+public interface IBottomView<T> extends IView<T> {
     public void updateMusicContent(File file);
 
     public void updateMaxProgress(int max);

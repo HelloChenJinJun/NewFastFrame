@@ -1,36 +1,45 @@
 package com.example.cootek.newfastframe;
 
-import android.os.Bundle;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
-import android.view.ViewGroup;
 
+import com.example.commonlibrary.baseadapter.OnRefreshListener;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.cootek.newfastframe.api.RankListBean;
+import com.example.cootek.newfastframe.dagger.DaggerRankFragmentComponent;
+import com.example.cootek.newfastframe.dagger.RankFragmentModule;
 
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by COOTEK on 2017/8/15.
  */
 
-public class RankFragment extends BaseFragment<RankListBean> {
+public class RankFragment extends BaseFragment<RankListBean, RankPresenter> implements OnRefreshListener {
 
 
     @BindView(R.id.srcv_fragment_rank_display)
     SuperRecyclerView display;
     @BindView(R.id.refresh_fragment_rank_refresh)
     SwipeRefreshLayout refresh;
+    @Inject
+    RankAdapter rankAdapter;
+    private List<Integer> typeList;
 
     @Override
     public void updateData(RankListBean rankListBeen) {
-
+        rankAdapter.addData(rankListBeen);
     }
 
     @Override
@@ -40,7 +49,7 @@ public class RankFragment extends BaseFragment<RankListBean> {
 
     @Override
     protected boolean isNeedEmptyLayout() {
-        return false;
+        return true;
     }
 
     @Override
@@ -55,12 +64,38 @@ public class RankFragment extends BaseFragment<RankListBean> {
 
     @Override
     protected void initData() {
-
+        DaggerRankFragmentComponent.builder().mainComponent(MainApplication.getMainComponent())
+                .rankFragmentModule(new RankFragmentModule(this)).build().inject(this);
+        typeList = new ArrayList<>();
+        typeList.addAll(Arrays.asList(MusicUtil.RANK_TYPE_LIST));
+        display.setLayoutManager(new LinearLayoutManager(getContext()));
+        display.setOnRefreshListener(this);
+        rankAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view) {
+                RankDetailActivity.start(getContext(), rankAdapter.getData(position).getBillboard().getBillboard_type());
+            }
+        });
+        display.setIAdapter(rankAdapter);
     }
 
     @Override
     protected void updateView() {
-
+        for (Integer type :
+                typeList) {
+            presenter.getRankList(type, false);
+        }
     }
 
+    @Override
+    public void onRefresh() {
+        for (Integer type :
+                typeList) {
+            presenter.getRankList(type, true);
+        }
+    }
+
+    public static RankFragment newInstance() {
+        return new RankFragment();
+    }
 }

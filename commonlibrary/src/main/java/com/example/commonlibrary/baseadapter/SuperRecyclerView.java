@@ -206,6 +206,19 @@ public class SuperRecyclerView extends RecyclerView {
             ensureLoadMoreFooterContainer();
             mLoadMoreFooterContainer.addView(loadMoreFooterView);
         }
+        if (loadMoreFooterView instanceof LoadMoreFooterView) {
+            addBottomListener(((LoadMoreFooterView) loadMoreFooterView));
+        }
+    }
+
+    private void addBottomListener(final LoadMoreFooterView loadMoreFooterView) {
+        loadMoreFooterView.setBottomViewClickListener(new RecyclerFooterViewClickListener() {
+            @Override
+            public void onBottomViewClickListener(View view) {
+                loadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
+                scrollToPosition(0);
+            }
+        });
     }
 
     public void setLoadMoreFooterView(@LayoutRes int loadMoreFooterLayoutRes) {
@@ -237,10 +250,6 @@ public class SuperRecyclerView extends RecyclerView {
     public void addHeaderView(View headerView) {
         ensureHeaderViewContainer();
         mHeaderViewContainer.addView(headerView);
-//        Adapter adapter = getAdapter();
-//        if (adapter != null) {
-//            adapter.notifyItemChanged(1);
-//        }
     }
 
 
@@ -635,7 +644,9 @@ public class SuperRecyclerView extends RecyclerView {
                         mRefreshHeaderContainer.requestLayout();
                         setStatus(STATUS_REFRESHING);
                         if (mOnRefreshListener != null) {
-//                            TLog.e(SuperRecyclerView.class, "刷新");
+                            if (mLoadMoreFooterView != null && mLoadMoreFooterView instanceof LoadMoreFooterView) {
+                                ((LoadMoreFooterView) mLoadMoreFooterView).setStatus(LoadMoreFooterView.Status.GONE);
+                            }
                             mOnRefreshListener.onRefresh();
                             mRefreshTrigger.onRefresh();
                         }
@@ -646,13 +657,14 @@ public class SuperRecyclerView extends RecyclerView {
                     }
                 }
                 break;
-
                 case STATUS_RELEASE_TO_REFRESH: {
                     mRefreshHeaderContainer.getLayoutParams().height = mRefreshHeaderView.getMeasuredHeight();
                     mRefreshHeaderContainer.requestLayout();
                     setStatus(STATUS_REFRESHING);
                     if (mOnRefreshListener != null) {
-//                        TLog.e(SuperRecyclerView.class, "释放刷新");
+                        if (mLoadMoreFooterView != null && mLoadMoreFooterView instanceof LoadMoreFooterView) {
+                            ((LoadMoreFooterView) mLoadMoreFooterView).setStatus(LoadMoreFooterView.Status.GONE);
+                        }
                         mOnRefreshListener.onRefresh();
                         mRefreshTrigger.onRefresh();
                     }
@@ -729,6 +741,9 @@ public class SuperRecyclerView extends RecyclerView {
         @Override
         public void onLoadMore(RecyclerView recyclerView) {
             if (mOnLoadMoreListener != null && mStatus == STATUS_DEFAULT) {
+                if (mLoadMoreFooterView != null && mLoadMoreFooterView instanceof LoadMoreFooterView) {
+                    ((LoadMoreFooterView) mLoadMoreFooterView).setStatus(LoadMoreFooterView.Status.LOADING);
+                }
                 mOnLoadMoreListener.loadMore();
             }
         }

@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/8/11.
  */
 
-public class MainPresenter extends BasePresenter<IView,MainModel> {
+public class MainPresenter extends BasePresenter<IView, MainModel> {
     private int num;
 
 
@@ -36,11 +36,14 @@ public class MainPresenter extends BasePresenter<IView,MainModel> {
     }
 
 
-    public void getAllMusic(final boolean isRefresh) {
+    public void getAllMusic(final boolean isRefresh, final boolean isShowLoading) {
         if (isRefresh) {
             num = 0;
         }
         num++;
+        if (isShowLoading) {
+            iView.showLoading("正在加载");
+        }
         List<Music> list = ((DaoSession) baseModel.getRepositoryManager().getDaoSession())
                 .getMusicDao().queryBuilder().offset((num - 1) * 10).limit(10).list();
         if (list.size() == 0) {
@@ -50,8 +53,7 @@ public class MainPresenter extends BasePresenter<IView,MainModel> {
                     .subscribe(new Observer<List<Music>>() {
                         @Override
                         public void onSubscribe(@NonNull Disposable d) {
-                            CommonLogger.e("正在加载");
-                            iView.showLoading("正在加载");
+
                             addDispose(d);
                         }
 
@@ -77,7 +79,7 @@ public class MainPresenter extends BasePresenter<IView,MainModel> {
                             iView.showError(message, new EmptyLayout.OnRetryListener() {
                                 @Override
                                 public void onRetry() {
-                                    getAllMusic(isRefresh);
+                                    getAllMusic(isRefresh,isShowLoading);
                                 }
                             });
                             num--;

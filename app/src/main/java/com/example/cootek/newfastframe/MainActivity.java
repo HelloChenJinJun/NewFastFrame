@@ -4,14 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.example.commonlibrary.baseadapter.OnLoadMoreListener;
-import com.example.commonlibrary.utils.CommonLogger;
-import com.example.cootek.newfastframe.mvp.MainPresenter;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.util.List;
-
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 
@@ -20,13 +14,10 @@ import butterknife.BindView;
  * Created by COOTEK on 2017/8/7.
  */
 
-public class MainActivity extends MainBaseActivity<List<Music>, MainPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends MainBaseActivity implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.slide_activity_main_container)
     SlidingUpPanelLayout slideLayout;
-    @Inject
-    MainAdapter mainAdapter;
-
 
     @Override
     protected boolean isNeedHeadLayout() {
@@ -45,7 +36,7 @@ public class MainActivity extends MainBaseActivity<List<Music>, MainPresenter> i
 
     @Override
     protected void initView() {
-        addOrReplaceFragment(MainFragment.newInstance(), R.id.fl_activity_main_container);
+        addOrReplaceFragment(HolderFragment.newInstance(), R.id.fl_activity_main_container);
         Fragment fragment = BottomFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.fl_activity_main_bottom_container, fragment).show(fragment).commitAllowingStateLoss();
     }
@@ -56,7 +47,6 @@ public class MainActivity extends MainBaseActivity<List<Music>, MainPresenter> i
     }
 
     private void getData(boolean isRefresh) {
-        presenter.getAllMusic(isRefresh);
     }
 
     @Override
@@ -83,12 +73,8 @@ public class MainActivity extends MainBaseActivity<List<Music>, MainPresenter> i
         getData(true);
     }
 
-
     @Override
-    public void updateData(List<Music> musics) {
-        if (musics != null) {
-            CommonLogger.e("数据到这里" + musics.size());
-        }
-        mainAdapter.addData(musics);
+    public void updateData(Object o) {
+
     }
 }

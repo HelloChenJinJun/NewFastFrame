@@ -96,4 +96,5 @@ dependencies {
     annotationProcessor rootProject.ext.dependencies.dagger2_compiler
     annotationProcessor rootProject.ext.dependencies.butterknife_compiler
     compile rootProject.ext.dependencies.butterknife
+    compile rootProject.ext.dependencies.transformations
 }

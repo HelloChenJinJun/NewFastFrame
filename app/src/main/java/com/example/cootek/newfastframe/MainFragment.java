@@ -25,7 +25,7 @@ import butterknife.BindView;
  * Created by COOTEK on 2017/8/13.
  */
 
-public class MainFragment extends BaseFragment<List<Music>> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainFragment extends BaseFragment<List<Music>, MainPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.srcv_fragment_main_display)
@@ -35,8 +35,6 @@ public class MainFragment extends BaseFragment<List<Music>> implements OnLoadMor
     private LoadMoreFooterView loadMoreFooterView;
     @Inject
     MainAdapter mainAdapter;
-    @Inject
-    MainPresenter mainPresenter;
 
     @Override
     public void updateData(List<Music> musics) {
@@ -62,22 +60,11 @@ public class MainFragment extends BaseFragment<List<Music>> implements OnLoadMor
     protected void initView() {
         display.setLayoutManager(new LinearLayoutManager(getContext()));
         loadMoreFooterView = new LoadMoreFooterView(getContext());
-        loadMoreFooterView.setBottomViewClickListener(new RecyclerFooterViewClickListener() {
-            @Override
-            public void onBottomViewClickListener(View view) {
-                loadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
-                display.scrollToPosition(0);
-            }
-        });
         display.setLoadMoreFooterView(loadMoreFooterView);
         display.setOnLoadMoreListener(this);
         refresh.setOnRefreshListener(this);
     }
 
-
-    private void getData(boolean isRefresh) {
-        mainPresenter.getAllMusic(isRefresh);
-    }
 
     @Override
     protected void initData() {
@@ -95,7 +82,7 @@ public class MainFragment extends BaseFragment<List<Music>> implements OnLoadMor
 
     @Override
     protected void updateView() {
-        getData(true);
+        presenter.getAllMusic(true, true);
     }
 
 
@@ -105,11 +92,11 @@ public class MainFragment extends BaseFragment<List<Music>> implements OnLoadMor
 
     @Override
     public void loadMore() {
-        getData(false);
+        presenter.getAllMusic(false, false);
     }
 
     @Override
     public void onRefresh() {
-        getData(true);
+        presenter.getAllMusic(true, false);
     }
 }

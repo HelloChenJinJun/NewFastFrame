@@ -56,6 +56,7 @@ public class LogInterceptor implements Interceptor {
             printLevel = Level.BODY;
         }
         colorLevel = java.util.logging.Level.INFO;
+        logger=Logger.getLogger("JUN");
     }
 
 

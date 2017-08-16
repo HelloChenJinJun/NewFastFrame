@@ -73,7 +73,7 @@ public class BaseApplication extends Application {
 
             @Override
             public Request onRequestBefore(Interceptor.Chain chain, Request request) {
-                CommonLogger.e("onRequestBefore");
+                CommonLogger.e("onRequestBefore:"+request.url().toString());
                 return request;
             }
         }).level(LogInterceptor.Level.BODY).cacheFile(FileUtil.getDefaultCacheFile(this))

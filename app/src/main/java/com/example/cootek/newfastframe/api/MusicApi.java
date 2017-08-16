@@ -3,7 +3,6 @@ package com.example.cootek.newfastframe.api;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 /**
  * Created by COOTEK on 2017/8/15.
@@ -20,7 +19,7 @@ public interface MusicApi {
      * @param size
      * @param offset
      * @return***/
-    @GET("/v1/restserver/ting?from=android&version=5.6.5.6&format=json&method=baidu.ting.billboard.billList")
+    @GET("/v1/restserver/ting?from=web&version=5.6.5.6&format=json&method=baidu.ting.billboard.billList")
     public Observable<RankListBean> getRankList(@Query("type") int type, @Query("size") int size, @Query("offset") int offset);
 
 
@@ -59,7 +58,7 @@ public interface MusicApi {
      * @return
      */
     @GET("/v1/restserver/ting?from=android&version=5.6.5.6&format=json&method=baidu.ting.song.play")
-    public Observable<DownLoadMusicInfo> getDownLoadMusicInfo(@Query("songid") String songId);
+    public Observable<DownLoadMusicBean> getDownLoadMusicInfo(@Query("songid") String songId);
 
     /**
      * 搜索关键词，返回的列表中包含预支相关的歌曲名，歌手名和专辑名

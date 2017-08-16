@@ -22,6 +22,8 @@ import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -34,7 +36,7 @@ import static android.view.View.GONE;
  * QQ:             1981367757
  */
 
-public abstract class BaseFragment<T> extends RxFragment implements IView<T> {
+public abstract class BaseFragment<T,P extends BasePresenter> extends RxFragment implements IView<T> {
 
     /**
      * 采用懒加载
@@ -49,6 +51,10 @@ public abstract class BaseFragment<T> extends RxFragment implements IView<T> {
     private ImageView rightImage;
     protected ImageView back;
     Unbinder unbinder;
+
+    @Nullable
+    @Inject
+    protected P presenter;
 
 
     protected abstract boolean isNeedHeadLayout();
@@ -273,6 +279,15 @@ public abstract class BaseFragment<T> extends RxFragment implements IView<T> {
         super.onDestroyView();
         if (unbinder != null) {
             unbinder.unbind();
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (presenter != null) {
+            presenter.onDestroy();
         }
     }
 

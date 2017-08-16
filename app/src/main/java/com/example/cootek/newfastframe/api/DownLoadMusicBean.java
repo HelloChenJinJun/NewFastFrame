@@ -4,7 +4,7 @@ package com.example.cootek.newfastframe.api;
  * Created by COOTEK on 2017/8/15.
  */
 
-public class DownLoadMusicInfo {
+public class DownLoadMusicBean {
 
     /**
      * songinfo : {"special_type":0,"pic_huge":"http://musicdata.baidu.com/data2/pic/59cffb7aa3a14d30f14fefb1c08c0739/549122402/549122402.jpg@s_1,w_1000,h_1000","ting_uid":"1209","pic_premium":"http://musicdata.baidu.com/data2/pic/59cffb7aa3a14d30f14fefb1c08c0739/549122402/549122402.jpg@s_1,w_500,h_500","havehigh":2,"si_proxycompany":"华宇世博-赵传曲库","author":"赵传","toneid":"0","has_mv":1,"song_id":"549122778","title":"看不见的地方","artist_id":"345","lrclink":"http://musicdata.baidu.com/data2/lrc/f9be1d054e9bb4c4116c958ed9caeec5/549122751/549122751.lrc","relate_status":"0","learn":0,"pic_big":"http://musicdata.baidu.com/data2/pic/59cffb7aa3a14d30f14fefb1c08c0739/549122402/549122402.jpg@s_1,w_150,h_150","play_type":0,"album_id":"549122776","pic_radio":"http://musicdata.baidu.com/data2/pic/59cffb7aa3a14d30f14fefb1c08c0739/549122402/549122402.jpg@s_1,w_300,h_300","bitrate_fee":"{\"0\":\"0|0\",\"1\":\"0|0\"}","song_source":"web","all_artist_id":"345","all_artist_ting_uid":"1209","piao_id":"0","charge":0,"copy_type":"0","all_rate":"64,128,256,320,flac","korean_bb_song":"0","is_first_publish":0,"has_mv_mobile":0,"album_title":"看不见的地方","pic_small":"http://musicdata.baidu.com/data2/pic/59cffb7aa3a14d30f14fefb1c08c0739/549122402/549122402.jpg@s_1,w_90,h_90","album_no":"1","resource_type_ext":"0","resource_type":"0"}
