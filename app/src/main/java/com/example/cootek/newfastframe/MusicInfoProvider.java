@@ -45,12 +45,12 @@ public class MusicInfoProvider {
     }
 
 
-    public static Observable<List<Music>> getMusicForPage(Context context,int num,int pageSize){
-        return getMusicForCursor(getSongCursor(context,"limit "+pageSize+" offset "+num,new String[]{num+"",pageSize+""}));
+    public static Observable<List<Music>> getMusicForPage(Context context, int num, int pageSize) {
+        return getMusicForCursor(getSongCursor(context, null, null,null));
     }
 
-    public static Observable<List<Music>> getMusicForPage(int num,int pageSize){
-        return getMusicForPage(MainApplication.getInstance(),num,pageSize);
+    public static Observable<List<Music>> getMusicForPage(int num, int pageSize) {
+        return getMusicForPage(MainApplication.getInstance(), num, pageSize);
     }
 
 
@@ -58,9 +58,8 @@ public class MusicInfoProvider {
         return Observable.create(new ObservableOnSubscribe<List<Music>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<Music>> e) throws Exception {
-                List<Music> list = null;
+                List<Music> list = new ArrayList<>();
                 if (cursor != null && cursor.moveToFirst()) {
-                    list = new ArrayList<>();
                     do {
                         Music music = new Music();
                         music.setSongId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID)));

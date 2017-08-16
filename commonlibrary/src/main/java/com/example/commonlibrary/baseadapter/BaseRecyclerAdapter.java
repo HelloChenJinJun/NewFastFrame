@@ -64,7 +64,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         this.data = data == null ? new ArrayList<T>() : data;
         if (layoutId != 0)
             this.layoutId = layoutId;
-        layoutId=getLayoutId();
+        this.layoutId = getLayoutId();
     }
 
     protected abstract int getLayoutId();
@@ -328,9 +328,33 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
 
     public void addData(int position, List<T> newData) {
-        data.addAll(position, newData);
-        notifyItemRangeInserted(position + 3, newData.size());
+        List<T> temp = new ArrayList<>();
+        List<T> copyData = new ArrayList<>(data);
+        for (T data :
+                newData) {
+            for (T item :
+                    copyData) {
+                if (data.equals(item)) {
+                    temp.add(data);
+                }
+            }
+        }
+        if (temp.size() > 0) {
+            int index;
+            for (T item :
+                    temp) {
+                index = data.indexOf(item);
+                data.set(index, item);
+                newData.remove(item);
+            }
+            notifyDataSetChanged();
+            addData(position, newData);
+        } else {
+            data.addAll(position, newData);
+            notifyItemRangeInserted(position + 3, newData.size());
+        }
     }
+
 
     public void addData(T newData) {
         addData(data.size(), newData);
@@ -338,8 +362,13 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
 
     public void addData(int position, T newData) {
-        data.add(position, newData);
-        notifyItemInserted(position + 3);
+        if (!data.contains(newData)) {
+            data.add(position, newData);
+            notifyItemInserted(position + 3);
+        } else {
+            int index = data.indexOf(newData);
+            data.set(index, newData);
+        }
     }
 
     public void addData(List<T> newData) {

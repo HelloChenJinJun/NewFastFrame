@@ -1,5 +1,6 @@
 package com.example.cootek.newfastframe;
 
+import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -39,10 +40,13 @@ public class MusicManager {
 
     public void bindService(Context context) {
         Intent intent = new Intent(context, MusicService.class);
-        context.startService(new Intent(context, MusicService.class));
+        CommonLogger.e("启动服务啦啦啦1");
+        context.startService(intent);
         BindConnection bindConnection = new BindConnection();
-        if (context.bindService(intent, bindConnection, 0)) {
+        CommonLogger.e("绑定服务1");
+        if (context.bindService(intent, bindConnection, Service.BIND_AUTO_CREATE)) {
             connectionWeakHashMap.put(context, bindConnection);
+            CommonLogger.e("绑定服务成功");
         }
     }
 
@@ -73,30 +77,30 @@ public class MusicManager {
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-            CommonLogger.e("远程服务失败"+e.getMessage());
+            CommonLogger.e("远程服务失败" + e.getMessage());
         }
     }
 
-    public void previous(boolean force){
+    public void previous(boolean force) {
         try {
             if (service != null) {
                 service.prev(force);
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-            CommonLogger.e("远程服务失败"+e.getMessage());
+            CommonLogger.e("远程服务失败" + e.getMessage());
         }
     }
 
 
-    public void next(){
+    public void next() {
         try {
             if (service != null) {
                 service.next();
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-            CommonLogger.e("远程服务失败"+e.getMessage());
+            CommonLogger.e("远程服务失败" + e.getMessage());
         }
     }
 
@@ -110,9 +114,18 @@ public class MusicManager {
      * @param forceShuffle
      */
     public void play(Context context, long[] idList, int position, long typeId, @MusicIdType.IdType int type, boolean forceShuffle) {
+        CommonLogger.e("1");
         if (idList == null || idList.length == 0 || service == null) {
+            if (idList == null) {
+                CommonLogger.e("idList");
+            } else if (idList.length == 0) {
+                CommonLogger.e("idList1");
+            } else {
+                CommonLogger.e("service");
+            }
             return;
         }
+        CommonLogger.e("2");
         try {
             if (forceShuffle) {
                 service.setShuffleMode(MusicService.SHUFFLE_NORMAL);
@@ -128,11 +141,12 @@ public class MusicManager {
             position = position < 0 ? 0 : position;
 //            准备资源
             service.open(idList, forceShuffle ? -1 : position, typeId, type);
+            service.setRepeatMode(MusicService.REPEAT_NONE);
             service.play();
         } catch (RemoteException e) {
             e.printStackTrace();
+            CommonLogger.e("异常" + e.getMessage());
         }
-
     }
 
     private long[] getCurrentListId() {
@@ -151,9 +165,32 @@ public class MusicManager {
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-            CommonLogger.e("远程服务失败"+e.getMessage());
+            CommonLogger.e("远程服务失败" + e.getMessage());
         }
         return false;
+    }
+
+    public long getCurrentProgress() {
+        try {
+            if (service != null) {
+                return service.position();
+            }
+        } catch (RemoteException | IllegalStateException e) {
+            e.printStackTrace();
+            CommonLogger.e("获取进度异常" + e.getMessage());
+        }
+        return 0;
+    }
+
+    public void seekTo(int progress) {
+        try {
+            if (service != null) {
+                service.seek(progress);
+            }
+        } catch (RemoteException | IllegalStateException e) {
+            e.printStackTrace();
+            CommonLogger.e("异常" + e.getMessage());
+        }
     }
 
 

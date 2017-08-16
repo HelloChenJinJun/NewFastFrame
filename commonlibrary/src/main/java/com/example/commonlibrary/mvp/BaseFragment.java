@@ -16,10 +16,14 @@ import com.bumptech.glide.Glide;
 import com.example.commonlibrary.R;
 import com.example.commonlibrary.baseadapter.EmptyLayout;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static android.view.View.GONE;
 
@@ -30,12 +34,12 @@ import static android.view.View.GONE;
  * QQ:             1981367757
  */
 
-public abstract class BaseFragment extends RxFragment implements IView {
+public abstract class BaseFragment<T> extends RxFragment implements IView<T> {
 
     /**
      * 采用懒加载
      */
-    private View root;
+    protected View root;
     private EmptyLayout mEmptyLayout;
     private boolean hasInit = false;
     private RelativeLayout headerLayout;
@@ -44,6 +48,7 @@ public abstract class BaseFragment extends RxFragment implements IView {
     private TextView title;
     private ImageView rightImage;
     protected ImageView back;
+    Unbinder unbinder;
 
 
     protected abstract boolean isNeedHeadLayout();
@@ -85,7 +90,14 @@ public abstract class BaseFragment extends RxFragment implements IView {
                     root = inflater.inflate(getContentLayout(), container, false);
                 }
             }
-//                        mEmptyLayout = (EmptyLayout) root.findViewById(R.id.fl_empty_layout);
+            if (root.getParent() != null) {
+                ((ViewGroup) root.getParent()).removeView(root);
+            }
+            if (container != null) {
+                CommonLogger.e("添加父类");
+                container.addView(root);
+            }
+            unbinder = ButterKnife.bind(this, root);
             initBaseView();
             initData();
         }
@@ -246,6 +258,27 @@ public abstract class BaseFragment extends RxFragment implements IView {
         } else {
             ToastUtils.showShortToast(errorMsg);
         }
+    }
+
+
+    public void showEmptyLayout(int status) {
+        if (mEmptyLayout != null) {
+            mEmptyLayout.setCurrentStatus(status);
+        }
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
+    }
+
+    @Override
+    public void showEmptyView() {
+        showEmptyLayout(EmptyLayout.STATUS_NO_DATA);
     }
 
 

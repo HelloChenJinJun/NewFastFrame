@@ -18,6 +18,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -47,6 +48,8 @@ import android.util.Log;
 
 
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ToastUtils;
+import com.google.googlejavaformat.CommentsHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
@@ -67,7 +70,6 @@ import java.util.TreeSet;
 public class MusicService extends Service {
 
     public static final int MAX_HISTORY_SIZE = 1000;
-    public static final int SHUFFLE_NORMAL = 0;
     public static final int TRACK_END = 0;
     public static final int NOTIFY_TYPE_NONE = 0;
     public static final int FOCUSCHANGE = 5;
@@ -96,9 +98,11 @@ public class MusicService extends Service {
     public static final int REPEAT_CURRENT = 2;
     public static final int SHUFFLE_NONE = 0;
     public static final int SHUFFLE_AUTO = 1;
+    public static final int SHUFFLE_NORMAL = 2;
     public static final long WAKE_UP_DELAY = 5 * 60 * 1000;
+    //audio._id AS _id
     private static final String[] PROJECTION = new String[]{ //歌曲信息
-            "audio._id AS _id", MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media._ID, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA,
             MediaStore.Audio.Media.MIME_TYPE, MediaStore.Audio.Media.ALBUM_ID,
             MediaStore.Audio.Media.ARTIST_ID
@@ -170,11 +174,11 @@ public class MusicService extends Service {
     private String mFileToPlay;
     private long[] mAutoShuffleList = null;
     private long mLastPlayedTime = 0;
-    private boolean mShowAlbumArtOnLockscreen;
+    private boolean mShowAlbumArtOnLockscreen = true;
     private boolean mServiceInUse = false;
     private float mCurrentVolume = 1.0f;
     private MediaStoreObserver mMediaStoreObserver;
-    private BroadcastReceiver mIntentReceiver=new BroadcastReceiver() {
+    private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             handleCommandIntent(intent);
@@ -186,10 +190,10 @@ public class MusicService extends Service {
         final String command = SERVICECMD.equals(action) ? intent.getStringExtra(COMMAND) : null;
         if (NEXT_ACTION.equals(action)) {
             next(true);
-        } else if ( PREVIOUS_ACTION.equals(action)
+        } else if (PREVIOUS_ACTION.equals(action)
                 || PREVIOUS_FORCE_ACTION.equals(action)) {
             previous(PREVIOUS_FORCE_ACTION.equals(action));
-        } else if ( TOGGLEPAUSE_ACTION.equals(action)) {
+        } else if (TOGGLEPAUSE_ACTION.equals(action)) {
             if (isPlaying()) {
                 pause();
                 mPausedByTransientLossOfFocus = false;
@@ -199,7 +203,7 @@ public class MusicService extends Service {
         } else if (PAUSE_ACTION.equals(action)) {
             pause();
             mPausedByTransientLossOfFocus = false;
-        }else if (STOP_ACTION.equals(action)) {
+        } else if (STOP_ACTION.equals(action)) {
             pause();
             mPausedByTransientLossOfFocus = false;
             seek(0);
@@ -235,9 +239,11 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
 //        发送前台通知
+        CommonLogger.e("服务的onCreate");
         notificationManagerCompat = NotificationManagerCompat.from(this);
         daoSession = MainApplication.getMainComponent().getDaoSession();
         handlerThread = new HandlerThread("music_handler_thread", Process.THREAD_PRIORITY_BACKGROUND);
+        handlerThread.start();
         musicServiceHandler = new MusicServiceHandler(handlerThread.getLooper(), this);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         audioManager.registerMediaButtonEventReceiver(new ComponentName(getPackageName(), MediaButtonIntentReceiver.class.getName()));
@@ -282,10 +288,12 @@ public class MusicService extends Service {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals(Intent.ACTION_MEDIA_EJECT)) {
+                    CommonLogger.e("注册sd接收器收到的消息" + Intent.ACTION_MEDIA_EJECT);
                     saveQueue(true);
                     mQueueIsSaveable = false;
                     closeExternalStorageFiles(intent.getData().getPath());
                 } else {
+                    CommonLogger.e("注册sd接收器收到的消息");
                     mMediaMountedCount++;
                     mCardId = getCardId();
                     reloadQueueAfterPermissionCheck();
@@ -375,6 +383,7 @@ public class MusicService extends Service {
      * @return
      */
     private boolean makeAutoShuffleList() {
+        CommonLogger.e("更新和保存自动随机的歌曲列表id");
         Cursor cursor = null;
         try {
             cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -403,10 +412,12 @@ public class MusicService extends Service {
     }
 
     private long duration() {
+        CommonLogger.e("获取歌曲的时长");
         return wrappedMediaPlayer.duration();
     }
 
     private void closeCursor() {
+        CommonLogger.e("关闭cursor");
         if (mCursor != null) {
             mCursor.close();
             mCursor = null;
@@ -418,6 +429,7 @@ public class MusicService extends Service {
     }
 
     private void updateCursor(long songId) {
+        CommonLogger.e("更新歌曲Id" + songId);
         updateCursor("_id=" + songId, null);
     }
 
@@ -455,6 +467,7 @@ public class MusicService extends Service {
     }
 
     private void closeExternalStorageFiles(String path) {
+        CommonLogger.e("closeExternalStorageFiles" + path);
         stop(true);
         notifyChange(QUEUE_CHANGED);
         notifyChange(META_CHANGED);
@@ -471,18 +484,18 @@ public class MusicService extends Service {
 
         final Intent intent = new Intent(action);
         intent.putExtra("id", getAudioId());
-        intent.putExtra("artist", getArtistName());
-        intent.putExtra("album", getAlbumName());
-        intent.putExtra("track", getSongName());
-        intent.putExtra("playing", isPlaying());
+        intent.putExtra("artistName", getArtistName());
+        intent.putExtra("albumName", getAlbumName());
+        intent.putExtra("isPlaying", isPlaying());
+        intent.putExtra("songName", getSongName());
+        intent.putExtra("maxProgress", duration());
         sendStickyBroadcast(intent);
-
-        final Intent musicIntent = new Intent(intent);
-        musicIntent.setAction(action);
-        sendStickyBroadcast(musicIntent);
+//        final Intent musicIntent = new Intent(intent);
+//        musicIntent.setAction(action);
+//        sendStickyBroadcast(musicIntent);
 
         if (action.equals(META_CHANGED)) {
-            daoSession.getMusicRecentInfoDao().insert(new MusicRecentInfo(System.currentTimeMillis(), mPlaylist.get(playPosition).getId()));
+            daoSession.getMusicRecentInfoDao().insertOrReplace(new MusicRecentInfo(System.currentTimeMillis(), mPlaylist.get(playPosition).getId()));
         } else if (action.equals(QUEUE_CHANGED)) {
             saveQueue(true);
             if (isPlaying()) {//如果正在播放,则提前设置好下首播放的datasource
@@ -509,6 +522,7 @@ public class MusicService extends Service {
     }
 
     private void updateMediaSession(String action) {
+        CommonLogger.e("updateMediaSession：" + action);
         int playState = mIsSupposedToBePlaying
                 ? PlaybackStateCompat.STATE_PLAYING
                 : PlaybackStateCompat.STATE_PAUSED;
@@ -530,6 +544,9 @@ public class MusicService extends Service {
                     config = Bitmap.Config.ARGB_8888;
                 }
                 albumArt = albumArt.copy(config, false);
+            } else {
+                CommonLogger.e("加载专辑的封面失败设置默认的图片");
+                albumArt = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaSessionCompat.setMetadata(new MediaMetadataCompat.Builder()
@@ -590,6 +607,7 @@ public class MusicService extends Service {
     }
 
     private long[] getQueue() {
+        CommonLogger.e("获取现在的播放的队列");
         synchronized (this) {
             final int len = mPlaylist.size();
             final long[] list = new long[len];
@@ -601,6 +619,7 @@ public class MusicService extends Service {
     }
 
     private int getQueuePosition() {
+        CommonLogger.e("获取现在播放队列的位置");
         synchronized (this) {
             return playPosition;
         }
@@ -634,33 +653,33 @@ public class MusicService extends Service {
         mediaSessionCompat.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPlay() {
-                super.onPlay();
+                CommonLogger.e("mediaSession:onPlay");
                 play();
 
             }
 
             @Override
             public void onPause() {
-                super.onPause();
+                CommonLogger.e("mediaSession:onPause");
                 pause();
                 mPausedByTransientLossOfFocus = false;
             }
 
             @Override
             public void onSkipToNext() {
-                super.onSkipToNext();
+                CommonLogger.e("mediaSession:onSkipToNext");
                 next(true);
             }
 
             @Override
             public void onSkipToPrevious() {
-                super.onSkipToPrevious();
+                CommonLogger.e("mediaSession:onSkipToPrevious");
                 previous(true);
             }
 
             @Override
             public void onStop() {
-                super.onStop();
+                CommonLogger.e("mediaSession:onStop");
                 pause();
                 mPausedByTransientLossOfFocus = false;
                 seek(0);
@@ -669,7 +688,7 @@ public class MusicService extends Service {
 
             @Override
             public void onSeekTo(long pos) {
-                super.onSeekTo(pos);
+                CommonLogger.e("mediaSession:onSeekTo");
             }
         });
         mediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
@@ -718,6 +737,7 @@ public class MusicService extends Service {
     }
 
     private void next(boolean force) {
+        CommonLogger.e("next下一首" + force);
         synchronized (this) {
             if (mPlaylist.size() <= 0) {
                 scheduleDelayedShutdown();
@@ -740,7 +760,7 @@ public class MusicService extends Service {
             setAndRecordPlayPos(pos); //设置当前播放曲目的ID
             openCurrentAndNext();
             play(); //不重新产生mNextPlayPos
-            notifyChange(META_CHANGED);
+//            notifyChange(META_CHANGED);
         }
     }
 
@@ -751,6 +771,7 @@ public class MusicService extends Service {
      * @param nextPos
      */
     public void setAndRecordPlayPos(int nextPos) {
+        CommonLogger.e("给playPosition设置播放的曲目ID" + nextPos);
         synchronized (this) {
 
             if (mShufmode != SHUFFLE_NONE) {
@@ -769,7 +790,7 @@ public class MusicService extends Service {
 
             if (goPrevious) {
                 int pos = getPreviousPlayPosition(true);
-
+                CommonLogger.e("前一首的位置" + pos);
                 if (pos < 0) {
                     return;
                 }
@@ -778,7 +799,7 @@ public class MusicService extends Service {
                 stop(false);
                 openCurrent();
                 play(false); //不产生新的下首序号
-                notifyChange(META_CHANGED);
+//                notifyChange(META_CHANGED);
             } else {
                 seek(0);
                 play(false);
@@ -798,9 +819,10 @@ public class MusicService extends Service {
      * @return
      */
     public int getPreviousPlayPosition(boolean removeFromHistory) {
+        CommonLogger.e("获取播放列表中的前一首歌曲");
         synchronized (this) {
             if (mShufmode == SHUFFLE_NORMAL) { //普通随机模式,从历史中获取
-
+                CommonLogger.e("这里1");
                 final int histsize = mHistory.size();
                 if (histsize == 0) {
                     return -1;
@@ -811,6 +833,7 @@ public class MusicService extends Service {
                 }
                 return pos.intValue();
             } else { //其他模式取播放列表中的前一个
+                CommonLogger.e("这里");
                 if (playPosition > 0) {
                     return playPosition - 1;
                 } else {
@@ -829,6 +852,7 @@ public class MusicService extends Service {
 
 
     private void stop(boolean died) {
+        CommonLogger.e("停止播放");
         if (wrappedMediaPlayer.isInitialized()) {
             wrappedMediaPlayer.stop();
         }
@@ -837,6 +861,7 @@ public class MusicService extends Service {
         if (died) {
             setIsSupposedToBePlaying(false, false);
         } else {
+            CommonLogger.e("停止前台");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 stopForeground(false);
             else stopForeground(true);
@@ -849,7 +874,13 @@ public class MusicService extends Service {
         play(true);
     }
 
+    /**
+     * 是否重新获取下一首歌的位置,当播放前一首歌的时候，就不需要重新获取下一首歌的位置了
+     *
+     * @param createNewNextMusicInfo
+     */
     private void play(boolean createNewNextMusicInfo) {
+        CommonLogger.e("play" + createNewNextMusicInfo);
         int status = audioManager.requestAudioFocus(mAudioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         if (status != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             return;
@@ -858,6 +889,7 @@ public class MusicService extends Service {
         intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, getAudioSessionId());
         intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
         sendBroadcast(intent);
+        CommonLogger.e("play的时候注册MediaButtonIntentReceiver");
         audioManager.registerMediaButtonEventReceiver(new ComponentName(getPackageName(),
                 MediaButtonIntentReceiver.class.getName()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -869,13 +901,17 @@ public class MusicService extends Service {
         }
         if (wrappedMediaPlayer.isInitialized()) {
             final long duration = wrappedMediaPlayer.duration();
-            if (repeatMode != REPEAT_CURRENT && duration > 2000
-                    && wrappedMediaPlayer.position() >= duration - 2000) {
-                next(true);
-            }
+            CommonLogger.e("这里判断是否播放已经到最后两秒了，如果是提前准备下一首1");
+//            if (repeatMode != REPEAT_CURRENT && duration > 2000
+//                    && wrappedMediaPlayer.position() >= duration - 2000) {
+//                CommonLogger.e("提前准备下一首");
+//                next(true);
+//            }
             wrappedMediaPlayer.start();
+            CommonLogger.e("这里通过移除减弱的声音的消息和发送增加声音的消息来调整到正常的音量");
             musicServiceHandler.removeMessages(FADEDOWN);
             musicServiceHandler.sendEmptyMessage(FADEUP); //组件调到正常音量
+            CommonLogger.e("设置播放状态,并通知播放状态的改变");
             setIsSupposedToBePlaying(true, true);
             cancelShutdown();
             updateNotification();
@@ -891,6 +927,7 @@ public class MusicService extends Service {
      * @param shuffleMode
      */
     private void setShuffleMode(int shuffleMode) {
+        CommonLogger.e("设置随机模式" + shuffleMode);
         synchronized (this) {
             if (mShufmode == shuffleMode && mPlaylist.size() > 0) {
                 return;
@@ -904,7 +941,7 @@ public class MusicService extends Service {
                     playPosition = 0;
                     openCurrentAndNext();
                     play();
-                    notifyChange(META_CHANGED);
+//                    notifyChange(META_CHANGED);
                     return;
                 } else {
                     mShufmode = SHUFFLE_NONE;
@@ -921,6 +958,7 @@ public class MusicService extends Service {
      * 更新通知栏
      */
     private void updateNotification() {
+        CommonLogger.e("更新通知栏");
         final int newNotifyMode;
         if (isPlaying()) {
             newNotifyMode = NOTIFY_MODE_FOREGROUND;
@@ -958,8 +996,7 @@ public class MusicService extends Service {
                 ? artistName : artistName + " - " + albumName;
 
         int playButtonResId = isPlaying
-                ? R.drawable.ic_pause_white_36dp : R.drawable.ic_play_white_36dp;
-
+                ? R.drawable.ic_pause_black_24dp : R.drawable.ic_play_arrow_black_24dp;
         Intent nowPlayingIntent = new Intent(this, MainActivity.class);
         nowPlayingIntent.setAction(Constants.NAVIGATE_LIBRARY);
         PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -968,25 +1005,24 @@ public class MusicService extends Service {
         artwork = ImageLoader.getInstance().loadImageSync(ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), getAlbumId()).toString());
 
         if (artwork == null) {
-            artwork = ImageLoader.getInstance().loadImageSync("drawable://" + R.drawable.icon_album_default);
+            artwork = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         }
-
         if (notificationPostTime == 0) {
             notificationPostTime = System.currentTimeMillis();
         }
         android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_music_note_white_48dp)
                 .setLargeIcon(artwork)
+                .setSmallIcon(R.drawable.ic_music_note_white_24dp)
                 .setContentIntent(clickIntent)
                 .setContentTitle(getSongName())
                 .setContentText(text)
                 .setWhen(notificationPostTime)
-                .addAction(R.drawable.ic_skip_previous_white_36dp,
+                .addAction(R.drawable.ic_skip_previous_black_24dp,
                         "",
                         getPendingIntent(PREVIOUS_ACTION))
                 .addAction(playButtonResId, "",
                         getPendingIntent(TOGGLEPAUSE_ACTION))
-                .addAction(R.drawable.ic_skip_next_white_36dp,
+                .addAction(R.drawable.ic_skip_next_black_24dp,
                         "",
                         getPendingIntent(NEXT_ACTION));
 
@@ -1013,6 +1049,7 @@ public class MusicService extends Service {
     }
 
     private String getArtistName() {
+        CommonLogger.e("获取歌手名");
         synchronized (this) {
             if (mCursor == null) {
                 return null;
@@ -1022,6 +1059,7 @@ public class MusicService extends Service {
     }
 
     private String getAlbumName() {
+        CommonLogger.e("获取专辑名");
         synchronized (this) {
             if (mCursor == null) {
                 return null;
@@ -1047,11 +1085,13 @@ public class MusicService extends Service {
 
 
             if (!mIsSupposedToBePlaying) {
+                CommonLogger.e("通知服务的销毁");
                 scheduleDelayedShutdown();
                 mLastPlayedTime = System.currentTimeMillis();
             }
 
             if (notify) {
+                CommonLogger.e("通知状态的改变");
                 notifyChange(PLAYSTATE_CHANGED);
             }
         }
@@ -1064,11 +1104,12 @@ public class MusicService extends Service {
     }
 
     private void pause() {
+        CommonLogger.e("暂停");
         synchronized (this) {
             musicServiceHandler.removeMessages(FADEUP);
             musicServiceHandler.sendEmptyMessage(FADEDOWN);
             if (mIsSupposedToBePlaying) {
-                notifyChange(META_CHANGED);
+//                notifyChange(META_CHANGED);
                 setIsSupposedToBePlaying(false, true);
                 TimerTask task = new TimerTask() {
                     public void run() {
@@ -1077,6 +1118,7 @@ public class MusicService extends Service {
                         intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, getAudioSessionId());
                         intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
                         sendBroadcast(intent); //由系统接收,通知系统audio_session将关闭,不再使用音效
+                        CommonLogger.e("发送广播给AudioSession");
                         wrappedMediaPlayer.pause();
                     }
                 };
@@ -1088,45 +1130,62 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        CommonLogger.e("onStartCommand");
+        CommonLogger.e("服务的onStartCommand");
         mStartId = startId;
         if (intent != null) {
             String action = intent.getAction();
             String value = intent.getStringExtra(COMMAND);
-            if (action.equals(MEDIA_BUTTON_ACTION)) {
-                switch (value) {
-                    case MEDIA_BUTTON_PAUSE:
-                        pause();
-                        mPausedByTransientLossOfFocus = false;
-                        break;
-                    case MEDIA_BUTTON_TOGGLE_PAUSE:
-                        if (isPlaying()) {
+            if (action != null) {
+                if (action.equals(MEDIA_BUTTON_ACTION)) {
+                    switch (value) {
+                        case MEDIA_BUTTON_PAUSE:
                             pause();
                             mPausedByTransientLossOfFocus = false;
-                        } else {
+                            break;
+                        case MEDIA_BUTTON_TOGGLE_PAUSE:
+                            if (isPlaying()) {
+                                pause();
+                                mPausedByTransientLossOfFocus = false;
+                            } else {
+                                play();
+                            }
+                            break;
+                        case MEDIA_BUTTON_NEXT:
+                            CommonLogger.e("MEDIA_BUTTON_NEXT_next");
+                            next(false);
+                            break;
+                        case MEDIA_BUTTON_PREVIOUS:
+                            previous(false);
+                            break;
+                        case MEDIA_BUTTON_STOP:
+                            pause();
+                            mPausedByTransientLossOfFocus = false;
+                            seek(0);
+                            releaseServiceUiAndStop();
+                            break;
+                        case MEDIA_BUTTON_PLAY:
                             play();
-                        }
-                        break;
-                    case MEDIA_BUTTON_NEXT:
-                        next(false);
-                        break;
-                    case MEDIA_BUTTON_PREVIOUS:
-                        previous(false);
-                        break;
-                    case MEDIA_BUTTON_STOP:
+                            break;
+                    }
+                    MediaButtonIntentReceiver.completeWakefulIntent(intent);
+                } else if (action.equals(SHUTDOWN_ACTION)) {
+                    mShutdownSchedule = false;
+                    releaseServiceUiAndStop();
+                } else if (action.equals(PREVIOUS_ACTION)) {
+                    ToastUtils.showShortToast("前一首");
+                    previous(true);
+                } else if (action.equals(NEXT_ACTION)) {
+                    next(true);
+                } else if (action.equals(TOGGLEPAUSE_ACTION)) {
+                    if (isPlaying()) {
                         pause();
                         mPausedByTransientLossOfFocus = false;
-                        seek(0);
-                        releaseServiceUiAndStop();
-                        break;
-                    case MEDIA_BUTTON_PLAY:
+                    } else {
                         play();
-                        break;
+                    }
+                } else {
+
                 }
-                MediaButtonIntentReceiver.completeWakefulIntent(intent);
-            } else if (action.equals(SHUTDOWN_ACTION)) {
-                mShutdownSchedule = false;
-                releaseServiceUiAndStop();
             }
         }
         return START_NOT_STICKY;
@@ -1174,7 +1233,7 @@ public class MusicService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        CommonLogger.e("onBind");
+        CommonLogger.e("服务的onBind");
         cancelShutdown(); //取消延时关闭
         mServiceInUse = true;
         return bind;
@@ -1217,6 +1276,7 @@ public class MusicService extends Service {
 
         @Override
         public void open(long[] list, int position, long sourceId, int sourceType) throws RemoteException {
+            CommonLogger.e("3");
             musicServiceWeakReference.get().open(list, position, sourceId, sourceType);
         }
 
@@ -1615,7 +1675,7 @@ public class MusicService extends Service {
             playPosition = position;
             openCurrentAndNext();
             play();
-            notifyChange(META_CHANGED);
+//            notifyChange(META_CHANGED);
             if (mShufmode == SHUFFLE_AUTO) {
                 doAutoShuffleUpdate();
             }
@@ -1637,7 +1697,7 @@ public class MusicService extends Service {
                 playPosition = 0;
                 openCurrentAndNext();
                 play();
-                notifyChange(META_CHANGED);
+//                notifyChange(META_CHANGED);
             }
         }
     }
@@ -1664,6 +1724,7 @@ public class MusicService extends Service {
         }
         if (newlist) {
             addToPlayList(list, -1, sourceId, sourceType); //添加到播放列表,并清空原播放列表
+            CommonLogger.e("清空之前的播放队列后通知队列的改变");
             notifyChange(QUEUE_CHANGED);
         }
         if (position >= 0) {
@@ -1672,18 +1733,19 @@ public class MusicService extends Service {
             playPosition = mShuffler.nextInt(mPlaylist.size());
         }
         mHistory.clear();
-        openCurrentAndNext();
-        if (oldId != getAudioId()) {
-            notifyChange(META_CHANGED);
-        }
+//        openCurrentAndNext();
+        openCurrent();
+//        if (oldId != getAudioId()) {
+//            notifyChange(META_CHANGED);
+//        }
     }
 
 
     /**
-     * 添加一个item到播放队列中
+     * 添加所有的item到播放队列中
      *
      * @param list
-     * @param position
+     * @param position   -1表示清除之前的播放列表
      * @param sourceId
      * @param sourceType
      */
@@ -1707,7 +1769,7 @@ public class MusicService extends Service {
 
         if (mPlaylist.size() == 0) {
             closeCursor();
-            notifyChange(META_CHANGED);
+//            notifyChange(META_CHANGED);
         }
     }
 
@@ -1718,6 +1780,7 @@ public class MusicService extends Service {
      * @return
      */
     private boolean openFile(String path) {
+        CommonLogger.e("打开文件的路径" + path);
         synchronized (this) {
             if (path == null) {
                 return false;
@@ -1745,7 +1808,7 @@ public class MusicService extends Service {
                     String mpUri = getValueForDownloadedFile(this, uri, "mediaprovider_uri");
                     if (!TextUtils.isEmpty(mpUri)) {
                         if (openFile(mpUri)) {
-                            notifyChange(META_CHANGED);
+//                            notifyChange(META_CHANGED);
                             return true;
                         } else {
                             return false;
@@ -1778,6 +1841,7 @@ public class MusicService extends Service {
                 mOpenFailedCounter = 0;
                 return true;
             }
+            CommonLogger.e("设置播放的出错啦啦，这里通知结束服务");
             String trackName = getSongName();
             if (TextUtils.isEmpty(trackName)) {
                 trackName = path;
@@ -1855,6 +1919,7 @@ public class MusicService extends Service {
     }
 
     public long getAlbumId() {
+        CommonLogger.e("获取当前的专辑图片的ID");
         synchronized (this) {
             if (mCursor == null) {
                 return -1;
@@ -1903,10 +1968,12 @@ public class MusicService extends Service {
 //                    全部播放完成
 //                    重复播放
                     if (repeatMode == REPEAT_CURRENT) {
+                        CommonLogger.e("循环默认，播放现在的歌曲");
                         seek(0);
                         play();
                     } else {
 //                        播放下一首
+                        CommonLogger.e("播放完next");
                         next(false);
                     }
                     break;
@@ -1914,6 +1981,7 @@ public class MusicService extends Service {
                     musicServiceWeakReference.get().getWeakLock().release();
                     break;
                 case NEXT:
+                    CommonLogger.e("通知next");
                     next(false);
                     break;
                 case FADEDOWN:
@@ -1998,8 +2066,9 @@ public class MusicService extends Service {
     }
 
     private void openCurrentAndMaybeNext(boolean openNext) {
+        CommonLogger.e("获取并准备现在的曲目资源和下一首资源");
         synchronized (this) {
-            closeCursor();
+//            closeCursor();
             if (mPlaylist.size() == 0) {
                 return;
             }
@@ -2007,12 +2076,15 @@ public class MusicService extends Service {
             boolean shutdown = false;
             updateCursor(mPlaylist.get(playPosition).getId());
             while (true) {
+
                 if (mCursor != null && openFile(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/" + mCursor.getLong(0))) {
 //                    打开资源成功
                     break;
                 }
+                CommonLogger.e("上面打开文件失败，进行下面的操作");
                 closeCursor();
                 if (mOpenFailedCounter++ < 10 && mPlaylist.size() > 1) {
+                    CommonLogger.e("更新下一首歌曲的Cursor");
 //                    切换下一首
                     int position = getNextPosition(false);
                     if (position < 0) {
@@ -2030,6 +2102,7 @@ public class MusicService extends Service {
                 }
             }
             if (shutdown) {
+                CommonLogger.e("在打开文件的位置通知关闭服务，可能是多次打开文件失败");
                 scheduleDelayedShutdown();
                 if (mIsSupposedToBePlaying) {
                     mIsSupposedToBePlaying = false;
@@ -2046,6 +2119,7 @@ public class MusicService extends Service {
     }
 
     private void setNextMusicPlayInfo(int nextPosition) {
+        CommonLogger.e("设置下一首的资源");
         nextPlayPosition = nextPosition;
         if (nextPlayPosition > 0 && mPlaylist != null && nextPlayPosition < mPlaylist.size()) {
             long id = mPlaylist.get(nextPlayPosition).getId();
@@ -2067,6 +2141,7 @@ public class MusicService extends Service {
      * @return
      */
     private int getNextPosition(boolean force) {
+        CommonLogger.e("获取下一首歌曲的位置" + force);
         if (mPlaylist == null || mPlaylist.size() == 0) {
             return -1;
         }
@@ -2183,6 +2258,7 @@ public class MusicService extends Service {
      * @return
      */
     private boolean wasRecentlyUsed(int idx, int lookback) {
+        CommonLogger.e("判断是否是最近播放的位置" + idx + " 是否在最近的" + lookback + "首");
         if (lookback == 0) {
             return false;
         }
@@ -2201,6 +2277,7 @@ public class MusicService extends Service {
     }
 
     private int removeMusicInfo(int first, int last) {
+        CommonLogger.e("移除前面的歌曲" + first + last);
         final int numremoved = removeMusicInfosInternal(first, last);
         if (numremoved > 0) {
             notifyChange(QUEUE_CHANGED);
@@ -2273,7 +2350,7 @@ public class MusicService extends Service {
                         play();
                     }
                 }
-                notifyChange(META_CHANGED);
+//                notifyChange(META_CHANGED);
             }
             return last - first + 1;
         }
@@ -2299,6 +2376,7 @@ public class MusicService extends Service {
 
 
         public void setNextDataSource(String path) {
+            CommonLogger.e("设置下一首歌的资源" + path);
             if (path == null) {
                 return;
             }
@@ -2323,6 +2401,7 @@ public class MusicService extends Service {
         }
 
         private boolean realSetDataSource(MediaPlayer mediaPlayer, String path) {
+            CommonLogger.e("设置播放的资源路径" + path);
             if (path == null) {
                 return false;
             }
@@ -2340,6 +2419,8 @@ public class MusicService extends Service {
                 e.printStackTrace();
                 CommonLogger.e("准备播放资源的时候出错" + e.getMessage());
                 return false;
+            } catch (IllegalStateException e) {
+                CommonLogger.e("准备播放资源的时候出错12" + e.getMessage());
             }
             mediaPlayer.setOnCompletionListener(this);
             mediaPlayer.setOnErrorListener(this);
@@ -2348,7 +2429,8 @@ public class MusicService extends Service {
 
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            CommonLogger.e("播放声音出错" + what + "  " + extra);
+//            这里返回true,防止直接调用onCompletion方法，导致不断切换下一首
+            CommonLogger.e("12播放声音出错" + what + "  " + extra);
             switch (what) {
                 case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
                     MusicErrorInfo musicErrorInfo = new MusicErrorInfo();
@@ -2359,7 +2441,7 @@ public class MusicService extends Service {
                 default:
                     break;
             }
-            return false;
+            return true;
         }
 
         @Override
@@ -2369,8 +2451,10 @@ public class MusicService extends Service {
                 mediaPlayer = nextMediaPlayer;
                 nextMediaPlayer = null;
                 musicServiceHandler.sendEmptyMessage(NEXT);
+                CommonLogger.e("播放完");
             } else {
 //                已经播放完所有的音乐
+                CommonLogger.e("播放完了？");
                 musicServiceWeakReference.get().getWeakLock().acquire(30000);
                 musicServiceHandler.sendEmptyMessage(TRACK_END);
                 musicServiceHandler.sendEmptyMessage(RELEASE_WAKE_LOCK);
@@ -2386,6 +2470,7 @@ public class MusicService extends Service {
         }
 
         public void start() {
+            CommonLogger.e("播放真正开始啦啦");
             mediaPlayer.start();
         }
 
@@ -2407,6 +2492,7 @@ public class MusicService extends Service {
         }
 
         public void pause() {
+            CommonLogger.e("真正停止");
             mediaPlayer.pause();
         }
 
@@ -2424,6 +2510,7 @@ public class MusicService extends Service {
     }
 
     private String getSongName() {
+        CommonLogger.e("获取歌名");
         synchronized (this) {
             if (mCursor == null) {
                 return null;
@@ -2433,11 +2520,11 @@ public class MusicService extends Service {
     }
 
     private long getAudioId() {
+        CommonLogger.e("getAudioId");
         MusicPlayInfo musicPlayInfo = getCurrentMusicPlayInfo();
         if (musicPlayInfo != null) {
             return musicPlayInfo.getId();
         }
-
         return -1;
     }
 
@@ -2447,6 +2534,7 @@ public class MusicService extends Service {
     }
 
     private MusicPlayInfo getCurrentMusicPlayInfo() {
+        CommonLogger.e("getCurrentMusicPlayInfo");
         return getMusicPlayInfo(playPosition);
     }
 
@@ -2454,6 +2542,7 @@ public class MusicService extends Service {
         if (position >= 0 && position < mPlaylist.size() && wrappedMediaPlayer.isInitialized()) {
             return mPlaylist.get(position);
         }
+        CommonLogger.e("getMusicPlayInfo" + position);
         return null;
     }
 
@@ -2476,6 +2565,7 @@ public class MusicService extends Service {
 
 
         public int nextInt(final int interval) {
+            CommonLogger.e("随机播放的时候获取下一首歌的位置" + interval);
             int next;
             do {
                 next = mRandom.nextInt(interval);

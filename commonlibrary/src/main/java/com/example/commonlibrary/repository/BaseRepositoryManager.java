@@ -1,6 +1,5 @@
 package com.example.commonlibrary.repository;
 
-import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.AbstractDaoSession;
 
 import java.util.HashMap;

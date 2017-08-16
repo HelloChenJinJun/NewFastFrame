@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 
 import static android.view.View.GONE;
@@ -46,9 +48,12 @@ import static android.view.View.GONE;
  * QQ:             1981367757
  */
 
-public abstract class BaseActivity<T> extends RxAppCompatActivity implements IView<T> {
+public abstract class BaseActivity<T,P extends BasePresenter> extends RxAppCompatActivity implements IView<T> {
 
     //  这里的布局view可能为空，取决于子类布局中是否含有该空布局
+
+
+
     private EmptyLayout mEmptyLayout;
     protected int fragmentContainerResId = 0;
     protected Fragment currentFragment;
@@ -60,6 +65,12 @@ public abstract class BaseActivity<T> extends RxAppCompatActivity implements IVi
     private TextView title;
     private ImageView rightImage;
     protected ImageView back;
+
+
+    @Nullable
+    @Inject
+    protected P presenter;
+
 
 
     public ImageView getBack() {
@@ -150,26 +161,6 @@ public abstract class BaseActivity<T> extends RxAppCompatActivity implements IVi
     }
 
 
-    /**
-     * 隐藏软键盘
-     */
-    protected void hideSoftInpuutView() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN && getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    /**
-     * 隐藏软键盘-一般是EditText.getWindowToken()
-     *
-     * @param token 标识
-     */
-    protected void hideSoftInput(IBinder token) {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
-    }
-
 
     protected void showEmptyLayout(int status) {
         if (mEmptyLayout != null) {
@@ -221,19 +212,6 @@ public abstract class BaseActivity<T> extends RxAppCompatActivity implements IVi
             back.setVisibility(GONE);
         }
 
-    }
-
-    public int getStatusHeight() {
-        try {
-            Class<?> c = Class.forName("com.android.internal.R$dimen");
-            Object obj = c.newInstance();
-            Field field = c.getField("status_bar_height");
-            int x = Integer.parseInt(field.get(obj).toString());
-            return getResources().getDimensionPixelSize(x);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
     }
 
 
@@ -362,5 +340,8 @@ public abstract class BaseActivity<T> extends RxAppCompatActivity implements IVi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (presenter!=null) {
+            presenter.onDestroy();
+        }
     }
 }

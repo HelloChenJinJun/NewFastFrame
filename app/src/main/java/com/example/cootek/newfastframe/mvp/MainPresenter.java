@@ -26,11 +26,11 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/8/11.
  */
 
-public class MainPresenter extends BasePresenter {
+public class MainPresenter extends BasePresenter<IView,MainModel> {
     private int num;
 
 
-    public MainPresenter(IView iView, BaseModel baseModel) {
+    public MainPresenter(IView iView, MainModel baseModel) {
         super(iView, baseModel);
         num = 0;
     }
@@ -43,8 +43,8 @@ public class MainPresenter extends BasePresenter {
         num++;
         List<Music> list = ((DaoSession) baseModel.getRepositoryManager().getDaoSession())
                 .getMusicDao().queryBuilder().offset((num - 1) * 10).limit(10).list();
-        if (list.size()==0) {
-            MusicInfoProvider.getMusicForPage((num - 1) * 10, 10)
+        if (list.size() == 0) {
+            MusicInfoProvider.searchMusic(MainApplication.getInstance(), "z")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<List<Music>>() {

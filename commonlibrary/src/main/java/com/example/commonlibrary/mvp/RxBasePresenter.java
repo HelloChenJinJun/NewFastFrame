@@ -1,13 +1,30 @@
 package com.example.commonlibrary.mvp;
 
+import com.example.commonlibrary.rxbus.RxBusManager;
+
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+
 /**
  * Created by COOTEK on 2017/8/4.
  */
 
-public class RxBasePresenter extends BasePresenter {
+public class RxBasePresenter<V extends IView,M extends BaseModel> extends BasePresenter<V,M> {
 
 
-    public RxBasePresenter(IView iView, BaseModel baseModel) {
+    public RxBasePresenter(V iView, M baseModel) {
         super(iView, baseModel);
+    }
+
+
+    public <T> void registerEvent(Class<T> type, Consumer<T> consumer) {
+        Disposable disposable = RxBusManager.getInstance().registerEvent(type, consumer, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+
+            }
+        });
+        addDispose(disposable);
     }
 }

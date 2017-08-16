@@ -2,6 +2,7 @@ package com.example.cootek.newfastframe;
 
 import android.app.Application;
 
+import com.example.commonlibrary.repository.BaseRepositoryManager;
 import com.example.cootek.newfastframe.scope.PerApplication;
 
 import org.greenrobot.greendao.database.Database;
@@ -28,7 +29,7 @@ class MainModule {
 
     @Provides
     @PerApplication
-    public MainRepositoryManager provideRepositoryManager(Retrofit retrofit,DaoSession daoSession){
-       return new MainRepositoryManager(retrofit,daoSession);
+    public MainRepositoryManager provideRepositoryManager(Retrofit retrofit, DaoSession daoSession) {
+        return new MainRepositoryManager(retrofit, daoSession);
     }
 }

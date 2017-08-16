@@ -21,17 +21,21 @@ public interface IView<T> {
     void showError(String message, EmptyLayout.OnRetryListener listener);
 
 
-    /**
-     * 更新数据
-     * @param t
-     */
-    void updateData(T t);
 
 
     /**
      * 展示空布局
      */
     void showEmptyView();
+
+
+
+
+    /**
+     * 更新数据
+     * @param t
+     */
+    void updateData(T t);
 
 
 

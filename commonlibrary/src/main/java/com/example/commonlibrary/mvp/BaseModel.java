@@ -4,23 +4,23 @@ package com.example.commonlibrary.mvp;
 import com.example.commonlibrary.repository.BaseRepositoryManager;
 import com.example.commonlibrary.repository.IRepositoryManager;
 
-public class BaseModel implements IModel {
+public class BaseModel<R extends BaseRepositoryManager> implements IModel<R> {
 
 
-    protected BaseRepositoryManager baseRepositoryManager;
+    protected R baseRepositoryManager;
 
 
-    public BaseModel(BaseRepositoryManager repositoryManager) {
+    public BaseModel(R repositoryManager) {
         this.baseRepositoryManager = repositoryManager;
-    }
-
-
-    public BaseRepositoryManager getRepositoryManager() {
-        return baseRepositoryManager;
     }
 
     @Override
     public void onDestroy() {
+        baseRepositoryManager.clearAllCache();
+    }
 
+    @Override
+    public R getRepositoryManager() {
+        return baseRepositoryManager;
     }
 }

@@ -73,7 +73,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (adapter.getOnItemClickListener() != null) {
-                    adapter.getOnItemClickListener().onItemClick(getAdapterPosition(), v);
+                    adapter.getOnItemClickListener().onItemClick(getAdapterPosition()-3, v);
                 }
             }
         });
@@ -87,7 +87,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
                 @Override
                 public void onClick(View v) {
                     if (adapter.getOnItemClickListener() != null) {
-                        adapter.getOnItemClickListener().onItemChildClick(getAdapterPosition(), v, v.getId());
+                        adapter.getOnItemClickListener().onItemChildClick(getAdapterPosition()-3, v, v.getId());
                     }
                 }
             });
@@ -101,7 +101,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
             @Override
             public boolean onLongClick(View v) {
                 if (adapter.getOnItemClickListener() != null) {
-                    return adapter.getOnItemClickListener().onItemLongClick(getAdapterPosition(), v);
+                    return adapter.getOnItemClickListener().onItemLongClick(getAdapterPosition()-3, v);
                 }
                 return false;
             }
@@ -116,7 +116,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
                 @Override
                 public boolean onLongClick(View v) {
                     if (adapter.getOnItemClickListener() != null) {
-                        return adapter.getOnItemClickListener().onItemChildLongClick(getAdapterPosition(), v, v.getId());
+                        return adapter.getOnItemClickListener().onItemChildLongClick(getAdapterPosition()-3, v, v.getId());
                     }
                     return false;
                 }

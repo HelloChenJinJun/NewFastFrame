@@ -2,6 +2,7 @@ package com.example.cootek.newfastframe;
 
 import com.example.commonlibrary.baseadapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.BaseWrappedViewHolder;
+import com.example.commonlibrary.utils.CommonLogger;
 
 import javax.inject.Inject;
 
@@ -24,6 +25,7 @@ public class MainAdapter extends BaseRecyclerAdapter<Music, BaseWrappedViewHolde
 
     @Override
     protected void convert(BaseWrappedViewHolder holder, Music data) {
+        CommonLogger.e("数据啦啦啦"+data.toString());
         holder.setImageUrl(R.id.riv_item_activity_main_image, data.getPath())
                 .setText(R.id.tv_item_activity_main_name, data.getSongTitle())
                 .setText(R.id.tv_item_activity_main_description, data.getArtistName() + "," + data.getAlbumName())

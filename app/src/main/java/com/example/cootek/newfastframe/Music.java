@@ -115,4 +115,24 @@ public class Music {
     public void setPosition(int position) {
         this.position = position;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof Music && ((Music) obj).getSongId() == getSongId();
+    }
+
+    @Override
+    public String toString() {
+        return "Music{" +
+                "songId=" + songId +
+                ", songTitle='" + songTitle + '\'' +
+                ", artistId=" + artistId +
+                ", artistName='" + artistName + '\'' +
+                ", path='" + path + '\'' +
+                ", albumId=" + albumId +
+                ", albumName='" + albumName + '\'' +
+                ", duration=" + duration +
+                ", position=" + position +
+                '}';
+    }
 }

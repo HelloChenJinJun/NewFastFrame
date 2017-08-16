@@ -55,4 +55,12 @@ public class FileUtil {
     }
 
 
+    public static boolean isFileExist(String path) {
+        File file = new File(path);
+        return file.exists();
+    }
+
+    public static File getLocalFile(String path) {
+        return new File(path);
+    }
 }

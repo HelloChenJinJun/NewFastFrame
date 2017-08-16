@@ -5,13 +5,13 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 
-public class BasePresenter implements IPresenter {
-    protected CompositeDisposable mCompositeDisposable;
-    protected IView iView;
-    protected BaseModel baseModel;
+public class BasePresenter<V extends IView, M extends BaseModel> implements IPresenter {
+    private CompositeDisposable mCompositeDisposable;
+    protected V iView;
+    protected M baseModel;
 
 
-    public BasePresenter(IView iView, BaseModel baseModel) {
+    public BasePresenter(V iView, M baseModel) {
         this.iView = iView;
         this.baseModel = baseModel;
     }
@@ -35,7 +35,7 @@ public class BasePresenter implements IPresenter {
         mCompositeDisposable.add(disposable);//将所有disposable放入,集中处理
     }
 
-    protected void unDispose() {
+    private void unDispose() {
         if (mCompositeDisposable != null) {
             mCompositeDisposable.clear();//保证activity结束时取消所有正在执行的订阅
         }
