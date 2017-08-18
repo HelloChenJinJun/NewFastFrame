@@ -7,6 +7,7 @@ import com.example.commonlibrary.dagger.OkHttpGlobalHandler;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -138,7 +139,8 @@ public class LogInterceptor implements Interceptor {
     private Logger logger;
 
     private void log(String message) {
-        logger.log(colorLevel, message);
+//        logger.log(colorLevel, message);
+        CommonLogger.e(message);
     }
 
     private Response logForResponse(Response response, long tookMs, Chain chain) {

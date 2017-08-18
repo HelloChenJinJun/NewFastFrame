@@ -3,6 +3,7 @@ package com.example.cootek.newfastframe;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.commonlibrary.baseadapter.OnRefreshListener;
@@ -26,7 +27,7 @@ import butterknife.BindView;
  * Created by COOTEK on 2017/8/15.
  */
 
-public class RankFragment extends BaseFragment<RankListBean, RankPresenter> implements OnRefreshListener {
+public class RankFragment extends BaseFragment<RankListBean, RankPresenter> implements SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.srcv_fragment_rank_display)
@@ -69,14 +70,19 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
         typeList = new ArrayList<>();
         typeList.addAll(Arrays.asList(MusicUtil.RANK_TYPE_LIST));
         display.setLayoutManager(new LinearLayoutManager(getContext()));
-        display.setOnRefreshListener(this);
+        refresh.setOnRefreshListener(this);
         rankAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                RankDetailActivity.start(getContext(), rankAdapter.getData(position).getBillboard().getBillboard_type());
+                RankDetailActivity.start(getContext(), Integer.parseInt(rankAdapter.getData(position).getBillboard().getBillboard_type()));
             }
         });
+        display.addHeaderView(getHeaderView());
         display.setIAdapter(rankAdapter);
+    }
+
+    private View getHeaderView() {
+        return  LayoutInflater.from(getContext()).inflate(R.layout.view_activity_rank_detail_header_view, null);
     }
 
     @Override
@@ -89,10 +95,11 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
 
     @Override
     public void onRefresh() {
-        for (Integer type :
-                typeList) {
-            presenter.getRankList(type, true);
-        }
+//        for (Integer type :
+//                typeList) {
+//            presenter.getRankList(type, true);
+//        }
+        refresh.setRefreshing(false);
     }
 
     public static RankFragment newInstance() {

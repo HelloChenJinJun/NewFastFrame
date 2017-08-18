@@ -9,7 +9,7 @@
         android:id="@+id/iv_item_fragment_rank_display"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:scaleType="fitCenter" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_gravity="center_vertical"

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import com.example.commonlibrary.baseadapter.animator.AlphaAnimator;
 import com.example.commonlibrary.baseadapter.animator.BaseAnimator;
 import com.example.commonlibrary.baseadapter.animator.ScaleAnimator;
+import com.example.commonlibrary.utils.CommonLogger;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -133,7 +134,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
                     if (isFullSpanType(wrapperAdapter.getItemViewType(position))) {
                         return gridLayoutManager.getSpanCount();
                     } else if (spanSizeLookup != null) {
-                        return spanSizeLookup.getSpanSize(position - 3);
+                        return spanSizeLookup.getSpanSize(position - getItemUpCount());
                     }
                     return 1;
                 }
@@ -174,11 +175,13 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     @Override
     public int getItemCount() {
-        return data.size() + 5;
+        int itemCount = data.size() + getItemUpCount() + 2;
+        CommonLogger.e("itemCount" + itemCount);
+        return itemCount;
     }
 
 
-    private boolean hasRefreshableView() {
+    public boolean hasRefreshableView() {
         return mRefreshHeaderContainer != null && mRefreshHeaderContainer.getChildCount() > 0;
     }
 
@@ -198,8 +201,29 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
 
+    public int getItemUpCount() {
+        int position = 1;
+        if (hasHeaderView()) {
+            position++;
+        }
+        if (hasRefreshableView()) {
+            position++;
+        }
+        return position;
+    }
+
+
     @Override
     public int getItemViewType(int position) {
+        if (!hasRefreshableView() && !hasHeaderView()) {
+            position = position + 2;
+        } else if (!hasRefreshableView()) {
+            position++;
+        } else if (!hasHeaderView()) {
+            if (position >= 1) {
+                position++;
+            }
+        }
         if (position == 0) {
             return REFRESH_HEADER;
         } else if (position == 1) {
@@ -223,8 +247,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     @Override
     public void onBindViewHolder(K holder, int position) {
-        if (2 < position && position < data.size() + 3) {
-            convert(holder, data.get(position - 3));
+        int realPosition = getRealPosition(position);
+        if (2 < realPosition && realPosition < data.size() + 3) {
+            convert(holder, data.get(realPosition - 3));
         } else if (getItemViewType(position) == EMPTY) {
             RecyclerView.LayoutParams layoutParams;
             if (emptyLayoutContainer.getChildCount() > 0) {
@@ -234,6 +259,20 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
                 emptyLayoutContainer.requestLayout();
             }
         }
+    }
+
+    private int getRealPosition(int position) {
+        int realPosition = position;
+        if (!hasRefreshableView() && !hasHeaderView()) {
+            realPosition = realPosition + 2;
+        } else if (!hasRefreshableView()) {
+            realPosition++;
+        } else if (!hasHeaderView()) {
+            if (position >= 1) {
+                realPosition++;
+            }
+        }
+        return realPosition;
     }
 
     protected abstract void convert(K holder, T data);
@@ -351,7 +390,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             addData(position, newData);
         } else {
             data.addAll(position, newData);
-            notifyItemRangeInserted(position + 3, newData.size());
+            notifyItemRangeInserted(position + getItemUpCount(), newData.size());
         }
     }
 
@@ -364,7 +403,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     public void addData(int position, T newData) {
         if (!data.contains(newData)) {
             data.add(position, newData);
-            notifyItemInserted(position + 3);
+            notifyItemInserted(position + getItemUpCount());
         } else {
             int index = data.indexOf(newData);
             data.set(index, newData);

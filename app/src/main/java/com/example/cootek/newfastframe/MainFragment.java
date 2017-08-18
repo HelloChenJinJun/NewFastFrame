@@ -11,6 +11,7 @@ import com.example.commonlibrary.baseadapter.RecyclerFooterViewClickListener;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.mvp.BaseFragment;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.dagger.DaggerMainFragmentComponent;
 import com.example.cootek.newfastframe.dagger.MainFragmentModule;
 import com.example.cootek.newfastframe.mvp.MainPresenter;
@@ -38,7 +39,10 @@ public class MainFragment extends BaseFragment<List<Music>, MainPresenter> imple
 
     @Override
     public void updateData(List<Music> musics) {
-        mainAdapter.addData(musics);
+        mainAdapter.getData().addAll(musics);
+        mainAdapter.notifyDataSetChanged();
+//        mainAdapter.addData(musics);
+        CommonLogger.e("dataSize" + mainAdapter.getData().size());
     }
 
     @Override
@@ -92,11 +96,13 @@ public class MainFragment extends BaseFragment<List<Music>, MainPresenter> imple
 
     @Override
     public void loadMore() {
-        presenter.getAllMusic(false, false);
+        CommonLogger.e("加载更多?");
+//        presenter.getAllMusic(false, false);
     }
 
     @Override
     public void onRefresh() {
         presenter.getAllMusic(true, false);
+        refresh.setRefreshing(false);
     }
 }

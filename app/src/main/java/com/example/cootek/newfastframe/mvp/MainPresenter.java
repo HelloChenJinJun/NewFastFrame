@@ -44,10 +44,10 @@ public class MainPresenter extends BasePresenter<IView, MainModel> {
         if (isShowLoading) {
             iView.showLoading("正在加载");
         }
-        List<Music> list = ((DaoSession) baseModel.getRepositoryManager().getDaoSession())
+        List<Music> list = baseModel.getRepositoryManager().getDaoSession()
                 .getMusicDao().queryBuilder().offset((num - 1) * 10).limit(10).list();
         if (list.size() == 0) {
-            MusicInfoProvider.searchMusic(MainApplication.getInstance(), "z")
+            MusicInfoProvider.getAllMusic(MainApplication.getInstance())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<List<Music>>() {

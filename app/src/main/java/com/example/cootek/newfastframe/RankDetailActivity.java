@@ -25,7 +25,6 @@ import com.example.cootek.newfastframe.dagger.RankDetailModule;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
@@ -42,16 +41,11 @@ public class RankDetailActivity extends BaseActivity<RankListBean, RankDetailPre
 
     @Inject
     RankDetailAdapter rankDetailAdapter;
-    @BindView(R.id.iv_view_activity_rank_detail_header_view_bg)
-    ImageView headerBg;
-    @BindView(R.id.iv_view_activity_rank_detail_header_view_image)
-    ImageView headerImage;
-    @BindView(R.id.tv_view_activity_rank_detail_header_view_name)
-    TextView headName;
-    @BindView(R.id.tv_view_activity_rank_detail_header_view_comment)
-    TextView headComment;
-    @BindView(R.id.tv_view_activity_rank_detail_header_view_time)
-    TextView headTime;
+    private ImageView headerBg;
+    private ImageView headerImage;
+    private TextView headName;
+    private TextView headComment;
+    private TextView headTime;
     private int type;
     private LoadMoreFooterView loadMoreFooterView;
     private LinearLayoutManager linearManager;
@@ -99,7 +93,6 @@ public class RankDetailActivity extends BaseActivity<RankListBean, RankDetailPre
 
     @Override
     protected void initView() {
-
     }
 
     @Override
@@ -116,7 +109,7 @@ public class RankDetailActivity extends BaseActivity<RankListBean, RankDetailPre
         });
         refreshLayout.setOnRefreshListener(this);
         display.setIAdapter(rankDetailAdapter);
-        display.setRefreshHeaderView(getHeaderView());
+        display.addHeaderView(getHeaderView());
         display.setOnLoadMoreListener(this);
         display.setLoadMoreFooterView(loadMoreFooterView = new LoadMoreFooterView(this));
         presenter.getRankDetailInfo(type, true, true);
@@ -124,11 +117,15 @@ public class RankDetailActivity extends BaseActivity<RankListBean, RankDetailPre
 
     private View getHeaderView() {
         View headerView = LayoutInflater.from(this).inflate(R.layout.view_activity_rank_detail_header_view, null);
-        ButterKnife.bind(headerView);
+        headerBg = (ImageView) headerView.findViewById(R.id.iv_view_activity_rank_detail_header_view_bg);
+        headerImage = (ImageView) headerView.findViewById(R.id.iv_view_activity_rank_detail_header_view_image);
+        headTime = (TextView) headerView.findViewById(R.id.tv_view_activity_rank_detail_header_view_time);
+        headComment = (TextView) headerView.findViewById(R.id.tv_view_activity_rank_detail_header_view_comment);
+        headName = (TextView) headerView.findViewById(R.id.tv_view_activity_rank_detail_header_view_name);
         return headerView;
     }
 
-    public static void start(Context context, String type) {
+    public static void start(Context context, int type) {
         Intent intent = new Intent(context, RankDetailActivity.class);
         intent.putExtra("type", type);
         context.startActivity(intent);

@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.example.commonlibrary.R;
+import com.example.commonlibrary.utils.CommonLogger;
 
 
 public class SuperRecyclerView extends RecyclerView {
@@ -307,7 +308,7 @@ public class SuperRecyclerView extends RecyclerView {
     private void ensureRefreshHeaderContainer() {
         if (mRefreshHeaderContainer == null) {
             mRefreshHeaderContainer = new RefreshHeaderLayout(getContext());
-            mRefreshHeaderContainer.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            mRefreshHeaderContainer.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0));
         }
     }
 
@@ -392,6 +393,7 @@ public class SuperRecyclerView extends RecyclerView {
         final int action = MotionEventCompat.getActionMasked(e);
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
+                CommonLogger.e("ACTION_DOWN");
                 final int index = MotionEventCompat.getActionIndex(e);
                 mActivePointerId = MotionEventCompat.getPointerId(e, 0);
                 mLastTouchX = getMotionEventX(e, index);
@@ -400,13 +402,13 @@ public class SuperRecyclerView extends RecyclerView {
             break;
 
             case MotionEvent.ACTION_MOVE: {
+                CommonLogger.e("ACTION_MOVE");
 //                TLog.e(SuperRecyclerView.class, "截获到滚动事件");
                 final int index = MotionEventCompat.findPointerIndex(e, mActivePointerId);
                 if (index < 0) {
                     Log.e(TAG, "Error processing scroll; pointer index for id " + index + " not found. Did any MotionEvents get skipped?");
                     return false;
                 }
-
                 final int x = getMotionEventX(e, index);
                 final int y = getMotionEventY(e, index);
 
@@ -446,6 +448,7 @@ public class SuperRecyclerView extends RecyclerView {
                             setStatus(STATUS_SWIPING_TO_REFRESH);
                         }
                         fingerMove(dy);
+                        CommonLogger.e("这里true");
                         return true;
                     }
                 }
@@ -453,6 +456,7 @@ public class SuperRecyclerView extends RecyclerView {
             break;
 
             case MotionEventCompat.ACTION_POINTER_DOWN: {
+                CommonLogger.e("ACTION_POINTER_DOWN");
                 final int index = MotionEventCompat.getActionIndex(e);
                 mActivePointerId = MotionEventCompat.getPointerId(e, index);
                 mLastTouchX = getMotionEventX(e, index);
@@ -466,11 +470,13 @@ public class SuperRecyclerView extends RecyclerView {
             break;
 
             case MotionEvent.ACTION_UP: {
+                CommonLogger.e("ACTION_UP");
                 onFingerUpStartAnimating();
             }
             break;
 
             case MotionEvent.ACTION_CANCEL: {
+                CommonLogger.e("ACTION_CANCEL");
                 onFingerUpStartAnimating();
             }
             break;

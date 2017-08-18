@@ -56,9 +56,11 @@ public class HolderFragment extends BaseFragment {
         List<String> titleList = new ArrayList<>();
         titleList.add("首页");
         titleList.add("排行榜");
+        titleList.add("测试");
         List<BaseFragment> fragments = new ArrayList<>();
         fragments.add(MainFragment.newInstance());
         fragments.add(RankFragment.newInstance());
+        fragments.add(TestFragment.newInstance());
         viewPagerAdapter.setTitleAndFragments(titleList, fragments);
         tab.setupWithViewPager(display);
         display.setOffscreenPageLimit(1);

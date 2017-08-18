@@ -13,8 +13,7 @@
         <com.example.commonlibrary.baseadapter.SuperRecyclerView
             android:id="@+id/srcv_fragment_main_display"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:loadMoreEnabled="true" />
+            android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>
