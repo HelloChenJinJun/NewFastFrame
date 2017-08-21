@@ -1,6 +1,7 @@
 package com.example.cootek.newfastframe;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -114,5 +115,15 @@ public class MusicUtil {
         }
 
         return lrcRows;
+    }
+
+    public static String makeLrcTime(long milliSecs) {
+        StringBuffer sb = new StringBuffer();
+        long m = milliSecs / (60 * 1000);
+        sb.append(m < 10 ? "0" + m : m);
+        sb.append(":");
+        long s = (milliSecs % (60 * 1000)) / 1000;
+        sb.append(s < 10 ? "0" + s : s);
+        return sb.toString();
     }
 }

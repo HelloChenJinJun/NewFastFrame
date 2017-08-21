@@ -1,16 +1,13 @@
 package com.example.cootek.newfastframe.mvp;
 
-import com.example.commonlibrary.mvp.BaseModel;
-import com.example.commonlibrary.utils.FileUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.MusicManager;
-import com.example.cootek.newfastframe.MusicUtil;
 
 /**
  * Created by COOTEK on 2017/8/14.
  */
 
-public class BottomPresenter extends BaseBottomPresenter<IBottomView,BottomModel> {
+public class BottomPresenter extends BaseBottomPresenter<IBottomView, BottomModel> {
 
 
     public BottomPresenter(IBottomView iView, BottomModel baseModel) {
@@ -35,6 +32,9 @@ public class BottomPresenter extends BaseBottomPresenter<IBottomView,BottomModel
     }
 
     @Override
-    public void loadMusicContent(String songName, String artistName, long duration) {
+    public void refresh() {
+        MusicManager.getInstance().refresh();
     }
+
+
 }

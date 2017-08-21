@@ -8,7 +8,7 @@ import com.example.commonlibrary.mvp.RxBasePresenter;
  * Created by COOTEK on 2017/8/14.
  */
 
-public abstract class BaseBottomPresenter<V extends IBottomView,M extends BaseModel> extends RxBasePresenter<V,M> {
+public abstract class BaseBottomPresenter<V extends IBottomView, M extends BaseModel> extends RxBasePresenter<V, M> {
 
 
     public BaseBottomPresenter(V iView, M baseModel) {
@@ -21,5 +21,6 @@ public abstract class BaseBottomPresenter<V extends IBottomView,M extends BaseMo
 
     public abstract void previous();
 
-    public abstract void loadMusicContent(String songName, String artistName, long duration);
+    public abstract void refresh();
+
 }

@@ -17,10 +17,11 @@
         android:id="@+id/riv_fragment_bottom_album"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:src="@mipmap/ic_launcher"
-        app:roundHeight="30dp"
-        app:roundWidth="30dp" />
+        app:roundHeight="20dp"
+        app:roundWidth="20dp" />
 
 
     <com.example.cootek.newfastframe.lrc.LrcView
@@ -30,6 +31,14 @@
         android:layout_marginTop="70dp"
         android:alpha="0"
         android:visibility="invisible" />
+
+
+    <com.example.cootek.newfastframe.lrc.LrcView
+        android:visibility="invisible"
+        android:alpha="0"
+        android:id="@+id/lv_fragment_bottom_lrc_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -120,19 +129,42 @@
             android:src="@drawable/ic_queue_music_black_24dp" />
     </RelativeLayout>
 
-
-    <SeekBar
-
-        android:id="@+id/sb_fragment_bottom_seek"
-        style="@style/Widget.AppCompat.SeekBar"
+    <LinearLayout
+        android:id="@+id/ll_fragment_bottom_seek_container"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/transparent"
-        android:minHeight="5dp"
-        android:progress="0"
-        android:progressDrawable="@drawable/progressbar_color"
-        android:thumb="@null"
-        android:visibility="visible" />
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_fragment_bottom_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:text="05:30:00"
+            android:visibility="gone" />
+
+        <SeekBar
+            android:id="@+id/sb_fragment_bottom_seek"
+            style="@style/Widget.AppCompat.SeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:minHeight="5dp"
+            android:progress="0"
+            android:progressDrawable="@drawable/progressbar_color"
+            android:thumb="@null"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_fragment_bottom_end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:text="05:30:00"
+            android:visibility="gone" />
+    </LinearLayout>
 
 
 </RelativeLayout>

@@ -416,7 +416,7 @@ public class MusicService extends Service {
 
 
     private void cancelNotification() {
-        stopForeground(true);
+        stopForeground(false);
         notificationManagerCompat.cancel(hashCode());
         notificationPostTime = 0;
     }
@@ -667,6 +667,7 @@ public class MusicService extends Service {
                 .setContentIntent(getMainIntent())
                 .setContentTitle(getSongName())
                 .setContentText(text)
+                .setOngoing(true)
                 .setWhen(notificationPostTime)
                 .addAction(R.drawable.ic_skip_previous_black_24dp,
                         "",
@@ -1499,6 +1500,7 @@ public class MusicService extends Service {
                 }
                 playPosition = nextPlayPosition;
                 nextPlayPosition = getNextPosition(force);
+                CommonLogger.e("下一首位置" + nextPlayPosition);
                 setNextMusicPlayInfo(nextPlayPosition);
             }
         }

@@ -11,7 +11,6 @@ import java.io.File;
  */
 
 public interface IBottomView<T> extends IView<T> {
-    public void updateMusicContent(File file);
 
     public void updateMaxProgress(int max);
 
