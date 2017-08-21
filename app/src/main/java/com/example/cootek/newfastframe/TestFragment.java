@@ -60,7 +60,7 @@ public class TestFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 Toast.makeText(getActivity(), "position:" + position, Toast.LENGTH_SHORT).show();
             }
         });
-        display.setIAdapter(adapter);
+        display.setAdapter(adapter);
 
     }
 

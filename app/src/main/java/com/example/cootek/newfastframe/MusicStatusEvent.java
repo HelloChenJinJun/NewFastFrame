@@ -48,15 +48,26 @@ public class MusicStatusEvent {
         private String albumName;
         private boolean isPlaying;
         private long maxProgress;
+        private String albumUrl;
 
 
-        public MusicContent(long id, String songName, String artistName, String albumName, boolean isPlaying, long maxProgress) {
+        public MusicContent(long id, String songName, String artistName, String albumName, boolean isPlaying, long maxProgress, String albumUrl) {
             this.id = id;
             this.songName = songName;
             this.artistName = artistName;
             this.albumName = albumName;
             this.maxProgress = maxProgress;
             this.isPlaying = isPlaying;
+            this.albumUrl = albumUrl;
+        }
+
+
+        public String getAlbumUrl() {
+            return albumUrl;
+        }
+
+        public void setAlbumUrl(String albumUrl) {
+            this.albumUrl = albumUrl;
         }
 
         public long getMaxProgress() {

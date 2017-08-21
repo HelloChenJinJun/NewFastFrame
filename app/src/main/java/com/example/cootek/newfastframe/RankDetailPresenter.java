@@ -6,6 +6,7 @@ import com.example.commonlibrary.baseadapter.EmptyLayout;
 import com.example.commonlibrary.mvp.BasePresenter;
 import com.example.commonlibrary.mvp.IView;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.cootek.newfastframe.api.DownLoadMusicBean;
 import com.example.cootek.newfastframe.api.MusicApi;
 import com.example.cootek.newfastframe.api.RankListBean;
 
@@ -21,10 +22,10 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/8/16.
  */
 
-public class RankDetailPresenter extends BasePresenter<IView<RankListBean>, RankDetailModel> {
+public class RankDetailPresenter extends BasePresenter<IView<Object>, RankDetailModel> {
     private int num = 0;
 
-    public RankDetailPresenter(IView<RankListBean> iView, RankDetailModel baseModel) {
+    public RankDetailPresenter(IView<Object> iView, RankDetailModel baseModel) {
         super(iView, baseModel);
         num = 0;
     }
@@ -52,6 +53,9 @@ public class RankDetailPresenter extends BasePresenter<IView<RankListBean>, Rank
                     public void onNext(@NonNull RankListBean rankListBean) {
                         CommonLogger.e("onNext");
                         if (rankListBean.getError_code() == 22000) {
+                            if (rankListBean.getSong_list() != null && rankListBean.getSong_list().size() > 0) {
+                                getMusicDetailInfo(rankListBean.getSong_list());
+                            }
                             iView.updateData(rankListBean);
                         } else {
                             onError(null);
@@ -67,21 +71,51 @@ public class RankDetailPresenter extends BasePresenter<IView<RankListBean>, Rank
                                 getRankDetailInfo(type, isRefresh, isShowLoading);
                             }
                         });
-                        if (e != null && e.getStackTrace() != null) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                for (Throwable error :
-                                        e.getSuppressed()) {
-                                    CommonLogger.e(error.getMessage());
-                                }
-                            }
-                        }
-                        CommonLogger.e("onError");
+                        CommonLogger.e(e);
                     }
 
                     @Override
                     public void onComplete() {
                         iView.hideLoading();
                         CommonLogger.e("onComplete");
+                    }
+                });
+    }
+
+    private void getMusicDetailInfo(List<RankListBean.SongListBean> songList) {
+        for (RankListBean.SongListBean bean
+                : songList
+                ) {
+            getMusicDetailInfo(bean);
+        }
+    }
+
+    private void getMusicDetailInfo(RankListBean.SongListBean bean) {
+        baseModel.getRepositoryManager().getApi(MusicApi.class).getDownLoadMusicInfo(bean.getSong_id())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<DownLoadMusicBean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        addDispose(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull DownLoadMusicBean downLoadMusicBean) {
+                        if (downLoadMusicBean.getError_code() == 22000) {
+                            iView.updateData(downLoadMusicBean);
+                        } else {
+                            onError(null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        CommonLogger.e(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

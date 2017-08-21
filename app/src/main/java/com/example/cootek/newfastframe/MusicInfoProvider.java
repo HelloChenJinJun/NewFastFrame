@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import com.example.commonlibrary.utils.CommonLogger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,42 +37,42 @@ public class MusicInfoProvider {
     }
 
 
-    public static Observable<List<Music>> searchMusic(Context context, String searchString) {
+    public static Observable<List<MusicPlayBean>> searchMusic(Context context, String searchString) {
         return getMusicForCursor(getSongCursor(context, "title LIKE ? or artist LIKE ? or album LIKE ? ",
                 new String[]{"%" + searchString + "%", "%" + searchString + "%", "%" + searchString + "%"}));
     }
 
-    public static Observable<List<Music>> getAllMusic(Context context) {
+    public static Observable<List<MusicPlayBean>> getAllMusic(Context context) {
         return getMusicForCursor(getSongCursor(context, null, null));
     }
 
 
-    public static Observable<List<Music>> getMusicForPage(Context context, int num, int pageSize) {
-        return getMusicForCursor(getSongCursor(context, null, null,null));
+    public static Observable<List<MusicPlayBean>> getMusicForPage(Context context, int num, int pageSize) {
+        return getMusicForCursor(getSongCursor(context, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER + " desc limit " + pageSize + " offset " + num));
     }
 
-    public static Observable<List<Music>> getMusicForPage(int num, int pageSize) {
+    public static Observable<List<MusicPlayBean>> getMusicForPage(int num, int pageSize) {
         return getMusicForPage(MainApplication.getInstance(), num, pageSize);
     }
 
 
-    private static Observable<List<Music>> getMusicForCursor(final Cursor cursor) {
-        return Observable.create(new ObservableOnSubscribe<List<Music>>() {
+    private static Observable<List<MusicPlayBean>> getMusicForCursor(final Cursor cursor) {
+        return Observable.create(new ObservableOnSubscribe<List<MusicPlayBean>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<List<Music>> e) throws Exception {
-                List<Music> list = new ArrayList<>();
+            public void subscribe(@NonNull ObservableEmitter<List<MusicPlayBean>> e) throws Exception {
+                List<MusicPlayBean> list = new ArrayList<>();
                 if (cursor != null && cursor.moveToFirst()) {
                     do {
-                        Music music = new Music();
+                        MusicPlayBean music = new MusicPlayBean();
                         music.setSongId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID)));
-                        music.setSongTitle(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE)));
-                        music.setArtistId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST_ID)));
+                        music.setSongName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE)));
+                        music.setArtistId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST_ID)) + "");
                         music.setArtistName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST)));
                         music.setAlbumId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM_ID)));
                         music.setAlbumName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM)));
-                        music.setPath(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATA)));
+                        music.setAlbumUrl(MusicUtil.getAlbumArtUri(music.getAlbumId()).toString());
                         music.setDuration(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DURATION)));
-                        music.setPosition(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TRACK)));
+                        music.setLocal(true);
                         list.add(music);
                     } while (cursor.moveToNext());
                 }
@@ -82,17 +84,20 @@ public class MusicInfoProvider {
 
 
     public static Cursor getSongCursor(Context context, String selection, String[] selectionArgs) {
-        String baseSelection = "is_music=1 AND title!= ''";
+        StringBuilder select = new StringBuilder(" 1=1 and title != ''");
+        select.append(" and " + MediaStore.Audio.Media.SIZE + " > " + 1048576);
+        select.append(" and " + MediaStore.Audio.Media.DURATION + " > " + 6000);
         if (!TextUtils.isEmpty(selection)) {
-            baseSelection = baseSelection + " AND " + selection;
+            select.append(" and ").append(selection);
         }
+        CommonLogger.e("这1");
         return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, new String[]{
                 MediaStore.Audio.AudioColumns._ID, MediaStore.Audio.AudioColumns.TITLE
                 , MediaStore.Audio.AudioColumns.ARTIST, MediaStore.Audio.AudioColumns.ARTIST_ID,
                 MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.AudioColumns.ALBUM_ID,
                 MediaStore.Audio.AudioColumns.TRACK, MediaStore.Audio.AudioColumns.DURATION,
                 MediaStore.Audio.AudioColumns.DATA
-        }, baseSelection, selectionArgs, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        }, select.toString(), selectionArgs, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
     }
 
 

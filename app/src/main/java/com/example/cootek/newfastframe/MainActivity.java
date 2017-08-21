@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.example.commonlibrary.baseadapter.OnLoadMoreListener;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 
@@ -36,6 +37,7 @@ public class MainActivity extends MainBaseActivity implements OnLoadMoreListener
 
     @Override
     protected void initView() {
+        CommonLogger.e("这里开始初始化fragment");
         addOrReplaceFragment(HolderFragment.newInstance(), R.id.fl_activity_main_container);
         Fragment fragment = BottomFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.fl_activity_main_bottom_container, fragment).show(fragment).commitAllowingStateLoss();

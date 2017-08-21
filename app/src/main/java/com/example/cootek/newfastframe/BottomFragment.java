@@ -2,6 +2,7 @@ package com.example.cootek.newfastframe;
 
 import android.animation.FloatEvaluator;
 import android.animation.IntEvaluator;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -12,17 +13,22 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
+import com.example.commonlibrary.imageloader.GlideImageLoaderConfig;
+import com.example.commonlibrary.imageloader.ImageLoader;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.cootek.newfastframe.api.DownLoadMusicBean;
 import com.example.cootek.newfastframe.dagger.BottomFragmentModule;
 import com.example.cootek.newfastframe.dagger.DaggerBottomFragmentComponent;
+import com.example.cootek.newfastframe.lrc.LrcRow;
+import com.example.cootek.newfastframe.lrc.LrcView;
 import com.example.cootek.newfastframe.mvp.BottomPresenter;
 import com.example.cootek.newfastframe.mvp.IBottomView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -31,12 +37,13 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * Created by COOTEK on 2017/8/13.
  */
 
-public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresenter> implements SlidingUpPanelLayout.PanelSlideListener, IBottomView<DownLoadMusicBean> {
+public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresenter> implements SlidingUpPanelLayout.PanelSlideListener, IBottomView<DownLoadMusicBean>, LrcView.OnSeekToListener {
 
 
     @BindView(R.id.riv_fragment_bottom_album)
@@ -61,7 +68,10 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     SeekBar seekBar;
     @BindView(R.id.rl_fragment_bottom_container)
     RelativeLayout container;
-    Unbinder unbinder;
+    @BindView(R.id.lv_fragment_bottom_lrc)
+    LrcView lrcView;
+    @BindView(R.id.iv_fragment_bottom_bg)
+    ImageView bg;
     private IntEvaluator intEvaluator;
     private int endSongName;
     private int endArtistName;
@@ -97,6 +107,17 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     protected void initView() {
         SlidingUpPanelLayout slidingUpPanelLayout = (SlidingUpPanelLayout) root.getParent().getParent();
         slidingUpPanelLayout.addPanelSlideListener(this);
+        lrcView.setOnSeekToListener(this);
+        lrcView.setOnLrcClickListener(new LrcView.OnLrcClickListener() {
+            @Override
+            public void onClick() {
+                if (bg.getVisibility() == View.VISIBLE) {
+                    bg.setVisibility(View.INVISIBLE);
+                } else {
+                    bg.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -108,7 +129,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             public void run() {
                 int progress = (int) MusicManager.getInstance().getCurrentProgress();
                 seekBar.setProgress(progress);
-                CommonLogger.e("进度" + progress);
                 if (MusicManager.getInstance().isPlaying()) {
                     seekBar.postDelayed(this, 50);
                 } else {
@@ -133,6 +153,10 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                             }
                             updateProgress();
                             break;
+                        case MusicStatusEvent.REFRESH_CHANGED:
+                            CommonLogger.e("接收到刷新消息啦啦");
+                            reLoadMusic();
+                            break;
                     }
                 }
 
@@ -141,6 +165,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                lrcView.seekTo(progress, true, fromUser);
                 if (fromUser) {
                     seekBar.removeCallbacks(progressRun);
                 }
@@ -174,9 +199,10 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         if (content.getArtistName() != null) {
             updateArtistName(content.getArtistName());
         }
-        if (content.getId() != 0) {
-            updateAlbum(MusicUtil.getAlbumArtUri(content.getId()).toString());
+        if (content.getAlbumUrl() != null) {
+            updateAlbum(content.getAlbumUrl());
         }
+        updateMusicContent(new File(MusicUtil.getLyricPath(content.getId())));
         CommonLogger.e("更新最大进度" + content.getMaxProgress());
         updateMaxProgress((int) content.getMaxProgress());
         updateProgress();
@@ -192,6 +218,10 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         screenHeight = DensityUtil.getScreenHeight(getContext());
         int margin = ((RelativeLayout.LayoutParams) playOrPause.getLayoutParams()).rightMargin;
         endPlay = screenWidth / 2 - (sameWidth * 2 + margin) + sameWidth / 2;
+    }
+
+    private void reLoadMusic() {
+        MusicManager.getInstance().refresh();
     }
 
     public static Fragment newInstance() {
@@ -213,7 +243,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                 String str = "songid=" + "549122778" + "&ts=" + System.currentTimeMillis();
                 String e = AESTools.encrpty(str);
                 CommonLogger.e(result + str + "&e=" + e);
-//                bottomPresenter.playOrPause();
+                bottomPresenter.playOrPause();
                 break;
             case R.id.iv_fragment_bottom_like:
                 break;
@@ -237,6 +267,9 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         playOrPause.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay));
         like.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         list.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
+        bg.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
+        lrcView.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
+
         iconContainer.setTranslationY(intEvaluator.evaluate(slideOffset, 0, screenHeight - (2 * iconContainer.getHeight())));
         seekBar.setTranslationY(intEvaluator.evaluate(slideOffset, 0, (int) (screenHeight - (2.5 * iconContainer.getHeight()))));
     }
@@ -245,15 +278,32 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
         if (previousState == SlidingUpPanelLayout.PanelState.COLLAPSED && newState == SlidingUpPanelLayout.PanelState.DRAGGING) {
             like.setVisibility(View.VISIBLE);
+            lrcView.setVisibility(View.VISIBLE);
+            bg.setVisibility(View.VISIBLE);
         } else if (previousState == SlidingUpPanelLayout.PanelState.DRAGGING && newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
             like.setVisibility(View.INVISIBLE);
+            lrcView.setVisibility(View.INVISIBLE);
+            bg.setVisibility(View.INVISIBLE);
         }
     }
 
 
     @Override
     public void updateMusicContent(File file) {
-
+        if (file.exists()) {
+            List<LrcRow> result = MusicUtil.parseLrcContent(file);
+            if (result != null && result.size() > 0) {
+                lrcView.setLrcRows(result);
+                lrcView.setVisibility(View.VISIBLE);
+                CommonLogger.e("获取得到了歌词啦啦");
+            } else {
+                CommonLogger.e("歌词为空");
+            }
+        } else {
+            CommonLogger.e("文件不存在？");
+            lrcView.reset();
+            lrcView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -278,6 +328,11 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             Glide.with(getContext()).load(uri).error(R.mipmap.ic_launcher)
                     .placeholder(R.mipmap.ic_launcher)
                     .into(album);
+            GlideImageLoaderConfig glideImageLoaderConfig = new GlideImageLoaderConfig.Builder().imageView(bg)
+                    .url(uri).placeHolderResId(R.mipmap.ic_launcher)
+                    .errorResId(R.mipmap.ic_launcher)
+                    .bitmapTransformation(new BlurTransformation(getContext())).build();
+            MainApplication.getAppComponent().getImageLoader().loadImage(getContext(), glideImageLoaderConfig);
         }
     }
 
@@ -300,5 +355,17 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         Rect bound = new Rect();
         artistName.getPaint().getTextBounds(artistName.getText().toString(), 0, artistName.getText().length(), bound);
         endArtistName = (DensityUtil.getScreenWidth(getContext()) - bound.width()) / 2 - DensityUtil.dip2px(getContext(), 80);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        CommonLogger.e("BottomOnDestroyView");
+    }
+
+    @Override
+    public void onSeekTo(int progress) {
+        MusicManager.getInstance().seekTo(progress);
     }
 }

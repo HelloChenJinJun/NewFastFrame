@@ -1,5 +1,6 @@
 package com.example.commonlibrary.utils;
 
+import android.os.Build;
 import android.util.Log;
 
 /**
@@ -65,4 +66,14 @@ public class CommonLogger {
     }
 
 
+    public static void e(Throwable e) {
+        if (e != null && e.getStackTrace() != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                for (Throwable error :
+                        e.getSuppressed()) {
+                    e(error.getMessage());
+                }
+            }
+        }
+    }
 }

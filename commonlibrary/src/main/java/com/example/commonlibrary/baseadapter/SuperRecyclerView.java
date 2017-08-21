@@ -288,20 +288,20 @@ public class SuperRecyclerView extends RecyclerView {
     }
 
 
-    public void setIAdapter(Adapter adapter) {
+    @Override
+    public void setAdapter(Adapter adapter) {
         ensureRefreshHeaderContainer();
         ensureHeaderViewContainer();
         ensureFooterViewContainer();
         ensureEmptyViewContainer();
         ensureLoadMoreFooterContainer();
         if (adapter instanceof BaseRecyclerAdapter) {
-//            TLog.e(SuperRecyclerView.class, "attachAdapter");
             ((BaseRecyclerAdapter) adapter).setFooterContainer(mFooterViewContainer);
             ((BaseRecyclerAdapter) adapter).setHeaderContainer(mHeaderViewContainer);
             ((BaseRecyclerAdapter) adapter).setRefreshHeaderContainer(mRefreshHeaderContainer);
             ((BaseRecyclerAdapter) adapter).setLoadMoreFooterContainer(mLoadMoreFooterContainer);
-            ((BaseRecyclerAdapter) adapter).setEmptyLayoutContainer(mEmptyViewContainer);
-            setAdapter(adapter);
+//            ((BaseRecyclerAdapter) adapter).setEmptyLayoutContainer(mEmptyViewContainer);
+            super.setAdapter(adapter);
         }
     }
 

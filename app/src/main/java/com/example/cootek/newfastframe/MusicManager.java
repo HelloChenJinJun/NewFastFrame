@@ -8,9 +8,13 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.WeakHashMap;
 
 /**
@@ -21,6 +25,7 @@ public class MusicManager {
     private static MusicManager instance;
     private IMusicService service;
     private WeakHashMap<Context, BindConnection> connectionWeakHashMap;
+    private boolean needRefreshData;
 
     public static MusicManager getInstance() {
         if (instance == null) {
@@ -40,8 +45,16 @@ public class MusicManager {
 
     public void bindService(Context context) {
         Intent intent = new Intent(context, MusicService.class);
-        CommonLogger.e("启动服务啦啦啦1");
-        context.startService(intent);
+        CommonLogger.e("这里的服务名" + MusicService.class.getName());
+        if (AppUtil.isServiceRunning(context, MusicService.class.getName())) {
+//            之前的服务是存活的,需要刷新界面数据
+            CommonLogger.e("需要绑定");
+            needRefreshData = true;
+        } else {
+            needRefreshData = false;
+            CommonLogger.e("启动服务啦啦啦1");
+            context.startService(intent);
+        }
         BindConnection bindConnection = new BindConnection();
         CommonLogger.e("绑定服务1");
         if (context.bindService(intent, bindConnection, Service.BIND_AUTO_CREATE)) {
@@ -84,7 +97,7 @@ public class MusicManager {
     public void previous(boolean force) {
         try {
             if (service != null) {
-                service.prev(force);
+                service.prev();
             }
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -107,18 +120,16 @@ public class MusicManager {
 
     /**
      * @param context
-     * @param idList
-     * @param position     为-1的时候表示第一次播放该列表的歌曲
-     * @param typeId
-     * @param type
+     * @param musicPlayBeanList
+     * @param position          为-1的时候表示第一次播放该列表的歌曲
      * @param forceShuffle
      */
-    public void play(Context context, long[] idList, int position, long typeId, @MusicIdType.IdType int type, boolean forceShuffle) {
+    public void play(Context context, List<MusicPlayBean> musicPlayBeanList, int position, boolean forceShuffle) {
         CommonLogger.e("1");
-        if (idList == null || idList.length == 0 || service == null) {
-            if (idList == null) {
+        if (musicPlayBeanList == null || musicPlayBeanList.size() == 0 || service == null) {
+            if (musicPlayBeanList == null) {
                 CommonLogger.e("idList");
-            } else if (idList.length == 0) {
+            } else if (musicPlayBeanList.size() == 0) {
                 CommonLogger.e("idList1");
             } else {
                 CommonLogger.e("service");
@@ -131,16 +142,21 @@ public class MusicManager {
                 service.setShuffleMode(MusicService.SHUFFLE_NORMAL);
             }
 //            这里判断是否是同一首歌
-            long currentId = service.getAudioId();
+            long currentId = 0;
             int currentPosition = service.getQueuePosition();
             long[] currentList = getCurrentListId();
-            if (position != -1 && currentId == idList[position] && currentPosition == position && Arrays.equals(idList, currentList)) {
+            long[] list = new long[musicPlayBeanList.size()];
+            for (int i = 0; i < musicPlayBeanList.size(); i++) {
+                list[i] = musicPlayBeanList.get(i).getSongId();
+            }
+            if (position != -1 && currentId == musicPlayBeanList.get(position).getSongId() && currentPosition == position && Arrays.equals(list, currentList)) {
                 service.play();
                 return;
             }
             position = position < 0 ? 0 : position;
 //            准备资源
-            service.open(idList, forceShuffle ? -1 : position, typeId, type);
+            CommonLogger.e("大小" + musicPlayBeanList.size());
+            service.open(musicPlayBeanList, forceShuffle ? -1 : position);
             service.setRepeatMode(MusicService.REPEAT_NONE);
             service.play();
         } catch (RemoteException e) {
@@ -193,12 +209,29 @@ public class MusicManager {
         }
     }
 
+    public void refresh() {
+        try {
+            if (service != null) {
+                service.refresh();
+            } else {
+                CommonLogger.e("service为空?");
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CommonLogger.e("刷新出错" + e.getMessage());
+        }
+    }
+
 
     private class BindConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             CommonLogger.e("连接远程服务成功");
             MusicManager.this.service = IMusicService.Stub.asInterface(service);
+            if (needRefreshData) {
+                CommonLogger.e("发送刷新消息啦啦");
+                RxBusManager.getInstance().post(new MusicStatusEvent(MusicStatusEvent.REFRESH_CHANGED));
+            }
         }
 
         @Override

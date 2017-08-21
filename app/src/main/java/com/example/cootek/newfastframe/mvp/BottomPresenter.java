@@ -36,11 +36,5 @@ public class BottomPresenter extends BaseBottomPresenter<IBottomView,BottomModel
 
     @Override
     public void loadMusicContent(String songName, String artistName, long duration) {
-        if (FileUtil.isFileExist(MusicUtil.getLyricPath(songName, artistName))) {
-            iView.updateMusicContent(FileUtil.getLocalFile(MusicUtil.getLyricPath(songName, artistName)));
-        } else {
-//            baseModel.getRepositoryManager().getApi()
-        }
-
     }
 }

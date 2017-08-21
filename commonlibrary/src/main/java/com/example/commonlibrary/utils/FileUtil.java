@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by COOTEK on 2017/7/31.
@@ -13,17 +15,22 @@ public class FileUtil {
 
 
     public static File getDefaultCacheFile(Context context) {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            File file = null;
-            file = context.getExternalCacheDir();//获取系统管理的sd卡缓存文件
-            if (file == null) {//如果获取的文件为空,就使用自己定义的缓存文件夹做缓存路径
-                file = new File(getCacheFilePath(context));
-                makeDirs(file);
-            }
-            return file;
-        } else {
-            return context.getCacheDir();
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        if (!file.exists()) {
+            file.mkdir();
         }
+        return file;
+//        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//            File file = null;
+//            file = context.getExternalCacheDir();//获取系统管理的sd卡缓存文件
+//            if (file == null) {//如果获取的文件为空,就使用自己定义的缓存文件夹做缓存路径
+//                file = new File(getCacheFilePath(context));
+//                makeDirs(file);
+//            }
+//            return file;
+//        } else {
+//            return context.getCacheDir();
+//        }
     }
 
     private static String getCacheFilePath(Context context) {
@@ -62,5 +69,33 @@ public class FileUtil {
 
     public static File getLocalFile(String path) {
         return new File(path);
+    }
+
+    public static void writeToFile(String path, String content) {
+        try {
+            CommonLogger.e("文件地址" + path);
+            File file = new File(path);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(content.getBytes());
+            CommonLogger.e("写入成功");
+        } catch (IOException e) {
+            e.printStackTrace();
+            CommonLogger.e("c" + e.getMessage());
+        }
+    }
+
+    public static File newFile(String path) {
+        File file = new File(path);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 }

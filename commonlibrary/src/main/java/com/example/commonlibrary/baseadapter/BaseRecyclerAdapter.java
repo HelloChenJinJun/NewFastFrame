@@ -84,16 +84,16 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
     private LayoutInflater mLayoutInflater;
-    private LinearLayout emptyLayoutContainer;
+//    private LinearLayout emptyLayoutContainer;
 
     public void setHeaderContainer(LinearLayout mHeaderContainer) {
         this.mHeaderContainer = mHeaderContainer;
     }
 
 
-    public void setEmptyLayoutContainer(LinearLayout mEmptyViewContainer) {
-        this.emptyLayoutContainer = mEmptyViewContainer;
-    }
+//    public void setEmptyLayoutContainer(LinearLayout mEmptyViewContainer) {
+//        this.emptyLayoutContainer = mEmptyViewContainer;
+//    }
 
 
     public void setFooterContainer(LinearLayout mFooterContainer) {
@@ -202,7 +202,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
 
     public int getItemUpCount() {
-        int position = 1;
+        int position =0;
         if (hasHeaderView()) {
             position++;
         }
@@ -215,26 +215,16 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     @Override
     public int getItemViewType(int position) {
-        if (!hasRefreshableView() && !hasHeaderView()) {
-            position = position + 2;
-        } else if (!hasRefreshableView()) {
-            position++;
-        } else if (!hasHeaderView()) {
-            if (position >= 1) {
-                position++;
-            }
-        }
+        position=getRealPosition(position);
         if (position == 0) {
             return REFRESH_HEADER;
         } else if (position == 1) {
             return HEADER;
-        } else if (position == 2) {
-            return EMPTY;
-        } else if (2 < position && position < data.size() + 3) {
-            return getDefaultItemViewType(position - 3);
-        } else if (position == data.size() + 3) {
+        } else if (1 < position && position < data.size() + 2) {
+            return getDefaultItemViewType(position - 2);
+        } else if (position == data.size() + 2) {
             return FOOTER;
-        } else if (position == data.size() + 4) {
+        } else if (position == data.size() + 3) {
             return LOAD_MORE_FOOTER;
         }
         throw new IllegalArgumentException("Wrong type! Position = " + position);
@@ -248,17 +238,18 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     @Override
     public void onBindViewHolder(K holder, int position) {
         int realPosition = getRealPosition(position);
-        if (2 < realPosition && realPosition < data.size() + 3) {
-            convert(holder, data.get(realPosition - 3));
-        } else if (getItemViewType(position) == EMPTY) {
-            RecyclerView.LayoutParams layoutParams;
-            if (emptyLayoutContainer.getChildCount() > 0) {
-                layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                emptyLayoutContainer.setGravity(Gravity.CENTER);
-                emptyLayoutContainer.setLayoutParams(layoutParams);
-                emptyLayoutContainer.requestLayout();
-            }
+        if (1 < realPosition && realPosition < data.size() + 2) {
+            convert(holder, data.get(realPosition - 2));
         }
+//        else if (getItemViewType(position) == EMPTY) {
+//            RecyclerView.LayoutParams layoutParams;
+//            if (emptyLayoutContainer.getChildCount() > 0) {
+//                layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                emptyLayoutContainer.setGravity(Gravity.CENTER);
+//                emptyLayoutContainer.setLayoutParams(layoutParams);
+//                emptyLayoutContainer.requestLayout();
+//            }
+//        }
     }
 
     private int getRealPosition(int position) {
@@ -288,9 +279,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
 
-    private boolean isEmptyLayoutEnable() {
-        return emptyLayoutContainer.getChildCount() > 0;
-    }
+//    private boolean isEmptyLayoutEnable() {
+//        return emptyLayoutContainer.getChildCount() > 0;
+//    }
 
 
     private View getLayoutFromViewType(ViewGroup parent, int viewType) {
@@ -299,8 +290,8 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
                 return mRefreshHeaderContainer;
             case HEADER:
                 return mHeaderContainer;
-            case EMPTY:
-                return emptyLayoutContainer;
+//            case EMPTY:
+//                return emptyLayoutContainer;
             case FOOTER:
                 return mFooterContainer;
             case LOAD_MORE_FOOTER:

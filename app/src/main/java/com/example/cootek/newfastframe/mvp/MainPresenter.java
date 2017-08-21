@@ -1,16 +1,12 @@
 package com.example.cootek.newfastframe.mvp;
 
 import com.example.commonlibrary.baseadapter.EmptyLayout;
-import com.example.commonlibrary.mvp.BaseModel;
 import com.example.commonlibrary.mvp.BasePresenter;
 import com.example.commonlibrary.mvp.IView;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.cootek.newfastframe.DaoSession;
 import com.example.cootek.newfastframe.MainApplication;
-import com.example.cootek.newfastframe.Music;
 import com.example.cootek.newfastframe.MusicInfoProvider;
-import com.example.cootek.newfastframe.MusicManager;
-import com.example.cootek.newfastframe.MusicPlayInfo;
+import com.example.cootek.newfastframe.MusicPlayBean;
 
 import java.util.List;
 
@@ -18,8 +14,6 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -44,56 +38,44 @@ public class MainPresenter extends BasePresenter<IView, MainModel> {
         if (isShowLoading) {
             iView.showLoading("正在加载");
         }
-        List<Music> list = baseModel.getRepositoryManager().getDaoSession()
-                .getMusicDao().queryBuilder().offset((num - 1) * 10).limit(10).list();
-        if (list.size() == 0) {
-            MusicInfoProvider.getAllMusic(MainApplication.getInstance())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<Music>>() {
-                        @Override
-                        public void onSubscribe(@NonNull Disposable d) {
+        MusicInfoProvider.getAllMusic(MainApplication.getInstance())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<MusicPlayBean>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        addDispose(d);
+                    }
 
-                            addDispose(d);
-                        }
-
-                        @Override
-                        public void onNext(@NonNull List<Music> musics) {
-                            iView.updateData(musics);
-                            if (musics != null) {
-                                ((DaoSession) baseModel.getRepositoryManager().getDaoSession()).getMusicDao().insertOrReplaceInTx(musics);
-                            } else {
-                                CommonLogger.e("数据为空?");
-                                num--;
-                            }
-                        }
-
-                        @Override
-                        public void onError(@NonNull Throwable e) {
-                            CommonLogger.e("数据为出错");
-                            String message = "";
-                            if (e != null) {
-                                message = e.getMessage();
-                            }
-                            CommonLogger.e(message);
-                            iView.showError(message, new EmptyLayout.OnRetryListener() {
-                                @Override
-                                public void onRetry() {
-                                    getAllMusic(isRefresh,isShowLoading);
-                                }
-                            });
+                    @Override
+                    public void onNext(@NonNull List<MusicPlayBean> musics) {
+                        iView.updateData(musics);
+                        if (musics == null) {
                             num--;
                         }
+                    }
 
-                        @Override
-                        public void onComplete() {
-                            iView.hideLoading();
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        CommonLogger.e("数据为出错");
+                        String message = "";
+                        if (e != null) {
+                            message = e.getMessage();
                         }
-                    });
-        } else {
-            CommonLogger.e("数据为空?");
-            iView.updateData(list);
-            iView.hideLoading();
-        }
+                        CommonLogger.e(message);
+                        iView.showError(message, new EmptyLayout.OnRetryListener() {
+                            @Override
+                            public void onRetry() {
+                                getAllMusic(isRefresh, isShowLoading);
+                            }
+                        });
+                        num--;
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        iView.hideLoading();
+                    }
+                });
     }
 }

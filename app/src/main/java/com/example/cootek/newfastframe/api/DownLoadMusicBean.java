@@ -16,6 +16,12 @@ public class DownLoadMusicBean {
     private int error_code;
     private BitrateBean bitrate;
 
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof DownLoadMusicBean && ((DownLoadMusicBean) obj).getSonginfo().getSong_id().equals(getSonginfo().getSong_id());
+    }
+
     public SonginfoBean getSonginfo() {
         return songinfo;
     }
@@ -491,4 +497,6 @@ public class DownLoadMusicBean {
             this.hash = hash;
         }
     }
+
+
 }

@@ -1,8 +1,12 @@
 package com.example.commonlibrary.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
+
+import java.util.List;
 
 /**
  * 方法工具类
@@ -35,6 +39,7 @@ public class AppUtil {
 
     /**
      * 读取baseurl
+     *
      * @param url
      * @return
      */
@@ -51,4 +56,23 @@ public class AppUtil {
         }
         return head + url;
     }
+
+
+    public static boolean isServiceRunning(Context context, String serviceName) {
+        if (context == null || TextUtils.isEmpty(serviceName)) {
+            return false;
+        }
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> runningServiceInfoList = activityManager.getRunningServices(Integer.MAX_VALUE);
+        if (runningServiceInfoList != null && runningServiceInfoList.size() > 0) {
+            for (ActivityManager.RunningServiceInfo info :
+                    runningServiceInfoList) {
+                if (info.service.getClassName().equals(serviceName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

@@ -34,7 +34,7 @@ public class GlideImageLoaderStrategy implements BaseImageLoaderStrategy<GlideIm
                 break;
         }
         if (config.getBitmapTransformation() != null) {
-            drawableRequestBuilder.transform(config.getBitmapTransformation());
+            drawableRequestBuilder.bitmapTransform(config.getBitmapTransformation());
         }
         if (config.getErrorResId() != 0) {
             drawableRequestBuilder.error(config.getErrorResId());

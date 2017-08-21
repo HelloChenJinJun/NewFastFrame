@@ -1,7 +1,9 @@
 package com.example.commonlibrary.imageloader;
 
+import android.graphics.Bitmap;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 /**
@@ -15,7 +17,7 @@ public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
     public static final int CACHE_RESULT=3;
 
 
-    private BitmapTransformation bitmapTransformation;
+    private Transformation<Bitmap> bitmapTransformation;
     private int cacheStrategy;
     private boolean isClearMemoryCache;
     private boolean isClearDiskCache;
@@ -32,7 +34,7 @@ public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
     }
 
 
-    public BitmapTransformation getBitmapTransformation() {
+    public Transformation<Bitmap> getBitmapTransformation() {
         return bitmapTransformation;
     }
 
@@ -53,7 +55,7 @@ public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
         private ImageView imageView;
         private String url;
         private int errorResId;
-        private BitmapTransformation bitmapTransformation;
+        private Transformation<Bitmap> bitmapTransformation;
         private int placeHolderResId;
         private int cacheStrategy;
         private boolean isClearMemeryCache;
@@ -77,7 +79,7 @@ public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
             return this;
         }
 
-        public Builder bitmapTransformation(BitmapTransformation val) {
+        public Builder bitmapTransformation(Transformation<Bitmap> val) {
             bitmapTransformation = val;
             return this;
         }

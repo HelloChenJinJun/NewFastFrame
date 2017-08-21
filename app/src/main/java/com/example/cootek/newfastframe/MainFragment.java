@@ -26,7 +26,7 @@ import butterknife.BindView;
  * Created by COOTEK on 2017/8/13.
  */
 
-public class MainFragment extends BaseFragment<List<Music>, MainPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainFragment extends BaseFragment<List<MusicPlayBean>, MainPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.srcv_fragment_main_display)
@@ -38,11 +38,8 @@ public class MainFragment extends BaseFragment<List<Music>, MainPresenter> imple
     MainAdapter mainAdapter;
 
     @Override
-    public void updateData(List<Music> musics) {
-        mainAdapter.getData().addAll(musics);
-        mainAdapter.notifyDataSetChanged();
-//        mainAdapter.addData(musics);
-        CommonLogger.e("dataSize" + mainAdapter.getData().size());
+    public void updateData(List<MusicPlayBean> musics) {
+        mainAdapter.addData(musics);
     }
 
     @Override
@@ -78,10 +75,10 @@ public class MainFragment extends BaseFragment<List<Music>, MainPresenter> imple
             @Override
             public void onItemClick(int position, View view) {
                 Toast.makeText(getActivity(), "position:" + position, Toast.LENGTH_SHORT).show();
-                MusicManager.getInstance().play(getActivity(), mainAdapter.getIds(), position, -1, MusicIdType.NORMAL, false);
+                MusicManager.getInstance().play(getActivity(), mainAdapter.getData(), position, false);
             }
         });
-        display.setIAdapter(mainAdapter);
+        display.setAdapter(mainAdapter);
     }
 
     @Override
@@ -97,7 +94,7 @@ public class MainFragment extends BaseFragment<List<Music>, MainPresenter> imple
     @Override
     public void loadMore() {
         CommonLogger.e("加载更多?");
-//        presenter.getAllMusic(false, false);
+        presenter.getAllMusic(false, false);
     }
 
     @Override

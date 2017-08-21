@@ -16,7 +16,7 @@ import com.example.commonlibrary.utils.CommonLogger;
  * Created by COOTEK on 2017/8/11.
  */
 
-public abstract class MainBaseActivity<T,P extends BasePresenter> extends BaseActivity<T,P> {
+public abstract class MainBaseActivity<T, P extends BasePresenter> extends BaseActivity<T, P> {
 
 
     protected MusicBroadCastReceiver receiver;
@@ -24,7 +24,6 @@ public abstract class MainBaseActivity<T,P extends BasePresenter> extends BaseAc
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         MusicManager.getInstance().bindService(this);
         receiver = new MusicBroadCastReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -33,10 +32,11 @@ public abstract class MainBaseActivity<T,P extends BasePresenter> extends BaseAc
         intentFilter.addAction(MusicService.PLAYSTATE_CHANGED);
         intentFilter.addAction(MusicService.POSITION_CHANGED);
         intentFilter.addAction(MusicService.QUEUE_CHANGED);
-        intentFilter.addAction(MusicService.REFRESH_CHANGED);
         intentFilter.addAction(MusicService.REPEATMODE_CHANGED);
         intentFilter.addAction(MusicService.SHUFFLEMODE_CHANGED);
         registerReceiver(receiver, intentFilter);
+        CommonLogger.e("注册完了了");
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -61,6 +61,7 @@ public abstract class MainBaseActivity<T,P extends BasePresenter> extends BaseAc
                 musicContent.setArtistName(intent.getStringExtra("artistName"));
                 musicContent.setPlaying(intent.getBooleanExtra("isPlaying", false));
                 musicContent.setMaxProgress(intent.getLongExtra("maxProgress", 0));
+                musicContent.setAlbumUrl(intent.getStringExtra("albumUrl"));
                 musicStatusEvent.setMusicContent(musicContent);
                 switch (action) {
                     case MusicService.META_CHANGED:
@@ -82,10 +83,6 @@ public abstract class MainBaseActivity<T,P extends BasePresenter> extends BaseAc
                     case MusicService.QUEUE_CHANGED:
                         CommonLogger.e("状态" + MusicService.QUEUE_CHANGED);
                         musicStatusEvent.setCurrentStatus(MusicStatusEvent.QUEUE_CHANGED);
-                        break;
-                    case MusicService.REFRESH_CHANGED:
-                        CommonLogger.e("状态" + MusicService.REFRESH_CHANGED);
-                        musicStatusEvent.setCurrentStatus(MusicStatusEvent.REFRESH_CHANGED);
                         break;
                     case MusicService.REPEATMODE_CHANGED:
                         musicStatusEvent.setCurrentStatus(MusicStatusEvent.REPEATMODE_CHANGED);

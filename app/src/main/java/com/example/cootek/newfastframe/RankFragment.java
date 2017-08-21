@@ -78,7 +78,7 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
             }
         });
         display.addHeaderView(getHeaderView());
-        display.setIAdapter(rankAdapter);
+        display.setAdapter(rankAdapter);
     }
 
     private View getHeaderView() {

@@ -20,10 +20,10 @@ import dagger.Provides;
 
 @Module
 public class RankDetailModule {
-    private IView<RankListBean> iView;
+    private IView<Object> iView;
 
 
-    public RankDetailModule(IView<RankListBean> iView) {
+    public RankDetailModule(IView<Object> iView) {
         this.iView = iView;
     }
 
