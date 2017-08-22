@@ -74,25 +74,14 @@ public class MusicService extends Service {
     public static final String QUEUE_CHANGED = "queue_changed";
     public static final String META_CHANGED = "meta_changed";
     public static final String PLAYSTATE_CHANGED = "play_state_changed";
-    public static final String SHUFFLEMODE_CHANGED = "shuffle_mode_changed";
     public static final String POSITION_CHANGED = "position_changed";
-    public static final String REPEATMODE_CHANGED = "repeat_mode_changed";
     public static final String PLAYLIST_CHANGED = "play_list_changed";
-    /**
-     * 播放到尾部的时候，自动停止
-     */
-    public static final int REPEAT_NONE = 0;
-    /**
-     * 播放到尾部的时候又重头开始播起
-     */
-    public static final int REPEAT_ALL = 1;
-    /**
-     * 循环重复某首歌曲
-     */
-    public static final int REPEAT_CURRENT = 2;
 
-    public static final int SHUFFLE_NONE = 0;
-    public static final int SHUFFLE_NORMAL = 1;
+    public static final int MODE_NORMAL = 0;
+    public static final int MODE_LOOP = 1;
+    public static final int MODE_SHUFFLE = 2;
+
+    private int mode = MODE_NORMAL;
     /**
      * 设置多少时长后关闭服务
      */
@@ -111,7 +100,6 @@ public class MusicService extends Service {
     private MediaSessionCompat mediaSessionCompat;
     private long notificationPostTime = 0;
     private PowerManager.WakeLock mWakeLock;
-    private int repeatMode = REPEAT_CURRENT;
     private int mStartId;
     private WrappedMediaPlayer wrappedMediaPlayer;
     private SharedPreferences mPreferences;
@@ -119,7 +107,6 @@ public class MusicService extends Service {
     private int playPosition = -1;
     private int mOpenFailedCounter = 0;
     private static LinkedList<Integer> mHistory = new LinkedList<>();
-    private int mShufmode = SHUFFLE_NONE;
     private boolean mIsSupposedToBePlaying = false;
     private Shuffler mShuffler = new Shuffler();
     private int nextPlayPosition = -1;
@@ -167,9 +154,8 @@ public class MusicService extends Service {
             openCurrentAndNext();
             long seekpos = mPreferences.getLong("seek", 0);
             seek(seekpos >= 0 && seekpos < duration() ? seekpos : 0);
-            repeatMode = mPreferences.getInt("repeatMode", REPEAT_NONE);
-            mShufmode = mPreferences.getInt("shuffleMode", SHUFFLE_NONE);
-            if (mShufmode != SHUFFLE_NONE) {
+            mode = mPreferences.getInt("play_mode", 0);
+            if (mode == MODE_SHUFFLE) {
 //                取出历史播放列表
                 mHistory.clear();
                 List<MusicHistoryInfo> historyInfos = daoSession.getMusicHistoryInfoDao().queryBuilder().where(MusicHistoryInfoDao.Properties.Position.le(mPlaylist.size())).build().list();
@@ -201,6 +187,7 @@ public class MusicService extends Service {
         intent.putExtra("isPlaying", isPlaying());
         intent.putExtra("songName", getSongName());
         intent.putExtra("maxProgress", duration());
+        intent.putExtra("mode", getPlayMode());
         sendBroadcast(intent);
         CommonLogger.e("已经发送广播");
         switch (action) {
@@ -209,14 +196,6 @@ public class MusicService extends Service {
                 break;
             case QUEUE_CHANGED:
                 saveQueue(true);
-                if (isPlaying()) {//如果正在播放,则提前设置好下首播放的datasource
-                    if (nextPlayPosition >= 0 && nextPlayPosition < mPlaylist.size()
-                            && mShufmode != SHUFFLE_NONE) {
-                        setNextMusicPlayInfo(nextPlayPosition);
-                    } else { //SHUFFLE_NONE直接播放下一首
-                        setNextMusicPlayInfo();
-                    }
-                }
                 break;
             case PLAYSTATE_CHANGED:
                 updateNotification();
@@ -226,6 +205,10 @@ public class MusicService extends Service {
                 saveQueue(false);
                 break;
         }
+    }
+
+    private int getPlayMode() {
+        return mode;
     }
 
     private String getAlbumUrl() {
@@ -350,7 +333,7 @@ public class MusicService extends Service {
         final SharedPreferences.Editor editor = mPreferences.edit();
         if (isAll) {
 //            清除旧数据，保持新数据
-            if (mShufmode != SHUFFLE_NONE) {
+            if (mode == MODE_SHUFFLE) {
                 List<MusicHistoryInfo> list = new ArrayList<>();
                 for (int i = 0; i < mHistory.size(); i++) {
                     MusicHistoryInfo musicHistoryInfo = new MusicHistoryInfo(mHistory.get(i));
@@ -368,8 +351,7 @@ public class MusicService extends Service {
         if (wrappedMediaPlayer.isInitialized()) {
             editor.putLong("seek", wrappedMediaPlayer.position());
         }
-        editor.putInt("repeatMode", repeatMode);
-        editor.putInt("shuffleMode", mShufmode);
+        editor.putInt("play_mode", mode);
         editor.apply();
     }
 
@@ -477,7 +459,7 @@ public class MusicService extends Service {
     public int getPreviousPlayPosition(boolean removeFromHistory) {
         CommonLogger.e("获取播放列表中的前一首歌曲");
         synchronized (this) {
-            if (mShufmode == SHUFFLE_NORMAL) { //普通随机模式,从历史中获取
+            if (mode == MODE_SHUFFLE) { //普通随机模式,从历史中获取
                 final int size = mHistory.size();
                 if (size == 0) {
                     return -1;
@@ -487,7 +469,9 @@ public class MusicService extends Service {
                     mHistory.remove(size - 1);
                 }
                 return pos;
-            } else { //其他模式取播放列表中的前一个
+            } else if (mode == MODE_LOOP) {
+                return playPosition;
+            } else {
                 if (playPosition > 0) {
                     return playPosition - 1;
                 } else {
@@ -540,20 +524,6 @@ public class MusicService extends Service {
         }
     }
 
-    /**
-     * 设置随机模式
-     *
-     * @param shuffleMode 随机模式
-     */
-    private void setShuffleMode(int shuffleMode) {
-        CommonLogger.e("设置随机模式" + shuffleMode);
-        synchronized (this) {
-            if (mShufmode != shuffleMode) {
-                mShufmode = shuffleMode;
-                notifyChange(SHUFFLEMODE_CHANGED);
-            }
-        }
-    }
 
     /**
      * 更新通知栏
@@ -888,14 +858,10 @@ public class MusicService extends Service {
         }
 
         @Override
-        public void setShuffleMode(int shuffleMode) throws RemoteException {
-            musicServiceWeakReference.get().setShuffleMode(shuffleMode);
+        public void setPlayMode(int mode) throws RemoteException {
+            musicServiceWeakReference.get().setPlayMode(mode);
         }
 
-        @Override
-        public void setRepeatMode(int repeatMode) throws RemoteException {
-            musicServiceWeakReference.get().setRepeatMode(repeatMode);
-        }
 
         @Override
         public void refresh() throws RemoteException {
@@ -942,14 +908,39 @@ public class MusicService extends Service {
             return musicServiceWeakReference.get().getMusicPlayInfo(index);
         }
 
-        @Override
-        public int getShuffleMode() throws RemoteException {
-            return musicServiceWeakReference.get().getShuffleMode();
-        }
 
         @Override
-        public int getRepeatMode() throws RemoteException {
-            return musicServiceWeakReference.get().getRepeatMode();
+        public void remove(int position) throws RemoteException {
+            musicServiceWeakReference.get().remove(position);
+        }
+    }
+
+    private void setPlayMode(int mode) {
+        this.mode = mode;
+    }
+
+    private void remove(int position) {
+        if (mPlaylist != null && position >= 0 && position < mPlaylist.size()) {
+            if (playPosition == position) {
+                if (mPlaylist.size() == 1) {
+                    mPlaylist.remove(position);
+                    stop(true);
+                } else {
+                    mPlaylist.remove(position);
+                    next(true);
+                }
+            } else if (nextPlayPosition == position) {
+                if (mPlaylist.size() == 1) {
+                    mPlaylist.remove(position);
+                    stop(true);
+                } else {
+                    mPlaylist.remove(position);
+//                    更新下一首歌资源
+                    setNextMusicPlayInfo();
+                }
+            } else {
+                mPlaylist.remove(position);
+            }
         }
     }
 
@@ -975,24 +966,6 @@ public class MusicService extends Service {
     private void refresh() {
         CommonLogger.e("刷新啦啦啦");
         notifyChange(META_CHANGED);
-    }
-
-
-    private void setRepeatMode(int repeatMode) {
-        synchronized (this) {
-            this.repeatMode = repeatMode;
-            setNextMusicPlayInfo();
-            notifyChange(REPEATMODE_CHANGED);
-        }
-    }
-
-
-    private int getShuffleMode() {
-        return mShufmode;
-    }
-
-    private int getRepeatMode() {
-        return repeatMode;
     }
 
 
@@ -1038,6 +1011,7 @@ public class MusicService extends Service {
             position = mPlaylist.size();
         }
         mPlaylist.addAll(position, list);
+        daoSession.getMusicPlayBeanDao().insertOrReplaceInTx(list);
     }
 
     /**
@@ -1096,11 +1070,7 @@ public class MusicService extends Service {
                 case TRACK_END:
 //                    全部播放完成
 //                    重复播放
-                    if (repeatMode == REPEAT_CURRENT) {
-                        CommonLogger.e("循环默认，播放现在的歌曲");
-                        seek(0);
-                        play();
-                    }
+                    next(true);
                     break;
                 case NEXT:
                     CommonLogger.e("通知next");
@@ -1190,7 +1160,7 @@ public class MusicService extends Service {
                     if (mOpenFailedCounter++ < 10 && mPlaylist.size() > 1) {
                         CommonLogger.e("更新下一首歌曲的Cursor");
 //                    切换下一首
-                        int position = getNextPosition(false);
+                        int position = getNextPosition(true);
                         if (position < 0) {
                             shutdown = true;
                             break;
@@ -1233,7 +1203,7 @@ public class MusicService extends Service {
     }
 
     private void setNextMusicPlayInfo() {
-        setNextMusicPlayInfo(getNextPosition(false));
+        setNextMusicPlayInfo(getNextPosition(true));
     }
 
     private void setNextMusicPlayInfo(int nextPosition) {
@@ -1260,10 +1230,10 @@ public class MusicService extends Service {
         if (mPlaylist == null || mPlaylist.size() == 0) {
             return -1;
         }
-        if (repeatMode == REPEAT_CURRENT) {
+        if (mode == MODE_LOOP) {
 //            循环播放
             return playPosition;
-        } else if (mShufmode == SHUFFLE_NORMAL) {
+        } else if (mode == MODE_SHUFFLE) {
 //            随机选择模式
             final int numTracks = mPlaylist.size();
             final int[] trackNumPlays = new int[numTracks]; //用来记录每首歌播放的次数
@@ -1290,10 +1260,6 @@ public class MusicService extends Service {
                     numTracksWithMinNumPlays++;
                 }
             }
-            if (minNumPlays > 0 && numTracksWithMinNumPlays == numTracks
-                    && repeatMode != REPEAT_ALL && !force) {
-                return -1; //当前模式为不循环,不选取下一首歌曲
-            }
 //            在相同播放次数最少的歌曲中随机选择
             int skip = mShuffler.nextInt(numTracksWithMinNumPlays);
             for (int i = 0; i < trackNumPlays.length; i++) {//遍历,根据随机数字选取对应的歌曲
@@ -1309,12 +1275,7 @@ public class MusicService extends Service {
         } else {
 //            正常的顺序播放
             if (playPosition >= mPlaylist.size() - 1) {
-                if (repeatMode == REPEAT_NONE && !force) {
-                    return -1;
-                } else if (repeatMode == REPEAT_ALL || force) {
-                    return 0;
-                }
-                return -1;
+                return 0;
             } else {
                 return playPosition + 1;
             }
@@ -1491,7 +1452,7 @@ public class MusicService extends Service {
                 wrappedMediaPlayer.mediaPlayer.release();
                 wrappedMediaPlayer.mediaPlayer = wrappedMediaPlayer.nextMediaPlayer;
                 wrappedMediaPlayer.nextMediaPlayer = null;
-                if (mShufmode != SHUFFLE_NONE) {
+                if (mode != MODE_SHUFFLE) {
                     //                如果是随机需要添加到历史播放记录中
                     mHistory.add(playPosition);
                     if (mHistory.size() > MAX_HISTORY_SIZE) {
@@ -1502,6 +1463,7 @@ public class MusicService extends Service {
                 nextPlayPosition = getNextPosition(force);
                 CommonLogger.e("下一首位置" + nextPlayPosition);
                 setNextMusicPlayInfo(nextPlayPosition);
+                play();
             }
         }
     }

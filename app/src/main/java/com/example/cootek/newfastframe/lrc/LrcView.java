@@ -295,7 +295,6 @@ public class LrcView extends View implements ILrcView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mLrcRows == null || mLrcRows.size() == 0) {
-            CommonLogger.e("这里，不会吧");
             return false;
         }
         switch (event.getAction()) {
@@ -358,7 +357,6 @@ public class LrcView extends View implements ILrcView {
                 }
                 break;
         }
-        CommonLogger.e("返回");
         return true;
     }
 

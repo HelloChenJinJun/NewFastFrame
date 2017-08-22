@@ -1,7 +1,5 @@
 package com.example.cootek.newfastframe.dagger;
 
-import com.example.commonlibrary.mvp.IView;
-import com.example.commonlibrary.repository.BaseRepositoryManager;
 import com.example.cootek.newfastframe.MainRepositoryManager;
 import com.example.cootek.newfastframe.mvp.BottomModel;
 import com.example.cootek.newfastframe.mvp.BottomPresenter;

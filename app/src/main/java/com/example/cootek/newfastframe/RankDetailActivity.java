@@ -133,7 +133,7 @@ public class RankDetailActivity extends BaseActivity<Object, RankDetailPresenter
                 }
                 if (list.size() > 0) {
                     CommonLogger.e("播放地址:" + downLoadMusicBean.getBitrate().getFile_link());
-                    MusicManager.getInstance().play(RankDetailActivity.this, list, position, false);
+                    MusicManager.getInstance().play( list, position, MusicService.MODE_NORMAL);
                 }
                 Toast.makeText(RankDetailActivity.this, "这里播放音乐", Toast.LENGTH_SHORT).show();
             }

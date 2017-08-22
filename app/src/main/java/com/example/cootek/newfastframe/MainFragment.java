@@ -75,7 +75,7 @@ public class MainFragment extends BaseFragment<List<MusicPlayBean>, MainPresente
             @Override
             public void onItemClick(int position, View view) {
                 Toast.makeText(getActivity(), "position:" + position, Toast.LENGTH_SHORT).show();
-                MusicManager.getInstance().play(getActivity(), mainAdapter.getData(), position, false);
+                MusicManager.getInstance().play(mainAdapter.getData(), position, MusicService.MODE_NORMAL);
             }
         });
         display.setAdapter(mainAdapter);

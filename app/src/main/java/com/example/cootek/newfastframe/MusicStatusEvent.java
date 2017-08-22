@@ -49,9 +49,10 @@ public class MusicStatusEvent {
         private boolean isPlaying;
         private long maxProgress;
         private String albumUrl;
+        private int mode;
 
 
-        public MusicContent(long id, String songName, String artistName, String albumName, boolean isPlaying, long maxProgress, String albumUrl) {
+        public MusicContent(long id, String songName, String artistName, String albumName, boolean isPlaying, long maxProgress, String albumUrl, int mode) {
             this.id = id;
             this.songName = songName;
             this.artistName = artistName;
@@ -59,6 +60,16 @@ public class MusicStatusEvent {
             this.maxProgress = maxProgress;
             this.isPlaying = isPlaying;
             this.albumUrl = albumUrl;
+            this.mode = mode;
+        }
+
+
+        public void setMode(int mode) {
+            this.mode = mode;
+        }
+
+        public int getMode() {
+            return mode;
         }
 
 

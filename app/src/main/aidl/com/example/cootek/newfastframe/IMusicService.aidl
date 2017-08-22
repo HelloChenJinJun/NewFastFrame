@@ -14,8 +14,7 @@ interface IMusicService {
                    void play();
                    void prev();
                    void next();
-                   void setShuffleMode(int shuffleMode);
-                   void setRepeatMode(int repeatMode);
+                   void setPlayMode(int mode);
                    void refresh();
                    boolean isPlaying();
                    long [] getQueue();
@@ -25,8 +24,8 @@ interface IMusicService {
                    long seek(long pos);
                    MusicPlayBean getCurrentPlayInfo();
                    MusicPlayBean getPlayInfo(int index);
-                   int getShuffleMode();
-                   int getRepeatMode();
+
+                   void remove(int position);
 
 
 

@@ -32,8 +32,6 @@ public abstract class MainBaseActivity<T, P extends BasePresenter> extends BaseA
         intentFilter.addAction(MusicService.PLAYSTATE_CHANGED);
         intentFilter.addAction(MusicService.POSITION_CHANGED);
         intentFilter.addAction(MusicService.QUEUE_CHANGED);
-        intentFilter.addAction(MusicService.REPEATMODE_CHANGED);
-        intentFilter.addAction(MusicService.SHUFFLEMODE_CHANGED);
         registerReceiver(receiver, intentFilter);
         CommonLogger.e("注册完了了");
         super.onCreate(savedInstanceState);
@@ -62,6 +60,7 @@ public abstract class MainBaseActivity<T, P extends BasePresenter> extends BaseA
                 musicContent.setPlaying(intent.getBooleanExtra("isPlaying", false));
                 musicContent.setMaxProgress(intent.getLongExtra("maxProgress", 0));
                 musicContent.setAlbumUrl(intent.getStringExtra("albumUrl"));
+                musicContent.setMode(intent.getIntExtra("mode", 0));
                 musicStatusEvent.setMusicContent(musicContent);
                 switch (action) {
                     case MusicService.META_CHANGED:
@@ -83,14 +82,6 @@ public abstract class MainBaseActivity<T, P extends BasePresenter> extends BaseA
                     case MusicService.QUEUE_CHANGED:
                         CommonLogger.e("状态" + MusicService.QUEUE_CHANGED);
                         musicStatusEvent.setCurrentStatus(MusicStatusEvent.QUEUE_CHANGED);
-                        break;
-                    case MusicService.REPEATMODE_CHANGED:
-                        musicStatusEvent.setCurrentStatus(MusicStatusEvent.REPEATMODE_CHANGED);
-                        CommonLogger.e("状态" + MusicService.REPEATMODE_CHANGED);
-                        break;
-                    case MusicService.SHUFFLEMODE_CHANGED:
-                        musicStatusEvent.setCurrentStatus(MusicStatusEvent.SHUFFLEMODE_CHANGED);
-                        CommonLogger.e("状态" + MusicService.SHUFFLEMODE_CHANGED);
                         break;
                 }
                 RxBusManager.getInstance().post(musicStatusEvent);

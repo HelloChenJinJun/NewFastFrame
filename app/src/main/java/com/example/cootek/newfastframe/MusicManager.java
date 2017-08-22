@@ -119,32 +119,20 @@ public class MusicManager {
 
 
     /**
-     * @param context
      * @param musicPlayBeanList
      * @param position          为-1的时候表示第一次播放该列表的歌曲
-     * @param forceShuffle
+     * @param mode
      */
-    public void play(Context context, List<MusicPlayBean> musicPlayBeanList, int position, boolean forceShuffle) {
-        CommonLogger.e("1");
+    public void play(List<MusicPlayBean> musicPlayBeanList, int position, int mode) {
         if (musicPlayBeanList == null || musicPlayBeanList.size() == 0 || service == null) {
-            if (musicPlayBeanList == null) {
-                CommonLogger.e("idList");
-            } else if (musicPlayBeanList.size() == 0) {
-                CommonLogger.e("idList1");
-            } else {
-                CommonLogger.e("service");
-            }
             return;
         }
-        CommonLogger.e("2");
         try {
-            if (forceShuffle) {
-                service.setShuffleMode(MusicService.SHUFFLE_NORMAL);
-            }
+            service.setPlayMode(mode);
 //            这里判断是否是同一首歌
             long currentId = 0;
             int currentPosition = service.getQueuePosition();
-            long[] currentList = getCurrentListId();
+            long[] currentList = getQueue();
             long[] list = new long[musicPlayBeanList.size()];
             for (int i = 0; i < musicPlayBeanList.size(); i++) {
                 list[i] = musicPlayBeanList.get(i).getSongId();
@@ -156,8 +144,7 @@ public class MusicManager {
             position = position < 0 ? 0 : position;
 //            准备资源
             CommonLogger.e("大小" + musicPlayBeanList.size());
-            service.open(musicPlayBeanList, forceShuffle ? -1 : position);
-            service.setRepeatMode(MusicService.REPEAT_NONE);
+            service.open(musicPlayBeanList, position);
             service.play();
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -165,14 +152,7 @@ public class MusicManager {
         }
     }
 
-    private long[] getCurrentListId() {
-        try {
-            return service.getQueue();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return new long[0];
-    }
+
 
     public boolean isPlaying() {
         try {
@@ -219,6 +199,37 @@ public class MusicManager {
         } catch (RemoteException e) {
             e.printStackTrace();
             CommonLogger.e("刷新出错" + e.getMessage());
+        }
+    }
+
+    long[] getQueue() {
+        try {
+            if (service != null) {
+                return service.getQueue();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void remove(int position) {
+        try {
+            if (service != null) {
+                service.remove(position);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setMode(int mode) {
+        try {
+            if (service != null) {
+                service.setPlayMode(mode);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 

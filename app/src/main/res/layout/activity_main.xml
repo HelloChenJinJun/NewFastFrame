@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+<com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/slide_activity_main_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/base_color_text_grey"
     android:gravity="bottom"
     android:orientation="vertical"
-    sothree:umanoDragView="@+id/fl_activity_main_bottom_container"
-    sothree:umanoOverlay="false"
-    sothree:umanoPanelHeight="60dp"
-    sothree:umanoShadowHeight="5dp">
+    app:umanoDragView="@+id/fl_activity_main_bottom_container"
+    app:umanoOverlay="false"
+    app:umanoPanelHeight="60dp"
+    app:umanoShadowHeight="5dp">
 
     <FrameLayout
         android:id="@+id/fl_activity_main_container"
@@ -23,4 +23,4 @@
         android:id="@+id/fl_activity_main_bottom_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+</com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout>

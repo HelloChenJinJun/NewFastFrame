@@ -15,13 +15,12 @@
 
     <com.example.commonlibrary.cusotomview.RoundAngleImageView
         android:id="@+id/riv_fragment_bottom_album"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="7.5dp"
         android:src="@mipmap/ic_launcher"
-        app:roundHeight="20dp"
-        app:roundWidth="20dp" />
+        app:roundHeight="25dp"
+        app:roundWidth="25dp" />
 
 
     <com.example.cootek.newfastframe.lrc.LrcView
@@ -34,11 +33,11 @@
 
 
     <com.example.cootek.newfastframe.lrc.LrcView
-        android:visibility="invisible"
-        android:alpha="0"
         android:id="@+id/lv_fragment_bottom_lrc_bottom"
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
+        android:layout_height="30dp"
+        android:alpha="0"
+        android:visibility="invisible" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -147,14 +146,16 @@
         <SeekBar
             android:id="@+id/sb_fragment_bottom_seek"
             style="@style/Widget.AppCompat.SeekBar"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/transparent"
-            android:minHeight="5dp"
+            android:maxHeight="2dp"
             android:progress="0"
             android:progressDrawable="@drawable/progressbar_color"
-            android:thumb="@null"
+            android:secondaryProgress="0"
+            android:splitTrack="false"
+            android:thumb="@drawable/thumb_music_normal"
             android:visibility="visible" />
 
         <TextView

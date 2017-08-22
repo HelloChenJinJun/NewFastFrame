@@ -202,7 +202,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
 
     public int getItemUpCount() {
-        int position =0;
+        int position = 0;
         if (hasHeaderView()) {
             position++;
         }
@@ -215,7 +215,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     @Override
     public int getItemViewType(int position) {
-        position=getRealPosition(position);
+        position = getRealPosition(position);
         if (position == 0) {
             return REFRESH_HEADER;
         } else if (position == 1) {
@@ -419,6 +419,15 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         } else {
             return data.get(position);
         }
+    }
+
+    public T removeData(int position) {
+        if (position >= 0 && position < data.size()) {
+            T t = data.remove(position);
+            notifyItemRemoved(position);
+            return t;
+        }
+        return null;
     }
 
     public interface OnItemClickListener {

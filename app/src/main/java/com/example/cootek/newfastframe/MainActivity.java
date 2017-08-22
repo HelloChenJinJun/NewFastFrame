@@ -5,7 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.example.commonlibrary.baseadapter.OnLoadMoreListener;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout;
 
 
 import butterknife.BindView;
@@ -18,7 +18,7 @@ import butterknife.BindView;
 public class MainActivity extends MainBaseActivity implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.slide_activity_main_container)
-    SlidingUpPanelLayout slideLayout;
+    SlidingPanelLayout slideLayout;
 
     @Override
     protected boolean isNeedHeadLayout() {
@@ -53,8 +53,8 @@ public class MainActivity extends MainBaseActivity implements OnLoadMoreListener
 
     @Override
     public void onBackPressed() {
-        if (slideLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-            slideLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        if (slideLayout.getPanelState() == SlidingPanelLayout.PanelState.EXPANDED) {
+            slideLayout.setPanelState(SlidingPanelLayout.PanelState.COLLAPSED);
         } else {
             super.onBackPressed();
         }
