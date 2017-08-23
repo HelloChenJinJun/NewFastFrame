@@ -2,6 +2,7 @@ package com.example.commonlibrary.net;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.DownloadStatus;
+import com.example.commonlibrary.utils.CommonLogger;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observer;
@@ -20,17 +21,18 @@ class DownLoadProgressObserver implements Observer<FileInfo>, DownloadProgressLi
     private DownloadListener listener;
     private FileDAOImpl fileDAO;
 
-    public DownLoadProgressObserver(FileInfo FileInfo,DownloadListener listener) {
+    public DownLoadProgressObserver(FileInfo FileInfo, DownloadListener listener) {
         this.fileInfo = FileInfo;
-        this.listener=listener;
-        fileDAO=FileDAOImpl.getInstance();
+        this.listener = listener;
+        fileDAO = FileDAOImpl.getInstance();
     }
-
-
 
 
     @Override
     public void onSubscribe(@NonNull Disposable d) {
+        if (fileInfo == null) {
+            CommonLogger.e("onSubscribe出错");
+        }
         fileInfo.setStatus(DownloadStatus.START);
         listener.onStart(fileInfo);
         fileDAO.update(fileInfo);
@@ -43,6 +45,9 @@ class DownLoadProgressObserver implements Observer<FileInfo>, DownloadProgressLi
 
     @Override
     public void onError(@NonNull Throwable e) {
+        if (fileInfo == null) {
+            CommonLogger.e("onError出错");
+        }
         fileInfo.setStatus(DownloadStatus.ERROR);
         fileDAO.update(fileInfo);
         listener.onError(fileInfo, e.getMessage());
@@ -50,6 +55,9 @@ class DownLoadProgressObserver implements Observer<FileInfo>, DownloadProgressLi
 
     @Override
     public void onComplete() {
+        if (fileInfo == null) {
+            CommonLogger.e("onComplete出错");
+        }
         fileInfo.setStatus(DownloadStatus.COMPLETE);
         fileDAO.update(fileInfo);
         listener.onComplete(fileInfo);
@@ -72,6 +80,9 @@ class DownLoadProgressObserver implements Observer<FileInfo>, DownloadProgressLi
                             fileDAO.update(fileInfo);
                             listener.onCancel(fileInfo);
                             return;
+                        }
+                        if (fileInfo == null) {
+                            CommonLogger.e("下载这里出错");
                         }
                         fileInfo.setStatus(DownloadStatus.DOWNLOADING);
                         fileDAO.update(fileInfo);

@@ -59,10 +59,6 @@ import java.util.TreeSet;
 public class MusicService extends Service {
 
     public static final int MAX_HISTORY_SIZE = 1000;
-    public static final int TRACK_END = 0;
-    public static final int FOCUSCHANGE = 5;
-    public static final int SERVICE_DIED = 4;
-    public static final int NEXT = 10;
     public static final String MEDIA_BUTTON_PAUSE = "pause";
     public static final String MEDIA_BUTTON_ACTION = "media_button_action";
     public static final String COMMAND = "command";
@@ -71,28 +67,19 @@ public class MusicService extends Service {
     public static final String MEDIA_BUTTON_PLAY = "play";
     public static final String MEDIA_BUTTON_NEXT = "next";
     public static final String MEDIA_BUTTON_PREVIOUS = "previous";
-    public static final String QUEUE_CHANGED = "queue_changed";
     public static final String META_CHANGED = "meta_changed";
     public static final String PLAYSTATE_CHANGED = "play_state_changed";
-    public static final String POSITION_CHANGED = "position_changed";
-    public static final String PLAYLIST_CHANGED = "play_list_changed";
-
     public static final int MODE_NORMAL = 0;
     public static final int MODE_LOOP = 1;
     public static final int MODE_SHUFFLE = 2;
-
+    public static final String BUFFER_UPDATE_CHANGED = "butter_update_changed";
     private int mode = MODE_NORMAL;
-    /**
-     * 设置多少时长后关闭服务
-     */
-    public static final String NAME_ERROR_ACTION = "name_error_action";
-    public static final String ERROR_CODE = "ERROR_CODE";
     public static final int FADEDOWN = 6;
     public static final int FADEUP = 7;
     public static final String PREVIOUS_ACTION = "previous_action";
     public static final String NEXT_ACTION = "next_action";
     public static final String TOGGLEPAUSE_ACTION = "toggle_pause_action";
-    private IBinder bind = new MusicServiceStub(this);
+    private MusicServiceStub bind = new MusicServiceStub(this);
     private NotificationManagerCompat notificationManagerCompat;
     private DaoSession daoSession;
     private HandlerThread handlerThread;
@@ -107,7 +94,7 @@ public class MusicService extends Service {
     private int playPosition = -1;
     private int mOpenFailedCounter = 0;
     private static LinkedList<Integer> mHistory = new LinkedList<>();
-    private boolean mIsSupposedToBePlaying = false;
+    private boolean isPlaying = false;
     private Shuffler mShuffler = new Shuffler();
     private int nextPlayPosition = -1;
     private float mCurrentVolume = 1.0f;
@@ -134,7 +121,6 @@ public class MusicService extends Service {
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
         mWakeLock.setReferenceCounted(false);
         mPreferences = getSharedPreferences("Service", 0);
-        reloadQueue();
     }
 
 
@@ -176,26 +162,24 @@ public class MusicService extends Service {
     private void notifyChange(String action) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             updateMediaSession(action);
-        if (action.equals(POSITION_CHANGED)) {
-            return;
-        }
         final Intent intent = new Intent(action);
-        intent.putExtra("id", getAudioId());
-        intent.putExtra("artistName", getArtistName());
-        intent.putExtra("albumUrl", getAlbumUrl());
-        intent.putExtra("albumName", getAlbumName());
-        intent.putExtra("isPlaying", isPlaying());
-        intent.putExtra("songName", getSongName());
-        intent.putExtra("maxProgress", duration());
-        intent.putExtra("mode", getPlayMode());
+        if (!action.equals(BUFFER_UPDATE_CHANGED)) {
+            intent.putExtra("id", getAudioId());
+            intent.putExtra("artistName", getArtistName());
+            intent.putExtra("albumUrl", getAlbumUrl());
+            intent.putExtra("albumName", getAlbumName());
+            intent.putExtra("isPlaying", isPlaying());
+            intent.putExtra("songName", getSongName());
+            intent.putExtra("maxProgress", duration());
+            intent.putExtra("mode", getPlayMode());
+        } else {
+            intent.putExtra("buffer_update", wrappedMediaPlayer.getSecondProgress());
+        }
         sendBroadcast(intent);
         CommonLogger.e("已经发送广播");
         switch (action) {
             case META_CHANGED:
                 updateNotification();
-                break;
-            case QUEUE_CHANGED:
-                saveQueue(true);
                 break;
             case PLAYSTATE_CHANGED:
                 updateNotification();
@@ -217,7 +201,7 @@ public class MusicService extends Service {
 
     private void updateMediaSession(String action) {
         CommonLogger.e("updateMediaSession：" + action);
-        final int playState = mIsSupposedToBePlaying
+        final int playState = isPlaying
                 ? PlaybackStateCompat.STATE_PLAYING
                 : PlaybackStateCompat.STATE_PAUSED;
         if (action.equals(PLAYSTATE_CHANGED)) { //播放状态改变时
@@ -404,7 +388,7 @@ public class MusicService extends Service {
     }
 
     private boolean isPlaying() {
-        return mIsSupposedToBePlaying;
+        return isPlaying;
     }
 
     private long seek(long position) {
@@ -414,9 +398,7 @@ public class MusicService extends Service {
             } else if (position > wrappedMediaPlayer.duration()) {
                 position = wrappedMediaPlayer.duration();
             }
-            long result = wrappedMediaPlayer.seek(position);
-            notifyChange(POSITION_CHANGED);
-            return result;
+            return wrappedMediaPlayer.seek(position);
         }
         return -1;
     }
@@ -695,8 +677,8 @@ public class MusicService extends Service {
 
 
     private void setIsSupposedToBePlaying(boolean isPlaying, boolean notify) {
-        if (mIsSupposedToBePlaying != isPlaying) {
-            mIsSupposedToBePlaying = isPlaying;
+        if (this.isPlaying != isPlaying) {
+            this.isPlaying = isPlaying;
 
             if (notify) {
                 notifyChange(PLAYSTATE_CHANGED);
@@ -798,7 +780,8 @@ public class MusicService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        CommonLogger.e("服务的onBind");
+        CommonLogger.e("1服务的onBind");
+        reloadQueue();
         return bind;
     }
 
@@ -945,24 +928,6 @@ public class MusicService extends Service {
     }
 
 
-    private int removeMusicInfo(long id) {
-        int num = -1;
-        if (mPlaylist != null) {
-            for (int i = 0; i < mPlaylist.size(); i++) {
-                if (mPlaylist.get(i).getSongId() == id) {
-                    num = i;
-                    break;
-                }
-            }
-            if (num >= 0) {
-                mPlaylist.remove(num);
-                notifyChange(QUEUE_CHANGED);
-            }
-        }
-        return num;
-    }
-
-
     private void refresh() {
         CommonLogger.e("刷新啦啦啦");
         notifyChange(META_CHANGED);
@@ -974,11 +939,9 @@ public class MusicService extends Service {
     }
 
     private void open(List<MusicPlayBean> list, int position) {
-        boolean needNotofy = false;
         if (!list.equals(mPlaylist)) {
             addToPlayList(list, -1); //添加到播放列表,并清空原播放列表
             CommonLogger.e("清空之前的播放队列后通知队列的改变");
-            needNotofy = true;
         }
         if (position >= 0) {
             playPosition = position;
@@ -986,10 +949,6 @@ public class MusicService extends Service {
             playPosition = mShuffler.nextInt(mPlaylist.size());
         }
         mHistory.clear();
-
-        if (needNotofy) {
-            notifyChange(QUEUE_CHANGED);
-        }
         openCurrentAndMaybeNext(false);
     }
 
@@ -1033,15 +992,8 @@ public class MusicService extends Service {
                 mOpenFailedCounter = 0;
                 return true;
             }
-            sendErrorMessage(path);
             return false;
         }
-    }
-
-    private void sendErrorMessage(String name) {
-        final Intent i = new Intent(NAME_ERROR_ACTION);
-        i.putExtra(ERROR_CODE, name);
-        sendBroadcast(i); //发送广播,被PlaybackStatus接收
     }
 
 
@@ -1057,25 +1009,6 @@ public class MusicService extends Service {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case SERVICE_DIED:
-                    if (isPlaying()) {
-                        MusicErrorInfo info = (MusicErrorInfo) msg.obj;
-                        musicServiceWeakReference.get().sendErrorMessage(info.getName());
-                        musicServiceWeakReference.get().removeMusicInfo(info.getSongId());
-                    } else {
-//                        如果不是正在播放，直接切换到下一首
-                        musicServiceWeakReference.get().openCurrentAndNext();
-                    }
-                    break;
-                case TRACK_END:
-//                    全部播放完成
-//                    重复播放
-                    next(true);
-                    break;
-                case NEXT:
-                    CommonLogger.e("通知next");
-                    next(false);
-                    break;
                 case FADEDOWN:
                     mCurrentVolume -= 0.05f;
                     if (mCurrentVolume > 0.2f) {
@@ -1094,36 +1027,6 @@ public class MusicService extends Service {
                     }
                     musicServiceWeakReference.get().setVolume(mCurrentVolume);
                     break;
-                case FOCUSCHANGE:
-                    CommonLogger.e("FOCUSCHANGE");
-//                    MusicService service = musicServiceWeakReference.get();
-//                    switch (msg.arg1) {
-//                        case AudioManager.AUDIOFOCUS_LOSS:
-//                        case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-//                            if (service.isPlaying()) {
-//                                service.mPausedByTransientLossOfFocus =
-//                                        msg.arg1 == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
-//                            }
-//                            service.pause();
-//                            break;
-//                        case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-//                            removeMessages(FADEUP);
-//                            sendEmptyMessage(FADEDOWN);
-//                            break;
-//                        case AudioManager.AUDIOFOCUS_GAIN:
-//                            if (!service.isPlaying()
-//                                    && service.mPausedByTransientLossOfFocus) {
-//                                service.mPausedByTransientLossOfFocus = false;
-//                                mCurrentVolume = 0f;
-//                                service.setVolume(mCurrentVolume);
-//                                service.play();
-//                            } else {
-//                                removeMessages(FADEDOWN);
-//                                sendEmptyMessage(FADEUP);
-//                            }
-//                            break;
-//                        default:
-//                    }
                 default:
                     break;
             }
@@ -1366,10 +1269,6 @@ public class MusicService extends Service {
             CommonLogger.e("12播放声音出错" + what + "  " + extra);
             switch (what) {
                 case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                    MusicErrorInfo musicErrorInfo = new MusicErrorInfo();
-                    musicErrorInfo.setSongId(musicServiceWeakReference.get().getAudioId());
-                    musicErrorInfo.setName(musicServiceWeakReference.get().getSongName());
-                    musicServiceHandler.sendMessageDelayed(musicServiceHandler.obtainMessage(SERVICE_DIED, musicErrorInfo), 2000);
                     break;
                 default:
                     break;
@@ -1383,11 +1282,6 @@ public class MusicService extends Service {
                 prepareNext(false);
                 notifyChange(META_CHANGED);
                 CommonLogger.e("播放完,这里会继续播放下一首吗");
-            } else {
-                //           已经播放完所有的音乐
-                CommonLogger.e("播放完了？");
-                musicServiceWeakReference.get().getWeakLock().acquire(30000);
-                musicServiceHandler.sendEmptyMessage(TRACK_END);
             }
         }
 
@@ -1434,10 +1328,12 @@ public class MusicService extends Service {
 
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
+            CommonLogger.e("这里缓存");
             if (mp == mediaPlayer) {
-//                只获取现在播放的耳机进度条,因为播放一首时会提前加载下一首
-                secondProgress = percent;
+//                只获取现在播放的加载进度条,因为播放一首时会提前加载下一首
+                secondProgress = (int) (percent * (mp.getDuration()) / 100.0);
                 CommonLogger.e("加载缓存进度" + secondProgress);
+                notifyChange(BUFFER_UPDATE_CHANGED);
             }
         }
 
@@ -1468,9 +1364,6 @@ public class MusicService extends Service {
         }
     }
 
-    private PowerManager.WakeLock getWeakLock() {
-        return mWakeLock;
-    }
 
     private String getSongName() {
         CommonLogger.e("获取歌名");

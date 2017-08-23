@@ -24,7 +24,6 @@ interface IMusicService {
                    long seek(long pos);
                    MusicPlayBean getCurrentPlayInfo();
                    MusicPlayBean getPlayInfo(int index);
-
                    void remove(int position);
 
 

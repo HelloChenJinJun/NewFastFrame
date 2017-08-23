@@ -17,7 +17,7 @@ public class FileDAOImpl implements FileDAO {
 
     private FileDAOImpl() {
         // 创建数据库
-        mDbHelper = new DbHelper(BaseApplication.getInstance(),DB_NAME, null, 2);
+        mDbHelper = new DbHelper(BaseApplication.getInstance(), DB_NAME, null, 2);
     }
 
     private static class HolderClass {

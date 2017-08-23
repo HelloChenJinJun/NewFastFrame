@@ -54,9 +54,7 @@ public abstract class BaseSwipeRecyclerAdapter<T, K extends BaseWrappedViewHolde
         this.mSwipeMenuItemClickListener = swipeMenuItemClickListener;
     }
 
-    public BaseSwipeRecyclerAdapter(List<T> data, int layoutId) {
-        super(data, layoutId);
-    }
+
 
 
     @Override
@@ -87,7 +85,7 @@ public abstract class BaseSwipeRecyclerAdapter<T, K extends BaseWrappedViewHolde
 
         if (mSwipeMenuCreator != null && (viewType != HEADER && viewType != FOOTER && viewType != EMPTY)) {
             CommonLogger.e("这里有没有执行mSwipeMenuCreator");
-            SwipeMenuLayout swipeMenuLayout = (SwipeMenuLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.yanzhenjie_item_default, parent, false);
+            SwipeMenuLayout swipeMenuLayout = (SwipeMenuLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.swipe_item_layout, parent, false);
             SwipeMenu swipeLeftMenu = new SwipeMenu(swipeMenuLayout, viewType);
             SwipeMenu swipeRightMenu = new SwipeMenu(swipeMenuLayout, viewType);
 

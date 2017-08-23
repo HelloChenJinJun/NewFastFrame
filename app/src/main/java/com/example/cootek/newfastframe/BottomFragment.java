@@ -2,22 +2,27 @@ package com.example.cootek.newfastframe;
 
 import android.animation.FloatEvaluator;
 import android.animation.IntEvaluator;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.PopupMenuCompat;
-import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.WrappedLinearLayoutManager;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.swipeview.Closeable;
+import com.example.commonlibrary.baseadapter.swipeview.OnSwipeMenuItemClickListener;
+import com.example.commonlibrary.baseadapter.swipeview.SwipeMenu;
+import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuCreator;
+import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuItem;
+import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuRecyclerView;
 import com.example.commonlibrary.cusotomview.CustomPopWindow;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.imageloader.GlideImageLoaderConfig;
@@ -86,6 +91,9 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     TextView endTime;
     @BindView(R.id.lv_fragment_bottom_lrc_bottom)
     LrcView bottomLrc;
+
+    @BindView(R.id.rl_fragment_bottom_lrc_container)
+    RelativeLayout lrcContainer;
     private IntEvaluator intEvaluator;
     private int endSongName;
     private int endArtistName;
@@ -96,6 +104,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     private SlidingPanelLayout slidingUpPanelLayout;
     private CustomPopWindow customPopWindow;
     private int mode = 0;
+    private boolean isShow = true;
 
     @Override
     public void updateData(DownLoadMusicBean o) {
@@ -124,16 +133,31 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         slidingUpPanelLayout = (SlidingPanelLayout) root.getParent().getParent();
         slidingUpPanelLayout.addPanelSlideListener(this);
         lrcView.setOnSeekToListener(this);
+        lrcContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonLogger.e("点击容器");
+                updateLrcView();
+            }
+        });
         lrcView.setOnLrcClickListener(new LrcView.OnLrcClickListener() {
             @Override
             public void onClick() {
-                if (bg.getVisibility() == View.VISIBLE) {
-                    bg.setVisibility(View.INVISIBLE);
-                } else {
-                    bg.setVisibility(View.VISIBLE);
-                }
+                CommonLogger.e("点击容器");
+                updateLrcView();
             }
         });
+    }
+
+    private void updateLrcView() {
+        isShow = !isShow;
+        if (lrcView.getVisibility() == View.VISIBLE) {
+            lrcView.setVisibility(View.INVISIBLE);
+            bottomLrc.setVisibility(View.VISIBLE);
+        } else {
+            lrcView.setVisibility(View.VISIBLE);
+            bottomLrc.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -174,15 +198,28 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                             CommonLogger.e("接收到刷新消息啦啦");
                             reLoadMusic();
                             break;
+                        case MusicStatusEvent.BUFFER_UPDATE_CHANGED:
+                            CommonLogger.e("这里到了吗");
+                            int progress = musicStatusEvent.getMusicContent().getSecondProgress();
+                            seekBar.setSecondaryProgress(musicStatusEvent.getMusicContent().getSecondProgress());
+//                            重置
+                            if (progress == seekBar.getMax()) {
+                                CommonLogger.e("重置了吗?");
+                                seekBar.setSecondaryProgress(0);
+                            }
+                            break;
                     }
                 }
-
             }
         });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                lrcView.seekTo(progress, true, fromUser);
+                if (isShow) {
+                    lrcView.seekTo(progress, true, fromUser);
+                } else {
+                    bottomLrc.seekTo(progress, true, fromUser);
+                }
                 startTime.setText(MusicUtil.makeLrcTime(progress));
                 if (fromUser) {
                     seekBar.removeCallbacks(progressRun);
@@ -231,7 +268,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
 
     @Override
     protected void updateView() {
-        seekBar.setSecondaryProgress(seekBar.getMax());
         intEvaluator = new IntEvaluator();
         floatEvaluator = new FloatEvaluator();
         int sameWidth = playOrPause.getLayoutParams().width;
@@ -268,9 +304,24 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                 if (customPopWindow == null) {
                     View contentView = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_bottom_pop_window, null);
                     playNum = (TextView) contentView.findViewById(R.id.tv_view_fragment_bottom_pop_window_num);
-                    popDisplay = (SuperRecyclerView) contentView.findViewById(R.id.srcv_view_fragment_bottom_pop_window_display);
-                    popDisplay.setLayoutManager(new LinearLayoutManager(getContext()));
+                    SuperRecyclerView popDisplay = (SuperRecyclerView) contentView.findViewById(R.id.srcv_view_fragment_bottom_pop_window_display);
+                    popDisplay.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
                     popupWindowAdapter = new PopupWindowAdapter();
+//                    popDisplay.setSwipeMenuCreator(new SwipeMenuCreator() {
+//                        @Override
+//                        public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
+//                            SwipeMenuItem swipeMenuItem = new SwipeMenuItem(getContext());
+//                            swipeMenuItem.setImage(R.drawable.ic_delete_white_24dp).setBackgroundColor(Color.RED);
+//                            swipeRightMenu.addMenuItem(swipeMenuItem);
+//                        }
+//                    });
+//                    popDisplay.setSwipeMenuItemClickListener(new OnSwipeMenuItemClickListener() {
+//                        @Override
+//                        public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, @SwipeMenuRecyclerView.DirectionMode int direction) {
+//                            popupWindowAdapter.removeData(adapterPosition);
+//                            presenter.remove(adapterPosition);
+//                        }
+//                    });
                     popupWindowAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
                         @Override
                         public void onItemClick(int position, View view) {
@@ -298,7 +349,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
 
 
     private TextView playNum;
-    private SuperRecyclerView popDisplay;
     private PopupWindowAdapter popupWindowAdapter;
     private long[] lastIdList;
 
@@ -346,22 +396,38 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         startTime.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         endTime.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         lrcView.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
+        bottomLrc.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         iconContainer.setTranslationY(intEvaluator.evaluate(slideOffset, 0, screenHeight - (2 * iconContainer.getHeight())));
+        bottomLrc.setTranslationY(intEvaluator.evaluate(slideOffset, 0, (screenHeight - (4 * iconContainer.getHeight()))));
         seekContainer.setTranslationY(intEvaluator.evaluate(slideOffset, 0, (int) (screenHeight - (2.5 * iconContainer.getHeight()))));
     }
 
     @Override
     public void onPanelStateChanged(View panel, SlidingPanelLayout.PanelState previousState, SlidingPanelLayout.PanelState newState) {
         if (previousState == SlidingPanelLayout.PanelState.COLLAPSED && newState == SlidingPanelLayout.PanelState.DRAGGING) {
+            lrcContainer.setVisibility(View.VISIBLE);
             like.setVisibility(View.VISIBLE);
-            lrcView.setVisibility(View.VISIBLE);
+            if (isShow) {
+                bottomLrc.setVisibility(View.INVISIBLE);
+                lrcView.setVisibility(View.VISIBLE);
+            } else {
+                bottomLrc.setVisibility(View.VISIBLE);
+                lrcView.setVisibility(View.INVISIBLE);
+            }
             bg.setVisibility(View.VISIBLE);
             startTime.setVisibility(View.VISIBLE);
             endTime.setVisibility(View.VISIBLE);
             seekBar.setPadding(10, 0, 10, 0);
         } else if (previousState == SlidingPanelLayout.PanelState.DRAGGING && newState == SlidingPanelLayout.PanelState.COLLAPSED) {
             like.setVisibility(View.INVISIBLE);
-            lrcView.setVisibility(View.INVISIBLE);
+            lrcContainer.setVisibility(View.INVISIBLE);
+            if (!isShow) {
+                bottomLrc.setVisibility(View.INVISIBLE);
+                lrcView.setVisibility(View.VISIBLE);
+            } else {
+                bottomLrc.setVisibility(View.VISIBLE);
+                lrcView.setVisibility(View.INVISIBLE);
+            }
             if (startTime.getVisibility() == View.VISIBLE) {
                 startTime.setVisibility(View.GONE);
             }
@@ -386,7 +452,14 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             List<LrcRow> result = MusicUtil.parseLrcContent(file);
             if (result != null && result.size() > 0) {
                 lrcView.setLrcRows(result);
-                lrcView.setVisibility(View.VISIBLE);
+                bottomLrc.setLrcRows(result);
+                if (isShow) {
+                    lrcView.setVisibility(View.VISIBLE);
+                    bottomLrc.setVisibility(View.INVISIBLE);
+                } else {
+                    lrcView.setVisibility(View.INVISIBLE);
+                    bottomLrc.setVisibility(View.VISIBLE);
+                }
                 CommonLogger.e("获取得到了歌词啦啦");
             } else {
                 CommonLogger.e("歌词为空");
@@ -394,7 +467,9 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         } else {
             CommonLogger.e("文件不存在？");
             lrcView.reset();
+            bottomLrc.reset();
             lrcView.setVisibility(View.INVISIBLE);
+            bottomLrc.setVisibility(View.INVISIBLE);
         }
     }
 

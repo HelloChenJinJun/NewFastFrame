@@ -23,21 +23,28 @@
         app:roundWidth="25dp" />
 
 
-    <com.example.cootek.newfastframe.lrc.LrcView
-        android:id="@+id/lv_fragment_bottom_lrc"
+    <RelativeLayout
+        android:id="@+id/rl_fragment_bottom_lrc_container"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="70dp"
-        android:alpha="0"
-        android:visibility="invisible" />
+        android:layout_height="wrap_content"
+        android:visibility="invisible">
+
+        <com.example.cootek.newfastframe.lrc.LrcView
+            android:id="@+id/lv_fragment_bottom_lrc"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginTop="70dp"
+            android:alpha="0"
+            android:visibility="invisible" />
 
 
-    <com.example.cootek.newfastframe.lrc.LrcView
-        android:id="@+id/lv_fragment_bottom_lrc_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:alpha="0"
-        android:visibility="invisible" />
+        <com.example.cootek.newfastframe.lrc.LrcView
+            android:id="@+id/lv_fragment_bottom_lrc_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:alpha="0"
+            android:visibility="invisible" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

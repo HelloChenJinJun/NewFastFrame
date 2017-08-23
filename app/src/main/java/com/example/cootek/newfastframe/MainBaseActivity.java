@@ -28,12 +28,9 @@ public abstract class MainBaseActivity<T, P extends BasePresenter> extends BaseA
         receiver = new MusicBroadCastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicService.META_CHANGED);
-        intentFilter.addAction(MusicService.PLAYLIST_CHANGED);
         intentFilter.addAction(MusicService.PLAYSTATE_CHANGED);
-        intentFilter.addAction(MusicService.POSITION_CHANGED);
-        intentFilter.addAction(MusicService.QUEUE_CHANGED);
+        intentFilter.addAction(MusicService.BUFFER_UPDATE_CHANGED);
         registerReceiver(receiver, intentFilter);
-        CommonLogger.e("注册完了了");
         super.onCreate(savedInstanceState);
     }
 
@@ -61,27 +58,20 @@ public abstract class MainBaseActivity<T, P extends BasePresenter> extends BaseA
                 musicContent.setMaxProgress(intent.getLongExtra("maxProgress", 0));
                 musicContent.setAlbumUrl(intent.getStringExtra("albumUrl"));
                 musicContent.setMode(intent.getIntExtra("mode", 0));
+                musicContent.setSecondProgress(intent.getIntExtra("buffer_update", 0));
                 musicStatusEvent.setMusicContent(musicContent);
                 switch (action) {
                     case MusicService.META_CHANGED:
                         CommonLogger.e("状态" + MusicService.META_CHANGED);
                         musicStatusEvent.setCurrentStatus(MusicStatusEvent.META_CHANGED);
                         break;
-                    case MusicService.PLAYLIST_CHANGED:
-                        CommonLogger.e("状态" + MusicService.PLAYLIST_CHANGED);
-                        musicStatusEvent.setCurrentStatus(MusicStatusEvent.PLAYLIST_CHANGED);
-                        break;
                     case MusicService.PLAYSTATE_CHANGED:
                         CommonLogger.e("状态" + MusicService.PLAYSTATE_CHANGED);
                         musicStatusEvent.setCurrentStatus(MusicStatusEvent.PLAYSTATE_CHANGED);
                         break;
-                    case MusicService.POSITION_CHANGED:
-                        CommonLogger.e("状态" + MusicService.POSITION_CHANGED);
-                        musicStatusEvent.setCurrentStatus(MusicStatusEvent.POSITION_CHANGED);
-                        break;
-                    case MusicService.QUEUE_CHANGED:
-                        CommonLogger.e("状态" + MusicService.QUEUE_CHANGED);
-                        musicStatusEvent.setCurrentStatus(MusicStatusEvent.QUEUE_CHANGED);
+                    case MusicService.BUFFER_UPDATE_CHANGED:
+                        CommonLogger.e("状态" + MusicService.BUFFER_UPDATE_CHANGED);
+                        musicStatusEvent.setCurrentStatus(MusicStatusEvent.BUFFER_UPDATE_CHANGED);
                         break;
                 }
                 RxBusManager.getInstance().post(musicStatusEvent);

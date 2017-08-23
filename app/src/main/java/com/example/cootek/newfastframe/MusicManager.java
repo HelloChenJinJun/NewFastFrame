@@ -25,7 +25,6 @@ public class MusicManager {
     private static MusicManager instance;
     private IMusicService service;
     private WeakHashMap<Context, BindConnection> connectionWeakHashMap;
-    private boolean needRefreshData;
 
     public static MusicManager getInstance() {
         if (instance == null) {
@@ -47,12 +46,7 @@ public class MusicManager {
         Intent intent = new Intent(context, MusicService.class);
         CommonLogger.e("这里的服务名" + MusicService.class.getName());
         if (AppUtil.isServiceRunning(context, MusicService.class.getName())) {
-//            之前的服务是存活的,需要刷新界面数据
-            CommonLogger.e("需要绑定");
-            needRefreshData = true;
         } else {
-            needRefreshData = false;
-            CommonLogger.e("启动服务啦啦啦1");
             context.startService(intent);
         }
         BindConnection bindConnection = new BindConnection();
@@ -153,7 +147,6 @@ public class MusicManager {
     }
 
 
-
     public boolean isPlaying() {
         try {
             if (service != null) {
@@ -239,10 +232,8 @@ public class MusicManager {
         public void onServiceConnected(ComponentName name, IBinder service) {
             CommonLogger.e("连接远程服务成功");
             MusicManager.this.service = IMusicService.Stub.asInterface(service);
-            if (needRefreshData) {
-                CommonLogger.e("发送刷新消息啦啦");
-                RxBusManager.getInstance().post(new MusicStatusEvent(MusicStatusEvent.REFRESH_CHANGED));
-            }
+            CommonLogger.e("发送刷新消息啦啦");
+            RxBusManager.getInstance().post(new MusicStatusEvent(MusicStatusEvent.REFRESH_CHANGED));
         }
 
         @Override

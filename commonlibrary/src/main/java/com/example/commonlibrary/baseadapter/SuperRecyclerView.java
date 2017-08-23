@@ -21,10 +21,11 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.example.commonlibrary.R;
+import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuRecyclerView;
 import com.example.commonlibrary.utils.CommonLogger;
 
 
-public class SuperRecyclerView extends RecyclerView {
+public class SuperRecyclerView extends SwipeMenuRecyclerView {
     private static final String TAG = SuperRecyclerView.class.getSimpleName();
 
     public static final int STATUS_DEFAULT = 0;

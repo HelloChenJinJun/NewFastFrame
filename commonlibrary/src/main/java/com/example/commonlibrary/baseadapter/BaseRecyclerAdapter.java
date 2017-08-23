@@ -274,7 +274,6 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             mLayoutInflater = LayoutInflater.from(parent.getContext());
         }
         K k = createBaseViewHolder(getLayoutFromViewType(parent, viewType));
-        k.bindAdapter(this);
         return k;
     }
 
@@ -309,6 +308,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             adapterClass = adapterClass.getSuperclass();
         }
         K k = createGenericKInstance(resultClass, view);
+        if (k != null) {
+            k.bindAdapter(this);
+        }
         return k != null ? k : (K) new BaseWrappedViewHolder(view);
     }
 

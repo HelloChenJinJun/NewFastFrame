@@ -12,8 +12,7 @@ public class MusicStatusEvent {
     public static final String POSITION_CHANGED = "POSITION_CHANGED";
     public static final String QUEUE_CHANGED = "QUEUE_CHANGED";
     public static final String REFRESH_CHANGED = "REFRESH_CHANGED";
-    public static final String REPEATMODE_CHANGED = "repeatmode_changed";
-    public static final String SHUFFLEMODE_CHANGED = "shuffle_mode_changed";
+    public static final String BUFFER_UPDATE_CHANGED = "BUFFER_UPDATE_CHANGED";
     private String currentStatus;
     private MusicContent musicContent;
 
@@ -41,6 +40,7 @@ public class MusicStatusEvent {
         this.musicContent = musicContent;
     }
 
+
     public static class MusicContent {
         private long id;
         private String songName;
@@ -50,9 +50,11 @@ public class MusicStatusEvent {
         private long maxProgress;
         private String albumUrl;
         private int mode;
+        private int secondProgress;
 
 
-        public MusicContent(long id, String songName, String artistName, String albumName, boolean isPlaying, long maxProgress, String albumUrl, int mode) {
+        public MusicContent(long id, String songName, String artistName, String albumName, boolean isPlaying, long maxProgress, String albumUrl, int mode
+                , int secondProgress) {
             this.id = id;
             this.songName = songName;
             this.artistName = artistName;
@@ -61,6 +63,16 @@ public class MusicStatusEvent {
             this.isPlaying = isPlaying;
             this.albumUrl = albumUrl;
             this.mode = mode;
+            this.secondProgress = secondProgress;
+        }
+
+
+        public void setSecondProgress(int secondProgress) {
+            this.secondProgress = secondProgress;
+        }
+
+        public int getSecondProgress() {
+            return secondProgress;
         }
 
 

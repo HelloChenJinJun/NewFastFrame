@@ -1,17 +1,23 @@
 package com.example.cootek.newfastframe;
 
 import com.example.commonlibrary.baseadapter.BaseRecyclerAdapter;
+import com.example.commonlibrary.baseadapter.BaseSwipeRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.BaseWrappedViewHolder;
+
+import java.util.List;
 
 /**
  * Created by COOTEK on 2017/8/22.
  */
 
 class PopupWindowAdapter extends BaseRecyclerAdapter<MusicPlayBean, BaseWrappedViewHolder> {
+
+
     @Override
     protected int getLayoutId() {
         return R.layout.item_view_pop_window_fragment_bottom;
     }
+
 
     @Override
     protected void convert(BaseWrappedViewHolder holder, MusicPlayBean data) {

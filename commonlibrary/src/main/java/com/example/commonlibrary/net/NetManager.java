@@ -56,7 +56,7 @@ public class NetManager {
 
     private NetManager() {
         stringRetrofitMap = new HashMap<>();
-        daoSession =FileDAOImpl.getInstance();
+        daoSession = FileDAOImpl.getInstance();
         compositeDisposableMap = new HashMap<>();
         newFileInfoMap = new HashMap<>();
     }
@@ -64,10 +64,10 @@ public class NetManager {
 
     public void upLoad(final String url, String key, final File file, UpLoadListener listener) {
         final FileInfo info;
-        if (daoSession.query(url)==null) {
-            info = new FileInfo(file.getAbsolutePath(), file.getName(), DownloadStatus.NORMAL, 0, 0,0, getDownLoadCacheDir());
+        if (daoSession.query(url) == null) {
+            info = new FileInfo(file.getAbsolutePath(), file.getName(), DownloadStatus.NORMAL, 0, 0, 0, getDownLoadCacheDir());
         } else {
-            info =daoSession.query(url);
+            info = daoSession.query(url);
         }
         newFileInfoMap.put(file.getAbsolutePath(), info);
         Retrofit retrofit = BaseApplication.getAppComponent().getRetrofit();
@@ -114,8 +114,9 @@ public class NetManager {
             return;
         }
         FileInfo info = daoSession.query(url);
-        if (info== null) {
-            info = new FileInfo(url,FileUtil.clipFileName(url), DownloadStatus.NORMAL, 0, 0,0, getDownLoadCacheDir());
+        if (info == null) {
+            info = new FileInfo(url, FileUtil.clipFileName(url), DownloadStatus.NORMAL, 0, 0, 0, getDownLoadCacheDir());
+            daoSession.insert(info);
         }
         newFileInfoMap.put(url, info);
         Retrofit retrofit;
@@ -130,10 +131,10 @@ public class NetManager {
                     .client(builder.build()).baseUrl(AppUtil.getBasUrl(url)).build();
             stringRetrofitMap.put(url, retrofit);
         }
-        retrofit.create(DownLoadApi.class).downLoad("bytes=" + info.getLoadBytes() + "-", url).subscribeOn(Schedulers.io()).map(new Function<Response, FileInfo>() {
+        retrofit.create(DownLoadApi.class).downLoad("bytes=" + info.getLoadBytes() + "-", url).subscribeOn(Schedulers.io()).map(new Function<ResponseBody, FileInfo>() {
             @Override
-            public FileInfo apply(@NonNull Response response) throws Exception {
-                return writeCaches(response.body(), url);
+            public FileInfo apply(@NonNull ResponseBody responseBody) throws Exception {
+                return writeCaches(responseBody, url);
             }
         }).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).retryWhen(new RetryWhenNetworkException()).doOnSubscribe(new Consumer<Disposable>() {
             @Override
@@ -194,6 +195,9 @@ public class NetManager {
             FileChannel channelOut = null;
             InputStream inputStream = null;
             try {
+                if (info == null) {
+                    CommonLogger.e("写入缓存这里出错");
+                }
                 info.setStatus(DownloadStatus.DOWNLOADING);
                 File file = new File(info.getPath(), info.getName());
                 if (!file.getParentFile().exists())
