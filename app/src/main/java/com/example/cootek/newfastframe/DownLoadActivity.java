@@ -105,10 +105,22 @@ public class DownLoadActivity extends BaseActivity {
 
             @Override
             public void onUpdate(FileInfo fileInfo) {
-                if (pbOne.getMax() == 0) {
-                    pbOne.setMax(fileInfo.getTotalBytes());
+                if (i == 0) {
+                    if (pbOne.getMax() == 0) {
+                        pbOne.setMax(fileInfo.getTotalBytes());
+                    }
+                    pbOne.setProgress(fileInfo.getLoadBytes());
+                } else if (i == 1) {
+                    if (pbTwo.getMax() == 0) {
+                        pbTwo.setMax(fileInfo.getTotalBytes());
+                    }
+                    pbTwo.setProgress(fileInfo.getLoadBytes());
+                } else {
+                    if (pbThree.getMax() == 0) {
+                        pbThree.setMax(fileInfo.getTotalBytes());
+                    }
+                    pbThree.setProgress(fileInfo.getLoadBytes());
                 }
-                pbOne.setProgress(fileInfo.getLoadBytes());
             }
 
             @Override
@@ -118,7 +130,7 @@ public class DownLoadActivity extends BaseActivity {
 
             @Override
             public void onComplete(FileInfo fileInfo) {
-                CommonLogger.e("完成");
+                CommonLogger.e("完成" + fileInfo.getPath() + fileInfo.getName());
             }
 
             @Override

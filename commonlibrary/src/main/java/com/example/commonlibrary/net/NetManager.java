@@ -1,5 +1,7 @@
 package com.example.commonlibrary.net;
 
+import android.os.Environment;
+
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.DownloadStatus;
 import com.example.commonlibrary.utils.AppUtil;
@@ -171,7 +173,8 @@ public class NetManager {
 
 
     public String getDownLoadCacheDir() {
-        return BaseApplication.getAppComponent().getCacheFile().getAbsolutePath();
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/music_download/";
+//        return BaseApplication.getAppComponent().getCacheFile().getAbsolutePath();
     }
 
 

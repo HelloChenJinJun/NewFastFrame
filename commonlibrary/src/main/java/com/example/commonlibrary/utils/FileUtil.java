@@ -56,7 +56,10 @@ public class FileUtil {
     public static String clipFileName(String path) {
         int index = path.lastIndexOf("/");
         if (index != -1) {
-            return path.substring(index + 1);
+            String expendName = path.substring(index + 1);
+            if (expendName.contains("?")) {
+                return expendName.substring(0, expendName.indexOf("?"));
+            }
         }
         return null;
     }

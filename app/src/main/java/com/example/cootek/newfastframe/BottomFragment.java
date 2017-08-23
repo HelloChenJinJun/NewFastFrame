@@ -91,6 +91,8 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     TextView endTime;
     @BindView(R.id.lv_fragment_bottom_lrc_bottom)
     LrcView bottomLrc;
+    @BindView(R.id.iv_fragment_bottom_back)
+    ImageView back;
 
     @BindView(R.id.rl_fragment_bottom_lrc_container)
     RelativeLayout lrcContainer;
@@ -286,7 +288,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     }
 
 
-    @OnClick({R.id.iv_fragment_bottom_next, R.id.iv_fragment_bottom_previous, R.id.iv_fragment_bottom_play, R.id.iv_fragment_bottom_like, R.id.iv_fragment_bottom_list})
+    @OnClick({R.id.iv_fragment_bottom_next, R.id.iv_fragment_bottom_previous, R.id.iv_fragment_bottom_play, R.id.iv_fragment_bottom_like, R.id.iv_fragment_bottom_list, R.id.iv_fragment_bottom_back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_fragment_bottom_next:
@@ -344,6 +346,11 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                     customPopWindow.show(20, 20);
                 }
                 break;
+            case R.id.iv_fragment_bottom_back:
+                CommonLogger.e("这里收缩");
+                slidingUpPanelLayout.setPanelState(SlidingPanelLayout.PanelState.COLLAPSED);
+                break;
+
         }
     }
 
@@ -397,6 +404,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         endTime.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         lrcView.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         bottomLrc.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
+        back.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         iconContainer.setTranslationY(intEvaluator.evaluate(slideOffset, 0, screenHeight - (2 * iconContainer.getHeight())));
         bottomLrc.setTranslationY(intEvaluator.evaluate(slideOffset, 0, (screenHeight - (4 * iconContainer.getHeight()))));
         seekContainer.setTranslationY(intEvaluator.evaluate(slideOffset, 0, (int) (screenHeight - (2.5 * iconContainer.getHeight()))));
@@ -407,6 +415,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         if (previousState == SlidingPanelLayout.PanelState.COLLAPSED && newState == SlidingPanelLayout.PanelState.DRAGGING) {
             lrcContainer.setVisibility(View.VISIBLE);
             like.setVisibility(View.VISIBLE);
+            back.setVisibility(View.VISIBLE);
             if (isShow) {
                 bottomLrc.setVisibility(View.INVISIBLE);
                 lrcView.setVisibility(View.VISIBLE);
@@ -420,6 +429,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             seekBar.setPadding(10, 0, 10, 0);
         } else if (previousState == SlidingPanelLayout.PanelState.DRAGGING && newState == SlidingPanelLayout.PanelState.COLLAPSED) {
             like.setVisibility(View.INVISIBLE);
+            back.setVisibility(View.INVISIBLE);
             lrcContainer.setVisibility(View.INVISIBLE);
             if (!isShow) {
                 bottomLrc.setVisibility(View.INVISIBLE);
