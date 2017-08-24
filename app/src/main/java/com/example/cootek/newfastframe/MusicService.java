@@ -899,7 +899,11 @@ public class MusicService extends Service {
     }
 
     private void setPlayMode(int mode) {
-        this.mode = mode;
+        if (this.mode != mode) {
+            this.mode = mode;
+//            重新选择下一首歌曲
+            setNextMusicPlayInfo();
+        }
     }
 
     private void remove(int position) {

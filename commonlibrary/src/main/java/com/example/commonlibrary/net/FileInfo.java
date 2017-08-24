@@ -41,14 +41,14 @@ public class FileInfo implements Parcelable {
     }
 
 
-    public FileInfo(String url,String name,int status,int totalBytes,int loadBytes,int speed,String path){
+    public FileInfo(String url, String name, int status, int totalBytes, int loadBytes, int speed, String path) {
         this.url = url;
         this.name = name;
         this.status = status;
         this.totalBytes = totalBytes;
         this.loadBytes = loadBytes;
         this.speed = speed;
-        this.path =path;
+        this.path = path;
     }
 
     public String getUrl() {

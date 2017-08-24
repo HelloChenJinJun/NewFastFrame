@@ -4,6 +4,7 @@ import android.animation.FloatEvaluator;
 import android.animation.IntEvaluator;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.media.Image;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -54,7 +55,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Created by COOTEK on 2017/8/13.
  */
 
-public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresenter> implements SlidingPanelLayout.PanelSlideListener, IBottomView<DownLoadMusicBean>, LrcView.OnSeekToListener {
+public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresenter> implements SlidingPanelLayout.PanelSlideListener, IBottomView<DownLoadMusicBean>, LrcView.OnSeekToListener, View.OnClickListener {
 
 
     @BindView(R.id.riv_fragment_bottom_album)
@@ -69,8 +70,8 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     ImageView previous;
     @BindView(R.id.iv_fragment_bottom_play)
     ImageView playOrPause;
-    @BindView(R.id.iv_fragment_bottom_like)
-    ImageView like;
+    @BindView(R.id.iv_fragment_bottom_mode)
+    ImageView playMode;
     @BindView(R.id.iv_fragment_bottom_list)
     ImageView list;
     @BindView(R.id.rl_fragment_bottom_icon_container)
@@ -93,6 +94,10 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     LrcView bottomLrc;
     @BindView(R.id.iv_fragment_bottom_back)
     ImageView back;
+    @BindView(R.id.iv_fragment_bottom_comment)
+    ImageView comment;
+    @BindView(R.id.cl_fragment_bottom_comment_layout)
+    CommentLayout commentLayout;
 
     @BindView(R.id.rl_fragment_bottom_lrc_container)
     RelativeLayout lrcContainer;
@@ -202,13 +207,13 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                             break;
                         case MusicStatusEvent.BUFFER_UPDATE_CHANGED:
                             CommonLogger.e("这里到了吗");
-                            int progress = musicStatusEvent.getMusicContent().getSecondProgress();
+//                            int progress = musicStatusEvent.getMusicContent().getSecondProgress();
                             seekBar.setSecondaryProgress(musicStatusEvent.getMusicContent().getSecondProgress());
 //                            重置
-                            if (progress == seekBar.getMax()) {
-                                CommonLogger.e("重置了吗?");
-                                seekBar.setSecondaryProgress(0);
-                            }
+//                            if (progress == seekBar.getMax()) {
+//                                CommonLogger.e("重置了吗?");
+//                                seekBar.setSecondaryProgress(0);
+//                            }
                             break;
                     }
                 }
@@ -261,10 +266,11 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         if (content.getAlbumUrl() != null) {
             updateAlbum(content.getAlbumUrl());
         }
-        mode = content.getMode();
+        updatePlayMode(content.getMode());
         updateMusicContent(new File(MusicUtil.getLyricPath(content.getId())));
         CommonLogger.e("更新最大进度" + content.getMaxProgress());
         updateMaxProgress((int) content.getMaxProgress());
+
         updateProgress();
     }
 
@@ -288,7 +294,11 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     }
 
 
-    @OnClick({R.id.iv_fragment_bottom_next, R.id.iv_fragment_bottom_previous, R.id.iv_fragment_bottom_play, R.id.iv_fragment_bottom_like, R.id.iv_fragment_bottom_list, R.id.iv_fragment_bottom_back})
+    private CustomPopWindow playModeWindow;
+
+
+    @OnClick({R.id.iv_fragment_bottom_next, R.id.iv_fragment_bottom_previous, R.id.iv_fragment_bottom_play, R.id.iv_fragment_bottom_mode, R.id.iv_fragment_bottom_list, R.id.iv_fragment_bottom_back,
+            R.id.iv_fragment_bottom_comment})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_fragment_bottom_next:
@@ -300,7 +310,21 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             case R.id.iv_fragment_bottom_play:
                 presenter.playOrPause();
                 break;
-            case R.id.iv_fragment_bottom_like:
+            case R.id.iv_fragment_bottom_mode:
+                if (playModeWindow == null) {
+                    View contentView = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_bottom_pop_window_mode, null);
+                    LinearLayout normal = (LinearLayout) contentView.findViewById(R.id.ll_view_fragment_bottom_pop_window_mode_normal);
+                    LinearLayout shuffle = (LinearLayout) contentView.findViewById(R.id.ll_view_fragment_bottom_pop_window_mode_shuffle);
+                    LinearLayout repeat = (LinearLayout) contentView.findViewById(R.id.ll_view_fragment_bottom_pop_window_mode_repeat);
+                    normal.setOnClickListener(this);
+                    shuffle.setOnClickListener(this);
+                    repeat.setOnClickListener(this);
+                    playModeWindow = new CustomPopWindow.Builder().contentView(contentView).parentView(view).build();
+                    int[] result = DensityUtil.getViewWidthAndHeight(contentView);
+                    playModeWindow.show(DensityUtil.getScreenWidth(contentView.getContext()) - result[0], 20);
+                } else {
+                    playModeWindow.show(DensityUtil.getScreenWidth(getContext()) - DensityUtil.getViewWidthAndHeight(playModeWindow.getContentView())[0], 20);
+                }
                 break;
             case R.id.iv_fragment_bottom_list:
                 if (customPopWindow == null) {
@@ -309,21 +333,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                     SuperRecyclerView popDisplay = (SuperRecyclerView) contentView.findViewById(R.id.srcv_view_fragment_bottom_pop_window_display);
                     popDisplay.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
                     popupWindowAdapter = new PopupWindowAdapter();
-//                    popDisplay.setSwipeMenuCreator(new SwipeMenuCreator() {
-//                        @Override
-//                        public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-//                            SwipeMenuItem swipeMenuItem = new SwipeMenuItem(getContext());
-//                            swipeMenuItem.setImage(R.drawable.ic_delete_white_24dp).setBackgroundColor(Color.RED);
-//                            swipeRightMenu.addMenuItem(swipeMenuItem);
-//                        }
-//                    });
-//                    popDisplay.setSwipeMenuItemClickListener(new OnSwipeMenuItemClickListener() {
-//                        @Override
-//                        public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, @SwipeMenuRecyclerView.DirectionMode int direction) {
-//                            popupWindowAdapter.removeData(adapterPosition);
-//                            presenter.remove(adapterPosition);
-//                        }
-//                    });
                     popupWindowAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
                         @Override
                         public void onItemClick(int position, View view) {
@@ -350,8 +359,20 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                 CommonLogger.e("这里收缩");
                 slidingUpPanelLayout.setPanelState(SlidingPanelLayout.PanelState.COLLAPSED);
                 break;
-
+            case R.id.iv_fragment_bottom_comment:
+                CommonLogger.e("点击啦啦啦");
+                commentLayout.setData(getData());
+                commentLayout.start();
+                break;
         }
+    }
+
+    private List<String> getData() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
+            list.add("测试" + i);
+        }
+        return list;
     }
 
 
@@ -393,11 +414,11 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         songName.setTranslationX(intEvaluator.evaluate(slideOffset, 0, endSongName));
         artistName.setTranslationX(intEvaluator.evaluate(slideOffset, 0, endArtistName));
         next.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay - DensityUtil.dip2px(getContext(), 15)));
-        like.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay + DensityUtil.dip2px(getContext(), 30)));
+        playMode.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay + DensityUtil.dip2px(getContext(), 30)));
         previous.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay + DensityUtil.dip2px(getContext(), 15)));
         list.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay - DensityUtil.dip2px(getContext(), 30)));
         playOrPause.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay));
-        like.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
+        playMode.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         list.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         bg.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         startTime.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
@@ -405,7 +426,9 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         lrcView.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         bottomLrc.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         back.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
+        comment.setAlpha(floatEvaluator.evaluate(slideOffset, 0, 1));
         iconContainer.setTranslationY(intEvaluator.evaluate(slideOffset, 0, screenHeight - (2 * iconContainer.getHeight())));
+        comment.setTranslationY(intEvaluator.evaluate(slideOffset, 0, screenHeight - (3 * iconContainer.getHeight())));
         bottomLrc.setTranslationY(intEvaluator.evaluate(slideOffset, 0, (screenHeight - (4 * iconContainer.getHeight()))));
         seekContainer.setTranslationY(intEvaluator.evaluate(slideOffset, 0, (int) (screenHeight - (2.5 * iconContainer.getHeight()))));
     }
@@ -414,7 +437,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     public void onPanelStateChanged(View panel, SlidingPanelLayout.PanelState previousState, SlidingPanelLayout.PanelState newState) {
         if (previousState == SlidingPanelLayout.PanelState.COLLAPSED && newState == SlidingPanelLayout.PanelState.DRAGGING) {
             lrcContainer.setVisibility(View.VISIBLE);
-            like.setVisibility(View.VISIBLE);
+            playMode.setVisibility(View.VISIBLE);
             back.setVisibility(View.VISIBLE);
             if (isShow) {
                 bottomLrc.setVisibility(View.INVISIBLE);
@@ -423,13 +446,16 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                 bottomLrc.setVisibility(View.VISIBLE);
                 lrcView.setVisibility(View.INVISIBLE);
             }
+            comment.setVisibility(View.VISIBLE);
             bg.setVisibility(View.VISIBLE);
             startTime.setVisibility(View.VISIBLE);
             endTime.setVisibility(View.VISIBLE);
             seekBar.setPadding(10, 0, 10, 0);
         } else if (previousState == SlidingPanelLayout.PanelState.DRAGGING && newState == SlidingPanelLayout.PanelState.COLLAPSED) {
-            like.setVisibility(View.INVISIBLE);
+            playMode.setVisibility(View.INVISIBLE);
             back.setVisibility(View.INVISIBLE);
+            commentLayout.stop();
+            comment.setVisibility(View.INVISIBLE);
             lrcContainer.setVisibility(View.INVISIBLE);
             if (!isShow) {
                 bottomLrc.setVisibility(View.INVISIBLE);
@@ -485,8 +511,11 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
 
     @Override
     public void updateMaxProgress(int max) {
-        seekBar.setMax(max);
-        endTime.setText(MusicUtil.makeLrcTime(max));
+        if (seekBar.getMax() != 0 && seekBar.getMax() != max) {
+            seekBar.setSecondaryProgress(max);
+            seekBar.setMax(max);
+            endTime.setText(MusicUtil.makeLrcTime(max));
+        }
     }
 
     @Override
@@ -541,5 +570,29 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     @Override
     public void onSeekTo(int progress) {
         MusicManager.getInstance().seekTo(progress);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int currentMode;
+        if (v.getId() == R.id.ll_view_fragment_bottom_pop_window_mode_repeat) {
+            currentMode = MusicService.MODE_LOOP;
+            playMode.setImageResource(R.drawable.ic_repeat_one_white_24dp);
+        } else if (v.getId() == R.id.ll_view_fragment_bottom_pop_window_mode_normal) {
+            currentMode = MusicService.MODE_NORMAL;
+            playMode.setImageResource(R.drawable.ic_compare_arrows_white_24dp);
+        } else {
+            currentMode = MusicService.MODE_SHUFFLE;
+            playMode.setImageResource(R.drawable.ic_shuffle_white_24dp);
+        }
+        playModeWindow.dismiss();
+        updatePlayMode(currentMode);
+    }
+
+    private void updatePlayMode(int currentMode) {
+        if (currentMode != mode) {
+            mode = currentMode;
+            presenter.setMode(mode);
+        }
     }
 }

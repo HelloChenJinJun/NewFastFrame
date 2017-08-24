@@ -41,15 +41,33 @@
         <com.example.cootek.newfastframe.lrc.LrcView
             android:id="@+id/lv_fragment_bottom_lrc_bottom"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="35dp"
             android:alpha="0"
             android:visibility="invisible" />
     </RelativeLayout>
+
+    <com.example.cootek.newfastframe.CommentLayout
+        android:id="@+id/cl_fragment_bottom_comment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:orientation="vertical" />
+
+
+    <ImageView
+        android:id="@+id/iv_fragment_bottom_comment"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:alpha="0"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_chat_bubble_outline_white_24dp"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/iv_fragment_bottom_back"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
         android:alpha="0"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
@@ -93,8 +111,8 @@
 
         <ImageView
             android:id="@+id/iv_fragment_bottom_next"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:scaleType="fitCenter"
@@ -102,8 +120,8 @@
 
         <ImageView
             android:id="@+id/iv_fragment_bottom_play"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@+id/iv_fragment_bottom_next"
@@ -112,8 +130,8 @@
 
         <ImageView
             android:id="@+id/iv_fragment_bottom_previous"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@+id/iv_fragment_bottom_play"
@@ -121,21 +139,21 @@
             android:src="@drawable/ic_skip_previous_black_24dp" />
 
         <ImageView
-            android:id="@+id/iv_fragment_bottom_like"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:id="@+id/iv_fragment_bottom_mode"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@+id/iv_fragment_bottom_previous"
             android:alpha="0"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_favorite_black_24dp"
+            android:src="@drawable/ic_compare_arrows_white_24dp"
             android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/iv_fragment_bottom_list"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/iv_fragment_bottom_next"

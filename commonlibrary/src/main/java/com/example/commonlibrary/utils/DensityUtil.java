@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
 
 public class DensityUtil {
 
@@ -42,4 +43,16 @@ public class DensityUtil {
         return (int) (pxValue / scale + 0.5f);
     }
 
+    public static int[] getViewWidthAndHeight(View contentView) {
+        int[] result = new int[2];
+        if (contentView.getMeasuredHeight() == 0 || contentView.getMeasuredWidth() == 0) {
+            contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            // 计算contentView的高宽
+            int windowHeight = contentView.getMeasuredHeight();
+            int windowWidth = contentView.getMeasuredWidth();
+            result[0] = windowWidth;
+            result[1] = windowHeight;
+        }
+        return result;
+    }
 }

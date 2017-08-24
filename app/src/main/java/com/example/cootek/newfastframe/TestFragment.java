@@ -24,7 +24,6 @@ public class TestFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     @BindView(R.id.tv_test_download)
     TextView tvTestDownload;
-    Unbinder unbinder;
 
     @Override
     public void updateData(Object o) {
@@ -79,7 +78,6 @@ public class TestFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
 
     @OnClick(R.id.tv_test_download)
