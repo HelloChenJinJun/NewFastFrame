@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.commonlibrary.utils.CommonLogger;
+
 import java.util.List;
 
 /**
@@ -53,14 +55,13 @@ public class CommentLayout extends LinearLayout implements Runnable, View.OnClic
         objectAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                View target = ((View) ((ObjectAnimator) animation).getTarget());
-                target.setPivotX(0);
-                target.setPivotX(target.getHeight());
+
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-
+                CommonLogger.e("删除到尾端了吗？");
+                next();
             }
 
             @Override
@@ -76,6 +77,11 @@ public class CommentLayout extends LinearLayout implements Runnable, View.OnClic
         return objectAnimator;
     }
 
+    private void next() {
+        addView(getItemView(position));
+        position++;
+    }
+
     private Animator getAppearingAnimator() {
         PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat("alpha", 0f, 1f);
         PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat("scaleX", 0f, 1f);
@@ -85,14 +91,13 @@ public class CommentLayout extends LinearLayout implements Runnable, View.OnClic
         objectAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                View target = ((View) ((ObjectAnimator) animation).getTarget());
-                target.setPivotX(0);
-                target.setPivotX(target.getHeight());
+
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-
+                CommonLogger.e("添加到尾端了吗？");
+                remove();
             }
 
             @Override
@@ -106,6 +111,12 @@ public class CommentLayout extends LinearLayout implements Runnable, View.OnClic
             }
         });
         return objectAnimator;
+    }
+
+    private void remove() {
+        if (getChildCount() > 0 && position > 5) {
+            removeViewAt(0);
+        }
     }
 
     private List<String> data;
@@ -142,24 +153,18 @@ public class CommentLayout extends LinearLayout implements Runnable, View.OnClic
         }
     }
 
-    int num = 0;
 
     @Override
     public void run() {
-        if (getItemView(position) != null) {
+        if (position < 5) {
             addView(getItemView(position));
             position++;
         } else {
-            position = 0;
-            stop();
+            removeViewAt(0);
+            removeCallbacks(this);
             return;
         }
-        if (num <= 5) {
-            num++;
-        } else {
-            removeViewAt(0);
-        }
-        postDelayed(this, 2000);
+        postDelayed(this, 1000);
     }
 
     public void stop() {
