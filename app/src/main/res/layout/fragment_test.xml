@@ -5,11 +5,10 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_test_download"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="下载"
-        android:textSize="26sp" />
+
+    <com.example.commonlibrary.baseadapter.SuperRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/srcv_fragment_test_play"/>
+
 </LinearLayout>

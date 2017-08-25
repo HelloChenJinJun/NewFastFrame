@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.commonlibrary.utils.CommonLogger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,75 +49,71 @@ public class CommentLayout extends LinearLayout implements Runnable, View.OnClic
 
 
     private Animator getDisAppearingAnimator() {
-        PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat("alpha", 1f, 0f);
+        final PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat("alpha", 1f, 0f);
         PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat("scaleX", 1f, 0f);
         PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat("scaleY", 1f, 0f);
-        ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(this, alpha, scaleX, scaleY)
+        ValueAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(alpha, scaleX, scaleY)
                 .setDuration(layoutTransition.getDuration(LayoutTransition.DISAPPEARING));
-        objectAnimator.addListener(new Animator.AnimatorListener() {
+        objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                CommonLogger.e("删除到尾端了吗？");
-                next();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (animation.getAnimatedFraction() == 1) {
+                    deal();
+                }
             }
         });
         return objectAnimator;
     }
 
+
+    private boolean flag = true;
+    private int num = 0;
+
+    private synchronized void deal() {
+        num++;
+        CommonLogger.e("num" + num);
+        if (position >= 5) {
+            if (flag) {
+                flag = false;
+                next();
+            } else {
+                flag = true;
+                remove();
+            }
+        }
+    }
+
+
+    private List<View> viewList = new ArrayList<>();
+
     private void next() {
+        CommonLogger.e("这里添加");
         addView(getItemView(position));
         position++;
     }
 
     private Animator getAppearingAnimator() {
-        PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat("alpha", 0f, 1f);
+        final PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat("alpha", 0f, 1f);
         PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat("scaleX", 0f, 1f);
         PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat("scaleY", 0f, 1f);
-        ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(this, alpha, scaleX, scaleY)
-                .setDuration(layoutTransition.getDuration(LayoutTransition.APPEARING));
-        objectAnimator.addListener(new Animator.AnimatorListener() {
+        ValueAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(alpha, scaleX, scaleY)
+                .setDuration(layoutTransition.getDuration(LayoutTransition.APPEARING) + 1);
+        objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                CommonLogger.e("添加到尾端了吗？");
-                remove();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (animation.getAnimatedFraction() == 1) {
+                    deal();
+                }
             }
         });
         return objectAnimator;
     }
 
     private void remove() {
-        if (getChildCount() > 0 && position > 5) {
-            removeViewAt(0);
+        CommonLogger.e("这里移除1");
+        if (position > 5) {
+            removeView(viewList.get(0));
+            CommonLogger.e("这里真正移除");
         }
     }
 
@@ -137,7 +135,7 @@ public class CommentLayout extends LinearLayout implements Runnable, View.OnClic
     }
 
 
-    private int position = 0;
+    private volatile int position = 0;
 
     private View getItemView(int position) {
         return updateView(LayoutInflater.from(getContext()).inflate(R.layout.view_comment_layout_item, null), position);
@@ -147,6 +145,7 @@ public class CommentLayout extends LinearLayout implements Runnable, View.OnClic
         if (position >= 0 && position < data.size()) {
             ((TextView) itemView.findViewById(R.id.tv_view_comment_layout_item_content)).setText(data.get(position));
             itemView.setOnClickListener(this);
+            viewList.add(itemView);
             return itemView;
         } else {
             return null;
@@ -157,10 +156,9 @@ public class CommentLayout extends LinearLayout implements Runnable, View.OnClic
     @Override
     public void run() {
         if (position < 5) {
-            addView(getItemView(position));
-            position++;
+            next();
         } else {
-            removeViewAt(0);
+            removeView(viewList.get(0));
             removeCallbacks(this);
             return;
         }

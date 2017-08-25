@@ -1,22 +1,14 @@
 package com.example.commonlibrary.baseadapter;
 
-import android.animation.Animator;
-import android.support.v4.animation.AnimatorCompatHelper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.example.commonlibrary.baseadapter.animator.AlphaAnimator;
-import com.example.commonlibrary.baseadapter.animator.BaseAnimator;
-import com.example.commonlibrary.baseadapter.animator.ScaleAnimator;
 import com.example.commonlibrary.utils.CommonLogger;
 
 import java.lang.reflect.Constructor;
@@ -39,12 +31,6 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     protected static final int LOAD_MORE_FOOTER = Integer.MAX_VALUE;
     protected static final int EMPTY = Integer.MIN_VALUE + 2;
 
-
-    private BaseAnimator baseAnimator = new AlphaAnimator();
-    private boolean enableAnimator = true;
-    //    默认为线性加速
-    private Interpolator interpolator = new LinearInterpolator();
-    private long animationTime = 300;
 
 
     private RefreshHeaderLayout mRefreshHeaderContainer;
@@ -111,15 +97,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
 
-    public void setItemAnimator(BaseAnimator baseAnimator) {
-        enableAnimator = true;
-        this.baseAnimator = baseAnimator;
-    }
 
-
-    public void setEnableAnimator(boolean enableAnimator) {
-        this.enableAnimator = enableAnimator;
-    }
 
     @Override
     public void onAttachedToRecyclerView(final RecyclerView recyclerView) {
@@ -152,18 +130,6 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             if (layoutParams instanceof StaggeredGridLayoutManager.LayoutParams) {
                 StaggeredGridLayoutManager.LayoutParams lp = (StaggeredGridLayoutManager.LayoutParams) layoutParams;
                 lp.setFullSpan(true);
-            }
-        } else {
-//            正常item做动画
-            if (enableAnimator) {
-                if (baseAnimator != null && holder.getLayoutPosition() > lastLayoutPosition) {
-                    for (Animator animator :
-                            baseAnimator.getAnimators(holder.itemView)) {
-                        animator.setInterpolator(interpolator);
-                        animator.setDuration(animationTime).start();
-                    }
-                    lastLayoutPosition = holder.getLayoutPosition();
-                }
             }
         }
     }
@@ -394,12 +360,14 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
 
     public void addData(int position, T newData) {
-        if (!data.contains(newData)) {
-            data.add(position, newData);
-            notifyItemInserted(position + getItemUpCount());
-        } else {
-            int index = data.indexOf(newData);
-            data.set(index, newData);
+        if (newData != null) {
+            if (!data.contains(newData)) {
+                data.add(position, newData);
+                notifyItemInserted(position + getItemUpCount());
+            } else {
+                int index = data.indexOf(newData);
+                data.set(index, newData);
+            }
         }
     }
 
