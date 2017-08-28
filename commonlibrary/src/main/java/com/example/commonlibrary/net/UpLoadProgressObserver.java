@@ -1,8 +1,5 @@
 package com.example.commonlibrary.net;
 
-import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.DownloadStatus;
-
 import io.reactivex.Flowable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;

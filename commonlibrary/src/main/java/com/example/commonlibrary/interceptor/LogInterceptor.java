@@ -2,12 +2,11 @@ package com.example.commonlibrary.interceptor;
 
 import android.support.annotation.Nullable;
 
-import com.example.commonlibrary.dagger.OkHttpGlobalHandler;
+import com.example.commonlibrary.OkHttpGlobalHandler;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;

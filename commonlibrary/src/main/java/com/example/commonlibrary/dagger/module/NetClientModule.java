@@ -4,14 +4,11 @@ import android.app.Application;
 import android.support.annotation.Nullable;
 
 import com.example.commonlibrary.interceptor.LogInterceptor;
-import com.example.commonlibrary.dagger.OkHttpGlobalHandler;
+import com.example.commonlibrary.OkHttpGlobalHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;

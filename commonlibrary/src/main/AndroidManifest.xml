@@ -5,7 +5,7 @@
     <application android:allowBackup="true" android:label="@string/app_name"
         android:supportsRtl="true">
 
-    <meta-data android:name="com.example.commonlibrary.GlideConfig"
+    <meta-data android:name="com.example.commonlibrary.net.okhttpconfig.GlideConfig"
         android:value="GlideModule"/>
     </application>
 

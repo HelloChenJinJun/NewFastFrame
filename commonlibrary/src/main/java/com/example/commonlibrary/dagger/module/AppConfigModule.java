@@ -3,7 +3,7 @@ package com.example.commonlibrary.dagger.module;
 import android.app.Application;
 
 import com.example.commonlibrary.interceptor.LogInterceptor;
-import com.example.commonlibrary.dagger.OkHttpGlobalHandler;
+import com.example.commonlibrary.OkHttpGlobalHandler;
 import com.example.commonlibrary.imageloader.BaseImageLoaderStrategy;
 import com.example.commonlibrary.imageloader.GlideImageLoaderStrategy;
 import com.example.commonlibrary.utils.FileUtil;

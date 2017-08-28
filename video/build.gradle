@@ -1,0 +1,78 @@
+if (rootProject.ext.isAlone) {
+    apply plugin: 'com.android.application'
+    apply plugin: 'org.greenrobot.greendao'
+    apply plugin: 'com.neenbedankt.android-apt'
+    apply plugin: 'com.jakewharton.butterknife'
+} else {
+    apply plugin: 'org.greenrobot.greendao'
+    apply plugin: 'com.android.library'
+    apply plugin: 'com.jakewharton.butterknife'
+    apply plugin: 'com.neenbedankt.android-apt'
+}
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    defaultConfig {
+
+        if (rootProject.ext.isAlone) {
+            applicationId "com.example.cootek.newfastframe"
+        }
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            if (rootProject.ext.isAlone) {
+                manifest.srcFile 'src/main/module/AndroidManifest.xml'
+                java.srcDirs = ['src/main/java', 'src/main/module/java']
+                res.srcDirs = ['src/main/res', 'src/main/module/res']
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+}
+
+
+//greendao {
+//    schemaVersion 1
+//    daoPackage 'com.example.cootek.newfastframe'
+//    targetGenDir 'src/main/java'
+//}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile project(':commonlibrary')
+
+    compile 'com.afollestad.material-dialogs:core:0.9.1.0'
+    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support:palette-v7:24.2.1'
+//    provided rootProject.ext.dependencies.dagger2_compiler
+
+
+
+    if (!rootProject.ext.isAlone) {
+        apt  rootProject.ext.dependencies.dagger2_compiler
+        annotationProcessor  rootProject.ext.dependencies.butterknife_compiler
+    } else {
+        provided rootProject.ext.dependencies.butterknife_compiler
+    }
+
+    testCompile 'junit:junit:4.12'
+
+
+}

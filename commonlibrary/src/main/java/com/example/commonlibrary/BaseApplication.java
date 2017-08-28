@@ -2,7 +2,6 @@ package com.example.commonlibrary;
 
 import android.app.Application;
 
-import com.example.commonlibrary.dagger.OkHttpGlobalHandler;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.component.DaggerAppComponent;
 import com.example.commonlibrary.dagger.module.AppConfigModule;
@@ -14,6 +13,9 @@ import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.FileUtil;
 import com.google.gson.GsonBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
@@ -32,7 +34,7 @@ public class BaseApplication extends Application {
 
     private static AppComponent appComponent;
     private static BaseApplication instance;
-
+    private static List<IApplicationLife> lifes = new ArrayList<>();
 
     public static BaseApplication getInstance() {
         return instance;
@@ -43,6 +45,12 @@ public class BaseApplication extends Application {
         super.onCreate();
         initDagger();
         instance = this;
+        if (lifes.size() > 0) {
+            for (IApplicationLife life :
+                    lifes) {
+                life.onAppCreate();
+            }
+        }
     }
 
 
@@ -73,12 +81,12 @@ public class BaseApplication extends Application {
 
             @Override
             public Request onRequestBefore(Interceptor.Chain chain, Request request) {
-                CommonLogger.e("onRequestBefore:"+request.url().toString());
+                CommonLogger.e("onRequestBefore:" + request.url().toString());
                 return request.newBuilder()
 //                        .header("cookie","BAIDUID=41F6024562091541FCEE149B292ACB04:FG=1")
 //                        .header("accept-encoding","gzip, deflate")
 //                        .header("Accept","*/*")
-                        .header("User-Agent","")
+                        .header("User-Agent", "")
                         .url(request.url()).build();
             }
         }).level(LogInterceptor.Level.BODY).cacheFile(FileUtil.getDefaultCacheFile(this))
@@ -90,5 +98,18 @@ public class BaseApplication extends Application {
 
     public static AppComponent getAppComponent() {
         return appComponent;
+    }
+
+
+    public static void registerApplication(IApplicationLife iApplicationLife) {
+        if (!lifes.contains(iApplicationLife)) {
+            lifes.add(iApplicationLife);
+        }
+    }
+
+    public static void unRegisterApplication(IApplicationLife iApplicationLife) {
+        if (lifes.contains(iApplicationLife)) {
+            lifes.remove(iApplicationLife);
+        }
     }
 }

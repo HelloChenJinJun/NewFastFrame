@@ -3,7 +3,6 @@ package com.example.commonlibrary.net;
 import android.os.Environment;
 
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.DownloadStatus;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.FileUtil;

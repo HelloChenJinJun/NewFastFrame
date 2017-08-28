@@ -36,7 +36,7 @@ import static android.view.View.GONE;
  * QQ:             1981367757
  */
 
-public abstract class BaseFragment<T,P extends BasePresenter> extends RxFragment implements IView<T> {
+public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragment implements IView<T> {
 
     /**
      * 采用懒加载

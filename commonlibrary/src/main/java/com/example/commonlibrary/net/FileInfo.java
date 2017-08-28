@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.commonlibrary.DownloadStatus;
-
 
 /**
  * 文件实体

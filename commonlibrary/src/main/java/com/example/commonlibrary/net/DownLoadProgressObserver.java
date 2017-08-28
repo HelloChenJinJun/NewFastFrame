@@ -1,7 +1,5 @@
 package com.example.commonlibrary.net;
 
-import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.DownloadStatus;
 import com.example.commonlibrary.utils.CommonLogger;
 
 import io.reactivex.Flowable;

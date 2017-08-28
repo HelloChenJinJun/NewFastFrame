@@ -1,18 +1,19 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'com.jakewharton.butterknife'
-
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
-    defaultConfig {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
 
-        applicationId "com.example.cootek.newfastframe"
+    defaultConfig {
+        applicationId "com.example.music"
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -20,31 +21,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
 
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(':commonlibrary')
-
-//    compile 'com.android.support:appcompat-v7:26.+'
-
-
-//    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.afollestad.material-dialogs:core:0.9.1.0'
-    compile 'com.android.support:cardview-v7:24.2.1'
-    compile 'com.android.support:palette-v7:24.2.1'
-    provided rootProject.ext.dependencies.dagger2_compiler
-    provided rootProject.ext.dependencies.butterknife_compiler
-//    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
-//    compile 'com.sothree.slidinguppanel:library:3.3.1'
-//    compile 'net.steamcrafted:materialiconlib:1.1.1'
-
-//    provided rootProject.ext.dependencies.dagger2
+    if (!rootProject.ext.isAlone) {
+        compile project(":video")
+    }else {
+        compile rootProject.ext.dependencies.appcompatV7
+    }
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-
-
 }
