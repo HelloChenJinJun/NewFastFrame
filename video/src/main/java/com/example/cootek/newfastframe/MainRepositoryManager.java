@@ -1,9 +1,8 @@
 package com.example.cootek.newfastframe;
 
-import com.example.commonlibrary.repository.BaseRepositoryManager;
-import com.example.commonlibrary.repository.IRepositoryManager;
 
-import javax.inject.Named;
+import com.example.commonlibrary.bean.DaoSession;
+import com.example.commonlibrary.repository.BaseRepositoryManager;
 
 import retrofit2.Retrofit;
 

@@ -2,11 +2,9 @@ if (rootProject.ext.isAlone) {
     apply plugin: 'com.android.application'
     apply plugin: 'org.greenrobot.greendao'
     apply plugin: 'com.neenbedankt.android-apt'
-    apply plugin: 'com.jakewharton.butterknife'
 } else {
     apply plugin: 'org.greenrobot.greendao'
     apply plugin: 'com.android.library'
-    apply plugin: 'com.jakewharton.butterknife'
     apply plugin: 'com.neenbedankt.android-apt'
 }
 
@@ -63,14 +61,7 @@ dependencies {
     compile 'com.android.support:palette-v7:24.2.1'
 //    provided rootProject.ext.dependencies.dagger2_compiler
 
-
-
-    if (!rootProject.ext.isAlone) {
-        apt  rootProject.ext.dependencies.dagger2_compiler
-        annotationProcessor  rootProject.ext.dependencies.butterknife_compiler
-    } else {
-        provided rootProject.ext.dependencies.butterknife_compiler
-    }
+    apt  rootProject.ext.dependencies.dagger2_compiler
 
     testCompile 'junit:junit:4.12'
 

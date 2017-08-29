@@ -1,8 +1,8 @@
 package com.example.cootek.newfastframe.mvp;
 
+import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.MusicManager;
-import com.example.cootek.newfastframe.MusicPlayBean;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class BottomPresenter extends BaseBottomPresenter<IBottomView, BottomMode
     }
 
     @Override
-    public void play(List<MusicPlayBean> list, int position,int mode) {
+    public void play(List<MusicPlayBean> list, int position, int mode) {
         MusicManager.getInstance().play(list, position, mode);
     }
 

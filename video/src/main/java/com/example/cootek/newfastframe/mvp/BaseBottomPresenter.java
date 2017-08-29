@@ -1,9 +1,8 @@
 package com.example.cootek.newfastframe.mvp;
 
+import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.mvp.BaseModel;
-import com.example.commonlibrary.mvp.BasePresenter;
 import com.example.commonlibrary.mvp.RxBasePresenter;
-import com.example.cootek.newfastframe.MusicPlayBean;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public abstract class BaseBottomPresenter<V extends IBottomView, M extends BaseM
 
     public abstract void refresh();
 
-    public abstract void play(List<MusicPlayBean> list, int position,int mode);
+    public abstract void play(List<MusicPlayBean> list, int position, int mode);
 
     public abstract void remove(int position);
 

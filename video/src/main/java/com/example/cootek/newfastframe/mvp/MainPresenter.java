@@ -1,11 +1,11 @@
 package com.example.cootek.newfastframe.mvp;
 
 import com.example.commonlibrary.baseadapter.EmptyLayout;
+import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.mvp.BasePresenter;
 import com.example.commonlibrary.mvp.IView;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.MusicInfoProvider;
-import com.example.cootek.newfastframe.MusicPlayBean;
 
 import java.util.List;
 

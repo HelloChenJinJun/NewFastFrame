@@ -1,7 +1,6 @@
 package com.example.cootek.newfastframe.dagger;
 
-import com.example.cootek.newfastframe.BottomFragment;
-import com.example.cootek.newfastframe.MainComponent;
+import com.example.cootek.newfastframe.ui.BottomFragment;
 import com.example.commonlibrary.dagger.scope.PerFragment;
 
 import dagger.Component;

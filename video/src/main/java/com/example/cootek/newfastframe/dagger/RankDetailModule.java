@@ -2,14 +2,9 @@ package com.example.cootek.newfastframe.dagger;
 
 import com.example.commonlibrary.mvp.IView;
 import com.example.cootek.newfastframe.MainRepositoryManager;
-import com.example.cootek.newfastframe.RankDetailAdapter;
-import com.example.cootek.newfastframe.RankDetailModel;
-import com.example.cootek.newfastframe.RankDetailPresenter;
-import com.example.cootek.newfastframe.RankModel;
-import com.example.cootek.newfastframe.RankPresenter;
-import com.example.cootek.newfastframe.api.RankListBean;
-
-import java.util.List;
+import com.example.cootek.newfastframe.adapter.RankDetailAdapter;
+import com.example.cootek.newfastframe.mvp.RankDetailModel;
+import com.example.cootek.newfastframe.mvp.RankDetailPresenter;
 
 import dagger.Module;
 import dagger.Provides;

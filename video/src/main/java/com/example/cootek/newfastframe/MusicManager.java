@@ -8,11 +8,12 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.cootek.newfastframe.event.MusicStatusEvent;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -195,7 +196,7 @@ public class MusicManager {
         }
     }
 
-    long[] getQueue() {
+   public long[] getQueue() {
         try {
             if (service != null) {
                 return service.getQueue();

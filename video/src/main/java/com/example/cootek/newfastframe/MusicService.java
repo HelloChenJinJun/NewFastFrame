@@ -32,10 +32,17 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 
+import com.example.commonlibrary.bean.DaoSession;
+import com.example.commonlibrary.bean.MusicHistoryInfo;
+import com.example.commonlibrary.bean.MusicHistoryInfoDao;
+import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.FileUtil;
 import com.example.commonlibrary.utils.Httputil;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.example.cootek.newfastframe.ui.MainActivity;
+import com.example.cootek.newfastframe.util.Constants;
+import com.example.cootek.newfastframe.util.MusicUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

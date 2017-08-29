@@ -15,7 +15,7 @@
         android:supportsRtl="true">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:launchMode="singleInstance" />
         <service
             android:name=".MusicService"
@@ -27,8 +27,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".RankDetailActivity" />
-        <activity android:name=".DownLoadActivity" />
+        <activity android:name=".ui.RankDetailActivity" />
+        <activity android:name=".ui.DownLoadActivity" />
     </application>
 
 </manifest>

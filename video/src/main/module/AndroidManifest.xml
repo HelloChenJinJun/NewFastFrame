@@ -36,9 +36,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".RankDetailActivity" />
-        <activity android:name=".DownLoadActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".ui.RankDetailActivity" />
+        <activity android:name=".ui.DownLoadActivity" />
+        <activity android:name=".ui.MainActivity" />
     </application>
 
 

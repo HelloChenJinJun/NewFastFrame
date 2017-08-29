@@ -48,10 +48,9 @@ import static android.view.View.GONE;
  * QQ:             1981367757
  */
 
-public abstract class BaseActivity<T,P extends BasePresenter> extends RxAppCompatActivity implements IView<T> {
+public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCompatActivity implements IView<T> {
 
     //  这里的布局view可能为空，取决于子类布局中是否含有该空布局
-
 
 
     private EmptyLayout mEmptyLayout;
@@ -70,7 +69,6 @@ public abstract class BaseActivity<T,P extends BasePresenter> extends RxAppCompa
     @Nullable
     @Inject
     protected P presenter;
-
 
 
     public ImageView getBack() {
@@ -111,7 +109,6 @@ public abstract class BaseActivity<T,P extends BasePresenter> extends RxAppCompa
                 setContentView(getContentLayout());
             }
         }
-        ButterKnife.bind(this);
         initBaseView();
         initData();
     }
@@ -159,7 +156,6 @@ public abstract class BaseActivity<T,P extends BasePresenter> extends RxAppCompa
         mBaseDialog = new BaseDialog(this);
         initView();
     }
-
 
 
     protected void showEmptyLayout(int status) {
@@ -340,7 +336,7 @@ public abstract class BaseActivity<T,P extends BasePresenter> extends RxAppCompa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (presenter!=null) {
+        if (presenter != null) {
             presenter.onDestroy();
         }
     }

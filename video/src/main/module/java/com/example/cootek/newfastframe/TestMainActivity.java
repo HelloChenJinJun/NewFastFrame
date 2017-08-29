@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.example.commonlibrary.mvp.BaseActivity;
+import com.example.cootek.newfastframe.ui.MainActivity;
 
 /**
  * Created by COOTEK on 2017/8/28.

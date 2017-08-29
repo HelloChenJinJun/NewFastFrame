@@ -24,6 +24,14 @@ android {
     }
 }
 
+
+//greendao {
+//    schemaVersion 1
+//    daoPackage 'com.example.commonlibrary'
+//    targetGenDir 'src/main/java/greendao'
+//}
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'

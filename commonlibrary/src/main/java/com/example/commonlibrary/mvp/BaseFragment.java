@@ -50,7 +50,6 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     private TextView title;
     private ImageView rightImage;
     protected ImageView back;
-    Unbinder unbinder;
 
     @Nullable
     @Inject
@@ -103,7 +102,6 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
                 CommonLogger.e("添加父类");
                 container.addView(root);
             }
-            unbinder = ButterKnife.bind(this, root);
             initBaseView();
             initData();
         }
