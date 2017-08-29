@@ -2,7 +2,7 @@
 
 <com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/slide_activity_main_container"
+    android:id="@+id/slide_panel_activity_main_containe"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/base_color_text_grey"

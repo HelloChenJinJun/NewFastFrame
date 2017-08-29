@@ -12,8 +12,8 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.adapter.MainAdapter;
-import com.example.cootek.newfastframe.MainApplication;
 import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.MusicService;
 import com.example.cootek.newfastframe.R;
@@ -72,7 +72,7 @@ public class MainFragment extends BaseFragment<List<MusicPlayBean>, MainPresente
 
     @Override
     protected void initData() {
-        DaggerMainFragmentComponent.builder().mainComponent(MainApplication.getMainComponent()).mainFragmentModule(new MainFragmentModule(this)).build().inject(this);
+        DaggerMainFragmentComponent.builder().mainComponent(VideoApplication.getMainComponent()).mainFragmentModule(new MainFragmentModule(this)).build().inject(this);
         mainAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {

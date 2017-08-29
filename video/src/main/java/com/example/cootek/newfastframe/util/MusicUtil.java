@@ -5,8 +5,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.utils.FileUtil;
-import com.example.cootek.newfastframe.MainApplication;
 import com.example.cootek.newfastframe.lrc.LrcRow;
 
 import java.io.BufferedReader;
@@ -37,7 +37,7 @@ public class MusicUtil {
     }
 
 
-    public static String musicLyricDir = FileUtil.getDefaultCacheFile(MainApplication.getInstance()).getAbsolutePath() + "/music/lyric/";
+    public static String musicLyricDir = FileUtil.getDefaultCacheFile(BaseApplication.getInstance()).getAbsolutePath() + "/music/lyric/";
 
     public static String getLyricPath(long longId) {
         return getMusicLrcCacheDir() + longId;

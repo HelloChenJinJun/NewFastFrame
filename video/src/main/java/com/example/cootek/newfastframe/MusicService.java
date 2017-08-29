@@ -113,7 +113,7 @@ public class MusicService extends Service {
 //        发送前台通知
         CommonLogger.e("服务的onCreate");
         notificationManagerCompat = NotificationManagerCompat.from(this);
-        daoSession = MainApplication.getMainComponent().getDaoSession();
+        daoSession = VideoApplication.getMainComponent().getDaoSession();
         handlerThread = new HandlerThread("music_handler_thread", Process.THREAD_PRIORITY_BACKGROUND);
         handlerThread.start();
         musicServiceHandler = new MusicServiceHandler(handlerThread.getLooper(), this);

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'com.neenbedankt.android-apt'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
@@ -14,6 +15,18 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        if (!rootProject.ext.isAlone) {
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    arguments = [moduleName: project.getName()]
+                }
+            }
+        }
+
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
     buildTypes {
         release {
@@ -30,10 +43,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     if (!rootProject.ext.isAlone) {
-        compile project(":video")
-    }else {
-        compile rootProject.ext.dependencies.appcompatV7
+        compile project(':video')
+        apt rootProject.ext.dependencies.arouter_compiler
+    } else {
+        compile project(':commonlibrary')
     }
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+//    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }

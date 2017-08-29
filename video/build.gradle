@@ -1,12 +1,10 @@
 if (rootProject.ext.isAlone) {
     apply plugin: 'com.android.application'
-    apply plugin: 'org.greenrobot.greendao'
-    apply plugin: 'com.neenbedankt.android-apt'
 } else {
-    apply plugin: 'org.greenrobot.greendao'
     apply plugin: 'com.android.library'
-    apply plugin: 'com.neenbedankt.android-apt'
 }
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -21,12 +19,25 @@ android {
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        if (!rootProject.ext.isAlone) {
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    arguments = [moduleName: project.getName()]
+                }
+            }
+        }
+
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
     sourceSets {
         main {
@@ -41,13 +52,11 @@ android {
     }
 }
 
-
 //greendao {
 //    schemaVersion 1
 //    daoPackage 'com.example.cootek.newfastframe'
 //    targetGenDir 'src/main/java'
 //}
-
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -61,9 +70,13 @@ dependencies {
     compile 'com.android.support:palette-v7:24.2.1'
 //    provided rootProject.ext.dependencies.dagger2_compiler
 
-    apt  rootProject.ext.dependencies.dagger2_compiler
+    apt rootProject.ext.dependencies.dagger2_compiler
 
+    if (!rootProject.ext.isAlone) {
+        apt rootProject.ext.dependencies.arouter_compiler
+    }
     testCompile 'junit:junit:4.12'
 
 
 }
+

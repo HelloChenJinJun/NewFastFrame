@@ -8,7 +8,7 @@ import android.view.View;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.mvp.BaseFragment;
-import com.example.cootek.newfastframe.MainApplication;
+import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.util.MusicUtil;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.adapter.RankAdapter;
@@ -65,7 +65,7 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
 
     @Override
     protected void initData() {
-        DaggerRankFragmentComponent.builder().mainComponent(MainApplication.getMainComponent())
+        DaggerRankFragmentComponent.builder().mainComponent(VideoApplication.getMainComponent())
                 .rankFragmentModule(new RankFragmentModule(this)).build().inject(this);
         typeList = new ArrayList<>();
         typeList.addAll(Arrays.asList(MusicUtil.RANK_TYPE_LIST));

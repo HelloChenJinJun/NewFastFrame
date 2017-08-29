@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.WrappedLinearLayoutManager;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
@@ -23,9 +24,9 @@ import com.example.commonlibrary.imageloader.GlideImageLoaderConfig;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
+import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.dagger.DaggerBottomFragmentComponent;
 import com.example.cootek.newfastframe.view.CommentLayout;
-import com.example.cootek.newfastframe.MainApplication;
 import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.MusicService;
 import com.example.cootek.newfastframe.event.MusicStatusEvent;
@@ -174,7 +175,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
 
     @Override
     protected void initData() {
-        DaggerBottomFragmentComponent.builder().mainComponent(MainApplication.getMainComponent())
+        DaggerBottomFragmentComponent.builder().mainComponent(VideoApplication.getMainComponent())
                 .bottomFragmentModule(new BottomFragmentModule(this)).build().inject(this);
         progressRun = new Runnable() {
             @Override
@@ -326,7 +327,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             playNum.setText("播放队列   " + idList.length);
             popupWindowAdapter.clearAllData();
             List<MusicPlayBean> list = new ArrayList<>();
-            MusicPlayBeanDao musicPlayBeanDao = MainApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao();
+            MusicPlayBeanDao musicPlayBeanDao = VideoApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao();
             for (long anIdList : idList) {
                 list.addAll(musicPlayBeanDao.queryBuilder().where(MusicPlayBeanDao.Properties.SongId.eq(anIdList))
                         .build().list());
@@ -467,10 +468,10 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     @Override
     public void updateAlbum(String uri) {
         if (getContext() != null) {
-            MainApplication.getAppComponent().getImageLoader().loadImage(getContext(), new GlideImageLoaderConfig.Builder().imageView(bg)
+            BaseApplication.getAppComponent().getImageLoader().loadImage(getContext(), new GlideImageLoaderConfig.Builder().imageView(bg)
                     .url(uri)
                     .bitmapTransformation(new BlurTransformation(getContext())).build());
-            MainApplication.getAppComponent().getImageLoader().loadImage(getContext(), new GlideImageLoaderConfig.Builder()
+            BaseApplication.getAppComponent().getImageLoader().loadImage(getContext(), new GlideImageLoaderConfig.Builder()
                     .imageView(album).url(uri).build());
         }
     }

@@ -4,16 +4,17 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.mvp.BaseActivity;
 import com.example.commonlibrary.net.DownloadListener;
 import com.example.commonlibrary.net.FileInfo;
 import com.example.commonlibrary.net.NetManager;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.cootek.newfastframe.MainApplication;
 import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.R;
 import com.example.commonlibrary.bean.MusicPlayBeanDao;
+import com.example.cootek.newfastframe.VideoApplication;
 
 import java.util.ArrayList;
 
@@ -22,20 +23,20 @@ import butterknife.OnClick;
 /**
  * Created by COOTEK on 2017/8/23.
  */
+@Route(path = "/video/download")
+public class DownLoadActivity extends BaseActivity implements View.OnClickListener {
 
-public class DownLoadActivity extends BaseActivity {
 
-
-  private   TextView tvOne;
-    private  ProgressBar pbOne;
-    private  TextView tvPauseOne;
-    private  TextView tvTwo;
-    private  ProgressBar pbTwo;
-    private  TextView tvPauseTwo;
-    private  TextView tvThree;
-    private  ProgressBar pbThree;
-    private  TextView tvPauseThree;
-    private  TextView tvAll;
+    private TextView tvOne;
+    private ProgressBar pbOne;
+    private TextView tvPauseOne;
+    private TextView tvTwo;
+    private ProgressBar pbTwo;
+    private TextView tvPauseTwo;
+    private TextView tvThree;
+    private ProgressBar pbThree;
+    private TextView tvPauseThree;
+    private TextView tvAll;
     private ArrayList<MusicPlayBean> list;
 
     @Override
@@ -69,7 +70,10 @@ public class DownLoadActivity extends BaseActivity {
         tvThree = (TextView) findViewById(R.id.tv_three);
         pbThree = (ProgressBar) findViewById(R.id.pb_three);
         tvPauseThree = (TextView) findViewById(R.id.tv_pause_three);
-        tvAll= (TextView) findViewById(R.id.tv_all);
+        tvAll = (TextView) findViewById(R.id.tv_all);
+        tvOne.setOnClickListener(this);
+        tvTwo.setOnClickListener(this);
+        tvThree.setOnClickListener(this);
     }
 
     @Override
@@ -81,7 +85,7 @@ public class DownLoadActivity extends BaseActivity {
         if (data != null && data.length > 0) {
             list = new ArrayList<>();
             for (int i = 0; i < data.length; i++) {
-                MusicPlayBean bean = MainApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao().queryBuilder()
+                MusicPlayBean bean = VideoApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao().queryBuilder()
                         .where(MusicPlayBeanDao.Properties.SongId.eq(data[i])).build().list().get(0);
 
                 list.add(bean);
@@ -145,23 +149,19 @@ public class DownLoadActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.tv_pause_one) {
+            NetManager.getInstance().stop(list.get(0).getSongUrl());
+        } else if (i == R.id.tv_pause_two) {
+            NetManager.getInstance().stop(list.get(1).getSongUrl());
+        } else if (i == R.id.tv_pause_three) {
+            NetManager.getInstance().stop(list.get(2).getSongUrl());
+        } else if (i == R.id.tv_all) {
+            CommonLogger.e("点击啦");
+            startDownLoad();
 
-    @OnClick({R.id.tv_pause_one, R.id.tv_pause_two, R.id.tv_pause_three, R.id.tv_all})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.tv_pause_one:
-                NetManager.getInstance().stop(list.get(0).getSongUrl());
-                break;
-            case R.id.tv_pause_two:
-                NetManager.getInstance().stop(list.get(1).getSongUrl());
-                break;
-            case R.id.tv_pause_three:
-                NetManager.getInstance().stop(list.get(2).getSongUrl());
-                break;
-            case R.id.tv_all:
-                CommonLogger.e("点击啦");
-                startDownLoad();
-                break;
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.example.commonlibrary;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.component.DaggerAppComponent;
 import com.example.commonlibrary.dagger.module.AppConfigModule;
@@ -34,23 +36,30 @@ public class BaseApplication extends Application {
 
     private static AppComponent appComponent;
     private static BaseApplication instance;
-    private static List<IApplicationLife> lifes = new ArrayList<>();
+    private ApplicationDelegate applicationDelegate;
 
     public static BaseApplication getInstance() {
         return instance;
     }
 
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        applicationDelegate = new ApplicationDelegate();
+        applicationDelegate.attachBaseContext(base);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        // 这两行必须写在init之前，否则这些配置在init过程中将无效
+        ARouter.openLog();     // 打印日志
+        ARouter.openDebug();
+        ARouter.init(this);
         initDagger();
         instance = this;
-        if (lifes.size() > 0) {
-            for (IApplicationLife life :
-                    lifes) {
-                life.onAppCreate();
-            }
-        }
+        applicationDelegate.onCreate(this);
     }
 
 
@@ -100,16 +109,9 @@ public class BaseApplication extends Application {
         return appComponent;
     }
 
-
-    public static void registerApplication(IApplicationLife iApplicationLife) {
-        if (!lifes.contains(iApplicationLife)) {
-            lifes.add(iApplicationLife);
-        }
-    }
-
-    public static void unRegisterApplication(IApplicationLife iApplicationLife) {
-        if (lifes.contains(iApplicationLife)) {
-            lifes.remove(iApplicationLife);
-        }
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        applicationDelegate.onTerminate(this);
     }
 }

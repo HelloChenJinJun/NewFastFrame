@@ -29,6 +29,10 @@
 
         <activity android:name=".ui.RankDetailActivity" />
         <activity android:name=".ui.DownLoadActivity" />
+
+        <meta-data
+            android:name="com.example.cootek.newfastframe.VideoApplication"
+            android:value="IModuleConfig" />
     </application>
 
 </manifest>

@@ -20,10 +20,10 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.mvp.BaseActivity;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.cootek.newfastframe.MainApplication;
 import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.MusicService;
 import com.example.cootek.newfastframe.R;
+import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.adapter.RankDetailAdapter;
 import com.example.cootek.newfastframe.dagger.DaggerRankDetailActivityComponent;
 import com.example.cootek.newfastframe.mvp.RankDetailPresenter;
@@ -112,7 +112,7 @@ public class RankDetailActivity extends BaseActivity<Object, RankDetailPresenter
 
     @Override
     protected void initData() {
-        DaggerRankDetailActivityComponent.builder().mainComponent(MainApplication.getMainComponent())
+        DaggerRankDetailActivityComponent.builder().mainComponent(VideoApplication.getMainComponent())
                 .rankDetailModule(new RankDetailModule(this)).build().inject(this);
         type = getIntent().getIntExtra("type", -1);
         display.setLayoutManager(linearManager = new LinearLayoutManager(this));
