@@ -60,8 +60,9 @@ public class MainFragment extends BaseFragment<List<MusicPlayBean>, MainPresente
 
     @Override
     protected void initView() {
-        display= (SuperRecyclerView) findViewById(R.id.srcv_fragment_main_display);
-        refresh= (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_main_refresh);
+        CommonLogger.e("初始化MainFragment");
+        display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_main_display);
+        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_main_refresh);
         display.setLayoutManager(new LinearLayoutManager(getContext()));
         loadMoreFooterView = new LoadMoreFooterView(getContext());
         display.setLoadMoreFooterView(loadMoreFooterView);

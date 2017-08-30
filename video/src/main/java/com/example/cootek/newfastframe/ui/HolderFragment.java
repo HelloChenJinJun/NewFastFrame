@@ -61,7 +61,7 @@ public class HolderFragment extends BaseFragment {
         fragments.add(TestFragment.newInstance());
         viewPagerAdapter.setTitleAndFragments(titleList, fragments);
         tab.setupWithViewPager(display);
-        display.setOffscreenPageLimit(1);
+        display.setOffscreenPageLimit(2);
         display.setAdapter(viewPagerAdapter);
     }
 
