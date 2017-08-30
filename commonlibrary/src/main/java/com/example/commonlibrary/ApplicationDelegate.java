@@ -3,6 +3,7 @@ package com.example.commonlibrary;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.commonlibrary.dagger.module.AppConfigModule;
 import com.example.commonlibrary.module.IModuleConfig;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.utils.ManifestParser;

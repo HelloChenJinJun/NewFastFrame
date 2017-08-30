@@ -3,9 +3,16 @@ apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.neenbedankt.android-apt'
 android {
+    signingConfigs {
+        config {
+            keyAlias 'chen'
+            keyPassword '3929249'
+            storeFile file('C:/Users/COOTEK/chen_key.jks')
+            storePassword '3929249'
+        }
+    }
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
-
     defaultConfig {
         applicationId "com.example.music"
         minSdkVersion rootProject.ext.android.minSdkVersion
@@ -30,15 +37,18 @@ android {
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.config
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
     }
-
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -48,6 +58,13 @@ dependencies {
     } else {
         compile project(':commonlibrary')
     }
-//    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    provided('com.tinkerpatch.tinker:tinker-android-anno:1.8.0') {
+        changing = true
+    }
+    compile('com.tinkerpatch.sdk:tinkerpatch-android-sdk:1.1.8') {
+        changing = true
+    }
+    //    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }
+apply from: 'tinkerpatch.gradle'

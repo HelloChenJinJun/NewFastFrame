@@ -92,9 +92,6 @@ public class BaseApplication extends Application {
             public Request onRequestBefore(Interceptor.Chain chain, Request request) {
                 CommonLogger.e("onRequestBefore:" + request.url().toString());
                 return request.newBuilder()
-//                        .header("cookie","BAIDUID=41F6024562091541FCEE149B292ACB04:FG=1")
-//                        .header("accept-encoding","gzip, deflate")
-//                        .header("Accept","*/*")
                         .header("User-Agent", "")
                         .url(request.url()).build();
             }
