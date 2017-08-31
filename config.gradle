@@ -50,6 +50,8 @@ ext {
     dependencies = [
             appcompatV7               : "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion",
             design                    : "com.android.support:design:$rootProject.supportLibraryVersion",
+            cardview                  : "com.android.support:cardview-v7:$rootProject.supportLibraryVersion",
+            palette                   : "com.android.support:palette-v7:$rootProject.supportLibraryVersion",
             recycleview               : "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion",
             support_v4                : "com.android.support:support-v4:25.4.0",
             annotations               : "com.android.support:support-annotations:$rootProject.supportLibraryVersion",

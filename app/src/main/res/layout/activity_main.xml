@@ -10,9 +10,12 @@
         android:layout_height="wrap_content"
         android:onClick="jump"
         android:text="Hello World!" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="补丁生成啦啦"/>
+        android:layout_marginTop="100dp"
+        android:onClick="crash"
+        android:text="新版本啦啦啦" />
 
 </LinearLayout>
