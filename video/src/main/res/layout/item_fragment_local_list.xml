@@ -9,7 +9,7 @@
     android:orientation="horizontal">
 
     <com.example.commonlibrary.cusotomview.RoundAngleImageView
-        android:id="@+id/riv_item_activity_main_image"
+        android:id="@+id/riv_item_fragment_local_list_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
         app:roundHeight="30dp"
@@ -22,7 +22,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_item_activity_main_name"
+            android:id="@+id/tv_item_fragment_local_list_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="歌名"
@@ -30,7 +30,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/tv_item_activity_main_description"
+            android:id="@+id/tv_item_fragment_local_list_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

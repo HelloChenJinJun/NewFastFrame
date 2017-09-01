@@ -1,7 +1,7 @@
 package com.example.cootek.newfastframe.dagger;
 
 import com.example.commonlibrary.mvp.IView;
-import com.example.cootek.newfastframe.adapter.MainAdapter;
+import com.example.cootek.newfastframe.adapter.LocalListAdapter;
 import com.example.cootek.newfastframe.MainRepositoryManager;
 import com.example.cootek.newfastframe.mvp.MainModel;
 import com.example.cootek.newfastframe.mvp.MainPresenter;
@@ -23,8 +23,8 @@ public class MainFragmentModule {
     }
 
     @Provides
-    MainAdapter providerMainAdapter() {
-        return new MainAdapter();
+    LocalListAdapter providerMainAdapter() {
+        return new LocalListAdapter();
     }
 
 

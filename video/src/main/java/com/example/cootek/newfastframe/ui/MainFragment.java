@@ -1,46 +1,26 @@
 package com.example.cootek.newfastframe.ui;
 
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
+import android.content.Intent;
+import android.media.Image;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import com.example.commonlibrary.baseadapter.LoadMoreFooterView;
-import com.example.commonlibrary.baseadapter.OnLoadMoreListener;
-import com.example.commonlibrary.baseadapter.SuperRecyclerView;
-import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
-import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.mvp.BaseFragment;
-import com.example.commonlibrary.utils.CommonLogger;
-import com.example.cootek.newfastframe.VideoApplication;
-import com.example.cootek.newfastframe.adapter.MainAdapter;
-import com.example.cootek.newfastframe.MusicManager;
-import com.example.cootek.newfastframe.MusicService;
 import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.dagger.DaggerMainFragmentComponent;
-import com.example.cootek.newfastframe.dagger.MainFragmentModule;
-import com.example.cootek.newfastframe.mvp.MainPresenter;
-
-import java.util.List;
-
-import javax.inject.Inject;
 
 /**
- * Created by COOTEK on 2017/8/13.
+ * Created by COOTEK on 2017/9/1.
  */
 
-public class MainFragment extends BaseFragment<List<MusicPlayBean>, MainPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainFragment extends BaseFragment implements View.OnClickListener {
+    private LinearLayout like, songList, downLoad, recent, localMusic, musicRepository;
+    private ImageView play;
 
-
-    SuperRecyclerView display;
-    SwipeRefreshLayout refresh;
-    private LoadMoreFooterView loadMoreFooterView;
-    @Inject
-    MainAdapter mainAdapter;
 
     @Override
-    public void updateData(List<MusicPlayBean> musics) {
-        mainAdapter.addData(musics);
+    public void updateData(Object o) {
+
     }
 
     @Override
@@ -50,7 +30,7 @@ public class MainFragment extends BaseFragment<List<MusicPlayBean>, MainPresente
 
     @Override
     protected boolean isNeedEmptyLayout() {
-        return true;
+        return false;
     }
 
     @Override
@@ -60,49 +40,55 @@ public class MainFragment extends BaseFragment<List<MusicPlayBean>, MainPresente
 
     @Override
     protected void initView() {
-        CommonLogger.e("初始化MainFragment");
-        display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_main_display);
-        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_main_refresh);
-        display.setLayoutManager(new LinearLayoutManager(getContext()));
-        loadMoreFooterView = new LoadMoreFooterView(getContext());
-        display.setLoadMoreFooterView(loadMoreFooterView);
-        display.setOnLoadMoreListener(this);
-        refresh.setOnRefreshListener(this);
+        like = (LinearLayout) findViewById(R.id.ll_fragment_main_like);
+        songList = (LinearLayout) findViewById(R.id.ll_fragment_main_songList);
+        downLoad = (LinearLayout) findViewById(R.id.ll_fragment_main_down);
+        recent = (LinearLayout) findViewById(R.id.ll_fragment_main_recent);
+        localMusic = (LinearLayout) findViewById(R.id.ll_fragment_main_local_music);
+        musicRepository = (LinearLayout) findViewById(R.id.ll_fragment_main_music_repository);
+        play = (ImageView) findViewById(R.id.iv_fragment_main_play);
+        like.setOnClickListener(this);
+        songList.setOnClickListener(this);
+        downLoad.setOnClickListener(this);
+        recent.setOnClickListener(this);
+        musicRepository.setOnClickListener(this);
     }
-
 
     @Override
     protected void initData() {
-        DaggerMainFragmentComponent.builder().mainComponent(VideoApplication.getMainComponent()).mainFragmentModule(new MainFragmentModule(this)).build().inject(this);
-        mainAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
-            @Override
-            public void onItemClick(int position, View view) {
-                Toast.makeText(getActivity(), "position:" + position, Toast.LENGTH_SHORT).show();
-                MusicManager.getInstance().play(mainAdapter.getData(), position, MusicService.MODE_NORMAL);
-            }
-        });
-        display.setAdapter(mainAdapter);
+
     }
 
     @Override
     protected void updateView() {
-        presenter.getAllMusic(true, true);
+
     }
 
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.ll_fragment_main_recent) {
+
+
+        } else if (i == R.id.ll_fragment_main_like) {
+
+        } else if (i == R.id.ll_fragment_main_down) {
+
+        } else if (i == R.id.ll_fragment_main_songList) {
+
+        } else if (i == R.id.ll_fragment_main_local_music) {
+
+        } else if (i == R.id.ll_fragment_main_music_repository) {
+            Intent intent = new Intent(getContext(), MusicRepositoryActivity.class);
+            startActivity(intent);
+        } else if (i == R.id.iv_fragment_main_play) {
+
+        } else {
+
+        }
+    }
 
     public static MainFragment newInstance() {
         return new MainFragment();
-    }
-
-    @Override
-    public void loadMore() {
-        CommonLogger.e("加载更多?");
-        presenter.getAllMusic(false, false);
-    }
-
-    @Override
-    public void onRefresh() {
-        presenter.getAllMusic(true, false);
-        refresh.setRefreshing(false);
     }
 }

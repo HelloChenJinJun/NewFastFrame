@@ -26,7 +26,6 @@ public class App extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
         setStrictMode();
         // 设置是否开启热更新能力，默认为true
         Beta.enableHotfix = true;
@@ -115,7 +114,6 @@ public class App extends BaseApplication {
         // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId,调试时将第三个参数设置为true
         Bugly.init(this, "2e5309db50", true);
         long end = System.currentTimeMillis();
-        Log.e("init time--->", end - start + "ms");
     }
 
     @Override

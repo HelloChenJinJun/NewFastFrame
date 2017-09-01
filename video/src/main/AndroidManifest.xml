@@ -29,8 +29,11 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.RankDetailActivity" />
+        <activity android:name=".ui.SongListActivity" />
         <activity android:name=".ui.DownLoadActivity" />
+
+        <activity android:name=".ui.MusicRepositoryActivity" />
+
 
         <meta-data
             android:name="com.example.cootek.newfastframe.VideoApplication"

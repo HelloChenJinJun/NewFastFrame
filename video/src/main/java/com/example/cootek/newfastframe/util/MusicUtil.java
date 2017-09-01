@@ -31,9 +31,13 @@ public class MusicUtil {
     public static final Integer[] RANK_TYPE_LIST = new Integer[]{
             1, 2, 6, 7, 8, 9, 11, 14, 20, 21, 22, 23, 24, 25
     };
+    public static final int FROM_RANK = 0;
+    public static final String FROM = "from";
+    public static final int FROM_SONG_MENU = 1;
+    public static final String LIST_ID = "list_id";
 
     public static Uri getAlbumArtUri(long paramInt) {
-        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), paramInt);
+        return ContentUris.withAppendedId(Uri.parse("content://media/exjava.lang.Stringternal/audio/albumart"), paramInt);
     }
 
 

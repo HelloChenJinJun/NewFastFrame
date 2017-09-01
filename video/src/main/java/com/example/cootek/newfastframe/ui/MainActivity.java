@@ -19,8 +19,6 @@ import com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout;
 @Route(path = "/video/main")
 public class MainActivity extends MainBaseActivity implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private SlidingPanelLayout slideLayout;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,11 +42,9 @@ public class MainActivity extends MainBaseActivity implements OnLoadMoreListener
 
     @Override
     protected void initView() {
-        slideLayout = (SlidingPanelLayout) findViewById(R.id.slide_panel_activity_main_containe);
         CommonLogger.e("这里开始初始化fragment");
         addOrReplaceFragment(HolderFragment.newInstance(), R.id.fl_activity_main_container);
-        Fragment fragment = BottomFragment.newInstance();
-        getSupportFragmentManager().beginTransaction().add(R.id.fl_activity_main_bottom_container, fragment).show(fragment).commitAllowingStateLoss();
+        showBottomFragment(true);
     }
 
     @Override
@@ -56,17 +52,6 @@ public class MainActivity extends MainBaseActivity implements OnLoadMoreListener
 
     }
 
-    private void getData(boolean isRefresh) {
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (slideLayout.getPanelState() == SlidingPanelLayout.PanelState.EXPANDED) {
-            slideLayout.setPanelState(SlidingPanelLayout.PanelState.COLLAPSED);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     protected void onDestroy() {
@@ -75,12 +60,10 @@ public class MainActivity extends MainBaseActivity implements OnLoadMoreListener
 
     @Override
     public void loadMore() {
-        getData(false);
     }
 
     @Override
     public void onRefresh() {
-        getData(true);
     }
 
     @Override

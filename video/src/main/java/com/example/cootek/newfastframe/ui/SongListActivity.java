@@ -24,12 +24,13 @@ import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.MusicService;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.VideoApplication;
-import com.example.cootek.newfastframe.adapter.RankDetailAdapter;
-import com.example.cootek.newfastframe.dagger.DaggerRankDetailActivityComponent;
-import com.example.cootek.newfastframe.mvp.RankDetailPresenter;
+import com.example.cootek.newfastframe.adapter.SongListAdapter;
+import com.example.cootek.newfastframe.dagger.DaggerSongListActivityComponent;
+import com.example.cootek.newfastframe.dagger.SongListModule;
+import com.example.cootek.newfastframe.mvp.SongListPresenter;
 import com.example.cootek.newfastframe.api.DownLoadMusicBean;
 import com.example.cootek.newfastframe.api.RankListBean;
-import com.example.cootek.newfastframe.dagger.RankDetailModule;
+import com.example.cootek.newfastframe.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,21 +44,20 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Created by COOTEK on 2017/8/16.
  */
 
-public class RankDetailActivity extends BaseActivity<Object, RankDetailPresenter> implements OnRefreshListener, OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class SongListActivity extends BaseActivity<Object, SongListPresenter> implements OnRefreshListener, OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     SwipeRefreshLayout refreshLayout;
     SuperRecyclerView display;
 
     @Inject
-    RankDetailAdapter rankDetailAdapter;
+    SongListAdapter songListAdapter;
     private ImageView headerBg;
     private ImageView headerImage;
     private TextView headName;
-    private TextView headComment;
-    private TextView headTime;
     private int type;
     private LoadMoreFooterView loadMoreFooterView;
     private LinearLayoutManager linearManager;
+    private String listId;
 
 
     @Override
@@ -66,17 +66,17 @@ public class RankDetailActivity extends BaseActivity<Object, RankDetailPresenter
             RankListBean bean = ((RankListBean) rankListBean);
             if (bean.getSong_list() == null && !refreshLayout.isRefreshing()) {
                 loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
-                linearManager.scrollToPosition(rankDetailAdapter.getItemCount() - 1);
+                linearManager.scrollToPosition(songListAdapter.getItemCount() - 1);
             }
             updateHeaderView(bean.getBillboard());
         } else if (rankListBean instanceof DownLoadMusicBean) {
             DownLoadMusicBean bean = ((DownLoadMusicBean) rankListBean);
             if (refreshLayout.isRefreshing()) {
-                rankDetailAdapter.clearAllData();
-                rankDetailAdapter.getData().add(bean);
-                rankDetailAdapter.notifyDataSetChanged();
+                songListAdapter.clearAllData();
+                songListAdapter.getData().add(bean);
+                songListAdapter.notifyDataSetChanged();
             } else {
-                rankDetailAdapter.addData(bean);
+                songListAdapter.addData(bean);
             }
         }
     }
@@ -84,9 +84,7 @@ public class RankDetailActivity extends BaseActivity<Object, RankDetailPresenter
     private void updateHeaderView(RankListBean.BillboardBean bean) {
         Glide.with(this).load(bean.getPic_s640()).bitmapTransform(new BlurTransformation(this)).into(headerBg);
         Glide.with(this).load(bean.getPic_s192()).centerCrop().into(headerImage);
-        headComment.setText(bean.getComment());
         headName.setText(bean.getName());
-        headTime.setText(bean.getUpdate_date());
     }
 
     @Override
@@ -101,28 +99,37 @@ public class RankDetailActivity extends BaseActivity<Object, RankDetailPresenter
 
     @Override
     protected int getContentLayout() {
-        return R.layout.activity_rank_detail;
+        return R.layout.activity_song_list;
     }
 
     @Override
     protected void initView() {
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_activity_rank_detail_refresh);
-        display = (SuperRecyclerView) findViewById(R.id.srcv_activity_rank_detail_display);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_activity_song_list_refresh);
+        display = (SuperRecyclerView) findViewById(R.id.srcv_activity_song_list_display);
     }
 
     @Override
     protected void initData() {
-        DaggerRankDetailActivityComponent.builder().mainComponent(VideoApplication.getMainComponent())
-                .rankDetailModule(new RankDetailModule(this)).build().inject(this);
+        DaggerSongListActivityComponent.builder().mainComponent(VideoApplication.getMainComponent())
+                .songListModule(new SongListModule(this)).build().inject(this);
         type = getIntent().getIntExtra("type", -1);
         display.setLayoutManager(linearManager = new LinearLayoutManager(this));
-        rankDetailAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+
+        int from = getIntent().getIntExtra(MusicUtil.FROM, 0);
+
+
+        if (from == MusicUtil.FROM_SONG_MENU) {
+            listId = getIntent().getStringExtra(MusicUtil.LIST_ID);
+        }
+
+
+        songListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                DownLoadMusicBean downLoadMusicBean = rankDetailAdapter.getData(position);
+                DownLoadMusicBean downLoadMusicBean = songListAdapter.getData(position);
                 List<MusicPlayBean> list = new ArrayList<>();
                 for (DownLoadMusicBean bean :
-                        rankDetailAdapter.getData()) {
+                        songListAdapter.getData()) {
                     MusicPlayBean playBean = new MusicPlayBean();
                     playBean.setLocal(false);
                     playBean.setSongId(Long.parseLong(bean.getSonginfo().getSong_id()));
@@ -140,11 +147,11 @@ public class RankDetailActivity extends BaseActivity<Object, RankDetailPresenter
                     CommonLogger.e("播放地址:" + downLoadMusicBean.getBitrate().getFile_link());
                     MusicManager.getInstance().play(list, position, MusicService.MODE_NORMAL);
                 }
-                Toast.makeText(RankDetailActivity.this, "这里播放音乐", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SongListActivity.this, "这里播放音乐", Toast.LENGTH_SHORT).show();
             }
         });
         refreshLayout.setOnRefreshListener(this);
-        display.setAdapter(rankDetailAdapter);
+        display.setAdapter(songListAdapter);
         display.addHeaderView(getHeaderView());
         display.setOnLoadMoreListener(this);
         display.setLoadMoreFooterView(loadMoreFooterView = new LoadMoreFooterView(this));
@@ -152,17 +159,16 @@ public class RankDetailActivity extends BaseActivity<Object, RankDetailPresenter
     }
 
     private View getHeaderView() {
-        View headerView = LayoutInflater.from(this).inflate(R.layout.view_activity_rank_detail_header_view, null);
-        headerBg = (ImageView) headerView.findViewById(R.id.iv_view_activity_rank_detail_header_view_bg);
-        headerImage = (ImageView) headerView.findViewById(R.id.iv_view_activity_rank_detail_header_view_image);
-        headTime = (TextView) headerView.findViewById(R.id.tv_view_activity_rank_detail_header_view_time);
-        headComment = (TextView) headerView.findViewById(R.id.tv_view_activity_rank_detail_header_view_comment);
-        headName = (TextView) headerView.findViewById(R.id.tv_view_activity_rank_detail_header_view_name);
+        View headerView = LayoutInflater.from(this).inflate(R.layout.view_activity_song_list_header_view, null);
+        headerBg = (ImageView) headerView.findViewById(R.id.iv_view_activity_song_list_header_view_bg);
+        headerImage = (ImageView) headerView.findViewById(R.id.iv_view_activity_song_list_header_view_image);
+        headName = (TextView) headerView.findViewById(R.id.tv_view_activity_song_list_header_view_title);
         return headerView;
     }
 
-    public static void start(Context context, int type) {
-        Intent intent = new Intent(context, RankDetailActivity.class);
+    public static void start(Context context, int type, int from) {
+        Intent intent = new Intent(context, SongListActivity.class);
+        intent.putExtra(MusicUtil.FROM, from);
         intent.putExtra("type", type);
         context.startActivity(intent);
     }

@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
     public void jump(View view) {
         Toast.makeText(this, "升级", Toast.LENGTH_SHORT).show();
         ARouter.getInstance().build("/video/main").navigation();
-
     }
 
 

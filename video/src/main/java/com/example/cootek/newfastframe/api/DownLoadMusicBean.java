@@ -85,6 +85,7 @@ public class DownLoadMusicBean {
          * resource_type : 0
          */
 
+
         private int special_type;
         private String pic_huge;
         private String ting_uid;

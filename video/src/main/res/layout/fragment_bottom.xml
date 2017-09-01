@@ -46,21 +46,20 @@
             android:visibility="invisible" />
     </RelativeLayout>
 
-    <com.example.cootek.newfastframe.view.CommentLayout
-        android:id="@+id/cl_fragment_bottom_comment_layout"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:orientation="vertical" />
 
 
-    <ImageView
-        android:id="@+id/iv_fragment_bottom_comment"
+    <TextView
+        android:id="@+id/tv_fragment_bottom_comment"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:alpha="0"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_chat_bubble_outline_white_24dp"
-        android:visibility="invisible" />
+        android:text="弹"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        android:textColor="@color/base_color_text_white"
+        android:background="@drawable/selector_fragment_bottom_comment"/>
 
     <ImageView
         android:id="@+id/iv_fragment_bottom_back"

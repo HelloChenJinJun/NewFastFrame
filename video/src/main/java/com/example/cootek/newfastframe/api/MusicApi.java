@@ -3,6 +3,7 @@ package com.example.cootek.newfastframe.api;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 /**
  * Created by COOTEK on 2017/8/15.
@@ -25,7 +26,8 @@ public interface MusicApi {
 
     /**
      * 获取歌手的基本信息
-     * @param id  歌手id
+     *
+     * @param id 歌手id
      * @return
      */
     @GET("/v1/restserver/ting?from=android&version=5.6.5.6&format=json&method=baidu.ting.artist.getInfo")
@@ -34,7 +36,8 @@ public interface MusicApi {
 
     /**
      * 获取歌手的歌曲列表
-     * @param id  歌手id
+     *
+     * @param id     歌手id
      * @param offset
      * @param limit
      * @return
@@ -45,6 +48,7 @@ public interface MusicApi {
 
     /**
      * 根据songId获取系统推荐的歌曲列表
+     *
      * @param songId
      * @param unm
      * @return
@@ -54,6 +58,7 @@ public interface MusicApi {
 
     /**
      * 获取歌曲的基本信息，包括播放地址和歌词地址
+     *
      * @param songId
      * @return
      */
@@ -62,10 +67,21 @@ public interface MusicApi {
 
     /**
      * 搜索关键词，返回的列表中包含预支相关的歌曲名，歌手名和专辑名
-     * @param searchText  关键词
+     *
+     * @param searchText 关键词
      * @return
      */
     @GET("/v1/restserver/ting?from=android&version=5.6.5.6&format=json&method=baidu.ting.search.catalogSug")
     public Observable<SearchMusicBean> search(@Query("query") String searchText);
+
+    @GET
+    public Observable<RecommendSongBean> getRecommendData(@Url String url);
+
+
+    @GET("/v1/restserver/ting?from=android&version=5.6.5.6&format=json&method=baidu.ting.diy.gedanInfo")
+    public Observable<SongMenuBean> getSongMenuData(@Query("listid") String listId);
+
+
+
 
 }

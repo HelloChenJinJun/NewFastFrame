@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_fragment_recommend_song_list_more"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="推荐歌单"
+                    android:textColor="@color/base_color_text_blue"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/iv_fragment_recommend_song_list_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_keyboard_arrow_right_white_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_fragment_recommend_song_list_arrow"
+                    android:text="更多"
+                    android:textColor="@color/base_color_text_blue"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <com.example.commonlibrary.baseadapter.SuperRecyclerView
+                android:id="@+id/srcv_fragment_recommend_song_list"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="20dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="20dp"
+                android:background="@color/divider_line_default_color" />
+
+
+            <RelativeLayout
+                android:id="@+id/rl_fragment_recommend_radio_more"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="推荐电台"
+                    android:textColor="@color/base_color_text_blue"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/iv_fragment_recommend_radio_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_keyboard_arrow_right_white_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_fragment_recommend_radio_arrow"
+                    android:text="更多"
+                    android:textColor="@color/base_color_text_blue"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <com.example.commonlibrary.baseadapter.SuperRecyclerView
+                android:id="@+id/srcv_fragment_recommend_radio"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="20dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="20dp"
+                android:background="@color/divider_line_default_color" />
+
+
+            <RelativeLayout
+                android:id="@+id/rl_fragment_recommend_album_more"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="最新专辑"
+                    android:textColor="@color/base_color_text_blue"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/iv_fragment_recommend_album_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_keyboard_arrow_right_white_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_fragment_recommend_album_arrow"
+                    android:text="更多"
+                    android:textColor="@color/base_color_text_blue"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <com.example.commonlibrary.baseadapter.SuperRecyclerView
+                android:id="@+id/srcv_fragment_recommend_album"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="20dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="20dp"
+                android:background="@color/divider_line_default_color" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

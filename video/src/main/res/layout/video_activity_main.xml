@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/slide_panel_activity_main_containe"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/base_color_text_grey"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    app:umanoDragView="@+id/fl_activity_main_bottom_container"
-    app:umanoOverlay="false"
-    app:umanoPanelHeight="60dp"
-    app:umanoShadowHeight="5dp">
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/fl_activity_main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+</LinearLayout>
 
 
-    <FrameLayout
-        android:id="@+id/fl_activity_main_bottom_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout>
+    <!--<com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout--><!--xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:id="@+id/slide_panel_activity_main_containe"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:background="@color/base_color_text_grey"--><!--android:gravity="bottom"--><!--android:orientation="vertical"--><!--app:umanoDragView="@+id/fl_activity_main_bottom_container"--><!--app:umanoOverlay="false"--><!--app:umanoPanelHeight="60dp"--><!--app:umanoShadowHeight="5dp">-->
+
+    <!--<FrameLayout--><!--android:id="@+id/fl_activity_main_container"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent" />-->
+
+
+    <!--<FrameLayout--><!--android:id="@+id/fl_activity_main_bottom_container"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent" />--><!--</com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout>-->

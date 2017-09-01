@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.example.commonlibrary.baseadapter.ViewPagerAdapter;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.cootek.newfastframe.R;
 
@@ -56,9 +57,9 @@ public class HolderFragment extends BaseFragment {
         titleList.add("排行榜");
         titleList.add("测试");
         List<BaseFragment> fragments = new ArrayList<>();
-        fragments.add(MainFragment.newInstance());
+        fragments.add(LocalListFragment.newInstance());
         fragments.add(RankFragment.newInstance());
-        fragments.add(TestFragment.newInstance());
+        fragments.add(MainFragment.newInstance());
         viewPagerAdapter.setTitleAndFragments(titleList, fragments);
         tab.setupWithViewPager(display);
         display.setOffscreenPageLimit(2);
@@ -72,34 +73,5 @@ public class HolderFragment extends BaseFragment {
 
     public static HolderFragment newInstance() {
         return new HolderFragment();
-    }
-
-    private class ViewPagerAdapter extends FragmentPagerAdapter {
-        private List<String> titleList;
-        private List<BaseFragment> fragments;
-
-        ViewPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titleList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        void setTitleAndFragments(List<String> titleList, List<BaseFragment> fragments) {
-            this.titleList = titleList;
-            this.fragments = fragments;
-        }
     }
 }

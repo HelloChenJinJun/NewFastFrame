@@ -20,10 +20,10 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/8/16.
  */
 
-public class RankDetailPresenter extends BasePresenter<IView<Object>, RankDetailModel> {
+public class SongListPresenter extends BasePresenter<IView<Object>, SongListModel> {
     private int num = 0;
 
-    public RankDetailPresenter(IView<Object> iView, RankDetailModel baseModel) {
+    public SongListPresenter(IView<Object> iView, SongListModel baseModel) {
         super(iView, baseModel);
         num = 0;
     }

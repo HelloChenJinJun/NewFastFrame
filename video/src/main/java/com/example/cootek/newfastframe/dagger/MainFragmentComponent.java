@@ -1,6 +1,6 @@
 package com.example.cootek.newfastframe.dagger;
 
-import com.example.cootek.newfastframe.ui.MainFragment;
+import com.example.cootek.newfastframe.ui.LocalListFragment;
 import com.example.commonlibrary.dagger.scope.PerFragment;
 
 import dagger.Component;
@@ -11,6 +11,6 @@ import dagger.Component;
 @PerFragment
 @Component(dependencies = MainComponent.class, modules = {MainFragmentModule.class})
 public interface MainFragmentComponent {
-    public void inject(MainFragment mainFragment);
+    public void inject(LocalListFragment mainFragment);
 }
 

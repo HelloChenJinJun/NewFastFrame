@@ -4,11 +4,11 @@ import com.example.commonlibrary.mvp.BaseModel;
 import com.example.cootek.newfastframe.MainRepositoryManager;
 
 /**
- * Created by COOTEK on 2017/8/16.
+ * Created by COOTEK on 2017/9/1.
  */
 
-public class RankDetailModel extends BaseModel<MainRepositoryManager> {
-    public RankDetailModel(MainRepositoryManager repositoryManager) {
+public class RecommendModel extends BaseModel<MainRepositoryManager> {
+    public RecommendModel(MainRepositoryManager repositoryManager) {
         super(repositoryManager);
     }
 }

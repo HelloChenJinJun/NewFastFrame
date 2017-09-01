@@ -26,7 +26,6 @@ import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.dagger.DaggerBottomFragmentComponent;
-import com.example.cootek.newfastframe.view.CommentLayout;
 import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.MusicService;
 import com.example.cootek.newfastframe.event.MusicStatusEvent;
@@ -68,7 +67,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     private ImageView list;
     private RelativeLayout iconContainer;
     private SeekBar seekBar;
-    private RelativeLayout container;
     private LrcView lrcView;
     private ImageView bg;
     private LinearLayout seekContainer;
@@ -76,8 +74,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     private TextView endTime;
     private LrcView bottomLrc;
     private ImageView back;
-    private ImageView comment;
-    private CommentLayout commentLayout;
+    private TextView comment;
     private RelativeLayout lrcContainer;
     private IntEvaluator intEvaluator;
     private int endSongName;
@@ -116,8 +113,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     @Override
     protected void initView() {
         lrcContainer = (RelativeLayout) findViewById(R.id.rl_fragment_bottom_lrc_container);
-        commentLayout = (CommentLayout) findViewById(R.id.cl_fragment_bottom_comment_layout);
-        comment = (ImageView) findViewById(R.id.iv_fragment_bottom_comment);
+        comment = (TextView) findViewById(R.id.tv_fragment_bottom_comment);
         back = (ImageView) findViewById(R.id.iv_fragment_bottom_back);
         bottomLrc = (LrcView) findViewById(R.id.lv_fragment_bottom_lrc_bottom);
         endTime = (TextView) findViewById(R.id.tv_fragment_bottom_end_time);
@@ -125,7 +121,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         seekContainer = (LinearLayout) findViewById(R.id.ll_fragment_bottom_seek_container);
         bg = (ImageView) findViewById(R.id.iv_fragment_bottom_bg);
         lrcView = (LrcView) findViewById(R.id.lv_fragment_bottom_lrc);
-        container = (RelativeLayout) findViewById(R.id.rl_fragment_bottom_container);
         seekBar = (SeekBar) findViewById(R.id.sb_fragment_bottom_seek);
         iconContainer = (RelativeLayout) findViewById(R.id.rl_fragment_bottom_icon_container);
         list = (ImageView) findViewById(R.id.iv_fragment_bottom_list);
@@ -289,13 +284,14 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         screenHeight = DensityUtil.getScreenHeight(getContext());
         int margin = ((RelativeLayout.LayoutParams) playOrPause.getLayoutParams()).rightMargin;
         endPlay = screenWidth / 2 - (sameWidth * 2 + margin) + sameWidth / 2;
+        reLoadMusic();
     }
 
     private void reLoadMusic() {
         presenter.refresh();
     }
 
-    public static Fragment newInstance() {
+    public static BottomFragment newInstance() {
         return new BottomFragment();
     }
 
@@ -390,7 +386,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         } else if (previousState == SlidingPanelLayout.PanelState.DRAGGING && newState == SlidingPanelLayout.PanelState.COLLAPSED) {
             playMode.setVisibility(View.INVISIBLE);
             back.setVisibility(View.INVISIBLE);
-            commentLayout.stop();
             comment.setVisibility(View.INVISIBLE);
             lrcContainer.setVisibility(View.INVISIBLE);
             if (!isShow) {
@@ -524,10 +519,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             playModeWindow.dismiss();
             updatePlayMode(MusicService.MODE_SHUFFLE);
             playMode.setImageResource(R.drawable.ic_shuffle_white_24dp);
-        } else if (id == R.id.iv_fragment_bottom_comment) {
-            CommonLogger.e("点击啦啦啦");
-            commentLayout.setData(getData());
-            commentLayout.start();
+        } else if (id == R.id.tv_fragment_bottom_comment) {
         } else if (id == R.id.iv_fragment_bottom_back) {
             CommonLogger.e("这里收缩");
             slidingUpPanelLayout.setPanelState(SlidingPanelLayout.PanelState.COLLAPSED);

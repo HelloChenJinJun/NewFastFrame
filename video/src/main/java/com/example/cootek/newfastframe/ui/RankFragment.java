@@ -74,7 +74,9 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
         rankAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                RankDetailActivity.start(getContext(), Integer.parseInt(rankAdapter.getData(position).getBillboard().getBillboard_type()));
+                SongListActivity.start(getContext(), Integer.parseInt(rankAdapter.getData(position).getBillboard().getBillboard_type()), MusicUtil
+                        .FROM_RANK);
+
             }
         });
         display.addHeaderView(getHeaderView());
@@ -82,7 +84,7 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
     }
 
     private View getHeaderView() {
-        return LayoutInflater.from(getContext()).inflate(R.layout.view_activity_rank_detail_header_view, null);
+        return LayoutInflater.from(getContext()).inflate(R.layout.view_activity_song_list_header_view, null);
     }
 
     @Override
