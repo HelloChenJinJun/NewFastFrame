@@ -42,7 +42,7 @@ public interface MusicApi {
      * @param limit
      * @return
      */
-    @GET("/v1/restserver/ting?from=android&version=5.6.5.6&format=json&method=baidu.ting.artist.getInfo")
+    @GET("/v1/restserver/ting?from=android&version=5.6.5.6&format=json&method=baidu.ting.artist.getSongList")
     public Observable<ArtistSongsBean> getArtistSongs(@Query("tinguid") String id, @Query("offset") int offset, @Query("limits") int limit);
 
 
@@ -82,6 +82,8 @@ public interface MusicApi {
     public Observable<SongMenuBean> getSongMenuData(@Query("listid") String listId);
 
 
+    @GET("/v1/restserver/ting?from=android&version=5.6.5.6&format=json&method=baidu.ting.album.getAlbumInfo")
+    public Observable<AlbumBean> getAlbumData(@Query("album_id") String albumId);
 
 
 }

@@ -42,9 +42,8 @@ public class MainActivity extends MainBaseActivity implements OnLoadMoreListener
 
     @Override
     protected void initView() {
-        CommonLogger.e("这里开始初始化fragment");
+        CommonLogger.e("1这里开始初始化fragment");
         addOrReplaceFragment(HolderFragment.newInstance(), R.id.fl_activity_main_container);
-        showBottomFragment(true);
     }
 
     @Override

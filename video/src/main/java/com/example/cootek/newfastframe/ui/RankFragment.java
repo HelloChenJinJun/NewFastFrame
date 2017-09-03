@@ -1,5 +1,6 @@
 package com.example.cootek.newfastframe.ui;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -74,9 +75,10 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
         rankAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                SongListActivity.start(getContext(), Integer.parseInt(rankAdapter.getData(position).getBillboard().getBillboard_type()), MusicUtil
-                        .FROM_RANK);
-
+                Intent intent = new Intent(getContext(), SongListActivity.class);
+                intent.putExtra(MusicUtil.FROM, MusicUtil.FROM_RANK);
+                intent.putExtra(MusicUtil.RANK_TYPE, Integer.parseInt(rankAdapter.getData(position).getBillboard().getBillboard_type()));
+                startActivity(intent);
             }
         });
         display.addHeaderView(getHeaderView());

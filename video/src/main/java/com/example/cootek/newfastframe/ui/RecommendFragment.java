@@ -140,6 +140,26 @@ public class RecommendFragment extends BaseFragment<RecommendSongBean, Recommend
                 startActivity(intent);
             }
         });
+        recommendRadioAdapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
+            @Override
+            public void onItemChildClick(int position, View view, int id) {
+                RecommendSongBean.ResultBeanXXXXXXXXXXXXXXXX.RadioBean.ResultBeanXXXXXXXXXXX data = recommendRadioAdapter.getData(position);
+                Intent intent = new Intent(getContext(), SongListActivity.class);
+                intent.putExtra(MusicUtil.FROM, MusicUtil.FROM_RADIO);
+                intent.putExtra(MusicUtil.RADIO_ID, data.getAlbum_id());
+                startActivity(intent);
+            }
+        });
+        recommendAlbumAdapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
+            @Override
+            public void onItemChildClick(int position, View view, int id) {
+                RecommendSongBean.ResultBeanXXXXXXXXXXXXXXXX.Mix1Bean.ResultBean data = recommendAlbumAdapter.getData(position);
+                Intent intent = new Intent(getContext(), SongListActivity.class);
+                intent.putExtra(MusicUtil.FROM, MusicUtil.FROM_ALBUM);
+                intent.putExtra(MusicUtil.ALBUM_ID, data.getType_id());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

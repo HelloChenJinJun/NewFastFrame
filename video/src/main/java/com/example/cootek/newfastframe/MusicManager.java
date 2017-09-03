@@ -46,10 +46,7 @@ public class MusicManager {
     public void bindService(Context context) {
         Intent intent = new Intent(context, MusicService.class);
         CommonLogger.e("这里的服务名" + MusicService.class.getName());
-        if (AppUtil.isServiceRunning(context, MusicService.class.getName())) {
-        } else {
-            context.startService(intent);
-        }
+        context.startService(intent);
         BindConnection bindConnection = new BindConnection();
         CommonLogger.e("绑定服务1");
         if (context.bindService(intent, bindConnection, Service.BIND_AUTO_CREATE)) {
@@ -196,7 +193,7 @@ public class MusicManager {
         }
     }
 
-   public long[] getQueue() {
+    public long[] getQueue() {
         try {
             if (service != null) {
                 return service.getQueue();

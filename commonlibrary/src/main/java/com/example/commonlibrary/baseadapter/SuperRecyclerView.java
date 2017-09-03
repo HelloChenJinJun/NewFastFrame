@@ -147,6 +147,7 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
+        setLoadMoreEnabled(true);
         this.mOnLoadMoreListener = listener;
     }
 
@@ -394,7 +395,6 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
         final int action = MotionEventCompat.getActionMasked(e);
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
-                CommonLogger.e("ACTION_DOWN");
                 final int index = MotionEventCompat.getActionIndex(e);
                 mActivePointerId = MotionEventCompat.getPointerId(e, 0);
                 mLastTouchX = getMotionEventX(e, index);
@@ -403,7 +403,6 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
             break;
 
             case MotionEvent.ACTION_MOVE: {
-                CommonLogger.e("ACTION_MOVE");
 //                TLog.e(SuperRecyclerView.class, "截获到滚动事件");
                 final int index = MotionEventCompat.findPointerIndex(e, mActivePointerId);
                 if (index < 0) {
@@ -449,7 +448,6 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
                             setStatus(STATUS_SWIPING_TO_REFRESH);
                         }
                         fingerMove(dy);
-                        CommonLogger.e("这里true");
                         return true;
                     }
                 }
@@ -457,7 +455,6 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
             break;
 
             case MotionEventCompat.ACTION_POINTER_DOWN: {
-                CommonLogger.e("ACTION_POINTER_DOWN");
                 final int index = MotionEventCompat.getActionIndex(e);
                 mActivePointerId = MotionEventCompat.getPointerId(e, index);
                 mLastTouchX = getMotionEventX(e, index);
@@ -471,13 +468,11 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
             break;
 
             case MotionEvent.ACTION_UP: {
-                CommonLogger.e("ACTION_UP");
                 onFingerUpStartAnimating();
             }
             break;
 
             case MotionEvent.ACTION_CANCEL: {
-                CommonLogger.e("ACTION_CANCEL");
                 onFingerUpStartAnimating();
             }
             break;

@@ -41,6 +41,15 @@
         <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.MusicRepositoryActivity" />
 
+        <receiver android:name=".receiver.MusicInfoReceiver">
+            <intent-filter>
+                <action android:name="meta_changed" />
+                <action android:name="play_state_changed" />
+                <action android:name="butter_update_changed" />
+            </intent-filter>
+        </receiver>
+        <activity android:name=".ui.LocalMusicListActivity" />
+        <activity android:name=".ui.SingerInfoActivity"/>
         <meta-data
             android:name="com.example.cootek.newfastframe.VideoApplication"
             android:value="IModuleConfig" />

@@ -52,6 +52,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         downLoad.setOnClickListener(this);
         recent.setOnClickListener(this);
         musicRepository.setOnClickListener(this);
+        localMusic.setOnClickListener(this);
     }
 
     @Override
@@ -77,7 +78,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         } else if (i == R.id.ll_fragment_main_songList) {
 
         } else if (i == R.id.ll_fragment_main_local_music) {
-
+            Intent intent = new Intent(getContext(), LocalMusicListActivity.class);
+            startActivity(intent);
         } else if (i == R.id.ll_fragment_main_music_repository) {
             Intent intent = new Intent(getContext(), MusicRepositoryActivity.class);
             startActivity(intent);

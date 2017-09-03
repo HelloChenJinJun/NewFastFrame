@@ -24,6 +24,10 @@ public class MusicPlayBean implements Parcelable {
     private String songUrl;
     private int duration;
     private boolean isLocal;
+    private String tingId;
+
+
+    private boolean isRecent;
 
 
     public boolean isLocal() {
@@ -131,6 +135,24 @@ public class MusicPlayBean implements Parcelable {
         this.isLocal = isLocal;
     }
 
+    @Override
+    public String toString() {
+        return "MusicPlayBean{" +
+                "songId=" + songId +
+                ", albumId=" + albumId +
+                ", artistId='" + artistId + '\'' +
+                ", songName='" + songName + '\'' +
+                ", albumName='" + albumName + '\'' +
+                ", artistName='" + artistName + '\'' +
+                ", albumUrl='" + albumUrl + '\'' +
+                ", lrcUrl='" + lrcUrl + '\'' +
+                ", songUrl='" + songUrl + '\'' +
+                ", duration=" + duration +
+                ", isLocal=" + isLocal +
+                ", tingId='" + tingId + '\'' +
+                ", isRecent=" + isRecent +
+                '}';
+    }
 
     @Override
     public int describeContents() {
@@ -142,6 +164,7 @@ public class MusicPlayBean implements Parcelable {
         dest.writeLong(this.songId);
         dest.writeLong(this.albumId);
         dest.writeString(this.artistId);
+        dest.writeString(this.tingId);
         dest.writeString(this.songName);
         dest.writeString(this.albumName);
         dest.writeString(this.artistName);
@@ -150,12 +173,14 @@ public class MusicPlayBean implements Parcelable {
         dest.writeString(this.songUrl);
         dest.writeInt(this.duration);
         dest.writeByte(this.isLocal ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isRecent ? (byte) 1 : (byte) 0);
     }
 
     protected MusicPlayBean(Parcel in) {
         this.songId = in.readLong();
         this.albumId = in.readLong();
         this.artistId = in.readString();
+        this.tingId = in.readString();
         this.songName = in.readString();
         this.albumName = in.readString();
         this.artistName = in.readString();
@@ -164,11 +189,13 @@ public class MusicPlayBean implements Parcelable {
         this.songUrl = in.readString();
         this.duration = in.readInt();
         this.isLocal = in.readByte() != 0;
+        this.isRecent = in.readByte() != 0;
     }
 
-    @Generated(hash = 25955599)
+    @Generated(hash = 1055983836)
     public MusicPlayBean(long songId, long albumId, String artistId, String songName, String albumName, String artistName,
-            String albumUrl, String lrcUrl, String songUrl, int duration, boolean isLocal) {
+                         String albumUrl, String lrcUrl, String songUrl, int duration, boolean isLocal, String tingId,
+                         boolean isRecent) {
         this.songId = songId;
         this.albumId = albumId;
         this.artistId = artistId;
@@ -180,13 +207,25 @@ public class MusicPlayBean implements Parcelable {
         this.songUrl = songUrl;
         this.duration = duration;
         this.isLocal = isLocal;
+        this.tingId = tingId;
+        this.isRecent = isRecent;
     }
 
+    public boolean getIsRecent() {
+        return this.isRecent;
+    }
 
+    public void setIsRecent(boolean isRecent) {
+        this.isRecent = isRecent;
+    }
 
+    public String getTingId() {
+        return this.tingId;
+    }
 
-
-
+    public void setTingId(String tingId) {
+        this.tingId = tingId;
+    }
 
     public static final Creator<MusicPlayBean> CREATOR = new Creator<MusicPlayBean>() {
         @Override

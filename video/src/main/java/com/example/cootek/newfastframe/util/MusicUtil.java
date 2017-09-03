@@ -35,6 +35,18 @@ public class MusicUtil {
     public static final String FROM = "from";
     public static final int FROM_SONG_MENU = 1;
     public static final String LIST_ID = "list_id";
+    public static final String RANK_TYPE = "TYPE";
+    public static final int FROM_ALBUM = 2;
+    public static final String ALBUM_ID = "album_id";
+    public static final int FROM_RADIO = 3;
+    public static final String RADIO_ID = "RADIO_ID";
+    public static final int FROM_SINGER = 4;
+    public static final String TING_UID = "ting_uid";
+    public static final String SINGER_AVATAR = "singer_avatar";
+    public static final String SHARED_PREFERENCES_NAME = "music";
+    public static final String PLAY_MODE = "PLAY_MODE";
+    public static final String POSITION = "position";
+    public static final String SEEK = "seek";
 
     public static Uri getAlbumArtUri(long paramInt) {
         return ContentUris.withAppendedId(Uri.parse("content://media/exjava.lang.Stringternal/audio/albumart"), paramInt);

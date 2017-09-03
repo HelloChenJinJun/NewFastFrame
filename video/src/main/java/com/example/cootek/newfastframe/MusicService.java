@@ -36,6 +36,7 @@ import com.example.commonlibrary.bean.DaoSession;
 import com.example.commonlibrary.bean.MusicHistoryInfo;
 import com.example.commonlibrary.bean.MusicHistoryInfoDao;
 import com.example.commonlibrary.bean.MusicPlayBean;
+import com.example.commonlibrary.bean.MusicPlayBeanDao;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.FileUtil;
 import com.example.commonlibrary.utils.Httputil;
@@ -111,7 +112,7 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
 //        发送前台通知
-        CommonLogger.e("服务的onCreate");
+        CommonLogger.e("服务的onCreate1");
         notificationManagerCompat = NotificationManagerCompat.from(this);
         daoSession = VideoApplication.getMainComponent().getDaoSession();
         handlerThread = new HandlerThread("music_handler_thread", Process.THREAD_PRIORITY_BACKGROUND);
@@ -127,27 +128,27 @@ public class MusicService extends Service {
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
         mWakeLock.setReferenceCounted(false);
-        mPreferences = getSharedPreferences("Service", 0);
+        mPreferences = getSharedPreferences(MusicUtil.SHARED_PREFERENCES_NAME, 0);
     }
 
 
     private void reloadQueue() {
-        List<MusicPlayBean> list = daoSession.getMusicPlayBeanDao().queryBuilder().list();
+        List<MusicPlayBean> list = daoSession.getMusicPlayBeanDao().queryBuilder().where(MusicPlayBeanDao.Properties.IsRecent.eq(Boolean.TRUE)).list();
         if (list.size() > 0) {
             mPlaylist.clear();
             mPlaylist.addAll(list);
         }
         if (mPlaylist.size() > 0) {
-            final int pos = mPreferences.getInt("position", 0); //记录了上次退出时播放曲目在播放队列中的位置
+            final int pos = mPreferences.getInt(MusicUtil.POSITION, 0); //记录了上次退出时播放曲目在播放队列中的位置
             if (pos < 0 || pos >= mPlaylist.size()) {
                 mPlaylist.clear();
                 return;
             }
             playPosition = pos;
             openCurrentAndNext();
-            long seekpos = mPreferences.getLong("seek", 0);
+            long seekpos = mPreferences.getLong(MusicUtil.SEEK, 0);
             seek(seekpos >= 0 && seekpos < duration() ? seekpos : 0);
-            mode = mPreferences.getInt("play_mode", 0);
+            mode = mPreferences.getInt(MusicUtil.PLAY_MODE, 0);
             if (mode == MODE_SHUFFLE) {
 //                取出历史播放列表
                 mHistory.clear();
@@ -335,8 +336,16 @@ public class MusicService extends Service {
                     daoSession.getMusicHistoryInfoDao().insertInTx(list);
                 }
             }
-            daoSession.getMusicPlayBeanDao().deleteAll();
-            daoSession.getMusicPlayBeanDao().insertInTx(mPlaylist);
+            List<MusicPlayBean> lastPlayList = daoSession.getMusicPlayBeanDao().queryBuilder().where(MusicPlayBeanDao.Properties.IsRecent.eq(Boolean.TRUE)).list();
+
+            if (lastPlayList.size() > 0) {
+                for (MusicPlayBean bean :
+                        lastPlayList) {
+                    bean.setIsRecent(false);
+                }
+                daoSession.getMusicPlayBeanDao().updateInTx(lastPlayList);
+            }
+            daoSession.getMusicPlayBeanDao().insertOrReplaceInTx(mPlaylist);
         }
         editor.putInt("position", playPosition);
         if (wrappedMediaPlayer.isInitialized()) {
@@ -960,7 +969,7 @@ public class MusicService extends Service {
             playPosition = mShuffler.nextInt(mPlaylist.size());
         }
         mHistory.clear();
-        openCurrentAndMaybeNext(false);
+        openCurrentAndMaybeNext(true);
     }
 
 

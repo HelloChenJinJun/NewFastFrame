@@ -4,7 +4,6 @@ import com.example.commonlibrary.baseadapter.EmptyLayout;
 import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.mvp.BasePresenter;
 import com.example.commonlibrary.mvp.IView;
-import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.MusicInfoProvider;
 
 import java.util.List;
@@ -16,29 +15,16 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by COOTEK on 2017/8/11.
+ * Created by COOTEK on 2017/9/3.
  */
 
-public class MainPresenter extends BasePresenter<IView, MainModel> {
-    private int num;
-
-
-    public MainPresenter(IView iView, MainModel baseModel) {
+public class SingerInfoPresenter extends BasePresenter<IView<List<MusicPlayBean>>, SingerInfoModel> {
+    public SingerInfoPresenter(IView<List<MusicPlayBean>> iView, SingerInfoModel baseModel) {
         super(iView, baseModel);
-        num = 0;
     }
 
-
-    public void getAllMusic(final boolean isRefresh, final boolean isShowLoading) {
-        if (isRefresh) {
-            num = 0;
-        }
-        num++;
-        if (isShowLoading) {
-            iView.showLoading("正在加载");
-        }
-        MusicInfoProvider.getAllMusic(true)
-                .subscribeOn(Schedulers.io())
+    public void getLocalSingerMusic(final String tingId) {
+        MusicInfoProvider.getMusicForSinger(tingId).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<MusicPlayBean>>() {
                     @Override
@@ -47,28 +33,18 @@ public class MainPresenter extends BasePresenter<IView, MainModel> {
                     }
 
                     @Override
-                    public void onNext(@NonNull List<MusicPlayBean> musics) {
-                        iView.updateData(musics);
-                        if (musics == null) {
-                            num--;
-                        }
+                    public void onNext(@NonNull List<MusicPlayBean> musicPlayBeen) {
+                        iView.updateData(musicPlayBeen);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        CommonLogger.e("数据为出错");
-                        String message = "";
-                        if (e != null) {
-                            message = e.getMessage();
-                        }
-                        CommonLogger.e(message);
-                        iView.showError(message, new EmptyLayout.OnRetryListener() {
+                        iView.showError(null, new EmptyLayout.OnRetryListener() {
                             @Override
                             public void onRetry() {
-                                getAllMusic(isRefresh, isShowLoading);
+                                getLocalSingerMusic(tingId);
                             }
                         });
-                        num--;
                     }
 
                     @Override

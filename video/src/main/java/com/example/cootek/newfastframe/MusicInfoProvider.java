@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.MusicPlayBean;
+import com.example.commonlibrary.bean.MusicPlayBeanDao;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.util.MusicUtil;
 
@@ -44,8 +45,17 @@ public class MusicInfoProvider {
                 new String[]{"%" + searchString + "%", "%" + searchString + "%", "%" + searchString + "%"}));
     }
 
-    public static Observable<List<MusicPlayBean>> getAllMusic() {
-        return getMusicForCursor(getSongCursor(BaseApplication.getInstance(), null, null));
+    public static Observable<List<MusicPlayBean>> getAllMusic(boolean isLocal) {
+        if (isLocal) {
+            return getMusicForCursor(getSongCursor(BaseApplication.getInstance(), null, null));
+        } else {
+            return getDownLoadMusic();
+        }
+    }
+
+    private static Observable<List<MusicPlayBean>> getDownLoadMusic() {
+        List<MusicPlayBean> result = VideoApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao().queryBuilder().where(MusicPlayBeanDao.Properties.IsLocal.eq(Boolean.FALSE)).list();
+        return Observable.just(result);
     }
 
 
@@ -66,6 +76,7 @@ public class MusicInfoProvider {
                 if (cursor != null && cursor.moveToFirst()) {
                     do {
                         MusicPlayBean music = new MusicPlayBean();
+                        CommonLogger.e("data", cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATA)));
                         music.setSongId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID)));
                         music.setSongName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE)));
                         music.setArtistId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST_ID)) + "");
@@ -103,4 +114,8 @@ public class MusicInfoProvider {
     }
 
 
+    public static Observable<List<MusicPlayBean>> getMusicForSinger(String tingId) {
+        return Observable.just(VideoApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao().queryBuilder()
+                .where(MusicPlayBeanDao.Properties.TingId.eq(tingId)).list());
+    }
 }

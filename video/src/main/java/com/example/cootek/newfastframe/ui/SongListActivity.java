@@ -16,8 +16,10 @@ import com.example.commonlibrary.baseadapter.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.OnRefreshListener;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.WrappedLinearLayoutManager;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.bean.MusicPlayBean;
+import com.example.commonlibrary.bean.SingerListBean;
 import com.example.commonlibrary.mvp.BaseActivity;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.MusicManager;
@@ -25,8 +27,11 @@ import com.example.cootek.newfastframe.MusicService;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.adapter.SongListAdapter;
+import com.example.cootek.newfastframe.api.AlbumBean;
+import com.example.cootek.newfastframe.api.SongMenuBean;
 import com.example.cootek.newfastframe.dagger.DaggerSongListActivityComponent;
 import com.example.cootek.newfastframe.dagger.SongListModule;
+import com.example.cootek.newfastframe.mvp.MainBaseActivity;
 import com.example.cootek.newfastframe.mvp.SongListPresenter;
 import com.example.cootek.newfastframe.api.DownLoadMusicBean;
 import com.example.cootek.newfastframe.api.RankListBean;
@@ -44,7 +49,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Created by COOTEK on 2017/8/16.
  */
 
-public class SongListActivity extends BaseActivity<Object, SongListPresenter> implements OnRefreshListener, OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class SongListActivity extends MainBaseActivity<Object, SongListPresenter> implements OnRefreshListener, OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     SwipeRefreshLayout refreshLayout;
     SuperRecyclerView display;
@@ -58,19 +63,22 @@ public class SongListActivity extends BaseActivity<Object, SongListPresenter> im
     private LoadMoreFooterView loadMoreFooterView;
     private LinearLayoutManager linearManager;
     private String listId;
+    private int from;
+    private String albumId;
+    private String tingId;
 
 
     @Override
-    public void updateData(Object rankListBean) {
-        if (rankListBean instanceof RankListBean) {
-            RankListBean bean = ((RankListBean) rankListBean);
+    public void updateData(Object object) {
+        if (object instanceof RankListBean) {
+            RankListBean bean = ((RankListBean) object);
             if (bean.getSong_list() == null && !refreshLayout.isRefreshing()) {
                 loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
                 linearManager.scrollToPosition(songListAdapter.getItemCount() - 1);
             }
-            updateHeaderView(bean.getBillboard());
-        } else if (rankListBean instanceof DownLoadMusicBean) {
-            DownLoadMusicBean bean = ((DownLoadMusicBean) rankListBean);
+            updateHeaderView(bean.getBillboard().getPic_s260(), bean.getBillboard().getName());
+        } else if (object instanceof DownLoadMusicBean) {
+            DownLoadMusicBean bean = ((DownLoadMusicBean) object);
             if (refreshLayout.isRefreshing()) {
                 songListAdapter.clearAllData();
                 songListAdapter.getData().add(bean);
@@ -78,13 +86,30 @@ public class SongListActivity extends BaseActivity<Object, SongListPresenter> im
             } else {
                 songListAdapter.addData(bean);
             }
+        } else if (object instanceof SongMenuBean) {
+            SongMenuBean songMenuBean = (SongMenuBean) object;
+            if (songMenuBean.getContent() == null && !refreshLayout.isRefreshing()) {
+                loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
+                linearManager.scrollToPosition(songListAdapter.getItemCount() - 1);
+            }
+            updateHeaderView(songMenuBean.getPic_300(), songMenuBean.getDesc());
+        } else if (object instanceof AlbumBean) {
+            AlbumBean albumBean = (AlbumBean) object;
+            if (albumBean.getSonglist() == null && !refreshLayout.isRefreshing()) {
+                loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
+                linearManager.scrollToPosition(songListAdapter.getItemCount() - 1);
+            }
+            updateHeaderView(albumBean.getAlbumInfo().getPic_s500(), albumBean.getAlbumInfo().getInfo());
+        } else if (object instanceof SingerListBean) {
+            SingerListBean singerListBean = (SingerListBean) object;
+            updateHeaderView(singerListBean.getAvatar(), singerListBean.getInfo());
         }
     }
 
-    private void updateHeaderView(RankListBean.BillboardBean bean) {
-        Glide.with(this).load(bean.getPic_s640()).bitmapTransform(new BlurTransformation(this)).into(headerBg);
-        Glide.with(this).load(bean.getPic_s192()).centerCrop().into(headerImage);
-        headName.setText(bean.getName());
+    private void updateHeaderView(String imageUrl, String title) {
+        Glide.with(this).load(imageUrl).bitmapTransform(new BlurTransformation(this)).into(headerBg);
+        Glide.with(this).load(imageUrl).centerCrop().into(headerImage);
+        headName.setText(title);
     }
 
     @Override
@@ -112,17 +137,17 @@ public class SongListActivity extends BaseActivity<Object, SongListPresenter> im
     protected void initData() {
         DaggerSongListActivityComponent.builder().mainComponent(VideoApplication.getMainComponent())
                 .songListModule(new SongListModule(this)).build().inject(this);
-        type = getIntent().getIntExtra("type", -1);
-        display.setLayoutManager(linearManager = new LinearLayoutManager(this));
-
-        int from = getIntent().getIntExtra(MusicUtil.FROM, 0);
-
-
+        from = getIntent().getIntExtra(MusicUtil.FROM, 0);
+        display.setLayoutManager(linearManager = new WrappedLinearLayoutManager(this));
         if (from == MusicUtil.FROM_SONG_MENU) {
             listId = getIntent().getStringExtra(MusicUtil.LIST_ID);
+        } else if (from == MusicUtil.FROM_ALBUM) {
+            albumId = getIntent().getStringExtra(MusicUtil.ALBUM_ID);
+        } else if (from == MusicUtil.FROM_RANK) {
+            type = getIntent().getIntExtra(MusicUtil.RANK_TYPE, -1);
+        } else if (from == MusicUtil.FROM_SINGER) {
+            tingId = getIntent().getStringExtra(MusicUtil.TING_UID);
         }
-
-
         songListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
@@ -141,6 +166,7 @@ public class SongListActivity extends BaseActivity<Object, SongListPresenter> im
                     playBean.setAlbumUrl(bean.getSonginfo().getPic_radio());
                     playBean.setSongUrl(bean.getBitrate().getFile_link());
                     playBean.setLrcUrl(bean.getSonginfo().getLrclink());
+                    playBean.setTingId(bean.getSonginfo().getTing_uid());
                     list.add(playBean);
                 }
                 if (list.size() > 0) {
@@ -155,7 +181,20 @@ public class SongListActivity extends BaseActivity<Object, SongListPresenter> im
         display.addHeaderView(getHeaderView());
         display.setOnLoadMoreListener(this);
         display.setLoadMoreFooterView(loadMoreFooterView = new LoadMoreFooterView(this));
-        presenter.getRankDetailInfo(type, true, true);
+        getData(true, true);
+    }
+
+
+    public void getData(boolean isRefresh, boolean isShowLoading) {
+        if (from == MusicUtil.FROM_SONG_MENU) {
+            presenter.getSongMenuData(listId, isRefresh, isShowLoading);
+        } else if (from == MusicUtil.FROM_RANK) {
+            presenter.getRankDetailInfo(type, isRefresh, isShowLoading);
+        } else if (from == MusicUtil.FROM_ALBUM) {
+            presenter.getAlbumInfoData(albumId, isRefresh, isShowLoading);
+        } else if (from == MusicUtil.FROM_SINGER) {
+            presenter.getSingerSongs(tingId, isRefresh, isShowLoading);
+        }
     }
 
     private View getHeaderView() {
@@ -166,22 +205,15 @@ public class SongListActivity extends BaseActivity<Object, SongListPresenter> im
         return headerView;
     }
 
-    public static void start(Context context, int type, int from) {
-        Intent intent = new Intent(context, SongListActivity.class);
-        intent.putExtra(MusicUtil.FROM, from);
-        intent.putExtra("type", type);
-        context.startActivity(intent);
-    }
-
     @Override
     public void onRefresh() {
-        presenter.getRankDetailInfo(type, true, false);
+        getData(true, false);
     }
 
 
     @Override
     public void loadMore() {
-        presenter.getRankDetailInfo(type, false, false);
+        getData(false, false);
     }
 
 
@@ -194,8 +226,11 @@ public class SongListActivity extends BaseActivity<Object, SongListPresenter> im
 
     @Override
     public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
-        super.showError(errorMsg, listener);
-        refreshLayout.setRefreshing(false);
-        loadMoreFooterView.setStatus(LoadMoreFooterView.Status.ERROR);
+        if (!refreshLayout.isRefreshing()) {
+            loadMoreFooterView.setStatus(LoadMoreFooterView.Status.ERROR);
+        } else {
+            refreshLayout.setRefreshing(false);
+            super.showError(errorMsg, listener);
+        }
     }
 }

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by aspsine on 16/3/12.
+ * Created by 陈锦军 on 16/3/12.
  */
 public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> extends RecyclerView.Adapter<K> {
 
@@ -30,7 +30,6 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     protected static final int FOOTER = Integer.MAX_VALUE - 1;
     protected static final int LOAD_MORE_FOOTER = Integer.MAX_VALUE;
     protected static final int EMPTY = Integer.MIN_VALUE + 2;
-
 
 
     private RefreshHeaderLayout mRefreshHeaderContainer;
@@ -95,8 +94,6 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     public void setLoadMoreFooterContainer(FrameLayout mLoadMoreFooterContainer) {
         this.mLoadMoreFooterContainer = mLoadMoreFooterContainer;
     }
-
-
 
 
     @Override

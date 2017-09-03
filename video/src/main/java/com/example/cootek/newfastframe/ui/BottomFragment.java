@@ -2,6 +2,8 @@ package com.example.cootek.newfastframe.ui;
 
 import android.animation.FloatEvaluator;
 import android.animation.IntEvaluator;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -87,6 +89,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     private CustomPopWindow customPopWindow;
     private int mode = 0;
     private boolean isShow = true;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void updateData(DownLoadMusicBean o) {
@@ -170,6 +173,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
 
     @Override
     protected void initData() {
+        sharedPreferences = getActivity().getSharedPreferences(MusicUtil.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         DaggerBottomFragmentComponent.builder().mainComponent(VideoApplication.getMainComponent())
                 .bottomFragmentModule(new BottomFragmentModule(this)).build().inject(this);
         progressRun = new Runnable() {
@@ -578,6 +582,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     private void updatePlayMode(int currentMode) {
         if (currentMode != mode) {
             mode = currentMode;
+            sharedPreferences.edit().putInt(MusicUtil.PLAY_MODE, currentMode).apply();
             presenter.setMode(mode);
         }
     }
