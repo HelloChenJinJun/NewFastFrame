@@ -2,8 +2,6 @@ package com.example.commonlibrary.skin.attr;
 
 import android.view.View;
 
-import com.example.commonlibrary.skin.SkinAttr;
-
 /**
  * Created by COOTEK on 2017/9/3.
  */

@@ -223,13 +223,12 @@ public class SongListActivity extends MainBaseActivity<Object, SongListPresenter
     @Override
     public void hideLoading() {
         super.hideLoading();
-//        loadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
         refreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
-        if (!refreshLayout.isRefreshing()) {
+        if (!refreshLayout.isRefreshing() && loadMoreFooterView.getStatus() == LoadMoreFooterView.Status.LOADING) {
             loadMoreFooterView.setStatus(LoadMoreFooterView.Status.ERROR);
         } else {
             refreshLayout.setRefreshing(false);

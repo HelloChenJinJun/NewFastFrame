@@ -1,16 +1,15 @@
 package com.example.commonlibrary.skin;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.commonlibrary.skin.attr.BackgroundAttr;
+import com.example.commonlibrary.skin.attr.SkinAttr;
 import com.example.commonlibrary.skin.attr.SkinItem;
 import com.example.commonlibrary.skin.attr.SrcAttr;
 import com.example.commonlibrary.skin.attr.TextColorAttr;

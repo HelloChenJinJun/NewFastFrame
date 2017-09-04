@@ -71,11 +71,13 @@ public class CommonLogger {
             return;
         }
         if (e != null && e.getStackTrace() != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                for (Throwable error :
-                        e.getSuppressed()) {
-                    e(error.getMessage());
-                }
+            if (e.getCause() != null) {
+                CommonLogger.e("cause:" + e.getCause().toString());
+            }
+            CommonLogger.e("message:" + e.getMessage());
+            for (StackTraceElement item :
+                    e.getStackTrace()) {
+                CommonLogger.e(item.toString());
             }
         }
     }

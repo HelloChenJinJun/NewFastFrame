@@ -61,16 +61,7 @@ public class RankPresenter extends BasePresenter<IView<RankListBean>, RankModel>
                                 }
                             });
                         }
-                        if (e != null && e.getStackTrace() != null) {
-                            if (e.getCause() != null) {
-                               CommonLogger.e("cause:"+ e.getCause().toString());
-                            }
-                            CommonLogger.e("message:"+e.getMessage());
-                            for (StackTraceElement item :
-                                    e.getStackTrace()) {
-                                CommonLogger.e(item.toString());
-                            }
-                        }
+                       CommonLogger.e(e);
                     }
 
                     @Override

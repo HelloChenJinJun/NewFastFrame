@@ -1,7 +1,6 @@
 package com.example.commonlibrary.skin.attr;
 
 import android.view.View;
-import com.example.commonlibrary.skin.SkinAttr;
 
 import java.util.List;
 

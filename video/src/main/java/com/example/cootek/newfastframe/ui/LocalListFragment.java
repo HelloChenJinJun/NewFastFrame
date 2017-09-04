@@ -38,7 +38,6 @@ public class LocalListFragment extends BaseFragment<List<MusicPlayBean>, MainPre
 
     SuperRecyclerView display;
     SwipeRefreshLayout refresh;
-    //    private LoadMoreFooterView loadMoreFooterView;
     @Inject
     LocalListAdapter mainAdapter;
 
@@ -135,12 +134,6 @@ public class LocalListFragment extends BaseFragment<List<MusicPlayBean>, MainPre
     public static LocalListFragment newInstance() {
         return new LocalListFragment();
     }
-
-//    @Override
-//    public void loadMore() {
-//        CommonLogger.e("加载更多?");
-//        presenter.getAllMusic(false, false);
-//    }
 
     @Override
     public void onRefresh() {

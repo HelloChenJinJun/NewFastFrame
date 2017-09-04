@@ -1,9 +1,11 @@
-package com.example.commonlibrary.skin;
+package com.example.commonlibrary.skin.attr;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.commonlibrary.skin.SkinManager;
 
 /**
  * Created by COOTEK on 2017/9/3.

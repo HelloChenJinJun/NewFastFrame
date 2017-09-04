@@ -6,9 +6,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.example.commonlibrary.baseadapter.EmptyLayout;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.mvp.BaseFragment;
+import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.util.MusicUtil;
 import com.example.cootek.newfastframe.R;
@@ -99,10 +102,23 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
 
     @Override
     public void onRefresh() {
-//        for (Integer type :
-//                typeList) {
-//            presenter.getRankList(type, true);
-//        }
+        for (Integer type :
+                typeList) {
+            presenter.getRankList(type, true);
+        }
+    }
+
+    @Override
+    public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
+
+        hideLoading();
+        ToastUtils.showShortToast("网络加载失败，请重新刷新下");
+    }
+
+
+    @Override
+    public void hideLoading() {
+        super.hideLoading();
         refresh.setRefreshing(false);
     }
 
