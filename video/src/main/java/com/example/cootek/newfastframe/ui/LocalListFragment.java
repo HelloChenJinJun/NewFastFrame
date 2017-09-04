@@ -11,7 +11,10 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.mvp.BaseFragment;
+import com.example.commonlibrary.skin.LoadSkinListener;
+import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.SkinUtil;
 import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.adapter.LocalListAdapter;
 import com.example.cootek.newfastframe.MusicManager;
@@ -79,6 +82,32 @@ public class LocalListFragment extends BaseFragment<List<MusicPlayBean>, MainPre
             public void onItemClick(int position, View view) {
                 Toast.makeText(getActivity(), "position:" + position, Toast.LENGTH_SHORT).show();
                 MusicManager.getInstance().play(mainAdapter.getData(), position, MusicService.MODE_NORMAL);
+            }
+
+
+            @Override
+            public boolean onItemLongClick(int position, View view) {
+                CommonLogger.e("长按");
+                SkinManager.getInstance().loadSkinResource(SkinUtil.getSkinFilePath("hello.skin"), new LoadSkinListener() {
+                    @Override
+                    public void onStart() {
+                        CommonLogger.e("onStart");
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        CommonLogger.e("onSuccess");
+                        SkinManager.getInstance().refreshSkin();
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        CommonLogger.e("onFailed");
+                    }
+                });
+
+
+                return true;
             }
         });
         display.setAdapter(mainAdapter);

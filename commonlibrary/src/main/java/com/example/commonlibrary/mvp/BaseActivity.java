@@ -26,6 +26,7 @@ import com.example.commonlibrary.baseadapter.EmptyLayout;
 import com.example.commonlibrary.cusotomview.BaseDialog;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
@@ -77,6 +78,7 @@ public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppComp
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        SkinManager.getInstance().apply(this);
         super.onCreate(savedInstanceState);
         if (isNeedHeadLayout()) {
             LinearLayout linearLayout = new LinearLayout(this);
