@@ -13,6 +13,7 @@ import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.commonlibrary.skin.LoadSkinListener;
 import com.example.commonlibrary.skin.SkinManager;
+import com.example.commonlibrary.skin.attr.SkinItem;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.SkinUtil;
 import com.example.cootek.newfastframe.VideoApplication;
@@ -32,18 +33,27 @@ import javax.inject.Inject;
  * Created by COOTEK on 2017/8/13.
  */
 
-public class LocalListFragment extends BaseFragment<List<MusicPlayBean>, MainPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class LocalListFragment extends BaseFragment<List<MusicPlayBean>, MainPresenter> implements SwipeRefreshLayout.OnRefreshListener {
 
 
     SuperRecyclerView display;
     SwipeRefreshLayout refresh;
-    private LoadMoreFooterView loadMoreFooterView;
+    //    private LoadMoreFooterView loadMoreFooterView;
     @Inject
     LocalListAdapter mainAdapter;
 
     @Override
     public void updateData(List<MusicPlayBean> musics) {
-        mainAdapter.addData(musics);
+        if (musics != null && musics.size() > 0) {
+            if (refresh.isRefreshing()) {
+                mainAdapter.clearAllData();
+                mainAdapter.notifyDataSetChanged();
+                mainAdapter.getData().addAll(musics);
+                mainAdapter.notifyDataSetChanged();
+            } else {
+                mainAdapter.addData(musics);
+            }
+        }
     }
 
     @Override
@@ -67,9 +77,9 @@ public class LocalListFragment extends BaseFragment<List<MusicPlayBean>, MainPre
         display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_main_display);
         refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_main_refresh);
         display.setLayoutManager(new LinearLayoutManager(getContext()));
-        loadMoreFooterView = new LoadMoreFooterView(getContext());
-        display.setLoadMoreFooterView(loadMoreFooterView);
-        display.setOnLoadMoreListener(this);
+//        loadMoreFooterView = new LoadMoreFooterView(getContext());
+//        display.setLoadMoreFooterView(loadMoreFooterView);
+//        display.setOnLoadMoreListener(this);
         refresh.setOnRefreshListener(this);
     }
 
@@ -88,25 +98,28 @@ public class LocalListFragment extends BaseFragment<List<MusicPlayBean>, MainPre
             @Override
             public boolean onItemLongClick(int position, View view) {
                 CommonLogger.e("长按");
-                SkinManager.getInstance().loadSkinResource(SkinUtil.getSkinFilePath("hello.skin"), new LoadSkinListener() {
-                    @Override
-                    public void onStart() {
-                        CommonLogger.e("onStart");
-                    }
+                if (SkinManager.getInstance().isLocal()) {
+                    SkinManager.getInstance().loadSkinResource(SkinUtil.getSkinFilePath("hello.skin"), new LoadSkinListener() {
+                        @Override
+                        public void onStart() {
+                            CommonLogger.e("onStart");
+                        }
 
-                    @Override
-                    public void onSuccess() {
-                        CommonLogger.e("onSuccess");
-                        SkinManager.getInstance().refreshSkin();
-                    }
+                        @Override
+                        public void onSuccess() {
+                            CommonLogger.e("onSuccess");
+                            SkinManager.getInstance().refreshSkin();
+                        }
 
-                    @Override
-                    public void onFailed() {
-                        CommonLogger.e("onFailed");
-                    }
-                });
-
-
+                        @Override
+                        public void onFailed() {
+                            CommonLogger.e("onFailed");
+                        }
+                    });
+                } else {
+                    SkinManager.getInstance().reset();
+                    SkinManager.getInstance().refreshSkin();
+                }
                 return true;
             }
         });
@@ -123,11 +136,11 @@ public class LocalListFragment extends BaseFragment<List<MusicPlayBean>, MainPre
         return new LocalListFragment();
     }
 
-    @Override
-    public void loadMore() {
-        CommonLogger.e("加载更多?");
-        presenter.getAllMusic(false, false);
-    }
+//    @Override
+//    public void loadMore() {
+//        CommonLogger.e("加载更多?");
+//        presenter.getAllMusic(false, false);
+//    }
 
     @Override
     public void onRefresh() {

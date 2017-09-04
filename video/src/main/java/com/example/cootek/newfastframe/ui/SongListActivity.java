@@ -207,12 +207,15 @@ public class SongListActivity extends MainBaseActivity<Object, SongListPresenter
 
     @Override
     public void onRefresh() {
+        loadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
         getData(true, false);
     }
 
 
     @Override
     public void loadMore() {
+        CommonLogger.e("加载更多阿拉啦");
+        loadMoreFooterView.setStatus(LoadMoreFooterView.Status.LOADING);
         getData(false, false);
     }
 
@@ -220,7 +223,7 @@ public class SongListActivity extends MainBaseActivity<Object, SongListPresenter
     @Override
     public void hideLoading() {
         super.hideLoading();
-        loadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
+//        loadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
         refreshLayout.setRefreshing(false);
     }
 

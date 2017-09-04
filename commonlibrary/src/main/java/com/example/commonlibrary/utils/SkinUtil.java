@@ -16,7 +16,7 @@ import java.io.OutputStream;
 
 public class SkinUtil {
     private static final String SKIN_DIR_NAME = "skin";
-    public static final String NAME_PLACE = "http://schemas.android.com/android/skin";
+    public static final String NAME_PLACE = "http://schemas.android.com/apk/res/android";
 
 
     public static String getSkinFilePath(String skinName) {

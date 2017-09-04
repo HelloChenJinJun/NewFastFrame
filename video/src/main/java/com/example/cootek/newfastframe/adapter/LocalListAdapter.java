@@ -27,7 +27,6 @@ public class LocalListAdapter extends BaseRecyclerAdapter<MusicPlayBean, BaseWra
 
     @Override
     protected void convert(BaseWrappedViewHolder holder, MusicPlayBean data) {
-        CommonLogger.e("数据啦啦啦" + data.toString());
         holder.setImageUrl(R.id.riv_item_fragment_local_list_image, data.getAlbumUrl())
                 .setText(R.id.tv_item_fragment_local_list_name, data.getSongName())
                 .setText(R.id.tv_item_fragment_local_list_description, data.getArtistName() + "," + data.getAlbumName())

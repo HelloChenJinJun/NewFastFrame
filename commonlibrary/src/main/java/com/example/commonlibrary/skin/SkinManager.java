@@ -177,6 +177,7 @@ public class SkinManager {
 
     public ColorStateList getColorStateList(int resId) {
         if (isLocal) {
+            CommonLogger.e("放回本地");
             return ContextCompat.getColorStateList(context, resId);
         }
         int id = resources.getIdentifier(context.getResources().getResourceEntryName(resId), "color", packageName);

@@ -323,6 +323,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
 
     public void addData(int position, List<T> newData) {
+        if (newData == null || newData.size() == 0) {
+            return;
+        }
         List<T> temp = new ArrayList<>();
         List<T> copyData = new ArrayList<>(data);
         for (T data :

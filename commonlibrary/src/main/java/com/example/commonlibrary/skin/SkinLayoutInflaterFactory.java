@@ -56,13 +56,16 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
 //        获取是否应用换肤操作
 
 
-        boolean isEnable = attrs.getAttributeBooleanValue(SkinUtil.NAME_PLACE, "enable", false);
-        CommonLogger.e("1这里" + isEnable);
+        String tag = attrs.getAttributeValue(SkinUtil.NAME_PLACE, "tag");
+        CommonLogger.e("1这里" + tag);
         View view = appCompatActivity.getDelegate().createView(parent, name, context, attrs);
         if (view == null) {
             view = ViewProducer.createViewFromTag(context, name, attrs);
         }
-        return applySkin(context, view, attrs);
+        if (tag != null && tag.equals("skin")) {
+            return applySkin(context, view, attrs);
+        }
+        return view;
     }
 
     private View applySkin(Context context, View view, AttributeSet attrs) {
@@ -89,7 +92,7 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
                     CommonLogger.e("value" + attrValue + " attrName" + attrName);
                     int id = Integer.parseInt(attrValue.substring(1));
                     if (id != 0) {
-                        createSkinFromAttrName(attrName, id, view);
+                        createSkinFromAttrName(attrName, id, view).apply(view);
                     }
                 }
             } catch (Resources.NotFoundException | NumberFormatException e) {

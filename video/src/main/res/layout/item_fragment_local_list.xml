@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
+
     android:orientation="horizontal">
 
     <com.example.commonlibrary.cusotomview.RoundAngleImageView
@@ -23,8 +24,9 @@
             android:id="@+id/tv_item_fragment_local_list_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="skin"
             android:text="歌名"
-            android:textColor="@color/base_color_text_blue"
+            android:textColor="@color/item_bg"
             android:textSize="20sp" />
 
         <TextView

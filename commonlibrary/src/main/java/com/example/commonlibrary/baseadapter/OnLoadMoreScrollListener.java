@@ -7,22 +7,24 @@ import android.view.View;
 public abstract class OnLoadMoreScrollListener extends RecyclerView.OnScrollListener {
 
     @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+    public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                int visibleItemCount = layoutManager.getChildCount();
+                boolean triggerCondition = visibleItemCount > 0
+                        && canTriggerLoadMore(recyclerView);
+                if (triggerCondition) {
+                    onLoadMore(recyclerView);
+                }
+            }
+        });
     }
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-        int visibleItemCount = layoutManager.getChildCount();
 
-
-        boolean triggerCondition = visibleItemCount > 0
-                && newState == RecyclerView.SCROLL_STATE_IDLE
-                && canTriggerLoadMore(recyclerView);
-
-        if (triggerCondition) {
-            onLoadMore(recyclerView);
-        }
     }
 
     public boolean canTriggerLoadMore(RecyclerView recyclerView) {

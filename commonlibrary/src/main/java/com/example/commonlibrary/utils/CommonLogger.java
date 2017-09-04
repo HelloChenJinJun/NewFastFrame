@@ -67,6 +67,9 @@ public class CommonLogger {
 
 
     public static void e(Throwable e) {
+        if (!isLogEnable) {
+            return;
+        }
         if (e != null && e.getStackTrace() != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 for (Throwable error :
