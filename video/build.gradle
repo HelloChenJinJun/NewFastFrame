@@ -69,6 +69,7 @@ dependencies {
     compile rootProject.ext.dependencies.cardview
     compile rootProject.ext.dependencies.palette
 //    provided rootProject.ext.dependencies.dagger2_compiler
+//    compile 'com.afollestad.material-dialogs:core:0.9.1.0'
 
     apt rootProject.ext.dependencies.dagger2_compiler
 

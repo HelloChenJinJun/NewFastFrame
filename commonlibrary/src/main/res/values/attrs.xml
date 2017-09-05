@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="empty_layout">
-        <attr name="empty_bg_color" format="color"/>
+        <attr name="empty_bg_color" format="color" />
     </declare-styleable>
 
     <declare-styleable name="RoundAngleImageView">
-        <attr name="roundWidth" format="dimension"/>
-        <attr name="roundHeight" format="dimension"/>
+        <attr name="roundWidth" format="dimension" />
+        <attr name="roundHeight" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="SwipeMenuLayout">
@@ -24,4 +24,42 @@
         <attr name="refreshFinalMoveOffset" format="dimension" />
     </declare-styleable>
 
+
+    <!--自定义属性-->
+
+
+    <!-- 控制app背景色 format:颜色值、资源引用 -->
+    <attr name="custom_attr_app_bg" format="color|reference" />
+    <!-- 控制app标题栏背景色 format:颜色值、资源引用 -->
+    <attr name="custom_attr_app_title_bg" format="color|reference" />
+    <!-- 控制app内容区背景色 format:颜色值、资源引用 -->
+    <attr name="custom_attr_app_content_bg" format="color|reference" />
+    <!-- 控制app内容区分割线颜色 format:颜色值、资源引用 -->
+    <attr name="custom_attr_app_content_div" format="color|reference" />
+
+    <!-- 控制按钮背景色 format:颜色值、资源引用 -->
+    <attr name="custom_attr_btn_bg" format="color|reference" />
+    <!-- 控制按钮上的字体颜色 format:颜色值、资源引用 -->
+    <attr name="custom_attr_btn_text" format="color|reference" />
+
+    <!-- 控制副文本字体颜色，如：提示、描述 format:颜色值、资源引用 -->
+    <attr name="custom_attr_text_sub" format="color|reference" />
+    <!-- 控制主文本字体颜色，如：标题、标签 format:颜色值、资源引用 -->
+    <attr name="custom_attr_text_main" format="color|reference|" />
+
+    <!-- CheckBox背景色 format:颜色值、资源引用 -->
+    <attr name="custom_attr_cb_bg" format="reference" />
+    <!-- CheckBox指示器颜色 format:颜色值、资源引用 -->
+    <attr name="custom_attr_cb_thumb_bg" format="reference" />
+    <!-- seekbar指示器颜色 format:颜色值、资源引用 -->
+    <attr name="custom_attr_sb_thumb_bg" format="reference" />
+
+    <!-- 首页大标题颜色 format:颜色值、资源引用 -->
+    <attr name="custom_attr_title_main_normal" format="color|reference" />
+    <attr name="custom_attr_title_main_selected" format="color|reference" />
+    <!-- 占位Drawable format:颜色值、资源引用 -->
+    <attr name="custom_attr_place_holder" format="color|reference" />
+    <attr name="custom_attr_sb_progress" format="color|reference" />
+    <attr name="custom_attr_sb_second_progress" format="color|reference" />
+    <attr name="custom_attr_sb_bg" format="color|reference" />
 </resources>

@@ -79,6 +79,11 @@ public class SongListActivity extends MainBaseActivity<Object, SongListPresenter
             updateHeaderView(bean.getBillboard().getPic_s260(), bean.getBillboard().getName());
         } else if (object instanceof DownLoadMusicBean) {
             DownLoadMusicBean bean = ((DownLoadMusicBean) object);
+            if (bean.getSonginfo() == null) {
+                if (loadMoreFooterView.getStatus() == LoadMoreFooterView.Status.LOADING) {
+                    loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
+                }
+            }
             if (refreshLayout.isRefreshing()) {
                 songListAdapter.clearAllData();
                 songListAdapter.getData().add(bean);
@@ -163,7 +168,8 @@ public class SongListActivity extends MainBaseActivity<Object, SongListPresenter
                     playBean.setAlbumName(bean.getSonginfo().getAlbum_title());
                     playBean.setSongName(bean.getSonginfo().getTitle());
                     playBean.setArtistName(bean.getSonginfo().getAuthor());
-                    playBean.setAlbumUrl(bean.getSonginfo().getPic_radio());
+                    playBean.setAlbumUrl(bean.getSonginfo().getPic_premium());
+                    CommonLogger.e("这里数据" + playBean.getAlbumUrl());
                     playBean.setSongUrl(bean.getBitrate().getFile_link());
                     playBean.setLrcUrl(bean.getSonginfo().getLrclink());
                     playBean.setTingId(bean.getSonginfo().getTing_uid());

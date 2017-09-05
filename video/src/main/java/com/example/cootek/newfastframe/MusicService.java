@@ -204,7 +204,9 @@ public class MusicService extends Service {
     }
 
     private String getAlbumUrl() {
-        return getCurrentMusicPlayInfo() != null ? getCurrentMusicPlayInfo().getAlbumUrl() : null;
+        String result = getCurrentMusicPlayInfo() != null ? getCurrentMusicPlayInfo().getAlbumUrl() : null;
+        CommonLogger.e("service:" + result);
+        return result;
     }
 
     private void updateMediaSession(String action) {

@@ -43,6 +43,10 @@ public class DensityUtil {
         return (int) (pxValue / scale + 0.5f);
     }
 
+
+
+
+
     public static int[] getViewWidthAndHeight(View contentView) {
         int[] result = new int[2];
         if (contentView.getMeasuredHeight() == 0 || contentView.getMeasuredWidth() == 0) {

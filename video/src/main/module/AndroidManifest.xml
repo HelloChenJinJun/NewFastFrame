@@ -15,7 +15,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/CustomTheme">
+        android:theme="@style/CustomTheme.Day">
 
         <activity
             android:name=".TestMainActivity"
@@ -48,8 +48,10 @@
                 <action android:name="butter_update_changed" />
             </intent-filter>
         </receiver>
+
         <activity android:name=".ui.LocalMusicListActivity" />
-        <activity android:name=".ui.SingerInfoActivity"/>
+        <activity android:name=".ui.SingerInfoActivity" />
+
         <meta-data
             android:name="com.example.cootek.newfastframe.VideoApplication"
             android:value="IModuleConfig" />

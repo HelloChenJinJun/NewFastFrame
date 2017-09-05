@@ -19,7 +19,7 @@ public class DownLoadMusicBean {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof DownLoadMusicBean && ((DownLoadMusicBean) obj).getSonginfo().getSong_id().equals(getSonginfo().getSong_id());
+        return obj != null && obj instanceof DownLoadMusicBean && ((DownLoadMusicBean) obj).getSonginfo() != null && ((DownLoadMusicBean) obj).getSonginfo().getSong_id().equals(getSonginfo().getSong_id());
     }
 
     public SonginfoBean getSonginfo() {

@@ -42,10 +42,6 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
     }
 
 
-    public static List<String> getSupportAttrsName() {
-        return supportAttrsName;
-    }
-
     public SkinLayoutInflaterFactory(AppCompatActivity appCompatActivity) {
         this.appCompatActivity = appCompatActivity;
     }
@@ -86,12 +82,14 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
                     if (backgroundResId != 0) {
                         createSkinFromAttrName(BACKGROUND, backgroundResId, view).apply(view);
                     }
-                } else if (supportAttrsName.contains(attrName) && attrValue.startsWith("@")) {
+                } else if (supportAttrsName.contains(attrName)) {
                     //                只有引用类型才可以换肤
-                    CommonLogger.e("value" + attrValue + " attrName" + attrName);
-                    int id = Integer.parseInt(attrValue.substring(1));
-                    if (id != 0) {
-                        createSkinFromAttrName(attrName, id, view).apply(view);
+                    CommonLogger.e("value：" + attrValue + " attrName：" + attrName);
+                    if (attrValue.startsWith("?")) {
+                        int id = Integer.parseInt(attrValue.substring(1));
+                        if (id != 0) {
+                            createSkinFromAttrName(attrName, id, view).apply(view);
+                        }
                     }
                 }
             } catch (Resources.NotFoundException | NumberFormatException e) {

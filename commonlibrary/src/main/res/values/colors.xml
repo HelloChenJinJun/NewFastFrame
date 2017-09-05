@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#ff343a49</color>
+    <color name="colorPrimaryDark">#ff2a2e3a</color>
+    <color name="colorAccent">#ffffffff</color>
 
 
     <color name="font66">#666666</color>
@@ -14,4 +14,69 @@
     <color name="base_color_text_white">#ffffff</color>
     <color name="base_color_text_black">#232121</color>
     <color name="divider_line_default_color">#d9d9d9</color>
+
+
+    <!--自定义颜色标签-->
+    <!-- app相关 -->
+    <color name="custom_color_app_bg_day">#FFEDEFF2</color>      <!-- app背景色 -->
+    <color name="custom_color_app_bg_night">#FF171717</color>      <!-- app背景色 -->
+    <color name="custom_color_app_title_bg_day">#FF2F3A4C</color>      <!-- app标题栏背景色 -->
+    <color name="custom_color_app_title_bg_night">#FF1D1D1D</color>      <!-- app标题栏背景色 -->
+    <color name="custom_color_app_content_bg_day">#FFFFFFFF</color>      <!-- app内容区背景色 -->
+    <color name="custom_color_app_content_bg_night">#FF1D1D1D</color>      <!-- app内容区背景色 -->
+    <color name="custom_color_app_content_div_day">#FFF2F2F2</color>      <!-- app内容区分割线颜色 -->
+    <color name="custom_color_app_content_div_night">#FF191919</color>      <!-- app内容区分割线颜色 -->
+
+    <!-- 文本相关 -->
+    <color name="custom_color_text_sub_day">#FF999999</color>      <!-- 副文本（提示、描述）字体颜色 -->
+    <color name="custom_color_text_sub_night">#FF444444</color>      <!-- 副文本（提示、描述）字体颜色 -->
+    <color name="custom_color_text_main_day">#FF424242</color>      <!-- 主文本（标题、标签）字体颜色 -->
+    <color name="custom_color_text_main_night">#FF666666</color>      <!-- 主文本（标题、标签）字体颜色 -->
+
+    <!--按钮相关-->
+    <color name="custom_color_btn_bg_normal_day">@color/base_color_text_blue</color>      <!-- 按钮正常情况下背景色 -->
+    <color name="custom_color_btn_bg_normal_night">#FF1D1D1D</color>      <!-- 按钮正常情况下背景色 -->
+    <color name="custom_color_btn_bg_pressed_day">#FFF9F9F9</color>      <!-- 按钮按住情况下背景色 -->
+    <color name="custom_color_btn_bg_pressed_night">#FF1B1B1B</color>      <!-- 按钮按住情况下背景色 -->
+
+    <!--按钮文字相关-->
+    <color name="custom_color_btn_text_pressed_day">#FF818181</color>      <!-- 按钮文字按住情况下背景色 -->
+    <color name="custom_color_btn_text_pressed_night">#FF4C4C4C</color>      <!-- 按钮文字按住情况下背景色 -->
+    <color name="custom_color_btn_text_normal_day">#FF525252</color>      <!-- 按钮文字正常情况下背景色 -->
+    <color name="custom_color_btn_text_normal_night">#FF666666</color>      <!-- 按钮文字正常情况下背景色 -->
+
+
+    <!--占位图颜色-->
+    <color name="custom_color_place_holder_bg_day">#FF29303B</color>      <!-- 占位drawable背景颜色 -->
+    <color name="custom_color_place_holder_bg_night">#FF171717</color>      <!--占位drawable背景颜色 -->
+
+
+    <!--checkbox-->
+
+
+    <!--标题字体颜色-->
+    <color name="custom_color_title_text_normal_day">#ffffffff</color>
+    <color name="custom_color_title_text_normal_night">#FF171717</color>
+    <color name="custom_color_title_text_selected_day">#FFF9F9F9</color>
+    <color name="custom_color_title_text_selected_night">#FF1B1B1B</color>
+
+
+    <!--二级进度条前景色-->
+    <color name="custom_color_sb_secondaryProgress_day">#ffffffff</color>
+    <color name="custom_color_sb_secondaryProgress_night">#FF29303B</color>颜色
+    <!--一级进度条前景色-->
+    <color name="custom_color_sb_progress_day">#fc2024</color>
+    <color name="custom_color_sb_progress_night">#FF29303B</color>
+    <!--进度条背景-->
+    <color name="custom_color_sb_bg_day">#dad0d4da</color>
+    <color name="custom_color_sb_bg_night">#dad0d4da</color>
+
+
+    <!--seekbar指示器-->
+
+    <color name="custom_color_sb_thumb_bg_day">#fc2024</color>
+    <color name="custom_color_sb_thumb_bg_night">#FF29303B</color>
+
+
 </resources>
+

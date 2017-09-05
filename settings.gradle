@@ -1,1 +1,1 @@
-include ':video', ':commonlibrary', ':app'
+include ':video', ':commonlibrary', ':app', ':skin'

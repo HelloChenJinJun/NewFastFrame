@@ -4,7 +4,7 @@
     <item android:id="@android:id/background">
         <shape>
             <size android:height="2dp" />
-            <solid android:color="@color/base_color_text_grey" />
+            <solid android:color="?attr/custom_attr_sb_bg" />
         </shape>
     </item>
 
@@ -12,7 +12,7 @@
         <clip>
             <shape>
                 <size android:height="2dp" />
-                <solid android:color="@color/base_color_text_white" />
+                <solid android:color="?attr/custom_attr_sb_second_progress" />
             </shape>
         </clip>
     </item>
@@ -21,7 +21,7 @@
         <clip>
             <shape>
                 <size android:height="2dp" />
-                <solid android:color="@color/red" />
+                <solid android:color="?attr/custom_attr_sb_progress" />
             </shape>
         </clip>
     </item>

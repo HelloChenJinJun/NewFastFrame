@@ -1,11 +1,14 @@
 package com.example.cootek.newfastframe.util;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.FileUtil;
 import com.example.cootek.newfastframe.lrc.LrcRow;
 
@@ -141,5 +144,17 @@ public class MusicUtil {
         long s = (milliSecs % (60 * 1000)) / 1000;
         sb.append(s < 10 ? "0" + s : s);
         return sb.toString();
+    }
+
+    public static String getRealUrl(String uri, Context context) {
+        int index = uri.lastIndexOf("@s_");
+        if (index > 0) {
+            int screenWidth = DensityUtil.getScreenWidth(context);
+            int screenHeight = DensityUtil.getScreenHeight(context);
+            uri = uri.substring(0, index);
+            uri = uri + "@s_1,w_" + screenWidth + ",h_" + screenHeight;
+        }
+        CommonLogger.e("url:::::" + uri);
+        return uri;
     }
 }

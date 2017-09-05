@@ -6,6 +6,6 @@
         android:width="10dp"
         android:height="10dp" />
     <corners android:radius="5dp" />
-    <solid android:color="@color/base_color_text_white" />
+    <solid android:color="?attr/custom_attr_sb_thumb_bg" />
 
 </shape>

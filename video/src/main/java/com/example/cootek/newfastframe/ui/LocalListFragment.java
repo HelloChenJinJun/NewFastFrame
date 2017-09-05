@@ -1,6 +1,7 @@
 package com.example.cootek.newfastframe.ui;
 
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import com.example.commonlibrary.baseadapter.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.bean.MusicPlayBean;
+import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.commonlibrary.skin.LoadSkinListener;
 import com.example.commonlibrary.skin.SkinManager;
@@ -76,6 +78,7 @@ public class LocalListFragment extends BaseFragment<List<MusicPlayBean>, MainPre
         display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_main_display);
         refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_main_refresh);
         display.setLayoutManager(new LinearLayoutManager(getContext()));
+        display.addItemDecoration(new ListViewDecoration(getActivity()));
 //        loadMoreFooterView = new LoadMoreFooterView(getContext());
 //        display.setLoadMoreFooterView(loadMoreFooterView);
 //        display.setOnLoadMoreListener(this);

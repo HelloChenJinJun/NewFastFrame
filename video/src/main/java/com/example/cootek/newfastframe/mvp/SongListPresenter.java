@@ -18,6 +18,7 @@ import java.util.List;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -56,7 +57,7 @@ public class SongListPresenter extends BasePresenter<IView<Object>, SongListMode
                     public void onNext(@NonNull RankListBean rankListBean) {
                         CommonLogger.e("onNext");
                         if (rankListBean.getError_code() == 22000) {
-                            if (rankListBean.getSong_list() != null && rankListBean.getSong_list().size() > 0) {
+                            if (rankListBean.getSong_list() != null) {
                                 for (RankListBean.SongListBean songLitBean :
                                         rankListBean.getSong_list()) {
                                     getMusicDetailInfo(songLitBean.getSong_id());
@@ -100,10 +101,11 @@ public class SongListPresenter extends BasePresenter<IView<Object>, SongListMode
 
                     @Override
                     public void onNext(@NonNull DownLoadMusicBean downLoadMusicBean) {
-                        if (downLoadMusicBean != null && downLoadMusicBean.getError_code() == 22000) {
+                        if (downLoadMusicBean == null) {
+                            CommonLogger.e("为空拉拉阿拉");
+                        }
+                        if (downLoadMusicBean != null) {
                             iView.updateData(downLoadMusicBean);
-                        } else {
-                            onError(null);
                         }
                     }
 
