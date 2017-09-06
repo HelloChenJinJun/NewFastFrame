@@ -110,63 +110,71 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/iv_fragment_bottom_next"
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            android:id="@+id/riv_fragment_bottom_next"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/custom_drawable_circle_bg"
+            android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_skip_next_black_24dp" />
+            android:src="@drawable/ic_skip_next_black_24dp"
+            android:tag="skin" />
 
-        <ImageView
-            android:id="@+id/iv_fragment_bottom_play"
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            android:id="@+id/riv_fragment_bottom_play"
+
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@+id/iv_fragment_bottom_next"
-            android:background="@drawable/custom_drawable_circle_bg"
+            android:layout_toLeftOf="@+id/riv_fragment_bottom_next"
+            android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_play_arrow_black_24dp" />
+            android:src="@drawable/ic_play_arrow_black_24dp"
+            android:tag="skin" />
 
-        <ImageView
-            android:id="@+id/iv_fragment_bottom_previous"
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            app:roundWidth="20dp"
+            app:roundHeight="20dp"
+            android:id="@+id/riv_fragment_bottom_previous"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@+id/iv_fragment_bottom_play"
-            android:background="@drawable/custom_drawable_circle_bg"
+            android:layout_toLeftOf="@+id/riv_fragment_bottom_play"
+            android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
+            android:src="@drawable/ic_skip_previous_black_24dp"
 
-            android:src="@drawable/ic_skip_previous_black_24dp" />
+            android:tag="skin" />
 
-        <ImageView
-            android:id="@+id/iv_fragment_bottom_mode"
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            android:id="@+id/riv_fragment_bottom_mode"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@+id/iv_fragment_bottom_previous"
+            android:layout_toLeftOf="@+id/riv_fragment_bottom_previous"
             android:alpha="0"
-            android:background="@drawable/custom_drawable_circle_bg"
+            android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
             android:src="@drawable/ic_compare_arrows_white_24dp"
+            android:tag="skin"
             android:visibility="invisible" />
 
-        <ImageView
-            android:id="@+id/iv_fragment_bottom_list"
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            android:id="@+id/riv_fragment_bottom_list"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/iv_fragment_bottom_next"
+            android:layout_toRightOf="@+id/riv_fragment_bottom_next"
             android:alpha="0"
-            android:background="@drawable/custom_drawable_circle_bg"
+            android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_queue_music_black_24dp" />
+            android:src="@drawable/ic_queue_music_black_24dp"
+            android:tag="skin" />
     </RelativeLayout>
 
     <LinearLayout
@@ -198,6 +206,7 @@
             android:progressDrawable="@drawable/progressbar_color"
             android:secondaryProgress="0"
             android:splitTrack="false"
+            android:tag="skin"
             android:thumb="@drawable/thumb_music_normal"
             android:visibility="visible" />
 

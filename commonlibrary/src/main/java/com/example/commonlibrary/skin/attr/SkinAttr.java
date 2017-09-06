@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.commonlibrary.skin.SkinManager;
+import com.example.commonlibrary.utils.CommonLogger;
 
 /**
  * Created by COOTEK on 2017/9/3.
@@ -119,6 +120,7 @@ public abstract class SkinAttr {
         setAttrName(attrName);
         setTypeName(context.getResources().getResourceTypeName(resId));
         setResName(context.getResources().getResourceName(resId));
+        CommonLogger.e(toString());
     }
 
 

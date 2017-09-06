@@ -34,6 +34,7 @@ public abstract class MainBaseActivity<T, P extends BasePresenter> extends BaseA
 
     @Override
     protected void initBaseView() {
+
         slidingPanelLayout = (SlidingPanelLayout) LayoutInflater.from(this).inflate(R.layout.view_music_content, null);
         slidingPanelLayout.addView(contentView, 0);
         setContentView(slidingPanelLayout);

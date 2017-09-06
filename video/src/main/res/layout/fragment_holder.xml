@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="?attr/custom_attr_app_title_bg"
+        android:tag="skin"
         app:tabSelectedTextColor="?attr/custom_attr_title_main_selected"
         app:tabTextColor="?attr/custom_attr_title_main_normal" />
 
@@ -19,6 +20,7 @@
         android:id="@+id/vp_fragment_holder_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/custom_attr_app_content_bg" />
+        android:background="?attr/custom_attr_app_content_bg"
+        android:tag="skin" />
 
 </LinearLayout>

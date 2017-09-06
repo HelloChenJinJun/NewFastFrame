@@ -11,8 +11,8 @@ android {
             storePassword '3929249'
         }
     }
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
     defaultConfig {
         applicationId "com.example.music"
         minSdkVersion rootProject.ext.android.minSdkVersion

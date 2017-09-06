@@ -62,11 +62,11 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     private RoundAngleImageView album;
     private TextView songName;
     private TextView artistName;
-    private ImageView next;
-    private ImageView previous;
-    private ImageView playOrPause;
-    private ImageView playMode;
-    private ImageView list;
+    private RoundAngleImageView next;
+    private RoundAngleImageView previous;
+    private RoundAngleImageView playOrPause;
+    private RoundAngleImageView playMode;
+    private RoundAngleImageView list;
     private RelativeLayout iconContainer;
     private SeekBar seekBar;
     private LrcView lrcView;
@@ -130,11 +130,11 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         lrcView = (LrcView) findViewById(R.id.lv_fragment_bottom_lrc);
         seekBar = (SeekBar) findViewById(R.id.sb_fragment_bottom_seek);
         iconContainer = (RelativeLayout) findViewById(R.id.rl_fragment_bottom_icon_container);
-        list = (ImageView) findViewById(R.id.iv_fragment_bottom_list);
-        playMode = (ImageView) findViewById(R.id.iv_fragment_bottom_mode);
-        playOrPause = (ImageView) findViewById(R.id.iv_fragment_bottom_play);
-        previous = (ImageView) findViewById(R.id.iv_fragment_bottom_previous);
-        next = (ImageView) findViewById(R.id.iv_fragment_bottom_next);
+        list = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_list);
+        playMode = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_mode);
+        playOrPause = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_play);
+        previous = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_previous);
+        next = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_next);
         artistName = (TextView) findViewById(R.id.tv_fragment_bottom_artist_name);
         album = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_album);
         songName = (TextView) findViewById(R.id.tv_fragment_bottom_song_name);
@@ -550,7 +550,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         } else if (id == R.id.iv_fragment_bottom_back) {
             CommonLogger.e("这里收缩");
             slidingUpPanelLayout.setPanelState(SlidingPanelLayout.PanelState.COLLAPSED);
-        } else if (id == R.id.iv_fragment_bottom_list) {
+        } else if (id == R.id.riv_fragment_bottom_list) {
             if (customPopWindow == null) {
                 View contentView = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_bottom_pop_window, null);
                 playNum = (TextView) contentView.findViewById(R.id.tv_view_fragment_bottom_pop_window_num);
@@ -578,7 +578,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                 updatePopData();
                 customPopWindow.show(20, 20);
             }
-        } else if (id == R.id.iv_fragment_bottom_mode) {
+        } else if (id == R.id.riv_fragment_bottom_mode) {
             if (playModeWindow == null) {
                 View contentView = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_bottom_pop_window_mode, null);
                 LinearLayout normal = (LinearLayout) contentView.findViewById(R.id.ll_view_fragment_bottom_pop_window_mode_normal);
@@ -593,11 +593,11 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             } else {
                 playModeWindow.show(DensityUtil.getScreenWidth(getContext()) - DensityUtil.getViewWidthAndHeight(playModeWindow.getContentView())[0], 20);
             }
-        } else if (id == R.id.iv_fragment_bottom_play) {
+        } else if (id == R.id.riv_fragment_bottom_play) {
             presenter.playOrPause();
-        } else if (id == R.id.iv_fragment_bottom_previous) {
+        } else if (id == R.id.riv_fragment_bottom_previous) {
             presenter.previous();
-        } else if (id == R.id.iv_fragment_bottom_next) {
+        } else if (id == R.id.riv_fragment_bottom_next) {
             presenter.next();
         }
     }

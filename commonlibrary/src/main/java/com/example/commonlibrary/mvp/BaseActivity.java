@@ -1,10 +1,12 @@
 package com.example.commonlibrary.mvp;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,6 +155,8 @@ public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppComp
             rightImage = (ImageView) headerLayout.findViewById(R.id.iv_header_layout_right);
             rightImage.setVisibility(View.GONE);
             right.setVisibility(View.VISIBLE);
+            setSupportActionBar((Toolbar) headerLayout.findViewById(R.id.toolbar));
+            getSupportActionBar().setTitle("");
         }
         mProgressDialog = new ProgressDialog(this);
         mBaseDialog = new BaseDialog(this);

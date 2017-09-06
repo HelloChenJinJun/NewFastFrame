@@ -13,6 +13,7 @@ import com.example.commonlibrary.skin.attr.SkinAttr;
 import com.example.commonlibrary.skin.attr.SkinItem;
 import com.example.commonlibrary.skin.attr.SrcAttr;
 import com.example.commonlibrary.skin.attr.TextColorAttr;
+import com.example.commonlibrary.skin.attr.ThumbAttr;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.SkinUtil;
 
@@ -31,6 +32,7 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
     private static final String TEXT_COLOR = "textColor";
     private static final String BACKGROUND = "background";
     private static final String SRC = "src";
+    private static final String THUMB = "thumb";
     private AppCompatActivity appCompatActivity;
     private static List<String> supportAttrsName = new ArrayList<>();
     private Map<View, SkinItem> viewSkinItemMap = new HashMap<>();
@@ -39,6 +41,7 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
         supportAttrsName.add(TEXT_COLOR);
         supportAttrsName.add(BACKGROUND);
         supportAttrsName.add(SRC);
+        supportAttrsName.add(THUMB);
     }
 
 
@@ -77,24 +80,27 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
                     int textColorResId = typedArray.getResourceId(0, 0);
                     int backgroundResId = typedArray.getResourceId(1, 0);
                     if (textColorResId != 0) {
-                        createSkinFromAttrName(TEXT_COLOR, textColorResId, view).apply(view);
+                        createSkinFromAttrName(TEXT_COLOR, textColorResId, view);
                     }
                     if (backgroundResId != 0) {
-                        createSkinFromAttrName(BACKGROUND, backgroundResId, view).apply(view);
+                        createSkinFromAttrName(BACKGROUND, backgroundResId, view);
                     }
                 } else if (supportAttrsName.contains(attrName)) {
                     //                只有引用类型才可以换肤
                     CommonLogger.e("value：" + attrValue + " attrName：" + attrName);
-                    if (attrValue.startsWith("?")) {
+                    if (attrValue.startsWith("?") || attrValue.startsWith("@")) {
                         int id = Integer.parseInt(attrValue.substring(1));
                         if (id != 0) {
-                            createSkinFromAttrName(attrName, id, view).apply(view);
+                            createSkinFromAttrName(attrName, id, view);
                         }
                     }
                 }
             } catch (Resources.NotFoundException | NumberFormatException e) {
                 e.printStackTrace();
                 CommonLogger.e("哈哈" + e.getMessage() + e.getCause().toString());
+            }
+            if (viewSkinItemMap.get(view) != null) {
+                viewSkinItemMap.get(view).apply();
             }
         }
         return view;
@@ -124,6 +130,8 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
             case TEXT_COLOR:
                 skinAttr = new TextColorAttr();
                 break;
+            case THUMB:
+                skinAttr = new ThumbAttr();
             default:
                 break;
         }
@@ -138,7 +146,6 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
         } else {
             viewSkinItemMap.get(view).getSkinAttrs().add(skinAttr);
         }
-//        CommonLogger.e(skinAttr.toString());
         return skinAttr;
     }
 

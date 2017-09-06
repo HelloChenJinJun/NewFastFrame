@@ -51,6 +51,7 @@
 
         <activity android:name=".ui.LocalMusicListActivity" />
         <activity android:name=".ui.SingerInfoActivity" />
+        <activity android:name=".ui.SettingActivity"/>
 
         <meta-data
             android:name="com.example.cootek.newfastframe.VideoApplication"

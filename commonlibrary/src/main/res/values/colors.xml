@@ -34,7 +34,8 @@
     <color name="custom_color_text_main_night">#FF666666</color>      <!-- 主文本（标题、标签）字体颜色 -->
 
     <!--按钮相关-->
-    <color name="custom_color_btn_bg_normal_day">@color/base_color_text_blue</color>      <!-- 按钮正常情况下背景色 -->
+    <color name="custom_color_btn_bg_normal_day">@color/base_color_text_blue
+    </color>      <!-- 按钮正常情况下背景色 -->
     <color name="custom_color_btn_bg_normal_night">#FF1D1D1D</color>      <!-- 按钮正常情况下背景色 -->
     <color name="custom_color_btn_bg_pressed_day">#FFF9F9F9</color>      <!-- 按钮按住情况下背景色 -->
     <color name="custom_color_btn_bg_pressed_night">#FF1B1B1B</color>      <!-- 按钮按住情况下背景色 -->
@@ -52,7 +53,8 @@
 
 
     <!--checkbox-->
-
+    <color name="custom_color_cb_bg_day">#fc2024</color>
+    <color name="custom_color_cb_bg_night">#fc2024</color>
 
     <!--标题字体颜色-->
     <color name="custom_color_title_text_normal_day">#ffffffff</color>

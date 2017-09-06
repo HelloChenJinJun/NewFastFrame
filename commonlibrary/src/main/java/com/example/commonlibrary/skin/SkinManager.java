@@ -1,5 +1,6 @@
 package com.example.commonlibrary.skin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -14,8 +15,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.R;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.SkinUtil;
 
@@ -23,7 +26,9 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by COOTEK on 2017/9/3.
@@ -52,6 +57,7 @@ public class SkinManager {
     }
 
     private void init() {
+        factoryMap = new HashMap<>();
         CommonLogger.e("开始加载");
         listeners = new ArrayList<>();
 //        复制所有资源文件到缓存目录中
@@ -153,8 +159,13 @@ public class SkinManager {
 
 
     public void refreshSkin() {
-        if (skinLayoutInflaterFactory != null) {
-            skinLayoutInflaterFactory.applyAllViewSkin();
+        if (factoryMap != null && factoryMap.size() > 0) {
+            for (SkinLayoutInflaterFactory skin :
+                    factoryMap.values()) {
+                skin.applyAllViewSkin();
+            }
+        } else {
+            CommonLogger.e("factor大小为空");
         }
     }
 
@@ -194,16 +205,23 @@ public class SkinManager {
     }
 
 
-    private SkinLayoutInflaterFactory skinLayoutInflaterFactory;
+    private Map<Activity, SkinLayoutInflaterFactory> factoryMap;
 
     public void apply(AppCompatActivity activity) {
-        LayoutInflaterCompat.setFactory(activity.getLayoutInflater(), skinLayoutInflaterFactory = new SkinLayoutInflaterFactory(activity));
+        if (activity.getSharedPreferences("theme", Context.MODE_PRIVATE).getBoolean("isNight", false)) {
+            activity.setTheme(R.style.CustomTheme_Night);
+        } else {
+            activity.setTheme(R.style.CustomTheme_Day);
+        }
+        CommonLogger.e("应用全部啦啦啦");
+        factoryMap.put(activity, new SkinLayoutInflaterFactory(activity));
+        LayoutInflaterCompat.setFactory(activity.getLayoutInflater(), factoryMap.get(activity));
     }
 
 
-    public void apply(String attrName, int attrResId, View view) {
-        skinLayoutInflaterFactory.createSkinFromAttrName(attrName, attrResId, view).apply(view);
-    }
+//    public void apply(String attrName, int attrResId, View view) {
+//        skinLayoutInflaterFactory.createSkinFromAttrName(attrName, attrResId, view).apply(view);
+//    }
 
     public boolean isLocal() {
         return isLocal;

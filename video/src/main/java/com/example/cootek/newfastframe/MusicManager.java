@@ -10,7 +10,6 @@ import android.os.RemoteException;
 
 import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.event.MusicStatusEvent;
 
@@ -223,6 +222,32 @@ public class MusicManager {
             e.printStackTrace();
         }
     }
+
+
+    public int getAudioSessionId(){
+        if (service != null) {
+            try {
+                return service.getAudioSessionId();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+//    public static int getAudioSessionId() {
+//        try {
+//
+//            if (service != null) {
+//                service.getAudioSessionId();
+//            }
+//
+//
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
+//        return 0;
+//    }
 
 
     private class BindConnection implements ServiceConnection {

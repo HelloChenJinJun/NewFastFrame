@@ -914,6 +914,15 @@ public class MusicService extends Service {
         public void remove(int position) throws RemoteException {
             musicServiceWeakReference.get().remove(position);
         }
+
+        @Override
+        public int getAudioSessionId() throws RemoteException {
+            return musicServiceWeakReference.get().getAudioSessionId();
+        }
+    }
+
+    private int getAudioSessionId() {
+        return wrappedMediaPlayer.getAudioSessionId();
     }
 
     private void setPlayMode(int mode) {
@@ -1361,6 +1370,10 @@ public class MusicService extends Service {
 
         public int getSecondProgress() {
             return secondProgress;
+        }
+
+        public int getAudioSessionId() {
+            return mediaPlayer.getAudioSessionId();
         }
     }
 

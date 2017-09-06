@@ -25,6 +25,7 @@ interface IMusicService {
                    MusicPlayBean getCurrentPlayInfo();
                    MusicPlayBean getPlayInfo(int index);
                    void remove(int position);
+                   int getAudioSessionId();
 
 
 

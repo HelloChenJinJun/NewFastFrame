@@ -15,7 +15,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary">
+            android:background="?attr/custom_attr_app_title_bg"
+            android:tag="skin">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -27,7 +28,8 @@
                     android:id="@+id/iv_header_layout_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_arrow_back_white_900_24dp" />
 
                 <com.example.commonlibrary.cusotomview.RoundAngleImageView
                     android:id="@+id/riv_header_layout_icon"
@@ -46,8 +48,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@id/riv_header_layout_icon"
+                    android:tag="skin"
                     android:text="标题"
-                    android:textColor="@color/base_color_text_black"
+                    android:textColor="?attr/custom_attr_text_main"
                     android:textSize="16sp" />
 
                 <TextView
