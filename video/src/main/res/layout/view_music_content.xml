@@ -13,10 +13,10 @@
     app:umanoPanelHeight="60dp"
     app:umanoShadowHeight="5dp">
 
-
     <FrameLayout
         android:id="@+id/fl_view_music_content_bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/custom_attr_app_content_bg" />
+        android:background="?attr/custom_attr_app_content_bg"
+        android:tag="skin" />
 </com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout>
