@@ -1369,11 +1369,11 @@ public class MusicService extends Service {
             }
         }
 
-        public int getSecondProgress() {
+        int getSecondProgress() {
             return secondProgress;
         }
 
-        public int getAudioSessionId() {
+        int getAudioSessionId() {
             return mediaPlayer.getAudioSessionId();
         }
     }
@@ -1458,8 +1458,8 @@ public class MusicService extends Service {
             int next;
             do {
                 next = mRandom.nextInt(interval);
-            } while (next != mPrevious && interval > 1
-                    && !mPreviousNumbers.contains(next));
+            } while (!(next != mPrevious && interval > 1
+                    && !mPreviousNumbers.contains(next)));
             mPrevious = next;
             mHistoryOfNumbers.add(mPrevious);
             mPreviousNumbers.add(mPrevious);

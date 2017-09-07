@@ -97,19 +97,19 @@ public class MainActivity extends MainBaseActivity implements OnLoadMoreListener
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.main_sub_item_equalizer:
-                try {
-                    final Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                    effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, MusicManager.getInstance().getAudioSessionId());
-                    startActivityForResult(effects, 666);
-                } catch (final ActivityNotFoundException notFound) {
-                    Toast.makeText(this, "Equalizer not found", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.main_sub_item_setting:
-                SettingActivity.start(this);
-                break;
+        int i = item.getItemId();
+        if (i == R.id.main_sub_item_equalizer) {
+            try {
+                final Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+                effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, MusicManager.getInstance().getAudioSessionId());
+                startActivityForResult(effects, 666);
+            } catch (final ActivityNotFoundException notFound) {
+                Toast.makeText(this, "Equalizer not found", Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (i == R.id.main_sub_item_setting) {
+            SettingActivity.start(this);
+
         }
         return true;
     }
