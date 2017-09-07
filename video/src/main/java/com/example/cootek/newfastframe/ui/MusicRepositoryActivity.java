@@ -48,9 +48,10 @@ public class MusicRepositoryActivity extends MainBaseActivity {
 
     @Override
     protected void initData() {
-        ToolBarOption toolBarOption=new ToolBarOption();
-        toolBarOption.setTitle("音乐世界" +
-                "");
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setTitle("音乐世界");
+        toolBarOption.setNeedNavigation(true);
+        setToolBar(toolBarOption);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         List<String> list = new ArrayList<>();
         list.add("推荐");

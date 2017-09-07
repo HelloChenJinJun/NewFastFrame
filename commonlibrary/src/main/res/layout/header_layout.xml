@@ -48,9 +48,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@id/riv_header_layout_icon"
-                    android:tag="skin"
                     android:text="标题"
-                    android:textColor="?attr/custom_attr_text_main"
+                    android:textColor="?attr/custom_attr_app_title_bg"
                     android:textSize="16sp" />
 
                 <TextView
