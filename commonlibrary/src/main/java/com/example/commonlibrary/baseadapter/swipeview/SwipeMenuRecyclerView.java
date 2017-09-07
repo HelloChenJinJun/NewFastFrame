@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 
-import com.example.commonlibrary.baseadapter.BaseSwipeRecyclerAdapter;
+import com.example.commonlibrary.baseadapter.adapter.BaseSwipeRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.swipeview.touch.DefaultItemTouchHelper;
 import com.example.commonlibrary.baseadapter.swipeview.touch.OnItemMoveListener;
 import com.example.commonlibrary.baseadapter.swipeview.touch.OnItemMovementListener;

@@ -1,5 +1,5 @@
 ext {
-    isAlone = true;//false:作为Lib组件存在， true:作为application存在
+    isAlone = false;//false:作为Lib组件存在， true:作为application存在
 
     android = [
             compileSdkVersion: 24,
@@ -35,13 +35,12 @@ ext {
             rxjava_adapter = "2.3.0",
             gson_converter = "2.3.0",
             scalars_converter = "2.3.0",
-            rxpermission = "0.9.4"
+            rxpermission = "0.9.4",
+            eventbus="3.0.0",
+            support_v4="25.4.0",
+            okhttp3="3.8.1"
 
-//            //不成熟开源库，需经常检查升级版本
-//            aptCompilerVersion = "1.1.7",
-//            routerVersion = "1.2.2",
-//            easyRecyclerVersion = "4.4.0,",
-//            cookieVersion = "v1.0.1"
+
 
 
     ]
@@ -53,16 +52,16 @@ ext {
             cardview                  : "com.android.support:cardview-v7:$rootProject.supportLibraryVersion",
             palette                   : "com.android.support:palette-v7:$rootProject.supportLibraryVersion",
             recycleview               : "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion",
-            support_v4                : "com.android.support:support-v4:25.4.0",
+            support_v4                : "com.android.support:support-v4:$rootProject.support_v4",
             annotations               : "com.android.support:support-annotations:$rootProject.supportLibraryVersion",
-            eventBus                  : "org.greenrobot:eventbus:3.0.0",
+            eventBus                  : "org.greenrobot:eventbus:$rootProject.eventbus",
             glide                     : "com.github.bumptech.glide:glide:$rootProject.glideVersion",
             gson                      : "com.google.code.gson:gson:$rootProject.gsonVersion",
             logger                    : "com.orhanobut:logger:$rootProject.loggerVersion",
             butterknife               : "com.jakewharton:butterknife:$rootProject.butterknife",
             butterknife_compiler      : "com.jakewharton:butterknife-compiler:$rootProject.butterknife",
             retrofit                  : "com.squareup.retrofit2:retrofit:$rootProject.retrofit",
-            okhttp3                   : "com.squareup.okhttp3:okhttp:3.8.1",
+            okhttp3                   : "com.squareup.okhttp3:okhttp:$rootProject.retrofit",
 
 
             retrofit_adapter_rxjava2  : "com.squareup.retrofit2:adapter-rxjava2:$rootProject.rxjava_adapter",

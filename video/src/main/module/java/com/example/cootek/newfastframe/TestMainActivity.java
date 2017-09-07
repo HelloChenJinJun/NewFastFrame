@@ -3,7 +3,7 @@ package com.example.cootek.newfastframe;
 import android.content.Intent;
 import android.view.View;
 
-import com.example.commonlibrary.mvp.BaseActivity;
+import com.example.commonlibrary.BaseActivity;
 import com.example.cootek.newfastframe.ui.MainActivity;
 
 /**

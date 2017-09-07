@@ -2,8 +2,8 @@ package com.example.cootek.newfastframe.dagger.singerlist;
 
 import com.example.cootek.newfastframe.MainRepositoryManager;
 import com.example.cootek.newfastframe.adapter.SingerListAdapter;
-import com.example.cootek.newfastframe.mvp.SingerListModel;
-import com.example.cootek.newfastframe.mvp.SingerListPresenter;
+import com.example.cootek.newfastframe.mvp.singerlist.SingerListModel;
+import com.example.cootek.newfastframe.mvp.singerlist.SingerListPresenter;
 import com.example.cootek.newfastframe.ui.SingerListFragment;
 
 import dagger.Module;

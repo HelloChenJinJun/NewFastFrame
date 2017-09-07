@@ -1,21 +1,17 @@
 package com.example.cootek.newfastframe.ui;
 
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.commonlibrary.baseadapter.LoadMoreFooterView;
-import com.example.commonlibrary.baseadapter.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
-import com.example.commonlibrary.mvp.BaseFragment;
+import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.skin.LoadSkinListener;
 import com.example.commonlibrary.skin.SkinManager;
-import com.example.commonlibrary.skin.attr.SkinItem;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.SkinUtil;
 import com.example.cootek.newfastframe.VideoApplication;
@@ -23,9 +19,9 @@ import com.example.cootek.newfastframe.adapter.LocalListAdapter;
 import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.MusicService;
 import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.dagger.DaggerMainFragmentComponent;
-import com.example.cootek.newfastframe.dagger.MainFragmentModule;
-import com.example.cootek.newfastframe.mvp.MainPresenter;
+import com.example.cootek.newfastframe.dagger.main.mainfragment.DaggerMainFragmentComponent;
+import com.example.cootek.newfastframe.dagger.main.mainfragment.MainFragmentModule;
+import com.example.cootek.newfastframe.mvp.main.MainPresenter;
 
 import java.util.List;
 

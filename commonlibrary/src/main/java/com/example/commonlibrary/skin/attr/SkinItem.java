@@ -9,6 +9,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.commonlibrary.R;
+import com.example.commonlibrary.skin.theme.ThemeUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 
 import java.util.List;
@@ -41,9 +42,9 @@ public class SkinItem {
 
     public void apply() {
         if (view != null) {
-            SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("theme", Context.MODE_PRIVATE);
-            boolean isTheme = sharedPreferences.getBoolean("isTheme", false);
-            int value = sharedPreferences.getInt("theme", Color.BLUE);
+            SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(ThemeUtil.NAME, Context.MODE_PRIVATE);
+            boolean isTheme = sharedPreferences.getBoolean(ThemeUtil.IS_THEME, true);
+            int value = sharedPreferences.getInt(ThemeUtil.THEME_COLOR, Color.parseColor("#FF2F3A4C"));
             for (SkinAttr skinAttr :
                     skinAttrs) {
                 if (isTheme) {

@@ -6,9 +6,9 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.commonlibrary.bean.MusicPlayBean;
-import com.example.commonlibrary.mvp.BaseActivity;
-import com.example.commonlibrary.net.DownloadListener;
-import com.example.commonlibrary.net.FileInfo;
+import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.net.download.DownloadListener;
+import com.example.commonlibrary.net.download.FileInfo;
 import com.example.commonlibrary.net.NetManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.MusicManager;
@@ -17,8 +17,6 @@ import com.example.commonlibrary.bean.MusicPlayBeanDao;
 import com.example.cootek.newfastframe.VideoApplication;
 
 import java.util.ArrayList;
-
-import butterknife.OnClick;
 
 /**
  * Created by COOTEK on 2017/8/23.

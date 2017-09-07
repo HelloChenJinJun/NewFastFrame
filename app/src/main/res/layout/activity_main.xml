@@ -8,14 +8,17 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="jump"
-        android:text="Hello World!" />
+        android:ellipsize="end"
+        android:maxLines="20"
+        android:text="@string/explain"
+        android:textSize="18sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:onClick="crash"
-        android:text="新版本啦啦啦" />
+        android:onClick="jump"
+        android:text="跳转到music模块"
+        android:textSize="26sp" />
 
 </LinearLayout>

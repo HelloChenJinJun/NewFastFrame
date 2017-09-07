@@ -3,11 +3,11 @@ package com.example.cootek.newfastframe.ui;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
-import com.example.commonlibrary.baseadapter.ViewPagerAdapter;
+import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.mvp.BaseFragment;
+import com.example.commonlibrary.BaseFragment;
 import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.mvp.MainBaseActivity;
+import com.example.cootek.newfastframe.MainBaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;

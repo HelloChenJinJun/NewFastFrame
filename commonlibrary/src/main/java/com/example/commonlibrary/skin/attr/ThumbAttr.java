@@ -5,6 +5,7 @@ import android.widget.CheckBox;
 import android.widget.SeekBar;
 
 import com.example.commonlibrary.skin.SkinManager;
+import com.example.commonlibrary.utils.CommonLogger;
 
 /**
  * Created by COOTEK on 2017/9/6.

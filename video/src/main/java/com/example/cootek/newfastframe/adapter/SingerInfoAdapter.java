@@ -1,9 +1,8 @@
 package com.example.cootek.newfastframe.adapter;
 
-import com.example.commonlibrary.baseadapter.BaseRecyclerAdapter;
-import com.example.commonlibrary.baseadapter.BaseWrappedViewHolder;
+import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
+import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.bean.MusicPlayBean;
-import com.example.commonlibrary.bean.SingerListBean;
 import com.example.cootek.newfastframe.R;
 
 /**

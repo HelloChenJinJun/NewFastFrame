@@ -1,12 +1,11 @@
 package com.example.cootek.newfastframe.ui;
 
 import android.content.Intent;
-import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.example.commonlibrary.mvp.BaseFragment;
+import com.example.commonlibrary.BaseFragment;
 import com.example.cootek.newfastframe.R;
 
 /**

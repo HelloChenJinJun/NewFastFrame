@@ -4,7 +4,7 @@ import android.app.Application;
 import android.support.annotation.Nullable;
 
 import com.example.commonlibrary.interceptor.LogInterceptor;
-import com.example.commonlibrary.OkHttpGlobalHandler;
+import com.example.commonlibrary.net.OkHttpGlobalHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

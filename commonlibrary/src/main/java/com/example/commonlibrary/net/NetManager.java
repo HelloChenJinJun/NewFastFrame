@@ -3,6 +3,17 @@ package com.example.commonlibrary.net;
 import android.os.Environment;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.net.download.DownLoadApi;
+import com.example.commonlibrary.net.download.DownLoadInterceptor;
+import com.example.commonlibrary.net.download.DownLoadProgressObserver;
+import com.example.commonlibrary.net.download.DownloadListener;
+import com.example.commonlibrary.net.download.DownloadStatus;
+import com.example.commonlibrary.net.download.FileDAOImpl;
+import com.example.commonlibrary.net.download.FileInfo;
+import com.example.commonlibrary.net.upload.UpLoadApi;
+import com.example.commonlibrary.net.upload.UpLoadListener;
+import com.example.commonlibrary.net.upload.UpLoadProgressObserver;
+import com.example.commonlibrary.net.upload.UpLoadRequestBody;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.FileUtil;

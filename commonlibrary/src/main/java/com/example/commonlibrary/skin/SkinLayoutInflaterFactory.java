@@ -109,7 +109,6 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
 
     public void applyAllViewSkin() {
         if (viewSkinItemMap != null && viewSkinItemMap.size() > 0) {
-            CommonLogger.e("这里了吗" + viewSkinItemMap.values().size());
             for (SkinItem skinItem :
                     viewSkinItemMap.values()) {
                 skinItem.apply();

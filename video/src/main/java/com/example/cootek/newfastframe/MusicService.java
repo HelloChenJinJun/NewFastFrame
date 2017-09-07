@@ -41,8 +41,8 @@ import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.FileUtil;
 import com.example.commonlibrary.utils.Httputil;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.example.cootek.newfastframe.receiver.MediaButtonIntentReceiver;
 import com.example.cootek.newfastframe.ui.MainActivity;
-import com.example.cootek.newfastframe.util.Constants;
 import com.example.cootek.newfastframe.util.MusicUtil;
 
 import java.io.File;
@@ -664,7 +664,7 @@ public class MusicService extends Service {
     private PendingIntent getMainIntent() {
         Intent nowPlayingIntent = new Intent(this, MainActivity.class);
 //        nowPlayingIntent.setComponent(new ComponentName("com.example.cootek.newfastframe","com.example.cootek.newfastframe."));
-        nowPlayingIntent.setAction(Constants.NAVIGATE_LIBRARY);
+//        nowPlayingIntent.setAction(Constants.NAVIGATE_LIBRARY);
         return PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 

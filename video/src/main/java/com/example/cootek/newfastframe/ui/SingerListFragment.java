@@ -4,16 +4,16 @@ import android.content.Intent;
 import android.view.View;
 
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
-import com.example.commonlibrary.baseadapter.WrappedLinearLayoutManager;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
-import com.example.commonlibrary.mvp.BaseFragment;
+import com.example.commonlibrary.BaseFragment;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.adapter.SingerListAdapter;
 import com.example.commonlibrary.bean.SingerListBean;
 import com.example.cootek.newfastframe.dagger.singerlist.DaggerSingerListComponent;
 import com.example.cootek.newfastframe.dagger.singerlist.SingerListModule;
-import com.example.cootek.newfastframe.mvp.SingerListPresenter;
+import com.example.cootek.newfastframe.mvp.singerlist.SingerListPresenter;
 import com.example.cootek.newfastframe.util.MusicUtil;
 
 import java.util.ArrayList;

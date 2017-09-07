@@ -1,5 +1,14 @@
 package com.example.cootek.newfastframe.api;
 
+import com.example.cootek.newfastframe.bean.AlbumBean;
+import com.example.cootek.newfastframe.bean.ArtistInfo;
+import com.example.cootek.newfastframe.bean.ArtistSongsBean;
+import com.example.cootek.newfastframe.bean.DownLoadMusicBean;
+import com.example.cootek.newfastframe.bean.RankListBean;
+import com.example.cootek.newfastframe.bean.RecommendSongBean;
+import com.example.cootek.newfastframe.bean.SearchMusicBean;
+import com.example.cootek.newfastframe.bean.SongMenuBean;
+
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

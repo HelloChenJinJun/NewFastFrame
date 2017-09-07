@@ -64,11 +64,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(':commonlibrary')
-    compile rootProject.ext.dependencies.cardview
-    compile rootProject.ext.dependencies.palette
-//    compile 'com.afollestad.material-dialogs:core:0.9.4.7'
-//   compile "com.android.support:appcompat-v7:26.0.1"
-//    compile 'com.afollestad.material-dialogs:core:0.9.4.7'
+//用作颜色选择器
     compile 'com.afollestad.material-dialogs:commons:0.9.1.0'
     apt rootProject.ext.dependencies.dagger2_compiler
 

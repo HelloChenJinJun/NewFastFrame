@@ -6,20 +6,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.example.commonlibrary.baseadapter.EmptyLayout;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
-import com.example.commonlibrary.mvp.BaseFragment;
-import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.VideoApplication;
+import com.example.cootek.newfastframe.dagger.rank.DaggerRankFragmentComponent;
 import com.example.cootek.newfastframe.util.MusicUtil;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.adapter.RankAdapter;
-import com.example.cootek.newfastframe.mvp.RankPresenter;
-import com.example.cootek.newfastframe.api.RankListBean;
-import com.example.cootek.newfastframe.dagger.DaggerRankFragmentComponent;
-import com.example.cootek.newfastframe.dagger.RankFragmentModule;
+import com.example.cootek.newfastframe.mvp.rank.RankPresenter;
+import com.example.cootek.newfastframe.bean.RankListBean;
+import com.example.cootek.newfastframe.dagger.rank.RankFragmentModule;
 
 
 import java.util.ArrayList;

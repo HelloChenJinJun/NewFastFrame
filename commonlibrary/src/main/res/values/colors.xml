@@ -77,7 +77,7 @@
     <!--seekbar指示器-->
 
     <color name="custom_color_sb_thumb_bg_day">#fc2024</color>
-    <color name="custom_color_sb_thumb_bg_night">#FF29303B</color>
+    <color name="custom_color_sb_thumb_bg_night">#fc2024</color>
 
 
 </resources>

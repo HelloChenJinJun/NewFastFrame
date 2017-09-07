@@ -9,15 +9,14 @@ import com.example.commonlibrary.dagger.component.DaggerAppComponent;
 import com.example.commonlibrary.dagger.module.AppConfigModule;
 import com.example.commonlibrary.dagger.module.AppModule;
 import com.example.commonlibrary.dagger.module.NetClientModule;
-import com.example.commonlibrary.imageloader.GlideImageLoaderStrategy;
+import com.example.commonlibrary.imageloader.glide.GlideImageLoaderStrategy;
 import com.example.commonlibrary.interceptor.LogInterceptor;
+import com.example.commonlibrary.net.OkHttpGlobalHandler;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.FileUtil;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;

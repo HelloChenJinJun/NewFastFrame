@@ -6,14 +6,14 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
-import com.example.commonlibrary.baseadapter.BaseRecyclerAdapter;
-import com.example.commonlibrary.baseadapter.BaseWrappedViewHolder;
-import com.example.commonlibrary.baseadapter.OnLoadMoreListener;
+import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
+import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
+import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
-import com.example.commonlibrary.baseadapter.WrappedLinearLayoutManager;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.baseadapter.animator.DefaultBaseAnimator;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
-import com.example.commonlibrary.mvp.BaseFragment;
+import com.example.commonlibrary.BaseFragment;
 import com.example.cootek.newfastframe.R;
 
 import java.util.ArrayList;

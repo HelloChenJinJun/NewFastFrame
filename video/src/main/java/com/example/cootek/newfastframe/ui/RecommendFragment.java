@@ -4,20 +4,19 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.example.commonlibrary.baseadapter.WrappedGridLayoutManager;
+import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
-import com.example.commonlibrary.mvp.BaseFragment;
+import com.example.commonlibrary.BaseFragment;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.adapter.RecommendAlbumAdapter;
 import com.example.cootek.newfastframe.adapter.RecommendRadioAdapter;
 import com.example.cootek.newfastframe.adapter.RecommendSongListAdapter;
-import com.example.cootek.newfastframe.api.RecommendSongBean;
-import com.example.cootek.newfastframe.dagger.DaggerRankFragmentComponent;
+import com.example.cootek.newfastframe.bean.RecommendSongBean;
 import com.example.cootek.newfastframe.dagger.recommend.DaggerRecommendComponent;
 import com.example.cootek.newfastframe.dagger.recommend.RecommendModule;
-import com.example.cootek.newfastframe.mvp.RecommendPresenter;
+import com.example.cootek.newfastframe.mvp.recommend.RecommendPresenter;
 import com.example.cootek.newfastframe.util.MusicUtil;
 
 import java.util.ArrayList;

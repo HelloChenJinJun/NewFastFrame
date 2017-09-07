@@ -27,7 +27,7 @@
         <service
             android:name=".MusicService"
             android:process=":main" />
-        <receiver android:name=".MediaButtonIntentReceiver">
+        <receiver android:name=".receiver.MediaButtonIntentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />

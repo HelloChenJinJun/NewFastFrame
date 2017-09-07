@@ -14,13 +14,11 @@ import android.widget.RelativeLayout;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.skin.SkinManager;
-import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.skin.theme.ThemeUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.mvp.MainBaseActivity;
-import com.example.cootek.newfastframe.util.MusicUtil;
+import com.example.cootek.newfastframe.MainBaseActivity;
 
 /**
  * Created by COOTEK on 2017/9/6.
@@ -65,9 +63,9 @@ public class SettingActivity extends MainBaseActivity implements View.OnClickLis
 
     @Override
     protected void initData() {
-        sharedPreferences = getSharedPreferences("theme", Context.MODE_PRIVATE);
-        themeColor = sharedPreferences.getInt("theme", Color.BLUE);
-        color.setBackgroundColor(sharedPreferences.getInt("theme", Color.BLUE));
+        sharedPreferences = getSharedPreferences(ThemeUtil.NAME, Context.MODE_PRIVATE);
+        themeColor = sharedPreferences.getInt(ThemeUtil.THEME_COLOR, Color.parseColor("#FF2F3A4C"));
+        color.setBackgroundColor(themeColor);
         checkBox.setBackgroundColor(themeColor);
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setNeedNavigation(true);
@@ -83,12 +81,12 @@ public class SettingActivity extends MainBaseActivity implements View.OnClickLis
 
         } else {
             new ColorChooserDialog.Builder(this, R.string.primary_color)
-                    .preselect((sharedPreferences.getInt("theme", Color.BLUE)))
+                    .preselect(themeColor)
                     .backButton(R.string.color_chooser_back)
                     .doneButton(R.string.color_chooser_done)
                     .cancelButton(R.string.color_chooser_cancel)
                     .customButton(R.string.color_chooser_custom)
-                    .preselect(sharedPreferences.getInt("theme", Color.BLUE))
+                    .preselect(themeColor)
                     .presetsButton(R.string.color_chooser_preset)
                     .show();
         }
@@ -101,7 +99,7 @@ public class SettingActivity extends MainBaseActivity implements View.OnClickLis
 
     @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
-        sharedPreferences.edit().putInt("theme", selectedColor).putBoolean("isTheme", true).apply();
+        sharedPreferences.edit().putInt(ThemeUtil.THEME_COLOR, selectedColor).putBoolean(ThemeUtil.IS_THEME, true).apply();
         SkinManager.getInstance().refreshSkin();
     }
 

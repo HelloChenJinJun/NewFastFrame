@@ -10,7 +10,7 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.FileUtil;
-import com.example.cootek.newfastframe.lrc.LrcRow;
+import com.example.cootek.newfastframe.view.lrc.LrcRow;
 
 import java.io.BufferedReader;
 import java.io.File;

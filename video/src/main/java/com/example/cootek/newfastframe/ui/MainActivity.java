@@ -6,24 +6,21 @@ import android.content.Intent;
 import android.media.audiofx.AudioEffect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.example.commonlibrary.baseadapter.OnLoadMoreListener;
+import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.mvp.MainBaseActivity;
-import com.example.cootek.newfastframe.slidingpanel.SlidingPanelLayout;
+import com.example.cootek.newfastframe.MainBaseActivity;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;

@@ -2,6 +2,9 @@ package com.example.commonlibrary.imageloader;
 
 import android.content.Context;
 
+import com.example.commonlibrary.imageloader.base.BaseImageLoaderConfig;
+import com.example.commonlibrary.imageloader.base.BaseImageLoaderStrategy;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

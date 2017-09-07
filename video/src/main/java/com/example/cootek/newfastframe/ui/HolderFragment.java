@@ -1,13 +1,10 @@
 package com.example.cootek.newfastframe.ui;
 
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.example.commonlibrary.baseadapter.ViewPagerAdapter;
-import com.example.commonlibrary.mvp.BaseFragment;
+import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
+import com.example.commonlibrary.BaseFragment;
 import com.example.cootek.newfastframe.R;
 
 import java.util.ArrayList;

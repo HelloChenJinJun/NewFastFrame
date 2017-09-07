@@ -21,8 +21,16 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.example.commonlibrary.R;
+import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
+import com.example.commonlibrary.baseadapter.animator.SimpleAnimatorListener;
+import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
+import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
+import com.example.commonlibrary.baseadapter.foot.OnLoadMoreScrollListener;
+import com.example.commonlibrary.baseadapter.foot.RecyclerFooterViewClickListener;
+import com.example.commonlibrary.baseadapter.refresh.OnRefreshListener;
+import com.example.commonlibrary.baseadapter.refresh.RefreshHeaderLayout;
+import com.example.commonlibrary.baseadapter.refresh.RefreshTrigger;
 import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuRecyclerView;
-import com.example.commonlibrary.utils.CommonLogger;
 
 
 public class SuperRecyclerView extends SwipeMenuRecyclerView {

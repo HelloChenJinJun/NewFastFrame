@@ -1,7 +1,7 @@
 package com.example.cootek.newfastframe.dagger.singerinfo;
 
 import com.example.commonlibrary.dagger.scope.PerActivity;
-import com.example.cootek.newfastframe.dagger.MainComponent;
+import com.example.cootek.newfastframe.dagger.main.MainComponent;
 import com.example.cootek.newfastframe.ui.SingerInfoActivity;
 
 import dagger.Component;

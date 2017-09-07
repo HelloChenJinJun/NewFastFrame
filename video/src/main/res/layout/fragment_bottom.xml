@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:visibility="invisible">
 
-        <com.example.cootek.newfastframe.lrc.LrcView
+        <com.example.cootek.newfastframe.view.lrc.LrcView
             android:id="@+id/lv_fragment_bottom_lrc"
             android:layout_width="match_parent"
             android:layout_height="400dp"
@@ -39,7 +39,7 @@
             android:visibility="invisible" />
 
 
-        <com.example.cootek.newfastframe.lrc.LrcView
+        <com.example.cootek.newfastframe.view.lrc.LrcView
             android:id="@+id/lv_fragment_bottom_lrc_bottom"
             android:layout_width="match_parent"
             android:layout_height="35dp"

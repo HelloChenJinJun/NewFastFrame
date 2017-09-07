@@ -7,9 +7,9 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.module.IModuleConfig;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.cootek.newfastframe.dagger.DaggerMainComponent;
-import com.example.cootek.newfastframe.dagger.MainComponent;
-import com.example.cootek.newfastframe.dagger.MainModule;
+import com.example.cootek.newfastframe.dagger.main.DaggerMainComponent;
+import com.example.cootek.newfastframe.dagger.main.MainComponent;
+import com.example.cootek.newfastframe.dagger.main.MainModule;
 
 import java.util.List;
 

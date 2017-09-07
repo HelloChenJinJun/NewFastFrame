@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.R;
+import com.example.commonlibrary.skin.theme.ThemeUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.SkinUtil;
 
@@ -208,12 +209,11 @@ public class SkinManager {
     private Map<Activity, SkinLayoutInflaterFactory> factoryMap;
 
     public void apply(AppCompatActivity activity) {
-        if (activity.getSharedPreferences("theme", Context.MODE_PRIVATE).getBoolean("isNight", false)) {
+        if (activity.getSharedPreferences(ThemeUtil.NAME, Context.MODE_PRIVATE).getBoolean(ThemeUtil.IS_NIGHT, false)) {
             activity.setTheme(R.style.CustomTheme_Night);
         } else {
             activity.setTheme(R.style.CustomTheme_Day);
         }
-        CommonLogger.e("应用全部啦啦啦");
         factoryMap.put(activity, new SkinLayoutInflaterFactory(activity));
         LayoutInflaterCompat.setFactory(activity.getLayoutInflater(), factoryMap.get(activity));
     }

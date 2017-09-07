@@ -2,7 +2,7 @@ package com.example.commonlibrary.interceptor;
 
 import android.support.annotation.Nullable;
 
-import com.example.commonlibrary.OkHttpGlobalHandler;
+import com.example.commonlibrary.net.OkHttpGlobalHandler;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -195,10 +195,7 @@ public class LogInterceptor implements Interceptor {
         return charset;
     }
 
-    /**
-     * Returns true if the body in question probably contains human readable text. Uses a small sample
-     * of code points to detect unicode control characters commonly used in binary file signatures.
-     */
+
     private static boolean isPlaintext(MediaType mediaType) {
         if (mediaType == null) return false;
         if (mediaType.type() != null && mediaType.type().equals("text")) {
