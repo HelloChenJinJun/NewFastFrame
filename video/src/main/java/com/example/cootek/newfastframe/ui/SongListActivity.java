@@ -20,6 +20,7 @@ import com.example.commonlibrary.baseadapter.WrappedLinearLayoutManager;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.bean.SingerListBean;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.mvp.BaseActivity;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.MusicManager;
@@ -72,7 +73,7 @@ public class SongListActivity extends MainBaseActivity<Object, SongListPresenter
     public void updateData(Object object) {
         if (object instanceof RankListBean) {
             RankListBean bean = ((RankListBean) object);
-            if (bean.getSong_list() == null && !refreshLayout.isRefreshing()) {
+            if ((bean.getSong_list() == null || bean.getSong_list().size() == 0) && !refreshLayout.isRefreshing()) {
                 loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
                 linearManager.scrollToPosition(songListAdapter.getItemCount() - 1);
             }
@@ -93,14 +94,14 @@ public class SongListActivity extends MainBaseActivity<Object, SongListPresenter
             }
         } else if (object instanceof SongMenuBean) {
             SongMenuBean songMenuBean = (SongMenuBean) object;
-            if (songMenuBean.getContent() == null && !refreshLayout.isRefreshing()) {
+            if ((songMenuBean.getContent() == null || songMenuBean.getContent().size() == 0) && !refreshLayout.isRefreshing()) {
                 loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
                 linearManager.scrollToPosition(songListAdapter.getItemCount() - 1);
             }
             updateHeaderView(songMenuBean.getPic_300(), songMenuBean.getDesc());
         } else if (object instanceof AlbumBean) {
             AlbumBean albumBean = (AlbumBean) object;
-            if (albumBean.getSonglist() == null && !refreshLayout.isRefreshing()) {
+            if ((albumBean.getSonglist() == null || albumBean.getSonglist().size() == 0) && !refreshLayout.isRefreshing()) {
                 loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
                 linearManager.scrollToPosition(songListAdapter.getItemCount() - 1);
             }
@@ -119,7 +120,7 @@ public class SongListActivity extends MainBaseActivity<Object, SongListPresenter
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return false;
+        return true;
     }
 
     @Override
@@ -140,6 +141,10 @@ public class SongListActivity extends MainBaseActivity<Object, SongListPresenter
 
     @Override
     protected void initData() {
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setTitle("歌曲列表");
+        toolBarOption.setNeedNavigation(true);
+        setToolBar(toolBarOption);
         DaggerSongListActivityComponent.builder().mainComponent(VideoApplication.getMainComponent())
                 .songListModule(new SongListModule(this)).build().inject(this);
         from = getIntent().getIntExtra(MusicUtil.FROM, 0);
@@ -229,7 +234,12 @@ public class SongListActivity extends MainBaseActivity<Object, SongListPresenter
     @Override
     public void hideLoading() {
         super.hideLoading();
-        refreshLayout.setRefreshing(false);
+        if (refreshLayout.isRefreshing()) {
+            if (loadMoreFooterView.getStatus() == LoadMoreFooterView.Status.LOADING) {
+                loadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
+            }
+            refreshLayout.setRefreshing(false);
+        }
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.animation.IntEvaluator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +21,7 @@ import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.bean.MusicPlayBeanDao;
 import com.example.commonlibrary.cusotomview.CustomPopWindow;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
+import com.example.commonlibrary.imageloader.BaseImageLoaderConfig;
 import com.example.commonlibrary.imageloader.GlideImageLoaderConfig;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -113,7 +113,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
 
     @Override
     protected int getContentLayout() {
-
         return R.layout.fragment_bottom;
     }
 
@@ -245,7 +244,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                seekBar.setThumb(seekBar.getResources().getDrawable(R.drawable.thumb_music_pressed));
+                seekBar.setThumb(seekBar.getResources().getDrawable(R.drawable.thumb_pressed));
                 if (MusicManager.getInstance().isPlaying()) {
                     MusicManager.getInstance().playOrPause();
                 }
@@ -254,7 +253,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 //                    释放手时调用
-                seekBar.setThumb(seekBar.getResources().getDrawable(R.drawable.thumb_music_normal));
+                seekBar.setThumb(seekBar.getResources().getDrawable(R.drawable.thumb_normal));
                 MusicManager.getInstance().seekTo(seekBar.getProgress());
                 if (!MusicManager.getInstance().isPlaying()) {
                     MusicManager.getInstance().playOrPause();
@@ -280,7 +279,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         updateMusicContent(new File(MusicUtil.getLyricPath(content.getId())));
         CommonLogger.e("更新最大进度" + content.getMaxProgress());
         updateMaxProgress((int) content.getMaxProgress());
-
         updateProgress();
     }
 
@@ -485,16 +483,16 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
 
     @Override
     public void updateAlbum(String uri) {
-        CommonLogger.e("uri哈哈哈" + uri);
         if (uri != null && uri.startsWith("http")) {
             uri = MusicUtil.getRealUrl(uri, getContext());
         }
         if (getContext() != null) {
             BaseApplication.getAppComponent().getImageLoader().loadImage(getContext(), new GlideImageLoaderConfig.Builder().imageView(bg)
+                    .errorResId(R.drawable.icon_album_default).placeHolderResId(R.drawable.icon_album_default)
                     .url(uri)
                     .bitmapTransformation(new BlurTransformation(getContext())).build());
             BaseApplication.getAppComponent().getImageLoader().loadImage(getContext(), new GlideImageLoaderConfig.Builder()
-                    .imageView(album).url(uri).build());
+                    .imageView(album).errorResId(R.drawable.icon_album_default).placeHolderResId(R.drawable.icon_album_default).url(uri).build());
         }
     }
 
@@ -548,7 +546,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             playMode.setImageResource(R.drawable.ic_shuffle_white_24dp);
         } else if (id == R.id.tv_fragment_bottom_comment) {
         } else if (id == R.id.iv_fragment_bottom_back) {
-            CommonLogger.e("这里收缩");
             slidingUpPanelLayout.setPanelState(SlidingPanelLayout.PanelState.COLLAPSED);
         } else if (id == R.id.riv_fragment_bottom_list) {
             if (customPopWindow == null) {

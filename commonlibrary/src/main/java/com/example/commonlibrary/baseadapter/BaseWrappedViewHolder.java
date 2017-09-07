@@ -73,7 +73,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (adapter.getOnItemClickListener() != null) {
-                    adapter.getOnItemClickListener().onItemClick(getAdapterPosition()-adapter.getItemUpCount(), v);
+                    adapter.getOnItemClickListener().onItemClick(getAdapterPosition() - adapter.getItemUpCount(), v);
                 }
             }
         });
@@ -87,7 +87,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
                 @Override
                 public void onClick(View v) {
                     if (adapter.getOnItemClickListener() != null) {
-                        adapter.getOnItemClickListener().onItemChildClick(getAdapterPosition()-adapter.getItemUpCount(), v, v.getId());
+                        adapter.getOnItemClickListener().onItemChildClick(getAdapterPosition() - adapter.getItemUpCount(), v, v.getId());
                     }
                 }
             });
@@ -101,7 +101,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
             @Override
             public boolean onLongClick(View v) {
                 if (adapter.getOnItemClickListener() != null) {
-                    return adapter.getOnItemClickListener().onItemLongClick(getAdapterPosition()-adapter.getItemUpCount(), v);
+                    return adapter.getOnItemClickListener().onItemLongClick(getAdapterPosition() - adapter.getItemUpCount(), v);
                 }
                 return false;
             }
@@ -116,7 +116,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
                 @Override
                 public boolean onLongClick(View v) {
                     if (adapter.getOnItemClickListener() != null) {
-                        return adapter.getOnItemClickListener().onItemChildLongClick(getAdapterPosition()-adapter.getItemUpCount(), v, v.getId());
+                        return adapter.getOnItemClickListener().onItemChildLongClick(getAdapterPosition() - adapter.getItemUpCount(), v, v.getId());
                     }
                     return false;
                 }
@@ -155,6 +155,14 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
     public BaseWrappedViewHolder setImageUrl(int id, String url) {
         if (getView(id) instanceof ImageView) {
             Glide.with(itemView.getContext()).load(url).into((ImageView) getView(id));
+        }
+        return this;
+    }
+
+
+    public BaseWrappedViewHolder setImageUrl(int id, String url, int errorId, int placeHolderId) {
+        if (getView(id) instanceof ImageView) {
+            Glide.with(itemView.getContext()).load(url).error(errorId).placeholder(placeHolderId).into((ImageView) getView(id));
         }
         return this;
     }

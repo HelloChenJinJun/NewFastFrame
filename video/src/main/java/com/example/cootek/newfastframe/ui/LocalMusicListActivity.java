@@ -4,8 +4,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
 import com.example.commonlibrary.baseadapter.ViewPagerAdapter;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.cootek.newfastframe.R;
+import com.example.cootek.newfastframe.api.RecommendSongBean;
 import com.example.cootek.newfastframe.mvp.MainBaseActivity;
 
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ public class LocalMusicListActivity extends MainBaseActivity {
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return false;
+        return true;
     }
 
     @Override
@@ -49,6 +51,10 @@ public class LocalMusicListActivity extends MainBaseActivity {
 
     @Override
     protected void initData() {
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setTitle("本地音乐");
+        toolBarOption.setNeedNavigation(true);
+        setToolBar(toolBarOption);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         tabLayout.setupWithViewPager(display);
         List<String> titleList = new ArrayList<>();

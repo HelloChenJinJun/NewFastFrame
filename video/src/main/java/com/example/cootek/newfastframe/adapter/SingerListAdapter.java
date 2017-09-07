@@ -19,7 +19,7 @@ public class SingerListAdapter extends BaseRecyclerAdapter<SingerListBean, BaseW
     protected void convert(BaseWrappedViewHolder holder, SingerListBean data) {
         holder.setText(R.id.tv_item_fragment_singer_list_name, data.getName())
                 .setText(R.id.tv_item_fragment_singer_list_count, data.getCount() + "首")
-                .setImageUrl(R.id.riv_item_fragment_singer_list_image, data.getAvatar())
+                .setImageUrl(R.id.riv_item_fragment_singer_list_image, data.getAvatar(), R.drawable.icon_album_default, R.drawable.icon_album_default)
                 .setOnItemClickListener();
 
     }

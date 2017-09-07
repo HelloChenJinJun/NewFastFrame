@@ -11,6 +11,7 @@ import com.example.commonlibrary.baseadapter.WrappedLinearLayoutManager;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.bean.MusicPlayBean;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.imageloader.GlideImageLoaderConfig;
 import com.example.commonlibrary.imageloader.ImageLoader;
 import com.example.cootek.newfastframe.MusicManager;
@@ -44,7 +45,7 @@ public class SingerInfoActivity extends MainBaseActivity<List<MusicPlayBean>, Si
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return false;
+        return true;
     }
 
     @Override
@@ -64,6 +65,10 @@ public class SingerInfoActivity extends MainBaseActivity<List<MusicPlayBean>, Si
 
     @Override
     protected void initData() {
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setTitle("歌手");
+        toolBarOption.setNeedNavigation(true);
+        setToolBar(toolBarOption);
         tingId = getIntent().getStringExtra(MusicUtil.TING_UID);
         DaggerSingerInfoComponent.builder().mainComponent(VideoApplication.getMainComponent())
                 .singerInfoModule(new SingerInfoModule(this)).build().inject(this);

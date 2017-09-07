@@ -3,7 +3,7 @@ package com.example.commonlibrary.skin.attr;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.util.TypedValue;
+import android.os.Build;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -43,13 +43,27 @@ public class SkinItem {
         if (view != null) {
             SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("theme", Context.MODE_PRIVATE);
             boolean isTheme = sharedPreferences.getBoolean("isTheme", false);
-            boolean isNight = sharedPreferences.getBoolean("isNight", false);
             int value = sharedPreferences.getInt("theme", Color.BLUE);
             for (SkinAttr skinAttr :
                     skinAttrs) {
                 if (isTheme) {
-                    updateBg(skinAttr, view);
-                    updateTextColor(skinAttr, view);
+                    if (skinAttr.getAttrName().equals("textColor")) {
+                        ((TextView) view).setTextColor(value);
+                    } else if (skinAttr.getAttrName().equals("background")) {
+                        if (view instanceof SeekBar) {
+//                            不设置seekbar的背景
+                            continue;
+                        }
+                        view.setBackgroundColor(value);
+                    } else if (skinAttr.getAttrName().equals("thumb") && view instanceof SeekBar) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            CommonLogger.e("这里设置主题");
+                            ((SeekBar) view).setThumb(view.getContext().getResources().getDrawable(R.drawable.thumb_normal, view.getContext().getTheme()));
+                        } else {
+                            CommonLogger.e("这里设置主题1");
+                            ((SeekBar) view).setThumb(view.getContext().getResources().getDrawable(R.drawable.thumb_normal));
+                        }
+                    }
                 } else {
                     skinAttr.apply(view);
                 }
@@ -57,38 +71,6 @@ public class SkinItem {
         }
     }
 
-    private void updateTextColor(SkinAttr skinAttr, View view) {
-        TypedValue typedValue = new TypedValue();
-        if (skinAttr.getResName().endsWith("text_main")) {
-            CommonLogger.e("text_main");
-            view.getContext().getTheme().resolveAttribute(R.attr.custom_attr_text_main, typedValue, true);
-            view.setBackgroundColor(typedValue.resourceId);
-            ((TextView) view).setTextColor(typedValue.resourceId);
-        }
-    }
-
-    private void updateBg(SkinAttr skinAttr, View view) {
-        if (view instanceof SeekBar) {
-            return;
-        }
-        TypedValue typedValue = new TypedValue();
-        if (skinAttr.getResName().endsWith("app_bg")) {
-            CommonLogger.e("app_bg");
-            view.getContext().getTheme().resolveAttribute(R.attr.custom_attr_app_bg, typedValue, true);
-            view.setBackgroundColor(typedValue.resourceId);
-        } else if (skinAttr.getResName().endsWith("content_bg")) {
-            CommonLogger.e("content_bg");
-            view.getContext().getTheme().resolveAttribute(R.attr.custom_attr_app_content_bg, typedValue, true);
-            view.setBackgroundColor(typedValue.resourceId);
-        } else if (skinAttr.getResName().endsWith("title_bg")) {
-            CommonLogger.e("title_bg");
-            view.getContext().getTheme().resolveAttribute(R.attr.custom_attr_app_title_bg, typedValue, true);
-            view.setBackgroundColor(typedValue.resourceId);
-        } else if (skinAttr.getResName().endsWith("sb_thumb_bg")) {
-            view.getContext().getTheme().resolveAttribute(R.attr.custom_attr_sb_thumb_bg, typedValue, true);
-            view.setBackgroundColor(typedValue.resourceId);
-        }
-    }
 
     @Override
     public boolean equals(Object obj) {

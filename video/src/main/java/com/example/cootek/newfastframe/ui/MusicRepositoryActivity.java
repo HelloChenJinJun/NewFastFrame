@@ -4,6 +4,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
 import com.example.commonlibrary.baseadapter.ViewPagerAdapter;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.mvp.BaseFragment;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.mvp.MainBaseActivity;
@@ -47,6 +48,9 @@ public class MusicRepositoryActivity extends MainBaseActivity {
 
     @Override
     protected void initData() {
+        ToolBarOption toolBarOption=new ToolBarOption();
+        toolBarOption.setTitle("音乐世界" +
+                "");
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         List<String> list = new ArrayList<>();
         list.add("推荐");

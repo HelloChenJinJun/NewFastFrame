@@ -226,7 +226,7 @@ public class MusicService extends Service {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 if (getCurrentMusicPlayInfo() != null) {
                     if (getCurrentMusicPlayInfo().isLocal()) {
-                        refreshMediaSession(playState, BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+                        refreshMediaSession(playState, BitmapFactory.decodeResource(getResources(), R.drawable.icon_album_default));
                     } else {
 //                        这里不能用Glide加载，在into方法中会出现判主线程的判断从而出错
                         String path = mPreferences.getString(String.valueOf(getAudioId()), null);
@@ -253,7 +253,7 @@ public class MusicService extends Service {
 
     private void refreshMediaSession(int playState, Bitmap resource) {
         if (resource == null) {
-            resource = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+            resource = BitmapFactory.decodeResource(getResources(), R.drawable.icon_album_default);
         }
         mediaSessionCompat.setMetadata(new MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, getArtistName())
@@ -536,7 +536,7 @@ public class MusicService extends Service {
         if (notificationPostTime == 0) {
             if (getCurrentMusicPlayInfo() != null) {
                 if (getCurrentMusicPlayInfo().isLocal()) {
-                    startForeground(notificationId, getBuildNotification(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher)));
+                    startForeground(notificationId, getBuildNotification(BitmapFactory.decodeResource(getResources(), R.drawable.icon_album_default)));
                 } else {
                     String imagePath = mPreferences.getString(String.valueOf(getAudioId()), null);
                     if (imagePath == null || !new File(imagePath).exists()) {
@@ -554,7 +554,7 @@ public class MusicService extends Service {
         } else {
             if (getCurrentMusicPlayInfo() != null) {
                 if (getCurrentMusicPlayInfo().isLocal()) {
-                    notificationManagerCompat.notify(notificationId, getBuildNotification(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher)));
+                    notificationManagerCompat.notify(notificationId, getBuildNotification(BitmapFactory.decodeResource(getResources(), R.drawable.icon_album_default)));
                 } else {
                     String imagePath = mPreferences.getString(String.valueOf(getAudioId()), null);
                     if (imagePath == null || !new File(imagePath).exists()) {
@@ -618,7 +618,7 @@ public class MusicService extends Service {
 
     private Notification getBuildNotification(Bitmap bitmap) {
         if (bitmap == null) {
-            bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_album_default);
         }
         String albumName = getAlbumName();
         String artistName = getArtistName();
@@ -663,6 +663,7 @@ public class MusicService extends Service {
 
     private PendingIntent getMainIntent() {
         Intent nowPlayingIntent = new Intent(this, MainActivity.class);
+//        nowPlayingIntent.setComponent(new ComponentName("com.example.cootek.newfastframe","com.example.cootek.newfastframe."));
         nowPlayingIntent.setAction(Constants.NAVIGATE_LIBRARY);
         return PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }

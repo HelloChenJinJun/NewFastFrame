@@ -18,7 +18,7 @@
 
         <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleTask" />
         <service
             android:name=".MusicService"
             android:process=":main" />

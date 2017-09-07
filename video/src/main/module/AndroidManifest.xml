@@ -17,9 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/CustomTheme.Day">
 
-        <activity
-            android:name=".TestMainActivity"
-            android:launchMode="singleInstance">
+        <activity android:name=".TestMainActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,7 +36,9 @@
 
         <activity android:name=".ui.SongListActivity" />
         <activity android:name=".ui.DownLoadActivity" />
-        <activity android:name=".ui.MainActivity" />
+        <activity
+            android:name=".ui.MainActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.MusicRepositoryActivity" />
 
         <receiver android:name=".receiver.MusicInfoReceiver">
@@ -51,7 +51,7 @@
 
         <activity android:name=".ui.LocalMusicListActivity" />
         <activity android:name=".ui.SingerInfoActivity" />
-        <activity android:name=".ui.SettingActivity"/>
+        <activity android:name=".ui.SettingActivity" />
 
         <meta-data
             android:name="com.example.cootek.newfastframe.VideoApplication"

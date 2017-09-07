@@ -19,9 +19,9 @@
         android:layout_height="50dp"
         android:layout_marginTop="7.5dp"
         android:scaleType="fitCenter"
-        android:src="@mipmap/ic_launcher"
         app:roundHeight="25dp"
-        app:roundWidth="25dp" />
+        app:roundWidth="25dp"
+        android:src="@drawable/icon_album_default"/>
 
 
     <RelativeLayout
@@ -207,7 +207,7 @@
             android:secondaryProgress="0"
             android:splitTrack="false"
             android:tag="skin"
-            android:thumb="@drawable/thumb_music_normal"
+            android:thumb="@drawable/thumb_normal"
             android:visibility="visible" />
 
         <TextView

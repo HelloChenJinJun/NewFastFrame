@@ -29,6 +29,7 @@ import com.example.commonlibrary.cusotomview.BaseDialog;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.skin.SkinManager;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
@@ -155,6 +156,7 @@ public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppComp
             rightImage = (ImageView) headerLayout.findViewById(R.id.iv_header_layout_right);
             rightImage.setVisibility(View.GONE);
             right.setVisibility(View.VISIBLE);
+            CommonLogger.e("这里呢???????");
             setSupportActionBar((Toolbar) headerLayout.findViewById(R.id.toolbar));
             getSupportActionBar().setTitle("");
         }

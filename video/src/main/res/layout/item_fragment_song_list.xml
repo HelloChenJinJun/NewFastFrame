@@ -13,7 +13,8 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="20dp"
         android:ellipsize="end"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:textColor="?attr/custom_attr_text_main" />
 
 
 </LinearLayout>

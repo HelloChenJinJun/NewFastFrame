@@ -17,6 +17,7 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.mvp.MainBaseActivity;
 import com.example.cootek.newfastframe.util.MusicUtil;
@@ -68,7 +69,6 @@ public class SettingActivity extends MainBaseActivity implements View.OnClickLis
         themeColor = sharedPreferences.getInt("theme", Color.BLUE);
         color.setBackgroundColor(sharedPreferences.getInt("theme", Color.BLUE));
         checkBox.setBackgroundColor(themeColor);
-        checkBox.setChecked(sharedPreferences.getBoolean("isNight", false));
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setNeedNavigation(true);
         toolBarOption.setTitle("设置");
@@ -101,20 +101,20 @@ public class SettingActivity extends MainBaseActivity implements View.OnClickLis
 
     @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
-        CommonLogger.e("这里了吗" + selectedColor);
-        sharedPreferences.edit().putInt("theme", selectedColor).putBoolean("isTheme", true).putBoolean("isNight", false).apply();
+        sharedPreferences.edit().putInt("theme", selectedColor).putBoolean("isTheme", true).apply();
         SkinManager.getInstance().refreshSkin();
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked) {
-            sharedPreferences.edit().putBoolean("isNight", true).apply();
-            setTheme(R.style.CustomTheme_Night);
-            RxBusManager.getInstance().post(new ThemeEvent(true));
-        } else {
-            sharedPreferences.edit().putBoolean("isNight", false).apply();
-            RxBusManager.getInstance().post(new ThemeEvent(false));
-        }
+        ToastUtils.showShortToast("暂时用皮肤插件来实现");
+//        if (isChecked) {
+//            sharedPreferences.edit().putBoolean("isNight", true).apply();
+//            setTheme(R.style.CustomTheme_Night);
+//            RxBusManager.getInstance().post(new ThemeEvent(true));
+//        } else {
+//            sharedPreferences.edit().putBoolean("isNight", false).apply();
+//            RxBusManager.getInstance().post(new ThemeEvent(false));
+//        }
     }
 }
