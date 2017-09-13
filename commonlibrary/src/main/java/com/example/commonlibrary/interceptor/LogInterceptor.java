@@ -2,7 +2,7 @@ package com.example.commonlibrary.interceptor;
 
 import android.support.annotation.Nullable;
 
-import com.example.commonlibrary.dagger.OkHttpGlobalHandler;
+import com.example.commonlibrary.net.OkHttpGlobalHandler;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -56,6 +56,7 @@ public class LogInterceptor implements Interceptor {
             printLevel = Level.BODY;
         }
         colorLevel = java.util.logging.Level.INFO;
+        logger=Logger.getLogger("JUN");
     }
 
 
@@ -137,7 +138,8 @@ public class LogInterceptor implements Interceptor {
     private Logger logger;
 
     private void log(String message) {
-        logger.log(colorLevel, message);
+//        logger.log(colorLevel, message);
+        CommonLogger.e(message);
     }
 
     private Response logForResponse(Response response, long tookMs, Chain chain) {
@@ -193,10 +195,7 @@ public class LogInterceptor implements Interceptor {
         return charset;
     }
 
-    /**
-     * Returns true if the body in question probably contains human readable text. Uses a small sample
-     * of code points to detect unicode control characters commonly used in binary file signatures.
-     */
+
     private static boolean isPlaintext(MediaType mediaType) {
         if (mediaType == null) return false;
         if (mediaType.type() != null && mediaType.type().equals("text")) {

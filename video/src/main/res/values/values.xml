@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SlidingUpPanelLayout"><attr format="dimension" name="umanoPanelHeight"/><attr format="dimension" name="umanoShadowHeight"/><attr format="dimension" name="umanoParallaxOffset"/><attr format="color" name="umanoFadeColor"/><attr format="integer" name="umanoFlingVelocity"/><attr format="reference" name="umanoDragView"/><attr format="reference" name="umanoScrollableView"/><attr format="boolean" name="umanoOverlay"/><attr format="boolean" name="umanoClipPanel"/><attr format="float" name="umanoAnchorPoint"/><attr format="enum" name="umanoInitialState"><enum name="expanded" value="0"/><enum name="collapsed" value="1"/><enum name="anchored" value="2"/><enum name="hidden" value="3"/></attr><attr format="reference" name="umanoScrollInterpolator"/></declare-styleable>
+</resources>

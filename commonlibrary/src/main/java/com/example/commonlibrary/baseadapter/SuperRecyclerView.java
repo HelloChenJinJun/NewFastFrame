@@ -21,9 +21,19 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.example.commonlibrary.R;
+import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
+import com.example.commonlibrary.baseadapter.animator.SimpleAnimatorListener;
+import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
+import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
+import com.example.commonlibrary.baseadapter.foot.OnLoadMoreScrollListener;
+import com.example.commonlibrary.baseadapter.foot.RecyclerFooterViewClickListener;
+import com.example.commonlibrary.baseadapter.refresh.OnRefreshListener;
+import com.example.commonlibrary.baseadapter.refresh.RefreshHeaderLayout;
+import com.example.commonlibrary.baseadapter.refresh.RefreshTrigger;
+import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuRecyclerView;
 
 
-public class SuperRecyclerView extends RecyclerView {
+public class SuperRecyclerView extends SwipeMenuRecyclerView {
     private static final String TAG = SuperRecyclerView.class.getSimpleName();
 
     public static final int STATUS_DEFAULT = 0;
@@ -145,6 +155,7 @@ public class SuperRecyclerView extends RecyclerView {
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
+        setLoadMoreEnabled(true);
         this.mOnLoadMoreListener = listener;
     }
 
@@ -206,6 +217,19 @@ public class SuperRecyclerView extends RecyclerView {
             ensureLoadMoreFooterContainer();
             mLoadMoreFooterContainer.addView(loadMoreFooterView);
         }
+        if (loadMoreFooterView instanceof LoadMoreFooterView) {
+            addBottomListener(((LoadMoreFooterView) loadMoreFooterView));
+        }
+    }
+
+    private void addBottomListener(final LoadMoreFooterView loadMoreFooterView) {
+        loadMoreFooterView.setBottomViewClickListener(new RecyclerFooterViewClickListener() {
+            @Override
+            public void onBottomViewClickListener(View view) {
+                loadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
+                scrollToPosition(0);
+            }
+        });
     }
 
     public void setLoadMoreFooterView(@LayoutRes int loadMoreFooterLayoutRes) {
@@ -237,10 +261,6 @@ public class SuperRecyclerView extends RecyclerView {
     public void addHeaderView(View headerView) {
         ensureHeaderViewContainer();
         mHeaderViewContainer.addView(headerView);
-//        Adapter adapter = getAdapter();
-//        if (adapter != null) {
-//            adapter.notifyItemChanged(1);
-//        }
     }
 
 
@@ -278,27 +298,27 @@ public class SuperRecyclerView extends RecyclerView {
     }
 
 
-    public void setIAdapter(Adapter adapter) {
+    @Override
+    public void setAdapter(Adapter adapter) {
         ensureRefreshHeaderContainer();
         ensureHeaderViewContainer();
         ensureFooterViewContainer();
         ensureEmptyViewContainer();
         ensureLoadMoreFooterContainer();
         if (adapter instanceof BaseRecyclerAdapter) {
-//            TLog.e(SuperRecyclerView.class, "attachAdapter");
             ((BaseRecyclerAdapter) adapter).setFooterContainer(mFooterViewContainer);
             ((BaseRecyclerAdapter) adapter).setHeaderContainer(mHeaderViewContainer);
             ((BaseRecyclerAdapter) adapter).setRefreshHeaderContainer(mRefreshHeaderContainer);
             ((BaseRecyclerAdapter) adapter).setLoadMoreFooterContainer(mLoadMoreFooterContainer);
-            ((BaseRecyclerAdapter) adapter).setEmptyLayoutContainer(mEmptyViewContainer);
-            setAdapter(adapter);
+//            ((BaseRecyclerAdapter) adapter).setEmptyLayoutContainer(mEmptyViewContainer);
+            super.setAdapter(adapter);
         }
     }
 
     private void ensureRefreshHeaderContainer() {
         if (mRefreshHeaderContainer == null) {
             mRefreshHeaderContainer = new RefreshHeaderLayout(getContext());
-            mRefreshHeaderContainer.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            mRefreshHeaderContainer.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0));
         }
     }
 
@@ -397,7 +417,6 @@ public class SuperRecyclerView extends RecyclerView {
                     Log.e(TAG, "Error processing scroll; pointer index for id " + index + " not found. Did any MotionEvents get skipped?");
                     return false;
                 }
-
                 final int x = getMotionEventX(e, index);
                 final int y = getMotionEventY(e, index);
 
@@ -635,7 +654,9 @@ public class SuperRecyclerView extends RecyclerView {
                         mRefreshHeaderContainer.requestLayout();
                         setStatus(STATUS_REFRESHING);
                         if (mOnRefreshListener != null) {
-//                            TLog.e(SuperRecyclerView.class, "刷新");
+                            if (mLoadMoreFooterView != null && mLoadMoreFooterView instanceof LoadMoreFooterView) {
+                                ((LoadMoreFooterView) mLoadMoreFooterView).setStatus(LoadMoreFooterView.Status.GONE);
+                            }
                             mOnRefreshListener.onRefresh();
                             mRefreshTrigger.onRefresh();
                         }
@@ -646,13 +667,14 @@ public class SuperRecyclerView extends RecyclerView {
                     }
                 }
                 break;
-
                 case STATUS_RELEASE_TO_REFRESH: {
                     mRefreshHeaderContainer.getLayoutParams().height = mRefreshHeaderView.getMeasuredHeight();
                     mRefreshHeaderContainer.requestLayout();
                     setStatus(STATUS_REFRESHING);
                     if (mOnRefreshListener != null) {
-//                        TLog.e(SuperRecyclerView.class, "释放刷新");
+                        if (mLoadMoreFooterView != null && mLoadMoreFooterView instanceof LoadMoreFooterView) {
+                            ((LoadMoreFooterView) mLoadMoreFooterView).setStatus(LoadMoreFooterView.Status.GONE);
+                        }
                         mOnRefreshListener.onRefresh();
                         mRefreshTrigger.onRefresh();
                     }
@@ -729,6 +751,9 @@ public class SuperRecyclerView extends RecyclerView {
         @Override
         public void onLoadMore(RecyclerView recyclerView) {
             if (mOnLoadMoreListener != null && mStatus == STATUS_DEFAULT) {
+                if (mLoadMoreFooterView != null && mLoadMoreFooterView instanceof LoadMoreFooterView) {
+                    ((LoadMoreFooterView) mLoadMoreFooterView).setStatus(LoadMoreFooterView.Status.LOADING);
+                }
                 mOnLoadMoreListener.loadMore();
             }
         }

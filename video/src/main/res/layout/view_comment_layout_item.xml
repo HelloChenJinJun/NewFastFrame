@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        android:id="@+id/riv_view_comment_layout_item_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher"
+        app:roundHeight="20dp"
+        app:roundWidth="20dp" />
+
+    <TextView
+        android:id="@+id/tv_view_comment_layout_item_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:text="姓名"
+        android:textColor="@color/base_color_text_white"
+        android:textSize="16sp" />
+
+</LinearLayout>

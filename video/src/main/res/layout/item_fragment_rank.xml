@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_gravity="center_vertical"
+        android:id="@+id/iv_item_fragment_rank_display"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:id="@+id/tv_item_fragment_rank_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="一" />
+
+        <TextView
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:id="@+id/tv_item_fragment_rank_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="二" />
+
+        <TextView
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:id="@+id/tv_item_fragment_rank_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="三" />
+    </LinearLayout>
+
+
+</LinearLayout>

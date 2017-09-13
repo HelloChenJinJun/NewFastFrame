@@ -1,15 +1,17 @@
 package com.example.commonlibrary;
 
 import android.app.Application;
+import android.content.Context;
 
-import com.example.commonlibrary.dagger.OkHttpGlobalHandler;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.component.DaggerAppComponent;
 import com.example.commonlibrary.dagger.module.AppConfigModule;
 import com.example.commonlibrary.dagger.module.AppModule;
 import com.example.commonlibrary.dagger.module.NetClientModule;
-import com.example.commonlibrary.imageloader.GlideImageLoaderStrategy;
+import com.example.commonlibrary.imageloader.glide.GlideImageLoaderStrategy;
 import com.example.commonlibrary.interceptor.LogInterceptor;
+import com.example.commonlibrary.net.OkHttpGlobalHandler;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.FileUtil;
@@ -33,17 +35,30 @@ public class BaseApplication extends Application {
 
     private static AppComponent appComponent;
     private static BaseApplication instance;
-
+    private ApplicationDelegate applicationDelegate;
 
     public static BaseApplication getInstance() {
         return instance;
     }
 
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        applicationDelegate = new ApplicationDelegate();
+        applicationDelegate.attachBaseContext(base);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        // 这两行必须写在init之前，否则这些配置在init过程中将无效
+        ARouter.openLog();     // 打印日志
+        ARouter.openDebug();
+        ARouter.init(this);
         initDagger();
         instance = this;
+        applicationDelegate.onCreate(this);
     }
 
 
@@ -74,8 +89,10 @@ public class BaseApplication extends Application {
 
             @Override
             public Request onRequestBefore(Interceptor.Chain chain, Request request) {
-                CommonLogger.e("onRequestBefore");
-                return request;
+                CommonLogger.e("onRequestBefore:" + request.url().toString());
+                return request.newBuilder()
+                        .header("User-Agent", "")
+                        .url(request.url()).build();
             }
         }).level(LogInterceptor.Level.BODY).cacheFile(FileUtil.getDefaultCacheFile(this))
                 .baseImageLoaderStrategy(new GlideImageLoaderStrategy());
@@ -86,5 +103,11 @@ public class BaseApplication extends Application {
 
     public static AppComponent getAppComponent() {
         return appComponent;
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        applicationDelegate.onTerminate(this);
     }
 }

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_activity_setting_color_picker_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="主题色"
+                android:textColor="?attr/custom_attr_text_main"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="保护你的眼睛"
+                android:textColor="?attr/custom_attr_text_sub"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            android:id="@+id/riv_activity_setting_color"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/custom_attr_btn_bg"
+            android:tag="skin" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_activity_setting_night_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="夜间模式"
+                android:textColor="?attr/custom_attr_text_main"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="护眼的夜间模式"
+                android:textColor="?attr/custom_attr_text_sub"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+        <CheckBox
+            android:id="@+id/cb_activity_setting_night"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/custom_attr_cb_bg"
+            android:checked="true"
+            android:tag="skin" />
+    </RelativeLayout>
+
+</LinearLayout>

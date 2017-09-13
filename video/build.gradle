@@ -1,0 +1,78 @@
+if (rootProject.ext.isAlone) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'org.greenrobot.greendao'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    defaultConfig {
+
+        if (rootProject.ext.isAlone) {
+            applicationId "com.example.cootek.newfastframe"
+        }
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        if (!rootProject.ext.isAlone) {
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    arguments = [moduleName: project.getName()]
+                }
+            }
+        }
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    sourceSets {
+        main {
+            if (rootProject.ext.isAlone) {
+                manifest.srcFile 'src/main/module/AndroidManifest.xml'
+                java.srcDirs = ['src/main/java', 'src/main/module/java']
+                res.srcDirs = ['src/main/res', 'src/main/module/res']
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+}
+
+//greendao {
+//    schemaVersion 1
+//    daoPackage 'com.example.cootek.newfastframe'
+//    targetGenDir 'src/main/java'
+//}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile project(':commonlibrary')
+//用作颜色选择器
+    compile 'com.afollestad.material-dialogs:commons:0.9.1.0'
+    apt rootProject.ext.dependencies.dagger2_compiler
+
+    if (!rootProject.ext.isAlone) {
+        apt rootProject.ext.dependencies.arouter_compiler
+    }
+    testCompile 'junit:junit:4.12'
+
+
+}
+

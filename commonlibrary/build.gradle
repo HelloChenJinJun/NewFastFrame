@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'org.greenrobot.greendao'
 
+apply plugin: 'com.jakewharton.butterknife'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -14,6 +15,11 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName()]
+            }
+        }
     }
     buildTypes {
         release {
@@ -22,6 +28,13 @@ android {
         }
     }
 }
+
+//greendao {
+//    schemaVersion 1
+//    daoPackage 'com.example.commonlibrary'
+//    targetGenDir 'src/main/java/greendao'
+//}
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -36,8 +49,6 @@ dependencies {
     }
     compile rootProject.ext.dependencies.recycleview
     compile rootProject.ext.dependencies.design
-
-
 
 //    compile(rootProject.ext.dependencies.support_v4) {
 //        exclude module: "support-annotations"
@@ -89,9 +100,14 @@ dependencies {
     compile rootProject.ext.dependencies.glide
     compile rootProject.ext.dependencies.eventBus
     compile rootProject.ext.dependencies.dagger2
-    compile(rootProject.ext.dependencies.rxpermission){
+    compile(rootProject.ext.dependencies.rxpermission) {
         exclude module: 'rxjava'
     }
     compile rootProject.ext.dependencies.retrofit_converter_scalars
     annotationProcessor rootProject.ext.dependencies.dagger2_compiler
+    annotationProcessor rootProject.ext.dependencies.butterknife_compiler
+    compile rootProject.ext.dependencies.butterknife
+    compile rootProject.ext.dependencies.transformations
+
+    compile rootProject.ext.dependencies.arouter_api
 }

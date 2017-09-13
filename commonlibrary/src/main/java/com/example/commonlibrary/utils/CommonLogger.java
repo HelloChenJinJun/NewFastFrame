@@ -1,5 +1,6 @@
 package com.example.commonlibrary.utils;
 
+import android.os.Build;
 import android.util.Log;
 
 /**
@@ -65,4 +66,19 @@ public class CommonLogger {
     }
 
 
+    public static void e(Throwable e) {
+        if (!isLogEnable) {
+            return;
+        }
+        if (e != null && e.getStackTrace() != null) {
+            if (e.getCause() != null) {
+                CommonLogger.e("cause:" + e.getCause().toString());
+            }
+            CommonLogger.e("message:" + e.getMessage());
+            for (StackTraceElement item :
+                    e.getStackTrace()) {
+                CommonLogger.e(item.toString());
+            }
+        }
+    }
 }

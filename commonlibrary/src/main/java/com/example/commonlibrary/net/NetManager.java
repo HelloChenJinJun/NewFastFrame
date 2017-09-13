@@ -1,10 +1,19 @@
 package com.example.commonlibrary.net;
 
+import android.os.Environment;
+
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.net.db.DaoSession;
-import com.example.commonlibrary.net.db.NewFileInfo;
-import com.example.commonlibrary.net.db.NewFileInfoDao;
-import com.example.commonlibrary.net.model.DownloadStatus;
+import com.example.commonlibrary.net.download.DownLoadApi;
+import com.example.commonlibrary.net.download.DownLoadInterceptor;
+import com.example.commonlibrary.net.download.DownLoadProgressObserver;
+import com.example.commonlibrary.net.download.DownloadListener;
+import com.example.commonlibrary.net.download.DownloadStatus;
+import com.example.commonlibrary.net.download.FileDAOImpl;
+import com.example.commonlibrary.net.download.FileInfo;
+import com.example.commonlibrary.net.upload.UpLoadApi;
+import com.example.commonlibrary.net.upload.UpLoadListener;
+import com.example.commonlibrary.net.upload.UpLoadProgressObserver;
+import com.example.commonlibrary.net.upload.UpLoadRequestBody;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.FileUtil;
@@ -45,8 +54,8 @@ public class NetManager {
     //    由于每个下载请求要监听进度，因此要添加拦截器，所以要保持不同的retrofit
     private Map<String, Retrofit> stringRetrofitMap;
     private Map<String, CompositeDisposable> compositeDisposableMap;
-    private DaoSession daoSession;
-    private Map<String, NewFileInfo> newFileInfoMap;
+    private FileDAOImpl daoSession;
+    private Map<String, FileInfo> newFileInfoMap;
 
     public static NetManager getInstance() {
         if (instance == null) {
@@ -59,19 +68,18 @@ public class NetManager {
 
     private NetManager() {
         stringRetrofitMap = new HashMap<>();
-        daoSession = BaseApplication.getAppComponent().getDaoSesion();
+        daoSession = FileDAOImpl.getInstance();
         compositeDisposableMap = new HashMap<>();
         newFileInfoMap = new HashMap<>();
     }
 
 
     public void upLoad(final String url, String key, final File file, UpLoadListener listener) {
-        List<NewFileInfo> list = daoSession.getNewFileInfoDao().queryBuilder().where(NewFileInfoDao.Properties.Url.eq(file.getAbsolutePath())).list();
-        final NewFileInfo info;
-        if (list.size() == 0) {
-            info = new NewFileInfo(file.getAbsolutePath(), file.getName(), 0, 0, 0, DownloadStatus.NORMAL, getDownLoadCacheDir());
+        final FileInfo info;
+        if (daoSession.query(url) == null) {
+            info = new FileInfo(file.getAbsolutePath(), file.getName(), DownloadStatus.NORMAL, 0, 0, 0, getDownLoadCacheDir());
         } else {
-            info = list.get(0);
+            info = daoSession.query(url);
         }
         newFileInfoMap.put(file.getAbsolutePath(), info);
         Retrofit retrofit = BaseApplication.getAppComponent().getRetrofit();
@@ -88,9 +96,9 @@ public class NetManager {
                     public void accept(@NonNull Disposable disposable) throws Exception {
                         addSubscription(disposable, file.getAbsolutePath());
                     }
-                }).map(new Function<Response, NewFileInfo>() {
+                }).map(new Function<Response, FileInfo>() {
             @Override
-            public NewFileInfo apply(@NonNull Response response) throws Exception {
+            public FileInfo apply(@NonNull Response response) throws Exception {
                 return info;
             }
         }).subscribe(upLoadProgressObserver);
@@ -117,13 +125,10 @@ public class NetManager {
         if (url == null) {
             return;
         }
-        NewFileInfo info;
-        List<NewFileInfo> list = daoSession.getNewFileInfoDao().queryBuilder().where(NewFileInfoDao.Properties.Url.eq(url)).list();
-        if (list.size() > 0) {
-            info = list.get(0);
-        } else {
-            info = new NewFileInfo(url, FileUtil.clipFileName(url), 0, 0, 0, DownloadStatus.NORMAL, getDownLoadCacheDir());
-            daoSession.getNewFileInfoDao().insert(info);
+        FileInfo info = daoSession.query(url);
+        if (info == null) {
+            info = new FileInfo(url, FileUtil.clipFileName(url), DownloadStatus.NORMAL, 0, 0, 0, getDownLoadCacheDir());
+            daoSession.insert(info);
         }
         newFileInfoMap.put(url, info);
         Retrofit retrofit;
@@ -138,10 +143,10 @@ public class NetManager {
                     .client(builder.build()).baseUrl(AppUtil.getBasUrl(url)).build();
             stringRetrofitMap.put(url, retrofit);
         }
-        retrofit.create(DownLoadApi.class).downLoad("bytes=" + info.getLoadBytes() + "-", url).subscribeOn(Schedulers.io()).map(new Function<Response, NewFileInfo>() {
+        retrofit.create(DownLoadApi.class).downLoad("bytes=" + info.getLoadBytes() + "-", url).subscribeOn(Schedulers.io()).map(new Function<ResponseBody, FileInfo>() {
             @Override
-            public NewFileInfo apply(@NonNull Response response) throws Exception {
-                return writeCaches(response.body(), url);
+            public FileInfo apply(@NonNull ResponseBody responseBody) throws Exception {
+                return writeCaches(responseBody, url);
             }
         }).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).retryWhen(new RetryWhenNetworkException()).doOnSubscribe(new Consumer<Disposable>() {
             @Override
@@ -177,8 +182,9 @@ public class NetManager {
     }
 
 
-    private String getDownLoadCacheDir() {
-        return BaseApplication.getAppComponent().getCacheFile().getAbsolutePath();
+    public String getDownLoadCacheDir() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/music_download/";
+//        return BaseApplication.getAppComponent().getCacheFile().getAbsolutePath();
     }
 
 
@@ -195,13 +201,16 @@ public class NetManager {
     /**
      * 写入文件
      */
-    private NewFileInfo writeCaches(ResponseBody responseBody, String url) {
-        NewFileInfo info = daoSession.getNewFileInfoDao().queryBuilder().where(NewFileInfoDao.Properties.Url.eq(url)).build().list().get(0);
+    private FileInfo writeCaches(ResponseBody responseBody, String url) {
+        FileInfo info = daoSession.query(url);
         try {
             RandomAccessFile randomAccessFile = null;
             FileChannel channelOut = null;
             InputStream inputStream = null;
             try {
+                if (info == null) {
+                    CommonLogger.e("写入缓存这里出错");
+                }
                 info.setStatus(DownloadStatus.DOWNLOADING);
                 File file = new File(info.getPath(), info.getName());
                 if (!file.getParentFile().exists())
@@ -246,24 +255,24 @@ public class NetManager {
         if (url == null) {
             return;
         }
-        NewFileInfo info;
+        FileInfo info;
         info = newFileInfoMap.get(url);
         if (info != null) {
             info.setStatus(DownloadStatus.STOP);
             unSubscrible(url);
         }
-        daoSession.getNewFileInfoDao().update(info);
+        daoSession.update(info);
     }
 
     public void cancel(String url) {
         if (url == null) {
             return;
         }
-        NewFileInfo newFileInfo = newFileInfoMap.get(url);
+        FileInfo newFileInfo = newFileInfoMap.get(url);
         if (newFileInfo != null) {
             newFileInfo.setStatus(DownloadStatus.CANCEL);
             unSubscrible(url);
         }
-        daoSession.getNewFileInfoDao().update(newFileInfo);
+        daoSession.update(newFileInfo);
     }
 }

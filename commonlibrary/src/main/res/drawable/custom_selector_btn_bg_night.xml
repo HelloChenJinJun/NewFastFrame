@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+        <shape android:dither="true" android:visible="true">
+            <solid android:color="@color/custom_color_btn_bg_pressed_night" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:dither="true" android:visible="true">
+            <solid android:color="@color/custom_color_btn_bg_normal_night" />
+        </shape>
+    </item>
+
+</selector>

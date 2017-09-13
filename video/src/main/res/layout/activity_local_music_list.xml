@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/custom_attr_app_bg"
+    android:orientation="vertical"
+    android:tag="skin">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tb_activity_local_music_list_tab"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="?attr/custom_attr_app_title_bg"
+        android:tag="skin" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_activity_local_music_list_display"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/custom_attr_app_content_bg"
+        android:tag="skin" />
+
+</LinearLayout>
