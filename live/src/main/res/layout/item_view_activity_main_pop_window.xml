@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:roundHeight="25dp"
+        app:roundWidth="25dp"
+        android:id="@+id/riv_item_view_activity_main_pop_window_icon"
+        android:src="@drawable/default_recommend_icon"/>
+    <TextView
+        android:id="@+id/tv_item_view_activity_main_pop_window_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/base_color_text_grey"
+        android:text="名称"
+        android:layout_marginTop="10dp"/>
+</LinearLayout>

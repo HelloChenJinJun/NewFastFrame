@@ -209,4 +209,9 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
         this.adapter = adapter;
         return this;
     }
+
+
+    public BaseRecyclerAdapter getAdapter() {
+        return adapter;
+    }
 }

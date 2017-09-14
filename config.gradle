@@ -1,7 +1,8 @@
 ext {
-    isAlone = false;//false:作为Lib组件存在， true:作为application存在
+    isAlone = true;//false:作为Lib组件存在， true:作为application存在
 
     android = [
+
             compileSdkVersion: 24,
             buildToolsVersion: "25.0.2",
             minSdkVersion    : 16,
