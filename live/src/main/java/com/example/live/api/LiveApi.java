@@ -2,12 +2,17 @@ package com.example.live.api;
 
 import com.example.live.bean.CategoryLiveBean;
 import com.example.live.bean.ListLiveBean;
+import com.example.live.bean.LiveRoomBean;
 import com.example.live.bean.RecommendLiveBean;
+import com.example.live.bean.SearchLiveBean;
+import com.example.live.bean.SearchRequestBody;
 
 import java.util.List;
 
 import io.reactivex.Observable;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -52,19 +57,19 @@ public interface LiveApi {
     @GET("json/categories/{slug}/list.json?v=3.0.1&os=1&ver=4")
     Observable<ListLiveBean> getCategoryItemData(@Path("slug") String slug);
 //
-//    /**
-//     * 进入房间
-//     * @param uid
-//     * @return
-//     */
-//    @GET("json/rooms/{uid}/info.json?v=3.0.1&os=1&ver=4")
-//    Observable<Room> enterRoom(@Path("uid")String uid);
-//
-//    /**
-//     * 搜索
-//     * @param searchRequestBody
-//     * @return
-//     */
-//    @POST("site/search")
-//    Observable<SearchResult> search(@Body SearchRequestBody searchRequestBody);
+    /**
+     * 进入房间
+     * @param uid
+     * @return
+     */
+    @GET("json/rooms/{uid}/info.json?v=3.0.1&os=1&ver=4")
+    Observable<LiveRoomBean> enterRoom(@Path("uid")String uid);
+
+    /**
+     * 搜索
+     * @param searchRequestBody
+     * @return
+     */
+    @POST("site/search")
+    Observable<SearchLiveBean> search(@Body SearchRequestBody searchRequestBody);
 }

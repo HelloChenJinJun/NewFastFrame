@@ -24,7 +24,10 @@ public class ListLivePresenter extends BasePresenter<IView<ListLiveBean>,ListLiv
         super(iView, baseModel);
     }
 
-    public void getCategoryItemData(final String slug) {
+    public void getCategoryItemData(final boolean isShowLoading, final boolean isRefresh, final String slug) {
+        if (isShowLoading) {
+            iView.showLoading(null);
+        }
         baseModel.getRepositoryManager().getApi(LiveApi.class)
                 .getCategoryItemData(slug).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -44,7 +47,7 @@ public class ListLivePresenter extends BasePresenter<IView<ListLiveBean>,ListLiv
                         iView.showError(null, new EmptyLayout.OnRetryListener() {
                             @Override
                             public void onRetry() {
-                                getCategoryItemData(slug);
+                                getCategoryItemData(isShowLoading, isRefresh,slug);
                             }
                         });
                     }

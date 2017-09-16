@@ -1,10 +1,13 @@
 package com.example.live;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
 
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.live.bean.ListLiveBean;
 import com.example.live.dagger.list.DaggerListLiveComponent;
@@ -51,7 +54,6 @@ public class ListLiveFragment extends BaseFragment<ListLiveBean,ListLivePresente
     protected void initView() {
         swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_list_live_refresh);
         display= (SuperRecyclerView) findViewById(R.id.srcv_fragment_list_live_display);
-
     }
 
     @Override
@@ -63,13 +65,23 @@ public class ListLiveFragment extends BaseFragment<ListLiveBean,ListLivePresente
                 .mainComponent(LiveApplication.getMainComponent()).build().inject(this);
         display.setLayoutManager(new WrappedGridLayoutManager(getContext(),2));
         display.setAdapter(listLiveAdapter);
+        listLiveAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view) {
+                Intent intent=new Intent(view.getContext(),VideoActivity.class);
+                ListLiveBean.DataEntity dataEntity=listLiveAdapter.getData(position);
+                intent.putExtra(LiveUtil.UID,dataEntity.getUid());
+                intent.putExtra(LiveUtil.THUMB,dataEntity.getThumb());
+                intent.putExtra(LiveUtil.IS_FULL,LiveUtil.SHOWING.equalsIgnoreCase(dataEntity.getCategory_slug()));
+                startActivity(intent);
+            }
+        });
         swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
     protected void updateView() {
-        presenter.getCategoryItemData(slug);
-
+        presenter.getCategoryItemData(true,true,slug);
     }
 
     public static ListLiveFragment newInstance() {
@@ -96,6 +108,6 @@ public class ListLiveFragment extends BaseFragment<ListLiveBean,ListLivePresente
 
     @Override
     public void onRefresh() {
-        presenter.getCategoryItemData(slug);
+        presenter.getCategoryItemData(false,true,slug);
     }
 }

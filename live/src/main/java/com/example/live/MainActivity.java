@@ -88,6 +88,7 @@ public class MainActivity extends BaseActivity<List<CategoryLiveBean>, MainPrese
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.live_menu_item_search) {
             ToastUtils.showLongToast("启动搜索界面");
+            SearchLiveActivity.start(this);
         }
         return true;
     }
@@ -140,7 +141,11 @@ public class MainActivity extends BaseActivity<List<CategoryLiveBean>, MainPrese
                 customPopWindow=new CustomPopWindow.Builder().parentView(v).contentView(getContentView())
                 .build();
             }
-            customPopWindow.show();
+            if (!customPopWindow.isShowing()) {
+                customPopWindow.showAsDropDown(v);
+            }else{
+                customPopWindow.dismiss();
+            }
         }
     }
 

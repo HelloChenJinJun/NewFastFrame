@@ -26,7 +26,7 @@ public class WrappedGridLayoutManager extends GridLayoutManager {
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         try {
             super.onLayoutChildren(recycler, state);
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException |IllegalArgumentException e) {
             e.printStackTrace();
         }
     }

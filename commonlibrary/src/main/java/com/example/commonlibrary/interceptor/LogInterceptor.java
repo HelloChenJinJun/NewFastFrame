@@ -3,6 +3,8 @@ package com.example.commonlibrary.interceptor;
 import android.support.annotation.Nullable;
 
 import com.example.commonlibrary.net.OkHttpGlobalHandler;
+import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.IOUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -23,9 +25,6 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.internal.http.HttpHeaders;
 import okio.Buffer;
-
-import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.IOUtils;
 
 /**
  * Created by COOTEK on 2017/7/31.

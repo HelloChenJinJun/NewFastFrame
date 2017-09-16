@@ -13,4 +13,5 @@ public class LiveUtil {
     public static final String SHOWING = "showing";
     public static final String IS_FULL = "is_full";
     public static final String SLUG = "slug";
+    public static final String THUMB = "thumb";
 }

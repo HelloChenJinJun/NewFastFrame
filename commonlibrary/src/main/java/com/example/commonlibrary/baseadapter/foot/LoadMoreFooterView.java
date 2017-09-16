@@ -64,7 +64,8 @@ public class LoadMoreFooterView extends FrameLayout {
             }
         });
 
-        setStatus(Status.GONE);
+        mStatus=Status.GONE;
+        change();
     }
 
     public void setOnRetryListener(OnRetryListener listener) {
@@ -76,8 +77,10 @@ public class LoadMoreFooterView extends FrameLayout {
     }
 
     public void setStatus(Status status) {
-        this.mStatus = status;
-        change();
+        if (mStatus!=status) {
+            this.mStatus = status;
+            change();
+        }
     }
 
     public boolean canLoadMore() {

@@ -47,6 +47,17 @@ public class CustomPopWindow extends PopupWindow {
     }
 
 
+    @Override
+    public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                BlurBitmapUtil.blur(((Activity) view.getContext()), contentView, 25, 8, 200);
+            }
+        });
+        super.showAsDropDown(anchor, xoff, yoff, gravity);
+    }
+
     public void show() {
         show(0, 0);
     }
@@ -83,7 +94,7 @@ public class CustomPopWindow extends PopupWindow {
         this.setTouchable(true);
         this.setOutsideTouchable(true);
         this.setFocusable(true);
-        setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setTouchInterceptor(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
