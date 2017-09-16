@@ -3,6 +3,7 @@ package com.example.news.api;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
+import retrofit2.http.Url;
 
 /**
  * 项目名称:    NewFastFrame
@@ -13,5 +14,5 @@ import retrofit2.http.GET;
 
 public interface CugNewsApi {
     @GET
-    public Observable<ResponseBody>  getCugNewsData();
+    public Observable<ResponseBody>  getCugNewsData(@Url String url);
 }

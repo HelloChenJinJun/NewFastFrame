@@ -1,7 +1,10 @@
 package com.example.news.dagger.news;
 
+import com.example.news.MainRepositoryManager;
 import com.example.news.NewsListAdapter;
 import com.example.news.NewsListFragment;
+import com.example.news.mvp.NewsListModel;
+import com.example.news.mvp.NewsListPresenter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -22,7 +25,18 @@ public class NewsListModule {
 
 
     @Provides
-    public NewsListAdapter provideNewsListAdapter(){
+    public NewsListAdapter provideNewsListAdapter() {
+        return new NewsListAdapter();
+    }
 
+
+    @Provides
+    public NewsListPresenter provideNewsListPresenter(NewsListModel newsListModel) {
+        return new NewsListPresenter(newsListFragment, newsListModel);
+    }
+
+    @Provides
+    public NewsListModel provideNewsListModel(MainRepositoryManager mainRepositoryManager) {
+        return new NewsListModel(mainRepositoryManager);
     }
 }

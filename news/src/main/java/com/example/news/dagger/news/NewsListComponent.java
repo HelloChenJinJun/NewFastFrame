@@ -1,7 +1,8 @@
 package com.example.news.dagger.news;
 
+import com.example.commonlibrary.dagger.scope.PerFragment;
+import com.example.news.NewsListFragment;
 import com.example.news.dagger.NewsComponent;
-import com.example.news.mvp.NewsListModel;
 
 import dagger.Component;
 
@@ -11,6 +12,8 @@ import dagger.Component;
  * 创建时间:    2017/9/16      16:52
  * QQ:             1981367757
  */
-@Component(dependencies = NewsComponent.class,modules = NewsListModule.class)
-public class NewsListComponent {
+@PerFragment
+@Component(dependencies = NewsComponent.class, modules = NewsListModule.class)
+public interface NewsListComponent {
+    public void inject(NewsListFragment newsListFragment);
 }

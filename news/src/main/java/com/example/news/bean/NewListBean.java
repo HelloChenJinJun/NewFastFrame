@@ -32,8 +32,16 @@ public class NewListBean {
     public  static class BannerBean {
         private String thumb;
         private String contentUrl;
-
+        private String description;
         private String title;
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
         public String getTitle() {
             return title;
@@ -66,6 +74,7 @@ public class NewListBean {
         private String description;
         private String contentUrl;
         private String thumb;
+        private String time;
 
         public String getThumb() {
             return thumb;
@@ -97,6 +106,14 @@ public class NewListBean {
 
         public void setContentUrl(String contentUrl) {
             this.contentUrl = contentUrl;
+        }
+
+        public String getTime() {
+            return time;
+        }
+
+        public void setTime(String time) {
+            this.time = time;
         }
     }
 }

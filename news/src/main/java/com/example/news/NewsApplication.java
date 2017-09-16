@@ -6,6 +6,7 @@ import android.content.Context;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.module.IModuleConfig;
+import com.example.news.dagger.DaggerNewsComponent;
 import com.example.news.dagger.NewsComponent;
 import com.example.news.dagger.NewsModule;
 

@@ -4,11 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.youth.banner.Banner
-        android:id="@+id/bn_fragment_news_list_banner"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"/>
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_fragment_news_list_refresh"
         android:layout_width="match_parent"

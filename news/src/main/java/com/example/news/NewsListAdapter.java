@@ -2,6 +2,7 @@ package com.example.news;
 
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
+import com.example.news.bean.NewListBean;
 
 /**
  * 项目名称:    NewFastFrame
@@ -10,14 +11,17 @@ import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
  * QQ:             1981367757
  */
 
-public class NewsListAdapter extends BaseRecyclerAdapter<Object,BaseWrappedViewHolder> {
+public class NewsListAdapter extends BaseRecyclerAdapter<NewListBean.NewsItem,BaseWrappedViewHolder> {
     @Override
     protected int getLayoutId() {
         return R.layout.item_fragment_news_list;
     }
 
     @Override
-    protected void convert(BaseWrappedViewHolder holder, Object data) {
-
+    protected void convert(BaseWrappedViewHolder holder, NewListBean.NewsItem data) {
+        holder.setImageUrl(R.id.iv_item_fragment_news_list_image,data.getThumb())
+                .setText(R.id.tv_item_fragment_news_list_title,data.getTitle())
+                .setText(R.id.tv_item_fragment_news_list_time,data.getTime())
+                .setOnItemClickListener();
     }
 }
