@@ -1,20 +1,19 @@
 package com.example.news;
 
 
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import android.support.annotation.IdRes;
+import android.support.v4.app.Fragment;
+import android.widget.RadioGroup;
 
 import com.example.commonlibrary.BaseActivity;
-import com.example.commonlibrary.BaseFragment;
-import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
-    private ViewPagerAdapter viewPagerAdapter;
-    private ViewPager display;
-    private TabLayout tabLayout;
+
+    private RadioGroup bottomContainer;
+    private List<Fragment> fragmentList;
 
 
     @Override
@@ -24,7 +23,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return true;
+        return false;
     }
 
     @Override
@@ -39,22 +38,24 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        display= (ViewPager) findViewById(R.id.vp_activity_main_display);
-        tabLayout= (TabLayout) findViewById(R.id.tl_activity_main_tab);
+       bottomContainer= (RadioGroup) findViewById(R.id.rg_activity_main_bottom_container);
+        bottomContainer.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                if (checkedId == R.id.rb_activity_main_bottom_index) {
+                        addOrReplaceFragment(fragmentList.get(0));
+                } else if (checkedId == R.id.rb_activity_main_bottom_library) {
+                    addOrReplaceFragment(fragmentList.get(1));
+                }
+            }
+        });
     }
 
     @Override
     protected void initData() {
-        List<String> titleList=new ArrayList<>();
-        titleList.add("地大");
-        titleList.add("要闻");
-        List<BaseFragment>  fragmentList=new ArrayList<>();
-        fragmentList.add(NewsListFragment.newInstance());
-        fragmentList.add(NewsListFragment.newInstance());
-        viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.setTitleAndFragments(titleList,fragmentList);
-        tabLayout.setupWithViewPager(display);
-        display.setAdapter(viewPagerAdapter);
-        display.setCurrentItem(0);
+        fragmentList=new ArrayList<>();
+        fragmentList.add(IndexFragment.newInstance());
+        fragmentList.add(LibraryFragment.newInstance());
+       addOrReplaceFragment(fragmentList.get(0),R.id.fl_activity_main_container);
     }
 }

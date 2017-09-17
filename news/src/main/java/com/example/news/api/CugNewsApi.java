@@ -15,4 +15,7 @@ import retrofit2.http.Url;
 public interface CugNewsApi {
     @GET
     public Observable<ResponseBody>  getCugNewsData(@Url String url);
+
+    @GET
+    public Observable<ResponseBody>  searchBook(@Url String url);
 }

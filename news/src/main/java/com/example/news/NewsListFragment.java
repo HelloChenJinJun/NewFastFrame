@@ -1,6 +1,8 @@
 package com.example.news;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +14,18 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.news.bean.NewListBean;
 import com.example.news.dagger.news.DaggerNewsListComponent;
 import com.example.news.dagger.news.NewsListModule;
 import com.example.news.mvp.NewsListPresenter;
+import com.example.news.util.NewsUtil;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
+import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoaderInterface;
 
 import java.util.ArrayList;
@@ -42,11 +47,16 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
     @Inject
     NewsListAdapter newsListAdapter;
     private LoadMoreFooterView loadMoreFooterView;
+    private String url;
+
+
+    private List<NewListBean.BannerBean>  bannerList;
 
 
     @Override
     public void updateData(NewListBean o) {
         if (o != null && o.getBannerBeanList() != null) {
+            bannerList=o.getBannerBeanList();
             List<String> titleList = new ArrayList<>();
             List<String> imageList = new ArrayList<>();
             for (NewListBean.BannerBean bean :
@@ -90,7 +100,6 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
     protected void initView() {
         display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_news_list_display);
         refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_news_list_refresh);
-        display.addHeaderView(getHeaderView());
     }
 
     private View getHeaderView() {
@@ -118,46 +127,77 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
         banner.setDelayTime(3000);
         banner.setIndicatorGravity(BannerConfig.CENTER);
         banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
+        banner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                if (bannerList != null && bannerList.size() > position) {
+                    Intent intent=new Intent(getContext(),NewsContentActivity.class);
+                    intent.putExtra(NewsUtil.URL,bannerList.get(position).getContentUrl());
+                    intent.putExtra(NewsUtil.TITLE,bannerList.get(position).getTitle());
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
     protected void initData() {
+        if (getArguments() != null) {
+            url = getArguments().getString(NewsUtil.URL);
+        }
         DaggerNewsListComponent.builder().newsListModule(new NewsListModule(this))
                 .newsComponent(NewsApplication.getNewsComponent())
                 .build().inject(this);
+        if (NewsUtil.CUG_NEWS.equals(url)) {
+            display.addHeaderView(getHeaderView());
+        }
         refresh.setOnRefreshListener(this);
         display.setLayoutManager(new WrappedLinearLayoutManager(getActivity()));
         loadMoreFooterView = new LoadMoreFooterView(getContext());
         display.setLoadMoreFooterView(loadMoreFooterView);
         display.setOnLoadMoreListener(this);
         display.setAdapter(newsListAdapter);
+        newsListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view) {
+                Intent intent = new Intent(getContext(), NewsContentActivity.class);
+                NewListBean.NewsItem newsItem = newsListAdapter.getData(position);
+                intent.putExtra(NewsUtil.URL, newsItem.getContentUrl());
+                intent.putExtra(NewsUtil.TITLE, newsItem.getTitle());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     protected void updateView() {
-        presenter.getCugNewsData(true, true);
+        presenter.getCugNewsData(true, true, url);
     }
 
-    public static NewsListFragment newInstance() {
-        return new NewsListFragment();
+    public static NewsListFragment newInstance(String url) {
+        NewsListFragment newsListFragment = new NewsListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(NewsUtil.URL, url);
+        newsListFragment.setArguments(bundle);
+        return newsListFragment;
     }
 
     @Override
     public void onRefresh() {
-        presenter.getCugNewsData(false, true);
+        presenter.getCugNewsData(false, true, url);
     }
 
     @Override
     public void loadMore() {
-        presenter.getCugNewsData(false, false);
+        presenter.getCugNewsData(false, false, url);
     }
 
 
     @Override
     public void hideLoading() {
-        if (newsListAdapter.getData().size()>0) {
+        if (newsListAdapter.getData().size() > 0) {
             super.hideLoading();
-        }else {
+        } else {
             showEmptyView();
         }
         refresh.setRefreshing(false);

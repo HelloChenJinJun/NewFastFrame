@@ -6,6 +6,7 @@
     android:orientation="horizontal">
 
     <ImageView
+        android:src="@drawable/cug_index"
         android:id="@+id/iv_item_fragment_news_list_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -19,7 +20,6 @@
         >
         <TextView
             android:text="标题"
-            android:layout_marginBottom="40dp"
             android:id="@+id/tv_item_fragment_news_list_title"
             android:maxLines="2"
             android:ellipsize="end"

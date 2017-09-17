@@ -20,16 +20,16 @@
             android:textColorHint="@color/base_color_text_grey"
             android:textColor="@color/base_color_text_white"
             android:textSize="16sp"
-            android:hint="主播昵称或全名号"
+            android:hint="请输入书名或作者名"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:id="@+id/et_activity_search_live_input"
+            android:id="@+id/et_fragment_library_input"
             android:maxLines="2"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
         <TextView
-            android:id="@+id/tv_activity_search_live_search"
+            android:id="@+id/tv_fragment_library_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="搜索"
@@ -43,12 +43,12 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/refresh_activity_search_live_refresh">
+        android:id="@+id/refresh_fragment_library_refresh">
 
         <com.example.commonlibrary.baseadapter.SuperRecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/srcv_activity_search_live_display"/>
+            android:id="@+id/srcv_fragment_library_display"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
