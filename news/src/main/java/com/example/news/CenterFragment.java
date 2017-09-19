@@ -38,6 +38,7 @@ public class CenterFragment extends BaseFragment implements View.OnClickListener
     @Override
     protected void initView() {
         findViewById(R.id.tv_fragment_center_library).setOnClickListener(this);
+        findViewById(R.id.tv_fragment_center_library_card).setOnClickListener(this);
 
     }
 
@@ -62,6 +63,8 @@ public class CenterFragment extends BaseFragment implements View.OnClickListener
                 Intent intent = new Intent(getContext(), LibraryInfoActivity.class);
                 startActivity(intent);
             }
+        }else {
+            Intent intent=new Intent(getContext(),CardLoginActivity.class);
         }
     }
 

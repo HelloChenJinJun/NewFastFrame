@@ -1,5 +1,7 @@
 package com.example.news.util;
 
+import java.util.Date;
+
 /**
  * 项目名称:    NewFastFrame
  * 创建人:        陈锦军
@@ -22,7 +24,13 @@ public class NewsUtil {
     public static final String LIBRARY_COOKIE = "library_cookie";
     public static final String LIBRARY_BERIFY_IMAGE_URL = "http://202.114.202.207/reader/captcha.php";
     public static final String BASE_URL = "http://202.114.202.207/";
-
+    public static final String CARD_LOGIN_URL = "card.cug.edu.cn";
+    public static final String CARD_LOGIN_COOKIE = "card_cookie";
+    public static final String CARD_VERIFY_IMAGE_URL="http://card.cug.edu.cn/Login/GetValidateCode";
+    public static final String CARD_POST_LOGIN_URL="http://card.cug.edu.cn/Login/LoginBySnoQuery";
+    public static final String CARD_POST_LOGIN_COOKIE = "card_post_login_cookie";
+    public static final String CARD_PAGE_INFO_URL = "http://card.cug.edu.cn/Page/page?flowID=1&type=0&apptype=&Url=&MenuName=&EMenuName=&parm11=&parm22=&comeapp=&headnames=&freamenames=&shownamess=";
+    public static final String CARD_BANK_INFO_URL = "http://card.cug.edu.cn/User/GetCardInfoByAccountNoParm?json=true";
 
     public static String getRealNewsUrl(int totalPage, int currentNum) {
         if (totalPage > 0) {
@@ -65,5 +73,24 @@ public class NewsUtil {
             return "http://202.114.202.207/"+url;
         }
         return url;
+    }
+
+    public static String getCardVerifyImageUrl() {
+        return CARD_VERIFY_IMAGE_URL+"?time="+new Date().getTime();
+    }
+
+
+
+//    http://card.cug.edu.cn/Login/LoginBySnoQuery?sno=20141001000&pwd=MDQxNjMz&ValiCode=56360&remember=0&uclass=1&json=true
+    public static String getCardVerifyLoginUrl(String account, String pw, String verifyCode) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("http://card.cug.edu.cn/Login/LoginBySnoQuery?")
+                .append("sno=").append(account).append("&pwd=").append(getEncodePassWord(pw))
+                .append("&ValiCode=").append(verifyCode).append("&remember=0&uclass=1&json=true");
+        return stringBuilder.toString();
+    }
+
+    private static String getEncodePassWord(String pw) {
+        return BaseCode64.encode(pw);
     }
 }
