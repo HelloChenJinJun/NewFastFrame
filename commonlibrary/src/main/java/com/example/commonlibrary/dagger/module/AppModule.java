@@ -1,6 +1,8 @@
 package com.example.commonlibrary.dagger.module;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.gson.Gson;
@@ -43,6 +45,14 @@ public class AppModule {
             gsonConfig.config(application, gsonBuilder);
         }
         return gsonBuilder.create();
+    }
+
+
+
+    @Singleton
+    @Provides
+    public SharedPreferences provideSharedPreferences(Application application){
+       return application.getSharedPreferences("common", Context.MODE_PRIVATE);
     }
 
 

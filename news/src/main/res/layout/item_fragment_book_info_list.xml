@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tv_item_Fragment_book_info_list_name"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="书名"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/base_color_text_black"
+        android:textSize="16sp"/>
+
+
+    <TextView
+        android:id="@+id/tv_item_Fragment_book_info_list_start"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="借阅日期"/>
+
+    <TextView
+        android:id="@+id/tv_item_Fragment_book_info_list_end"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="归还日期"/>
+
+
+    <TextView
+        android:id="@+id/tv_item_Fragment_book_info_list_num"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="续借量"/>
+</LinearLayout>

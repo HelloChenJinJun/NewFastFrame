@@ -37,10 +37,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
         <RadioButton
+            android:id="@+id/rb_activity_main_bottom_center"
             android:textColor="@color/tab_text_color"
-
             android:gravity="center"
-            android:text="首页"
+            android:text="中心"
             android:button="@null"
             android:layout_width="0dp"
             android:layout_height="match_parent"

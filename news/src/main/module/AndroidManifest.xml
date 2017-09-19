@@ -26,6 +26,9 @@
         </activity>
         <activity android:name="MainActivity" />
         <activity android:name=".NewsContentActivity" />
+        <activity android:name=".LibraryLoginActivity"/>
+        <activity android:name=".LibraryContentActivity"/>
+        <activity android:name=".LibraryInfoActivity"/>
 
         <meta-data
             android:name="com.example.news.NewsApplication"
