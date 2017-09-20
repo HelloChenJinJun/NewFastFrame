@@ -10,14 +10,7 @@ import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.api.CugCardApi;
 import com.example.news.bean.CardLoginBean;
-import com.example.news.bean.CardPersonInfoBean;
 import com.example.news.util.NewsUtil;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -118,7 +111,7 @@ public class CardLoginPresenter extends BasePresenter<IView<Object>, CardLoginMo
             return;
         }
         baseModel.getRepositoryManager().getApi(CugCardApi.class)
-                .login(NewsUtil.getCardVerifyLoginUrl(account, pw, verifyCode))
+                .login(NewsUtil.CARD_POST_LOGIN_URL,NewsUtil.getLoginRequestBody(account, pw, verifyCode))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<CardLoginBean>() {
@@ -129,12 +122,14 @@ public class CardLoginPresenter extends BasePresenter<IView<Object>, CardLoginMo
 
                     @Override
                     public void onNext(@NonNull CardLoginBean cardLoginBean) {
-                        if (cardLoginBean != null && cardLoginBean.isIsSucceed()) {
-                            iView.updateData(null);
-                            getPersonCardInfo();
-                        } else {
-                            onError(null);
-                        }
+//                        if (cardLoginBean != null && cardLoginBean.isIsSucceed()) {
+//                            iView.updateData(null);
+////                            getPersonCardInfo();
+//                        } else {
+//
+//                            onError(null);
+//                        }
+                        iView.updateData(null);
                     }
 
                     @Override

@@ -1,6 +1,7 @@
 package com.example.news.dagger.cardinfo;
 
 import com.example.commonlibrary.dagger.scope.PerActivity;
+import com.example.news.CardInfoActivity;
 import com.example.news.dagger.NewsComponent;
 
 import dagger.Component;
@@ -13,5 +14,6 @@ import dagger.Component;
  */
 @PerActivity
 @Component(dependencies = NewsComponent.class,modules = CardInfoModule.class)
-public class CardInfoComponent {
+public interface CardInfoComponent {
+    public void inject(CardInfoActivity cardInfoActivity);
 }

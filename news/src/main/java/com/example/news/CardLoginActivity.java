@@ -76,7 +76,7 @@ public class CardLoginActivity extends BaseActivity<Object,CardLoginPresenter> i
                 .build().inject(this);
         login.setOnClickListener(this);
         verifyImage.setOnClickListener(this);
-        if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.LIBRARY_COOKIE, null) == null) {
+        if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.CARD_LOGIN_COOKIE, null) == null) {
             login.post(new Runnable() {
                 @Override
                 public void run() {

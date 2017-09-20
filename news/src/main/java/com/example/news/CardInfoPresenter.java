@@ -3,11 +3,17 @@ package com.example.news;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.news.api.CugCardApi;
-import com.example.news.bean.BankCardInfoBean;
+import com.example.news.bean.BankAccountItem;
 import com.example.news.bean.CardPersonInfoBean;
+import com.example.news.bean.Item;
 import com.example.news.util.NewsUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -35,8 +41,9 @@ public class CardInfoPresenter extends BasePresenter<IView<Object>,CardInfoModel
 
 
     public void getPersonCardInfo() {
+        iView.showLoading(null);
         baseModel.getRepositoryManager().getApi(CugCardApi.class)
-                .getPersonCardInfo(NewsUtil.CARD_PAGE_INFO_URL)
+                .getPersonCardInfo(NewsUtil.CARD_PAGE_INFO_URL,NewsUtil.getPageRequestBody())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseBody>() {
@@ -60,6 +67,7 @@ public class CardInfoPresenter extends BasePresenter<IView<Object>,CardInfoModel
                                 cardPersonInfoBean.setCertNumber(elements.get(0).children().get(4).text());
                                 cardPersonInfoBean.setUnit(elements.get(0).children().get(5).text());
                                 iView.updateData(cardPersonInfoBean);
+                                getBankAccountInfo();
                             }else {
                                 onError(null);
                             }
@@ -87,34 +95,37 @@ public class CardInfoPresenter extends BasePresenter<IView<Object>,CardInfoModel
     }
 
 
-    public void getBankAccountInfo(){
+    private void getBankAccountInfo(){
         baseModel.getRepositoryManager().getApi(CugCardApi.class)
-                .getBankAccountInfo(NewsUtil.CARD_BANK_INFO_URL)
+                .getBankAccountInfo(NewsUtil.CARD_BANK_INFO_URL,NewsUtil.getBankAccountRequestBody())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BankCardInfoBean>() {
+                .subscribe(new Observer<Item>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         addDispose(d);
                     }
 
                     @Override
-                    public void onNext(@NonNull BankCardInfoBean bankCardInfoBean) {
-                        if (bankCardInfoBean.isIsSucceed()) {
-                            iView.updateData(bankCardInfoBean);
-                        }else {
-                            onError(null);
-                        }
+                    public void onNext(@NonNull Item item) {
+                            try {
+                                JSONObject jsonObject=new JSONObject(item.getMsg());
+                                String info=jsonObject.getString("query_card");
+                                BankAccountItem bankAccountItem=new Gson().fromJson(info,BankAccountItem.class);
+                                iView.updateData(bankAccountItem);
+                            } catch (JsonSyntaxException e) {
+                                e.printStackTrace();
+                                CommonLogger.e("1json解析出错");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                CommonLogger.e("json解析出错");
+                            }
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        iView.showError(null, new EmptyLayout.OnRetryListener() {
-                            @Override
-                            public void onRetry() {
-                                getBankAccountInfo();
-                            }
-                        });
+
+
                     }
 
                     @Override

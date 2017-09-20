@@ -12,6 +12,12 @@ import static java.lang.Double.isNaN;
 public class BaseCode64 {
 
 
+//    041633
+//    MDQxNjMz
+//    NDg1MjQ5NTQ1MTUx
+
+
+
     private static   final  String _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
     public static String encode(String input){
@@ -20,7 +26,7 @@ public class BaseCode64 {
         int i = 0;
         input = uft8Encode(input);
         while (i < input.length()) {
-            chr1= input.charAt(i++);
+            chr1= getCharCode(input.charAt(i++));
             chr2 = input.charAt(i++);
             chr3 = input.charAt(i++);
             enc1 = chr1 >> 2;
@@ -37,6 +43,10 @@ public class BaseCode64 {
                     _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
         }
         return output;
+    }
+
+    private static int getCharCode(char c) {
+        return ((int) c);
     }
 
     private static String uft8Encode(String input) {

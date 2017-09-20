@@ -65,6 +65,7 @@ public class CenterFragment extends BaseFragment implements View.OnClickListener
             }
         }else {
             Intent intent=new Intent(getContext(),CardLoginActivity.class);
+            startActivity(intent);
         }
     }
 

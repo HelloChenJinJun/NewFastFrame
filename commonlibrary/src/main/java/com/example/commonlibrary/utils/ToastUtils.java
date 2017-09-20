@@ -21,18 +21,20 @@ public class ToastUtils {
                 sHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                                Context context = BaseApplication.getInstance();
-                                if (!msg.equals(oldMsg)) { // 当显示的内容不一样时，即断定为不是同一个Toast
-                                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                                        time = System.currentTimeMillis();
-                                } else {
-                                        // 显示内容一样时，只有间隔时间大于Toast.LENGTH_SHORT时才显示
-                                        if (System.currentTimeMillis() - time > Toast.LENGTH_SHORT) {
+                                if (msg!=null) {
+                                        Context context = BaseApplication.getInstance();
+                                        if (!msg.equals(oldMsg)) { // 当显示的内容不一样时，即断定为不是同一个Toast
                                                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                                                 time = System.currentTimeMillis();
+                                        } else {
+                                                // 显示内容一样时，只有间隔时间大于Toast.LENGTH_SHORT时才显示
+                                                if (System.currentTimeMillis() - time > Toast.LENGTH_SHORT) {
+                                                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                                                        time = System.currentTimeMillis();
+                                                }
                                         }
+                                        oldMsg = msg;
                                 }
-                                oldMsg = msg;
                         }
                 });
         }

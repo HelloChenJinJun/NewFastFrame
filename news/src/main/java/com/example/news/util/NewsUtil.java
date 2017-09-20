@@ -1,6 +1,11 @@
 package com.example.news.util;
 
+import android.util.Base64;
+
 import java.util.Date;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * 项目名称:    NewFastFrame
@@ -24,13 +29,13 @@ public class NewsUtil {
     public static final String LIBRARY_COOKIE = "library_cookie";
     public static final String LIBRARY_BERIFY_IMAGE_URL = "http://202.114.202.207/reader/captcha.php";
     public static final String BASE_URL = "http://202.114.202.207/";
-    public static final String CARD_LOGIN_URL = "card.cug.edu.cn";
+    public static final String CARD_LOGIN_URL = "http://card.cug.edu.cn/";
     public static final String CARD_LOGIN_COOKIE = "card_cookie";
     public static final String CARD_VERIFY_IMAGE_URL="http://card.cug.edu.cn/Login/GetValidateCode";
     public static final String CARD_POST_LOGIN_URL="http://card.cug.edu.cn/Login/LoginBySnoQuery";
     public static final String CARD_POST_LOGIN_COOKIE = "card_post_login_cookie";
-    public static final String CARD_PAGE_INFO_URL = "http://card.cug.edu.cn/Page/page?flowID=1&type=0&apptype=&Url=&MenuName=&EMenuName=&parm11=&parm22=&comeapp=&headnames=&freamenames=&shownamess=";
-    public static final String CARD_BANK_INFO_URL = "http://card.cug.edu.cn/User/GetCardInfoByAccountNoParm?json=true";
+    public static final String CARD_PAGE_INFO_URL = "http://card.cug.edu.cn/Page/page";
+    public static final String CARD_BANK_INFO_URL = "http://card.cug.edu.cn/User/GetCardInfoByAccountNoParm";
 
     public static String getRealNewsUrl(int totalPage, int currentNum) {
         if (totalPage > 0) {
@@ -81,16 +86,45 @@ public class NewsUtil {
 
 
 
-//    http://card.cug.edu.cn/Login/LoginBySnoQuery?sno=20141001000&pwd=MDQxNjMz&ValiCode=56360&remember=0&uclass=1&json=true
-    public static String getCardVerifyLoginUrl(String account, String pw, String verifyCode) {
-        StringBuilder stringBuilder=new StringBuilder();
-        stringBuilder.append("http://card.cug.edu.cn/Login/LoginBySnoQuery?")
-                .append("sno=").append(account).append("&pwd=").append(getEncodePassWord(pw))
-                .append("&ValiCode=").append(verifyCode).append("&remember=0&uclass=1&json=true");
-        return stringBuilder.toString();
-    }
+
 
     private static String getEncodePassWord(String pw) {
-        return BaseCode64.encode(pw);
+        return Base64.encodeToString(pw.getBytes(),Base64.NO_WRAP);
+    }
+
+    public static RequestBody getLoginRequestBody(String account, String pw, String verifyCode) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("sno=").append(account).append("&pwd=").append(getEncodePassWord(pw))
+                .append("&ValiCode=").append(verifyCode).append("&remember=0&uclass=1&json=true");
+        RequestBody requestBody=RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"),stringBuilder.toString());
+        return requestBody;
+    }
+
+
+
+    public static RequestBody getPageRequestBody(){
+        RequestBody requestBody=RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"flowID=1&type=0&apptype=&Url=&MenuName=&EMenuName=&parm11=&parm22=&comeapp=&headnames=&freamenames=&shownamess=");
+    return requestBody;
+    }
+
+
+
+    public static RequestBody getBankAccountRequestBody(){
+        RequestBody requestBody=RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"),"json=true");
+        return requestBody;
+    }
+
+
+//account=99225&acctype=%23%23%23&tranamt=1000&qpwd=MDQxNjMz&json=true
+    public static RequestBody getAccountPayRequestBody(String account,String money,String password){
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("account=")
+                .append(account).append("&acctype=###")
+                .append("&tranamt=").append(money)
+                .append("&qpwd=").append(getEncodePassWord(password))
+                .append("&json=true");
+        RequestBody requestBody=RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
+        ,stringBuilder.toString());
+    return requestBody;
     }
 }

@@ -29,6 +29,8 @@
         <activity android:name=".LibraryLoginActivity"/>
         <activity android:name=".LibraryContentActivity"/>
         <activity android:name=".LibraryInfoActivity"/>
+        <activity android:name=".CardInfoActivity"/>
+        <activity android:name=".CardLoginActivity"/>
 
         <meta-data
             android:name="com.example.news.NewsApplication"

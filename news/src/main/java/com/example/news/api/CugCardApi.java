@@ -1,10 +1,12 @@
 package com.example.news.api;
 
-import com.example.news.bean.BankCardInfoBean;
 import com.example.news.bean.CardLoginBean;
+import com.example.news.bean.Item;
 
 import io.reactivex.Observable;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Url;
@@ -24,11 +26,14 @@ public interface CugCardApi {
     @GET
     public Observable<ResponseBody> getVerifyImage(@Url String url);
     @POST
-    public Observable<CardLoginBean>  login(@Url String url);
+    public Observable<CardLoginBean>  login(@Url String url,@Body RequestBody requestBody);
 
 
-    @GET
-    public Observable<ResponseBody>  getPersonCardInfo(@Url String url);
+    @POST
+    public Observable<ResponseBody>  getPersonCardInfo(@Url String url,@Body RequestBody requestBody);
 
-    public Observable<BankCardInfoBean> getBankAccountInfo(@Url String url);
+
+
+    @POST
+    public Observable<Item> getBankAccountInfo(@Url String url, @Body RequestBody requestBody);
 }
