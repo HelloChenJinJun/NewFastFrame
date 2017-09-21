@@ -1,7 +1,7 @@
 package com.example.news.dagger.news;
 
 import com.example.commonlibrary.dagger.scope.PerFragment;
-import com.example.news.NewsListFragment;
+import com.example.news.mvp.news.NewsListFragment;
 import com.example.news.dagger.NewsComponent;
 
 import dagger.Component;

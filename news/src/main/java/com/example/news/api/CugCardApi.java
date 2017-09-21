@@ -1,6 +1,8 @@
 package com.example.news.api;
 
 import com.example.news.bean.CardLoginBean;
+import com.example.news.bean.CardPayHistoryBean;
+import com.example.news.bean.CardPayResultBean;
 import com.example.news.bean.Item;
 
 import io.reactivex.Observable;
@@ -36,4 +38,13 @@ public interface CugCardApi {
 
     @POST
     public Observable<Item> getBankAccountInfo(@Url String url, @Body RequestBody requestBody);
+
+
+    @POST
+    public Observable<CardPayResultBean> pay(@Url String url, @Body RequestBody payRequestBody);
+
+
+    @POST
+    public Observable<CardPayHistoryBean>  getPayHistoryData(@Url String url,@Body RequestBody requestBody);
+
 }

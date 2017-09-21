@@ -1,7 +1,7 @@
 package com.example.news.dagger.booklist;
 
 import com.example.commonlibrary.dagger.scope.PerFragment;
-import com.example.news.BookInfoListFragment;
+import com.example.news.mvp.booklist.BookInfoListFragment;
 import com.example.news.dagger.NewsComponent;
 
 import dagger.Component;

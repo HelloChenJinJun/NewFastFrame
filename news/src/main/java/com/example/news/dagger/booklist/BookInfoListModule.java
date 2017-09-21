@@ -1,9 +1,9 @@
 package com.example.news.dagger.booklist;
 
-import com.example.news.BookInfoListAdapter;
-import com.example.news.BookInfoListFragment;
-import com.example.news.BookInfoListModel;
-import com.example.news.BookInfoListPresenter;
+import com.example.news.adapter.BookInfoListAdapter;
+import com.example.news.mvp.booklist.BookInfoListFragment;
+import com.example.news.mvp.booklist.BookInfoListModel;
+import com.example.news.mvp.booklist.BookInfoListPresenter;
 import com.example.news.MainRepositoryManager;
 
 import dagger.Module;

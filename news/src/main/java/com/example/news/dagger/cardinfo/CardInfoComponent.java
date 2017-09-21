@@ -1,7 +1,7 @@
 package com.example.news.dagger.cardinfo;
 
 import com.example.commonlibrary.dagger.scope.PerActivity;
-import com.example.news.CardInfoActivity;
+import com.example.news.mvp.cardinfo.CardInfoActivity;
 import com.example.news.dagger.NewsComponent;
 
 import dagger.Component;

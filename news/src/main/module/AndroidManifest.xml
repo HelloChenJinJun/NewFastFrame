@@ -26,11 +26,10 @@
         </activity>
         <activity android:name="MainActivity" />
         <activity android:name=".NewsContentActivity" />
-        <activity android:name=".LibraryLoginActivity"/>
-        <activity android:name=".LibraryContentActivity"/>
+        <activity android:name=".mvp.librarylogin.LibraryLoginActivity"/>
         <activity android:name=".LibraryInfoActivity"/>
-        <activity android:name=".CardInfoActivity"/>
-        <activity android:name=".CardLoginActivity"/>
+        <activity android:name=".mvp.cardinfo.CardInfoActivity"/>
+        <activity android:name=".mvp.cardlogin.CardLoginActivity"/>
 
         <meta-data
             android:name="com.example.news.NewsApplication"

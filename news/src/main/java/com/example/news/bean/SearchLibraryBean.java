@@ -65,6 +65,7 @@ public class SearchLibraryBean {
                 ", totalNum='" + totalNum + '\'' +
                 ", enableNum='" + enableNum + '\'' +
                 '}';
+
     }
 
     public String getContentUrl() {

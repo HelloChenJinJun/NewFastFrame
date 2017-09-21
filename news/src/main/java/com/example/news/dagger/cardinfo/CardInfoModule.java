@@ -1,8 +1,8 @@
 package com.example.news.dagger.cardinfo;
 
-import com.example.news.CardInfoActivity;
-import com.example.news.CardInfoModel;
-import com.example.news.CardInfoPresenter;
+import com.example.news.mvp.cardinfo.CardInfoActivity;
+import com.example.news.mvp.cardinfo.CardInfoModel;
+import com.example.news.mvp.cardinfo.CardInfoPresenter;
 import com.example.news.MainRepositoryManager;
 
 import dagger.Module;

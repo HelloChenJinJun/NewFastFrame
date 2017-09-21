@@ -1,7 +1,7 @@
 package com.example.news.dagger.librarylogin;
 
 import com.example.commonlibrary.dagger.scope.PerActivity;
-import com.example.news.LibraryLoginActivity;
+import com.example.news.mvp.librarylogin.LibraryLoginActivity;
 import com.example.news.dagger.NewsComponent;
 
 import dagger.Component;

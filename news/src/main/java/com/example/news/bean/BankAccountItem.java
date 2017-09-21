@@ -14,7 +14,7 @@ public class BankAccountItem {
     /**
      * retcode : 0
      * errmsg : 查询成功！
-     * card : [{"account":"99225","name":"陈锦军","unsettle_amount":"0","db_balance":"1781","acc_status":"0","lostflag":"0","freezeflag":"0","barflag":"0","idflag":"1","expdate":"20180910","cardtype":"800","cardname":"正式卡","bankacc":"6217857600018226865","sno":"20141000341","phone":"","certtype":"","cert":"440804199509041633","createdate":"20140825","autotrans_limite":"2000","autotrans_amt":"5000","autotrans_flag":"1","mscard":"0","scard_num":"0"}]
+     * card :
      */
 
     private String retcode;
@@ -47,8 +47,8 @@ public class BankAccountItem {
 
     public static class CardEntity {
         /**
-         * account : 99225
-         * name : 陈锦军
+         * account :
+         * name :
          * unsettle_amount : 0
          * db_balance : 1781
          * acc_status : 0
@@ -59,11 +59,11 @@ public class BankAccountItem {
          * expdate : 20180910
          * cardtype : 800
          * cardname : 正式卡
-         * bankacc : 6217857600018226865
-         * sno : 20141000341
+         * bankacc :
+         * sno :
          * phone :
          * certtype :
-         * cert : 440804199509041633
+         * cert :
          * createdate : 20140825
          * autotrans_limite : 2000
          * autotrans_amt : 5000

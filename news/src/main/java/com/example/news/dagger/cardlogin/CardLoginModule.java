@@ -1,8 +1,8 @@
 package com.example.news.dagger.cardlogin;
 
-import com.example.news.CardLoginActivity;
-import com.example.news.CardLoginModel;
-import com.example.news.CardLoginPresenter;
+import com.example.news.mvp.cardlogin.CardLoginActivity;
+import com.example.news.mvp.cardlogin.CardLoginModel;
+import com.example.news.mvp.cardlogin.CardLoginPresenter;
 import com.example.news.MainRepositoryManager;
 
 import dagger.Module;

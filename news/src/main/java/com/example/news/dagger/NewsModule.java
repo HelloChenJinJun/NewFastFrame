@@ -7,7 +7,7 @@ import com.example.commonlibrary.bean.DaoMaster;
 import com.example.commonlibrary.bean.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.news.MainRepositoryManager;
-import com.example.news.NewsInterceptor;
+import com.example.news.interceptor.NewsInterceptor;
 import com.example.news.util.NewsUtil;
 import com.google.gson.Gson;
 

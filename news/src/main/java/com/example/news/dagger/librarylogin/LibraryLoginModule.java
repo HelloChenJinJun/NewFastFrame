@@ -1,8 +1,8 @@
 package com.example.news.dagger.librarylogin;
 
-import com.example.news.LibraryLoginActivity;
-import com.example.news.LibraryLoginModel;
-import com.example.news.LibraryLoginPresenter;
+import com.example.news.mvp.librarylogin.LibraryLoginActivity;
+import com.example.news.mvp.librarylogin.LibraryLoginModel;
+import com.example.news.mvp.librarylogin.LibraryLoginPresenter;
 import com.example.news.MainRepositoryManager;
 
 import dagger.Module;

@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.news.mvp.news.NewsListFragment;
 import com.example.news.util.NewsUtil;
 
 import java.util.ArrayList;

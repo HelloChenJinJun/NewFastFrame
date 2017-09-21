@@ -1,10 +1,10 @@
 package com.example.news.dagger.news;
 
 import com.example.news.MainRepositoryManager;
-import com.example.news.NewsListAdapter;
-import com.example.news.NewsListFragment;
-import com.example.news.mvp.NewsListModel;
-import com.example.news.mvp.NewsListPresenter;
+import com.example.news.adapter.NewsListAdapter;
+import com.example.news.mvp.news.NewsListFragment;
+import com.example.news.mvp.news.NewsListModel;
+import com.example.news.mvp.news.NewsListPresenter;
 
 import dagger.Module;
 import dagger.Provides;

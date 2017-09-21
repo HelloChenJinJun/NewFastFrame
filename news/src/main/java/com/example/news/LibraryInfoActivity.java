@@ -7,6 +7,7 @@ import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.news.mvp.booklist.BookInfoListFragment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.widget.RadioGroup;
 
 import com.example.commonlibrary.BaseActivity;
+import com.example.news.mvp.searchlibrary.LibraryFragment;
 
 import java.util.ArrayList;
 import java.util.List;
