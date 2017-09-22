@@ -1,5 +1,6 @@
 package com.example.news.mvp.cardinfo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,7 +20,6 @@ import com.example.news.bean.CardPersonInfoBean;
 import com.example.news.dagger.cardinfo.CardInfoModule;
 import com.example.news.dagger.cardinfo.DaggerCardInfoComponent;
 import com.example.news.mvp.cardlogin.CardLoginActivity;
-import com.example.news.util.NewsUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,9 +79,7 @@ public class CardInfoActivity extends BaseActivity<Object, CardInfoPresenter> im
                 }
             }
         }else {
-            Intent intent=new Intent(this,CardLoginActivity.class);
-            intent.putExtra(NewsUtil.ERROR_INFO,"cookie过期");
-            startActivity(intent);
+           CardLoginActivity.start(this,"cookie过期");
             finish();
         }
     }
@@ -158,5 +156,10 @@ public class CardInfoActivity extends BaseActivity<Object, CardInfoPresenter> im
     public void hideLoading() {
         super.hideLoading();
         dismissLoadDialog();
+    }
+
+    public static void start(Context context) {
+        Intent intent=new Intent(context,CardInfoActivity.class);
+        context.startActivity(intent);
     }
 }

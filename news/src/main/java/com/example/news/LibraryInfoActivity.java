@@ -1,5 +1,7 @@
 package com.example.news;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
@@ -66,5 +68,10 @@ public class LibraryInfoActivity extends BaseActivity{
         toolBarOption.setTitle("图书借阅情况");
         toolBarOption.setNeedNavigation(true);
         setToolBar(toolBarOption);
+    }
+
+    public static void start(Context context) {
+        Intent intent=new Intent(context,LibraryInfoActivity.class);
+        context.startActivity(intent);
     }
 }

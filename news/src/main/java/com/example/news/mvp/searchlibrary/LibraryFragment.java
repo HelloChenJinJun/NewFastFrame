@@ -16,12 +16,12 @@ import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.utils.ToastUtils;
-import com.example.news.adapter.LibraryAdapter;
 import com.example.news.NewsApplication;
 import com.example.news.NewsContentActivity;
 import com.example.news.R;
+import com.example.news.adapter.LibraryAdapter;
 import com.example.news.bean.SearchLibraryBean;
-import com.example.news.dagger.DaggerLibraryComponent;
+import com.example.news.dagger.searchlibrary.DaggerLibraryComponent;
 import com.example.news.dagger.searchlibrary.LibraryModule;
 import com.example.news.util.NewsUtil;
 
@@ -86,6 +86,7 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>,Librar
 
     @Override
     protected void initData() {
+
         DaggerLibraryComponent.builder().libraryModule(new LibraryModule(this))
                 .newsComponent(NewsApplication.getNewsComponent())
                 .build().inject(this);

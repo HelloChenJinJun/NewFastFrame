@@ -52,14 +52,14 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
         }
         num++;
         String realUrl;
-        if (NewsUtil.CUG_NEWS.equals(url)) {
-            if (isRefresh) {
+//        if (NewsUtil.CUG_NEWS.equals(url)) {
+            if (isRefresh&&NewsUtil.CUG_NEWS.equals(url)) {
                 getCugNewsBannerData();
             }
-            realUrl = isRefresh? NewsUtil.CUG_NEWS:NewsUtil.getRealNewsUrl(totalPage,num);
-        }else {
-            realUrl=url;
-        }
+            realUrl = isRefresh? url:NewsUtil.getRealNewsUrl(url,totalPage,num);
+//        }else {
+//            realUrl=url;
+//        }
         baseModel.getRepositoryManager().getApi(CugNewsApi.class)
                 .getCugNewsData(realUrl).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -68,6 +68,7 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                     public void onSubscribe(@NonNull Disposable d) {
                         addDispose(d);
                     }
+
 
                     @Override
                     public void onNext(@NonNull ResponseBody responseBody) {

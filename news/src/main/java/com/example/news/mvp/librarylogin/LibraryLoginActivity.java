@@ -1,5 +1,6 @@
 package com.example.news.mvp.librarylogin;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
@@ -35,8 +36,7 @@ public class LibraryLoginActivity extends BaseActivity<Object, LibraryLoginPrese
     @Override
     public void updateData(Object o) {
         if (o == null) {
-            Intent intent = new Intent(this, LibraryInfoActivity.class);
-            startActivity(intent);
+            LibraryInfoActivity.start(this);
             finish();
         } else if (o instanceof Bitmap) {
             verifyImage.setImageBitmap((Bitmap) o);
@@ -128,5 +128,13 @@ public class LibraryLoginActivity extends BaseActivity<Object, LibraryLoginPrese
         } else {
             super.showError(errorMsg, listener);
         }
+    }
+
+    public static void start(Context context, String info) {
+        Intent intent=new Intent(context,LibraryLoginActivity.class);
+        if (info != null) {
+            intent.putExtra(NewsUtil.ERROR_INFO,info);
+        }
+        context.startActivity(intent);
     }
 }

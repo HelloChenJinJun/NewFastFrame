@@ -1,5 +1,6 @@
 package com.example.news.mvp.cardlogin;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
@@ -41,8 +42,7 @@ public class CardLoginActivity extends BaseActivity<Object, CardLoginPresenter> 
             BaseApplication.getAppComponent().getSharedPreferences()
                     .edit().putString(NewsUtil.PW, NewsUtil.getEncodePassWord(password.getText().toString().trim()))
                     .apply();
-            Intent intent = new Intent(this, CardInfoActivity.class);
-            startActivity(intent);
+            CardInfoActivity.start(this);
             finish();
         } else if (o instanceof Bitmap) {
             verifyImage.setImageBitmap((Bitmap) o);
@@ -133,5 +133,13 @@ public class CardLoginActivity extends BaseActivity<Object, CardLoginPresenter> 
         } else {
             super.showError(errorMsg, listener);
         }
+    }
+
+    public static void start(Context context, String info) {
+        Intent intent=new Intent(context,CardLoginActivity.class);
+        if (info != null) {
+            intent.putExtra(NewsUtil.ERROR_INFO,info);
+        }
+        context.startActivity(intent);
     }
 }

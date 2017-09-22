@@ -12,11 +12,10 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.utils.AppUtil;
-import com.example.news.adapter.BookInfoListAdapter;
 import com.example.news.NewsApplication;
 import com.example.news.NewsContentActivity;
 import com.example.news.R;
+import com.example.news.adapter.BookInfoListAdapter;
 import com.example.news.bean.BookInfoBean;
 import com.example.news.dagger.booklist.BookInfoListModule;
 import com.example.news.dagger.booklist.DaggerBookInfoListComponent;
@@ -115,9 +114,7 @@ public class BookInfoListFragment extends BaseFragment<List<BookInfoBean>, BookI
             @Override
             public void accept(@NonNull LibraryLoginEvent libraryLoginEvent) throws Exception {
                 if (getContext()!=null) {
-                    Intent intent=new Intent(getContext(),LibraryLoginActivity.class);
-                    intent.putExtra(NewsUtil.ERROR_INFO,libraryLoginEvent.getInfo());
-                    startActivity(intent);
+                   LibraryLoginActivity.start(getContext(),libraryLoginEvent.getInfo());
                     getActivity().finish();
                 }
             }
@@ -143,7 +140,7 @@ public class BookInfoListFragment extends BaseFragment<List<BookInfoBean>, BookI
 
     @Override
     public void loadMore() {
-        presenter.getBorrowBookInfo(false, true, true);
+        presenter.getBorrowBookInfo(false, false, true);
     }
 
     @Override
@@ -170,11 +167,6 @@ public class BookInfoListFragment extends BaseFragment<List<BookInfoBean>, BookI
     public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
         super.showError(errorMsg, listener);
         refreshLayout.setRefreshing(false);
-        if (AppUtil.isNetworkAvailable(getContext())) {
-            Intent intent=new Intent(getContext(),LibraryLoginActivity.class);
-            startActivity(intent);
-            getActivity().finish();
-        }
     }
 
 

@@ -4,23 +4,9 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
-
-    <TextView
-        android:textSize="18sp"
-        android:id="@+id/tv_fragment_center_library"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="图书管理"
-        />
-
-
-    <TextView
-        android:id="@+id/tv_fragment_center_library_card"
-        android:textSize="18sp"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="一卡通管理"
-        />
+    <com.example.commonlibrary.baseadapter.SuperRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/srcv_fragment_center_display"/>
 
 </LinearLayout>

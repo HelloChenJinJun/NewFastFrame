@@ -115,5 +115,12 @@ public class NewListBean {
         public void setTime(String time) {
             this.time = time;
         }
+
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj!=null&&(obj instanceof NewsItem)
+                    && ((NewsItem) obj).getContentUrl().equals(getContentUrl());
+        }
     }
 }

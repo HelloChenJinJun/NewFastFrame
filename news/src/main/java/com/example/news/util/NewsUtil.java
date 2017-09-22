@@ -44,11 +44,14 @@ public class NewsUtil {
     public static final String PAY_HISTORY_URL = "http://card.cug.edu.cn/Report/GetPersonTrjn";
     public static final String ERROR_INFO = "error_info";
 
-    public static String getRealNewsUrl(int totalPage, int currentNum) {
+    public static String getRealNewsUrl(String url,int totalPage, int currentNum) {
         if (totalPage > 0) {
-            return "http://www.cug.edu.cn/index/ddyw/" + (totalPage - currentNum + 1) + ".htm";
+            StringBuilder stringBuilder=new StringBuilder();
+            stringBuilder.append(url.substring(0,url.lastIndexOf(".")))
+                    .append("/").append(totalPage - currentNum + 1).append(".htm");
+            return stringBuilder.toString();
         }
-        return CUG_NEWS;
+        return url;
     }
 
 

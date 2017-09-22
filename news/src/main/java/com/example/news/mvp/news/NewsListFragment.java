@@ -77,7 +77,7 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
                 newsListAdapter.addData(o.getNewsItemList());
             } else {
                 newsListAdapter.addData(o.getNewsItemList());
-                if (newsListAdapter.getData().size() == 0) {
+                if (o.getNewsItemList().size() == 0) {
                     loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
                 }
             }
