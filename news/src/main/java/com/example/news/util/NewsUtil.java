@@ -168,4 +168,17 @@ public class NewsUtil {
     private static final long ONE_MONTH=1000*60*60*24*30L;
 
 
+
+//    http://202.114.202.207/newbook/newbook_cls_book.php?back_days=30&s_doctype=01&loca_code=00201&cls=ALL&clsname=%E5%85%A8%E9%83%A8%E6%96%B0%E4%B9%A6
+    public static String getSearchNewBookUrl(String time, String type, String place,String className,int num) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("http://202.114.202.207/newbook/newbook_cls_book.php?")
+                .append("back_days=").append(time)
+                .append("&s_doctype=").append(type)
+                .append("&loca_code=").append(place)
+                .append("&cls=").append(className.split("/")[1])
+                .append("&clsname=").append(className.split("/")[0])
+                .append("&page=").append(num);
+        return stringBuilder.toString();
+    }
 }

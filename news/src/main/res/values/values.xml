@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="class_name">
+        <item>马列主义、毛泽东思想、邓小平理论/A</item>
+        <item>哲学、宗教/B</item>
+        <item>社会科学总论/C</item>
+        <item>政治、法律/D</item>
+        <item>军事/E</item>
+        <item>经济/F</item>
+        <item>文化、科学、教育、体育/G</item>
+        <item>语言、文字/H</item>
+        <item>文学/I</item>
+        <item>艺术/J</item>
+        <item>历史、地理/K</item>
+        <item>自然科学总论/N</item>
+        <item>数理科学与化学/O</item>
+        <item>天文学、地球科学/P</item>
+        <item>生物科学/Q</item>
+        <item>医药、卫生/R</item>
+        <item>农业科学/S</item>
+        <item>工业技术/T</item>
+        <item>交通运输U</item>
+        <item>航空、航天/V</item>
+        <item>环境科学,安全科学/X</item>
+        <item>综合性图书/Z</item>
+    </string-array>
+
+    <string-array name="type_name">
+        <item>所有书刊/ALL</item>
+        <item>中文图书/01</item>
+        <item>西文图书/02</item>
+        <item>日文图书/03</item>
+        <item>俄文图书/04</item>
+        <item>中文期刊/11</item>
+        <item>西文期刊/12</item>
+        <item>日文期刊/13</item>
+        <item>俄文期刊/14</item>
+        <item>电子图书/29</item>
+        <item>电子期刊/30</item>
+        <item>中文古籍/31</item>
+        <item>非中文古籍/32</item>
+        <item>录像资料/39</item>
+        <item>类型不详/99</item>
+    </string-array>
+
+
+    <string-array name="time_name">
+        <item>最近半月/15</item>
+        <item>最近一月/30</item>
+        <item>最近三月/90</item>
+        <item>最近半年/180</item>
+        <item>最近一天/1</item>
+        <item>最近三天/3</item>
+        <item>最近一周/7</item>
+    </string-array>
+
+
+
+
+    <string-array name="place_name">
+
+
+        <item>所有馆藏地/ALL</item>
+        <item>2F理工类Ⅱ/00201</item>
+        <item>3F理工类Ⅰ/00202</item>
+        <item>4F人文社科Ⅲ/00203</item>
+        <item>6F人文社科Ⅱ/00204</item>
+        <item>7F人文社科Ⅰ/00205</item>
+        <item>8F外文图书/00206</item>
+        <item>9F工具书_地质图册/00207</item>
+        <item>10F仿古善本、古籍/00208</item>
+        <item>10F密集书库/00209</item>
+        <item>8F密集书库/00210</item>
+        <item>10F三线书库/00211</item>
+        <item>资源建设部/00212</item>
+        <item>2F密集书库/00213</item>
+        <item>3F密集书库/00214</item>
+        <item>4F密集书库/00215</item>
+        <item>6F密集书库/00216</item>
+        <item>7F密集书库/00217</item>
+        <item>9F密集书库/00218</item>
+        <item>图件室/00219</item>
+        <item>1F中文社会科学现刊/00220</item>
+        <item>1F中文自然科学现刊/00221</item>
+        <item>外文现刊/00222</item>
+        <item>民族语言书库/00223</item>
+        <item>档案馆/00224</item>
+        <item>删除库/00225</item>
+        <item>卡片库/00226</item>
+        <item>地大文库/00227</item>
+        <item>不定馆藏地/99999</item>
+    </string-array>
+
+
+
+
+
+
+
+
+
+
+
+
+</resources>
