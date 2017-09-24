@@ -1,6 +1,7 @@
 package com.example.commonlibrary.baseadapter.adapter;
 
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -9,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
+import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.refresh.RefreshHeaderLayout;
+import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ToastUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -71,16 +74,10 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
     private LayoutInflater mLayoutInflater;
-//    private LinearLayout emptyLayoutContainer;
 
     public void setHeaderContainer(LinearLayout mHeaderContainer) {
         this.mHeaderContainer = mHeaderContainer;
     }
-
-
-//    public void setEmptyLayoutContainer(LinearLayout mEmptyViewContainer) {
-//        this.emptyLayoutContainer = mEmptyViewContainer;
-//    }
 
 
     public void setFooterContainer(LinearLayout mFooterContainer) {
@@ -243,19 +240,12 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
 
-//    private boolean isEmptyLayoutEnable() {
-//        return emptyLayoutContainer.getChildCount() > 0;
-//    }
-
-
     private View getLayoutFromViewType(ViewGroup parent, int viewType) {
         switch (viewType) {
             case REFRESH_HEADER:
                 return mRefreshHeaderContainer;
             case HEADER:
                 return mHeaderContainer;
-//            case EMPTY:
-//                return emptyLayoutContainer;
             case FOOTER:
                 return mFooterContainer;
             case LOAD_MORE_FOOTER:
@@ -326,6 +316,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     public void addData(int position, List<T> newData) {
         if (newData == null || newData.size() == 0) {
+            notifyLoadMoreChanged();
             return;
         }
         List<T> temp = new ArrayList<>();
@@ -352,6 +343,31 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         } else {
             data.addAll(position, newData);
             notifyItemRangeInserted(position + getItemUpCount(), newData.size());
+            notifyLoadMoreChanged();
+        }
+    }
+
+
+    private void notifyLoadMoreChanged() {
+        if (data.size() == 0) {
+            ToastUtils.showShortToast("数据为空");
+        }
+        if (hasMoreLoadView()) {
+            int lastVisiblePosition;
+            if (layoutManager instanceof LinearLayoutManager) {
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+                lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition();
+            } else {
+                GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+                lastVisiblePosition = gridLayoutManager.findLastVisibleItemPosition();
+            }
+            int position;
+            position = getItemUpCount() + getData().size()+1;
+            if (lastVisiblePosition!=-1&&lastVisiblePosition == position) {
+                if (mLoadMoreFooterContainer.getChildAt(0) instanceof LoadMoreFooterView) {
+                    ((LoadMoreFooterView) mLoadMoreFooterContainer.getChildAt(0)).setStatus(LoadMoreFooterView.Status.THE_END);
+                }
+            }
         }
     }
 
@@ -400,6 +416,21 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             return t;
         }
         return null;
+    }
+
+
+    private RecyclerView.LayoutManager layoutManager;
+
+    public void bindManager(RecyclerView.LayoutManager layoutManager) {
+        this.layoutManager = layoutManager;
+
+    }
+
+    public void refreshData(List<T> list) {
+        clearAllData();
+        notifyDataSetChanged();
+        addData(list);
+        layoutManager.scrollToPosition(0);
     }
 
     public interface OnItemClickListener {

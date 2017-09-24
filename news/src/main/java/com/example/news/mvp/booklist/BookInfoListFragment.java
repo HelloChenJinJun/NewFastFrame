@@ -57,7 +57,9 @@ public class BookInfoListFragment extends BaseFragment<List<BookInfoBean>, BookI
         } else {
             bookInfoListAdapter.addData(list);
             if (bookInfoListAdapter.getData().size() == 0) {
-                loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
+                if (loadMoreFooterView!=null) {
+                    loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
+                }
             }
         }
     }

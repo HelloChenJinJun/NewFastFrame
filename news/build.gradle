@@ -51,6 +51,7 @@ android {
             } else {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
             }
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
         }
     }
 }
@@ -70,6 +71,8 @@ dependencies {
 
     compile 'org.jsoup:jsoup:1.10.1'
     compile 'com.youth.banner:banner:1.4.9'
+    // LabelView
+    compile 'com.flyco.labelview:FlycoLabelView_Lib:1.0.2@aar'
 
     apt rootProject.ext.dependencies.dagger2_compiler
     if (!rootProject.ext.isAlone) {

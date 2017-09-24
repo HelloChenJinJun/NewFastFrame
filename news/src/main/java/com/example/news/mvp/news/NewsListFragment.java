@@ -49,17 +49,16 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
     private SuperRecyclerView display;
     @Inject
     NewsListAdapter newsListAdapter;
-    private LoadMoreFooterView loadMoreFooterView;
     private String url;
 
 
-    private List<NewListBean.BannerBean>  bannerList;
+    private List<NewListBean.BannerBean> bannerList;
 
 
     @Override
     public void updateData(NewListBean o) {
         if (o != null && o.getBannerBeanList() != null) {
-            bannerList=o.getBannerBeanList();
+            bannerList = o.getBannerBeanList();
             List<String> titleList = new ArrayList<>();
             List<String> imageList = new ArrayList<>();
             for (NewListBean.BannerBean bean :
@@ -70,16 +69,11 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
             banner.setImages(imageList);
             banner.setBannerTitles(titleList);
             banner.start();
-        } else if (o != null && o.getNewsItemList() != null) {
+        } else  {
             if (refresh.isRefreshing()) {
-                newsListAdapter.clearAllData();
-                newsListAdapter.notifyDataSetChanged();
-                newsListAdapter.addData(o.getNewsItemList());
-            } else {
-                newsListAdapter.addData(o.getNewsItemList());
-                if (o.getNewsItemList().size() == 0) {
-                    loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
-                }
+                newsListAdapter.refreshData(o!=null?o.getNewsItemList():null);
+            }else {
+                newsListAdapter.addData(o!=null?o.getNewsItemList():null);
             }
         }
     }
@@ -134,9 +128,9 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
             @Override
             public void OnBannerClick(int position) {
                 if (bannerList != null && bannerList.size() > position) {
-                    Intent intent=new Intent(getContext(),NewsContentActivity.class);
-                    intent.putExtra(NewsUtil.URL,bannerList.get(position).getContentUrl());
-                    intent.putExtra(NewsUtil.TITLE,bannerList.get(position).getTitle());
+                    Intent intent = new Intent(getContext(), NewsContentActivity.class);
+                    intent.putExtra(NewsUtil.URL, bannerList.get(position).getContentUrl());
+                    intent.putExtra(NewsUtil.TITLE, bannerList.get(position).getTitle());
                     startActivity(intent);
                 }
             }
@@ -156,8 +150,7 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
         }
         refresh.setOnRefreshListener(this);
         display.setLayoutManager(new WrappedLinearLayoutManager(getActivity()));
-        loadMoreFooterView = new LoadMoreFooterView(getContext());
-        display.setLoadMoreFooterView(loadMoreFooterView);
+        display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);
         display.setAdapter(newsListAdapter);
         newsListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
@@ -171,6 +164,7 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
             }
         });
     }
+
 
     @Override
     protected void updateView() {
@@ -197,18 +191,23 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
 
 
     @Override
+    public void showLoading(String loadingMsg) {
+        refresh.setRefreshing(true);
+    }
+
+    @Override
     public void hideLoading() {
-        if (newsListAdapter.getData().size() > 0) {
-            super.hideLoading();
-        } else {
-            showEmptyView();
-        }
+        super.hideLoading();
         refresh.setRefreshing(false);
     }
 
     @Override
     public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
-        super.showError(errorMsg, listener);
-        refresh.setRefreshing(false);
+        if (refresh.isRefreshing()) {
+            refresh.setRefreshing(false);
+            super.showError(errorMsg, listener);
+        }else {
+            ((LoadMoreFooterView) display.getLoadMoreFooterView()).setStatus(LoadMoreFooterView.Status.ERROR);
+        }
     }
 }

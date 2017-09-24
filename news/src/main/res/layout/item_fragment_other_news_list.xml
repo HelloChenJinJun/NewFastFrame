@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:background="@color/base_color_text_grey"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
+        android:scaleType="centerCrop"
+        android:id="@+id/iv_item_fragment_other_news_list_display"/>
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:id="@+id/tv_item_fragment_other_news_list_title"
+        android:layout_toRightOf="@+id/iv_item_fragment_other_news_list_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="16sp"
+        android:textColor="@color/base_color_text_black"
+        android:layout_marginLeft="10dp"
+        />
+
+
+    <TextView
+        android:textSize="12sp"
+        android:textColor="@color/base_color_text_grey"
+        android:id="@+id/tv_item_fragment_other_news_list_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_item_fragment_other_news_list_title"
+        android:layout_alignBottom="@+id/iv_item_fragment_other_news_list_display"
+        android:layout_marginBottom="5dp"/>
+    <TextView
+        android:textSize="12sp"
+        android:textColor="@color/base_color_text_grey"
+        android:id="@+id/tv_item_fragment_other_news_list_time"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_item_fragment_other_news_list_from"/>
+</RelativeLayout>

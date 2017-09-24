@@ -29,9 +29,23 @@ public abstract class BaseMultipleRecyclerAdapter<T extends MultipleItem, K exte
         return layoutIds;
     }
 
+
+
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
+
     public BaseMultipleRecyclerAdapter(List<T> data, int layoutId) {
         super(data, layoutId);
     }
+
+
+    public BaseMultipleRecyclerAdapter() {
+        super(null, 0);
+    }
+
+
 
     @Override
     protected int getDefaultItemViewType(int position) {

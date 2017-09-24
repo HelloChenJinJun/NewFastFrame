@@ -14,9 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import com.example.commonlibrary.R;
-import com.example.commonlibrary.utils.CommonLogger;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -31,7 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 public class EmptyLayout extends FrameLayout implements View.OnClickListener {
 
 
-    private FrameLayout errorLayout;
+    private FrameLayout errorLayout,emptyLayout;
     private LinearLayout loadingLayout;
     private FrameLayout container;
     private TextView loadContent;
@@ -61,10 +59,13 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
         int bgColor = typedArray.getColor(R.styleable.empty_layout_empty_bg_color, Color.WHITE);
         View view = View.inflate(context, R.layout.empty_layout, this);
         errorLayout = (FrameLayout) view.findViewById(R.id.fl_empty_layout_error);
+        emptyLayout= (FrameLayout) view.findViewById(R.id.fl_empty_layout_empty);
+
         loadContent = (TextView) view.findViewById(R.id.tv_empty_layout_loading_content);
         loadingLayout = (LinearLayout) view.findViewById(R.id.ll_empty_layout_loading);
         container = (FrameLayout) view.findViewById(R.id.fl_empty_layout_container);
-        view.findViewById(R.id.tv_empty_retry).setOnClickListener(this);
+        view.findViewById(R.id.tv_empty_error_retry).setOnClickListener(this);
+        view.findViewById(R.id.tv_empty_empty_retry).setOnClickListener(this);
         container.setBackgroundColor(bgColor);
         typedArray.recycle();
         updateViewVisible();
@@ -98,9 +99,6 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
     }
 
     private void updateViewVisible() {
-        if (container == null) {
-            CommonLogger.e("容器为空11");
-        }
         if (currentStatus != STATUS_HIDE) {
             if (getVisibility() == GONE) {
                 setVisibility(VISIBLE);
@@ -115,15 +113,20 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
                 container.setVisibility(GONE);
                 break;
             case STATUS_NO_DATA:
+                container.setVisibility(VISIBLE);
+                errorLayout.setVisibility(GONE);
+                loadingLayout.setVisibility(GONE);
+                emptyLayout.setVisibility(VISIBLE);
             case STATUS_NO_NET:
                 container.setVisibility(VISIBLE);
                 errorLayout.setVisibility(VISIBLE);
                 loadingLayout.setVisibility(GONE);
+                emptyLayout.setVisibility(GONE);
                 break;
             case STATUS_LOADING:
-                CommonLogger.e("加载1");
                 container.setVisibility(VISIBLE);
                 errorLayout.setVisibility(GONE);
+                emptyLayout.setVisibility(GONE);
                 loadingLayout.setVisibility(VISIBLE);
                 break;
             default:

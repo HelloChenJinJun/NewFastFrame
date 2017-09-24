@@ -43,6 +43,7 @@ public class NewsModule {
     }
 
 
+
     @Provides
     @PerApplication
     public MainRepositoryManager provideRepositoryManager(@Named("news") Retrofit retrofit, DaoSession daoSession) {

@@ -69,18 +69,15 @@ public class BookInfoListPresenter extends RxBasePresenter<IView<List<BookInfoBe
                         try {
                             Document document = Jsoup.parse(responseBody.string());
                             Elements elements = document.getElementsByTag("tbody");
-                            if (elements == null || elements.size() == 0
+                            if (elements.size() == 0
                                     || (elements.first().children().size() > 0 &&
                                     elements.first().children().get(0).children().size() < 7)) {
                                 if (elements == null || elements.size() == 0) {
-                                    RxBusManager.getInstance().post(new LibraryLoginEvent("未知错误"));
-                                } else {
                                     RxBusManager.getInstance().post(new LibraryLoginEvent("cookie过期"));
+                                } else {
+                                    iView.updateData(null);
                                 }
                                 return;
-                            } else if (elements.size() == 1 && !isHistory) {
-//                                数据为空的情况, 当前借阅情况
-                                iView.updateData(null);
                             }
                             List<BookInfoBean> bookInfoBeanList = null;
                             if (elements != null && elements.first() != null) {

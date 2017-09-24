@@ -24,13 +24,15 @@ public class NewsUtil {
     public static final String CUG_TECHNOLOGY="http://www.cug.edu.cn/index/xsdt.htm";
     public static final String URL = "url";
     public static final String TITLE = "title";
+
     public static final String CUG_LIBRARY="http://202.114.202.207/opac/openlink.php?location=ALL&title=java&doctype=ALL&lang_code=ALL&match_flag=forward&displaypg=20&showmode=list&orderby=DESC&sort=CATA_DATE&onlylendable=no&with_ebook=&page=2";
     public static final String LIBRARY_LOGIN = "http://202.114.202.207/reader/login.php";
     public static final String LIBRARY_BORROW_BOOK_LIST_URL="http://202.114.202.207/reader/book_lst.php";
     public static final String LIBRARY_BORROW_BOOK_HISTORY_LIST_URL="http://202.114.202.207/reader/book_hist.php";
     public static final String LIBRARY_COOKIE = "library_cookie";
     public static final String LIBRARY_BERIFY_IMAGE_URL = "http://202.114.202.207/reader/captcha.php";
-    public static final String BASE_URL = "http://202.114.202.207/";
+//  http://202.114.202.207/
+    public static final String BASE_URL = "http://c.3g.163.com/";
     public static final String CARD_LOGIN_URL = "http://card.cug.edu.cn/";
     public static final String CARD_LOGIN_COOKIE = "card_cookie";
     public static final String CARD_VERIFY_IMAGE_URL="http://card.cug.edu.cn/Login/GetValidateCode";
@@ -43,6 +45,8 @@ public class NewsUtil {
     public static final String PAY_URL="http://card.cug.edu.cn/User/Account_Pay";
     public static final String PAY_HISTORY_URL = "http://card.cug.edu.cn/Report/GetPersonTrjn";
     public static final String ERROR_INFO = "error_info";
+    public static final String PHOTO_SET = "photoset";
+
 
     public static String getRealNewsUrl(String url,int totalPage, int currentNum) {
         if (totalPage > 0) {
@@ -180,5 +184,16 @@ public class NewsUtil {
                 .append("&clsname=").append(className.split("/")[0])
                 .append("&page=").append(num);
         return stringBuilder.toString();
+    }
+
+
+//    http://202.114.202.207/opac/ajax_lend_avl.php?marc_no=0000764801&time=1506166430560
+    public static String getNewsBookNumberUrl(String id) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("http://202.114.202.207/opac/ajax_lend_avl.php?")
+                .append("marc_no=").append(id)
+                .append("&time=").append(new Date().getTime());
+        return stringBuilder.toString();
+
     }
 }

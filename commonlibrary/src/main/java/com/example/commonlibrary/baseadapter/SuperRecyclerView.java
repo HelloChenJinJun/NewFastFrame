@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -306,14 +307,16 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
         ensureEmptyViewContainer();
         ensureLoadMoreFooterContainer();
         if (adapter instanceof BaseRecyclerAdapter) {
-            ((BaseRecyclerAdapter) adapter).setFooterContainer(mFooterViewContainer);
-            ((BaseRecyclerAdapter) adapter).setHeaderContainer(mHeaderViewContainer);
-            ((BaseRecyclerAdapter) adapter).setRefreshHeaderContainer(mRefreshHeaderContainer);
-            ((BaseRecyclerAdapter) adapter).setLoadMoreFooterContainer(mLoadMoreFooterContainer);
-//            ((BaseRecyclerAdapter) adapter).setEmptyLayoutContainer(mEmptyViewContainer);
+            BaseRecyclerAdapter baseRecyclerAdapter = (BaseRecyclerAdapter) adapter;
+            baseRecyclerAdapter.setFooterContainer(mFooterViewContainer);
+            baseRecyclerAdapter.setHeaderContainer(mHeaderViewContainer);
+            baseRecyclerAdapter.setRefreshHeaderContainer(mRefreshHeaderContainer);
+            baseRecyclerAdapter.setLoadMoreFooterContainer(mLoadMoreFooterContainer);
+            baseRecyclerAdapter.bindManager(getLayoutManager());
             super.setAdapter(adapter);
         }
     }
+
 
     private void ensureRefreshHeaderContainer() {
         if (mRefreshHeaderContainer == null) {
@@ -372,118 +375,119 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
-        final int action = MotionEventCompat.getActionMasked(e);
-        final int actionIndex = MotionEventCompat.getActionIndex(e);
-        switch (action) {
-            case MotionEvent.ACTION_DOWN: {
-                mActivePointerId = MotionEventCompat.getPointerId(e, 0);
-                mLastTouchX = (int) (MotionEventCompat.getX(e, actionIndex) + 0.5f);
-                mLastTouchY = (int) (MotionEventCompat.getY(e, actionIndex) + 0.5f);
+        if (mRefreshEnabled) {
+            final int action = MotionEventCompat.getActionMasked(e);
+            final int actionIndex = MotionEventCompat.getActionIndex(e);
+            switch (action) {
+                case MotionEvent.ACTION_DOWN: {
+                    mActivePointerId = MotionEventCompat.getPointerId(e, 0);
+                    mLastTouchX = (int) (MotionEventCompat.getX(e, actionIndex) + 0.5f);
+                    mLastTouchY = (int) (MotionEventCompat.getY(e, actionIndex) + 0.5f);
+                }
+                break;
+                case MotionEvent.ACTION_POINTER_DOWN: {
+                    mActivePointerId = MotionEventCompat.getPointerId(e, actionIndex);
+                    mLastTouchX = (int) (MotionEventCompat.getX(e, actionIndex) + 0.5f);
+                    mLastTouchY = (int) (MotionEventCompat.getY(e, actionIndex) + 0.5f);
+                }
+                break;
+                case MotionEventCompat.ACTION_POINTER_UP: {
+                    onPointerUp(e);
+                }
+                break;
             }
-            break;
-
-            case MotionEvent.ACTION_POINTER_DOWN: {
-                mActivePointerId = MotionEventCompat.getPointerId(e, actionIndex);
-                mLastTouchX = (int) (MotionEventCompat.getX(e, actionIndex) + 0.5f);
-                mLastTouchY = (int) (MotionEventCompat.getY(e, actionIndex) + 0.5f);
-            }
-            break;
-
-            case MotionEventCompat.ACTION_POINTER_UP: {
-                onPointerUp(e);
-            }
-            break;
         }
-
         return super.onInterceptTouchEvent(e);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        final int action = MotionEventCompat.getActionMasked(e);
-        switch (action) {
-            case MotionEvent.ACTION_DOWN: {
-                final int index = MotionEventCompat.getActionIndex(e);
-                mActivePointerId = MotionEventCompat.getPointerId(e, 0);
-                mLastTouchX = getMotionEventX(e, index);
-                mLastTouchY = getMotionEventY(e, index);
-            }
-            break;
+        if (mRefreshEnabled) {
+            final int action = MotionEventCompat.getActionMasked(e);
+            switch (action) {
+                case MotionEvent.ACTION_DOWN: {
+                    final int index = MotionEventCompat.getActionIndex(e);
+                    mActivePointerId = MotionEventCompat.getPointerId(e, 0);
+                    mLastTouchX = getMotionEventX(e, index);
+                    mLastTouchY = getMotionEventY(e, index);
+                }
+                break;
 
-            case MotionEvent.ACTION_MOVE: {
+                case MotionEvent.ACTION_MOVE: {
 //                TLog.e(SuperRecyclerView.class, "截获到滚动事件");
-                final int index = MotionEventCompat.findPointerIndex(e, mActivePointerId);
-                if (index < 0) {
-                    Log.e(TAG, "Error processing scroll; pointer index for id " + index + " not found. Did any MotionEvents get skipped?");
-                    return false;
-                }
-                final int x = getMotionEventX(e, index);
-                final int y = getMotionEventY(e, index);
-
-                final int dx = x - mLastTouchX;
-                final int dy = y - mLastTouchY;
-
-                mLastTouchX = x;
-                mLastTouchY = y;
-
-                final boolean triggerCondition = isEnabled() && mRefreshEnabled && mRefreshHeaderView != null && isFingerDragging() && canTriggerRefresh();
-                if (DEBUG) {
-                    Log.i(TAG, "triggerCondition = " + triggerCondition + "; mStatus = " + mStatus + "; dy = " + dy);
-                }
-                if (triggerCondition) {
-
-                    final int refreshHeaderContainerHeight = mRefreshHeaderContainer.getMeasuredHeight();
-                    final int refreshHeaderViewHeight = mRefreshHeaderView.getMeasuredHeight();
-
-                    if (dy > 0 && mStatus == STATUS_DEFAULT) {
-                        setStatus(STATUS_SWIPING_TO_REFRESH);
-//                        TLog.e(SuperRecyclerView.class, "滚动刷新");
-                        mRefreshTrigger.onStart(false, refreshHeaderViewHeight, mRefreshFinalMoveOffset);
-                    } else if (dy < 0) {
-                        if (mStatus == STATUS_SWIPING_TO_REFRESH && refreshHeaderContainerHeight <= 0) {
-                            setStatus(STATUS_DEFAULT);
-                        }
-                        if (mStatus == STATUS_DEFAULT) {
-                            break;
-                        }
+                    final int index = MotionEventCompat.findPointerIndex(e, mActivePointerId);
+                    if (index < 0) {
+                        Log.e(TAG, "Error processing scroll; pointer index for id " + index + " not found. Did any MotionEvents get skipped?");
+                        return false;
                     }
+                    final int x = getMotionEventX(e, index);
+                    final int y = getMotionEventY(e, index);
 
-                    if (mStatus == STATUS_SWIPING_TO_REFRESH || mStatus == STATUS_RELEASE_TO_REFRESH) {
-                        if (refreshHeaderContainerHeight >= refreshHeaderViewHeight) {
-                            setStatus(STATUS_RELEASE_TO_REFRESH);
-                        } else {
-//                            TLog.e(SuperRecyclerView.class, "这里开始下拉刷新");
+                    final int dx = x - mLastTouchX;
+                    final int dy = y - mLastTouchY;
+
+                    mLastTouchX = x;
+                    mLastTouchY = y;
+
+                    final boolean triggerCondition = isEnabled() && mRefreshEnabled && mRefreshHeaderView != null && isFingerDragging() && canTriggerRefresh();
+                    if (DEBUG) {
+                        Log.i(TAG, "triggerCondition = " + triggerCondition + "; mStatus = " + mStatus + "; dy = " + dy);
+                    }
+                    if (triggerCondition) {
+
+                        final int refreshHeaderContainerHeight = mRefreshHeaderContainer.getMeasuredHeight();
+                        final int refreshHeaderViewHeight = mRefreshHeaderView.getMeasuredHeight();
+
+                        if (dy > 0 && mStatus == STATUS_DEFAULT) {
                             setStatus(STATUS_SWIPING_TO_REFRESH);
+//                        TLog.e(SuperRecyclerView.class, "滚动刷新");
+                            mRefreshTrigger.onStart(false, refreshHeaderViewHeight, mRefreshFinalMoveOffset);
+                        } else if (dy < 0) {
+                            if (mStatus == STATUS_SWIPING_TO_REFRESH && refreshHeaderContainerHeight <= 0) {
+                                setStatus(STATUS_DEFAULT);
+                            }
+                            if (mStatus == STATUS_DEFAULT) {
+                                break;
+                            }
                         }
-                        fingerMove(dy);
-                        return true;
+
+                        if (mStatus == STATUS_SWIPING_TO_REFRESH || mStatus == STATUS_RELEASE_TO_REFRESH) {
+                            if (refreshHeaderContainerHeight >= refreshHeaderViewHeight) {
+                                setStatus(STATUS_RELEASE_TO_REFRESH);
+                            } else {
+//                            TLog.e(SuperRecyclerView.class, "这里开始下拉刷新");
+                                setStatus(STATUS_SWIPING_TO_REFRESH);
+                            }
+                            fingerMove(dy);
+                            return true;
+                        }
                     }
                 }
-            }
-            break;
+                break;
 
-            case MotionEventCompat.ACTION_POINTER_DOWN: {
-                final int index = MotionEventCompat.getActionIndex(e);
-                mActivePointerId = MotionEventCompat.getPointerId(e, index);
-                mLastTouchX = getMotionEventX(e, index);
-                mLastTouchY = getMotionEventY(e, index);
-            }
-            break;
+                case MotionEventCompat.ACTION_POINTER_DOWN: {
+                    final int index = MotionEventCompat.getActionIndex(e);
+                    mActivePointerId = MotionEventCompat.getPointerId(e, index);
+                    mLastTouchX = getMotionEventX(e, index);
+                    mLastTouchY = getMotionEventY(e, index);
+                }
+                break;
 
-            case MotionEventCompat.ACTION_POINTER_UP: {
-                onPointerUp(e);
-            }
-            break;
+                case MotionEventCompat.ACTION_POINTER_UP: {
+                    onPointerUp(e);
+                }
+                break;
 
-            case MotionEvent.ACTION_UP: {
-                onFingerUpStartAnimating();
-            }
-            break;
+                case MotionEvent.ACTION_UP: {
+                    onFingerUpStartAnimating();
+                }
+                break;
 
-            case MotionEvent.ACTION_CANCEL: {
-                onFingerUpStartAnimating();
+                case MotionEvent.ACTION_CANCEL: {
+                    onFingerUpStartAnimating();
+                }
+                break;
             }
-            break;
         }
         return super.onTouchEvent(e);
     }
@@ -680,7 +684,6 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
                     }
                 }
                 break;
-
                 case STATUS_REFRESHING: {
                     mIsAutoRefreshing = false;
                     mRefreshHeaderContainer.getLayoutParams().height = 0;
@@ -690,9 +693,7 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
                 }
                 break;
             }
-            if (DEBUG) {
-                Log.i(TAG, "onAnimationEnd " + getStatusLog(lastStatus) + " -> " + getStatusLog(mStatus) + " ;refresh view height:" + mRefreshHeaderContainer.getMeasuredHeight());
-            }
+
         }
     };
 
@@ -700,7 +701,6 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
         @Override
         public void onStart(boolean automatic, int headerHeight, int finalHeight) {
             if (mRefreshHeaderView != null && mRefreshHeaderView instanceof RefreshTrigger) {
-//                TLog.e(SuperRecyclerView.class, "刷新头部的滚动");
                 RefreshTrigger trigger = (RefreshTrigger) mRefreshHeaderView;
                 trigger.onStart(automatic, headerHeight, finalHeight);
             }
@@ -750,8 +750,9 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
     private OnLoadMoreScrollListener mOnLoadMoreScrollListener = new OnLoadMoreScrollListener() {
         @Override
         public void onLoadMore(RecyclerView recyclerView) {
-            if (mOnLoadMoreListener != null && mStatus == STATUS_DEFAULT) {
-                if (mLoadMoreFooterView != null && mLoadMoreFooterView instanceof LoadMoreFooterView) {
+            if (mLoadMoreEnabled && mOnLoadMoreListener != null && !isRefreshing()) {
+                if (mLoadMoreFooterView != null && mLoadMoreFooterView instanceof LoadMoreFooterView
+                        && ((LoadMoreFooterView) mLoadMoreFooterView).getStatus() != LoadMoreFooterView.Status.LOADING) {
                     ((LoadMoreFooterView) mLoadMoreFooterView).setStatus(LoadMoreFooterView.Status.LOADING);
                 }
                 mOnLoadMoreListener.loadMore();
@@ -759,39 +760,17 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
         }
     };
 
+    private boolean isRefreshing() {
+        if (getParent() != null && getParent() instanceof SwipeRefreshLayout) {
+            SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) getParent();
+            return refreshLayout.isRefreshing();
+        } else {
+            return mStatus != STATUS_DEFAULT;
+        }
+    }
+
     private void setStatus(int status) {
         this.mStatus = status;
-        if (DEBUG) {
-            printStatusLog();
-        }
-    }
 
-    private void printStatusLog() {
-        Log.i(TAG, getStatusLog(mStatus));
-    }
-
-    private String getStatusLog(int status) {
-        final String statusLog;
-        switch (status) {
-            case STATUS_DEFAULT:
-                statusLog = "status_default";
-                break;
-
-            case STATUS_SWIPING_TO_REFRESH:
-                statusLog = "status_swiping_to_refresh";
-                break;
-
-            case STATUS_RELEASE_TO_REFRESH:
-                statusLog = "status_release_to_refresh";
-                break;
-
-            case STATUS_REFRESHING:
-                statusLog = "status_refreshing";
-                break;
-            default:
-                statusLog = "status_illegal!";
-                break;
-        }
-        return statusLog;
     }
 }

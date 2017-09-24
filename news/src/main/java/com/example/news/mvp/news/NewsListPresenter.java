@@ -35,11 +35,10 @@ import static com.example.news.util.NewsUtil.getHref;
 
 public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsListModel> {
     private int num = 0;
-    private Integer totalPage=0;
+    private Integer totalPage=-1;
 
     public NewsListPresenter(IView<NewListBean> iView, NewsListModel baseModel) {
         super(iView, baseModel);
-        totalPage=144;
     }
 
 
@@ -49,17 +48,20 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
         }
         if (isRefresh) {
             num = 0;
+            totalPage=-1;
         }
         num++;
+        if (totalPage != -1 && num > totalPage) {
+            iView.updateData(null);
+            iView.hideLoading();
+            num--;
+            return;
+        }
         String realUrl;
-//        if (NewsUtil.CUG_NEWS.equals(url)) {
             if (isRefresh&&NewsUtil.CUG_NEWS.equals(url)) {
                 getCugNewsBannerData();
             }
             realUrl = isRefresh? url:NewsUtil.getRealNewsUrl(url,totalPage,num);
-//        }else {
-//            realUrl=url;
-//        }
         baseModel.getRepositoryManager().getApi(CugNewsApi.class)
                 .getCugNewsData(realUrl).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -80,6 +82,8 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                             if (text!=null) {
                                 String num=text.substring(text.lastIndexOf("/")+1,text.length()-1);
                                 totalPage= Integer.valueOf(num);
+                            }else {
+                                totalPage=1;
                             }
                                 Element newElement=document.select(".col-news-list").first();
                                 List<NewListBean.NewsItem> newsItemList=null;
@@ -104,7 +108,11 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                                     }
                                 }
                                 newListBean.setNewsItemList(newsItemList);
-                                iView.updateData(newListBean);
+//                                if (newsItemList == null || newsItemList.size() == 0) {
+//                                    iView.showEmptyView();
+//                                }else {
+                                    iView.updateData(newListBean);
+//                                }
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 CommonLogger.e("网络错误"+e.getMessage());
@@ -156,8 +164,6 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                                     bannerBean.setContentUrl(item.getElementsByTag("a").attr("href"));
                                     bannerBean.setThumb(NewsUtil.getHref(item.getElementsByTag("a").select("img").attr("src")));
                                     bannerBean.setTitle(item.select(".dtxt").text());
-//                                    bannerBean.setTitle(item.select("div.btjj").select("a[href]").get(0).text());
-//                                    bannerBean.setDescription(item.select("div.btjj").select("a[href]").get(1).text());
                                     list.add(bannerBean);
                                 }
                             }
@@ -170,26 +176,11 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-//                        iView.showError(null,null);
                     }
 
                     @Override
                     public void onComplete() {
-//                        iView.hideLoading();
                     }
                 });
     }
-
-
-
-    public void getCugNotifyData(){
-
-    }
-
-
-
-
-
-
-
 }

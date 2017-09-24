@@ -33,4 +33,8 @@ public interface CugLibraryApi {
 
     @GET
     public Observable<ResponseBody> getNewBook(@Url String url);
+
+
+    @GET
+    public Observable<ResponseBody> getNewsBookNumberInfo(@Url String url);
 }

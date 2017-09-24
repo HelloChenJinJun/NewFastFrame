@@ -89,7 +89,7 @@ public class NewsInterceptor implements Interceptor {
             Response response = chain.proceed(newRequest);
             return response;
         }
-        if (request.url().toString().startsWith(NewsUtil.BASE_URL)) {
+        if (request.url().toString().startsWith("http://202.114.202.207/")) {
             if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.LIBRARY_COOKIE, null) != null) {
                 Request newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
                         .header("Cookie", BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.LIBRARY_COOKIE, null))

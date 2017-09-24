@@ -4,12 +4,20 @@ import android.app.Application;
 import android.content.Context;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.bean.OtherNewsTypeBean;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.module.IModuleConfig;
+import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.FileUtil;
 import com.example.news.dagger.DaggerNewsComponent;
 import com.example.news.dagger.NewsComponent;
 import com.example.news.dagger.NewsModule;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,12 +49,28 @@ public class NewsApplication implements IModuleConfig, IAppLife {
     public void onCreate(Application application) {
         newsComponent = DaggerNewsComponent.builder().appComponent(BaseApplication.getAppComponent())
                 .newsModule(new NewsModule()).build();
+        initDB(application);
+    }
+
+    private void initDB(Application application) {
+        Gson gson = new Gson();
+        JsonParser jsonParser = new JsonParser();
+        JsonArray jsonElements = jsonParser.parse(FileUtil.readData(application, "NewsChannel")).getAsJsonArray();
+        List<OtherNewsTypeBean>  result=new ArrayList<>();
+        for (JsonElement item :
+                jsonElements) {
+            OtherNewsTypeBean bean = gson.fromJson(item, OtherNewsTypeBean.class);
+            result.add(bean);
+            CommonLogger.e("bean:"+bean.toString());
+        }
+        newsComponent.getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
+        .insertOrReplaceInTx(result);
     }
 
     @Override
     public void onTerminate(Application application) {
         if (newsComponent != null) {
-            newsComponent=null;
+            newsComponent = null;
         }
     }
 

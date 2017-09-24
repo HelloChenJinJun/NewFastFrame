@@ -5,8 +5,11 @@ import android.support.v4.view.ViewPager;
 
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
+import com.example.commonlibrary.bean.OtherNewsTypeBean;
+import com.example.commonlibrary.bean.OtherNewsTypeBeanDao;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.news.mvp.news.NewsListFragment;
+import com.example.news.mvp.news.othernew.OtherNewsListFragment;
 import com.example.news.util.NewsUtil;
 
 import java.util.ArrayList;
@@ -61,9 +64,26 @@ public class IndexFragment extends BaseFragment {
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NOTIFY));
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_TECHNOLOGY));
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
+        List<OtherNewsTypeBean>  result=NewsApplication
+                .getNewsComponent().getRepositoryManager()
+                .getDaoSession()
+                .getOtherNewsTypeBeanDao()
+                .queryBuilder().whereOr(OtherNewsTypeBeanDao.Properties
+                .Name.eq("头条"),OtherNewsTypeBeanDao
+                .Properties.Name.eq("精选")
+                ,OtherNewsTypeBeanDao.Properties
+                .Name.eq("娱乐"))
+                .build().list();
+        for (int i = 0; i < result.size(); i++) {
+            OtherNewsTypeBean otherNewsTypeBean=result.get(i);
+            OtherNewsListFragment otherNewsListFragment=OtherNewsListFragment.newInstance(otherNewsTypeBean);
+            fragmentList.add(otherNewsListFragment);
+            titleList.add(otherNewsTypeBean.getName());
+        }
         viewPagerAdapter.setTitleAndFragments(titleList, fragmentList);
         tabLayout.setupWithViewPager(display);
         display.setAdapter(viewPagerAdapter);
+        display.setOffscreenPageLimit(2);
         display.setCurrentItem(0);
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("地大新闻");
@@ -76,7 +96,8 @@ public class IndexFragment extends BaseFragment {
 
     }
 
-    public static IndexFragment newInstance() {
+    public static IndexFragment newInstance()
+    {
         return new IndexFragment();
     }
 }

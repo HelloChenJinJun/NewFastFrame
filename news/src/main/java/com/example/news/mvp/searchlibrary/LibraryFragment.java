@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +17,7 @@ import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.NewsApplication;
 import com.example.news.NewsContentActivity;
@@ -50,29 +50,23 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
     private boolean isClassSearch;
     @Inject
     LibraryAdapter libraryAdapter;
-    private NavigationAdapter typeAdapter,placeAdapter,classAdapter,timeAdapter;
-    private SuperRecyclerView typeDisplay,placeDisplay,classDisplay
-            ,timeDisplay;
+    private NavigationAdapter typeAdapter, placeAdapter, classAdapter, timeAdapter;
+    private SuperRecyclerView typeDisplay, placeDisplay, classDisplay, timeDisplay;
 
     private int preTypePosition = 0;
     private int prePlacePosition = 0;
-    private int preTimePosition=0;
-    private int preClassPosition=0;
-    private WrappedGridLayoutManager typeManager, placeManager,timeManager,classManager;
+    private int preTimePosition = 0;
+    private int preClassPosition = 0;
+    private WrappedGridLayoutManager typeManager, placeManager, timeManager, classManager;
     private DrawerLayout drawerLayout;
 
 
     @Override
     public void updateData(List<SearchLibraryBean> beanList) {
-        if (loadMoreFooterView.getStatus() != LoadMoreFooterView.Status.LOADING) {
-            libraryAdapter.clearAllData();
-            libraryAdapter.notifyDataSetChanged();
-            libraryAdapter.addData(beanList);
+        if (refresh.isRefreshing()) {
+            libraryAdapter.refreshData(beanList);
         } else {
             libraryAdapter.addData(beanList);
-            if (beanList==null||beanList.size()==0) {
-                loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
-            }
         }
     }
 
@@ -100,8 +94,8 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
         typeDisplay = (SuperRecyclerView) findViewById(R.id.srcv_fragment_library_right_type_display);
         placeDisplay = (SuperRecyclerView) findViewById(R.id.srcv_fragment_library_right_place_display);
         drawerLayout = (DrawerLayout) findViewById(R.id.dl_fragment_library_container);
-        classDisplay= (SuperRecyclerView) findViewById(R.id.srcv_fragment_library_right_class_display);
-        timeDisplay= (SuperRecyclerView) findViewById(R.id.srcv_fragment_library_right_time_display);
+        classDisplay = (SuperRecyclerView) findViewById(R.id.srcv_fragment_library_right_class_display);
+        timeDisplay = (SuperRecyclerView) findViewById(R.id.srcv_fragment_library_right_time_display);
         findViewById(R.id.btn_fragment_library_right_confirm).setOnClickListener(this);
         search.setOnClickListener(this);
     }
@@ -112,7 +106,7 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
                 .newsComponent(NewsApplication.getNewsComponent())
                 .build().inject(this);
         refresh.setOnRefreshListener(this);
-        display.setLayoutManager(new LinearLayoutManager(getContext()));
+        display.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
         loadMoreFooterView = new LoadMoreFooterView(getContext());
         display.setLoadMoreFooterView(loadMoreFooterView);
         display.setOnLoadMoreListener(this);
@@ -125,6 +119,7 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
                 intent.putExtra(NewsUtil.URL, dataEntity.getContentUrl());
                 intent.putExtra(NewsUtil.TITLE, dataEntity.getBookName());
                 startActivity(intent);
+
             }
         });
 //        ToolBarOption toolBarOption = new ToolBarOption();
@@ -132,16 +127,16 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
 //        setToolBar(toolBarOption);
         typeDisplay.setLayoutManager(typeManager = new WrappedGridLayoutManager(getContext(), 3));
         placeDisplay.setLayoutManager(placeManager = new WrappedGridLayoutManager(getContext(), 3));
-        timeDisplay.setLayoutManager(timeManager=new WrappedGridLayoutManager(getContext(),3));
-        classDisplay.setLayoutManager(classManager=new WrappedGridLayoutManager(getContext(),3));
+        timeDisplay.setLayoutManager(timeManager = new WrappedGridLayoutManager(getContext(), 3));
+        classDisplay.setLayoutManager(classManager = new WrappedGridLayoutManager(getContext(), 3));
         typeDisplay.setNestedScrollingEnabled(false);
         placeDisplay.setNestedScrollingEnabled(false);
         timeDisplay.setNestedScrollingEnabled(false);
         classDisplay.setNestedScrollingEnabled(false);
         typeAdapter = new NavigationAdapter();
         placeAdapter = new NavigationAdapter();
-        classAdapter=new NavigationAdapter();
-        timeAdapter=new NavigationAdapter();
+        classAdapter = new NavigationAdapter();
+        timeAdapter = new NavigationAdapter();
         classDisplay.setAdapter(classAdapter);
         typeDisplay.setAdapter(typeAdapter);
         placeDisplay.setAdapter(placeAdapter);
@@ -149,10 +144,10 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
         placeAdapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
             @Override
             public void onItemChildClick(int position, View view, int id) {
-                TextView pre= (TextView) placeManager.findViewByPosition(prePlacePosition).findViewById(id);
+                TextView pre = (TextView) placeManager.findViewByPosition(prePlacePosition).findViewById(id);
                 pre.setTextColor(getContext().getResources().getColor(R.color.base_color_text_grey));
                 pre.setBackground(getContext().getResources().getDrawable(R.drawable.tab_btn_bg_normal));
-                TextView textView= (TextView) view;
+                TextView textView = (TextView) view;
                 textView.setTextColor(getContext().getResources().getColor(R.color.base_color_text_blue));
                 textView.setBackground(getContext().getResources().getDrawable(R.drawable.tab_btn_bg_selected));
                 prePlacePosition = position;
@@ -161,10 +156,10 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
         typeAdapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
             @Override
             public void onItemChildClick(int position, View view, int id) {
-                TextView pre= (TextView) typeManager.findViewByPosition(preTypePosition).findViewById(id);
+                TextView pre = (TextView) typeManager.findViewByPosition(preTypePosition).findViewById(id);
                 pre.setTextColor(getContext().getResources().getColor(R.color.base_color_text_grey));
                 pre.setBackground(getContext().getResources().getDrawable(R.drawable.tab_btn_bg_normal));
-                TextView textView= (TextView) view;
+                TextView textView = (TextView) view;
                 textView.setTextColor(getContext().getResources().getColor(R.color.base_color_text_blue));
                 textView.setBackground(getContext().getResources().getDrawable(R.drawable.tab_btn_bg_selected));
                 preTypePosition = position;
@@ -173,10 +168,10 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
         timeAdapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
             @Override
             public void onItemChildClick(int position, View view, int id) {
-                TextView pre= (TextView) timeManager.findViewByPosition(preTimePosition).findViewById(id);
+                TextView pre = (TextView) timeManager.findViewByPosition(preTimePosition).findViewById(id);
                 pre.setTextColor(getContext().getResources().getColor(R.color.base_color_text_grey));
                 pre.setBackground(getContext().getResources().getDrawable(R.drawable.tab_btn_bg_normal));
-                TextView textView= (TextView) view;
+                TextView textView = (TextView) view;
                 textView.setTextColor(getContext().getResources().getColor(R.color.base_color_text_blue));
                 textView.setBackground(getContext().getResources().getDrawable(R.drawable.tab_btn_bg_selected));
                 preTimePosition = position;
@@ -185,10 +180,10 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
         classAdapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
             @Override
             public void onItemChildClick(int position, View view, int id) {
-                TextView pre= (TextView) classManager.findViewByPosition(preClassPosition).findViewById(id);
+                TextView pre = (TextView) classManager.findViewByPosition(preClassPosition).findViewById(id);
                 pre.setTextColor(getContext().getResources().getColor(R.color.base_color_text_grey));
                 pre.setBackground(getContext().getResources().getDrawable(R.drawable.tab_btn_bg_normal));
-                TextView textView= (TextView) view;
+                TextView textView = (TextView) view;
                 textView.setTextColor(getContext().getResources().getColor(R.color.base_color_text_blue));
                 textView.setBackground(getContext().getResources().getDrawable(R.drawable.tab_btn_bg_selected));
                 preClassPosition = position;
@@ -203,9 +198,7 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
         placeAdapter.addData(Arrays.asList(getResources().getStringArray(R.array.place_name)));
         typeAdapter.addData(Arrays.asList(getResources().getStringArray(R.array.type_name)));
         classAdapter.addData(Arrays.asList(getResources().getStringArray(R.array.class_name)));
-
     }
-
 
 
     public static LibraryFragment newInstance() {
@@ -220,11 +213,11 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
             } else {
                 presenter.searchBook(false, false, input.getText().toString().trim());
             }
-        }else {
-            presenter.searchNewBook(false,false,timeAdapter.getData(preTimePosition).split("/")[1]
-                    ,typeAdapter.getData(preTypePosition).split("/")[1]
-                    ,placeAdapter.getData(prePlacePosition).split("/")[1]
-                    ,classAdapter.getData(preClassPosition));
+        } else {
+            presenter.searchNewBook(false, false, timeAdapter.getData(preTimePosition).split("/")[1]
+                    , typeAdapter.getData(preTypePosition).split("/")[1]
+                    , placeAdapter.getData(prePlacePosition).split("/")[1]
+                    , classAdapter.getData(preClassPosition));
         }
     }
 
@@ -239,11 +232,11 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
             } else {
                 presenter.searchBook(false, true, input.getText().toString().trim());
             }
-        }else {
-            presenter.searchNewBook(false,true,timeAdapter.getData(preTimePosition).split("/")[1]
-                    ,typeAdapter.getData(preTypePosition).split("/")[1]
-                    ,placeAdapter.getData(prePlacePosition).split("/")[1]
-                    ,classAdapter.getData(preClassPosition));
+        } else {
+            presenter.searchNewBook(false, true, timeAdapter.getData(preTimePosition).split("/")[1]
+                    , typeAdapter.getData(preTypePosition).split("/")[1]
+                    , placeAdapter.getData(prePlacePosition).split("/")[1]
+                    , classAdapter.getData(preClassPosition));
         }
     }
 
@@ -253,16 +246,17 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
             ToastUtils.showShortToast("确定");
             drawerLayout.closeDrawer(GravityCompat.END);
             refresh.setRefreshing(true);
-            isClassSearch=true;
-            presenter.searchNewBook(false,true,timeAdapter.getData(preTimePosition).split("/")[1]
-                    ,typeAdapter.getData(preTypePosition).split("/")[1]
-                    ,placeAdapter.getData(prePlacePosition).split("/")[1]
-                    ,classAdapter.getData(preClassPosition));
+            isClassSearch = true;
+            presenter.searchNewBook(false, true, timeAdapter.getData(preTimePosition).split("/")[1]
+                    , typeAdapter.getData(preTypePosition).split("/")[1]
+                    , placeAdapter.getData(prePlacePosition).split("/")[1]
+                    , classAdapter.getData(preClassPosition));
         } else {
             if (TextUtils.isEmpty(input.getText().toString().trim())) {
                 ToastUtils.showShortToast("内容不能为空哦");
             } else {
-                isClassSearch=false;
+                isClassSearch = false;
+                refresh.setRefreshing(true);
                 presenter.searchBook(false, true, input.getText().toString().trim());
             }
         }
@@ -282,11 +276,6 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
     @Override
     public void hideLoading() {
         super.hideLoading();
-        if (libraryAdapter.getData().size() > 0) {
-            super.hideLoading();
-        } else {
-            showEmptyView();
-        }
         refresh.setRefreshing(false);
     }
 

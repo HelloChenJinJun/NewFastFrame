@@ -16,11 +16,33 @@
         android:tag="skin">
 
         <TextView
-            android:id="@+id/tv_empty_retry"
+            android:id="@+id/tv_empty_error_retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tag="skin"
             android:text="网络加载失败，请点击重试"
+            android:textColor="?attr/custom_attr_text_main"
+            android:textSize="23sp" />
+    </FrameLayout>
+
+
+
+    <FrameLayout
+
+        android:id="@+id/fl_empty_layout_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="?attr/custom_attr_app_content_bg"
+        android:tag="skin">
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_empty_empty_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="skin"
+            android:text="暂时没有数据，请点击重试"
             android:textColor="?attr/custom_attr_text_main"
             android:textSize="23sp" />
     </FrameLayout>

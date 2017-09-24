@@ -16,4 +16,10 @@ public class MainRepositoryManager extends BaseRepositoryManager<DaoSession> {
     public MainRepositoryManager(Retrofit retrofit, DaoSession abstractDaoSession) {
         super(retrofit, abstractDaoSession);
     }
+
+
+    @Override
+    public <T> T getApi(Class<T> retrofitClass) {
+        return super.getApi(retrofitClass);
+    }
 }
