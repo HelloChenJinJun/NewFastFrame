@@ -97,6 +97,17 @@ public class NewInfoBean implements MultipleItem {
     private List<ImgextraEntity> imgextra;
     private List<AdsEntity> ads;
 
+
+    private String specialID;
+
+    public String getSpecialID() {
+        return specialID;
+    }
+
+    public void setSpecialID(String specialID) {
+        this.specialID = specialID;
+    }
+
     public String getTemplate() {
         return template;
     }

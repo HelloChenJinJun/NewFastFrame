@@ -26,10 +26,10 @@
         <activity android:name=".NewsContentActivity" />
         <activity android:name=".NewsContentActivity" />
         <activity android:name=".mvp.librarylogin.LibraryLoginActivity" />
-        <activity android:name=".LibraryContentActivity" />
         <activity android:name=".LibraryInfoActivity" />
         <activity android:name=".mvp.cardinfo.CardInfoActivity"/>
         <activity android:name=".mvp.cardlogin.CardLoginActivity"/>
+        <activity android:name=".mvp.news.othernew.special.SpecialNewsActivity"/>
 
         <meta-data
             android:name="com.example.cootek.newfastframe.VideoApplication"

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -155,7 +156,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
 
     public BaseWrappedViewHolder setImageUrl(int id, String url) {
         if (getView(id) instanceof ImageView) {
-            Glide.with(itemView.getContext()).load(url).into((ImageView) getView(id));
+            Glide.with(itemView.getContext()).load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).into((ImageView) getView(id));
         }
         return this;
     }

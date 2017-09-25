@@ -74,6 +74,9 @@ dependencies {
     // LabelView
     compile 'com.flyco.labelview:FlycoLabelView_Lib:1.0.2@aar'
 
+    // TagLayout
+//    compile 'com.github.Rukey7:TagLayout:1.0.3'
+
     apt rootProject.ext.dependencies.dagger2_compiler
     if (!rootProject.ext.isAlone) {
         apt rootProject.ext.dependencies.arouter_compiler

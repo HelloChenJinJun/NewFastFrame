@@ -6,6 +6,7 @@ import com.example.commonlibrary.baseadapter.adapter.BaseMultipleRecyclerAdapter
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.news.R;
 import com.example.news.bean.NewInfoBean;
+import com.example.news.util.NewsUtil;
 
 /**
  * 项目名称:    NewFastFrame
@@ -34,12 +35,12 @@ public class OtherNewsListAdapter extends BaseMultipleRecyclerAdapter<NewInfoBea
             .setOnItemClickListener();
         if (data.getItemViewType() == NewInfoBean.TYPE_PHOTO){
             if (data.getImgextra() != null) {
-                for (int i = 1; i < data.getImgextra().size(); i++) {
+                for (int i = 0; i < data.getImgextra().size(); i++) {
                     NewInfoBean.ImgextraEntity imgextraEntity=data.getImgextra().get(i);
-                    if (i == 1) {
+                    if (i == 0) {
                         holder.setImageUrl(R.id.iv_item_fragment_other_news_list_photo_two
                                 ,imgextraEntity.getImgsrc());
-                    } else if (i == 2) {
+                    } else if (i == 1) {
                         holder.setImageUrl(R.id.iv_item_fragment_other_news_list_photo_three
                                 ,imgextraEntity.getImgsrc());
                     }else {
@@ -47,6 +48,11 @@ public class OtherNewsListAdapter extends BaseMultipleRecyclerAdapter<NewInfoBea
                     }
                 }
             }
+        }
+        if (NewsUtil.SPECIAL_TITLE.equals(data.getSkipType())) {
+            holder.setVisible(R.id.lv_item_fragment_other_news_list_label,true);
+        }else if (NewInfoBean.TYPE_PHOTO!=data.getItemViewType()){
+            holder.setVisible(R.id.lv_item_fragment_other_news_list_label,false);
         }
     }
 }

@@ -46,6 +46,8 @@ public class NewsUtil {
     public static final String PAY_HISTORY_URL = "http://card.cug.edu.cn/Report/GetPersonTrjn";
     public static final String ERROR_INFO = "error_info";
     public static final String PHOTO_SET = "photoset";
+    public static final String SPECIAL_TITLE = "special";
+    public static final String SPECIAL_ID = "special_id";
 
 
     public static String getRealNewsUrl(String url,int totalPage, int currentNum) {
