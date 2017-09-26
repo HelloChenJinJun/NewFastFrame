@@ -324,6 +324,51 @@ public class RawSpecialNewsBean {
             private String tag;
             private String imgsrc;
             private String ptime;
+            private String skipType;
+            private String skipID;
+            private List<ImgextraEntity> imgextra;
+
+
+            public String getSkipType() {
+                return skipType;
+            }
+
+            public void setSkipType(String skipType) {
+                this.skipType = skipType;
+            }
+
+            public String getSkipID() {
+                return skipID;
+            }
+
+            public void setSkipID(String skipID) {
+                this.skipID = skipID;
+            }
+
+            public List<ImgextraEntity> getImgextra() {
+                return imgextra;
+            }
+
+            public void setImgextra(List<ImgextraEntity> imgextra) {
+                this.imgextra = imgextra;
+            }
+
+            public static class ImgextraEntity {
+                /**
+                 * imgsrc : http://cms-bucket.nosdn.127.net/3da0c64f6627454183d701e6b422e29020170923224700.jpeg
+                 */
+
+                private String imgsrc;
+
+                public String getImgsrc() {
+                    return imgsrc;
+                }
+
+                public void setImgsrc(String imgsrc) {
+                    this.imgsrc = imgsrc;
+                }
+            }
+
 
             public int getVotecount() {
                 return votecount;

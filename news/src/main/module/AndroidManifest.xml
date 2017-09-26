@@ -31,7 +31,8 @@
         <activity android:name=".mvp.cardinfo.CardInfoActivity"/>
         <activity android:name=".mvp.cardlogin.CardLoginActivity"/>
         <activity android:name=".mvp.news.othernew.special.SpecialNewsActivity"/>
-
+<activity android:name=".mvp.news.othernew.detail.OtherNewsDetailActivity"/>
+        <activity android:name=".mvp.news.othernew.photo.OtherNewPhotoSetActivity"/>
         <meta-data
             android:name="com.example.news.NewsApplication"
             android:value="IModuleConfig" />

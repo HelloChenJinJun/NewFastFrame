@@ -77,6 +77,11 @@ dependencies {
     // TagLayout
 //    compile 'com.github.Rukey7:TagLayout:1.0.3'
 
+    // photoview
+    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+
+    // html text
+    compile 'com.zzhoujay.richtext:richtext:2.0.9'
     apt rootProject.ext.dependencies.dagger2_compiler
     if (!rootProject.ext.isAlone) {
         apt rootProject.ext.dependencies.arouter_compiler

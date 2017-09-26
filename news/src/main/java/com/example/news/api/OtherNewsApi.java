@@ -1,6 +1,8 @@
 package com.example.news.api;
 
 import com.example.news.bean.NewInfoBean;
+import com.example.news.bean.OtherNewsDetailBean;
+import com.example.news.bean.PhotoSetBean;
 import com.example.news.bean.RawSpecialNewsBean;
 
 import java.util.List;
@@ -24,6 +26,14 @@ public interface OtherNewsApi {
 
     @GET("nc/special/{specialId}.html")
     Observable<Map<String, RawSpecialNewsBean>> getSpecialNewsData(@Path("specialId") String specialIde);
+
+
+    @GET("nc/article/{newsId}/full.html")
+    Observable<Map<String, OtherNewsDetailBean>> getNewsDetail(@Path("newsId") String newsId);
+
+
+    @GET("photo/api/set/{photoId}.json")
+    Observable<PhotoSetBean> getPhotoSetData(@Path("photoId") String photoId);
 
 }
 

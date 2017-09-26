@@ -11,14 +11,16 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.bean.OtherNewsTypeBean;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.bean.NewInfoBean;
-import com.example.commonlibrary.bean.OtherNewsTypeBean;
 import com.example.news.dagger.news.othernews.DaggerOtherNewsComponent;
 import com.example.news.dagger.news.othernews.OtherNewsModule;
+import com.example.news.mvp.news.othernew.detail.OtherNewsDetailActivity;
+import com.example.news.mvp.news.othernew.photo.OtherNewPhotoSetActivity;
 import com.example.news.mvp.news.othernew.special.SpecialNewsActivity;
 import com.example.news.util.NewsUtil;
 
@@ -91,9 +93,12 @@ public class OtherNewsListFragment extends BaseFragment<List<NewInfoBean>,OtherN
             public void onItemClick(int position, View view) {
                 NewInfoBean newInfoBean=otherNewsListAdapter.getData(position);
                 if (NewsUtil.SPECIAL_TITLE.equals(newInfoBean.getSkipType())) {
-                    SpecialNewsActivity.start(getContext(),newInfoBean.getSkipID(),newInfoBean.getTitle());
+                    SpecialNewsActivity.start(getContext(),newInfoBean.getSpecialID(),newInfoBean.getTitle());
+                }else if (NewsUtil.PHOTO_SET.equals(newInfoBean.getSkipType())){
+                    OtherNewPhotoSetActivity.start(getContext(),newInfoBean.getPhotosetID());
                 }else {
                     ToastUtils.showShortToast("其他");
+                    OtherNewsDetailActivity.start(getContext(),newInfoBean.getPostid());
                 }
             }
         });

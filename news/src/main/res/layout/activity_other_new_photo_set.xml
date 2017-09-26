@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+
+    <com.example.news.widget.WrappedViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/wvp_activity_other_new_photo_set_display"/>
+    <ImageView
+        android:id="@+id/iv_activity_other_new_photo_set_back"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_arrow_back_white_900_24dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1/5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textSize="14sp"
+        android:textColor="@color/base_color_text_white"
+        android:id="@+id/tv_activity_other_new_photo_index"/>
+
+    <LinearLayout
+        android:padding="10dp"
+        android:background="@color/photo_set_bottom_bg"
+        android:id="@+id/ll_activity_other_new_photo_set_bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_activity_other_new_photo_set_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/base_color_text_grey"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:id="@+id/tv_activity_other_new_photo_set_title"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

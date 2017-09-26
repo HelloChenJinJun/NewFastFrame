@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
@@ -18,6 +19,7 @@ import com.example.news.adapter.SpecialNewsAdapter;
 import com.example.news.bean.SpecialNewsBean;
 import com.example.news.dagger.news.othernews.special.DaggerSpecialNewsComponent;
 import com.example.news.dagger.news.othernews.special.SpecialNewsModule;
+import com.example.news.mvp.news.othernew.photo.OtherNewPhotoSetActivity;
 import com.example.news.util.NewsUtil;
 
 import java.util.List;
@@ -76,6 +78,15 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
         display.setLayoutManager(new WrappedLinearLayoutManager(this));
         display.addHeaderView(getHeaderView());
         display.setAdapter(specialNewsAdapter);
+        specialNewsAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view) {
+                SpecialNewsBean bean=specialNewsAdapter.getData(position);
+                if (NewsUtil.PHOTO_SET.equals(bean.getBean().getSkipType())) {
+                    OtherNewPhotoSetActivity.start(SpecialNewsActivity.this,bean.getBean().getSkipID());
+                }
+            }
+        });
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -102,6 +113,7 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
         intent.putExtra(NewsUtil.TITLE,title);
         context.startActivity(intent);
     }
+
 
     @Override
     public void updateBanner(String url) {

@@ -6,7 +6,7 @@
     <ImageView
         android:id="@+id/iv_view_activity_special_news_header_banner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"/>
+        android:layout_height="100dp"
+        android:scaleType="fitXY"/>
 
 </LinearLayout>

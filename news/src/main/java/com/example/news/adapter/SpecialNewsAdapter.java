@@ -32,7 +32,8 @@ public class SpecialNewsAdapter extends BaseMultipleRecyclerAdapter<SpecialNewsB
             holder.setText(R.id.tv_item_activity_special_news_normal_title,data.getBean().getTitle())
                     .setText(R.id.tv_item_activity_special_news_normal_time,data.getBean().getPtime())
                     .setText(R.id.tv_item_activity_special_news_normal_from,data.getBean().getSource())
-                    .setImageUrl(R.id.iv_item_activity_special_news_normal_display,data.getBean().getImgsrc());
+                    .setImageUrl(R.id.iv_item_activity_special_news_normal_display,data.getBean().getImgsrc())
+            .setOnItemClickListener();
         }
 //        if (NewsUtil.SPECIAL_TITLE.equals(data.getBean().getSkipType())) {
 //            holder.setVisible(R.id.lv_item_activity_special_news_normal_label,true);
