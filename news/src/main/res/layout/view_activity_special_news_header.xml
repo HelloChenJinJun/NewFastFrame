@@ -2,11 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <ImageView
         android:id="@+id/iv_view_activity_special_news_header_banner"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:scaleType="fitXY"/>
+
+
+    <com.example.news.widget.flowlayout.TagFlowLayout
+        android:padding="10dp"
+        app:max_select="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tfl_view_activity_special_news_header_flow"/>
+
+
+
+
 
 </LinearLayout>

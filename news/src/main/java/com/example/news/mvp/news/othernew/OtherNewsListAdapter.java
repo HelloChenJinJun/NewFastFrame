@@ -1,5 +1,7 @@
 package com.example.news.mvp.news.othernew;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.util.SparseArray;
 
 import com.example.commonlibrary.baseadapter.adapter.BaseMultipleRecyclerAdapter;
@@ -54,5 +56,11 @@ public class OtherNewsListAdapter extends BaseMultipleRecyclerAdapter<NewInfoBea
         }else if (NewInfoBean.TYPE_PHOTO!=data.getItemViewType()){
             holder.setVisible(R.id.lv_item_fragment_other_news_list_label,false);
         }
+    }
+
+
+    @Override
+    protected Animator[] getItemAnimator(BaseWrappedViewHolder holder) {
+        return new Animator[]{ObjectAnimator.ofFloat(holder.itemView,"translationX",holder.itemView.getWidth(),0)};
     }
 }

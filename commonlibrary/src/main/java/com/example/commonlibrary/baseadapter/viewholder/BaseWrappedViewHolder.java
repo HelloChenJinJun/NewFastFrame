@@ -16,7 +16,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.utils.CommonLogger;
 
-
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;

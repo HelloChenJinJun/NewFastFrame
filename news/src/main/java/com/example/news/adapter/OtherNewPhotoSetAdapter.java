@@ -58,7 +58,8 @@ public class OtherNewPhotoSetAdapter extends PagerAdapter{
         BaseApplication
                 .getAppComponent().getImageLoader().loadImage(container.getContext()
         ,new GlideImageLoaderConfig.Builder().imageView(photoView)
-        .url(imageList.get(position)).cacheStrategy(GlideImageLoaderConfig.CACHE_SOURCE).build());
+        .url(imageList.get(position)).centerInside().build());
+        container.addView(view);
         return view;
     }
 

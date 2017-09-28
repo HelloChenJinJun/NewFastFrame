@@ -25,7 +25,6 @@ public class LoadMoreFooterView extends FrameLayout {
     private View mTheEndView;
 
     private TextView mToTopTV;
-
     private OnRetryListener mOnRetryListener;
 
     private RecyclerFooterViewClickListener listener ;
@@ -42,12 +41,10 @@ public class LoadMoreFooterView extends FrameLayout {
     public LoadMoreFooterView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.layout_superrecyclerview_load_more_footer_view, this, true);
-
         mLoadingView = findViewById(R.id.loadingView);
         mErrorView = findViewById(R.id.errorView);
         mTheEndView =  findViewById(R.id.theEndView);
         mToTopTV = (TextView) findViewById(R.id.to_list_top_textview);
-
         mToTopTV.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,6 +56,7 @@ public class LoadMoreFooterView extends FrameLayout {
             @Override
             public void onClick(View v) {
                 if (mOnRetryListener != null) {
+                    setStatus(Status.LOADING);
                     mOnRetryListener.onRetry(LoadMoreFooterView.this);
                 }
             }

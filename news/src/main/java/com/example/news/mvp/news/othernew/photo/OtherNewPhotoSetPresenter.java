@@ -1,5 +1,7 @@
 package com.example.news.mvp.news.othernew.photo;
 
+import android.text.TextUtils;
+
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
@@ -26,7 +28,7 @@ public class OtherNewPhotoSetPresenter extends BasePresenter<IView<PhotoSetBean>
 
     public void getOtherNewPhotoSetData(final String photoSetId) {
         baseModel.getRepositoryManager().getApi(OtherNewsApi.class)
-                .getPhotoSetData(photoSetId)
+                .getPhotoSetData(clipPhotoSetId(photoSetId))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<PhotoSetBean>() {
@@ -55,5 +57,25 @@ public class OtherNewPhotoSetPresenter extends BasePresenter<IView<PhotoSetBean>
                 iView.hideLoading();
             }
         });
+    }
+
+
+
+    /**
+     * 裁剪图集ID
+     *
+     * @param photoId
+     * @return
+     */
+    public  String clipPhotoSetId(String photoId) {
+        if (TextUtils.isEmpty(photoId)) {
+            return photoId;
+        }
+        int i = photoId.indexOf("|");
+        if (i >= 4) {
+            String result = photoId.replace('|', '/');
+            return result.substring(i - 4);
+        }
+        return null;
     }
 }

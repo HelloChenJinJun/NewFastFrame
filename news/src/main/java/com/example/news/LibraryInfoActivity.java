@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
@@ -20,7 +21,7 @@ import java.util.List;
  * 创建时间:    2017/9/18      16:50
  * QQ:             1981367757
  */
-
+@Route(path = "library/index")
 public class LibraryInfoActivity extends BaseActivity{
     private ViewPagerAdapter viewPagerAdapter;
     private ViewPager display;

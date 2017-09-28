@@ -220,7 +220,19 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
         }
         if (loadMoreFooterView instanceof LoadMoreFooterView) {
             addBottomListener(((LoadMoreFooterView) loadMoreFooterView));
+            addOnRetryListener(((LoadMoreFooterView) loadMoreFooterView));
         }
+    }
+
+    private void addOnRetryListener(LoadMoreFooterView loadMoreFooterView) {
+        loadMoreFooterView.setOnRetryListener(new LoadMoreFooterView.OnRetryListener() {
+            @Override
+            public void onRetry(LoadMoreFooterView view) {
+                if (mOnLoadMoreListener != null) {
+                    mOnLoadMoreListener.loadMore();
+                }
+            }
+        });
     }
 
     private void addBottomListener(final LoadMoreFooterView loadMoreFooterView) {

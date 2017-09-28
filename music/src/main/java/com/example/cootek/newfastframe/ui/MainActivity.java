@@ -29,7 +29,7 @@ import io.reactivex.functions.Consumer;
 /**
  * Created by COOTEK on 2017/8/7.
  */
-@Route(path = "/video/main")
+@Route(path = "/music/main")
 public class MainActivity extends MainBaseActivity implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
 

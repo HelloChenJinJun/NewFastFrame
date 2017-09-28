@@ -5,12 +5,14 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.widget.RadioGroup;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.commonlibrary.BaseActivity;
 import com.example.news.mvp.searchlibrary.LibraryFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Route(path = "/news/main")
 public class MainActivity extends BaseActivity {
 
     private RadioGroup bottomContainer;
@@ -34,7 +36,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int getContentLayout() {
-        return R.layout.activity_main;
+        return R.layout.activity_main_news;
     }
 
     @Override

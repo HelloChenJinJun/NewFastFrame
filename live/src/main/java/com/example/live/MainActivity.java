@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
+@Route(path = "/live/main")
 public class MainActivity extends BaseActivity<List<CategoryLiveBean>, MainPresenter> implements View.OnClickListener {
     private ViewPager display;
     private TabLayout tab;
@@ -49,7 +50,7 @@ public class MainActivity extends BaseActivity<List<CategoryLiveBean>, MainPrese
 
     @Override
     protected int getContentLayout() {
-        return R.layout.activity_main;
+        return R.layout.activity_main_live;
     }
 
     @Override

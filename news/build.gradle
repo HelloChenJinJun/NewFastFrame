@@ -29,32 +29,31 @@ android {
                     arguments = [moduleName: project.getName()]
                 }
             }
-        }
 
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
-    sourceSets {
-        main {
-            if (rootProject.ext.isAlone) {
-                manifest.srcFile 'src/main/module/AndroidManifest.xml'
-                java.srcDirs = ['src/main/java', 'src/main/module/java']
-                res.srcDirs = ['src/main/res', 'src/main/module/res']
-            } else {
-                manifest.srcFile 'src/main/AndroidManifest.xml'
+        buildTypes {
+            release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             }
-            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+        }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_7
+            targetCompatibility JavaVersion.VERSION_1_7
+        }
+        sourceSets {
+            main {
+                if (rootProject.ext.isAlone) {
+                    manifest.srcFile 'src/main/module/AndroidManifest.xml'
+                    java.srcDirs = ['src/main/java', 'src/main/module/java']
+                    res.srcDirs = ['src/main/res', 'src/main/module/res']
+                } else {
+                    manifest.srcFile 'src/main/AndroidManifest.xml'
+                }
+                assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+            }
         }
     }
-}
 
 //greendao {
 //    schemaVersion 1
@@ -62,31 +61,32 @@ android {
 //    targetGenDir 'src/main/java'
 //}
 
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile project(':commonlibrary')
+    dependencies {
+        compile fileTree(include: ['*.jar'], dir: 'libs')
+        androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+            exclude group: 'com.android.support', module: 'support-annotations'
+        })
+        compile project(':commonlibrary')
 
-    compile 'org.jsoup:jsoup:1.10.1'
-    compile 'com.youth.banner:banner:1.4.9'
-    // LabelView
-    compile 'com.flyco.labelview:FlycoLabelView_Lib:1.0.2@aar'
+        compile 'org.jsoup:jsoup:1.10.1'
+        compile 'com.youth.banner:banner:1.4.9'
+        // LabelView
+        compile 'com.flyco.labelview:FlycoLabelView_Lib:1.0.2@aar'
 
-    // TagLayout
+        // TagLayout
 //    compile 'com.github.Rukey7:TagLayout:1.0.3'
 
-    // photoview
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+        // photoview
+        compile 'com.github.chrisbanes.photoview:library:1.2.4'
 
-    // html text
-    compile 'com.zzhoujay.richtext:richtext:2.0.9'
-    apt rootProject.ext.dependencies.dagger2_compiler
-    if (!rootProject.ext.isAlone) {
-        apt rootProject.ext.dependencies.arouter_compiler
+        // html text
+        compile 'com.zzhoujay.richtext:richtext:2.0.9'
+        apt rootProject.ext.dependencies.dagger2_compiler
+        if (!rootProject.ext.isAlone) {
+            apt rootProject.ext.dependencies.arouter_compiler
+        }
+        testCompile 'junit:junit:4.12'
+        compile files('libs/pldroid-player-1.5.0.jar')
     }
-    testCompile 'junit:junit:4.12'
-    compile files('libs/pldroid-player-1.5.0.jar')
 }
 

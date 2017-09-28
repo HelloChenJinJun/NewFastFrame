@@ -35,6 +35,9 @@ public class ListViewDecoration extends RecyclerView.ItemDecoration {
                 int right = parent.getWidth() - parent.getPaddingRight();
                 View child = null;
                 for (int i = 0; i < count; i++) {
+                        if (count == 1) {
+                                break;
+                        }
                         child = parent.getChildAt(i);
                         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
                         int top = child.getBottom() + params.bottomMargin;

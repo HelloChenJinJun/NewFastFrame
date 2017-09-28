@@ -18,13 +18,13 @@
 
     <!--自定义颜色标签-->
     <!-- app相关 -->
-    <color name="custom_color_app_bg_day">#FFEDEFF2</color>      <!-- app背景色 -->
+    <color name="custom_color_app_bg_day">#ff343a49</color>      <!-- app背景色 -->
     <color name="custom_color_app_bg_night">#FF171717</color>      <!-- app背景色 -->
-    <color name="custom_color_app_title_bg_day">#ffffffff</color>      <!-- app标题栏背景色 -->
+    <color name="custom_color_app_title_bg_day">#ff2a2e3a</color>      <!-- app标题栏背景色 -->
     <color name="custom_color_app_title_bg_night">#FF1D1D1D</color>      <!-- app标题栏背景色 -->
     <color name="custom_color_app_content_bg_day">#FFFFFFFF</color>      <!-- app内容区背景色 -->
     <color name="custom_color_app_content_bg_night">#FF1D1D1D</color>      <!-- app内容区背景色 -->
-    <color name="custom_color_app_content_div_day">#FFF2F2F2</color>      <!-- app内容区分割线颜色 -->
+    <color name="custom_color_app_content_div_day">@color/base_color_text_grey</color>      <!-- app内容区分割线颜色 -->
     <color name="custom_color_app_content_div_night">#FF191919</color>      <!-- app内容区分割线颜色 -->
 
     <!-- 文本相关 -->

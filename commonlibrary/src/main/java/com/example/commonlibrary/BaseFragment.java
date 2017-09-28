@@ -226,7 +226,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     @Override
     public void hideLoading() {
         if (mEmptyLayout != null) {
-            if (mEmptyLayout.getCurrentStatus() == EmptyLayout.STATUS_LOADING) {
+            if (mEmptyLayout.getCurrentStatus() !=EmptyLayout.STATUS_HIDE) {
                 mEmptyLayout.setCurrentStatus(EmptyLayout.STATUS_HIDE);
             }
         } else {

@@ -21,12 +21,14 @@ public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
     private int cacheStrategy;
     private boolean isClearMemoryCache;
     private boolean isClearDiskCache;
+    private boolean isCenterInside=false;
 
     private GlideImageLoaderConfig(Builder builder) {
         setImageView(builder.imageView);
         setUrl(builder.url);
         setErrorResId(builder.errorResId);
         bitmapTransformation = builder.bitmapTransformation;
+        isCenterInside=builder.isCenterInside;
         setPlaceHolderResId(builder.placeHolderResId);
         cacheStrategy = builder.cacheStrategy;
         isClearMemoryCache = builder.isClearMemeryCache;
@@ -46,6 +48,10 @@ public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
         return isClearDiskCache;
     }
 
+    public boolean isCenterInside(){
+        return isCenterInside;
+    }
+
 
     public boolean isClearMemoryCache() {
         return isClearMemoryCache;
@@ -60,12 +66,20 @@ public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
         private int cacheStrategy;
         private boolean isClearMemeryCache;
         private boolean isClearDiskCache;
+        private boolean isCenterInside=false;
 
         public Builder() {
         }
 
         public Builder imageView(ImageView val) {
             imageView = val;
+            return this;
+        }
+
+
+
+        public Builder centerInside(){
+            isCenterInside=true;
             return this;
         }
 

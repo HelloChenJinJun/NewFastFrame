@@ -57,11 +57,17 @@ public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean
             @Override
             public void onSuccess(@NonNull List<NewInfoBean> newInfoBeen) {
                 iView.updateData(newInfoBeen);
+                if (newInfoBeen == null || newInfoBeen.size() == 0) {
+                    num--;
+                }
                 iView.hideLoading();
             }
 
             @Override
             public void onError(@NonNull Throwable e) {
+                if (!isRefresh) {
+                    num--;
+                }
             iView.showError(null, new EmptyLayout.OnRetryListener() {
                 @Override
                 public void onRetry() {

@@ -1,6 +1,7 @@
 package com.example.news.bean;
 
 import com.example.commonlibrary.baseadapter.baseitem.MultipleItem;
+import com.example.news.util.NewsUtil;
 
 /**
  * 项目名称:    NewFastFrame
@@ -9,9 +10,10 @@ import com.example.commonlibrary.baseadapter.baseitem.MultipleItem;
  * QQ:             1981367757
  */
 
-public class SpecialNewsBean implements MultipleItem{
+public class SpecialNewsBean implements MultipleItem {
     public static final int TYPE_HEADER = 1;
-    public static final int TYPE_NORMAL=0;
+    public static final int TYPE_NORMAL = 0;
+    public static final int TYPE_PHOTO_SET = 2;
     private int type;
 
 
@@ -26,13 +28,17 @@ public class SpecialNewsBean implements MultipleItem{
 
     public SpecialNewsBean(RawSpecialNewsBean.TopicsEntity.DocsEntity bean) {
         this.bean = bean;
-        type=TYPE_NORMAL;
+        if (NewsUtil.PHOTO_SET.equals(bean.getSkipType())) {
+            type = TYPE_PHOTO_SET;
+        } else {
+            type = TYPE_NORMAL;
+        }
     }
 
 
     public SpecialNewsBean(String title) {
         this.title = title;
-        type=TYPE_HEADER;
+        type = TYPE_HEADER;
     }
 
     private RawSpecialNewsBean.TopicsEntity.DocsEntity bean;

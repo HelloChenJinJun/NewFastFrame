@@ -1,5 +1,6 @@
 package com.example.commonlibrary.baseadapter.adapter;
 
+import android.animation.Animator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,14 +8,13 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.refresh.RefreshHeaderLayout;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
-import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.ToastUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -138,7 +138,6 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     @Override
     public int getItemCount() {
         int itemCount = data.size() + getItemUpCount() + 2;
-        CommonLogger.e("itemCount" + itemCount);
         return itemCount;
     }
 
@@ -188,8 +187,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             return FOOTER;
         } else if (position == data.size() + 3) {
             return LOAD_MORE_FOOTER;
+        }else {
+            return -1;
         }
-        throw new IllegalArgumentException("Wrong type! Position = " + position);
     }
 
 
@@ -201,18 +201,29 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     public void onBindViewHolder(K holder, int position) {
         int realPosition = getRealPosition(position);
         if (1 < realPosition && realPosition < data.size() + 2) {
+            Animator[] itemAnimator=getItemAnimator(holder);
+            if (itemAnimator!=null) {
+                for (Animator anim :itemAnimator) {
+                    anim.setInterpolator(interpolator);
+                    anim.setDuration(duration).start();
+                }
+            }
             convert(holder, data.get(realPosition - 2));
         }
-//        else if (getItemViewType(position) == EMPTY) {
-//            RecyclerView.LayoutParams layoutParams;
-//            if (emptyLayoutContainer.getChildCount() > 0) {
-//                layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                emptyLayoutContainer.setGravity(Gravity.CENTER);
-//                emptyLayoutContainer.setLayoutParams(layoutParams);
-//                emptyLayoutContainer.requestLayout();
-//            }
-//        }
     }
+
+
+
+
+
+    protected Animator[] getItemAnimator(BaseWrappedViewHolder holder){
+        return null;
+    };
+
+
+    private int duration=300;
+    private LinearInterpolator interpolator=new LinearInterpolator();
+
 
     private int getRealPosition(int position) {
         int realPosition = position;
@@ -255,7 +266,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         }
     }
 
-    protected K createBaseViewHolder(View view) {
+    K createBaseViewHolder(View view) {
         Class adapterClass = getClass();
         Class resultClass = null;
         while (resultClass == null && adapterClass != null) {
@@ -349,9 +360,6 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
 
     private void notifyLoadMoreChanged() {
-        if (data.size() == 0) {
-            ToastUtils.showShortToast("数据为空");
-        }
         if (hasMoreLoadView()) {
             int lastVisiblePosition;
             if (layoutManager instanceof LinearLayoutManager) {
@@ -434,13 +442,13 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(int position, View view);
+         void onItemClick(int position, View view);
 
-        public boolean onItemLongClick(int position, View view);
+         boolean onItemLongClick(int position, View view);
 
-        public boolean onItemChildLongClick(int position, View view, int id);
+         boolean onItemChildLongClick(int position, View view, int id);
 
-        public void onItemChildClick(int position, View view, int id);
+         void onItemChildClick(int position, View view, int id);
     }
 
 

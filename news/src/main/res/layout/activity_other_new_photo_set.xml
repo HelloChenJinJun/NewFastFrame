@@ -38,19 +38,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/tv_activity_other_new_photo_set_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/base_color_text_grey"/>
-        <TextView
-            android:layout_marginTop="10dp"
+            android:textColor="@color/base_color_text_white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:ellipsize="end"
             android:textSize="16sp"
             android:id="@+id/tv_activity_other_new_photo_set_title"/>
+        <TextView
+            android:id="@+id/tv_activity_other_new_photo_set_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/base_color_text_white"/>
+
     </LinearLayout>
 
 
