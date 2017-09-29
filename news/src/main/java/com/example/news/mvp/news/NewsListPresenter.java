@@ -161,7 +161,7 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                                 for (Element item :
                                         elements) {
                                     NewListBean.BannerBean bannerBean = new NewListBean.BannerBean();
-                                    bannerBean.setContentUrl(item.getElementsByTag("a").attr("href"));
+                                    bannerBean.setContentUrl(NewsUtil.getHref(item.getElementsByTag("a").attr("href")));
                                     bannerBean.setThumb(NewsUtil.getHref(item.getElementsByTag("a").select("img").attr("src")));
                                     bannerBean.setTitle(item.select(".dtxt").text());
                                     list.add(bannerBean);

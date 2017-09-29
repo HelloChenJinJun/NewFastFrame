@@ -14,4 +14,5 @@ public class LiveUtil {
     public static final String IS_FULL = "is_full";
     public static final String SLUG = "slug";
     public static final String THUMB = "thumb";
+    public static final String BASE_URL = "http://www.quanmin.tv/";
 }

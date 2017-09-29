@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:text="已选择"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_activity_adjust_news_type_selected"/>
+
+
+    <com.example.commonlibrary.baseadapter.SuperRecyclerView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/srcv_activity_adjust_news_type_up_display"/>
+
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:text="未选择"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_activity_adjust_news_type_unselected"/>
+
+
+    <com.example.commonlibrary.baseadapter.SuperRecyclerView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/srcv_activity_adjust_news_type_down_display"/>
+
+</LinearLayout>

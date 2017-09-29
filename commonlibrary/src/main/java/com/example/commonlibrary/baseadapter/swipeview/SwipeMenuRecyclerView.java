@@ -63,7 +63,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
     private int mDownX;
     private int mDownY;
 
-    private boolean isInterceptTouchEvent = true;
+    private boolean isInterceptTouchEvent = false;
 
     private SwipeMenuCreator mSwipeMenuCreator;
     private OnSwipeMenuItemClickListener mSwipeMenuItemClickListener;

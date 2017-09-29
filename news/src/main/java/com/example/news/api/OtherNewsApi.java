@@ -3,6 +3,7 @@ package com.example.news.api;
 import com.example.news.bean.NewInfoBean;
 import com.example.news.bean.OtherNewsDetailBean;
 import com.example.news.bean.PhotoSetBean;
+import com.example.news.bean.PictureBean;
 import com.example.news.bean.RawSpecialNewsBean;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 /**
  * 项目名称:    NewFastFrame
@@ -34,6 +36,11 @@ public interface OtherNewsApi {
 
     @GET("photo/api/set/{photoId}.json")
     Observable<PhotoSetBean> getPhotoSetData(@Path("photoId") String photoId);
+
+
+
+    @GET
+    Observable<PictureBean> getPhotoListData(@Url String url);
 
 }
 

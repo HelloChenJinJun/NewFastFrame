@@ -200,4 +200,14 @@ public class NewsUtil {
         return stringBuilder.toString();
 
     }
+
+
+
+//    http://gank.io/api/data/福利/10/{page}
+    public static String getPhotoListUrl(int size,int num) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("http://gank.io/api/data/福利/").append(size)
+                .append("/").append(num);
+        return stringBuilder.toString();
+    }
 }

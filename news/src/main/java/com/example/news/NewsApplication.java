@@ -60,6 +60,7 @@ public class NewsApplication implements IModuleConfig, IAppLife {
         for (JsonElement item :
                 jsonElements) {
             OtherNewsTypeBean bean = gson.fromJson(item, OtherNewsTypeBean.class);
+            bean.setHasSelected(true);
             result.add(bean);
             CommonLogger.e("bean:"+bean.toString());
         }
