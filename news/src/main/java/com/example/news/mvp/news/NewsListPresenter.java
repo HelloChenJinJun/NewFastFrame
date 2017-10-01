@@ -14,6 +14,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,10 +59,14 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             return;
         }
         String realUrl;
+        if (url.startsWith("http://www.cug.edu.cn")) {
             if (isRefresh&&NewsUtil.CUG_NEWS.equals(url)) {
                 getCugNewsBannerData();
             }
             realUrl = isRefresh? url:NewsUtil.getRealNewsUrl(url,totalPage,num);
+        }else {
+            realUrl=isRefresh?url:NewsUtil.getCollegeNewsUrl(url,num);
+        }
         baseModel.getRepositoryManager().getApi(CugNewsApi.class)
                 .getCugNewsData(realUrl).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -75,48 +80,16 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                     @Override
                     public void onNext(@NonNull ResponseBody responseBody) {
                             NewListBean newListBean=new NewListBean();
-                            try {
-                                Document document = Jsoup.parse(responseBody.string());
-                                Element element = document.getElementById("fanye177473");
-                                String text=element.text();
-                            if (text!=null) {
-                                String num=text.substring(text.lastIndexOf("/")+1,text.length()-1);
-                                totalPage= Integer.valueOf(num);
-                            }else {
-                                totalPage=1;
-                            }
-                                Element newElement=document.select(".col-news-list").first();
-                                List<NewListBean.NewsItem> newsItemList=null;
-                                if (newElement != null) {
-                                    newsItemList=new ArrayList<>();
-                                    for (Element child :
-                                            newElement.children()) {
-                                        if (!child.hasClass("list_item")) {
-                                            continue;
-                                        }
-                                        NewListBean.NewsItem newsItem=new NewListBean.NewsItem();
-                                        Element title=child.select(".news-title").first();
-                                        if (title != null) {
-                                            newsItem.setTitle(title.text());
-                                            newsItem.setContentUrl(getHref(title.attr("href")));
-                                        }
-                                        Element date=child.select(".news-date").first();
-                                        if (date != null) {
-                                            newsItem.setTime(date.text());
-                                        }
-                                        newsItemList.add(newsItem);
-                                    }
-                                }
-                                newListBean.setNewsItemList(newsItemList);
-//                                if (newsItemList == null || newsItemList.size() == 0) {
-//                                    iView.showEmptyView();
-//                                }else {
-                                    iView.updateData(newListBean);
-//                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                CommonLogger.e("网络错误"+e.getMessage());
-                            }
+                        Document document = null;
+                        try {
+                            String temp=responseBody.string().replace("&nbsp;"," ");
+                           CommonLogger.e(temp);
+                            document=Jsoup.parse(temp);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        parseNewsData(document,url,newListBean);
+                        iView.updateData(newListBean);
                     }
 
                     @Override
@@ -136,6 +109,70 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                 });
     }
 
+    private void parseNewsData(Document document, String url, NewListBean newListBean) {
+        if (url.startsWith("http://www.cug.edu.cn")) {
+            Element element = document.getElementById("fanye177473");
+            String text=element.text();
+            if (text!=null) {
+                String num=text.substring(text.lastIndexOf("/")+1,text.length()-1);
+                totalPage= Integer.valueOf(num);
+            }else {
+                totalPage=1;
+            }
+            Element newElement=document.select(".col-news-list").first();
+            List<NewListBean.NewsItem> newsItemList=null;
+            if (newElement != null) {
+                newsItemList=new ArrayList<>();
+                for (Element child :
+                        newElement.children()) {
+                    if (!child.hasClass("list_item")) {
+                        continue;
+                    }
+                    NewListBean.NewsItem newsItem=new NewListBean.NewsItem();
+                    Element title=child.select(".news-title").first();
+                    if (title != null) {
+                        newsItem.setTitle(title.text());
+                        newsItem.setContentUrl(NewsUtil.getHref(title.attr("href")));
+                    }
+                    Element date=child.select(".news-date").first();
+                    if (date != null) {
+                        newsItem.setTime(date.text());
+                    }
+                    newsItemList.add(newsItem);
+                }
+            }
+            newListBean.setNewsItemList(newsItemList);
+        } else if (url.startsWith("http://jgxy.cug.edu.cn")) {
+            Element element=null;
+            try {
+                Element item=document.select(".a2").get(1);
+                        element=item.children().get(3).children().first()
+                        .children().first().children()
+                        .get(2).children().get(1)
+                        .children().first()
+                        .children().get(1)
+                        .children().get(1);
+            } catch (NullPointerException e) {
+                CommonLogger.e("空指针异常"+e.getMessage());
+                e.printStackTrace();
+            }
+            if (element != null&&element.children().size()>0) {
+                List<NewListBean.NewsItem>  result=new ArrayList<>();
+                for (Element item :
+                        element.children()) {
+                    NewListBean.NewsItem newsItem = new NewListBean.NewsItem();
+                    Element href=item.getElementsByTag("a").first();
+                    if (href != null) {
+                            String temp=new String(href.text().getBytes(Charset.forName("gb2312")), Charset.forName("utf-8"));
+                            newsItem.setTitle(temp);
+                        newsItem.setContentUrl(NewsUtil.getJG_REAL_URL(href.attr("href")));
+                    }
+                    result.add(newsItem);
+                }
+                newListBean.setNewsItemList(result);
+            }
+        }
+    }
 
 
     private void getCugNewsBannerData() {
@@ -161,8 +198,8 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                                 for (Element item :
                                         elements) {
                                     NewListBean.BannerBean bannerBean = new NewListBean.BannerBean();
-                                    bannerBean.setContentUrl(NewsUtil.getHref(item.getElementsByTag("a").attr("href")));
-                                    bannerBean.setThumb(NewsUtil.getHref(item.getElementsByTag("a").select("img").attr("src")));
+                                    bannerBean.setContentUrl(getHref(item.getElementsByTag("a").attr("href")));
+                                    bannerBean.setThumb(getHref(item.getElementsByTag("a").select("img").attr("src")));
                                     bannerBean.setTitle(item.select(".dtxt").text());
                                     list.add(bannerBean);
                                 }

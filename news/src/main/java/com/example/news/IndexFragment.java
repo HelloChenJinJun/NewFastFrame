@@ -20,6 +20,7 @@ import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.news.adapter.PopWindowAdapter;
 import com.example.news.event.TypeNewsEvent;
 import com.example.news.mvp.news.NewsListFragment;
+import com.example.news.mvp.news.college.CollegeNewsMainFragment;
 import com.example.news.mvp.news.othernew.OtherNewsListFragment;
 import com.example.news.mvp.news.othernew.photolist.PhotoListFragment;
 import com.example.news.util.NewsUtil;
@@ -80,11 +81,13 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         titleList.add("要闻");
         titleList.add("公告");
         titleList.add("学术");
+        titleList.add("经管");
         titleList.add("福利");
         fragmentList = new ArrayList<>();
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NEWS));
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NOTIFY));
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_TECHNOLOGY));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_JG));
         fragmentList.add(PhotoListFragment.newInstance());
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         List<OtherNewsTypeBean> result = NewsApplication
@@ -102,7 +105,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         viewPagerAdapter.setTitleAndFragments(titleList, fragmentList);
         tabLayout.setupWithViewPager(display);
         display.setAdapter(viewPagerAdapter);
-        display.setOffscreenPageLimit(1);
         display.setCurrentItem(0);
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("地大新闻");

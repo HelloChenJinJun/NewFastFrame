@@ -50,6 +50,13 @@ public class NewsUtil {
     public static final String SPECIAL_ID = "special_id";
     public static final String POST_ID = "post_id";
     public static final String PHOTO_SET_ID = "photo_set_id";
+    public static final String JG_INDEX_URL = "http://jgxy.cug.edu.cn/news.asp?bid=6&sid=1";
+    public static final String JG_NOTICE_URL = "http://jgxy.cug.edu.cn/news.asp?bid=6&sid=2";
+    public static final String JG_SCIENCE_URL = "http://jgxy.cug.edu.cn/news.asp?bid=2&sid=11";
+    public static final String JG_BASE_URL = "http://jgxy.cug.edu.cn/";
+    public static final String JG_COOKIE = "jg_cookie";
+    public static final String COLLEGE_TYPE_JG = "type_jg";
+    public static final String COLLEGE_TYPE = "college_type";
 
 
     public static String getRealNewsUrl(String url,int totalPage, int currentNum) {
@@ -209,5 +216,19 @@ public class NewsUtil {
         stringBuilder.append("http://gank.io/api/data/福利/").append(size)
                 .append("/").append(num);
         return stringBuilder.toString();
+    }
+
+    public static String getCollegeNewsUrl(String url, int num) {
+        StringBuilder builder=new StringBuilder();
+        builder.append(url).append("&Curpage=").append(num);
+        return builder.toString();
+    }
+
+    public static String getJG_REAL_URL(String href) {
+        if (href != null && !href.startsWith(JG_BASE_URL)) {
+            return JG_BASE_URL+href;
+        }else {
+            return href;
+        }
     }
 }

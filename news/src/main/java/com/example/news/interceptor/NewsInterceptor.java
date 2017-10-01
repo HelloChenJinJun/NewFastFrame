@@ -97,6 +97,26 @@ public class NewsInterceptor implements Interceptor {
                 return chain.proceed(newRequest);
             }
         }
+        if (request.url().toString().startsWith(NewsUtil.JG_BASE_URL)) {
+            Request newRequest;
+                newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
+                        .header("Cookie", "_ga=GA1.3.1067555487.1498354603;" + BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.JG_COOKIE, null))
+                        .header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+                        .header("Accept-Encoding","gzip, deflate, sdch")
+                        .header("Accept-Language","zh-CN,zh;q=0.8")
+                        .header("Upgrade-Insecure-Requests","1")
+                        .header("Cache-Control","max-age=0")
+                        .build();
+            Response response = chain.proceed(newRequest);
+            String cookie = response.header("Set-Cookie", null);
+            if (cookie != null) {
+                String newCookie = cookie.substring(0, cookie.indexOf(";"));
+                BaseApplication.getAppComponent()
+                        .getSharedPreferences().edit().putString(NewsUtil.JG_COOKIE, newCookie)
+                        .apply();
+            }
+            return response;
+        }
         return chain.proceed(request);
     }
 
