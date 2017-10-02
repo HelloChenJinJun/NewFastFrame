@@ -82,14 +82,22 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         titleList.add("公告");
         titleList.add("学术");
         titleList.add("经管");
+        titleList.add("公管");
+        titleList.add("计院 ");
+        titleList.add("地科");
+        titleList.add("外院");
         titleList.add("福利");
         fragmentList = new ArrayList<>();
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NEWS));
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NOTIFY));
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_TECHNOLOGY));
         fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_JG));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_GG));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_JSJ));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_DK));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_WY));
         fragmentList.add(PhotoListFragment.newInstance());
-        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
+        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
         List<OtherNewsTypeBean> result = NewsApplication
                 .getNewsComponent().getRepositoryManager()
                 .getDaoSession()

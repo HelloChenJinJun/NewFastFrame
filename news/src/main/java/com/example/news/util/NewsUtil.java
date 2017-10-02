@@ -55,8 +55,29 @@ public class NewsUtil {
     public static final String JG_SCIENCE_URL = "http://jgxy.cug.edu.cn/news.asp?bid=2&sid=11";
     public static final String JG_BASE_URL = "http://jgxy.cug.edu.cn/";
     public static final String JG_COOKIE = "jg_cookie";
-    public static final String COLLEGE_TYPE_JG = "type_jg";
+    public static final String COLLEGE_TYPE_JG = "TYPE_JG";
     public static final String COLLEGE_TYPE = "college_type";
+//    http://ggxy.cug.edu.cn/ggxy2014/?sort=31
+    public static final String GG_BASE_URL = "http://ggxy.cug.edu.cn/ggxy2014/";
+    public static final String COLLEGE_TYPE_GG = "TYPE_GG";
+    public static final String GG_INDEX_URL = "http://ggxy.cug.edu.cn/ggxy2014/?sort=31";
+    public static final String GG_NOTICE_URL = "http://ggxy.cug.edu.cn/ggxy2014/?sort=32";
+    public static final String GG_SCIENCE_URL = "http://ggxy.cug.edu.cn/ggxy2014/?sort=12";
+    public static final String JSJ_BASE_URL = "http://jsjxy.cug.edu.cn/";
+    public static final String COLLEGE_TYPE_JSJ = "TYPE_JSJ";
+    public static final String JSJ_INDEX_URL = "http://jsjxy.cug.edu.cn/xyxw/xwdt.htm";
+    public static final String JSJ_NOTICE_URL ="http://jsjxy.cug.edu.cn/tzgg/tzgg.htm" ;
+    public static final String DK_BASE_URL = "http://dxy.cug.edu.cn/";
+    public static final String COLLEGE_TYPE_DK = "TYPE_DK";
+    public static final String DK_INDEX_URL = "http://dxy.cug.edu.cn/xyxw/xyxw.htm";
+    public static final String DK_NOTICE_URL = "http://dxy.cug.edu.cn/xyxw/xygg.htm";
+    public static final String DK_SCIENCE_URL = "http://dxy.cug.edu.cn/xkjs/xsdt.htm";
+    public static final String WY_BASE_URL = "http://wyxy.cug.edu.cn/";
+//    http://wyxy.cug.edu.cn/E_NobigClass.asp?E_typeid=27
+    public static final String WY_INDEX_URL = "http://wyxy.cug.edu.cn/E_NobigClass.asp?E_typeid=27";
+    public static final String COLLEGE_TYPE_WY = "TYPE_WY";
+    public static final String WY_SCIENCE_URL = "http://wyxy.cug.edu.cn/E_Type.asp?E_typeid=26";
+    public static final String WY_NOTICE_URL = "http://wyxy.cug.edu.cn/E_Type.asp?E_typeid=7";
 
 
     public static String getRealNewsUrl(String url,int totalPage, int currentNum) {
@@ -75,12 +96,7 @@ public class NewsUtil {
         return CUG_LIBRARY.replace("java",text).replace("page=2","page="+page).replace("displaypg=20","displaypg="+num);
     }
 
-    public static String getHref(String href) {
-        if (href != null && !href.startsWith("http")) {
-            return CUG_INDEX + href;
-        }
-        return href;
-    }
+
 
     public static String getRealSearchLibraryUrl(String url) {
         if (url != null && !url.startsWith("http")) {
@@ -218,17 +234,58 @@ public class NewsUtil {
         return stringBuilder.toString();
     }
 
-    public static String getCollegeNewsUrl(String url, int num) {
+    public static String getCollegeNewsUrl(String url, int totalPage, int num) {
         StringBuilder builder=new StringBuilder();
-        builder.append(url).append("&Curpage=").append(num);
+        if (url.startsWith(JG_BASE_URL)) {
+            builder.append(url).append("&Curpage=").append(num);
+        } else if (url.startsWith(GG_BASE_URL)) {
+//            ggxy2014/?sort=31
+            builder.append(url).append("&page=").append(num);
+        } else if (url.startsWith(JSJ_BASE_URL)||url.startsWith(DK_BASE_URL)) {
+            if (totalPage > 0) {
+                builder.append(url.substring(0,url.lastIndexOf(".")))
+                        .append("/").append(totalPage - num + 1).append(".htm");
+                return builder.toString();
+            }
+        }
         return builder.toString();
     }
 
-    public static String getJG_REAL_URL(String href) {
-        if (href != null && !href.startsWith(JG_BASE_URL)) {
-            return JG_BASE_URL+href;
+
+
+
+
+
+
+    public static String getRealUrl(String href,String baseUrl) {
+        if (href != null && !href.startsWith(baseUrl)) {
+            return baseUrl+href;
         }else {
             return href;
+        }
+    }
+
+    public static String getDKPage(String url) {
+        if (url.startsWith(DK_INDEX_URL)) {
+            return "fanye177091";
+        } else {
+            return "fanye176991";
+        }
+    }
+
+    public static String getBaseUrl(String url) {
+        if (url.startsWith(CUG_INDEX)) {
+            return CUG_INDEX;
+        } else if (url.startsWith(DK_BASE_URL)) {
+            return DK_BASE_URL;
+        } else if (url.startsWith(JG_BASE_URL)) {
+            return JG_BASE_URL;
+        }else if (url.startsWith(GG_BASE_URL)){
+            return GG_BASE_URL;
+        } else if (url.startsWith(JSJ_BASE_URL)) {
+            return JSJ_BASE_URL;
+        }else {
+            return null;
         }
     }
 }

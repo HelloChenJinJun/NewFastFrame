@@ -145,13 +145,19 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
         DaggerNewsListComponent.builder().newsListModule(new NewsListModule(this))
                 .newsComponent(NewsApplication.getNewsComponent())
                 .build().inject(this);
-        if (NewsUtil.CUG_NEWS.equals(url)) {
+        if (NewsUtil.CUG_NEWS.equals(url)||NewsUtil.DK_INDEX_URL.equals(url)
+                ||NewsUtil.JG_INDEX_URL.equals(url)
+                ||NewsUtil.GG_INDEX_URL.equals(url)
+                ||NewsUtil.JSJ_INDEX_URL.equals(url)
+                ||NewsUtil.WY_INDEX_URL.equals(url)) {
             display.addHeaderView(getHeaderView());
         }
         refresh.setOnRefreshListener(this);
         display.setLayoutManager(new WrappedLinearLayoutManager(getActivity()));
-        display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
-        display.setOnLoadMoreListener(this);
+        if (!url.startsWith(NewsUtil.WY_BASE_URL)) {
+            display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
+            display.setOnLoadMoreListener(this);
+        }
         display.setAdapter(newsListAdapter);
         newsListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override

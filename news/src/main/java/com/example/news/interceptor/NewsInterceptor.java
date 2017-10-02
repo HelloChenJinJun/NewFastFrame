@@ -1,13 +1,18 @@
 package com.example.news.interceptor;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.IOUtils;
 import com.example.news.util.NewsUtil;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * 项目名称:    NewFastFrame+
@@ -108,14 +113,35 @@ public class NewsInterceptor implements Interceptor {
                         .header("Cache-Control","max-age=0")
                         .build();
             Response response = chain.proceed(newRequest);
+//            responseBody = ResponseBody.create(responseBody.contentType(), bytes);
             String cookie = response.header("Set-Cookie", null);
+            ResponseBody responseBody=response.body();
+            CommonLogger.e("类型:"+responseBody.contentType().toString());
+            byte[] bytes = IOUtils.toByteArray(responseBody
+                    .byteStream());
+            Charset charset = responseBody.contentType() != null ? responseBody.contentType().charset() : Charset.forName("UTF-8");
+            if (charset == null) charset = Charset.forName("gb2312");
+            String body=new String(bytes,charset);
+            CommonLogger.e("主体"+body);
+            responseBody = ResponseBody.create(MediaType.parse("text/html; charset=gb2312"), bytes);
+            Response newResponse = response.newBuilder().body(responseBody).build();
             if (cookie != null) {
                 String newCookie = cookie.substring(0, cookie.indexOf(";"));
                 BaseApplication.getAppComponent()
                         .getSharedPreferences().edit().putString(NewsUtil.JG_COOKIE, newCookie)
                         .apply();
             }
-            return response;
+            return newResponse;
+        } else if (request.url().toString().startsWith(NewsUtil.WY_BASE_URL)) {
+            Response response = chain.proceed(chain.request());
+            ResponseBody responseBody=response.body();
+            byte[] bytes = IOUtils.toByteArray(responseBody
+                    .byteStream());
+            Charset charset = Charset.forName("gb2312");
+            String body=new String(bytes,charset);
+            CommonLogger.e("外主体"+body);
+            responseBody = ResponseBody.create(MediaType.parse("text/html; charset=gb2312"), bytes);
+            return response.newBuilder().body(responseBody).build();
         }
         return chain.proceed(request);
     }

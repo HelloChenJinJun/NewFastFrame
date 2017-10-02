@@ -189,7 +189,7 @@ public class LogInterceptor implements Interceptor {
 
 
     private static Charset getCharset(MediaType contentType) {
-        Charset charset = contentType != null ? contentType.charset(UTF8) : UTF8;
+        Charset charset = contentType != null ? contentType.charset() : UTF8;
         if (charset == null) charset = UTF8;
         return charset;
     }

@@ -75,6 +75,7 @@ public class NewListBean {
         private String contentUrl;
         private String thumb;
         private String time;
+        private String from;
 
         public String getThumb() {
             return thumb;
@@ -121,6 +122,14 @@ public class NewListBean {
         public boolean equals(Object obj) {
             return obj!=null&&(obj instanceof NewsItem)
                     && ((NewsItem) obj).getContentUrl().equals(getContentUrl());
+        }
+
+        public String getFrom() {
+            return from;
+        }
+
+        public void setFrom(String from) {
+            this.from = from;
         }
     }
 }

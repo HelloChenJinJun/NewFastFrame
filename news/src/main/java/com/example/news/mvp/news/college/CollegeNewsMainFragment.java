@@ -66,10 +66,30 @@ public class CollegeNewsMainFragment extends BaseFragment {
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.JG_NOTICE_URL));
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.JG_SCIENCE_URL));
                     break;
+                case NewsUtil.COLLEGE_TYPE_GG:
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.GG_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.GG_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.GG_SCIENCE_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_JSJ:
+                    titleList.remove(2);
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.JSJ_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.JSJ_NOTICE_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_DK:
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.DK_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.DK_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.DK_SCIENCE_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_WY:
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.WY_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.WY_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.WY_SCIENCE_URL));
+                    break;
             }
         }
         tabLayout.setupWithViewPager(display);
-        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         viewPagerAdapter.setTitleAndFragments(titleList,fragmentList);
     }
 

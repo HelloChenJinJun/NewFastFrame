@@ -23,6 +23,7 @@ public class NewsListAdapter extends BaseRecyclerAdapter<NewListBean.NewsItem,Ba
         holder.setImageUrl(R.id.iv_item_fragment_news_list_image,data.getThumb(),R.drawable.cug_index
         ,R.drawable.cug_index)
                 .setText(R.id.tv_item_fragment_news_list_title,data.getTitle())
+                .setText(R.id.tv_item_fragment_news_list_time_from,data.getFrom())
                 .setText(R.id.tv_item_fragment_news_list_time,data.getTime())
                 .setOnItemClickListener();
     }
