@@ -73,11 +73,50 @@ public class NewsUtil {
     public static final String DK_NOTICE_URL = "http://dxy.cug.edu.cn/xyxw/xygg.htm";
     public static final String DK_SCIENCE_URL = "http://dxy.cug.edu.cn/xkjs/xsdt.htm";
     public static final String WY_BASE_URL = "http://wyxy.cug.edu.cn/";
-//    http://wyxy.cug.edu.cn/E_NobigClass.asp?E_typeid=27
-    public static final String WY_INDEX_URL = "http://wyxy.cug.edu.cn/E_NobigClass.asp?E_typeid=27";
+//    http://wyxy.cug.edu.cn/E_Type.asp?E_typeid=7
+    public static final String WY_INDEX_URL = "http://wyxy.cug.edu.cn/E_Type.asp?E_typeid=7";
     public static final String COLLEGE_TYPE_WY = "TYPE_WY";
     public static final String WY_SCIENCE_URL = "http://wyxy.cug.edu.cn/E_Type.asp?E_typeid=26";
-    public static final String WY_NOTICE_URL = "http://wyxy.cug.edu.cn/E_Type.asp?E_typeid=7";
+//    http://wyxy.cug.edu.cn/E_BigClass.asp?E_typeid=27&E_BigClassID=73
+    public static final String WY_NOTICE_URL = "http://wyxy.cug.edu.cn/E_BigClass.asp?E_typeid=27&E_BigClassID=73";
+    public static final String DY_BASE_URL = "http://lsgxy.cug.edu.cn/";
+    public static final String COLLEGE_TYPE_DY = "TYPE_DY";
+    public static final String DY_INDEX_URL = "http://lsgxy.cug.edu.cn/xydt.htm";
+    public static final String DY_NOTICE_URL = "http://lsgxy.cug.edu.cn/tzgg.htm";
+    public static final String DY_PUBLIC_URL = "http://lsgxy.cug.edu.cn/xxgs.htm";
+    public static final String XY_BASE_URL = "http://xgxy.cug.edu.cn/";
+    public static final String COLLEGE_TYPE_XY = "TYPE_XY";
+    public static final String XY_INDEX_URL = "http://xgxy.cug.edu.cn/xyxw.htm";
+    public static final String XY_SCIENCE_URL = "http://xgxy.cug.edu.cn/kyxsdt.htm";
+    public static final String XY_TECH_URL = "http://xgxy.cug.edu.cn/bkjxxx.htm";
+    public static final String XY_GRADUATE_URL = "http://xgxy.cug.edu.cn/yjsglxx.htm";
+    public static final String XY_JOB_URL = "http://xgxy.cug.edu.cn/zsjyxx.htm";
+    public static final String XY_STUDENT_URL = "http://xgxy.cug.edu.cn/xsgzdt.htm";
+    public static final String ZDH_BASE_URL = "http://au.cug.edu.cn/";
+    public static final String ZDH_INDEX_URL ="http://au.cug.edu.cn/xyxw.htm" ;
+    public static final String COLLEGE_TYPE_ZDH = "TYPE_ZDH";
+    public static final String ZDH_NOTICE_URL = "http://au.cug.edu.cn/xygg.htm";
+    public static final String ZDH_SCIENCE_URL = "http://au.cug.edu.cn/xsdt.htm";
+    public static final String ZDH_STUDENT_URL = "http://au.cug.edu.cn/sybksjy.htm";
+    public static final String ZDH_GRADUATE_URL = "http://au.cug.edu.cn/syyjsjy.htm";
+    public static final String ZDH_JOB_URL = "http://au.cug.edu.cn/syyjsjy.htm";
+    public static final String ZY_BASE_URL = "http://zyxy.cug.edu.cn/";
+    public static final String ZY_INDEX_URL = "http://zyxy.cug.edu.cn/xyxw/xyxw.htm";
+    public static final String COLLEGE_TYPE_ZY = "TYPE_ZY";
+    public static final String ZY_SCIENCE_URL = "http://zyxy.cug.edu.cn/kxyj/xsdt.htm";
+    public static final String ZY_STUDENT_NEWS_URL = "http://zyxy.cug.edu.cn/xsgz1/xsdt.htm";
+    public static final String ZY_STUDENT_URL = "http://zyxy.cug.edu.cn/rcpy1/bksjy/bkspy.htm";
+    public static final String ZY_GRADUATE_URL = "http://zyxy.cug.edu.cn/rcpy1/yjsjy/yjspy.htm";
+    public static final String CH_BASE_URL = "http://chxy.cug.edu.cn/";
+    public static final String CH_INDEX_URL = "http://chxy.cug.edu.cn/xwzx/xyxw.htm";
+    public static final String COLLEGE_TYPE_CH = "TYPE_CH";
+    public static final String CH_NOTICE_URL = "http://chxy.cug.edu.cn/xwzx/tzgg.htm";
+    public static final String CH_SCIENCE_URL = "http://chxy.cug.edu.cn/kxyj/kydt.htm";
+    public static final String COLLEGE_TYPE_GC = "TYPE_GC";
+    public static final String GC_INDEX_URL = "http://gccug.com/index.php?m=content&c=index&a=lists&catid=32";
+    public static final String GC_NOTICE_URL = "http://gccug.com/index.php?m=content&c=index&a=lists&catid=33";
+    public static final String GC_WORK_URL = "http://gccug.com/index.php?m=content&c=index&a=lists&catid=34";
+    public static final String GC_BASE_URL = "http://gccug.com/";
 
 
     public static String getRealNewsUrl(String url,int totalPage, int currentNum) {
@@ -238,10 +277,16 @@ public class NewsUtil {
         StringBuilder builder=new StringBuilder();
         if (url.startsWith(JG_BASE_URL)) {
             builder.append(url).append("&Curpage=").append(num);
-        } else if (url.startsWith(GG_BASE_URL)) {
+        } else if (url.startsWith(GG_BASE_URL)
+                ||url.startsWith(GC_BASE_URL)) {
 //            ggxy2014/?sort=31
             builder.append(url).append("&page=").append(num);
-        } else if (url.startsWith(JSJ_BASE_URL)||url.startsWith(DK_BASE_URL)) {
+        } else if (url.startsWith(JSJ_BASE_URL)||url.startsWith(DK_BASE_URL)
+                ||url.startsWith(DY_BASE_URL)
+                ||url.startsWith(XY_BASE_URL)
+                ||url.startsWith(ZDH_BASE_URL)
+                ||url.startsWith(ZY_BASE_URL)
+                ||url.startsWith(CH_BASE_URL)) {
             if (totalPage > 0) {
                 builder.append(url.substring(0,url.lastIndexOf(".")))
                         .append("/").append(totalPage - num + 1).append(".htm");
@@ -258,11 +303,14 @@ public class NewsUtil {
 
 
     public static String getRealUrl(String href,String baseUrl) {
-        if (href != null && !href.startsWith(baseUrl)) {
-            return baseUrl+href;
-        }else {
-            return href;
+        if (href != null) {
+            if (href.startsWith("http")) {
+                return href;
+            }else {
+                return baseUrl+href;
+            }
         }
+        return null;
     }
 
     public static String getDKPage(String url) {
@@ -284,8 +332,31 @@ public class NewsUtil {
             return GG_BASE_URL;
         } else if (url.startsWith(JSJ_BASE_URL)) {
             return JSJ_BASE_URL;
+        }else if (url.startsWith(WY_BASE_URL)){
+            return WY_BASE_URL;
+        }else if (url.startsWith(DY_BASE_URL)){
+            return DY_BASE_URL;
+        }else if (url.startsWith(XY_BASE_URL)){
+            return XY_BASE_URL;
+        }else if (url.startsWith(ZDH_BASE_URL)){
+            return ZDH_BASE_URL;
+        }else if (url.startsWith(ZY_BASE_URL)){
+            return ZY_BASE_URL+"sy.htm";
+        }else if (url.startsWith(CH_BASE_URL)){
+            return CH_BASE_URL;
+        }else if (url.startsWith(GC_BASE_URL)){
+            return GC_BASE_URL;
         }else {
             return null;
+        }
+    }
+
+    public static String getZYPage(String url) {
+        if (url.equals(ZY_STUDENT_URL)
+                || url.equals(ZY_GRADUATE_URL)) {
+            return "fanye193939";
+        }else {
+            return "fanye193184";
         }
     }
 }

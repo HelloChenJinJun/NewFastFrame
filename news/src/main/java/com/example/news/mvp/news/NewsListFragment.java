@@ -149,7 +149,13 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
                 ||NewsUtil.JG_INDEX_URL.equals(url)
                 ||NewsUtil.GG_INDEX_URL.equals(url)
                 ||NewsUtil.JSJ_INDEX_URL.equals(url)
-                ||NewsUtil.WY_INDEX_URL.equals(url)) {
+                ||NewsUtil.WY_INDEX_URL.equals(url)
+                ||NewsUtil.DY_INDEX_URL.equals(url)
+                ||NewsUtil.XY_INDEX_URL.equals(url)
+                ||NewsUtil.ZDH_INDEX_URL.equals(url)
+                ||NewsUtil.ZY_INDEX_URL.equals(url)
+                ||NewsUtil.CH_INDEX_URL.equals(url)
+                ||NewsUtil.GC_INDEX_URL.equals(url)) {
             display.addHeaderView(getHeaderView());
         }
         refresh.setOnRefreshListener(this);

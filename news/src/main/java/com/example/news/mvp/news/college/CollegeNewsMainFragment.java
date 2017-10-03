@@ -86,6 +86,61 @@ public class CollegeNewsMainFragment extends BaseFragment {
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.WY_NOTICE_URL));
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.WY_SCIENCE_URL));
                     break;
+                case NewsUtil.COLLEGE_TYPE_DY:
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.DY_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.DY_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.DY_PUBLIC_URL));
+                    titleList.set(2,"公示");
+                    break;
+                case NewsUtil.COLLEGE_TYPE_XY:
+                    titleList.clear();
+                    titleList.add("要闻");
+                    titleList.add("科研");
+                    titleList.add("教学");
+                    titleList.add("研究生");
+                    titleList.add("就业");
+                    titleList.add("动态");
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.XY_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.XY_SCIENCE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.XY_TECH_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.XY_GRADUATE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.XY_JOB_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.XY_STUDENT_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_ZDH:
+                    titleList.add("本科生");
+                    titleList.add("研究生");
+                    titleList.add("就业");
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZDH_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZDH_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZDH_SCIENCE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZDH_STUDENT_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZDH_GRADUATE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZDH_JOB_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_ZY:
+                    titleList.remove(1);
+                    titleList.add("学生动态");
+                    titleList.add("本科生");
+                    titleList.add("研究生");
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZY_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZY_SCIENCE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZY_STUDENT_NEWS_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZY_STUDENT_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.ZY_GRADUATE_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_CH:
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.CH_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.CH_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.CH_SCIENCE_URL));
+                break;
+                case NewsUtil.COLLEGE_TYPE_GC:
+                    titleList.set(2,"党建");
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.GC_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.GC_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.GC_WORK_URL));
+                    break;
+
             }
         }
         tabLayout.setupWithViewPager(display);
