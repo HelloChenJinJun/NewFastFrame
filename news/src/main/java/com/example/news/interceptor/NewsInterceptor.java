@@ -132,7 +132,8 @@ public class NewsInterceptor implements Interceptor {
                         .apply();
             }
             return newResponse;
-        } else if (request.url().toString().startsWith(NewsUtil.WY_BASE_URL)) {
+        } else if (request.url().toString().startsWith(NewsUtil.WY_BASE_URL)
+                ||request.url().toString().startsWith(NewsUtil.YM_BASE_URL)) {
             Response response = chain.proceed(chain.request());
             ResponseBody responseBody=response.body();
             byte[] bytes = IOUtils.toByteArray(responseBody

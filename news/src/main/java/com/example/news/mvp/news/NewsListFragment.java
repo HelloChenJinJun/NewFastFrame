@@ -161,7 +161,8 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
                 ||NewsUtil.JD_INDEX_URL.equals(url)
                 ||NewsUtil.HY_INDEX_URL.equals(url)
                 ||NewsUtil.SL_INDEX_URL.equals(url)
-                ||NewsUtil.YM_INDEX_URL.equals(url)) {
+                ||NewsUtil.YM_INDEX_URL.equals(url)
+                ||NewsUtil.MY_INDEX_URL.equals(url)) {
             display.addHeaderView(getHeaderView());
         }
         refresh.setOnRefreshListener(this);

@@ -81,9 +81,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         titleList.add("要闻");
         titleList.add("公告");
         titleList.add("学术");
+        titleList.add("马院");
         titleList.add("艺媒");
         titleList.add("数理");
-
         titleList.add("海洋");
         titleList.add("机电");
         titleList.add("地空");
@@ -104,6 +104,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NEWS));
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NOTIFY));
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_TECHNOLOGY));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_MY));
         fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_YM));
         fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_SL));
         fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_HY));

@@ -185,6 +185,16 @@ public class CollegeNewsMainFragment extends BaseFragment {
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.YM_NOTICE_URL));
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.YM_STUDENT_WORK_URL));
                     break;
+                case NewsUtil.COLLEGE_TYPE_MY:
+                    titleList.add("本科生");
+                    titleList.add("研究生");
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.MY_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.MY_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.MY_SCIENCE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.MY_STUDENT_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.MY_GRADUATE_URL));
+                    break;
+
             }
         }
         tabLayout.setupWithViewPager(display);

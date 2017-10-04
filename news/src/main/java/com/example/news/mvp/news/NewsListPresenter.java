@@ -74,7 +74,8 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                     || NewsUtil.JD_INDEX_URL.equals(url)
                     || NewsUtil.HY_INDEX_URL.equals(url)
                     || NewsUtil.SL_INDEX_URL.equals(url)
-                    ||NewsUtil.YM_INDEX_URL.equals(url)) {
+                    ||NewsUtil.YM_INDEX_URL.equals(url)
+                    ||NewsUtil.MY_INDEX_URL.equals(url)) {
                 getCugNewsBannerData(NewsUtil.getBaseUrl(url));
             }
         }
@@ -639,6 +640,52 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                     }
                 }
                 newListBean.setNewsItemList(list);
+            }
+        } else if (url.startsWith(NewsUtil.MY_BASE_URL)) {
+            Elements container = document.select(".listBox2");
+            Element page = document.getElementById("fanye193912");
+            String text = null;
+            if (page != null) {
+                text = page.text();
+            }
+            if (text != null) {
+                String num = text.substring(text.lastIndexOf("/") + 1, text.length()).trim();
+                totalPage = Integer.valueOf(num);
+            } else {
+                totalPage = 1;
+            }
+            if (container.size() > 0) {
+                Elements elements = container.first().getElementsByTag("li");
+                if (elements.size() > 0) {
+                    List<NewListBean.NewsItem> list = new ArrayList<>();
+                    for (Element item :
+                            elements) {
+                        Element image= item.select(".img").first();
+                        NewListBean.NewsItem bean = new NewListBean.NewsItem();
+                        if (item.select(".addi").size() > 0) {
+                            String time=item.select(".addi").first().text();
+                            bean.setTime(time.substring(0,time.indexOf("点")));
+                        }
+                        Element element;
+                        if (image != null) {
+                            element=image.getElementsByTag("img").first();
+                            Element a=image.getElementsByTag("a").first();
+                            if (a != null) {
+                                bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"), NewsUtil.MY_BASE_URL));
+                            }
+                            bean.setTitle(element.attr("alt"));
+                                bean.setThumb(NewsUtil.getRealUrl(element.attr("src"),NewsUtil.MY_BASE_URL));
+                        }else {
+                            element=item.getElementsByTag("a").first();
+                            bean.setTitle(element.text());
+                            bean.setContentUrl(NewsUtil.getRealUrl(element.attr("href"), NewsUtil.MY_BASE_URL));
+                        }
+
+                        bean.setFrom("马克思主义学院");
+                        list.add(bean);
+                    }
+                    newListBean.setNewsItemList(list);
+                }
             }
         }
     }
@@ -1284,6 +1331,51 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                 newListBean.setBannerBeanList(list);
             }
 
+        } else if (url.equals(NewsUtil.MY_BASE_URL)) {
+            Elements script = document.getElementsByTag("script");
+            String content = null;
+            for (Element temp :
+                    script) {
+                if (temp.html().contains("ImageChangeNews")) {
+                    content = temp.html();
+                    break;
+                }
+            }
+            if (content == null) {
+                return;
+            }
+            String start = "{";
+            String end = "u_u6_icn.changeimg(0)";
+            content = content.substring(content.indexOf(start) + start.length(), content.indexOf(end)).replace("amp;", "");
+            String str = "\\);";
+            String[] array = content.split(str);
+            List<NewListBean.BannerBean> bannerList = new ArrayList<>();
+            List<String> list = new ArrayList<>();
+            for (String string :
+                    array) {
+                if (string.contains("\"")) {
+                    String[] temp = string.split("\"");
+                    list.add(temp[1]);
+                    list.add(temp[3]);
+                    list.add((temp[5]));
+                }
+            }
+            int size = list.size();
+            for (int i = 0; i < size; i++) {
+                String item = list.get(i);
+                if (i % 3 == 0) {
+                    NewListBean.BannerBean bean = new NewListBean.BannerBean();
+                    bean.setThumb(NewsUtil.getRealUrl(item, url).replace("\\", ""));
+                    bannerList.add(bean);
+                } else {
+                    if (i % 3 == 1) {
+                        bannerList.get(i / 3).setContentUrl(NewsUtil.getRealUrl(item, url).replace("\\", ""));
+                    } else {
+                        bannerList.get(i / 3).setTitle(item);
+                    }
+                }
+            }
+            newListBean.setBannerBeanList(bannerList);
         }
     }
 

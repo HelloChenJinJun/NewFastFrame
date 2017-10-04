@@ -153,6 +153,13 @@ public class NewsUtil {
     public static final String YM_BASE_URL = "http://sac.cug.edu.cn/";
     public static final String YM_NOTICE_URL = "http://sac.cug.edu.cn/channels/33.html";
     public static final String YM_STUDENT_WORK_URL = "http://sac.cug.edu.cn/channels/84.html";
+    public static final String COLLEGE_TYPE_MY = "TYPE_MY";
+    public static final String MY_INDEX_URL = "http://mkszyxy.cug.edu.cn/xyxw.htm";
+    public static final String MY_NOTICE_URL = "http://mkszyxy.cug.edu.cn/tzgg.htm";
+    public static final String MY_SCIENCE_URL = "http://mkszyxy.cug.edu.cn/kxyj/xsdt.htm";
+    public static final String MY_STUDENT_URL = "http://mkszyxy.cug.edu.cn/rcpy/bkspy.htm";
+    public static final String MY_GRADUATE_URL = "http://mkszyxy.cug.edu.cn/rcpy/yjspy.htm";
+    public static final String MY_BASE_URL = "http://mkszyxy.cug.edu.cn/";
 
 
     public static String getRealNewsUrl(String url,int totalPage, int currentNum) {
@@ -326,7 +333,8 @@ public class NewsUtil {
                 ||url.startsWith(CH_BASE_URL)
                 ||url.startsWith(DWK_BASE_URL)
                 ||url.startsWith(JD_BASE_URL)
-                ||url.startsWith(SL_BASE_URL)) {
+                ||url.startsWith(SL_BASE_URL)
+                ||url.startsWith(MY_BASE_URL)) {
             if (totalPage > 0) {
                 builder.append(url.substring(0,url.lastIndexOf(".")))
                         .append("/").append(totalPage - num + 1).append(".htm");
@@ -337,7 +345,7 @@ public class NewsUtil {
                 return builder.toString();
         } else if (url.startsWith(YM_BASE_URL)) {
             builder.append(url.substring(0,url.lastIndexOf("."))).append("_").append(num)
-                    .append(".htm");
+                    .append(".html");
             return builder.toString();
         }
         return builder.toString();
@@ -405,6 +413,8 @@ public class NewsUtil {
             return SL_BASE_URL;
         }else if (url.startsWith(YM_BASE_URL)){
             return YM_BASE_URL;
+        }else if (url.startsWith(MY_BASE_URL)){
+            return MY_BASE_URL;
         }else {
             return null;
         }
