@@ -81,6 +81,13 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         titleList.add("要闻");
         titleList.add("公告");
         titleList.add("学术");
+        titleList.add("艺媒");
+        titleList.add("数理");
+
+        titleList.add("海洋");
+        titleList.add("机电");
+        titleList.add("地空");
+        titleList.add("环境");
         titleList.add("工程");
         titleList.add("材化");
         titleList.add("资源");
@@ -97,6 +104,12 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NEWS));
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NOTIFY));
         fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_TECHNOLOGY));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_YM));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_SL));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_HY));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_JD));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_DWK));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_HJ));
         fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_GC));
         fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_CH));
         fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_ZY));

@@ -140,7 +140,51 @@ public class CollegeNewsMainFragment extends BaseFragment {
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.GC_NOTICE_URL));
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.GC_WORK_URL));
                     break;
-
+                case NewsUtil.COLLEGE_TYPE_HJ:
+                    titleList.remove(1);
+                    titleList.add("本科生");
+                    titleList.add("研究生");
+                    titleList.add("学生动态");
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HJ_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HJ_SCIENCE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HJ_STUDENT_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HJ_GRADUATE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HJ_STUDENT_WORK_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_DWK:
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.DWK_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.DWK_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.DWK_SCIENCE_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_JD:
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.JD_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.JD_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.JD_SCIENCE_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_HY:
+                    titleList.add("本科生");
+                    titleList.add("研究生");
+                    titleList.add("学生动态");
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_SCIENCE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_STUDENT_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_GRADUATE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_STUDENT_WORK_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_SL:
+                    titleList.add("教学");
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.SL_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.SL_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.SL_SCIENCE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.SL_TECH_URL));
+                    break;
+                case NewsUtil.COLLEGE_TYPE_YM:
+                    titleList.set(2,"学生动态");
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.YM_INDEX_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.YM_NOTICE_URL));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.YM_STUDENT_WORK_URL));
+                    break;
             }
         }
         tabLayout.setupWithViewPager(display);

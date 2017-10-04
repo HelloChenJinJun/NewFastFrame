@@ -117,6 +117,42 @@ public class NewsUtil {
     public static final String GC_NOTICE_URL = "http://gccug.com/index.php?m=content&c=index&a=lists&catid=33";
     public static final String GC_WORK_URL = "http://gccug.com/index.php?m=content&c=index&a=lists&catid=34";
     public static final String GC_BASE_URL = "http://gccug.com/";
+    public static final String COLLEGE_TYPE_HJ = "TYPE_HJ";
+    public static final String HJ_INDEX_URL = "http://sescug.com/index.php?m=content&c=index&a=lists&catid=65";
+    public static final String HJ_SCIENCE_URL = "http://sescug.com/index.php?m=content&c=index&a=lists&catid=66";
+    public static final String HJ_STUDENT_URL = "http://sescug.com/index.php?m=content&c=index&a=lists&catid=68";
+    public static final String HJ_GRADUATE_URL = "http://sescug.com/index.php?m=content&c=index&a=lists&catid=67";
+    public static final String HJ_STUDENT_WORK_URL = "http://sescug.com/index.php?m=content&c=index&a=lists&catid=69";
+    public static final String HJ_BASE_URL = "http://sescug.com/";
+    public static final String COLLEGE_TYPE_DWK = "TYPE_DWK";
+    public static final String DWK_INDEX_URL = "http://dkxy.cug.edu.cn/xydt/xyxw.htm";
+    public static final String DWK_NOTICE_URL = "http://dkxy.cug.edu.cn/xydt/tzgg.htm";
+    public static final String DWK_SCIENCE_URL = "http://dkxy.cug.edu.cn/xsky/xsdt.htm";
+    public static final String DWK_BASE_URL = "http://dkxy.cug.edu.cn/";
+    public static final String JD_BASE_URL = "http://jidian.cug.edu.cn/";
+    public static final String COLLEGE_TYPE_JD = "TYPE_JD";
+    public static final String JD_INDEX_URL = "http://jidian.cug.edu.cn/index/xyxw.htm";
+    public static final String JD_NOTICE_URL = "http://jidian.cug.edu.cn/index/tzgg.htm";
+    public static final String JD_SCIENCE_URL = "http://jidian.cug.edu.cn/index/xsdt.htm";
+    public static final String COLLEGE_TYPE_HY = "TYPE_HY";
+    public static final String HY_INDEX_URL = "http://cmst.cug.edu.cn/category/college-news";
+    public static final String HY_NOTICE_URL = "http://cmst.cug.edu.cn/category/notice";
+    public static final String HY_SCIENCE_URL = "http://cmst.cug.edu.cn/category/academic-trends";
+    public static final String HY_STUDENT_URL = "http://cmst.cug.edu.cn/category/undergraduate";
+    public static final String HY_GRADUATE_URL = "http://cmst.cug.edu.cn/category/postgraduate";
+    public static final String HY_STUDENT_WORK_URL = "http://cmst.cug.edu.cn/category/xue-sheng-gong-zuo";
+    public static final String HY_BASE_URL = "http://cmst.cug.edu.cn/";
+    public static final String COLLEGE_TYPE_SL = "TYPE_SL";
+    public static final String SL_INDEX_URL = "http://slxy.cug.edu.cn/xygk1/xyxw.htm";
+    public static final String SL_NOTICE_URL = "http://slxy.cug.edu.cn/xygk1/tzgg.htm";
+    public static final String SL_SCIENCE_URL = "http://slxy.cug.edu.cn/xygk1/xsdt.htm";
+    public static final String SL_TECH_URL = "http://slxy.cug.edu.cn/xygk1/jyjx.htm";
+    public static final String SL_BASE_URL = "http://slxy.cug.edu.cn/";
+    public static final String COLLEGE_TYPE_YM = "TYPE_YM";
+    public static final String YM_INDEX_URL = "http://sac.cug.edu.cn/channels/71.html";
+    public static final String YM_BASE_URL = "http://sac.cug.edu.cn/";
+    public static final String YM_NOTICE_URL = "http://sac.cug.edu.cn/channels/33.html";
+    public static final String YM_STUDENT_WORK_URL = "http://sac.cug.edu.cn/channels/84.html";
 
 
     public static String getRealNewsUrl(String url,int totalPage, int currentNum) {
@@ -278,7 +314,8 @@ public class NewsUtil {
         if (url.startsWith(JG_BASE_URL)) {
             builder.append(url).append("&Curpage=").append(num);
         } else if (url.startsWith(GG_BASE_URL)
-                ||url.startsWith(GC_BASE_URL)) {
+                ||url.startsWith(GC_BASE_URL)
+                ||url.startsWith(HJ_BASE_URL)) {
 //            ggxy2014/?sort=31
             builder.append(url).append("&page=").append(num);
         } else if (url.startsWith(JSJ_BASE_URL)||url.startsWith(DK_BASE_URL)
@@ -286,12 +323,22 @@ public class NewsUtil {
                 ||url.startsWith(XY_BASE_URL)
                 ||url.startsWith(ZDH_BASE_URL)
                 ||url.startsWith(ZY_BASE_URL)
-                ||url.startsWith(CH_BASE_URL)) {
+                ||url.startsWith(CH_BASE_URL)
+                ||url.startsWith(DWK_BASE_URL)
+                ||url.startsWith(JD_BASE_URL)
+                ||url.startsWith(SL_BASE_URL)) {
             if (totalPage > 0) {
                 builder.append(url.substring(0,url.lastIndexOf(".")))
                         .append("/").append(totalPage - num + 1).append(".htm");
                 return builder.toString();
             }
+        } else if (url.startsWith(HY_BASE_URL)) {
+                builder.append(url).append("/").append(num);
+                return builder.toString();
+        } else if (url.startsWith(YM_BASE_URL)) {
+            builder.append(url.substring(0,url.lastIndexOf("."))).append("_").append(num)
+                    .append(".htm");
+            return builder.toString();
         }
         return builder.toString();
     }
@@ -346,6 +393,18 @@ public class NewsUtil {
             return CH_BASE_URL;
         }else if (url.startsWith(GC_BASE_URL)){
             return GC_BASE_URL;
+        }else if (url.startsWith(HJ_BASE_URL)){
+            return HJ_BASE_URL;
+        }else if (url.startsWith(DWK_BASE_URL)){
+            return DWK_BASE_URL;
+        }else if (url.startsWith(JD_BASE_URL)){
+            return JD_BASE_URL;
+        }else if (url.startsWith(HY_BASE_URL)){
+            return HY_BASE_URL;
+        }else if (url.startsWith(SL_BASE_URL)){
+            return SL_BASE_URL;
+        }else if (url.startsWith(YM_BASE_URL)){
+            return YM_BASE_URL;
         }else {
             return null;
         }

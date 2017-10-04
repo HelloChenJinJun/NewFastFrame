@@ -56,7 +56,6 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             num--;
             return;
         }
-        String realUrl;
 
         if (isRefresh) {
             if (NewsUtil.CUG_NEWS.equals(url) || NewsUtil.DK_INDEX_URL.equals(url)
@@ -67,12 +66,19 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                     || NewsUtil.DY_INDEX_URL.equals(url)
                     || NewsUtil.XY_INDEX_URL.equals(url)
                     || NewsUtil.ZDH_INDEX_URL.equals(url)
-                    ||NewsUtil.ZY_INDEX_URL.equals(url)
-                    ||NewsUtil.CH_INDEX_URL.equals(url)
-                    ||NewsUtil.GC_INDEX_URL.equals(url)) {
+                    || NewsUtil.ZY_INDEX_URL.equals(url)
+                    || NewsUtil.CH_INDEX_URL.equals(url)
+                    || NewsUtil.GC_INDEX_URL.equals(url)
+                    || NewsUtil.HJ_INDEX_URL.equals(url)
+                    || NewsUtil.DWK_INDEX_URL.equals(url)
+                    || NewsUtil.JD_INDEX_URL.equals(url)
+                    || NewsUtil.HY_INDEX_URL.equals(url)
+                    || NewsUtil.SL_INDEX_URL.equals(url)
+                    ||NewsUtil.YM_INDEX_URL.equals(url)) {
                 getCugNewsBannerData(NewsUtil.getBaseUrl(url));
             }
         }
+        String realUrl;
         if (url.startsWith(NewsUtil.CUG_INDEX)) {
             realUrl = isRefresh ? url : NewsUtil.getRealNewsUrl(url, totalPage, num);
         } else {
@@ -92,8 +98,6 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                         NewListBean newListBean = new NewListBean();
                         Document document = null;
                         try {
-//                            byte[] bytes=IOUtils.toByteArray(responseBody.byteStream());
-//                            String result=new String(bytes,Charset.forName("utf-8"));
                             String temp = responseBody.string().replace("&nbsp;", " ");
                             CommonLogger.e(temp);
                             document = Jsoup.parse(temp);
@@ -129,6 +133,8 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                     }
                 });
     }
+
+
 
     private void parseNewsData(Document document, String url, NewListBean newListBean) {
         if (url.startsWith(NewsUtil.CUG_INDEX)) {
@@ -375,11 +381,11 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             for (int i = 0; i < 19; i++) {
                 String id = "line_u5_" + i;
                 Element item = document.getElementById(id);
-                String temp=null;
+                String temp = null;
                 if (item != null) {
-                    temp=item.text();
+                    temp = item.text();
                 }
-                if (item != null&&(temp==null||!temp.contains("none"))) {
+                if (item != null && (temp == null || !temp.contains("none"))) {
                     Element a = item.getElementsByTag("a").first();
                     if (a != null) {
                         NewListBean.NewsItem bean = new NewListBean.NewsItem();
@@ -408,17 +414,17 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             for (int i = 0; i < 29; i++) {
                 String id = "line_u5_" + i;
                 Element item = document.getElementById(id);
-                String temp=null;
+                String temp = null;
                 if (item != null) {
-                    temp=item.text();
+                    temp = item.text();
                 }
-                if (item != null&&(temp==null||!temp.contains("none"))) {
+                if (item != null && (temp == null || !temp.contains("none"))) {
                     Element a = item.getElementsByTag("a").first();
                     if (a != null) {
                         NewListBean.NewsItem bean = new NewListBean.NewsItem();
                         bean.setTitle(a.text());
                         bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"), NewsUtil.ZY_BASE_URL));
-                        bean.setTime(item.text().substring(0,item.text().indexOf(bean.getTitle())));
+                        bean.setTime(item.text().substring(0, item.text().indexOf(bean.getTitle())));
                         bean.setFrom("资源学院");
                         list.add(bean);
                     }
@@ -427,7 +433,7 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             newListBean.setNewsItemList(list);
         } else if (url.startsWith(NewsUtil.CH_BASE_URL)) {
 //             page id =fanye176770
-            Elements container=document.select(".tzgg-list");
+            Elements container = document.select(".tzgg-list");
             Element page = document.getElementById("fanye176770");
             String text = page.text();
             if (text != null) {
@@ -436,11 +442,11 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             } else {
                 totalPage = 1;
             }
-            if (container.size()>0&&container.first().children().size()>0) {
-                List<NewListBean.NewsItem>  list=new ArrayList<>();
-                Elements chidren =container.first().children();
-                for (Element item:
-                     chidren) {
+            if (container.size() > 0 && container.first().children().size() > 0) {
+                List<NewListBean.NewsItem> list = new ArrayList<>();
+                Elements chidren = container.first().children();
+                for (Element item :
+                        chidren) {
                     Element a = item.getElementsByTag("a").first();
                     if (a != null) {
                         NewListBean.NewsItem bean = new NewListBean.NewsItem();
@@ -455,11 +461,11 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             }
         } else if (url.startsWith(NewsUtil.GC_BASE_URL)) {
 //             class right_list
-            Element element=document.select(".right_list").first();
+            Element element = document.select(".right_list").first();
             if (element != null && element.children().size() > 0
-                    &&element.children().first().children().size()>0) {
-                Elements children =element.children().first().children();
-                List<NewListBean.NewsItem> list=new ArrayList<>();
+                    && element.children().first().children().size() > 0) {
+                Elements children = element.children().first().children();
+                List<NewListBean.NewsItem> list = new ArrayList<>();
                 for (Element item :
                         children) {
                     Element a = item.getElementsByTag("a").first();
@@ -474,8 +480,170 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                 }
                 newListBean.setNewsItemList(list);
             }
+        } else if (url.startsWith(NewsUtil.HJ_BASE_URL)) {
+            Elements container = document.select(".list.newslist");
+            if (container.size() > 0 && container.first().children().size() > 0) {
+                List<NewListBean.NewsItem> list = new ArrayList<>();
+                Elements children = container.first().children();
+                for (Element item :
+                        children) {
+                    Element a = item.getElementsByTag("a").first();
+                    if (a != null) {
+                        NewListBean.NewsItem bean = new NewListBean.NewsItem();
+                        bean.setTitle(a.text());
+                        bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"), NewsUtil.HJ_BASE_URL));
+                        bean.setFrom("环境学院");
+                        list.add(bean);
+                    }
+                }
+                newListBean.setNewsItemList(list);
+            }
+        } else if (url.startsWith(NewsUtil.DWK_BASE_URL)) {
+//            newslist
+//            page id =fanye192802
+            Elements container = document.select(".newslist");
+            Element page = document.getElementById("fanye192802");
+            String text = null;
+            if (page != null) {
+                text = page.text();
+            }
+            if (text != null) {
+                String num = text.substring(text.lastIndexOf("/") + 1, text.length()).trim();
+                totalPage = Integer.valueOf(num);
+            } else {
+                totalPage = 1;
+            }
+            if (container.size() > 0) {
+                Elements elements = container.first().getElementsByTag("li");
+                if (elements.size() > 0) {
+                    List<NewListBean.NewsItem> list = new ArrayList<>();
+                    for (Element item :
+                            elements) {
+                        Element a = item.getElementsByTag("a").first();
+                        if (a != null) {
+                            NewListBean.NewsItem bean = new NewListBean.NewsItem();
+                            bean.setTitle(a.text());
+                            bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"), NewsUtil.DWK_BASE_URL));
+                            bean.setTime(item.text().substring(item.text().indexOf(bean.getTitle()) + bean.getTitle().length()));
+                            bean.setFrom("地空学院");
+                            list.add(bean);
+                        }
+                    }
+                    newListBean.setNewsItemList(list);
+                }
+            }
+        } else if (url.startsWith(NewsUtil.JD_BASE_URL)) {
+//            n_listxx1
+//            page id= fanye163147
+            Elements container = document.select(".n_listxx1");
+            Element page = document.getElementById("fanye163147");
+            String text = null;
+            if (page != null) {
+                text = page.text();
+            }
+            if (text != null) {
+                String num = text.substring(text.lastIndexOf("/") + 1, text.length()).trim();
+                totalPage = Integer.valueOf(num);
+            } else {
+                totalPage = 1;
+            }
+            if (container.size() > 0) {
+                Elements elements = container.first().getElementsByTag("li");
+                if (elements.size() > 0) {
+                    List<NewListBean.NewsItem> list = new ArrayList<>();
+                    for (Element item :
+                            elements) {
+                        Element a = item.getElementsByTag("a").first();
+                        if (a != null) {
+                            NewListBean.NewsItem bean = new NewListBean.NewsItem();
+                            bean.setTitle(a.text());
+                            bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"), NewsUtil.JD_BASE_URL));
+                            bean.setTime(item.text().substring(item.text().indexOf(bean.getTitle()) + bean.getTitle().length()));
+                            bean.setFrom("机电学院");
+                            list.add(bean);
+                        }
+                    }
+                    newListBean.setNewsItemList(list);
+                }
+            }
+        } else if (url.startsWith(NewsUtil.HY_BASE_URL)) {
+//            class name =post-list
+            Elements container = document.select(".post-list");
+            if (container.size() > 0) {
+                Elements elements = container.first().getElementsByTag("li");
+                if (elements.size() > 0) {
+                    List<NewListBean.NewsItem> list = new ArrayList<>();
+                    for (Element item :
+                            elements) {
+                        Element a = item.getElementsByTag("a").first();
+                        if (a != null) {
+                            NewListBean.NewsItem bean = new NewListBean.NewsItem();
+                            bean.setTitle(a.text());
+                            bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"), NewsUtil.HY_BASE_URL));
+                            bean.setTime(item.text().substring(item.text().indexOf(bean.getTitle()) + bean.getTitle().length()));
+                            bean.setFrom("海洋学院");
+                            list.add(bean);
+                        }
+                    }
+                    newListBean.setNewsItemList(list);
+                }
+            }
+        } else if (url.startsWith(NewsUtil.SL_BASE_URL)) {
+//            page id fanye176363
+            Element page = document.getElementById("fanye176363");
+            String text = page.text();
+            if (text != null) {
+                String num = text.substring(text.lastIndexOf("/") + 1, text.length()).trim();
+                totalPage = Integer.valueOf(num);
+            } else {
+                totalPage = 1;
+            }
+//            line_u5_1
+            List<NewListBean.NewsItem> list = new ArrayList<>();
+            for (int i = 0; i < 59; i++) {
+                String id = "line_u5_" + i;
+                Element item = document.getElementById(id);
+                String temp = null;
+                if (item != null) {
+                    temp = item.text();
+                }
+                if (item != null && (temp == null || !temp.contains("none"))) {
+                    Element a = item.getElementsByTag("a").first();
+                    if (a != null) {
+                        NewListBean.NewsItem bean = new NewListBean.NewsItem();
+                        bean.setTitle(a.text());
+                        bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"), NewsUtil.SL_BASE_URL));
+                        bean.setTime(item.text().substring(item.text().indexOf(bean.getTitle()) + bean.getTitle().length()));
+                        bean.setFrom("数理学院");
+                        list.add(bean);
+                    }
+                }
+            }
+            newListBean.setNewsItemList(list);
+        } else if (url.startsWith(NewsUtil.YM_BASE_URL)) {
+            Element content=document.getElementById("text_list");
+            if (content != null&&content.getElementsByTag("li").size()>0) {
+                Elements children=content.getElementsByTag("li");
+                int size=children.size();
+                List<NewListBean.NewsItem> list=new ArrayList<>();
+                for (int i = 1; i < size; i++) {
+                    Element item=children.get(i);
+                    Element a = item.getElementsByTag("a").first();
+                    if (a != null) {
+                        NewListBean.NewsItem bean = new NewListBean.NewsItem();
+                        bean.setTitle(a.text());
+                        bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"), NewsUtil.YM_BASE_URL));
+                        bean.setTime(item.text().substring(0, item.text().indexOf(bean.getTitle())));
+                        bean.setFrom("艺媒学院");
+                        list.add(bean);
+                    }
+                }
+                newListBean.setNewsItemList(list);
+            }
         }
     }
+
+
 
 
     private void getCugNewsBannerData(final String url) {
@@ -820,7 +988,7 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                 }
             }
             newListBean.setBannerBeanList(bannerList);
-        }else if (url.startsWith(NewsUtil.ZY_BASE_URL)){
+        } else if (url.startsWith(NewsUtil.ZY_BASE_URL)) {
             Elements script = document.getElementsByTag("script");
             String content = null;
             for (Element temp :
@@ -899,7 +1067,7 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                 String item = list.get(i);
                 if (i % 3 == 0) {
                     NewListBean.BannerBean bean = new NewListBean.BannerBean();
-                    bean.setThumb(NewsUtil.getRealUrl(item,url).replace("\\", ""));
+                    bean.setThumb(NewsUtil.getRealUrl(item, url).replace("\\", ""));
                     bannerList.add(bean);
                 } else {
                     if (i % 3 == 1) {
@@ -911,30 +1079,211 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             }
             newListBean.setBannerBeanList(bannerList);
         } else if (url.equals(NewsUtil.GC_BASE_URL)) {
-            Element container=document.getElementById("D1pic1");
+            Element container = document.getElementById("D1pic1");
             if (container != null && container.children().size() > 0) {
-                List<NewListBean.BannerBean>  list=new ArrayList<>();
+                List<NewListBean.BannerBean> list = new ArrayList<>();
                 for (Element item :
                         container.children()) {
                     if (item.text().equals("")) {
                         continue;
                     }
-                    NewListBean.BannerBean bean=new NewListBean.BannerBean();
+                    NewListBean.BannerBean bean = new NewListBean.BannerBean();
                     if (item.select(".banner_title").first() != null) {
                         bean.setTitle(item.select(".banner_title").first().text());
                     }
-                    Elements a=item.getElementsByTag("a");
+                    Elements a = item.getElementsByTag("a");
                     if (a.size() > 0) {
-                        bean.setContentUrl(NewsUtil.getRealUrl(a.first().attr("href"),NewsUtil.GC_BASE_URL));
+                        bean.setContentUrl(NewsUtil.getRealUrl(a.first().attr("href"), NewsUtil.GC_BASE_URL));
                     }
-                    Elements image=item.getElementsByTag("img");
+                    Elements image = item.getElementsByTag("img");
                     if (image.size() > 0) {
-                        bean.setThumb(NewsUtil.getRealUrl(image.first().attr("src"),NewsUtil.GC_BASE_URL));
+                        bean.setThumb(NewsUtil.getRealUrl(image.first().attr("src"), NewsUtil.GC_BASE_URL));
                     }
                     list.add(bean);
                 }
                 newListBean.setBannerBeanList(list);
             }
+        } else if (url.equals(NewsUtil.HJ_BASE_URL)) {
+            Element container = document.getElementById("D1pic1");
+            if (container != null && container.children().size() > 0) {
+                List<NewListBean.BannerBean> list = new ArrayList<>();
+                for (Element item :
+                        container.children()) {
+                    NewListBean.BannerBean bean = new NewListBean.BannerBean();
+                    bean.setTitle(item.text());
+                    Elements a = item.getElementsByTag("a");
+                    if (a.size() > 0) {
+                        bean.setContentUrl(NewsUtil.getRealUrl(a.first().attr("href"), url));
+                    }
+                    Elements image = item.getElementsByTag("img");
+                    if (image.size() > 0) {
+                        bean.setThumb(NewsUtil.getRealUrl(image.first().attr("src"), url));
+                    }
+                    list.add(bean);
+                }
+                newListBean.setBannerBeanList(list);
+            }
+        } else if (url.equals(NewsUtil.DWK_BASE_URL)) {
+            Element element = document.select(".news-pic").first();
+            if (element != null) {
+                Elements elements = element.getElementsByTag("li");
+                if (elements.size() > 0) {
+                    List<NewListBean.BannerBean> list = new ArrayList<>();
+                    int size = elements.size();
+                    for (int i = 0; i < size; i++) {
+                        Element item = elements.get(i);
+                        Elements a = item.getElementsByTag("a");
+                        Elements image = item.getElementsByTag("img");
+                        if (a.size() > 0) {
+                            if (image.size() > 0) {
+                                NewListBean.BannerBean bean = new NewListBean.BannerBean();
+                                bean.setContentUrl(NewsUtil.getRealUrl(a.first().attr("href"), url));
+                                bean.setThumb(NewsUtil.getRealUrl(image.first().attr("src"), url));
+                                list.add(bean);
+                            } else {
+                                list.get(i % list.size()).setTitle(item.text());
+                            }
+                        }
+                    }
+                    newListBean.setBannerBeanList(list);
+                }
+            }
+        } else if (url.equals(NewsUtil.JD_BASE_URL)) {
+            Elements script = document.getElementsByTag("script");
+            String content = null;
+            for (Element temp :
+                    script) {
+                if (temp.html().contains("ImageChangeNews")) {
+                    content = temp.html();
+                    break;
+                }
+            }
+            if (content == null) {
+                return;
+            }
+            String start = "{";
+            String end = "u_u5_icn.changeimg(0)";
+            content = content.substring(content.indexOf(start) + start.length(), content.indexOf(end)).replace("amp;", "");
+            String str = "\\);";
+            String[] array = content.split(str);
+            List<NewListBean.BannerBean> bannerList = new ArrayList<>();
+            List<String> list = new ArrayList<>();
+            for (String string :
+                    array) {
+                if (string.contains("\"")) {
+                    String[] temp = string.split("\"");
+                    list.add(temp[1]);
+                    list.add(temp[3]);
+                    list.add((temp[5]));
+                }
+            }
+            int size = list.size();
+            for (int i = 0; i < size; i++) {
+                String item = list.get(i);
+                if (i % 3 == 0) {
+                    NewListBean.BannerBean bean = new NewListBean.BannerBean();
+                    bean.setThumb(NewsUtil.getRealUrl(item, url).replace("\\", ""));
+                    bannerList.add(bean);
+                } else {
+                    if (i % 3 == 1) {
+                        bannerList.get(i / 3).setContentUrl(NewsUtil.getRealUrl(item, url).replace("\\", ""));
+                    } else {
+                        bannerList.get(i / 3).setTitle(item);
+                    }
+                }
+            }
+            newListBean.setBannerBeanList(bannerList);
+        } else if (url.equals(NewsUtil.HY_BASE_URL)) {
+//            class name col col-3 slide-box
+            Element element = document.select(".col.col-3.slide-box").first();
+            if (element != null) {
+                Elements elements = element.getElementsByTag("li");
+                if (elements.size() > 0) {
+                    List<NewListBean.BannerBean> list = new ArrayList<>();
+                    int size = elements.size();
+                    for (int i = 0; i < size; i++) {
+                        Element item = elements.get(i);
+                        NewListBean.BannerBean bean = new NewListBean.BannerBean();
+                        Elements a = item.getElementsByTag("a");
+                        if (a.size() > 0) {
+                            bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"), url));
+                        }
+                        Elements p = item.getElementsByTag("p");
+                        if (p.size() > 0) {
+                            bean.setTitle(p.attr("title"));
+                        }
+                        String content = item.attr("data-bg");
+                        if (content.contains("'")) {
+                            if (content.indexOf("'") > 0 && content.lastIndexOf("'") > 0) {
+                                bean.setThumb(NewsUtil.getRealUrl(content.substring(content.indexOf("'") + 1,
+                                        content.lastIndexOf("'")), url));
+                            }
+                        }
+                        list.add(bean);
+                    }
+                    newListBean.setBannerBeanList(list);
+                }
+            }
+        } else if (url.equals(NewsUtil.SL_BASE_URL)) {
+            Elements script = document.getElementsByTag("script");
+            String content = null;
+            for (Element temp :
+                    script) {
+                if (temp.html().contains("ImageChangeNews")) {
+                    content = temp.html();
+                    break;
+                }
+            }
+            if (content == null) {
+                return;
+            }
+            String start = "{";
+            String end = "u_u2_icn.changeimg(0)";
+            content = content.substring(content.indexOf(start) + start.length(), content.indexOf(end)).replace("amp;", "");
+            String str = "\\);";
+            String[] array = content.split(str);
+            List<NewListBean.BannerBean> bannerList = new ArrayList<>();
+            List<String> list = new ArrayList<>();
+            for (String string :
+                    array) {
+                if (string.contains("\"")) {
+                    String[] temp = string.split("\"");
+                    list.add(temp[1]);
+                    list.add(temp[3]);
+                    list.add((temp[5]));
+                }
+            }
+            int size = list.size();
+            for (int i = 0; i < size; i++) {
+                String item = list.get(i);
+                if (i % 3 == 0) {
+                    NewListBean.BannerBean bean = new NewListBean.BannerBean();
+                    bean.setThumb(NewsUtil.getRealUrl(item, url).replace("\\", ""));
+                    bannerList.add(bean);
+                } else {
+                    if (i % 3 == 1) {
+                        bannerList.get(i / 3).setContentUrl(NewsUtil.getRealUrl(item, url).replace("\\", ""));
+                    } else {
+                        bannerList.get(i / 3).setTitle(item);
+                    }
+                }
+            }
+            newListBean.setBannerBeanList(bannerList);
+        } else if (url.equals(NewsUtil.YM_BASE_URL)) {
+            Elements container=document.select(".pic");
+            if (container.size() > 0 && container.first()
+                    .getElementsByTag("img").size() > 0) {
+                List<NewListBean.BannerBean>  list=new ArrayList<>();
+                Elements elements=container.first().getElementsByTag("img");
+                for (Element item:
+                        elements) {
+                    NewListBean.BannerBean bean=new NewListBean.BannerBean();
+                    bean.setThumb(NewsUtil.getRealUrl(item.attr("src"),url));
+                    list.add(bean);
+                }
+                newListBean.setBannerBeanList(list);
+            }
+
         }
     }
 
