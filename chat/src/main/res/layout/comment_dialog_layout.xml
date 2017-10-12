@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_comment_dialog_copy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:text="复制"
+        android:textSize="20sp"/>
+    <View
+        android:id="@+id/view_comment_dialog_divider"
+        android:layout_width="match_parent" android:layout_height="1px"
+        android:background="@drawable/basic_skin_icon_dot_gray"/>
+    <TextView
+        android:id="@+id/tv_comment_dialog_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:text="删除"
+        android:textSize="20sp"/>
+
+</LinearLayout>

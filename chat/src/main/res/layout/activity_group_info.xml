@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
+
+    <ScrollView
+        style="@style/Custom_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/chat_bg"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:id="@+id/rl_group_info_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp">
+                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                    android:id="@+id/riv_group_info_avatar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/head"
+                    app:roundHeight="25dp"
+                    app:roundWidth="25dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/riv_group_info_avatar"
+                    android:orientation="vertical">
+                    <TextView android:id="@+id/tv_group_info_name"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="群名"
+                              android:textColor="@color/base_color_text_black"/>
+                    <TextView android:id="@+id/tv_group_info_create_time"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:layout_marginTop="5dp"
+                              android:text="创建时间"
+                              android:textColor="@color/base_color_text_grey"/>
+                </LinearLayout>
+                <ImageView android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_alignParentRight="true"
+                           android:layout_centerVertical="true"
+                           android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+            </RelativeLayout>
+            <include android:id="@+id/ll_group_info_number_name"
+                     layout="@layout/group_info_item_layout"
+            />
+            <include android:id="@+id/ll_group_info_number_count"
+                     layout="@layout/group_info_item_layout"
+            />
+            <!--<chen.testchat.view.CustomGridView-->
+            <!--android:id="@+id/cgv_group_info_number_avatar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:numColumns="5"-->
+            <!--android:paddingBottom="20dp"-->
+            <!--android:paddingLeft="15dp"-->
+            <!--android:paddingRight="15dp"-->
+            <!--android:paddingTop="20dp"-->
+            <!--android:verticalSpacing="5dp">-->
+            <!--</chen.testchat.view.CustomGridView>-->
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcv_group_info_number_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="20dp"
+                android:verticalSpacing="5dp"/>
+
+
+            <include android:id="@+id/ll_group_info_group_name"
+                     layout="@layout/group_info_item_layout"/>
+            <include android:id="@+id/ll_group_info_group_description"
+                     layout="@layout/group_info_item_layout"/>
+            <include android:id="@+id/ll_group_info_group_notification"
+                     layout="@layout/group_info_item_layout"/>
+            <include android:id="@+id/ll_group_info_remind"
+                     layout="@layout/group_info_item_layout"/>
+
+            <Button
+                android:id="@+id/btn_group_info_exit_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginBottom="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_logout_selector"
+                android:text="退出该群"
+                android:textColor="@color/base_color_text_white"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

@@ -19,6 +19,11 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url "https://raw.github.com/bmob/bmob-android-sdk/master" }
+
+        //        地址选择器
+        maven { url "https://jitpack.io" }
+
     }
 }
 

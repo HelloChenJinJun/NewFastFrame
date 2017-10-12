@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/chat_bg">
+    <LinearLayout
+        android:id="@+id/ll_fragment_contacts_nearby"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_people_blue_500_36dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="附近的人"
+            android:textSize="18sp"/>
+    </LinearLayout>
+    <View
+        android:id="@+id/view_divider_line1"
+        android:layout_width="match_parent" android:layout_height="1px"
+        android:layout_below="@+id/ll_fragment_contacts_nearby"
+        android:background="@color/divider_line_default_color"/>
+
+    <LinearLayout
+        android:id="@+id/ll_fragment_contacts_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_divider_line1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <ImageView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:src="@drawable/ic_group_light_green_300_36dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="群列表"
+            android:textSize="18sp"/>
+    </LinearLayout>
+    <View
+        android:id="@+id/view_divider_line"
+        android:layout_width="match_parent" android:layout_height="1px"
+        android:layout_below="@+id/ll_fragment_contacts_group"
+        android:background="@color/divider_line_default_color"/>
+
+    <TextView
+        android:id="@+id/tv_fragment_contacts_middle"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/contacts_dialog_bg"
+        android:gravity="center"
+        android:textSize="26sp"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:id="@+id/ll_fragment_contacts_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_divider_line"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_person_grey_900_36dp"
+        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="黑名单"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcv_fragment_contacts_display"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ll_fragment_contacts_black"/>
+    <com.example.chat.view.MyLetterView
+        android:id="@+id/ml_fragment_contacts_letter"
+        android:layout_width="25dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:background="#00000000"/>
+</RelativeLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="#cc22292c"
+                android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/iv_picture_top_bar_back"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_back_press"
+        android:padding="14dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_arrow_back_blue_grey_900_24dp"
+    />
+
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_toRightOf="@id/iv_picture_top_bar_back"
+        android:background="#cc111111"/>
+
+    <TextView
+        android:id="@+id/tv_picture_top_bar_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="7dp"
+        android:layout_toRightOf="@id/iv_picture_top_bar_back"
+        android:text="选择图片"
+    />
+
+    <Button
+        android:id="@+id/btn_picture_top_bar_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:background="@drawable/selector_top_bar_finish"
+        android:gravity="center"
+        android:text="完成(3/9)"
+    />
+
+    <ImageView
+        android:id="@+id/iv_picture_top_bar_delete"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_delete_forever_white_24dp"
+        android:visibility="gone"
+    />
+
+</RelativeLayout>

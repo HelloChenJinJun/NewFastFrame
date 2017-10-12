@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="5dp">
+
+    <ImageView
+        android:id="@+id/iv_search_friend_item_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/head"
+    />
+
+    <TextView
+        android:id="@+id/tv_search_friend_item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/btn_search_friend_item_look"
+        android:layout_toRightOf="@+id/iv_search_friend_item_avatar"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="姓名"
+        android:textColor="@color/base_color_text_grey"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btn_search_friend_item_look"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/btn_login_selector"
+        android:gravity="center"
+        android:text="查看"
+        android:textColor="@color/base_color_text_white"/>
+
+</RelativeLayout>

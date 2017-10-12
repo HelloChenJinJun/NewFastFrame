@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <!--<color name="base_color_text_white">#FFFFFF</color>-->
+    <!--<color name="base_color_text_blue">#489cfa</color>-->
+    <color name="theme_bg_color">#f0f2f5</color>
+    <color name="transparent">#00000000</color>
+    <!--<color name="base_color_text_black">#232121</color>-->
+    <color name="base_color_bg">#f4f6f6</color>
+    <color name="base_color_text_grey">#ff777777</color>
+    <color name="chat_bottom_divider">#ffa1a1a1</color>
+    <color name="base_color_bg_gray">#e3e3e3</color>
+    <color name="theme_body">#cc22292c</color>
+    <color name="comment_text_default_bg_color">#787575</color>
+    <color name="comment_text_click_default_bg_color">#ffffff</color>
+    <color name="comment_text_color">#232323</color>
+    <color name="liker_default_bg_color">#333333</color>
+    <color name="liker_click_default_bg_color">#cccccc</color>
+    <color name="default_image_bg_color">#abb1b6</color>
+    <color name="transparent_black_85">#DA000000</color>
+    <color name="chat_bg">#ECF1F5</color>
+    <color name="divider_line_default_color">#d9d9d9</color>
+    <color name="net_work_bg_color">#ee4b62</color>
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="white_pressed">#f1f1f1</color>
+    <color name="half_black">#808080</color>
+    <color name="pink">#e91e63</color>
+    <color name="pink_pressed">#ec407a</color>
+    <color name="blue_semi_transparent">#805677fc</color>
+    <color name="blue_semi_transparent_pressed">#80738ffe</color>
+    <color name="comment_item_pressed">#979595</color>
+    <color name="photo_display_bg">#000000</color>
+</resources>

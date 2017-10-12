@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/base_color_text_white"
+              android:orientation="vertical"
+              android:paddingLeft="15dp"
+              android:paddingRight="15dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp">
+        <TextView android:id="@+id/tv_group_info_item_layout_title"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_centerVertical="true"
+                  android:text="title"
+                  android:textColor="@color/base_color_text_black"
+                  android:textSize="15sp"/>
+        <ImageView android:id="@+id/iv_group_info_item_layout_arrow"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_alignParentRight="true"
+                   android:layout_centerVertical="true"
+                   android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+        <TextView
+            android:id="@+id/tv_group_info_item_layout_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/iv_group_info_item_layout_arrow"
+            android:text="" android:textSize="15sp"
+        />
+
+    </RelativeLayout>
+    <View android:layout_width="match_parent" android:layout_height="1px"
+          android:background="@color/divider_line_default_color"/>
+
+
+</LinearLayout>

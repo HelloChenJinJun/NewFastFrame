@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/chat_bg"
+                android:fitsSystemWindows="true">
+
+
+    <TextView
+        android:id="@+id/tv_selected_friends_middle"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/contacts_dialog_bg"
+        android:gravity="center"
+        android:textSize="26sp"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header_layout_id"
+        android:orientation="vertical">
+        <android.support.v7.widget.RecyclerView
+            android:layout_weight="1"
+            android:id="@+id/rcv_selected_friends_display"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <LinearLayout
+            android:id="@+id/ll_selected_friends_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@mipmap/global_bottom_bg_small"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"/>
+    </LinearLayout>
+
+    <com.example.chat.view.MyLetterView
+        android:id="@+id/ml_selected_friends_letter"
+        android:layout_width="25dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:background="#00000000"/>
+</RelativeLayout>

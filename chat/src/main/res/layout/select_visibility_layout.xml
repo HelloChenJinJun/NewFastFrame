@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+    <RadioGroup
+        android:id="@+id/rg_select_visibility_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <RadioButton
+            android:id="@+id/rb_visibility_private"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="仅对自己可见"
+            android:textColor="@color/base_color_text_black"/>
+        <RadioButton
+            android:id="@+id/rb_visibility_public"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="对所有人可见"
+            android:textColor="@color/base_color_text_black"/>
+        <RadioButton
+            android:id="@+id/rb_visibility_part"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="对部分人可见"
+            android:textColor="@color/base_color_text_black"/>
+        <RadioButton
+            android:id="@+id/rb_visibility_exclude_part"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="对部分人不可见"
+            android:textColor="@color/base_color_text_black"/>
+    </RadioGroup>
+
+</LinearLayout>

@@ -55,7 +55,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         this.data = data == null ? new ArrayList<T>() : data;
         if (layoutId != 0)
             this.layoutId = layoutId;
-        this.layoutId = getLayoutId();
+        if (getLayoutId()!=0) {
+            this.layoutId = getLayoutId();
+        }
     }
 
     protected abstract int getLayoutId();

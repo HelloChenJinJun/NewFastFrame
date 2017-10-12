@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/recent_top_height"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+>
+    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        android:id="@+id/riv_edit_share_message_visibility_item_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/head"
+        app:roundHeight="25dp"
+        app:roundWidth="25dp"/>
+    <TextView
+        android:id="@+id/tv_edit_share_message_visibility_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/riv_edit_share_message_visibility_item_avatar"
+        android:text="姓名"
+        android:textColor="@color/base_color_text_black"
+        android:textSize="18sp"/>
+    <TextView
+        android:id="@+id/tv_edit_share_message_visibility_item_signature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="end"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@+id/tv_edit_share_message_visibility_item_name"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="签名"
+        android:textColor="@color/base_color_text_grey"
+        android:textSize="14sp"/>
+
+
+</RelativeLayout>

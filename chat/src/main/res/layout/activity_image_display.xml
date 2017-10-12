@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/photo_display_bg"
+                android:fitsSystemWindows="true">
+
+
+    <com.example.chat.view.ZoomImageView
+        android:scaleType="centerCrop"
+        android:id="@+id/iv_image_display"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <!--<chen.testchat.view.ImageDisplayRecyclerView-->
+        <!--android:id="@+id/image_display_show"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="gone"/>-->
+    <mabeijianxi.camera.views.SurfaceVideoView
+        android:id="@+id/svv_image_display_video"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"/>
+    <chen.testchat.view.CircleLoadView
+        android:id="@+id/clv_image_display_loading"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/pb_image_display_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>
+
+

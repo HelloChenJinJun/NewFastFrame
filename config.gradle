@@ -1,5 +1,5 @@
 ext {
-    isAlone = true;//false:作为Lib组件存在， true:作为application存在
+    isAlone = false;//false:作为Lib组件存在， true:作为application存在
 
     android = [
 
@@ -10,6 +10,7 @@ ext {
             versionCode      : 1,
             versionName      : '1.0.0',
     ]
+
 
 
     libsVersion = [

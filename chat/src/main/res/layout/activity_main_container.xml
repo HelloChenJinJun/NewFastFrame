@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.chat.view.ContentView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <include android:id="@+id/header_layout_id"
+             layout="@layout/header_layout"/>
+    <TextView
+        android:id="@+id/tv_main_net"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/header_layout_id"
+        android:background="@color/net_work_bg_color"
+        android:gravity="center"
+        android:text="网络连接失败,请检查网络配置"
+        android:textColor="@color/base_color_text_white"
+        android:textSize="18sp"
+        android:visibility="gone"/>
+    <FrameLayout
+        android:id="@+id/fl_content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_main_net"
+        android:background="@drawable/global_bg"
+    />
+    <ImageView
+        android:id="@+id/iv_main_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:scaleType="fitXY"
+        android:src="@drawable/sidebar_bg_black"/>
+</com.example.chat.view.ContentView>

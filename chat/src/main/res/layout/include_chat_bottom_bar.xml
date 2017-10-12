@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/base_comment_emo_bar"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/base_chat_bottom_bar_height"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <Button
+            android:id="@+id/btn_chat_bottom_add"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/btn_chat_bottom_add_selector"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/btn_chat_bottom_emotion"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/btn_chat_bottom_emotion_selector"
+            android:gravity="center"/>
+
+        <EditText
+            android:id="@+id/et_chat_bottom_input"
+            android:layout_width="0.0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/base_edit_input"
+            android:minHeight="@dimen/base_chat_bottom_input_height"
+            android:padding="5dp"/>
+
+        <Button
+            android:id="@+id/btn_chat_bottom_speak"
+            android:layout_width="0.0dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_chat_bottom_speak_selector"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="按住说话"
+            android:textColor="@color/base_color_text_grey"
+            android:textSize="18sp"
+            android:visibility="gone"
+        />
+
+        <Button
+            android:id="@+id/btn_chat_bottom_send"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="6dp"
+            android:background="@drawable/btn_chat_bottom_send_selector"
+            android:gravity="center"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btn_chat_bottom_voice"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="6dp"
+            android:background="@drawable/btn_chat_bottom_voice_selector"
+            android:gravity="center"
+            android:visibility="visible"/>
+
+        <Button
+            android:id="@+id/btn_chat_bottom_keyboard"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="6dp"
+            android:background="@drawable/btn_chat_bottom_keyboard_selector"
+            android:gravity="center"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/chat_bottom_divider"
+        android:focusable="false"/>
+
+    <LinearLayout
+        android:id="@+id/l1_chat_bottom_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/r1_chat_bottom_emotion"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:visibility="gone">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_chat_bottom_emotion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v4.view.ViewPager>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/l1_chat_bottom_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/tv_chat_bottom_picture"
+                android:layout_width="0.0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:drawableTop="@drawable/ic_photo_size_select_actual_grey_900_48dp"
+                android:gravity="center"
+                android:text="照片"/>
+
+            <TextView
+                android:id="@+id/tv_chat_bottom_camera"
+                android:layout_width="0.0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:drawableTop="@drawable/ic_photo_camera_grey_900_48dp"
+                android:gravity="center"
+                android:text="拍照"/>
+
+            <TextView
+                android:id="@+id/tv_chat_bottom_location"
+                android:layout_width="0.0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:drawableTop="@drawable/ic_location_on_grey_900_48dp"
+                android:gravity="center"
+                android:text="位置"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

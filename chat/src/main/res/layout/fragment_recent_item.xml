@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:id="@+id/rl_recent_item_container"
+                android:layout_height="@dimen/recent_top_height">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="65dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            android:id="@+id/riv_recent_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/head"
+            app:roundHeight="30dp"
+            app:roundWidth="30dp"/>
+
+        <TextView
+            android:id="@+id/tv_recent_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:text="时间"
+            android:textColor="@color/base_color_text_grey"
+            android:textSize="10sp"/>
+
+        <TextView
+            android:id="@+id/tv_recent_unread"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_recent_time"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/list_newmessage2"
+            android:gravity="center"
+            android:text="2"
+            android:textColor="@color/base_color_text_white"
+            android:textSize="10sp"
+        />
+
+
+        <TextView
+            android:id="@+id/tv_recent_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/tv_recent_time"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@+id/tv_recent_time"
+            android:layout_toRightOf="@id/riv_recent_avatar"
+            android:text="姓名"
+            android:textColor="@color/base_color_text_black"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tv_recent_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/tv_recent_unread"
+            android:layout_below="@+id/tv_recent_name"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@+id/tv_recent_unread"
+            android:layout_toRightOf="@+id/riv_recent_avatar"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="内容"
+            android:textColor="@color/base_color_text_grey"
+            android:textSize="16sp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

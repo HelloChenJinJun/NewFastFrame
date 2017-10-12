@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+              android:paddingBottom="5dp"
+              android:paddingLeft="15dp"
+              android:paddingRight="15dp"
+              android:paddingTop="5dp">
+
+    <ImageView
+        android:id="@+id/iv_new_friend_item_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/head"/>
+
+    <TextView
+        android:id="@+id/tv_new_friend_item_name"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="姓名"
+        android:textColor="@color/base_color_text_grey"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/tv_new_friend_item_agree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:paddingRight="5dp"
+        android:text="已同意"
+        android:textColor="@color/base_color_text_blue"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btn_new_friend_item_agree"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:background="@drawable/btn_login_selector"
+        android:text="同意"
+        android:textColor="@color/base_color_text_white"
+        android:visibility="visible"/>
+
+
+</LinearLayout>

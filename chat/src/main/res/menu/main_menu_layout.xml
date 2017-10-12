@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/main_item_search"
+        android:icon="@drawable/ic_search_blue_grey_900_24dp"
+        android:title="搜索"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/main_item_more"
+          android:icon="@drawable/ic_more_vert_blue_grey_900_24dp"
+          android:title=""
+          app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/main_sub_item_add"
+                  android:icon="@drawable/ic_person_add_blue_grey_900_24dp"
+                  android:title="添加好友"/>
+            <item android:id="@+id/main_sub_item_create"
+                  android:icon="@drawable/ic_group_add_blue_grey_900_24dp"
+                  android:title="建群"/>
+            <item android:id="@+id/main_sub_item_happy"
+                  android:icon="@drawable/ic_favorite_blue_grey_900_24dp"
+                  android:title="开心时刻"/>
+            <item android:id="@+id/main_sub_item_bg"
+                  android:icon="@drawable/ic_photo_blue_grey_900_24dp"
+                  android:title="背景"/>
+            <item android:id="@+id/main_sub_item_settings"
+                  android:icon="@drawable/ic_settings_blue_grey_900_24dp"
+                  android:title="设置"/>
+
+        </menu>
+
+    </item>
+
+
+</menu>

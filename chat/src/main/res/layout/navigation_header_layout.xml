@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="220dp"
+              android:id="@+id/ll_happy_header_layout"
+              android:gravity="bottom|center_horizontal"
+              android:background="@drawable/wallpaper1"
+              android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="生活的美好，需要你用心去发现，用眼去摄录"
+        android:textColor="@color/base_color_text_white"/>
+
+</LinearLayout>

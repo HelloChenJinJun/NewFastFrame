@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true">
+
+
+
+
+    <com.example.chat.view.PreviewViewPager
+        android:id="@+id/vp_base_preview_display"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+    </com.example.chat.view.PreviewViewPager>
+
+
+
+    <include layout="@layout/picture_top_bar"
+             android:id="@+id/picture_top_bar"/>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_base_preview_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="#cc22292c">
+        <CheckBox
+            android:id="@+id/cb_base_preview_origin"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="原图(5.0M)"
+            android:textColor="#FFF"
+            android:textSize="16sp"/>
+
+
+        <CheckBox
+            android:id="@+id/cb_base_preview_select"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="选择"
+            android:textColor="#FFF"
+            android:textSize="16sp"
+        />
+    </RelativeLayout>
+
+
+</RelativeLayout>

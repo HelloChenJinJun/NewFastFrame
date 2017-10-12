@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/iv_login_bg"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_marginLeft="-50dp"
+        android:layout_marginRight="-300dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/de_bg"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:text="地倾"
+        android:textColor="@color/base_color_text_blue"
+        android:textSize="45sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:orientation="vertical">
+        <com.example.chat.view.AutoEditText
+            android:id="@+id/aet_login_name"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:inputType="text"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="bottom"
+            android:hint="@string/login_username_hint"
+            android:maxLines="1"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textSize="15sp"
+        />
+        <com.example.chat.view.AutoEditText
+            android:id="@+id/aet_login_password"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="bottom"
+            android:hint="@string/login_password_hint"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textSize="15sp"
+        />
+        <Button
+            android:id="@+id/btn_login_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_margin="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_login_selector"
+            android:gravity="center"
+            android:text="@string/login"
+            android:textColor="@color/base_color_text_white"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_login_forget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="@string/register_text1"
+        android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/tv_login_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/register_text2"
+        android:textColor="@color/base_color_text_blue"
+        android:textSize="16sp"/>
+
+</RelativeLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+    <com.example.chat.view.ListImageView
+        android:id="@+id/liv_share_fragment_item_main_image_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </com.example.chat.view.ListImageView>
+
+</LinearLayout>

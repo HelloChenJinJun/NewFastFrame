@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/base_color_text_white"
+                android:minHeight="50dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+    <TextView
+        android:id="@+id/tv_setting_item_title"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="title"
+        android:textColor="@color/base_color_text_black"
+        android:textSize="18sp"/>
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_setting_item_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>

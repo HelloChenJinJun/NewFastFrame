@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.0dp"
+        android:layout_weight="1"
+        android:background="@color/chat_bg">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swl_chat_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcy_chat_display"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <RelativeLayout
+            android:id="@+id/r1_chat_middle_voice_container"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/chat_top_voice_bg"
+            android:padding="10dp"
+            android:visibility="invisible">
+            <ImageView
+                android:id="@+id/iv_chat_middle_voice_display"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/chat_icon_voice1"/>
+            <TextView
+                android:id="@+id/tv_chat_middle_voice_tip"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_chat_middle_voice_display"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/chat_middle_voice_tip"
+                android:textColor="@color/base_color_text_white"
+                android:textSize="14sp"/>
+        </RelativeLayout>
+    </RelativeLayout>
+    <include layout="@layout/include_chat_bottom_bar"/>
+</LinearLayout>

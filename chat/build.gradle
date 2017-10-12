@@ -1,0 +1,102 @@
+if (rootProject.ext.isAlone) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'org.greenrobot.greendao'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    aaptOptions {
+        cruncherEnabled = false
+//        useNewCruncher = false
+    }
+    defaultConfig {
+
+        if (rootProject.ext.isAlone) {
+            applicationId "com.example.chat"
+        }
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi', 'armeabi-v7a'//, 'x86', 'x86_64', 'arm64-v8a'
+        }
+        if (!rootProject.ext.isAlone) {
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    arguments = [moduleName: project.getName()]
+                }
+            }
+        }
+
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    sourceSets {
+        main {
+            if (rootProject.ext.isAlone) {
+                manifest.srcFile 'src/main/module/AndroidManifest.xml'
+                java.srcDirs = ['src/main/java', 'src/main/module/java']
+                res.srcDirs = ['src/main/res', 'src/main/module/res']
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+}
+
+//greendao {
+//    schemaVersion 1
+//    daoPackage 'com.example.cootek.newfastframe'
+//    targetGenDir 'src/main/java'
+//}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile project(':commonlibrary')
+    compile 'cn.bmob.android:bmob-sdk:3.4.7'
+    compile 'cn.bmob.android:bmob-push:1.0.0'
+    compile 'com.zhy:okhttputils:2.6.2'
+    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+    compile 'com.komi.slider:slider:0.4.0'
+    compile 'com.mabeijianxi:small-video-record:1.2.0'
+    compile 'com.github.chihane:JDAddressSelector:1.1.4'
+
+
+    compile rootProject.ext.dependencies.cardview
+    apt rootProject.ext.dependencies.dagger2_compiler
+    if (!rootProject.ext.isAlone) {
+        apt rootProject.ext.dependencies.arouter_compiler
+    }
+    testCompile 'junit:junit:4.12'
+    compile files('libs/pldroid-player-1.5.0.jar')
+    compile files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
+    compile files('libs/BmobStat_v1.1_170114.jar')
+    compile files('libs/nineoldandroids-2.4.0.jar')
+    compile files('libs/pinyin4j-2.5.0.jar')
+}
+

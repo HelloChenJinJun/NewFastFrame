@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rl_wei_xin_news_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true">
+
+
+    <ProgressBar
+        android:id="@+id/pb_wei_xin_news_load"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/header_layout_id"
+        android:max="100"
+        android:progressDrawable="@drawable/web_view_progress"/>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/pb_wei_xin_news_load"
+    >
+        <WebView android:id="@+id/wv_wei_xin_news_display"
+            android:layout_width="match_parent"
+                 android:layout_height="wrap_content"/>
+    </android.support.v4.widget.NestedScrollView>
+    <com.example.chat.view.fab.FloatingActionsMenu
+        android:id="@+id/fam_wei_xin_news_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp">
+
+        <com.example.chat.view.fab.FloatingActionButtonA
+            android:id="@+id/fab_wei_xin_news_browser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/blue_semi_transparent"
+            fab:fab_colorPressed="@color/blue_semi_transparent_pressed"
+            fab:fab_icon="@mipmap/ic_fab_star"
+            fab:fab_title="浏览器"/>
+        <com.example.chat.view.fab.FloatingActionButtonA
+            android:id="@+id/fab_wei_xin_news_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/pink"
+            fab:fab_colorPressed="@color/pink_pressed"
+            fab:fab_icon="@drawable/ic_share_white_24px"
+            fab:fab_title="分享"/>
+
+    </com.example.chat.view.fab.FloatingActionsMenu>
+
+
+</RelativeLayout>

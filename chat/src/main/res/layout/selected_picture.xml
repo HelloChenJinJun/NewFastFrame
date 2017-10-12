@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
+    <include
+        android:id="@+id/picture_top_bar"
+        layout="@layout/picture_top_bar"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_selected_picture_display"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_selected_picture_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:background="#DC22292C">
+
+
+            <Button
+                android:id="@+id/btn_selected_picture_all"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:drawablePadding="4dp"
+                android:drawableRight="@mipmap/text_indicator"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="全部图片"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"/>
+
+            <Button
+                android:id="@+id/btn_selected_picture_pre"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@null"
+                android:gravity="center"
+                android:text="预览(1)"
+                android:textSize="16sp"/>
+
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_toLeftOf="@id/btn_selected_picture_pre"
+                android:background="#cc111111"
+            />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

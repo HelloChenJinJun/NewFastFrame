@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">地倾</string>
+    <string name="register_text1">忘记密码</string>
+    <string name="register_text2">立即注册 ></string>
+    <string name="login">登录</string>
+    <string name="login_password_hint">请输入密码</string>
+    <string name="login_username_hint">请输入用户名</string>
+    <string name="network_tip">当前网络不可用，请检查网络配置</string>
+    <string name="register_account">帐号</string>
+    <string name="register_account_hint">请输入用户名</string>
+    <string name="register_password">密码</string>
+    <string name="register_password_hint">请输入密码</string>
+    <string name="register_password_confirm_hint">请再次输入密码</string>
+    <string name="register_confirm_password">确定密码</string>
+    <string name="register">注册</string>
+    <string name="account_null">帐号不能为空，请重新输入</string>
+    <string name="password_null">密码不能为空，请重新输入</string>
+    <string name="register_password_error">两次输入的密码不一致，请重新输过</string>
+    <string name="recent_tag_message">会话</string>
+    <string name="chat_middle_voice_tip">向上滑，取消发送</string>
+    <string name="chat_input_empty">内容不能为空哦，亲！</string>
+    <string name="chat_middle_voice_tip1">手指松开，取消发送！</string>
+    <string name="contacts_tag_message">联系人</string>
+    <string name="base_user_detail_bar_height">256dp</string>
+    <string name="preview_image_count">%1$d/%2$d</string>
+    <string name="finish_count">完成(%1$d/%2$d)</string>
+    <string name="finish">完成</string>
+    <string name="origin_size">原图(%1$dM)</string>
+    <string name="origin_text">原图</string>
+    <string name="bottom_preview_count">预览(%1$d)</string>
+    <string name="bottom_preview">预览(0)</string>
+    <string name="image_folder_count">一共有%1$d张图片</string>
+</resources>

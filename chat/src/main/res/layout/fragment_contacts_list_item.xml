@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_contacts_item_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/alphabet_bg"
+        android:paddingLeft="20dp"
+        android:text="B"
+        android:textSize="12sp"/>
+    <ImageView
+        android:id="@+id/iv_contacts_item_divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/global_dividing_line_grain_bg"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_fragment_contacts_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp">
+
+        <ImageView
+            android:id="@+id/iv_fragment_contacts_item_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/head"/>
+        <TextView
+            android:id="@+id/tv_fragment_contacts_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toEndOf="@id/iv_fragment_contacts_item_avatar"
+            android:gravity="center_vertical"
+            android:text="姓名"
+            android:textColor="@color/base_color_text_black"
+            android:textSize="16sp"
+            android:layout_toRightOf="@id/iv_fragment_contacts_item_avatar"/>
+
+        <CheckBox
+            android:id="@+id/cb_fragment_contacts_item_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"/>
+
+    </RelativeLayout>
+</LinearLayout>

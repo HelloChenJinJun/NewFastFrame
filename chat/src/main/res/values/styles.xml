@@ -1,0 +1,92 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/base_color_text_white</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/base_color_text_white</item>
+    </style>
+
+    <style name="splashTheme"
+           parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/de_bg</item>
+    </style>
+
+
+    <style name="ImageFolderPopupWindow">
+        <item name="android:windowEnterAnimation">@anim/popup_input</item>
+        <item name="android:windowExitAnimation">@anim/popup_output</item>
+        <item name="android:windowBackground">@color/transparent_middle</item>
+        <!--<item name="android:windowBackground">@color/transparent</item>-->
+    </style>
+
+
+    <style name="ActionBar">
+        <!--头部布局的背景-->
+        <item name="android:background">@drawable/top_bar</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/base_actionbar_height</item>
+
+
+    </style>
+    <!--actionbar标题的style-->
+    <style name="ActionBarTitle">
+        <item name="android:textSize">@dimen/base_actionbar_title_size</item>
+        <item name="android:textColor">@color/base_color_text_white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="register_input">
+        <item name="android:layout_height">@dimen/base_actionbar_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@drawable/base_edit_input</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginLeft">@dimen/register_margin</item>
+        <item name="android:layout_marginRight">@dimen/register_margin</item>
+        <item name="android:layout_marginTop">@dimen/register_margin</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="btn_comment_animation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
+    </style>
+    <style name="dialog_default_style" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowFrame">@null</item>
+    </style>
+    <style name="Custom.Theme.ToolBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:actionOverflowButtonStyle">@style/ActionButton.Overflow</item>
+
+    </style>
+
+    <style name="ActionButton.Overflow"
+           parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:color">@android:color/white</item>
+    </style>
+    <style name="Custom_scroll_view"
+           parent="@android:style/Widget.ScrollView">
+        <item name="android:scrollbarThumbVertical">@drawable/nim_scrollbar_handle_holo_dark</item>
+        <item name="android:scrollbarThumbHorizontal">@drawable/nim_scrollbar_handle_holo_dark
+        </item>
+    </style>
+    <dimen name="base_actionbar_title_size">22dp</dimen>
+    <dimen name="register_margin">10dp</dimen>
+
+
+    <!---->
+    <style name="menu_labels_style">
+        <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:textColor">@color/base_color_text_white</item>
+    </style>
+    <color name="transparent_middle">#50000000</color>
+</resources>

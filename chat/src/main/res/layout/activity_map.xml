@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rl_map_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true">
+
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/mv_display"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.amap.api.maps.MapView>
+
+
+    <Button
+        android:id="@+id/btn_map_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/transparent"
+        android:text="发送"
+        android:textColor="@color/base_color_text_grey"/>
+    <Button
+        android:id="@+id/btn_map_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/transparent"
+        android:text="返回"
+        android:textColor="@color/base_color_text_grey"/>
+
+    <Button
+        android:id="@+id/btn_map_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:background="@color/transparent"
+        android:text="视图"
+        android:textColor="@color/base_color_text_grey"
+    />
+
+
+</RelativeLayout>

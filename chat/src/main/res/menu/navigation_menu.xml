@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/fragment_wei_xin"
+          android:title="微信精选"/>
+    <item android:id="@+id/fragment_happy"
+          android:title="精选趣图"/>
+    <item android:id="@+id/fragment_happy_content"
+          android:title="精选笑话"/>
+    <item android:id="@+id/fragment_picture"
+          android:title="美女图片"/>
+</menu>
