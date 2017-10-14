@@ -51,6 +51,7 @@ android {
                     manifest.srcFile 'src/main/AndroidManifest.xml'
                 }
                 assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+
             }
         }
     }

@@ -105,55 +105,55 @@ public class SelectedPictureActivity extends SlideBaseActivity implements View.O
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.iv_picture_top_bar_back:
-                                CommonImageLoader.getInstance().getSelectedImages().clear();
-                                finish();
-                                break;
-                        case R.id.btn_picture_top_bar_finish:
-                                setResult(Activity.RESULT_OK);
-                                finish();
-                                break;
-                        case R.id.btn_selected_picture_all:
-                                List<ImageFolder> list = CommonImageLoader.getInstance().getImageFolders();
-                                if (list == null || list.size() == 0) {
-                                        ToastUtils.showShortToast("当前没有任何照片");
-                                        return;
-                                }
-                                if (imageFolderPopupWindow == null) {
-                                        LogUtil.e("创建下拉窗口123");
-                                        imageFolderPopupWindow = new ImageFolderPopupWindow(this, mImageFoldersAdapter) {
-                                                @Override
-                                                public void onItemClick(View view, int position, long id) {
-                                                        mImageFoldersAdapter.setCurrentSelectedPosition(position);
-                                                        CommonImageLoader.getInstance().setCurrentImageFolderPosition(position);
-                                                        ImageFolder imageFolder = mImageFoldersAdapter.getData(position);
-                                                        if (imageFolder != null) {
-                                                                mAdapter.clearAllData();
-                                                                ImageItem imageItem = new ImageItem();
-                                                                imageItem.setItemType(ImageItem.ITEM_CAMERA);
-                                                                mAdapter.addData(imageItem);
-                                                                mAdapter.addData(imageFolder.getAllImages());
-                                                                all.setText(imageFolder.getName());
-                                                        }
-                                                        imageFolderPopupWindow.dismiss();
+                int i = v.getId();
+                if (i == R.id.iv_picture_top_bar_back) {
+                        CommonImageLoader.getInstance().getSelectedImages().clear();
+                        finish();
+
+                } else if (i == R.id.btn_picture_top_bar_finish) {
+                        setResult(Activity.RESULT_OK);
+                        finish();
+
+                } else if (i == R.id.btn_selected_picture_all) {
+                        List<ImageFolder> list = CommonImageLoader.getInstance().getImageFolders();
+                        if (list == null || list.size() == 0) {
+                                ToastUtils.showShortToast("当前没有任何照片");
+                                return;
+                        }
+                        if (imageFolderPopupWindow == null) {
+                                LogUtil.e("创建下拉窗口123");
+                                imageFolderPopupWindow = new ImageFolderPopupWindow(this, mImageFoldersAdapter) {
+                                        @Override
+                                        public void onItemClick(View view, int position, long id) {
+                                                mImageFoldersAdapter.setCurrentSelectedPosition(position);
+                                                CommonImageLoader.getInstance().setCurrentImageFolderPosition(position);
+                                                ImageFolder imageFolder = mImageFoldersAdapter.getData(position);
+                                                if (imageFolder != null) {
+                                                        mAdapter.clearAllData();
+                                                        ImageItem imageItem = new ImageItem();
+                                                        imageItem.setItemType(ImageItem.ITEM_CAMERA);
+                                                        mAdapter.addData(imageItem);
+                                                        mAdapter.addData(imageFolder.getAllImages());
+                                                        all.setText(imageFolder.getName());
                                                 }
-                                        };
-                                        imageFolderPopupWindow.showAtLocation(bottomView, Gravity.NO_GRAVITY, 0, 0);
-                                } else {
-                                        if (imageFolderPopupWindow.isShowing()) {
                                                 imageFolderPopupWindow.dismiss();
-                                        } else {
-                                                imageFolderPopupWindow.showAtLocation(bottomView, Gravity.NO_GRAVITY, 0, 0);
-                                                mImageFoldersAdapter.notifyDataSetChanged();
                                         }
+                                };
+                                imageFolderPopupWindow.showAtLocation(bottomView, Gravity.NO_GRAVITY, 0, 0);
+                        } else {
+                                if (imageFolderPopupWindow.isShowing()) {
+                                        imageFolderPopupWindow.dismiss();
+                                } else {
+                                        imageFolderPopupWindow.showAtLocation(bottomView, Gravity.NO_GRAVITY, 0, 0);
+                                        mImageFoldersAdapter.notifyDataSetChanged();
                                 }
-                                break;
-                        case R.id.btn_selected_picture_pre:
-                                Intent intent = new Intent(this, BasePreViewActivity.class);
-                                intent.putExtra(CommonImageLoader.PREVIEW_FROM, CommonImageLoader.PREVIEW_SELECT);
-                                startActivity(intent);
-                                break;
+                        }
+
+                } else if (i == R.id.btn_selected_picture_pre) {
+                        Intent intent = new Intent(this, BasePreViewActivity.class);
+                        intent.putExtra(CommonImageLoader.PREVIEW_FROM, CommonImageLoader.PREVIEW_SELECT);
+                        startActivity(intent);
+
                 }
         }
 

@@ -2,6 +2,7 @@ package com.example.commonlibrary;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.commonlibrary.dagger.component.AppComponent;
@@ -47,6 +48,7 @@ public class BaseApplication extends Application {
         super.attachBaseContext(base);
         applicationDelegate = new ApplicationDelegate();
         applicationDelegate.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @Override

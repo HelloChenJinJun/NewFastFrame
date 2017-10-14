@@ -36,7 +36,7 @@
     </LinearLayout>
 
 
-    <android.support.v7.widget.RecyclerView
+    <com.example.commonlibrary.baseadapter.SuperRecyclerView
         android:id="@+id/rcv_edit_share_message_display"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

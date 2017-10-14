@@ -9,8 +9,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -64,6 +62,7 @@ import com.example.chat.util.LogUtil;
 import com.example.chat.view.DragLayout;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -143,9 +142,7 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
                 weatherTemperature = (TextView) findViewById(R.id.tv_menu_weather_temperature);
                 bottomLayout = (LinearLayout) findViewById(R.id.ll_menu_bottom_container);
                 bg.setAlpha((float) 0.0);
-                menuDisplay.setLayoutManager(new LinearLayoutManager(this));
-                menuDisplay.setHasFixedSize(true);
-                menuDisplay.setItemAnimator(new DefaultItemAnimator());
+                menuDisplay.setLayoutManager(new WrappedLinearLayoutManager(this));
                 container.setListener(this);
                 headLayout.setOnClickListener(this);
                 net.setOnClickListener(this);
@@ -358,36 +355,36 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
-                switch (item.getItemId()) {
-                        case R.id.main_item_search:
-                                Intent intent = new Intent(this, SearchActivity.class);
-                                startActivity(intent);
-                                break;
-                        case R.id.main_sub_item_add:
-                                ToastUtils.showShortToast("点击了添加好友");
-                                SearchFriendActivity.start(this);
-                                break;
-                        case R.id.main_sub_item_create:
-                                ToastUtils.showShortToast("点击了创建群");
-                                Intent selectIntent = new Intent(this, SelectedFriendsActivity.class);
-                                selectIntent.putExtra("from", "createGroup");
-                                startActivity(selectIntent);
-                                break;
-                        case R.id.main_sub_item_settings:
-                                ToastUtils.showShortToast("点击了设置");
-                                SettingsActivity.start(this, Constant.REQUEST_CODE_EDIT_USER_INFO);
-                                break;
-                        case R.id.main_sub_item_happy:
-                                HappyActivity.startActivity(this);
+                int i = item.getItemId();
+                if (i == R.id.main_item_search) {
+                        Intent intent = new Intent(this, SearchActivity.class);
+                        startActivity(intent);
+
+                } else if (i == R.id.main_sub_item_add) {
+                        ToastUtils.showShortToast("点击了添加好友");
+                        SearchFriendActivity.start(this);
+
+                } else if (i == R.id.main_sub_item_create) {
+                        ToastUtils.showShortToast("点击了创建群");
+                        Intent selectIntent = new Intent(this, SelectedFriendsActivity.class);
+                        selectIntent.putExtra("from", "createGroup");
+                        startActivity(selectIntent);
+
+                } else if (i == R.id.main_sub_item_settings) {
+                        ToastUtils.showShortToast("点击了设置");
+                        SettingsActivity.start(this, Constant.REQUEST_CODE_EDIT_USER_INFO);
+
+                } else if (i == R.id.main_sub_item_happy) {
+                        HappyActivity.startActivity(this);
 //                                Toast.makeText(this, "启动demo", Toast.LENGTH_SHORT).show();
 //                                Intent demo = new Intent(this, DemoActivity.class);
 //                                startActivity(demo);
-                                break;
-                        case R.id.main_sub_item_bg:
-                                ToastUtils.showShortToast("点击了背景");
-                                Intent wallPaperIntent = new Intent(this, WallPaperActivity.class);
-                                wallPaperIntent.putExtra("from", "wallpaper");
-                                startActivityForResult(wallPaperIntent, Constant.REQUEST_CODE_SELECT_WALLPAPER);
+
+                } else if (i == R.id.main_sub_item_bg) {
+                        ToastUtils.showShortToast("点击了背景");
+                        Intent wallPaperIntent = new Intent(this, WallPaperActivity.class);
+                        wallPaperIntent.putExtra("from", "wallpaper");
+                        startActivityForResult(wallPaperIntent, Constant.REQUEST_CODE_SELECT_WALLPAPER);
                 }
                 return true;
         }
@@ -816,28 +813,27 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
         @Override
         public void onClick(View view) {
                 LogUtil.e("侧滑关闭");
-                switch (view.getId()) {
-                        case R.id.drag_container:
-                                openMenu();
-                                break;
-                        case R.id.rl_menu_head_layout:
-//                                点击进入个人信息界面之前，先实时监听个人信息界面中的说说
-                                Intent intent = new Intent(this, UserDetailActivity.class);
-                                intent.putExtra("from", "me");
-                                intent.putExtra("uid", UserManager.getInstance().getCurrentUserObjectId());
-                                startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_USER_INFO);
-                                break;
-                        case R.id.tv_main_net:
-                                Intent settingIntent = new Intent();
-                                settingIntent.setAction(Settings.ACTION_WIFI_SETTINGS);
-                                startActivity(settingIntent);
-                                break;
-                        case R.id.ll_menu_bottom_container:
-                                Intent weatherIntent = new Intent(this, WeatherInfoActivity.class);
-                                if (mWeatherInfoBean != null) {
-                                        weatherIntent.putExtra("WeatherInfo", mWeatherInfoBean);
-                                }
-                                startActivityForResult(weatherIntent, Constant.REQUEST_CODE_WEATHER_INFO);
+                int i = view.getId();
+                if (i == R.id.drag_container) {
+                        openMenu();
+
+                } else if (i == R.id.rl_menu_head_layout) {//                                点击进入个人信息界面之前，先实时监听个人信息界面中的说说
+                        Intent intent = new Intent(this, UserDetailActivity.class);
+                        intent.putExtra("from", "me");
+                        intent.putExtra("uid", UserManager.getInstance().getCurrentUserObjectId());
+                        startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_USER_INFO);
+
+                } else if (i == R.id.tv_main_net) {
+                        Intent settingIntent = new Intent();
+                        settingIntent.setAction(Settings.ACTION_WIFI_SETTINGS);
+                        startActivity(settingIntent);
+
+                } else if (i == R.id.ll_menu_bottom_container) {
+                        Intent weatherIntent = new Intent(this, WeatherInfoActivity.class);
+                        if (mWeatherInfoBean != null) {
+                                weatherIntent.putExtra("WeatherInfo", mWeatherInfoBean);
+                        }
+                        startActivityForResult(weatherIntent, Constant.REQUEST_CODE_WEATHER_INFO);
                 }
         }
 

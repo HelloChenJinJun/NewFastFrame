@@ -111,17 +111,17 @@ public class HappyActivity extends SlideBaseActivity {
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
-                switch (item.getItemId()) {
-                        case R.id.happy_main_add_friend:
-                                SearchFriendActivity.start(this);
-                                finish();
-                                break;
-                        case R.id.happy_main_create_group:
-                                ToastUtils.showShortToast("点击了创建群");
-                                Intent selectIntent = new Intent(this, SelectedFriendsActivity.class);
-                                selectIntent.putExtra("from", "createGroup");
-                                startActivity(selectIntent);
-                                break;
+                int i = item.getItemId();
+                if (i == R.id.happy_main_add_friend) {
+                        SearchFriendActivity.start(this);
+                        finish();
+
+                } else if (i == R.id.happy_main_create_group) {
+                        ToastUtils.showShortToast("点击了创建群");
+                        Intent selectIntent = new Intent(this, SelectedFriendsActivity.class);
+                        selectIntent.putExtra("from", "createGroup");
+                        startActivity(selectIntent);
+
                 }
                 return true;
         }

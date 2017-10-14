@@ -786,46 +786,46 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_share_fragment_send:
-                String content = input.getText().toString().trim();
-                if (content.equals("") || content.contains("$") || content.contains("&")) {
-                    LogUtil.e("评论内容不能为空或包含特殊符号，比如$或者&");
+        int i = v.getId();
+        if (i == R.id.iv_share_fragment_send) {
+            String content = input.getText().toString().trim();
+            if (content.equals("") || content.contains("$") || content.contains("&")) {
+                LogUtil.e("评论内容不能为空或包含特殊符号，比如$或者&");
+            } else {
+                String wrappedContent;
+                if (replyUid != null) {
+                    wrappedContent = UserManager.getInstance().getCurrentUserObjectId() + "$" + replyUid + "$" + content;
                 } else {
-                    String wrappedContent;
-                    if (replyUid != null) {
-                        wrappedContent = UserManager.getInstance().getCurrentUserObjectId() + "$" + replyUid + "$" + content;
-                    } else {
-                        wrappedContent = UserManager.getInstance().getCurrentUserObjectId() + "$" + content;
-                    }
-                    presenter.addComment(mAdapter.getData(currentPosition - 1).getObjectId(), wrappedContent);
+                    wrappedContent = UserManager.getInstance().getCurrentUserObjectId() + "$" + content;
                 }
-                input.setText("");
-                break;
-            case R.id.fab_share_message_normal:
-                if (mMenu.isExpanded()) {
-                    mMenu.collapse();
-                }
-                Intent intent = new Intent(getActivity(), EditShareMessageActivity.class);
-                intent.putExtra("destination", "text");
-                startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_SHARE_MESSAGE);
-                break;
-            case R.id.fab_share_message_video:
-                if (mMenu.isExpanded()) {
-                    mMenu.collapse();
-                }
-                Intent videoIntent = new Intent(getActivity(), EditShareMessageActivity.class);
-                videoIntent.putExtra("destination", "video");
-                startActivityForResult(videoIntent, Constant.REQUEST_CODE_EDIT_SHARE_MESSAGE);
-                break;
-            case R.id.fab_share_message_image:
-                if (mMenu.isExpanded()) {
-                    mMenu.collapse();
-                }
-                Intent imageIntent = new Intent(getActivity(), EditShareMessageActivity.class);
-                imageIntent.putExtra("destination", "image");
-                startActivityForResult(imageIntent, Constant.REQUEST_CODE_EDIT_SHARE_MESSAGE);
-                break;
+                presenter.addComment(mAdapter.getData(currentPosition - 1).getObjectId(), wrappedContent);
+            }
+            input.setText("");
+
+        } else if (i == R.id.fab_share_message_normal) {
+            if (mMenu.isExpanded()) {
+                mMenu.collapse();
+            }
+            Intent intent = new Intent(getActivity(), EditShareMessageActivity.class);
+            intent.putExtra("destination", "text");
+            startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_SHARE_MESSAGE);
+
+        } else if (i == R.id.fab_share_message_video) {
+            if (mMenu.isExpanded()) {
+                mMenu.collapse();
+            }
+            Intent videoIntent = new Intent(getActivity(), EditShareMessageActivity.class);
+            videoIntent.putExtra("destination", "video");
+            startActivityForResult(videoIntent, Constant.REQUEST_CODE_EDIT_SHARE_MESSAGE);
+
+        } else if (i == R.id.fab_share_message_image) {
+            if (mMenu.isExpanded()) {
+                mMenu.collapse();
+            }
+            Intent imageIntent = new Intent(getActivity(), EditShareMessageActivity.class);
+            imageIntent.putExtra("destination", "image");
+            startActivityForResult(imageIntent, Constant.REQUEST_CODE_EDIT_SHARE_MESSAGE);
+
         }
     }
 

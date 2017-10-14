@@ -32,7 +32,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
-        <org.pointstone.cugappplat.base.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
             android:id="@+id/riv_edit_user_info_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"

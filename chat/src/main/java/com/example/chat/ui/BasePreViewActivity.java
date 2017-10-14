@@ -223,60 +223,60 @@ public class BasePreViewActivity extends SlideBaseActivity implements View.OnCli
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.iv_picture_top_bar_back:
-                                LogUtil.e("点击返回键");
-                                finish();
-                                break;
-                        case R.id.btn_picture_top_bar_finish:
-                                LogUtil.e("点击完成键");
-                                finish();
-                                break;
-                        case R.id.iv_picture_top_bar_delete:
-                                LogUtil.e("点击删除键");
-                                showBaseDialog("提示", "确定要删除该照片吗?", "取消", "确定", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                                cancelBaseDialog();
-                                        }
-                                }, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                                dismissBaseDialog();
-                                                selectedList.remove(currentPosition);
-                                                if (selectedList.size() > 0) {
-                                                        LogUtil.e("通知数据改变");
-                                                        mImagePageAdapter.notifyDataSetChanged();
-                                                        display.setCurrentItem(currentPosition, true);
-                                                        description.setText(getString(R.string.preview_image_count, currentPosition + 1, selectedList.size()));
-                                                } else {
-                                                        onBackPressed();
-                                                }
-                                        }
-                                });
-                                break;
-                        case R.id.cb_base_preview_select:
-                                int size = CommonImageLoader.getInstance().getMaxSelectedCount();
-                                if (select.isChecked()) {
-                                        if (selectedList.size() >= size) {
-                                                ToastUtils.showShortToast("最多只能添加" + size + "图片");
-                                                select.setChecked(false);
+                int i = v.getId();
+                if (i == R.id.iv_picture_top_bar_back) {
+                        LogUtil.e("点击返回键");
+                        finish();
+
+                } else if (i == R.id.btn_picture_top_bar_finish) {
+                        LogUtil.e("点击完成键");
+                        finish();
+
+                } else if (i == R.id.iv_picture_top_bar_delete) {
+                        LogUtil.e("点击删除键");
+                        showBaseDialog("提示", "确定要删除该照片吗?", "取消", "确定", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                        cancelBaseDialog();
+                                }
+                        }, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                        dismissBaseDialog();
+                                        selectedList.remove(currentPosition);
+                                        if (selectedList.size() > 0) {
+                                                LogUtil.e("通知数据改变");
+                                                mImagePageAdapter.notifyDataSetChanged();
+                                                display.setCurrentItem(currentPosition, true);
+                                                description.setText(getString(R.string.preview_image_count, currentPosition + 1, selectedList.size()));
                                         } else {
-                                                LogUtil.e("selectedList.size()" + selectedList.size());
-                                                selectedList.add(previewList.get(currentPosition));
-                                                LogUtil.e("CommonImageLoaderSize" + CommonImageLoader.getInstance().getSelectedImages().size());
+                                                onBackPressed();
                                         }
-                                } else {
-                                        selectedList.remove(previewList.get(currentPosition));
                                 }
-                                if (size > 0) {
-                                        finish.setEnabled(true);
-                                        finish.setText(getString(R.string.finish_count, CommonImageLoader.getInstance().getSelectedImages().size(), size));
+                        });
+
+                } else if (i == R.id.cb_base_preview_select) {
+                        int size = CommonImageLoader.getInstance().getMaxSelectedCount();
+                        if (select.isChecked()) {
+                                if (selectedList.size() >= size) {
+                                        ToastUtils.showShortToast("最多只能添加" + size + "图片");
+                                        select.setChecked(false);
                                 } else {
-                                        finish.setEnabled(false);
-                                        finish.setText(R.string.finish);
+                                        LogUtil.e("selectedList.size()" + selectedList.size());
+                                        selectedList.add(previewList.get(currentPosition));
+                                        LogUtil.e("CommonImageLoaderSize" + CommonImageLoader.getInstance().getSelectedImages().size());
                                 }
-                                break;
+                        } else {
+                                selectedList.remove(previewList.get(currentPosition));
+                        }
+                        if (size > 0) {
+                                finish.setEnabled(true);
+                                finish.setText(getString(R.string.finish_count, CommonImageLoader.getInstance().getSelectedImages().size(), size));
+                        } else {
+                                finish.setEnabled(false);
+                                finish.setText(R.string.finish);
+                        }
+
                 }
         }
 

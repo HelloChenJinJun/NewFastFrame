@@ -288,97 +288,95 @@ public class GroupInfoActivity extends SlideBaseActivity implements View.OnClick
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.rl_group_info_header:
-                                List<String> list = new ArrayList<>();
-                                list.add("拍摄");
-                                list.add("从手机相册选择");
-                                showChooseDialog("设置头像", list, new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                dismissBaseDialog();
-                                                if (position == 0) {
+                int i = v.getId();
+                if (i == R.id.rl_group_info_header) {
+                        List<String> list = new ArrayList<>();
+                        list.add("拍摄");
+                        list.add("从手机相册选择");
+                        showChooseDialog("设置头像", list, new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        dismissBaseDialog();
+                                        if (position == 0) {
 //                                                        File imageFile = FileUtil.newFile(FileUtil.newDir(Constant.IMAGE_CACHE_DIR).getAbsolutePath() + System.currentTimeMillis());
-                                                        localImagePath=    CommonImageLoader.getInstance().takePhoto(GroupInfoActivity.this, Constant.REQUEST_CODE_TAKE_PICTURE).getAbsolutePath();
-                                                } else {
-                                                        CommonImageLoader.getInstance().pickPhoto(GroupInfoActivity.this, Constant.REQUEST_CODE_SELECT_FROM_LOCAL);
-                                                }
+                                                localImagePath = CommonImageLoader.getInstance().takePhoto(GroupInfoActivity.this, Constant.REQUEST_CODE_TAKE_PICTURE).getAbsolutePath();
+                                        } else {
+                                                CommonImageLoader.getInstance().pickPhoto(GroupInfoActivity.this, Constant.REQUEST_CODE_SELECT_FROM_LOCAL);
+                                        }
+                                }
+                        });
+
+                } else if (i == R.id.ll_group_info_number_name) {//                                编辑昵称
+                        Intent intent = new Intent(this, EditUserInfoDetailActivity.class);
+                        intent.putExtra("groupId", mGroupTableMessage.getGroupId());
+                        intent.putExtra("from", "groupNick");
+                        startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_GROUP_INFO_NICK);
+
+                } else if (i == R.id.ll_group_info_number_count) {
+                        Intent numberIntent = new Intent(this, GroupNumberDisplayActivity.class);
+                        numberIntent.putExtra("groupId", mGroupTableMessage.getGroupId());
+                        numberIntent.putExtra("isCreator", isCreator);
+                        startActivity(numberIntent);
+
+                } else if (i == R.id.ll_group_info_group_name) {
+                        Intent groupName = new Intent(this, EditUserInfoDetailActivity.class);
+                        groupName.putExtra("groupId", mGroupTableMessage.getGroupId());
+                        groupName.putExtra("from", "groupName");
+                        groupName.putExtra("message", mGroupTableMessage.getGroupName());
+                        startActivityForResult(groupName, Constant.REQUEST_CODE_EDIT_GROUP_INFO_GROUP_NAME);
+
+                } else if (i == R.id.ll_group_info_group_description) {
+                        Intent description = new Intent(this, EditUserInfoDetailActivity.class);
+                        description.putExtra("groupId", mGroupTableMessage.getGroupId());
+                        description.putExtra("from", "groupDescription");
+                        description.putExtra("message", mGroupTableMessage.getGroupDescription());
+                        startActivityForResult(description, Constant.REQUEST_CODE_EDIT_GROUP_INFO_DESCRIPTION);
+
+                } else if (i == R.id.ll_group_info_group_notification) {
+                        Intent notification = new Intent(this, EditUserInfoDetailActivity.class);
+                        notification.putExtra("groupId", mGroupTableMessage.getGroupId());
+                        notification.putExtra("from", "groupNotification");
+                        notification.putExtra("message", mGroupTableMessage.getNotification());
+                        startActivityForResult(notification, Constant.REQUEST_CODE_EDIT_GROUP_INFO_NOTIFICATION);
+
+                } else if (i == R.id.ll_group_info_remind) {
+                        isRemind = !isRemind;
+                        BaseApplication.getAppComponent().getSharedPreferences()
+                                .edit().putBoolean(mGroupTableMessage.getGroupId(), isRemind);
+                        if (isRemind) {
+                                remind.setText("开启");
+                        } else {
+                                remind.setText("关闭");
+                        }
+
+                } else if (i == R.id.btn_group_info_exit_group) {
+                        if (mGroupTableMessage.getCreatorId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+//                                        群主退出该群,
+                                Toast.makeText(this, "群组不能退出该群", Toast.LENGTH_SHORT).show();
+                        } else {
+                                GroupTableMessage groupTableMessage = new GroupTableMessage();
+                                groupTableMessage.setObjectId(mGroupTableMessage.getGroupId());
+                                List<String> numberList = new ArrayList<>(mGroupTableMessage.getGroupNumber());
+                                if (numberList.contains(UserManager.getInstance().getCurrentUserObjectId())) {
+                                        numberList.remove(UserManager.getInstance().getCurrentUserObjectId());
+                                }
+                                groupTableMessage.setGroupNumber(numberList);
+                                groupTableMessage.update(this, new UpdateListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                                LogUtil.e("更新群主的群结构消息成功");
+                                                finish();
+                                        }
+
+                                        @Override
+                                        public void onFailure(int i, String s) {
+                                                LogUtil.e("更新群主的群结构消息失败" + s + i);
                                         }
                                 });
-                                break;
-                        case R.id.ll_group_info_number_name:
-//                                编辑昵称
-                                Intent intent = new Intent(this, EditUserInfoDetailActivity.class);
-                                intent.putExtra("groupId", mGroupTableMessage.getGroupId());
-                                intent.putExtra("from", "groupNick");
-                                startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_GROUP_INFO_NICK);
-                                break;
-                        case R.id.ll_group_info_number_count:
-                                Intent numberIntent = new Intent(this, GroupNumberDisplayActivity.class);
-                                numberIntent.putExtra("groupId", mGroupTableMessage.getGroupId());
-                                numberIntent.putExtra("isCreator", isCreator);
-                                startActivity(numberIntent);
-                                break;
-                        case R.id.ll_group_info_group_name:
-                                Intent groupName = new Intent(this, EditUserInfoDetailActivity.class);
-                                groupName.putExtra("groupId", mGroupTableMessage.getGroupId());
-                                groupName.putExtra("from", "groupName");
-                                groupName.putExtra("message", mGroupTableMessage.getGroupName());
-                                startActivityForResult(groupName, Constant.REQUEST_CODE_EDIT_GROUP_INFO_GROUP_NAME);
-                                break;
-                        case R.id.ll_group_info_group_description:
-                                Intent description = new Intent(this, EditUserInfoDetailActivity.class);
-                                description.putExtra("groupId", mGroupTableMessage.getGroupId());
-                                description.putExtra("from", "groupDescription");
-                                description.putExtra("message", mGroupTableMessage.getGroupDescription());
-                                startActivityForResult(description, Constant.REQUEST_CODE_EDIT_GROUP_INFO_DESCRIPTION);
-                                break;
-                        case R.id.ll_group_info_group_notification:
-                                Intent notification = new Intent(this, EditUserInfoDetailActivity.class);
-                                notification.putExtra("groupId", mGroupTableMessage.getGroupId());
-                                notification.putExtra("from", "groupNotification");
-                                notification.putExtra("message", mGroupTableMessage.getNotification());
-                                startActivityForResult(notification, Constant.REQUEST_CODE_EDIT_GROUP_INFO_NOTIFICATION);
-                                break;
-                        case R.id.ll_group_info_remind:
-                                isRemind = !isRemind;
-                                BaseApplication.getAppComponent().getSharedPreferences()
-                                        .edit().putBoolean(mGroupTableMessage.getGroupId(),isRemind);
-                                if (isRemind) {
-                                        remind.setText("开启");
-                                } else {
-                                        remind.setText("关闭");
-                                }
-                                break;
-                        case R.id.btn_group_info_exit_group:
-                                if (mGroupTableMessage.getCreatorId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
-//                                        群主退出该群,
-                                        Toast.makeText(this, "群组不能退出该群", Toast.LENGTH_SHORT).show();
-                                }else {
-                                        GroupTableMessage groupTableMessage=new GroupTableMessage();
-                                        groupTableMessage.setObjectId(mGroupTableMessage.getGroupId());
-                                        List<String> numberList=new ArrayList<>(mGroupTableMessage.getGroupNumber());
-                                        if (numberList.contains(UserManager.getInstance().getCurrentUserObjectId())) {
-                                                numberList.remove(UserManager.getInstance().getCurrentUserObjectId());
-                                        }
-                                        groupTableMessage.setGroupNumber(numberList);
-                                        groupTableMessage.update(this, new UpdateListener() {
-                                                @Override
-                                                public void onSuccess() {
-                                                        LogUtil.e("更新群主的群结构消息成功");
-                                                        finish();
-                                                }
+                        }
 
-                                                @Override
-                                                public void onFailure(int i, String s) {
-                                                        LogUtil.e("更新群主的群结构消息失败"+s+i);
-                                                }
-                                        });
-                                }
 
-                                break;
-                        default:
-                                break;
+                } else {
                 }
         }
 

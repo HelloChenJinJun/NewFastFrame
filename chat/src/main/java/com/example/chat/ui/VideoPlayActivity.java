@@ -203,20 +203,19 @@ public class VideoPlayActivity extends SlideBaseActivity implements
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.videoview:
-                                if (mVideoView.isPlaying()) {
-                                        Toast.makeText(this, "1正在播放中", Toast.LENGTH_SHORT).show();
-                                        mVideoView.pause();
-                                } else {
-                                        if (mVideoView.isRelease())
-                                                mVideoView.reOpen();
-                                        else
-                                                mVideoView.start();
-                                }
-                                break;
-                        case R.id.root:
-                                break;
+                int i = v.getId();
+                if (i == R.id.videoview) {
+                        if (mVideoView.isPlaying()) {
+                                Toast.makeText(this, "1正在播放中", Toast.LENGTH_SHORT).show();
+                                mVideoView.pause();
+                        } else {
+                                if (mVideoView.isRelease())
+                                        mVideoView.reOpen();
+                                else
+                                        mVideoView.start();
+                        }
+
+                } else if (i == R.id.root) {
                 }
         }
 

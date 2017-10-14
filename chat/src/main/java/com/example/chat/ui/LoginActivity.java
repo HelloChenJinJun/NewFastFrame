@@ -107,22 +107,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         @Override
         public void onClick(View view) {
-                switch (view.getId()) {
-                        case R.id.btn_login_confirm:
-                                boolean isNetConnected = CommonUtils.isNetWorkAvailable(this);
-                                if (!isNetConnected) {
-                                        ToastUtils.showShortToast(getString(R.string.network_tip));
-                                } else {
-                                        login();
-                                }
-                                break;
-                        case R.id.tv_login_register:
-                                Intent intent = new Intent(this, RegisterActivity.class);
-                                startActivityForResult(intent, Constant.REQUEST_CODE_REGISTER);
-                                break;
-                        case R.id.tv_login_forget:
-                                LogUtil.e("忘记密码");
-                                break;
+                int i = view.getId();
+                if (i == R.id.btn_login_confirm) {
+                        boolean isNetConnected = CommonUtils.isNetWorkAvailable(this);
+                        if (!isNetConnected) {
+                                ToastUtils.showShortToast(getString(R.string.network_tip));
+                        } else {
+                                login();
+                        }
+
+                } else if (i == R.id.tv_login_register) {
+                        Intent intent = new Intent(this, RegisterActivity.class);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_REGISTER);
+
+                } else if (i == R.id.tv_login_forget) {
+                        LogUtil.e("忘记密码");
+
                 }
         }
 

@@ -123,24 +123,23 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.btn_user_info_chat:
-                                Intent intent = new Intent(this, ChatActivity.class);
-                                intent.putExtra("user", user);
-                                intent.putExtra("from", "person");
-                                startActivity(intent);
-                                finish();
-                                break;
-                        case R.id.btn_user_info_add_friend:
-                                sendAddFriendMsg();
-                                break;
-                        case R.id.btn_user_info_add_black:
-//                                添加对方为黑名单
-                                if (!isBlack) {
-                                        showAddBlackDialog();
-                                } else {
-                                        showCancelBlackDialog();
-                                }
+                int i = v.getId();
+                if (i == R.id.btn_user_info_chat) {
+                        Intent intent = new Intent(this, ChatActivity.class);
+                        intent.putExtra("user", user);
+                        intent.putExtra("from", "person");
+                        startActivity(intent);
+                        finish();
+
+                } else if (i == R.id.btn_user_info_add_friend) {
+                        sendAddFriendMsg();
+
+                } else if (i == R.id.btn_user_info_add_black) {//                                添加对方为黑名单
+                        if (!isBlack) {
+                                showAddBlackDialog();
+                        } else {
+                                showCancelBlackDialog();
+                        }
                 }
         }
 

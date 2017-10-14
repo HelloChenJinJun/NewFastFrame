@@ -94,25 +94,25 @@ public class GroupNumberInfoDetailActivity extends SlideBaseActivity implements 
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.btn_group_number_info_detail_exit:
-                                if (!CommonUtils.isNetWorkAvailable()) {
-                                        ToastUtils.showShortToast("网络连接失败，请检查网络配置");
-                                        return;
+                int i = v.getId();
+                if (i == R.id.btn_group_number_info_detail_exit) {
+                        if (!CommonUtils.isNetWorkAvailable()) {
+                                ToastUtils.showShortToast("网络连接失败，请检查网络配置");
+                                return;
+                        }
+                        final String deleteId = mGroupNumberInfo.getUser().getObjectId();
+                        MsgManager.getInstance().updateGroupMessage(groupId, "deleteNumber", deleteId, new UpdateListener() {
+                                @Override
+                                public void onSuccess() {
+                                        LogUtil.e("1删除群成员成功");
                                 }
-                                final String deleteId = mGroupNumberInfo.getUser().getObjectId();
-                                MsgManager.getInstance().updateGroupMessage(groupId, "deleteNumber", deleteId, new UpdateListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                                LogUtil.e("1删除群成员成功");
-                                        }
 
-                                        @Override
-                                        public void onFailure(int i, String s) {
-                                                LogUtil.e("删除群成员失败" + s + i);
-                                        }
-                                });
-                                break;
+                                @Override
+                                public void onFailure(int i, String s) {
+                                        LogUtil.e("删除群成员失败" + s + i);
+                                }
+                        });
+
                 }
         }
 

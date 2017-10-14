@@ -145,17 +145,15 @@ public class ContactsFragment extends BaseFragment implements MyLetterView.MyLet
 
         @Override
         public void onClick(View view) {
-                switch (view.getId()) {
-                        case R.id.ll_fragment_contacts_group:
-                                GroupListActivity.start(getActivity());
-                                break;
-                        case R.id.ll_fragment_contacts_black:
-                                BlackListActivity.start(getActivity());
-                                break;
-                        case R.id.ll_fragment_contacts_nearby:
-                                NearbyPeopleActivity.start(getActivity());
-                                break;
+                int i = view.getId();
+                if (i == R.id.ll_fragment_contacts_group) {
+                        GroupListActivity.start(getActivity());
 
+                } else if (i == R.id.ll_fragment_contacts_black) {
+                        BlackListActivity.start(getActivity());
+
+                } else if (i == R.id.ll_fragment_contacts_nearby) {
+                        NearbyPeopleActivity.start(getActivity());
 
                 }
         }

@@ -19,6 +19,8 @@ android {
         if (rootProject.ext.isAlone) {
             applicationId "com.example.chat"
         }
+        multiDexEnabled true
+
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
@@ -37,12 +39,8 @@ android {
         }
 
     }
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-        }
-    }
-    
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -54,6 +52,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
     sourceSets {
+
+
         main {
             if (rootProject.ext.isAlone) {
                 manifest.srcFile 'src/main/module/AndroidManifest.xml'
@@ -62,6 +62,8 @@ android {
             } else {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
             }
+            jniLibs.srcDirs = ['libs']
+
         }
     }
 }
@@ -85,11 +87,14 @@ dependencies {
     compile 'com.komi.slider:slider:0.4.0'
     compile 'com.mabeijianxi:small-video-record:1.2.0'
     compile 'com.github.chihane:JDAddressSelector:1.1.4'
+    compile 'com.android.support:multidex:1.0.1'
 
 
     compile rootProject.ext.dependencies.cardview
     apt rootProject.ext.dependencies.dagger2_compiler
     if (!rootProject.ext.isAlone) {
+
+
         apt rootProject.ext.dependencies.arouter_compiler
     }
     testCompile 'junit:junit:4.12'

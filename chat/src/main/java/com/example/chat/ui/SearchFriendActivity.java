@@ -124,10 +124,10 @@ public class SearchFriendActivity extends SlideBaseActivity implements View.OnCl
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.btn_search_friend:
-                                searchUsers();
-                                break;
+                int i = v.getId();
+                if (i == R.id.btn_search_friend) {
+                        searchUsers();
+
                 }
         }
 

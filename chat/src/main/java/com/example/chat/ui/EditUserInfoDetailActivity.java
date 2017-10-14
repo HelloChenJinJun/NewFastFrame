@@ -330,22 +330,21 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.rl_edit_user_info_detail_female:
-                                updateGenderChecked(1);
-                                break;
-                        case R.id.rl_edit_user_info_detail_male:
-                                updateGenderChecked(0);
-                                break;
-                        case R.id.rl_edit_user_info_detail_other:
-                                updateGenderChecked(2);
-                                break;
-                        case R.id.rl_edit_user_info_detail_birth:
-                                openDatePicker();
-                                break;
-                        case R.id.rl_edit_user_info_detail_address:
-                                showBottomDialog();
+                int i = v.getId();
+                if (i == R.id.rl_edit_user_info_detail_female) {
+                        updateGenderChecked(1);
 
+                } else if (i == R.id.rl_edit_user_info_detail_male) {
+                        updateGenderChecked(0);
+
+                } else if (i == R.id.rl_edit_user_info_detail_other) {
+                        updateGenderChecked(2);
+
+                } else if (i == R.id.rl_edit_user_info_detail_birth) {
+                        openDatePicker();
+
+                } else if (i == R.id.rl_edit_user_info_detail_address) {
+                        showBottomDialog();
                 }
         }
 

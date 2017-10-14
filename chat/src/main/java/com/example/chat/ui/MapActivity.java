@@ -195,71 +195,72 @@ public class MapActivity extends SlideBaseActivity implements View.OnClickListen
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.btn_map_send:
-                                mMap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
-                                        @Override
-                                        public void onMapScreenShot(Bitmap bitmap) {
-                                        }
+                int i = v.getId();
+                if (i == R.id.btn_map_send) {
+                        mMap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
+                                @Override
+                                public void onMapScreenShot(Bitmap bitmap) {
+                                }
 
-                                        @Override
-                                        public void onMapScreenShot(Bitmap bitmap, int i) {
-                                                if (bitmap == null) {
-                                                        return;
-                                                }
-                                                try {
-                                                        localPath = getScreenShotLocalPath();
-                                                        FileOutputStream outputStream = new FileOutputStream(localPath);
-                                                        boolean result = bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                                                        if (result) {
-                                                                LogUtil.e("截屏成功");
-                                                                sendResult(true);
-                                                        } else {
-                                                                LogUtil.e("截屏失败");
-                                                                sendResult(false);
-                                                        }
-                                                        outputStream.flush();
-                                                        outputStream.close();
-                                                } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                }
+                                @Override
+                                public void onMapScreenShot(Bitmap bitmap, int i) {
+                                        if (bitmap == null) {
+                                                return;
                                         }
-                                });
-                                break;
-                        case R.id.btn_map_back:
-                                if (mLocationClient != null) {
-                                        mLocationClient.onDestroy();
-                                        mLocationClient = null;
-                                }
-                                if (display != null) {
-                                        display.onDestroy();
-                                        display = null;
-                                }
-                                LogUtil.e("finish");
-                                finish();
-                                break;
-                        case R.id.btn_map_type:
-                                if (list == null) {
-                                        list = new ArrayList<>();
-                                        list.add("标准模式");
-                                        list.add("卫星模式");
-                                        list.add("夜间模式");
-                                }
-                                showChooseDialog("选择视图类型", list, new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                dismissBaseDialog();
-                                                if (position == 0) {
-                                                        mMap.setMapType(AMap.MAP_TYPE_NORMAL);
-                                                } else if (position == 1) {
-                                                        mMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+                                        try {
+                                                localPath = getScreenShotLocalPath();
+                                                FileOutputStream outputStream = new FileOutputStream(localPath);
+                                                boolean result = bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                                                if (result) {
+                                                        LogUtil.e("截屏成功");
+                                                        sendResult(true);
                                                 } else {
-                                                        mMap.setMapType(AMap.MAP_TYPE_NIGHT);
+                                                        LogUtil.e("截屏失败");
+                                                        sendResult(false);
                                                 }
+                                                outputStream.flush();
+                                                outputStream.close();
+                                        } catch (IOException e) {
+                                                e.printStackTrace();
                                         }
-                                });
-                        default:
-                                break;
+                                }
+                        });
+
+                } else if (i == R.id.btn_map_back) {
+                        if (mLocationClient != null) {
+                                mLocationClient.onDestroy();
+                                mLocationClient = null;
+                        }
+                        if (display != null) {
+                                display.onDestroy();
+                                display = null;
+                        }
+                        LogUtil.e("finish");
+                        finish();
+
+                } else if (i == R.id.btn_map_type) {
+                        if (list == null) {
+                                list = new ArrayList<>();
+                                list.add("标准模式");
+                                list.add("卫星模式");
+                                list.add("夜间模式");
+                        }
+                        showChooseDialog("选择视图类型", list, new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        dismissBaseDialog();
+                                        if (position == 0) {
+                                                mMap.setMapType(AMap.MAP_TYPE_NORMAL);
+                                        } else if (position == 1) {
+                                                mMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+                                        } else {
+                                                mMap.setMapType(AMap.MAP_TYPE_NIGHT);
+                                        }
+                                }
+                        });
+
+
+                } else {
                 }
         }
 

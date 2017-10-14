@@ -216,20 +216,19 @@ public class UserDetailActivity extends SlideBaseActivity<List<SharedMessage>,Sh
                 mShareMultipleLayoutAdapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
                         @Override
                         public void onItemChildClick(int position, View view, int id) {
-                                switch (id) {
-                                        case R.id.riv_share_fragment_item_main_avatar:
-                                                onImageAvatarClick(UserCacheManager.getInstance().getUser(mShareMultipleLayoutAdapter.getData(position).getBelongId()).getAvatar());
-                                                break;
-                                        case R.id.tv_share_fragment_item_main_name:
-                                                onNameClick(mShareMultipleLayoutAdapter.getData(position).getBelongId());
-                                                break;
-                                        case R.id.iv_share_fragment_item_main_comment:
-                                                boolean isLike = false;
-                                                if (mShareMultipleLayoutAdapter.getData(position).getLikerList() != null && mShareMultipleLayoutAdapter.getData(position).getLikerList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
-                                                        LogUtil.e("已有赞");
-                                                        isLike = true;
-                                                }
-                                                onCommentBtnClick(view, mShareMultipleLayoutAdapter.getData(position).getObjectId(), position, isLike);
+                                if (id == R.id.riv_share_fragment_item_main_avatar) {
+                                        onImageAvatarClick(UserCacheManager.getInstance().getUser(mShareMultipleLayoutAdapter.getData(position).getBelongId()).getAvatar());
+
+                                } else if (id == R.id.tv_share_fragment_item_main_name) {
+                                        onNameClick(mShareMultipleLayoutAdapter.getData(position).getBelongId());
+
+                                } else if (id == R.id.iv_share_fragment_item_main_comment) {
+                                        boolean isLike = false;
+                                        if (mShareMultipleLayoutAdapter.getData(position).getLikerList() != null && mShareMultipleLayoutAdapter.getData(position).getLikerList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
+                                                LogUtil.e("已有赞");
+                                                isLike = true;
+                                        }
+                                        onCommentBtnClick(view, mShareMultipleLayoutAdapter.getData(position).getObjectId(), position, isLike);
                                 }
 
                         }

@@ -141,7 +141,6 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
         @Override
         protected void onNewIntent(Intent intent) {
                 super.onNewIntent(intent);
-                LogUtil.e("onNewIntent111");
                 if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_SEND)) {
                         display.setVisibility(View.GONE);
                         video.setVisibility(View.GONE);
@@ -522,81 +521,81 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.rl_edit_share_message_visibility_container:
-                                mBaseDialog.setDialogContentView(R.layout.select_visibility_layout).setTitle("谁可见").setBottomLayoutVisible(true).setLeftButton("取消", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                                cancelBaseDialog();
-                                        }
-                                }).setRightButton("确定", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                                selectedVisibleUsers = null;
-                                                invisibleUsers = null;
-                                                dismissBaseDialog();
-                                                RadioGroup radioGroup = (RadioGroup) mBaseDialog.getMiddleLayout().findViewById(R.id.rg_select_visibility_container);
-                                                switch (radioGroup.getCheckedRadioButtonId()) {
-                                                        case R.id.rb_visibility_private:
-                                                                selectedVisibilityPosition = 0;
-                                                                visibility.setText("仅对自己可见");
-                                                                updateBottomData();
-                                                                break;
-                                                        case R.id.rb_visibility_public:
-                                                                selectedVisibilityPosition = 1;
-                                                                visibility.setText("对所有人都可见");
-                                                                updateBottomData();
-                                                                break;
-                                                        case R.id.rb_visibility_part:
-                                                                selectedVisibilityPosition = 2;
-                                                                visibility.setText("对部分人可见");
-                                                                Intent partVisibility = new Intent(EditShareMessageActivity.this, SelectedFriendsActivity.class);
-                                                                partVisibility.putExtra("from", "select_visibility");
-                                                                partVisibility.putExtra("title", "对谁可见");
-                                                                startActivityForResult(partVisibility, Constant.REQUEST_CODE_SELECT_VISIBILITY);
-                                                                break;
-                                                        case R.id.rb_visibility_exclude_part:
-                                                                selectedVisibilityPosition = 3;
-                                                                visibility.setText("对部分人不可见");
-                                                                Intent intent = new Intent(EditShareMessageActivity.this, SelectedFriendsActivity.class);
-                                                                intent.putExtra("from", "select_visibility");
-                                                                intent.putExtra("title", "对谁不可见");
-                                                                startActivityForResult(intent, Constant.REQUEST_CODE_SELECT_VISIBILITY);
-                                                                break;
-                                                }
-                                        }
-                                }).show();
-                                ((RadioGroup) mBaseDialog.getMiddleLayout().findViewById(R.id.rg_select_visibility_container)).check(getCheckIdFromPosition(selectedVisibilityPosition));
-                                break;
-                        case R.id.iv_edit_share_message_video:
-                                LogUtil.e("点击了播放录制视频");
-                                Intent intent = new Intent(this, VideoPlayActivity.class);
-                                intent.putExtra("path", mPath);
-                                startActivity(intent);
-                                break;
-                        case R.id.rl_edit_share_message_location:
-                                if (addressList != null) {
-                                        addressList.clear();
-                                } else {
-                                        addressList = new ArrayList<>();
+                int i = v.getId();
+                if (i == R.id.rl_edit_share_message_visibility_container) {
+                        mBaseDialog.setDialogContentView(R.layout.select_visibility_layout).setTitle("谁可见").setBottomLayoutVisible(true).setLeftButton("取消", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                        cancelBaseDialog();
                                 }
-                                addressList.addAll(LocationManager.getInstance().getLocationList());
-                                addressList.add("不显示");
-                                showChooseDialog("选择位置", addressList, this);
-                                break;
-                        case R.id.cv_edit_share_message_url_container:
-                                Intent happyContentIntent = new Intent(this, HappyContentDisplayActivity.class);
-                                if (getIntent().getStringExtra("type").equals("happy")) {
-                                        happyContentIntent.putExtra("content",mHappyBean.getContent());
-                                        happyContentIntent.putExtra("url",mHappyBean.getUrl());
-                                        startActivity(happyContentIntent);
-                                } else if (getIntent().getStringExtra("type").equals("happy_content")) {
-                                        happyContentIntent.putExtra("content",mHappyContentBean.getContent());
-                                        startActivity(happyContentIntent);
-                                } else {
-                                        WeiXinNewsActivity.start(this, mWinXinBean.getTitle(), mWinXinBean.getUrl());
+                        }).setRightButton("确定", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                        selectedVisibleUsers = null;
+                                        invisibleUsers = null;
+                                        dismissBaseDialog();
+                                        RadioGroup radioGroup = (RadioGroup) mBaseDialog.getMiddleLayout().findViewById(R.id.rg_select_visibility_container);
+                                        int i1 = radioGroup.getCheckedRadioButtonId();
+                                        if (i1 == R.id.rb_visibility_private) {
+                                                selectedVisibilityPosition = 0;
+                                                visibility.setText("仅对自己可见");
+                                                updateBottomData();
+
+                                        } else if (i1 == R.id.rb_visibility_public) {
+                                                selectedVisibilityPosition = 1;
+                                                visibility.setText("对所有人都可见");
+                                                updateBottomData();
+
+                                        } else if (i1 == R.id.rb_visibility_part) {
+                                                selectedVisibilityPosition = 2;
+                                                visibility.setText("对部分人可见");
+                                                Intent partVisibility = new Intent(EditShareMessageActivity.this, SelectedFriendsActivity.class);
+                                                partVisibility.putExtra("from", "select_visibility");
+                                                partVisibility.putExtra("title", "对谁可见");
+                                                startActivityForResult(partVisibility, Constant.REQUEST_CODE_SELECT_VISIBILITY);
+
+                                        } else if (i1 == R.id.rb_visibility_exclude_part) {
+                                                selectedVisibilityPosition = 3;
+                                                visibility.setText("对部分人不可见");
+                                                Intent intent = new Intent(EditShareMessageActivity.this, SelectedFriendsActivity.class);
+                                                intent.putExtra("from", "select_visibility");
+                                                intent.putExtra("title", "对谁不可见");
+                                                startActivityForResult(intent, Constant.REQUEST_CODE_SELECT_VISIBILITY);
+
+                                        }
                                 }
-                                break;
+                        }).show();
+                        ((RadioGroup) mBaseDialog.getMiddleLayout().findViewById(R.id.rg_select_visibility_container)).check(getCheckIdFromPosition(selectedVisibilityPosition));
+
+                } else if (i == R.id.iv_edit_share_message_video) {
+                        LogUtil.e("点击了播放录制视频");
+                        Intent intent = new Intent(this, VideoPlayActivity.class);
+                        intent.putExtra("path", mPath);
+                        startActivity(intent);
+
+                } else if (i == R.id.rl_edit_share_message_location) {
+                        if (addressList != null) {
+                                addressList.clear();
+                        } else {
+                                addressList = new ArrayList<>();
+                        }
+                        addressList.addAll(LocationManager.getInstance().getLocationList());
+                        addressList.add("不显示");
+                        showChooseDialog("选择位置", addressList, this);
+
+                } else if (i == R.id.cv_edit_share_message_url_container) {
+                        Intent happyContentIntent = new Intent(this, HappyContentDisplayActivity.class);
+                        if (getIntent().getStringExtra("type").equals("happy")) {
+                                happyContentIntent.putExtra("content", mHappyBean.getContent());
+                                happyContentIntent.putExtra("url", mHappyBean.getUrl());
+                                startActivity(happyContentIntent);
+                        } else if (getIntent().getStringExtra("type").equals("happy_content")) {
+                                happyContentIntent.putExtra("content", mHappyContentBean.getContent());
+                                startActivity(happyContentIntent);
+                        } else {
+                                WeiXinNewsActivity.start(this, mWinXinBean.getTitle(), mWinXinBean.getUrl());
+                        }
+
                 }
         }
 

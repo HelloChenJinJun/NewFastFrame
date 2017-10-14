@@ -115,8 +115,7 @@ public class WallPaperActivity extends SlideBaseActivity {
 //                                        baseWrappedViewHolder.setImageBg(R.id.iv_wallpaper_item_display, selectedImage)
 //                                                .setImageResource(R.id.iv_wallpaper_item_display, R.drawable.change_background_picture_btn);
                                         if (prePosition != -1) {
-                                                LogUtil.e("清除图片");
-                                                ((BaseWrappedViewHolder) display.findViewHolderForAdapterPosition(prePosition)).setImageResource(R.id.iv_wallpaper_item_display, 0);
+                                                ((BaseWrappedViewHolder) display.findViewHolderForAdapterPosition(prePosition)).setImageResource(R.id.iv_wallpaper_item_display, R.drawable.change_background_picture_btn);
                                         }
                                 }
                                 prePosition = position;

@@ -141,19 +141,19 @@ public class WeiXinNewsActivity extends SlideBaseActivity implements View.OnClic
         if (mFloatingActionsMenu.isExpanded()) {
             mFloatingActionsMenu.collapse();
         }
-        switch (v.getId()) {
-            case R.id.fab_wei_xin_news_share:
-                Intent intent = new Intent(this, EditShareMessageActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, bean.getTitle() + "," + bean.getUrl());
-                intent.putExtra("share_info", bean);
-                intent.putExtra("type", "wei_xin");
-                intent.putExtra("destination", "url");
-                intent.setType("text/plain");
-                startActivity(intent);
-                break;
-            case R.id.fab_wei_xin_news_browser:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                break;
+        int i = v.getId();
+        if (i == R.id.fab_wei_xin_news_share) {
+            Intent intent = new Intent(this, EditShareMessageActivity.class);
+            intent.putExtra(Intent.EXTRA_TEXT, bean.getTitle() + "," + bean.getUrl());
+            intent.putExtra("share_info", bean);
+            intent.putExtra("type", "wei_xin");
+            intent.putExtra("destination", "url");
+            intent.setType("text/plain");
+            startActivity(intent);
+
+        } else if (i == R.id.fab_wei_xin_news_browser) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+
         }
     }
 

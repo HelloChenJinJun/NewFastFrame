@@ -13,7 +13,7 @@ public class ChatUtil {
     public static final String VOICE_STATUS = "VOICE_STATUS";
     public static final String PUSH_NOTIFY = "PUSH_NOTIFY";
     public static final String DELTA_TIME = "DELTA_TIME";
-    public static final String BASE_URL = "";
+    public static final String BASE_URL = "http://www.quanmin.tv/";
     public static final String LAST_GROUP_MESSAGE_TIME = "last_group_message_time";
     public static final String LAST_SHARE_MESSAGE_TIME = "last_share_message_time";
     public static final String USER_DATA_LAST_UPDATE_TIME = "user_data_last_update_time";

@@ -4,7 +4,6 @@ import android.widget.TextView;
 
 import com.example.chat.R;
 import com.example.chat.db.ChatDB;
-import com.example.chat.util.LogUtil;
 import com.example.chat.util.PixelUtil;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
@@ -27,9 +26,8 @@ public class MenuDisplayAdapter extends BaseRecyclerAdapter<String, BaseWrappedV
 
         @Override
         protected void convert(BaseWrappedViewHolder holder, String data) {
-                holder.setText(R.id.tv_menu_item, data);
+                holder.setText(R.id.tv_menu_item, data).setOnItemClickListener();
                 int position = holder.getAdapterPosition();
-                LogUtil.e("position22" + position);
                 int size;
                 if (position == 0) {
                         ((TextView) holder.getView(R.id.tv_menu_item)).setCompoundDrawablesWithIntrinsicBounds(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_chat_blue_grey_900_24dp), null, null, null);

@@ -139,8 +139,18 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     @Override
     public int getItemCount() {
-        int itemCount = data.size() + getItemUpCount() + 2;
-        return itemCount;
+        return data.size() + getItemUpCount() + getItemDownCount();
+    }
+
+    private int getItemDownCount() {
+        int position = 0;
+        if (hasFootView()) {
+            position++;
+        }
+        if (hasMoreLoadView()) {
+            position++;
+        }
+        return position;
     }
 
 
@@ -179,15 +189,20 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     @Override
     public int getItemViewType(int position) {
         position = getRealPosition(position);
+        int size=data.size();
         if (position == 0) {
             return REFRESH_HEADER;
         } else if (position == 1) {
             return HEADER;
-        } else if (1 < position && position < data.size() + 2) {
+        } else if (1 < position && position < size + 2) {
             return getDefaultItemViewType(position - 2);
-        } else if (position == data.size() + 2) {
-            return FOOTER;
-        } else if (position == data.size() + 3) {
+        } else if (position == size + 2) {
+            if (hasFootView()) {
+                return FOOTER;
+            }else{
+                return LOAD_MORE_FOOTER;
+            }
+        } else if (position == size + 3) {
             return LOAD_MORE_FOOTER;
         }else {
             return -1;

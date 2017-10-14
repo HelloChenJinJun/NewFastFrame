@@ -111,34 +111,33 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.rl_setting_header:
-                                if (mStringList == null) {
-                                        mStringList = new ArrayList<>();
-                                        mStringList.add("拍照");
-                                        mStringList.add("从手机上取");
+                int i = v.getId();
+                if (i == R.id.rl_setting_header) {
+                        if (mStringList == null) {
+                                mStringList = new ArrayList<>();
+                                mStringList.add("拍照");
+                                mStringList.add("从手机上取");
+                        }
+                        showChooseDialog("拍照", mStringList, this);
+
+                } else if (i == R.id.ll_setting_clear) {
+                        showLoadDialog("正在删除所有的聊天记录..........");
+                        new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                        dismissLoadDialog();
+                                        MsgManager.getInstance().clearAllChatMessage();
                                 }
-                                showChooseDialog("拍照", mStringList, this);
-                                break;
-                        case R.id.ll_setting_clear:
-                                showLoadDialog("正在删除所有的聊天记录..........");
-                                new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                                dismissLoadDialog();
-                                                MsgManager.getInstance().clearAllChatMessage();
-                                        }
-                                }).start();
-                                break;
-                        case R.id.btn_setting_logout:
-                                Intent intent = new Intent(Constant.NEW_MESSAGE_ACTION);
-                                intent.putExtra("isLogout", true);
-                                sendBroadcast(intent);
-                                Intent loginIntent = new Intent(this, LoginActivity.class);
-                                startActivity(loginIntent);
-                                UserManager.getInstance().logout();
-                                finish();
-                                break;
+                        }).start();
+
+                } else if (i == R.id.btn_setting_logout) {
+                        Intent intent = new Intent(Constant.NEW_MESSAGE_ACTION);
+                        intent.putExtra("isLogout", true);
+                        sendBroadcast(intent);
+                        Intent loginIntent = new Intent(this, LoginActivity.class);
+                        startActivity(loginIntent);
+                        UserManager.getInstance().logout();
+                        finish();
 
                 }
 

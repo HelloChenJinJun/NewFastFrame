@@ -68,8 +68,6 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ToastUtils;
 
-import org.reactivestreams.Subscription;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -675,80 +673,79 @@ public class ChatActivity extends SlideBaseActivity implements View.OnClickListe
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.btn_chat_bottom_add:
-                                if (l1_more.getVisibility() == View.GONE) {
-                                        l1_more.setVisibility(View.VISIBLE);
-                                        l1_add.setVisibility(View.VISIBLE);
-                                        r1_emotion.setVisibility(View.GONE);
-                                        CommonUtils.hideSoftInput(this,input);
-                                } else if (l1_add.getVisibility() == View.VISIBLE) {
-                                        l1_more.setVisibility(View.GONE);
-                                } else {
-                                        r1_emotion.setVisibility(View.GONE);
-                                        l1_add.setVisibility(View.VISIBLE);
-                                }
-                                break;
-                        case R.id.btn_chat_bottom_emotion:
-                                if (speak.getVisibility() == View.VISIBLE) {
-                                        keyboard.setVisibility(View.GONE);
-                                        speak.setVisibility(View.GONE);
-                                        input.setVisibility(View.VISIBLE);
-                                        send.setVisibility(View.VISIBLE);
-                                }
-                                if (l1_more.getVisibility() == View.GONE) {
-                                        l1_more.setVisibility(View.VISIBLE);
-                                        l1_add.setVisibility(View.GONE);
-                                        r1_emotion.setVisibility(View.VISIBLE);
-                                        CommonUtils.hideSoftInput(this,input);
-                                } else if (r1_emotion.getVisibility() == View.VISIBLE) {
-                                        l1_more.setVisibility(View.GONE);
-                                } else {
-                                        l1_add.setVisibility(View.GONE);
-                                        r1_emotion.setVisibility(View.VISIBLE);
-                                        CommonUtils.hideSoftInput(this,input);
-                                }
-                                break;
-                        case R.id.btn_chat_bottom_voice:
-                                if (l1_more.getVisibility() == View.VISIBLE) {
-                                        l1_more.setVisibility(View.GONE);
-                                }
-                                keyboard.setVisibility(View.VISIBLE);
-                                speak.setVisibility(View.VISIBLE);
-                                input.setVisibility(View.GONE);
-                                voice.setVisibility(View.GONE);
-                                CommonUtils.hideSoftInput(this,input);
-                                break;
-                        case R.id.btn_chat_bottom_keyboard:
+                int i = v.getId();
+                if (i == R.id.btn_chat_bottom_add) {
+                        if (l1_more.getVisibility() == View.GONE) {
+                                l1_more.setVisibility(View.VISIBLE);
+                                l1_add.setVisibility(View.VISIBLE);
+                                r1_emotion.setVisibility(View.GONE);
+                                CommonUtils.hideSoftInput(this, input);
+                        } else if (l1_add.getVisibility() == View.VISIBLE) {
+                                l1_more.setVisibility(View.GONE);
+                        } else {
+                                r1_emotion.setVisibility(View.GONE);
+                                l1_add.setVisibility(View.VISIBLE);
+                        }
+
+                } else if (i == R.id.btn_chat_bottom_emotion) {
+                        if (speak.getVisibility() == View.VISIBLE) {
                                 keyboard.setVisibility(View.GONE);
-                                voice.setVisibility(View.VISIBLE);
                                 speak.setVisibility(View.GONE);
                                 input.setVisibility(View.VISIBLE);
-                                break;
-                        case R.id.btn_chat_bottom_send:
-                                if (l1_more.getVisibility() == View.VISIBLE) {
-                                        l1_more.setVisibility(View.GONE);
-                                }
-                                if (TextUtils.isEmpty(input.getText().toString().trim())) {
-                                        ToastUtils.showShortToast(getString(R.string.chat_input_empty));
-                                        input.setText("");
-                                        return;
-                                }
-                                sendTextMessage(input.getText().toString().trim());
+                                send.setVisibility(View.VISIBLE);
+                        }
+                        if (l1_more.getVisibility() == View.GONE) {
+                                l1_more.setVisibility(View.VISIBLE);
+                                l1_add.setVisibility(View.GONE);
+                                r1_emotion.setVisibility(View.VISIBLE);
+                                CommonUtils.hideSoftInput(this, input);
+                        } else if (r1_emotion.getVisibility() == View.VISIBLE) {
+                                l1_more.setVisibility(View.GONE);
+                        } else {
+                                l1_add.setVisibility(View.GONE);
+                                r1_emotion.setVisibility(View.VISIBLE);
+                                CommonUtils.hideSoftInput(this, input);
+                        }
+
+                } else if (i == R.id.btn_chat_bottom_voice) {
+                        if (l1_more.getVisibility() == View.VISIBLE) {
+                                l1_more.setVisibility(View.GONE);
+                        }
+                        keyboard.setVisibility(View.VISIBLE);
+                        speak.setVisibility(View.VISIBLE);
+                        input.setVisibility(View.GONE);
+                        voice.setVisibility(View.GONE);
+                        CommonUtils.hideSoftInput(this, input);
+
+                } else if (i == R.id.btn_chat_bottom_keyboard) {
+                        keyboard.setVisibility(View.GONE);
+                        voice.setVisibility(View.VISIBLE);
+                        speak.setVisibility(View.GONE);
+                        input.setVisibility(View.VISIBLE);
+
+                } else if (i == R.id.btn_chat_bottom_send) {
+                        if (l1_more.getVisibility() == View.VISIBLE) {
+                                l1_more.setVisibility(View.GONE);
+                        }
+                        if (TextUtils.isEmpty(input.getText().toString().trim())) {
+                                ToastUtils.showShortToast(getString(R.string.chat_input_empty));
                                 input.setText("");
-                                break;
-                        case R.id.tv_chat_bottom_camera:
-//                                File imageFile = FileUtil.newFile(FileUtil.newDir(Constant.IMAGE_CACHE_DIR).getAbsolutePath() + System.currentTimeMillis() + ".jpg");
+                                return;
+                        }
+                        sendTextMessage(input.getText().toString().trim());
+                        input.setText("");
+
+                } else if (i == R.id.tv_chat_bottom_camera) {//                                File imageFile = FileUtil.newFile(FileUtil.newDir(Constant.IMAGE_CACHE_DIR).getAbsolutePath() + System.currentTimeMillis() + ".jpg");
 //                                localImagePath = imageFile.getAbsolutePath();
-                                localImagePath = CommonImageLoader.getInstance().takePhoto(this, Constant.REQUEST_CODE_TAKE_PICTURE).getAbsolutePath();
-                                break;
-                        case R.id.tv_chat_bottom_picture:
-                                CommonImageLoader.getInstance().pickPhoto(this, Constant.REQUEST_CODE_SELECT_FROM_LOCAL);
-                                break;
-                        case R.id.tv_chat_bottom_location:
-                                Intent locationIntent = new Intent(this, MapActivity.class);
-                                startActivityForResult(locationIntent, Constant.REQUEST_MAP);
-                                break;
+                        localImagePath = CommonImageLoader.getInstance().takePhoto(this, Constant.REQUEST_CODE_TAKE_PICTURE).getAbsolutePath();
+
+                } else if (i == R.id.tv_chat_bottom_picture) {
+                        CommonImageLoader.getInstance().pickPhoto(this, Constant.REQUEST_CODE_SELECT_FROM_LOCAL);
+
+                } else if (i == R.id.tv_chat_bottom_location) {
+                        Intent locationIntent = new Intent(this, MapActivity.class);
+                        startActivityForResult(locationIntent, Constant.REQUEST_MAP);
+
                 }
         }
 

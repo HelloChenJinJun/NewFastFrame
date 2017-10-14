@@ -8,6 +8,7 @@ android {
     buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
+        multiDexEnabled true
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
@@ -108,6 +109,7 @@ dependencies {
     annotationProcessor rootProject.ext.dependencies.butterknife_compiler
     compile rootProject.ext.dependencies.butterknife
     compile rootProject.ext.dependencies.transformations
+    compile 'com.android.support:multidex:1.0.1'
 
     compile rootProject.ext.dependencies.arouter_api
 }
