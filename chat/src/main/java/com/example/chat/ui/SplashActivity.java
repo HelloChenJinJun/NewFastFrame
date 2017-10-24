@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.chat.R;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.User;
@@ -30,6 +31,7 @@ import cn.bmob.v3.listener.FindListener;
  * 创建时间:    2016/9/11      16:52
  * QQ:             1981367757
  */
+@Route(path = "/chat/splash")
 public class SplashActivity extends BaseActivity {
         private Handler handler = new Handler() {
                 @Override

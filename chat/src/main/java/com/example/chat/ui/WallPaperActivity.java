@@ -1,6 +1,5 @@
 package com.example.chat.ui;
 
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -96,7 +95,6 @@ public class WallPaperActivity extends SlideBaseActivity {
 
         private void initAdapter(List<String> list) {
                 display.setLayoutManager(new GridLayoutManager(this, 3));
-                display.setItemAnimator(new DefaultItemAnimator());
                 adapter = new WallPaperAdapter();
                 int i = 0;
                 for (String url :
@@ -112,11 +110,11 @@ public class WallPaperActivity extends SlideBaseActivity {
                         public void onItemClick(int position, View view) {
                                 if (position != prePosition) {
                                         selectedImage = adapter.getData(position);
-//                                        baseWrappedViewHolder.setImageBg(R.id.iv_wallpaper_item_display, selectedImage)
-//                                                .setImageResource(R.id.iv_wallpaper_item_display, R.drawable.change_background_picture_btn);
+                                        ((BaseWrappedViewHolder) display.findViewHolderForAdapterPosition(position)).setImageResource(R.id.iv_wallpaper_item_display, R.drawable.change_background_picture_btn);
                                         if (prePosition != -1) {
-                                                ((BaseWrappedViewHolder) display.findViewHolderForAdapterPosition(prePosition)).setImageResource(R.id.iv_wallpaper_item_display, R.drawable.change_background_picture_btn);
+                                                ((BaseWrappedViewHolder) display.findViewHolderForAdapterPosition(prePosition)).setImageResource(R.id.iv_wallpaper_item_display,0);
                                         }
+
                                 }
                                 prePosition = position;
                         }
@@ -128,7 +126,7 @@ public class WallPaperActivity extends SlideBaseActivity {
         private void initActionBar() {
                 ToolBarOption toolBarOption = new ToolBarOption();
                 toolBarOption.setRightText("完成");
-                toolBarOption.setTitle("1选择背景图片");
+                toolBarOption.setTitle("选择背景图片");
                 toolBarOption.setAvatar(UserManager.getInstance().getCurrentUser().getAvatar());
                 toolBarOption.setNeedNavigation(true);
                 toolBarOption.setRightListener(new View.OnClickListener() {

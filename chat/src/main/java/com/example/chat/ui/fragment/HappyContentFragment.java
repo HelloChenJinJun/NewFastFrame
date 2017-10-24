@@ -16,6 +16,7 @@ import com.example.chat.mvp.HappyContentInfoTask.HappyContentPresenter;
 import com.example.chat.ui.EditShareMessageActivity;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
@@ -37,9 +38,7 @@ public class HappyContentFragment extends BaseFragment<List<HappyContentBean>,Ha
         private List<HappyContentBean> data = new ArrayList<>();
         private HappyContentPresenter mHappyPresenter;
         private int currentPage = 1;
-        private HappyContentModel mHappyContentModel;
-
-
+        private SwipeRefreshLayout refresh;
 
 
         @Override
@@ -59,7 +58,7 @@ public class HappyContentFragment extends BaseFragment<List<HappyContentBean>,Ha
 
         @Override
         public void initView() {
-                SwipeRefreshLayout refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_happy_fragment);
+                 refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_happy_fragment);
                 display = (SuperRecyclerView) findViewById(R.id.rcv_happy_fragment_display);
                 refresh.setOnRefreshListener(this);
         }
@@ -133,12 +132,29 @@ public class HappyContentFragment extends BaseFragment<List<HappyContentBean>,Ha
         }
 
 
+        @Override
+        public void hideLoading() {
+                super.hideLoading();
+                if (refresh.isRefreshing()) {
+                        refresh.setRefreshing(false);
+                }
+        }
 
+        @Override
+        public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
+                super.showError(errorMsg, listener);
+                if (refresh.isRefreshing()) {
+                        refresh.setRefreshing(false);
+                }
+        }
 
-    @Override
+        @Override
     public void updateData(List<HappyContentBean> happyContentBeen) {
-        currentPage++;
-        this.data.addAll(data);
-        mHappyAdapter.notifyDataSetChanged();
+            if (refresh.isRefreshing()) {
+                    mHappyAdapter.refreshData(happyContentBeen);
+            }else {
+                    mHappyAdapter.addData(happyContentBeen);
+                    currentPage++;
+            }
     }
 }

@@ -309,27 +309,27 @@ public class UserDetailActivity extends SlideBaseActivity<List<SharedMessage>,Sh
 
         @Override
         public void onClick(View v) {
-                switch (v.getId()) {
-                        case R.id.fab_activity_user_detail_button:
-                                Intent intent = new Intent(this, EditUserInfoActivity.class);
-                                startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_USER_INFO);
-                                break;
-                        case R.id.iv_user_detail_send:
-                                String content = input.getText().toString().trim();
-                                if (content.equals("") || content.contains("$") || content.contains("&")) {
-                                        LogUtil.e("评论内容不能为空或包含特殊符号，比如$或者&");
+                int i = v.getId();
+                if (i == R.id.fab_activity_user_detail_button) {
+                        Intent intent = new Intent(this, EditUserInfoActivity.class);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_USER_INFO);
+
+                } else if (i == R.id.iv_user_detail_send) {
+                        String content = input.getText().toString().trim();
+                        if (content.equals("") || content.contains("$") || content.contains("&")) {
+                                LogUtil.e("评论内容不能为空或包含特殊符号，比如$或者&");
+                        } else {
+                                String wrappedContent;
+                                if (replyUid != null) {
+                                        wrappedContent = UserManager.getInstance().getCurrentUserObjectId() + "$" + replyUid + "$" + content;
                                 } else {
-                                        String wrappedContent;
-                                        if (replyUid != null) {
-                                                wrappedContent = UserManager.getInstance().getCurrentUserObjectId() + "$" + replyUid + "$" + content;
-                                        } else {
-                                                wrappedContent = UserManager.getInstance().getCurrentUserObjectId() + "$" + content;
-                                        }
-                                        presenter.addComment(mShareMultipleLayoutAdapter.getData(currentPosition).getObjectId(), wrappedContent);
-                                        presenter.addComment(mShareMultipleLayoutAdapter.getData(currentPosition).getObjectId(), wrappedContent);
+                                        wrappedContent = UserManager.getInstance().getCurrentUserObjectId() + "$" + content;
                                 }
-                                input.setText("");
-                                break;
+                                presenter.addComment(mShareMultipleLayoutAdapter.getData(currentPosition).getObjectId(), wrappedContent);
+                                presenter.addComment(mShareMultipleLayoutAdapter.getData(currentPosition).getObjectId(), wrappedContent);
+                        }
+                        input.setText("");
+
                 }
         }
 

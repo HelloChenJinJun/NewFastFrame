@@ -1,5 +1,7 @@
 package com.example.chat.util;
 
+import com.example.chat.base.Constant;
+
 /**
  * 项目名称:    NewFastFrame
  * 创建人:        陈锦军
@@ -20,4 +22,43 @@ public class ChatUtil {
     public static final String LOCATION = "location";
     public static final String ADDRESS = "ADDRESS";
     public static final String PUSH_STATUS = "PUSH_STATUS";
+
+
+
+//            @GET("/wxnew/?key=" + Constant.TIAN_XING_KEY + "&num=20")
+    public static String getWinXinUrl(int page) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("https://api.tianapi.com/wxnew?key=")
+                .append(Constant.TIAN_XING_KEY).append("&num=20&page=").append(page);
+        return stringBuilder.toString();
+    }
+
+
+//        @GET("/joke/img/text.from?key=" + Constant.JU_HE_KEY)
+
+    public static String getHappyUrl(int page, int num) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("http://japi.juhe.cn/joke/img/text.from?key=")
+                .append(Constant.JU_HE_KEY).append("&page=").append(page)
+        .append("&pagesize=").append(num);
+        return stringBuilder.toString();
+    }
+//        @GET("/joke/content/text.from?key=" + Constant.JU_HE_KEY)
+
+    public static String getHappyContentUrl(int page, int num) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("http://japi.juhe.cn/joke/content/text.from?key=")
+                .append(Constant.JU_HE_KEY).append("&page=").append(page)
+                .append("&pagesize=").append(num);
+        return stringBuilder.toString();
+    }
+
+
+//            @GET("/api/data/福利/10/{page}")
+//    http://gank.io
+    public static String getPictureUrl(int page) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("http://gank.io/api/data/福利/10/").append(page);
+        return stringBuilder.toString();
+    }
 }

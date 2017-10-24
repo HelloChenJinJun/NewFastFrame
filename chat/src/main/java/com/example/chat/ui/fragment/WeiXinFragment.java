@@ -2,7 +2,6 @@ package com.example.chat.ui.fragment;
 
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
@@ -18,15 +17,14 @@ import com.example.chat.mvp.WinXinInfoTask.WinXinInfoModel;
 import com.example.chat.mvp.WinXinInfoTask.WinXinInfoPresenter;
 import com.example.chat.ui.EditShareMessageActivity;
 import com.example.chat.ui.WeiXinNewsActivity;
-import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,9 +37,7 @@ public class WeiXinFragment extends BaseFragment<List<WinXinBean>,WinXinInfoPres
         private SuperRecyclerView display;
         private SwipeRefreshLayout refresh;
         private WeiXinAdapter mAdapter;
-        private List<WinXinBean> data = new ArrayList<>();
         private WinXinInfoPresenter mWinXinInfoPresenter;
-        private WinXinInfoModel mWinXinInfoModel;
 
 
         @Override
@@ -67,7 +63,7 @@ public class WeiXinFragment extends BaseFragment<List<WinXinBean>,WinXinInfoPres
                         @Override
                         public void onRefresh() {
                                 currentPage = 1;
-                                data.clear();
+                                mAdapter.clear();
                                 mWinXinInfoPresenter.getWinXinInfo(currentPage);
                         }
                 });
@@ -80,7 +76,6 @@ public class WeiXinFragment extends BaseFragment<List<WinXinBean>,WinXinInfoPres
         @Override
         public void initData() {
                 display.setLayoutManager(new LinearLayoutManager(getActivity()));
-                display.setItemAnimator(new DefaultItemAnimator());
                 display.addItemDecoration(new ListViewDecoration(getActivity()));
                 mAdapter = new WeiXinAdapter();
                 mWinXinInfoPresenter = new WinXinInfoPresenter(this,new WinXinInfoModel(ChatApplication
@@ -112,24 +107,24 @@ public class WeiXinFragment extends BaseFragment<List<WinXinBean>,WinXinInfoPres
                                         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                                 @Override
                                                 public boolean onMenuItemClick(MenuItem item) {
-                                                        switch (item.getItemId()) {
-                                                                case R.id.wei_xin_fragment_item_menu_share:
-                                                                        Intent intent = new Intent(getActivity(), EditShareMessageActivity.class);
-                                                                        intent.putExtra(Intent.EXTRA_TEXT, bean.getTitle() + "," + bean.getUrl());
-                                                                        intent.putExtra("share_info", bean);
-                                                                        intent.putExtra("type", "wei_xin");
-                                                                        intent.putExtra("destination", "url");
-                                                                        intent.setType("text/plain");
-                                                                        startActivity(intent);
-                                                                        break;
-                                                                case R.id.wei_xin_fragment_item_menu_read:
-                                                                        if (item.getTitle().equals("标记为未读状态")) {
-                                                                                ChatDB.create().saveWeiXinInfoReadStatus(bean.getUrl(), 0);
-                                                                        } else {
-                                                                                ChatDB.create().saveWeiXinInfoReadStatus(bean.getUrl(), 1);
-                                                                        }
-                                                                        mAdapter.notifyDataSetChanged();
-                                                                        break;
+                                                        int i = item.getItemId();
+                                                        if (i == R.id.wei_xin_fragment_item_menu_share) {
+                                                                Intent intent = new Intent(getActivity(), EditShareMessageActivity.class);
+                                                                intent.putExtra(Intent.EXTRA_TEXT, bean.getTitle() + "," + bean.getUrl());
+                                                                intent.putExtra("share_info", bean);
+                                                                intent.putExtra("type", "wei_xin");
+                                                                intent.putExtra("destination", "url");
+                                                                intent.setType("text/plain");
+                                                                startActivity(intent);
+
+                                                        } else if (i == R.id.wei_xin_fragment_item_menu_read) {
+                                                                if (item.getTitle().equals("标记为未读状态")) {
+                                                                        ChatDB.create().saveWeiXinInfoReadStatus(bean.getUrl(), 0);
+                                                                } else {
+                                                                        ChatDB.create().saveWeiXinInfoReadStatus(bean.getUrl(), 1);
+                                                                }
+                                                                mAdapter.notifyDataSetChanged();
+
                                                         }
                                                         return true;
                                                 }
@@ -146,7 +141,6 @@ public class WeiXinFragment extends BaseFragment<List<WinXinBean>,WinXinInfoPres
 
         @Override
         protected void updateView() {
-                mAdapter.addData(data);
                 loadMoreData();
         }
 
@@ -156,19 +150,17 @@ public class WeiXinFragment extends BaseFragment<List<WinXinBean>,WinXinInfoPres
 
         @Override
         public void updateData(List<WinXinBean> data) {
-                currentPage++;
-                if (data != null && data.size() > 0) {
-                        this.data.addAll(data);
-                } else {
-                        LogUtil.e("加载的数据为空");
+                if (refresh.isRefreshing()) {
+                        mAdapter.refreshData(data);
+                }else {
+                        mAdapter.addData(data);
+                        currentPage++;
                 }
-                mAdapter.notifyDataSetChanged();
         }
 
 
         @Override
         public void hideLoading() {
-//                isLoading = false;
                 if (refresh.isRefreshing()) {
                         refresh.setRefreshing(false);
                 }
@@ -179,9 +171,23 @@ public class WeiXinFragment extends BaseFragment<List<WinXinBean>,WinXinInfoPres
         @Override
         public void onDestroyView() {
                 super.onDestroyView();
+        }
+
+
+        @Override
+        public void onDestroy() {
+                super.onDestroy();
                 mWinXinInfoPresenter.onDestroy();
         }
 
+
+        @Override
+        public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
+                super.showError(errorMsg, listener);
+                if (refresh.isRefreshing()) {
+                        refresh.setRefreshing(false);
+                }
+        }
 
         @Override
         public void loadMore() {

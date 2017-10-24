@@ -382,9 +382,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             if (layoutManager instanceof LinearLayoutManager) {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
                 lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition();
-            } else {
-                GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
-                lastVisiblePosition = gridLayoutManager.findLastVisibleItemPosition();
+            } else{
+                StaggeredGridLayoutManager gridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
+                lastVisiblePosition = gridLayoutManager.findLastVisibleItemPositions(null)[0];
             }
             int position;
             position = getItemUpCount() + getData().size()+1;
@@ -424,6 +424,11 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     public void clearAllData() {
         data.clear();
+    }
+
+    public void clear(){
+        data.clear();
+        notifyDataSetChanged();
     }
 
     public T getData(int position) {

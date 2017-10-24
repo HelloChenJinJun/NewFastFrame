@@ -4,6 +4,7 @@ import com.example.chat.api.TxApi;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.TxResponse;
 import com.example.chat.bean.WinXinBean;
+import com.example.chat.util.ChatUtil;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
@@ -52,7 +53,7 @@ public class WinXinInfoPresenter extends WinXinInfoContacts.Presenter {
                         return;
                 }
                 baseModel.getRepositoryManager().getApi(TxApi.class)
-                        .getWinXinInfo(page)
+                        .getWinXinInfo(ChatUtil.getWinXinUrl(page))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<TxResponse>() {

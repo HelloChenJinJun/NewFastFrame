@@ -19,6 +19,7 @@ import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import java.util.List;
@@ -289,6 +290,11 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     @Override
     public void showEmptyView() {
         showEmptyLayout(EmptyLayout.STATUS_NO_DATA);
+    }
+
+    @Override
+    public <Y> LifecycleTransformer<Y> bindLife() {
+        return bindToLifecycle();
     }
 
 

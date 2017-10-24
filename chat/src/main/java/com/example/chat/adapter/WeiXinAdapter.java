@@ -29,7 +29,8 @@ public class WeiXinAdapter extends BaseRecyclerAdapter<WinXinBean, BaseWrappedVi
                         .setText(R.id.tv_wei_xin_fragment_layout_title, data.getTitle())
                         .setText(R.id.tv_wei_xin_fragment_item_description, data.getDescription())
                         .setText(R.id.tv_wei_xin_fragment_item_time, data.getCtime())
-                        .setOnItemChildClickListener(R.id.btn_wei_xin_fragment_right);
+                        .setOnItemChildClickListener(R.id.btn_wei_xin_fragment_right)
+                .setOnItemClickListener();
                 if (ChatDB.create().getWeixinInfoReadStatus(data.getUrl()) == 1) {
                         ((TextView) holder.getView(R.id.tv_wei_xin_fragment_layout_title)).setTextColor(holder.getContext().getResources().getColor(R.color.base_color_text_grey));
                 } else {

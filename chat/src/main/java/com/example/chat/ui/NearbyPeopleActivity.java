@@ -42,7 +42,6 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<NearbyInfo>,Nea
         private NearbyPeopleAdapter mNearbyPeopleAdapter;
         private NearbyPeoplePresenter mNearbyPeoplePresenter;
         private int currentPosition = 0;
-        private List<User> data = new ArrayList<>();
         private double longitude = 0;
         private double latitude = 0;
 
@@ -84,8 +83,7 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<NearbyInfo>,Nea
 //                display.setHasFixedSize(true);
                 display.setItemAnimator(new DefaultItemAnimator());
                 display.addItemDecoration(new ListViewDecoration(this));
-                mNearbyPeopleAdapter =new NearbyPeopleAdapter()
-                ;
+                mNearbyPeopleAdapter =new NearbyPeopleAdapter();
                mNearbyPeopleAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
                        @Override
                        public void onItemClick(int position, View view) {
@@ -104,7 +102,6 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<NearbyInfo>,Nea
                         }
                 });
                 initActionBar();
-                mNearbyPeopleAdapter.addData(data);
         }
 
         private void initActionBar() {
@@ -138,9 +135,7 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<NearbyInfo>,Nea
 
         private void loadData(boolean isRefresh) {
                 if (isRefresh) {
-                        if (data.size() > 0) {
-                                data.clear();
-                        }
+
                 }
                 if (longitude != 0 || latitude != 0) {
                         LogUtil.e("已经定位过了，无需再定位");
@@ -174,13 +169,11 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<NearbyInfo>,Nea
                         refresh.setRefreshing(false);
                 }
                 dismissLoadDialog();
+                mNearbyPeopleAdapter.clearAllData();
+                mNearbyPeopleAdapter.notifyDataSetChanged();
                 if (list != null && list.size() > 0) {
-                        data.addAll(list);
-                        mNearbyPeopleAdapter.notifyDataSetChanged();
+                       mNearbyPeopleAdapter.addData(list);
                 } else {
-                        data.clear();
-                        mNearbyPeopleAdapter.notifyDataSetChanged();
-                        LogUtil.e("查询得到的附近人为空");
                         ToastUtils.showShortToast("查询得到的附近人为空");
                 }
         }

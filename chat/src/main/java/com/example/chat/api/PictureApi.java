@@ -4,7 +4,7 @@ import com.example.chat.bean.PictureResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 
 /**
@@ -15,6 +15,7 @@ import retrofit2.http.Path;
  */
 public interface PictureApi {
 
-        @GET("/api/data/福利/10/{page}")
-        Observable<PictureResponse> getPictureInfo(@Path("page") int page);
+//        @GET("/api/data/福利/10/{page}")
+        @GET
+        Observable<PictureResponse> getPictureInfo(@Url String url);
 }

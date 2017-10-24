@@ -33,7 +33,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginRight="15dp">
 
-        <com.example.chat.view.fab.FloatingActionButtonA
+        <com.example.chat.view.fab.FloatingActionButton
             android:id="@+id/fab_wei_xin_news_browser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             fab:fab_colorPressed="@color/blue_semi_transparent_pressed"
             fab:fab_icon="@mipmap/ic_fab_star"
             fab:fab_title="浏览器"/>
-        <com.example.chat.view.fab.FloatingActionButtonA
+        <com.example.chat.view.fab.FloatingActionButton
             android:id="@+id/fab_wei_xin_news_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

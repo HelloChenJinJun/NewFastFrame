@@ -25,16 +25,17 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.skin.SkinManager;
-import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.util.List;
 
-
 import javax.inject.Inject;
 
 import static android.view.View.GONE;
+
+
 
 /**
  * 项目名称:    Cugappplat
@@ -43,7 +44,7 @@ import static android.view.View.GONE;
  * QQ:             1981367757
  */
 
-public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCompatActivity implements IView<T> {
+public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCompatActivity implements IView<T> {
 
     //  这里的布局view可能为空，取决于子类布局中是否含有该空布局
 
@@ -328,6 +329,11 @@ public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppComp
     @Override
     public void showEmptyView() {
         showEmptyLayout(EmptyLayout.STATUS_NO_DATA);
+    }
+
+    @Override
+    public <Y> LifecycleTransformer<Y> bindLife() {
+        return bindToLifecycle();
     }
 
 

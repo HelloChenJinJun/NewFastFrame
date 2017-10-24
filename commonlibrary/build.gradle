@@ -111,5 +111,6 @@ dependencies {
     compile rootProject.ext.dependencies.transformations
     compile 'com.android.support:multidex:1.0.1'
 
+
     compile rootProject.ext.dependencies.arouter_api
 }

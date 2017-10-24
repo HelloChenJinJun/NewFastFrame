@@ -49,17 +49,16 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/chat_logo2"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/CustomTheme.Day">
         <activity
             android:name=".ui.SplashActivity"
             android:theme="@style/splashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
         </activity>
         <activity android:name=".ui.LoginActivity"/>
         <activity android:name=".ui.MainActivity" android:launchMode="singleTask"/>

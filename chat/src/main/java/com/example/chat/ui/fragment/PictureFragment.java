@@ -19,6 +19,7 @@ import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.EditShareMessageActivity;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
@@ -41,12 +42,6 @@ public class PictureFragment extends BaseFragment<List<PictureBean>,PicturePrese
         private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
         private PicturePresenter mHappyPresenter;
         private int currentPage = 1;
-        private PictureModel mPictureModel;
-//        private int visibleCount;
-//        private int[] firstVisiblePosition;
-//        private int itemCount;
-//        private boolean isLoading = false;
-
 
         @Override
         protected boolean isNeedHeadLayout() {
@@ -132,6 +127,15 @@ public class PictureFragment extends BaseFragment<List<PictureBean>,PicturePrese
                 super.hideLoading();
         }
 
+
+        @Override
+        public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
+                super.showError(errorMsg, listener);
+                if (refresh.isRefreshing()) {
+                        refresh.setRefreshing(false);
+                }
+        }
+
         @Override
         public void updateData(List<PictureBean> pictureBeen) {
 
@@ -156,7 +160,11 @@ public class PictureFragment extends BaseFragment<List<PictureBean>,PicturePrese
         @Override
         public void onUpdatePictureInfo(List<PictureBean> data) {
                 currentPage++;
-                mAdapter.addData(data);
+                if (refresh.isRefreshing()) {
+                        mAdapter.refreshData(data);
+                }else {
+                        mAdapter.addData(data);
+                }
         }
 
         @Override

@@ -3,6 +3,7 @@ package com.example.chat.mvp.HappyContentInfoTask;
 import com.example.chat.api.HappyApi;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.HappyContentResponse;
+import com.example.chat.util.ChatUtil;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
@@ -47,7 +48,8 @@ public class HappyContentPresenter extends HappyContentContacts.Presenter {
                         });
                         return;
                 }
-                baseModel.getRepositoryManager().getApi(HappyApi.class).getHappyContentInfo(page,20)
+                baseModel.getRepositoryManager().getApi(HappyApi.class).getHappyContentInfo(ChatUtil
+                .getHappyContentUrl(page,20))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<HappyContentResponse>() {

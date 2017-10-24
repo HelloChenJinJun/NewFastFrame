@@ -81,28 +81,27 @@ public class CommentPopupWindow extends PopupWindow implements View.OnClickListe
                 if (isShowing()) {
                         dismiss();
                 }
-                switch (v.getId()) {
-                        case R.id.tv_comment_popup_window_like:
-                                if (mOnCommentPopupItemClickListener != null) {
-                                        if (System.currentTimeMillis() - mLasttime < 700)//防止快速点击操作
-                                                return;
-                                        mLasttime = System.currentTimeMillis();
-                                        if (likerName.equals("赞")) {
-                                                mOnCommentPopupItemClickListener.onItemClick(v, 0, false);
-                                        } else {
-                                                mOnCommentPopupItemClickListener.onItemClick(v, 0, true);
-                                        }
+                int i = v.getId();
+                if (i == R.id.tv_comment_popup_window_like) {
+                        if (mOnCommentPopupItemClickListener != null) {
+                                if (System.currentTimeMillis() - mLasttime < 700)//防止快速点击操作
+                                        return;
+                                mLasttime = System.currentTimeMillis();
+                                if (likerName.equals("赞")) {
+                                        mOnCommentPopupItemClickListener.onItemClick(v, 0, false);
+                                } else {
+                                        mOnCommentPopupItemClickListener.onItemClick(v, 0, true);
                                 }
-                                break;
-                        case R.id.tv_comment_popup_window_comment:
-                                if (mOnCommentPopupItemClickListener != null) {
-                                        if (likerName.equals("赞")) {
-                                                mOnCommentPopupItemClickListener.onItemClick(v, 1, false);
-                                        } else {
-                                                mOnCommentPopupItemClickListener.onItemClick(v, 1, true);
-                                        }
+                        }
+
+                } else if (i == R.id.tv_comment_popup_window_comment) {
+                        if (mOnCommentPopupItemClickListener != null) {
+                                if (likerName.equals("赞")) {
+                                        mOnCommentPopupItemClickListener.onItemClick(v, 1, false);
+                                } else {
+                                        mOnCommentPopupItemClickListener.onItemClick(v, 1, true);
                                 }
-                                break;
+                        }
 
                 }
         }

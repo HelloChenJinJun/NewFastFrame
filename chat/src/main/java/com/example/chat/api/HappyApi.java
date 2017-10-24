@@ -1,14 +1,13 @@
 package com.example.chat.api;
 
 
-import com.example.chat.base.Constant;
 import com.example.chat.bean.HappyContentResponse;
 import com.example.chat.bean.HappyResponse;
 import com.example.chat.bean.PictureResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
-import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 /**
  * 项目名称:    TestChat
@@ -19,12 +18,13 @@ import retrofit2.http.Query;
 
 public interface HappyApi {
 
-        @GET("/joke/img/text.from?key=" + Constant.JU_HE_KEY)
-       public Observable<HappyResponse> getHappyInfo(@Query("page") int page, @Query("pagesize") int pagesize);
+    //        @GET("/joke/img/text.from?key=" + Constant.JU_HE_KEY)
+    @GET
+    public Observable<HappyResponse> getHappyInfo(@Url String url);
 
-        @GET("/joke/content/text.from?key=" + Constant.JU_HE_KEY)
-       public Observable<HappyContentResponse> getHappyContentInfo(@Query("page") int page, @Query("pagesize") int pagesize);
+    @GET
+    public Observable<HappyContentResponse> getHappyContentInfo(@Url String url);
 
-        public Observable<PictureResponse> getPictureInfo(int page, int i);
+    public Observable<PictureResponse> getPictureInfo(int page, int i);
 
 }

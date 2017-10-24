@@ -78,8 +78,7 @@ public class MainActivity extends BaseActivity {
         live.setPath("/live/main");
         MainItemBean chat=new MainItemBean();
         chat.setName("聊天");
-
-        chat.setPath("/chat/main");
+        chat.setPath("/chat/splash");
         chat.setResId(R.mipmap.ic_launcher);
         result.add(mainItemBean);
         result.add(music);

@@ -97,7 +97,7 @@ public class ChatApplication implements IModuleConfig,IAppLife {
             VCamera.setVideoCachePath(dcim + "/mabeijianxi/");
         }
         VCamera.setDebugMode(true);
-        VCamera.initialize(application);
+//        VCamera.initialize(application);
     }
 
     private void initOkHttp() {

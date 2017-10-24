@@ -142,53 +142,54 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
 
         public void onClick(View v) {
                 Intent intent = new Intent();
-                switch (v.getId()) {
-                        case R.id.rl_edit_user_info_avatar:
-                                CommonImageLoader.getInstance().initStanderConfig(1);
-                                intent.setClass(this, SelectedPictureActivity.class);
-                                startActivityForResult(intent, Constant.REQUEST_CODE_SELECT_PICTURE);
-                                break;
-                        case R.id.rl_edit_user_info_nick:
-                                intent.putExtra("from", "nick");
-                                intent.putExtra("message", mUser.getNick());
-                                intent.setClass(this, EditUserInfoDetailActivity.class);
-                                startActivityForResult(intent, Constant.REQUEST_CODE_NICK);
-                                break;
-                        case R.id.rl_edit_user_info_sex:
-                                intent.putExtra("from", "gender");
-                                intent.putExtra("message", mUser.isSex() ? "男" : "女");
-                                intent.setClass(this, EditUserInfoDetailActivity.class);
-                                startActivityForResult(intent, Constant.REQUEST_CODE_SEX);
-                                break;
-                        case R.id.rl_edit_user_info_birth:
-                                intent.putExtra("from", "birth");
-                                intent.putExtra("message", mUser.getBirthDay());
-                                intent.setClass(this, EditUserInfoDetailActivity.class);
-                                startActivityForResult(intent, Constant.REQUEST_CODE_BIRTH);
-                                break;
-                        case R.id.rl_edit_user_info_phone:
-                                intent.putExtra("from", "phone");
-                                intent.putExtra("message", mUser.getMobilePhoneNumber());
-                                intent.setClass(this, EditUserInfoDetailActivity.class);
-                                startActivityForResult(intent, Constant.REQUEST_CODE_PHONE);
-                                break;
-                        case R.id.rl_edit_user_info_email:
-                                intent.putExtra("from", "email");
-                                intent.putExtra("message", mUser.getEmail());
-                                intent.setClass(this, EditUserInfoDetailActivity.class);
-                                startActivityForResult(intent, Constant.REQUEST_CODE_EMAIL);
-                                break;
-                        case R.id.rl_edit_user_info_signature:
-                                intent.putExtra("from", "signature");
-                                intent.putExtra("message", mUser.getSignature());
-                                intent.setClass(this, EditUserInfoDetailActivity.class);
-                                startActivityForResult(intent, Constant.REQUEST_CODE_SIGNATURE);
-                                break;
-                        case R.id.rl_edit_user_info_address:
-                                intent.putExtra("from", "address");
-                                intent.putExtra("message", mUser.getAddress());
-                                intent.setClass(this, EditUserInfoDetailActivity.class);
-                                startActivityForResult(intent, Constant.REQUEST_CODE_ADDRESS);
+                int i = v.getId();
+                if (i == R.id.rl_edit_user_info_avatar) {
+                        CommonImageLoader.getInstance().initStanderConfig(1);
+                        intent.setClass(this, SelectedPictureActivity.class);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_SELECT_PICTURE);
+
+                } else if (i == R.id.rl_edit_user_info_nick) {
+                        intent.putExtra("from", "nick");
+                        intent.putExtra("message", mUser.getNick());
+                        intent.setClass(this, EditUserInfoDetailActivity.class);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_NICK);
+
+
+                } else if (i == R.id.rl_edit_user_info_sex) {
+                        intent.putExtra("from", "gender");
+                        intent.putExtra("message", mUser.isSex() ? "男" : "女");
+                        intent.setClass(this, EditUserInfoDetailActivity.class);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_SEX);
+
+                } else if (i == R.id.rl_edit_user_info_birth) {
+                        intent.putExtra("from", "birth");
+                        intent.putExtra("message", mUser.getBirthDay());
+                        intent.setClass(this, EditUserInfoDetailActivity.class);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_BIRTH);
+
+                } else if (i == R.id.rl_edit_user_info_phone) {
+                        intent.putExtra("from", "phone");
+                        intent.putExtra("message", mUser.getMobilePhoneNumber());
+                        intent.setClass(this, EditUserInfoDetailActivity.class);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_PHONE);
+
+                } else if (i == R.id.rl_edit_user_info_email) {
+                        intent.putExtra("from", "email");
+                        intent.putExtra("message", mUser.getEmail());
+                        intent.setClass(this, EditUserInfoDetailActivity.class);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_EMAIL);
+
+                } else if (i == R.id.rl_edit_user_info_signature) {
+                        intent.putExtra("from", "signature");
+                        intent.putExtra("message", mUser.getSignature());
+                        intent.setClass(this, EditUserInfoDetailActivity.class);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_SIGNATURE);
+
+                } else if (i == R.id.rl_edit_user_info_address) {
+                        intent.putExtra("from", "address");
+                        intent.putExtra("message", mUser.getAddress());
+                        intent.setClass(this, EditUserInfoDetailActivity.class);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_ADDRESS);
                 }
         }
 

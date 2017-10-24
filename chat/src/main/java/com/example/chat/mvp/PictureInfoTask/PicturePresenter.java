@@ -4,6 +4,7 @@ import com.example.chat.api.PictureApi;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.PictureBean;
 import com.example.chat.bean.PictureResponse;
+import com.example.chat.util.ChatUtil;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
@@ -53,7 +54,7 @@ public class PicturePresenter extends PictureContacts.Presenter {
                 }
 
                 baseModel.getRepositoryManager().getApi(PictureApi.class)
-                        .getPictureInfo(page)
+                        .getPictureInfo(ChatUtil.getPictureUrl(page))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<PictureResponse>() {
@@ -98,45 +99,5 @@ public class PicturePresenter extends PictureContacts.Presenter {
                                         iView.hideLoading();
                                 }
                         });
-
-
-//                Subscription subscription = ((PictureApi) NetManager.getInstance().getApi("http://gank.io", PictureApi.class)).getPictureInfo(page).subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<PictureResponse>() {
-//                                @Override
-//                                public void onCompleted() {
-//                                        iView.hideLoading();
-//                                }
-//                                @Override
-//                                public void onError(Throwable e) {
-//                                        iView.hideLoading();
-////                                        下拉加载设置重试,下拉加载不设置
-//                                        if (mPage==1&&baseModel.getPictureInfo(Constant.PICTURE_KEY+mPage)==null) {
-//                                                iView.showError(e.getMessage(), new EmptyLayout.OnRetryListener() {
-//                                                        @Override
-//                                                        public void onRetry() {
-//                                                                getPictureInfo(mPage);
-//                                                        }
-//                                                });
-//                                                iView.showError(e.getMessage(),null);
-//                                        }
-//                                        iView.onUpdatePictureInfo(baseModel.getPictureInfo(Constant.PICTURE_KEY + mPage));
-//                                }
-//
-//                                @Override
-//                                public void onNext(PictureResponse pictureResponse) {
-//                                        LogUtil.e("接收到的图片数据" + mGson.toJson(pictureResponse));
-//                                        if (!pictureResponse.isError()) {
-//                                                iView.onUpdatePictureInfo(pictureResponse.getResults());
-//                                                for (PictureBean bean :
-//                                                        pictureResponse.getResults()) {
-//                                                        baseModel.savePictureInfo(bean.getUrl(), mGson.toJson(bean));
-//                                                }
-//                                                baseModel.savePictureInfo(Constant.PICTURE_KEY + mPage, mGson.toJson(pictureResponse));
-//                                        } else {
-//                                                LogUtil.e("服务器出错拉");
-//                                        }
-//                                }
-//                        });
-//                addSubscription(subscription);
         }
 }

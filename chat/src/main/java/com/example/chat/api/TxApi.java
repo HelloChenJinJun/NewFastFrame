@@ -1,11 +1,10 @@
 package com.example.chat.api;
 
-import com.example.chat.base.Constant;
 import com.example.chat.bean.TxResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
-import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 /**
  * 项目名称:    TestChat
@@ -15,7 +14,6 @@ import retrofit2.http.Query;
  */
 
 public interface TxApi {
-
-        @GET("/wxnew/?key=" + Constant.TIAN_XING_KEY + "&num=20")
-        Observable<TxResponse> getWinXinInfo(@Query("page") int page);
+@GET
+        Observable<TxResponse> getWinXinInfo(@Url String url);
 }

@@ -19,6 +19,7 @@ import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.EditShareMessageActivity;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
@@ -38,7 +39,6 @@ public class HappyFragment extends BaseFragment<List<HappyBean>,HappyPresenter> 
         private SwipeRefreshLayout refresh;
         private SuperRecyclerView display;
         private HappyAdapter mHappyAdapter;
-        private List<HappyBean> data = new ArrayList<>();
         private HappyPresenter mHappyPresenter;
         private int currentPage = 1;
         private HappyInfoModel mHappyInfoModel;
@@ -111,7 +111,6 @@ public class HappyFragment extends BaseFragment<List<HappyBean>,HappyPresenter> 
                display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
                 display.setOnLoadMoreListener(this);
                 display.setAdapter(mHappyAdapter);
-                mHappyAdapter.addData(data);
 
         }
 
@@ -122,19 +121,34 @@ public class HappyFragment extends BaseFragment<List<HappyBean>,HappyPresenter> 
 
         @Override
         public void onUpdateHappyInfo(List<HappyBean> data) {
-                currentPage++;
-                this.data.addAll(data);
-                mHappyAdapter.notifyDataSetChanged();
+                if (refresh.isRefreshing()) {
+                        mHappyAdapter.refreshData(data);
+                }else {
+                        mHappyAdapter.addData(data);
+                        currentPage++;
+                }
         }
 
 
-
-
+        @Override
+        public void hideLoading() {
+                super.hideLoading();
+                if (refresh.isRefreshing()) {
+                        refresh.setRefreshing(false);
+                }
+        }
 
 
         @Override
+        public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
+                super.showError(errorMsg, listener);
+                if (refresh.isRefreshing()) {
+                        refresh.setRefreshing(false);
+                }
+        }
+
+        @Override
         public void onRefresh() {
-                data.clear();
                 currentPage = 1;
                 loadMoreData(currentPage);
         }

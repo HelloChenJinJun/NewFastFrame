@@ -4,6 +4,7 @@ import com.example.chat.api.HappyApi;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.HappyBean;
 import com.example.chat.bean.HappyResponse;
+import com.example.chat.util.ChatUtil;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
@@ -53,7 +54,7 @@ public class HappyPresenter extends HappyContacts.Presenter {
                         return;
                 }
                 baseModel.getRepositoryManager().getApi(HappyApi.class).
-                        getHappyInfo(page,20)
+                        getHappyInfo(ChatUtil.getHappyUrl(page,20))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<HappyResponse>() {
