@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.bean.OtherNewsTypeBean;
+import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.module.IModuleConfig;
 import com.example.commonlibrary.utils.CommonLogger;

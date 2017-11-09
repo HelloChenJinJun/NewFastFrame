@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_item_activity_local_music_normal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <ImageView
+            android:id="@+id/iv_item_activity_local_music_add"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add"/>
+
+        <LinearLayout
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/iv_item_activity_local_music_more"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_item_activity_local_music_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/tv_item_activity_local_music_song_name"
+                    android:textColor="@color/base_color_text_black"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="16sp"
+                    android:layout_marginRight="5dp"
+                    android:text="月半小月曲"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:textSize="10sp"
+                    android:textColor="@color/base_color_text_blue"
+                    android:gravity="center"
+                    android:text="HQ"
+                    android:background="@drawable/custom_drawable_music_item_bg"
+                    android:layout_width="25dp"
+                    android:layout_height="15dp"
+                    />
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:textSize="10sp"
+                    android:textColor="@color/base_color_text_blue"
+                    android:gravity="center"
+                    android:text="MV"
+                    android:background="@drawable/custom_drawable_music_item_bg"
+                    android:layout_width="25dp"
+                    android:layout_height="15dp"
+                    />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tv_item_activity_local_music_artist_name"
+                android:textSize="14sp"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="张学友"
+                android:textColor="@color/base_color_text_grey"/>
+
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_item_activity_local_music_more"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_more"/>
+    </RelativeLayout>
+    <!--<include layout="@layout/item_activity_local_music_detail"-->
+        <!--/>-->
+    <!--<include layout="@layout/item_activity_local_music_action"-->
+        <!--/>-->
+
+    <!--<ViewStub-->
+        <!--android:id="@+id/vs_item_activity_local_music_detail"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout="@layout/item_activity_local_music_detail"/>-->
+
+    <!--<ViewStub-->
+        <!--android:id="@+id/vs_item_activity_local_music_action"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout="@layout/item_activity_local_music_action"/>-->
+
+</LinearLayout>

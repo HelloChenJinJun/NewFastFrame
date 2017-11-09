@@ -40,9 +40,11 @@
             android:name=".ui.MainActivity"
             android:launchMode="singleTask" />
         <activity android:name=".ui.MusicRepositoryActivity" />
+        <activity android:name=".ui.LocalMusicActivity"/>
 
         <receiver android:name=".receiver.MusicInfoReceiver">
             <intent-filter>
+                <action android:name="refresh_data"/>
                 <action android:name="meta_changed" />
                 <action android:name="play_state_changed" />
                 <action android:name="butter_update_changed" />

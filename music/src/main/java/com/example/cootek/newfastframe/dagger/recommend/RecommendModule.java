@@ -6,7 +6,7 @@ import com.example.cootek.newfastframe.adapter.RecommendRadioAdapter;
 import com.example.cootek.newfastframe.adapter.RecommendSongListAdapter;
 import com.example.cootek.newfastframe.mvp.recommend.RecommendModel;
 import com.example.cootek.newfastframe.mvp.recommend.RecommendPresenter;
-import com.example.cootek.newfastframe.ui.RecommendFragment;
+import com.example.cootek.newfastframe.ui.fragment.RecommendFragment;
 
 import dagger.Module;
 import dagger.Provides;

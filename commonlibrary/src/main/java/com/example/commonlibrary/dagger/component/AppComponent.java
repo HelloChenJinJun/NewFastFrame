@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.dagger.module.AppConfigModule;
 import com.example.commonlibrary.dagger.module.AppModule;
 import com.example.commonlibrary.dagger.module.NetClientModule;
@@ -36,6 +37,10 @@ public interface AppComponent {
     public File getCacheFile();
 
     public OkHttpClient getOkHttpClient();
+
+
+
+    public DaoSession getDaoSession();
 
     public OkHttpClient.Builder getOkHttpClientBuilder();
 

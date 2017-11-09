@@ -32,11 +32,11 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 
-import com.example.commonlibrary.bean.DaoSession;
-import com.example.commonlibrary.bean.MusicHistoryInfo;
-import com.example.commonlibrary.bean.MusicHistoryInfoDao;
-import com.example.commonlibrary.bean.MusicPlayBean;
-import com.example.commonlibrary.bean.MusicPlayBeanDao;
+import com.example.commonlibrary.bean.music.DaoSession;
+import com.example.commonlibrary.bean.music.MusicHistoryInfo;
+import com.example.commonlibrary.bean.music.MusicHistoryInfoDao;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
+import com.example.commonlibrary.bean.music.MusicPlayBeanDao;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.FileUtil;
 import com.example.commonlibrary.utils.Httputil;
@@ -76,11 +76,13 @@ public class MusicService extends Service {
     public static final String MEDIA_BUTTON_NEXT = "next";
     public static final String MEDIA_BUTTON_PREVIOUS = "previous";
     public static final String META_CHANGED = "meta_changed";
+    public static final String REFRESH_DATA = "refresh_data";
     public static final String PLAYSTATE_CHANGED = "play_state_changed";
     public static final int MODE_NORMAL = 0;
     public static final int MODE_LOOP = 1;
     public static final int MODE_SHUFFLE = 2;
     public static final String BUFFER_UPDATE_CHANGED = "butter_update_changed";
+
     private int mode = MODE_NORMAL;
     public static final int FADEDOWN = 6;
     public static final int FADEUP = 7;
@@ -187,6 +189,7 @@ public class MusicService extends Service {
         CommonLogger.e("已经发送广播");
         switch (action) {
             case META_CHANGED:
+            case REFRESH_DATA:
                 updateNotification();
                 break;
             case PLAYSTATE_CHANGED:
@@ -961,8 +964,7 @@ public class MusicService extends Service {
 
 
     private void refresh() {
-        CommonLogger.e("刷新啦啦啦");
-        notifyChange(META_CHANGED);
+        notifyChange(REFRESH_DATA);
     }
 
 

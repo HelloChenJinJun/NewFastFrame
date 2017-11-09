@@ -1,15 +1,15 @@
 package com.example.cootek.newfastframe.mvp.songlist;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.bean.SingerListBean;
-import com.example.commonlibrary.bean.SingerListBeanDao;
+import com.example.commonlibrary.bean.music.SingerListBean;
+import com.example.commonlibrary.bean.music.SingerListBeanDao;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.cootek.newfastframe.api.MusicApi;
 import com.example.cootek.newfastframe.bean.AlbumBean;
 import com.example.cootek.newfastframe.bean.ArtistSongsBean;
 import com.example.cootek.newfastframe.bean.DownLoadMusicBean;
-import com.example.cootek.newfastframe.api.MusicApi;
 import com.example.cootek.newfastframe.bean.RankListBean;
 import com.example.cootek.newfastframe.bean.SongMenuBean;
 

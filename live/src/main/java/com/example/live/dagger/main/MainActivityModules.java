@@ -1,10 +1,10 @@
 package com.example.live.dagger.main;
 
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
-import com.example.live.MainActivity;
+import com.example.live.ui.MainActivity;
 import com.example.live.MainRepositoryManager;
-import com.example.live.mvp.MainModel;
-import com.example.live.mvp.MainPresenter;
+import com.example.live.mvp.main.MainModel;
+import com.example.live.mvp.main.MainPresenter;
 
 import dagger.Module;
 import dagger.Provides;

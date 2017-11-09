@@ -1,9 +1,9 @@
 package com.example.live.dagger.video;
 
 import com.example.live.MainRepositoryManager;
-import com.example.live.VideoActivity;
-import com.example.live.VideoModel;
-import com.example.live.VideoPresenter;
+import com.example.live.ui.VideoActivity;
+import com.example.live.mvp.video.VideoModel;
+import com.example.live.mvp.video.VideoPresenter;
 
 import dagger.Module;
 import dagger.Provides;

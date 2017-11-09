@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <LinearLayout
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                android:id="@+id/riv_fragment_listener_header"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/header"
+                app:roundHeight="30dp"
+                app:roundWidth="30dp"
+                android:scaleType="centerCrop"
+                android:layout_marginRight="15dp"/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_alignTop="@+id/riv_fragment_listener_header"
+                android:layout_centerVertical="true"
+                android:id="@+id/tv_fragment_listener_name"
+                android:textColor="@color/base_color_text_black"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:layout_toRightOf="@+id/riv_fragment_listener_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我在等你"
+                android:drawableRight="@drawable/ic_vip"/>
+            <TextView
+                android:padding="2dp"
+                android:id="@+id/tv_fragment_listener_level"
+                android:layout_marginBottom="5dp"
+                android:layout_alignBottom="@+id/riv_fragment_listener_header"
+                android:textSize="10sp"
+                android:background="@drawable/custom_drawable_vip_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LV.4"
+                android:gravity="center"
+                android:textColor="@color/orange"
+                android:layout_toRightOf="@+id/riv_fragment_listener_header"/>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="听歌11109分钟"
+                android:textColor="@color/base_color_text_grey"
+                android:layout_alignBottom="@+id/tv_fragment_listener_level"
+                android:layout_toRightOf="@+id/tv_fragment_listener_level"/>
+        </RelativeLayout>
+        <ImageView
+            android:scaleType="fitCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_listener_music"/>
+        <View
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="1px"
+            android:layout_height="20dp"
+            android:background="@color/black_transparency_100"/>
+
+        <ImageView
+            android:scaleType="fitCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_info"/>
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black_transparency_100"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+
+        <LinearLayout
+            android:id="@+id/ll_fragment_listener_local_music"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <TextView
+                android:drawablePadding="7dp"
+                android:textColor="@color/base_color_text_black"
+                android:text="本地音乐"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_phone"/>
+
+            <TextView
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="136"
+                android:textColor="@color/base_color_text_grey"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <TextView
+                android:drawablePadding="7dp"
+                android:textColor="@color/base_color_text_black"
+                android:text="喜欢*歌单"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_like"/>
+
+            <TextView
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="136"
+                android:textColor="@color/base_color_text_grey"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <TextView
+                android:drawablePadding="7dp"
+                android:textColor="@color/base_color_text_black"
+                android:text="下载"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_download"/>
+
+            <TextView
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="136"
+                android:textColor="@color/base_color_text_grey"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <TextView
+                android:drawablePadding="7dp"
+                android:textColor="@color/base_color_text_black"
+                android:text="最近"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_recently"/>
+
+            <TextView
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="136"
+                android:textColor="@color/base_color_text_grey"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#f2efef"
+        />
+
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/tv_fragment_music_repository"
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="乐库"
+                android:drawableTop="@drawable/custom_drawable_tv_music_repository_bg"
+                />
+            <TextView
+                android:id="@+id/tv_fragment_music_menu"
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="歌单"
+                android:drawableTop="@drawable/custom_drawable_tv_music_menu_bg"
+                />
+            <TextView
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="乐库"
+                android:drawableTop="@drawable/custom_drawable_tv_music_radio_bg"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="猜你喜欢"
+
+                android:drawableTop="@drawable/custom_drawable_tv_music_favorite_bg"
+                />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_centerHorizontal="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/custom_drawable_iv_music_every_day_bg"/>
+                    <TextView
+                        android:layout_marginTop="22dp"
+                        android:textColor="@color/base_color_text_white"
+                        android:textSize="12sp"
+                        android:layout_centerHorizontal="true"
+                        android:drawablePadding="7dp"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="05"
+                        />
+                </RelativeLayout>
+                <TextView
+                    android:layout_marginTop="7dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="每日推荐"
+
+                    />
+
+            </LinearLayout>
+            <TextView
+
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="音乐圈"
+                android:drawableTop="@drawable/custom_drawable_tv_music_business_bg"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <View
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black_transparency_100"/>
+
+    <LinearLayout
+        android:paddingLeft="30dp"
+        android:paddingRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <TextView
+            android:textColor="@color/base_color_text_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="推广"
+            android:drawableLeft="@drawable/ic_broadcast"
+            android:gravity="center"
+            android:drawablePadding="15dp"/>
+        <TextView
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/base_color_text_grey"
+            android:textSize="12sp"
+            android:text="X玖同款-充电1次，听歌10小时"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black_transparency_100"/>
+
+
+
+
+
+
+</LinearLayout>

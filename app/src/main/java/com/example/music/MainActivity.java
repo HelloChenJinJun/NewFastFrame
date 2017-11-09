@@ -13,7 +13,6 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity {
     private MainAdapter mainAdapter;
-
     private SuperRecyclerView display;
 
     @Override

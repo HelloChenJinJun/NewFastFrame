@@ -3,10 +3,14 @@ package com.example.commonlibrary.dagger.module;
 import android.app.Application;
 import android.support.annotation.Nullable;
 
+import com.example.commonlibrary.bean.music.DaoMaster;
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.interceptor.LogInterceptor;
 import com.example.commonlibrary.net.OkHttpGlobalHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.greenrobot.greendao.database.Database;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +32,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @Module
 public class NetClientModule {
+
+
+
+    @Provides
+    @Singleton
+    public DaoSession provideDaoSession(Application application) {
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(application, "common_library_db", null);
+        Database database = devOpenHelper.getWritableDb();
+        DaoMaster master = new DaoMaster(database);
+        return master.newSession();
+    }
 
 
     @Singleton

@@ -1,9 +1,9 @@
 package com.example.live.dagger.list;
 
-import com.example.live.ListLiveAdapter;
-import com.example.live.ListLiveFragment;
-import com.example.live.ListLiveModel;
-import com.example.live.ListLivePresenter;
+import com.example.live.adapter.ListLiveAdapter;
+import com.example.live.ui.fragment.ListLiveFragment;
+import com.example.live.mvp.list.ListLiveModel;
+import com.example.live.mvp.list.ListLivePresenter;
 import com.example.live.MainRepositoryManager;
 
 import dagger.Module;

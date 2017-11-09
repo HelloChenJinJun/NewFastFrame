@@ -4,7 +4,7 @@ import com.example.cootek.newfastframe.MainRepositoryManager;
 import com.example.cootek.newfastframe.adapter.SingerListAdapter;
 import com.example.cootek.newfastframe.mvp.singerlist.SingerListModel;
 import com.example.cootek.newfastframe.mvp.singerlist.SingerListPresenter;
-import com.example.cootek.newfastframe.ui.SingerListFragment;
+import com.example.cootek.newfastframe.ui.fragment.SingerListFragment;
 
 import dagger.Module;
 import dagger.Provides;

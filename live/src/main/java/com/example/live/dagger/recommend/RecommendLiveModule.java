@@ -1,10 +1,10 @@
 package com.example.live.dagger.recommend;
 
 import com.example.live.MainRepositoryManager;
-import com.example.live.RecommendLiveAdapter;
-import com.example.live.RecommendLiveFragment;
-import com.example.live.mvp.RecommendLiveModel;
-import com.example.live.mvp.RecommendLivePresenter;
+import com.example.live.adapter.RecommendLiveAdapter;
+import com.example.live.ui.fragment.RecommendLiveFragment;
+import com.example.live.mvp.recommend.RecommendLiveModel;
+import com.example.live.mvp.recommend.RecommendLivePresenter;
 
 import dagger.Module;
 import dagger.Provides;

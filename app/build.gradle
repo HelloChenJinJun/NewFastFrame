@@ -1,6 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'org.greenrobot.greendao'
-apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.neenbedankt.android-apt'
 android {
 //    signingConfigs {

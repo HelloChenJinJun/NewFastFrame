@@ -168,13 +168,23 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         if (!isNeedHeadLayout()) {
             return;
         }
+
+        if (option.getBgColor() !=0) {
+            headerLayout.setBackgroundColor(option.getBgColor());
+        }
+        if (option.getCustomView() != null) {
+            ViewGroup container= ((ViewGroup) headerLayout.findViewById(R.id.toolbar));
+            container.removeAllViews();
+            container.addView(option.getCustomView());
+            return;
+        }
+
         if (option.getAvatar() != null) {
             icon.setVisibility(View.VISIBLE);
             Glide.with(this).load(option.getAvatar()).into(icon);
         } else {
             icon.setVisibility(GONE);
         }
-
         if (option.getRightResId() != 0) {
             right.setVisibility(GONE);
             rightImage.setVisibility(View.VISIBLE);

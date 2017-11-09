@@ -5,9 +5,9 @@
     android:id="@+id/sl_view_music_content_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/custom_attr_app_bg"
     android:gravity="bottom"
     android:orientation="vertical"
+    android:background="@color/base_color_text_white"
     app:umanoDragView="@+id/fl_view_music_content_bottom"
     app:umanoOverlay="false"
     app:umanoPanelHeight="60dp"
@@ -16,7 +16,5 @@
     <FrameLayout
         android:id="@+id/fl_view_music_content_bottom"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/custom_attr_app_content_bg"
-        android:tag="skin" />
+        android:layout_height="match_parent"/>
 </com.example.cootek.newfastframe.view.slide.SlidingPanelLayout>

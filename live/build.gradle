@@ -4,7 +4,7 @@ if (rootProject.ext.isAlone) {
     apply plugin: 'com.android.library'
 }
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'org.greenrobot.greendao'
+
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -55,11 +55,6 @@ android {
     }
 }
 
-//greendao {
-//    schemaVersion 1
-//    daoPackage 'com.example.cootek.newfastframe'
-//    targetGenDir 'src/main/java'
-//}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')

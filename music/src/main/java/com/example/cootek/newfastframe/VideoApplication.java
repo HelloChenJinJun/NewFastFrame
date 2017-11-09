@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.module.IModuleConfig;
 import com.example.commonlibrary.module.IAppLife;
+import com.example.commonlibrary.module.IModuleConfig;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.dagger.main.DaggerMainComponent;
 import com.example.cootek.newfastframe.dagger.main.MainComponent;

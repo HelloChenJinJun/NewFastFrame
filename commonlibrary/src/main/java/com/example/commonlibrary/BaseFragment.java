@@ -2,6 +2,7 @@ package com.example.commonlibrary;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +120,8 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
             rightImage = (ImageView) headerLayout.findViewById(R.id.iv_header_layout_right);
             rightImage.setVisibility(View.GONE);
             right.setVisibility(View.VISIBLE);
+            ((BaseActivity) getActivity()).setSupportActionBar((Toolbar) headerLayout.findViewById(R.id.toolbar));
+            ((BaseActivity) getActivity()).getSupportActionBar().setTitle("");
         }
         initView();
     }
@@ -167,6 +170,16 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
 
     public void setToolBar(ToolBarOption option) {
         if (!isNeedHeadLayout()) {
+            return;
+        }
+
+        if (option.getBgColor() !=0) {
+            headerLayout.setBackgroundColor(option.getBgColor());
+        }
+        if (option.getCustomView() != null) {
+            ViewGroup container= ((ViewGroup) headerLayout.findViewById(R.id.toolbar));
+            container.removeAllViews();
+            container.addView(option.getCustomView());
             return;
         }
         if (option.getAvatar() != null) {

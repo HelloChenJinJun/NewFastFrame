@@ -35,6 +35,10 @@ public class MusicInfoReceiver extends BroadcastReceiver {
                     CommonLogger.e("状态" + MusicService.META_CHANGED);
                     musicStatusEvent.setCurrentStatus(MusicStatusEvent.META_CHANGED);
                     break;
+                case MusicService.REFRESH_DATA:
+                    CommonLogger.e("状态" + MusicService.REFRESH_DATA);
+                    musicStatusEvent.setCurrentStatus(MusicStatusEvent.REFRESH_DATA);
+                    break;
                 case MusicService.PLAYSTATE_CHANGED:
                     CommonLogger.e("状态" + MusicService.PLAYSTATE_CHANGED);
                     musicStatusEvent.setCurrentStatus(MusicStatusEvent.PLAYSTATE_CHANGED);

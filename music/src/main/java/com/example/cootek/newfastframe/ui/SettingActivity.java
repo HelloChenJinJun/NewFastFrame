@@ -18,13 +18,12 @@ import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.skin.theme.ThemeUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.MainBaseActivity;
 
 /**
  * Created by COOTEK on 2017/9/6.
  */
 
-public class SettingActivity extends MainBaseActivity implements View.OnClickListener, ColorChooserDialog.ColorCallback, CompoundButton.OnCheckedChangeListener {
+public class SettingActivity extends MusicBaseActivity implements View.OnClickListener, ColorChooserDialog.ColorCallback, CompoundButton.OnCheckedChangeListener {
     private CheckBox checkBox;
     private SharedPreferences sharedPreferences;
     private RoundAngleImageView color;

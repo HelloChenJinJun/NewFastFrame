@@ -3,7 +3,7 @@ package com.example.cootek.newfastframe.adapter;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.cootek.newfastframe.R;
-import com.example.commonlibrary.bean.SingerListBean;
+import com.example.commonlibrary.bean.music.SingerListBean;
 
 /**
  * Created by COOTEK on 2017/9/2.

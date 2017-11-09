@@ -9,7 +9,7 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
-import com.example.commonlibrary.bean.MusicPlayBean;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
@@ -19,7 +19,6 @@ import com.example.cootek.newfastframe.VideoApplication;
 import com.example.cootek.newfastframe.adapter.SingerInfoAdapter;
 import com.example.cootek.newfastframe.dagger.singerinfo.DaggerSingerInfoComponent;
 import com.example.cootek.newfastframe.dagger.singerinfo.SingerInfoModule;
-import com.example.cootek.newfastframe.MainBaseActivity;
 import com.example.cootek.newfastframe.mvp.singerinfo.SingerInfoPresenter;
 import com.example.cootek.newfastframe.util.MusicUtil;
 
@@ -31,7 +30,7 @@ import javax.inject.Inject;
  * Created by COOTEK on 2017/9/3.
  */
 
-public class SingerInfoActivity extends MainBaseActivity<List<MusicPlayBean>, SingerInfoPresenter> implements View.OnClickListener {
+public class SingerInfoActivity extends MusicBaseActivity<List<MusicPlayBean>, SingerInfoPresenter> implements View.OnClickListener {
     private SuperRecyclerView display;
     @Inject
     SingerInfoAdapter singerInfoAdapter;

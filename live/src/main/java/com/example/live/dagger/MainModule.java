@@ -3,12 +3,12 @@ package com.example.live.dagger;
 import android.app.Application;
 import android.support.annotation.Nullable;
 
-import com.example.commonlibrary.bean.DaoMaster;
-import com.example.commonlibrary.bean.DaoSession;
+import com.example.commonlibrary.bean.music.DaoMaster;
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
-import com.example.live.LiveUtil;
 import com.example.live.MainRepositoryManager;
 import com.example.live.interceptor.LiveInterceptor;
+import com.example.live.util.LiveUtil;
 import com.google.gson.Gson;
 
 import org.greenrobot.greendao.database.Database;

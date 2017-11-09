@@ -5,7 +5,7 @@ import android.animation.ObjectAnimator;
 
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
-import com.example.commonlibrary.bean.OtherNewsTypeBean;
+import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.news.R;
 

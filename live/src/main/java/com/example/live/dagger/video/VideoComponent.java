@@ -1,7 +1,7 @@
 package com.example.live.dagger.video;
 
 import com.example.commonlibrary.dagger.scope.PerActivity;
-import com.example.live.VideoActivity;
+import com.example.live.ui.VideoActivity;
 import com.example.live.dagger.MainComponent;
 
 import dagger.Component;

@@ -4,7 +4,6 @@ if (rootProject.ext.isAlone) {
     apply plugin: 'com.android.library'
 }
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -56,11 +55,7 @@ android {
         }
     }
 
-//greendao {
-//    schemaVersion 1
-//    daoPackage 'com.example.cootek.newfastframe'
-//    targetGenDir 'src/main/java'
-//}
+
 
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -74,19 +69,16 @@ android {
         // LabelView
         compile 'com.flyco.labelview:FlycoLabelView_Lib:1.0.2@aar'
 
-        // TagLayout
-//    compile 'com.github.Rukey7:TagLayout:1.0.3'
 
         // photoview
         compile 'com.github.chrisbanes.photoview:library:1.2.4'
 
-        // html text
         compile 'com.zzhoujay.richtext:richtext:2.0.9'
         apt rootProject.ext.dependencies.dagger2_compiler
         compile rootProject.ext.dependencies.cardview
         if (!rootProject.ext.isAlone) {
             apt rootProject.ext.dependencies.arouter_compiler
-        }
+    }
         testCompile 'junit:junit:4.12'
         compile files('libs/pldroid-player-1.5.0.jar')
     }

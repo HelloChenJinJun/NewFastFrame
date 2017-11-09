@@ -1,7 +1,7 @@
 package com.example.cootek.newfastframe.mvp.singerinfo;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.bean.MusicPlayBean;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.cootek.newfastframe.MusicInfoProvider;

@@ -8,7 +8,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import com.example.commonlibrary.bean.MusicPlayBean;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.event.MusicStatusEvent;
@@ -44,13 +44,10 @@ public class MusicManager {
 
     public void bindService(Context context) {
         Intent intent = new Intent(context, MusicService.class);
-        CommonLogger.e("这里的服务名" + MusicService.class.getName());
         context.startService(intent);
         BindConnection bindConnection = new BindConnection();
-        CommonLogger.e("绑定服务1");
         if (context.bindService(intent, bindConnection, Service.BIND_AUTO_CREATE)) {
             connectionWeakHashMap.put(context, bindConnection);
-            CommonLogger.e("绑定服务成功");
         }
     }
 
@@ -234,20 +231,6 @@ public class MusicManager {
         }
         return 0;
     }
-
-//    public static int getAudioSessionId() {
-//        try {
-//
-//            if (service != null) {
-//                service.getAudioSessionId();
-//            }
-//
-//
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        }
-//        return 0;
-//    }
 
 
     private class BindConnection implements ServiceConnection {

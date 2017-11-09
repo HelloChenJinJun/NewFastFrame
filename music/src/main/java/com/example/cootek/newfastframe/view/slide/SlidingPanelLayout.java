@@ -47,7 +47,7 @@ public class SlidingPanelLayout extends ViewGroup {
     private static PanelState DEFAULT_SLIDE_STATE = PanelState.COLLAPSED;
 
     /**
-     * Default height of the shadow above the peeking out panel
+     * Default height of the shadw above the peeking out panel
      */
     private static final int DEFAULT_SHADOW_HEIGHT = 4; // dp;
 
@@ -100,7 +100,7 @@ public class SlidingPanelLayout extends ViewGroup {
     private final Paint mCoveredFadePaint = new Paint();
 
     /**
-     * Drawable used to draw the shadow between panes.
+     * Drawable used to draw the shadw between panes.
      */
     private final Drawable mShadowDrawable;
 
@@ -110,7 +110,7 @@ public class SlidingPanelLayout extends ViewGroup {
     private int mPanelHeight = -1;
 
     /**
-     * The size of the shadow in pixels.
+     * The size of the shadw in pixels.
      */
     private int mShadowHeight = -1;
 
@@ -328,7 +328,7 @@ public class SlidingPanelLayout extends ViewGroup {
         if (mParallaxOffset == -1) {
             mParallaxOffset = (int) (DEFAULT_PARALLAX_OFFSET * density);
         }
-        // If the shadow height is zero, don't show the shadow
+        // If the shadw height is zero, don't show the shadw
         if (mShadowHeight > 0) {
             if (mIsSlidingUp) {
                 mShadowDrawable = getResources().getDrawable(R.drawable.above_shadow);
@@ -429,14 +429,14 @@ public class SlidingPanelLayout extends ViewGroup {
     }
 
     /**
-     * @return The current shadow height
+     * @return The current shadw height
      */
     public int getShadowHeight() {
         return mShadowHeight;
     }
 
     /**
-     * Set the shadow height
+     * Set the shadw height
      *
      * @param val A height in pixels
      */
@@ -1242,7 +1242,7 @@ public class SlidingPanelLayout extends ViewGroup {
     public void draw(Canvas c) {
         super.draw(c);
 
-        // draw the shadow
+        // draw the shadw
         if (mShadowDrawable != null && mSlideableView != null) {
             final int right = mSlideableView.getRight();
             final int top;

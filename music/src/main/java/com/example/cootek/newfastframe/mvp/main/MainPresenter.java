@@ -1,8 +1,8 @@
 package com.example.cootek.newfastframe.mvp.main;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.bean.MusicPlayBean;
-import com.example.commonlibrary.mvp.presenter.BasePresenter;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
+import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.MusicInfoProvider;
@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/8/11.
  */
 
-public class MainPresenter extends BasePresenter<IView, MainModel> {
+public class MainPresenter extends RxBasePresenter<IView, MainModel> {
     private int num;
 
 

@@ -1,17 +1,14 @@
 package com.example.news.dagger;
 
-import android.app.Application;
+
 import android.support.annotation.Nullable;
 
-import com.example.commonlibrary.bean.DaoMaster;
-import com.example.commonlibrary.bean.DaoSession;
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.news.MainRepositoryManager;
 import com.example.news.interceptor.NewsInterceptor;
 import com.example.news.util.NewsUtil;
 import com.google.gson.Gson;
-
-import org.greenrobot.greendao.database.Database;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,14 +30,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class NewsModule {
 
-    @Provides
-    @PerApplication
-    public DaoSession provideDaoSession(Application application) {
-        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(application, "common_library_db", null);
-        Database database = devOpenHelper.getWritableDb();
-        DaoMaster master = new DaoMaster(database);
-        return master.newSession();
-    }
 
 
 
@@ -53,7 +42,7 @@ public class NewsModule {
     @Provides
     @Named("news")
     @PerApplication
-    public Retrofit provideRetrofit(@Named("news") OkHttpClient okHttpClient,@Nullable  Gson gson){
+    public Retrofit provideRetrofit(@Named("news") OkHttpClient okHttpClient,@Nullable Gson gson){
         Retrofit.Builder builder=new Retrofit.Builder().baseUrl(NewsUtil.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson)).client(okHttpClient);
         return builder.build();

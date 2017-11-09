@@ -2,47 +2,120 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="20dp"
     android:orientation="horizontal">
 
-    <ImageView
-        android:layout_gravity="center_vertical"
-        android:id="@+id/iv_item_fragment_rank_display"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:scaleType="centerCrop" />
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp">
+        <ImageView
+            android:id="@+id/iv_item_fragment_rank_display"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            />
+        <ImageView
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="3dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_gravity="center_vertical"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_weight="1"
         android:orientation="vertical">
-
-        <TextView
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:id="@+id/tv_item_fragment_rank_one"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="一" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:background="@drawable/custom_drawable_rank_one"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/base_color_text_white"
+                android:text="1" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:ellipsize="end"
+                android:textSize="12sp"
+                android:id="@+id/tv_item_fragment_rank_one"
+                android:layout_width="match_parent"
+                android:maxLines="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/base_color_text_white"
+                android:text="歌名" />
 
-        <TextView
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:id="@+id/tv_item_fragment_rank_two"
-            android:layout_width="wrap_content"
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="二" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:background="@drawable/custom_drawable_rank_two"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/base_color_text_white"
+                android:text="2" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:ellipsize="end"
+                android:textSize="12sp"
+                android:id="@+id/tv_item_fragment_rank_two"
+                android:layout_width="match_parent"
+                android:maxLines="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/base_color_text_white"
+                android:text="歌名" />
 
-        <TextView
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:id="@+id/tv_item_fragment_rank_three"
-            android:layout_width="wrap_content"
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="三" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:background="@drawable/custom_drawable_rank_three"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/base_color_text_white"
+                android:text="3" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:ellipsize="end"
+                android:textSize="12sp"
+                android:id="@+id/tv_item_fragment_rank_three"
+                android:layout_width="match_parent"
+                android:maxLines="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/base_color_text_white"
+                android:text="歌名" />
+        </LinearLayout>
+
+
     </LinearLayout>
+    <ImageView
+        android:scaleType="centerCrop"
+        android:layout_gravity="center_vertical"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_keyboard_arrow_right_white_24dp"/>
 
 
 </LinearLayout>

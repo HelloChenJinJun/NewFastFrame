@@ -4,11 +4,12 @@ if (rootProject.ext.isAlone) {
     apply plugin: 'com.android.library'
 }
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'org.greenrobot.greendao'
+
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
     buildToolsVersion rootProject.ext.android.buildToolsVersion
+
 
     aaptOptions {
         cruncherEnabled = false
@@ -68,12 +69,6 @@ android {
     }
 }
 
-//greendao {
-//    schemaVersion 1
-//    daoPackage 'com.example.cootek.newfastframe'
-//    targetGenDir 'src/main/java'
-//}
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -88,13 +83,10 @@ dependencies {
     compile 'com.mabeijianxi:small-video-record:1.2.0'
     compile 'com.github.chihane:JDAddressSelector:1.1.4'
     compile 'com.android.support:multidex:1.0.1'
-
-
     compile rootProject.ext.dependencies.cardview
     apt rootProject.ext.dependencies.dagger2_compiler
+
     if (!rootProject.ext.isAlone) {
-
-
         apt rootProject.ext.dependencies.arouter_compiler
     }
     testCompile 'junit:junit:4.12'

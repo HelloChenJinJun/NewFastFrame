@@ -16,8 +16,8 @@ import com.example.commonlibrary.baseadapter.refresh.OnRefreshListener;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
-import com.example.commonlibrary.bean.MusicPlayBean;
-import com.example.commonlibrary.bean.SingerListBean;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
+import com.example.commonlibrary.bean.music.SingerListBean;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.MusicManager;
@@ -29,7 +29,6 @@ import com.example.cootek.newfastframe.bean.AlbumBean;
 import com.example.cootek.newfastframe.bean.SongMenuBean;
 import com.example.cootek.newfastframe.dagger.songlist.DaggerSongListActivityComponent;
 import com.example.cootek.newfastframe.dagger.songlist.SongListModule;
-import com.example.cootek.newfastframe.MainBaseActivity;
 import com.example.cootek.newfastframe.mvp.songlist.SongListPresenter;
 import com.example.cootek.newfastframe.bean.DownLoadMusicBean;
 import com.example.cootek.newfastframe.bean.RankListBean;
@@ -47,7 +46,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Created by COOTEK on 2017/8/16.
  */
 
-public class SongListActivity extends MainBaseActivity<Object, SongListPresenter> implements OnRefreshListener, OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class SongListActivity extends MusicBaseActivity<Object, SongListPresenter> implements OnRefreshListener, OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     SwipeRefreshLayout refreshLayout;
     SuperRecyclerView display;

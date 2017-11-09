@@ -1,7 +1,7 @@
 package com.example.live.dagger.list;
 
 import com.example.commonlibrary.dagger.scope.PerFragment;
-import com.example.live.ListLiveFragment;
+import com.example.live.ui.fragment.ListLiveFragment;
 import com.example.live.dagger.MainComponent;
 
 import dagger.Component;

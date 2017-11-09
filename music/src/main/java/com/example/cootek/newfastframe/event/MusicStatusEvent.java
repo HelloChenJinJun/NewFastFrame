@@ -13,6 +13,7 @@ public class MusicStatusEvent {
     public static final String QUEUE_CHANGED = "QUEUE_CHANGED";
     public static final String REFRESH_CHANGED = "REFRESH_CHANGED";
     public static final String BUFFER_UPDATE_CHANGED = "BUFFER_UPDATE_CHANGED";
+    public static final String REFRESH_DATA = "REFRESH_DATA";
     private String currentStatus;
     private MusicContent musicContent;
 

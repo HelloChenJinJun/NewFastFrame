@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/stroke_bg"/>
+    <item android:drawable="@drawable/circle_bg"
+        android:right="30dp"
+        android:top="1dp"
+        android:bottom="1dp"
+        android:left="1dp"/>
+</layer-list>

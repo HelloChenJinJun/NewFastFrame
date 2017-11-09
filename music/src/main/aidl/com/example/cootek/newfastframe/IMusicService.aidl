@@ -1,6 +1,6 @@
 // IMusicService.aidl
 package com.example.cootek.newfastframe;
-import com.example.commonlibrary.bean.MusicPlayBean;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
 // Declare any non-default types here with import statements
 
 interface IMusicService {

@@ -2,7 +2,7 @@ package com.example.cootek.newfastframe.dagger.singerlist;
 
 import com.example.commonlibrary.dagger.scope.PerFragment;
 import com.example.cootek.newfastframe.dagger.main.MainComponent;
-import com.example.cootek.newfastframe.ui.SingerListFragment;
+import com.example.cootek.newfastframe.ui.fragment.SingerListFragment;
 
 import dagger.Component;
 

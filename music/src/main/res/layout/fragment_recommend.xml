@@ -24,8 +24,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="推荐歌单"
-                    android:textColor="@color/base_color_text_blue"
-                    android:textSize="20sp" />
+                    android:textColor="@color/base_color_text_black"
+                    android:textSize="18sp" />
 
                 <ImageView
                     android:id="@+id/iv_fragment_recommend_song_list_arrow"
@@ -42,8 +42,8 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/iv_fragment_recommend_song_list_arrow"
                     android:text="更多"
-                    android:textColor="@color/base_color_text_blue"
-                    android:textSize="16sp" />
+                    android:textColor="@color/base_color_text_grey"
+                    android:textSize="14sp" />
             </RelativeLayout>
 
             <com.example.commonlibrary.baseadapter.SuperRecyclerView
@@ -52,11 +52,7 @@
                 android:layout_height="300dp"
                 android:layout_marginTop="20dp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/divider_line_default_color" />
+
 
 
             <RelativeLayout
@@ -70,8 +66,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="推荐电台"
-                    android:textColor="@color/base_color_text_blue"
-                    android:textSize="20sp" />
+                    android:textColor="@color/base_color_text_black"
+                    android:textSize="18sp" />
 
                 <ImageView
                     android:id="@+id/iv_fragment_recommend_radio_arrow"
@@ -88,8 +84,8 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/iv_fragment_recommend_radio_arrow"
                     android:text="更多"
-                    android:textColor="@color/base_color_text_blue"
-                    android:textSize="16sp" />
+                    android:textColor="@color/base_color_text_grey"
+                    android:textSize="14sp" />
             </RelativeLayout>
 
             <com.example.commonlibrary.baseadapter.SuperRecyclerView

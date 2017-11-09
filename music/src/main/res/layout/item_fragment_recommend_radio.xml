@@ -6,9 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
-
-
+        android:layout_height="120dp">
         <ImageView
             android:id="@+id/iv_item_fragment_recommend_radio_image"
             android:layout_width="match_parent"
@@ -18,42 +16,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
-            <ImageView
-                android:id="@+id/iv_item_fragment_recommend_radio_music_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_music_note_white_18dp" />
-
+            android:layout_marginBottom="3dp"
+            android:paddingRight="3dp"
+            android:paddingLeft="3dp">
             <TextView
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_listener"
                 android:id="@+id/tv_item_fragment_recommend_radio_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/iv_item_fragment_recommend_radio_music_icon"
                 android:textColor="@color/base_color_text_white"
                 android:textSize="14sp" />
-
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_play_circle_outline_white_24dp" />
         </RelativeLayout>
     </RelativeLayout>
-
     <TextView
         android:id="@+id/tv_item_fragment_recommend_radio_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
+        android:gravity="center"
         android:text="中国新歌声第二季合辑"
         android:textColor="@color/base_color_text_white"
         android:textSize="18sp" />

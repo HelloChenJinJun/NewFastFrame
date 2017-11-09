@@ -1,7 +1,7 @@
 package com.example.live.dagger.main;
 
 import com.example.commonlibrary.dagger.scope.PerActivity;
-import com.example.live.MainActivity;
+import com.example.live.ui.MainActivity;
 import com.example.live.dagger.MainComponent;
 
 import dagger.Component;

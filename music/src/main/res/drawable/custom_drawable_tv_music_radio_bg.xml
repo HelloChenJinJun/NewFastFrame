@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/custom_drawable_blue_bg"
+        android:gravity="center"/>
+    <item android:drawable="@drawable/custom_drawable_out_circle"
+        android:gravity="center"/>
+    <item android:drawable="@drawable/ic_music_radio"
+        android:gravity="center"/>
+
+</layer-list>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff343a49</color>
-    <color name="colorPrimaryDark">#ff2a2e3a</color>
+    <!--#0398db-->
+    <color name="colorPrimary">@color/light_blue_600</color>
+    <color name="colorPrimaryDark">@color/light_blue_600</color>
     <color name="colorAccent">#ffffffff</color>
 
 
@@ -20,9 +21,11 @@
     <!-- app相关 -->
     <color name="custom_color_app_bg_day">#ff343a49</color>      <!-- app背景色 -->
     <color name="custom_color_app_bg_night">#FF171717</color>      <!-- app背景色 -->
-    <color name="custom_color_app_title_bg_day">#ff2a2e3a</color>      <!-- app标题栏背景色 -->
-    <color name="custom_color_app_title_bg_night">#FF1D1D1D</color>      <!-- app标题栏背景色 -->
-    <color name="custom_color_app_content_bg_day">#FFFFFFFF</color>      <!-- app内容区背景色 -->
+    <!--#ff2a2e3a-->
+    <color name="custom_color_app_title_bg_day">#FF818181</color>      <!-- app标题栏背景色 -->
+    <!--#FF1D1D1D-->
+    <color name="custom_color_app_title_bg_night">#FF818181</color>      <!-- app标题栏背景色 -->
+    <color name="custom_color_app_content_bg_day">#ff343a49</color>      <!-- app内容区背景色 -->
     <color name="custom_color_app_content_bg_night">#FF1D1D1D</color>      <!-- app内容区背景色 -->
     <color name="custom_color_app_content_div_day">@color/base_color_text_grey</color>      <!-- app内容区分割线颜色 -->
     <color name="custom_color_app_content_div_night">#FF191919</color>      <!-- app内容区分割线颜色 -->
@@ -34,7 +37,7 @@
     <color name="custom_color_text_main_night">#FF666666</color>      <!-- 主文本（标题、标签）字体颜色 -->
 
     <!--按钮相关-->
-    <color name="custom_color_btn_bg_normal_day">@color/base_color_text_blue
+    <color name="custom_color_btn_bg_normal_day">@color/light_blue_600
     </color>      <!-- 按钮正常情况下背景色 -->
     <color name="custom_color_btn_bg_normal_night">#FF1D1D1D</color>      <!-- 按钮正常情况下背景色 -->
     <color name="custom_color_btn_bg_pressed_day">#FFF9F9F9</color>      <!-- 按钮按住情况下背景色 -->

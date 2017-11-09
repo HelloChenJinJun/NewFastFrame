@@ -12,7 +12,7 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
-import com.example.commonlibrary.bean.OtherNewsTypeBean;
+import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.bean.OtherNewsTypeBeanDao;
 import com.example.commonlibrary.cusotomview.CustomPopWindow;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
@@ -141,6 +141,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         display.setAdapter(viewPagerAdapter);
         display.setCurrentItem(0);
         ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setBgColor(getResources().getColor(R.color.base_color_text_grey));
         toolBarOption.setTitle("地大新闻");
         toolBarOption.setNeedNavigation(true);
         setToolBar(toolBarOption);

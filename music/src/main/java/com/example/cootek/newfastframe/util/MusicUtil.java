@@ -51,6 +51,7 @@ public class MusicUtil {
     public static final String POSITION = "position";
     public static final String SEEK = "seek";
     public static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting/";
+    public static final String SONG_COUNT = "count";
 
     public static Uri getAlbumArtUri(long paramInt) {
         return ContentUris.withAppendedId(Uri.parse("content://media/exjava.lang.Stringternal/audio/albumart"), paramInt);

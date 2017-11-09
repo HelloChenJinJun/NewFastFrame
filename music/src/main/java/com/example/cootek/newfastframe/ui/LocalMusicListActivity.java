@@ -7,7 +7,8 @@ import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.BaseFragment;
 import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.MainBaseActivity;
+import com.example.cootek.newfastframe.ui.fragment.LocalListFragment;
+import com.example.cootek.newfastframe.ui.fragment.SingerListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * Created by COOTEK on 2017/9/2.
  */
 
-public class LocalMusicListActivity extends MainBaseActivity {
+public class LocalMusicListActivity extends MusicBaseActivity {
     private TabLayout tabLayout;
     private ViewPager display;
 

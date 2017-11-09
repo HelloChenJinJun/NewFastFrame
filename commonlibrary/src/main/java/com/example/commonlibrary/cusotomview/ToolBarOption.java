@@ -28,6 +28,8 @@ public class ToolBarOption {
 
         private String avatar;
         private int rightResId = 0;
+        private int bgColor;
+        private View customView;
 
 
         public int getRightResId() {
@@ -111,5 +113,21 @@ public class ToolBarOption {
 
         public void setNeedNavigation(boolean needNavigation) {
                 isNeedNavigation = needNavigation;
+        }
+
+        public void setBgColor(int bgColor) {
+                this.bgColor = bgColor;
+        }
+
+        public int getBgColor() {
+                return bgColor;
+        }
+
+        public void setCustomView(View customView) {
+                this.customView = customView;
+        }
+
+        public View getCustomView() {
+                return customView;
         }
 }

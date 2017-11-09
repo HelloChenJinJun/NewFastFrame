@@ -1,14 +1,14 @@
 package com.example.cootek.newfastframe.mvp.singerlist;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.bean.MusicPlayBean;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.MusicInfoProvider;
 import com.example.cootek.newfastframe.bean.ArtistInfo;
 import com.example.cootek.newfastframe.api.MusicApi;
-import com.example.commonlibrary.bean.SingerListBean;
+import com.example.commonlibrary.bean.music.SingerListBean;
 
 import java.util.ArrayList;
 import java.util.HashMap;

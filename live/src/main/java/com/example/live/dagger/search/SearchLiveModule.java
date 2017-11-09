@@ -1,10 +1,10 @@
 package com.example.live.dagger.search;
 
 import com.example.live.MainRepositoryManager;
-import com.example.live.SearchLiveActivity;
-import com.example.live.SearchLiveAdapter;
-import com.example.live.SearchLiveModel;
-import com.example.live.SearchLivePresenter;
+import com.example.live.ui.SearchLiveActivity;
+import com.example.live.adapter.SearchLiveAdapter;
+import com.example.live.mvp.search.SearchLiveModel;
+import com.example.live.mvp.search.SearchLivePresenter;
 
 import dagger.Module;
 import dagger.Provides;

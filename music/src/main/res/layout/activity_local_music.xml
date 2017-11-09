@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <LinearLayout
+            android:id="@+id/ll_activity_local_music_header"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:scaleType="center"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_order_play"/>
+            <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="1px"
+                android:layout_height="30dp"
+                android:background="@color/base_color_text_grey"/>
+
+
+            <ImageView
+                android:scaleType="center"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_play"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/iv_activity_local_music_search"
+                android:scaleType="centerCrop"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_search"/>
+            <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="1px"
+                android:layout_height="30dp"
+                android:background="@color/base_color_text_grey"/>
+
+            <ImageView
+                android:scaleType="centerInside"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_sort"/>
+            <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="1px"
+                android:layout_height="30dp"
+                android:background="@color/base_color_text_grey"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="挑"
+                android:textColor="@color/base_color_text_grey"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+
+
+
+
+
+        <LinearLayout
+            android:visibility="invisible"
+            android:id="@+id/ll_activity_local_music_header_search"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <EditText
+
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:padding="8dp"
+                android:gravity="center_vertical"
+                android:textSize="12sp"
+                android:hint="请输入歌曲名或歌手名"
+                android:layout_marginRight="20dp"
+                android:drawablePadding="10dp"
+                android:drawableLeft="@drawable/ic_abc"
+                android:background="#ecebeb"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/tv_activity_local_music_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="取消"
+                android:textColor="@color/base_color_text_blue"/>
+
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/base_color_text_grey"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.example.commonlibrary.baseadapter.SuperRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/srcv_activity_local_music_display"/>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_activity_local_music_index"
+            android:textSize="50sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/custom_drawable_tv_index_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="H"
+            android:layout_centerInParent="true"/>
+
+
+    <com.example.cootek.newfastframe.view.IndexView
+        android:id="@+id/lv_activity_local_music_index"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="25dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

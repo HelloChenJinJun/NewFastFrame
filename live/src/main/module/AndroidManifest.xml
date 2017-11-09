@@ -27,11 +27,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity"
+        <activity android:name=".ui.MainActivity"
             />
 
-        <activity android:name=".SearchLiveActivity"/>
-        <activity android:name=".VideoActivity"
+        <activity android:name=".ui.SearchLiveActivity"/>
+        <activity android:name=".ui.VideoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
 

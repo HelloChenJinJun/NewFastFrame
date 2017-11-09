@@ -8,6 +8,12 @@
         <attr name="roundWidth" format="dimension" />
         <attr name="roundHeight" format="dimension" />
     </declare-styleable>
+    
+    
+    
+    <declare-styleable name="ViewPagerIndicator">
+        <attr name="visibleTabCount" format="integer"/>
+    </declare-styleable>
 
     <declare-styleable name="SwipeMenuLayout">
         <attr name="leftViewId" format="reference" />

@@ -8,9 +8,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="100dp">
-
-
         <ImageView
+            android:scaleType="centerCrop"
             android:id="@+id/iv_item_fragment_recommend_song_list_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -23,26 +22,21 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
-            <ImageView
-                android:id="@+id/iv_item_fragment_recommend_song_list_music_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_music_note_white_18dp" />
+
 
             <TextView
+                android:drawableLeft="@drawable/ic_listener"
                 android:id="@+id/tv_item_fragment_recommend_song_list_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/iv_item_fragment_recommend_song_list_music_icon"
                 android:textColor="@color/base_color_text_white"
                 android:textSize="14sp" />
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_play_circle_outline_white_24dp" />
@@ -57,8 +51,7 @@
         android:gravity="center"
         android:maxLines="2"
         android:text="中国新歌声第二季合辑"
-        android:textColor="@color/base_color_text_white"
+        android:textColor="@color/base_color_text_black"
         android:textSize="18sp" />
-
 
 </LinearLayout>

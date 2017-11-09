@@ -11,7 +11,7 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.bean.OtherNewsTypeBean;
+import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.NewsApplication;

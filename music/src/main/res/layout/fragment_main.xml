@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_favorite_border_white_24dp" />
+                android:src="@drawable/ic_like" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -127,7 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
-            android:src="@drawable/ic_phone_android_white_24dp" />
+            android:src="@drawable/ic_phone" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -1,17 +1,13 @@
 package com.example.cootek.newfastframe.dagger.main;
 
-import android.app.Application;
 import android.support.annotation.Nullable;
 
-import com.example.commonlibrary.bean.DaoMaster;
-import com.example.commonlibrary.bean.DaoSession;
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.cootek.newfastframe.MainRepositoryManager;
 import com.example.cootek.newfastframe.interceptor.MusicInterceptor;
 import com.example.cootek.newfastframe.util.MusicUtil;
 import com.google.gson.Gson;
-
-import org.greenrobot.greendao.database.Database;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,15 +25,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @Module
 public class MainModule {
-    @Provides
-    @PerApplication
-    public DaoSession provideDaoSession(Application application) {
-        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(application, "common_library_db", null);
-        Database database = devOpenHelper.getWritableDb();
-        DaoMaster master = new DaoMaster(database);
-        return master.newSession();
-    }
-
 
     @Provides
     @PerApplication

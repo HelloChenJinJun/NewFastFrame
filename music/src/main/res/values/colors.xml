@@ -2,4 +2,6 @@
 <resources>
     <color name="red">#FF3838</color>
     <color name="item_bg">#1414c1</color>
+    <color name="orange">#fc6501</color>
+    <color name="yellow" >#fcd703</color>
 </resources>

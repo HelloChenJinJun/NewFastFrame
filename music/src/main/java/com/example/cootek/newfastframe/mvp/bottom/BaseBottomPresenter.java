@@ -1,6 +1,6 @@
 package com.example.cootek.newfastframe.mvp.bottom;
 
-import com.example.commonlibrary.bean.MusicPlayBean;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.mvp.model.BaseModel;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 

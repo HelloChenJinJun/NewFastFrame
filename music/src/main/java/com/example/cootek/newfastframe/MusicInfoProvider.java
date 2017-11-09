@@ -6,8 +6,8 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.bean.MusicPlayBean;
-import com.example.commonlibrary.bean.MusicPlayBeanDao;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
+import com.example.commonlibrary.bean.music.MusicPlayBeanDao;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.util.MusicUtil;
 

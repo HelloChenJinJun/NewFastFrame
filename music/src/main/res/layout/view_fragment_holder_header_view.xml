@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:layout_height="60dp"
+    >
+    <ImageView
+        android:layout_centerVertical="true"
+        android:id="@+id/iv_view_Fragment_holder_header_view_expend"
+        android:src="@drawable/ic_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        />
+    <com.example.commonlibrary.cusotomview.ViewPagerIndicator
+        android:layout_centerInParent="true"
+        android:layout_width="210dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:id="@+id/vpi_view_fragment_holder_header_view_indicator"
+        app:visibleTabCount="3"/>
+    <ImageView
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/iv_view_Fragment_holder_header_view_search"
+        android:src="@drawable/ic_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

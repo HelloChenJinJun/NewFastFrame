@@ -133,6 +133,19 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
 
+
+
+    private int marginSize=0;
+
+
+    public int getMarginSize() {
+        return marginSize;
+    }
+
+    public void setMarginSize(int marginSize) {
+        this.marginSize = marginSize;
+    }
+
     private boolean isFullSpanType(int type) {
         return type == REFRESH_HEADER || type == HEADER || type == FOOTER || type == LOAD_MORE_FOOTER || type == EMPTY;
     }
