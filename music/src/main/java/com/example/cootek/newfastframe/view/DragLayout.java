@@ -168,9 +168,9 @@ public class DragLayout extends ViewGroup {
         }
         menu = (ViewGroup) getChildAt(0);
         if (mode == RIGHT_MODE) {
-            menu.setPadding(DensityUtil.dip2px(getContext(),100), DensityUtil.dip2px(getContext(),20),0,DensityUtil.dip2px(getContext(),20));
+            menu.setPadding(DensityUtil.dip2px(getContext(),80), DensityUtil.dip2px(getContext(),20),DensityUtil.dip2px(getContext(),20),DensityUtil.dip2px(getContext(),20));
         }else {
-            menu.setPadding(DensityUtil.dip2px(getContext(),20), DensityUtil.dip2px(getContext(),20),DensityUtil.dip2px(getContext(),100),DensityUtil.dip2px(getContext(),20));
+            menu.setPadding(DensityUtil.dip2px(getContext(),20), DensityUtil.dip2px(getContext(),20),DensityUtil.dip2px(getContext(),80),DensityUtil.dip2px(getContext(),20));
         }
         content = (ViewGroup) getChildAt(1);
         menu.setClickable(true);

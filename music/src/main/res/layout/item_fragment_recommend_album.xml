@@ -19,12 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
-          x
-
+            android:layout_marginBottom="3dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp">
             <TextView
                 android:drawableLeft="@drawable/ic_listener"
                 android:id="@+id/tv_item_fragment_recommend_album_count"

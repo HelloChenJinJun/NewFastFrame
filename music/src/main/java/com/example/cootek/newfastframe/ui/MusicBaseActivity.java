@@ -56,7 +56,6 @@ public abstract class MusicBaseActivity<T, P extends BasePresenter> extends Base
             dragLayout.setBackgroundResource(R.drawable.wallpaper);
             ViewGroup menu= (ViewGroup) LayoutInflater.from(this).inflate(R.layout.view_activity_main_menu,null,false);
 //            int width=(int) (DensityUtil.getScreenWidth(this)*0.8f);
-            menu.setPadding(100,50,50,50);
 //            menu.setLayoutParams(new ViewGroup.LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT));
             dragLayout.addView(menu);
             ContentView contentView=new ContentView(this);

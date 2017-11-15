@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
@@ -155,6 +154,11 @@ public class LocalMusicActivity extends SlideMusicBaseActivity<List<MusicPlayBea
                         }
                     } else{
                         MusicPlayBean item=adapter.getData(position);
+                        if (item == null) {
+                            return;
+                        }
+
+
                         MusicPlayBean newItem=new MusicPlayBean(item.getSongId(),item.getAlbumId()
                         ,item.getArtistId(),item.getSongName(),item.getAlbumName(),item.getArtistName()
                         ,item.getAlbumUrl(),item.getLrcUrl(),item.getSongUrl(),item.getDuration(),
@@ -212,7 +216,6 @@ public class LocalMusicActivity extends SlideMusicBaseActivity<List<MusicPlayBea
     }
 
     private void dealItemClick(int position) {
-        Toast.makeText(LocalMusicActivity.this, "position:" + position, Toast.LENGTH_SHORT).show();
         List<MusicPlayBean> list=new ArrayList<>();
         for (MusicPlayBean bean :
                 adapter.getData()) {
@@ -221,13 +224,18 @@ public class LocalMusicActivity extends SlideMusicBaseActivity<List<MusicPlayBea
             }
         }
         MusicManager.getInstance().play(list, position, MusicService.MODE_NORMAL);
-        MusicPlayBean bean=adapter.removeData(position);
-        bean.setType(MusicPlayBean.DETAIL);
-        adapter.addData(position,bean);
+//        MusicPlayBean bean=adapter.removeData(position);
+//        bean.setType(MusicPlayBean.DETAIL);
+//        adapter.addData(position,bean);
+        adapter.getData(position).setType(MusicPlayBean.DETAIL);
+        adapter.notifyDataSetChanged();
         if (prePosition != -1) {
-            MusicPlayBean  removeBean=adapter.removeData(prePosition);
-            removeBean.setType(MusicPlayBean.NORMAL);
-            adapter.addData(prePosition,removeBean);
+//            MusicPlayBean  removeBean=adapter.removeData(prePosition);
+//            removeBean.setType(MusicPlayBean.NORMAL);
+//            adapter.addData(prePosition,removeBean);
+            adapter.getData(prePosition).setType(MusicPlayBean.NORMAL);
+            adapter.notifyDataSetChanged();
+
         }
         prePosition=position;
     }
