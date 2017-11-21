@@ -1,17 +1,13 @@
 package com.example.chat.dagger;
 
-import android.app.Application;
 import android.support.annotation.Nullable;
 
 import com.example.chat.ChatInterceptor;
 import com.example.chat.MainRepositoryManager;
 import com.example.chat.util.ChatUtil;
-import com.example.commonlibrary.bean.DaoMaster;
-import com.example.commonlibrary.bean.DaoSession;
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.google.gson.Gson;
-
-import org.greenrobot.greendao.database.Database;
 
 import java.util.concurrent.TimeUnit;
 
@@ -32,14 +28,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @Module
 public class ChatMainModule {
-    @Provides
-    @PerApplication
-    public DaoSession provideDaoSession(Application application) {
-        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(application, "common_library_db", null);
-        Database database = devOpenHelper.getWritableDb();
-        DaoMaster master = new DaoMaster(database);
-        return master.newSession();
-    }
 
 
     @Provides

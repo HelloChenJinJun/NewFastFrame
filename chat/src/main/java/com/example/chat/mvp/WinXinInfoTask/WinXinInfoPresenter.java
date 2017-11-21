@@ -34,20 +34,20 @@ public class WinXinInfoPresenter extends WinXinInfoContacts.Presenter {
         }
 
         @Override
-        public void getWinXinInfo( int page) {
+        public void getWinXinInfo(int page, final boolean showLoading) {
                 this.mPage=page;
-                LogUtil.e("测试拉拉");
                 if (page == 1) {
-                        LogUtil.e("这里清除数据困中的缓存数据");
+                    if (showLoading) {
                         iView.showLoading("正在加载..........");
-                        baseModel.clearAllData();
+                    }
+                    baseModel.clearAllData();
                 }
                 if (!AppUtil.isNetworkAvailable(BaseApplication.getInstance())) {
                         iView.hideLoading();
                         iView.showError("网络连接失败", new EmptyLayout.OnRetryListener() {
                                 @Override
                                 public void onRetry() {
-                                        getWinXinInfo(mPage);
+                                        getWinXinInfo(mPage,showLoading);
                                 }
                         });
                         return;
@@ -85,7 +85,7 @@ public class WinXinInfoPresenter extends WinXinInfoContacts.Presenter {
                                         iView.showError(e.getMessage(), new EmptyLayout.OnRetryListener() {
                                                 @Override
                                                 public void onRetry() {
-                                                        getWinXinInfo(mPage);
+                                                        getWinXinInfo(mPage,showLoading);
                                                 }
                                         });
                                         iView.updateData(baseModel.getCacheWeiXinInfo(Constant.WEI_XIN_KEY + mPage));

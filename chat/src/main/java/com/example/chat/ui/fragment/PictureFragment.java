@@ -67,7 +67,7 @@ public class PictureFragment extends BaseFragment<List<PictureBean>,PicturePrese
 
 
         private void loadMoreData(int currentPage) {
-                mHappyPresenter.getPictureInfo(currentPage);
+                mHappyPresenter.getPictureInfo(currentPage,false);
         }
 
         @Override
@@ -113,7 +113,7 @@ public class PictureFragment extends BaseFragment<List<PictureBean>,PicturePrese
 
         @Override
         protected void updateView() {
-                onRefresh();
+                mHappyPresenter.getPictureInfo(currentPage,true);
         }
 
 
@@ -153,9 +153,15 @@ public class PictureFragment extends BaseFragment<List<PictureBean>,PicturePrese
         @Override
         public void onDestroyView() {
                 super.onDestroyView();
-                mHappyPresenter.onDestroy();
+//                mHappyPresenter.onDestroy();
         }
 
+
+        @Override
+        public void onDestroy() {
+                super.onDestroy();
+                mHappyPresenter.onDestroy();
+        }
 
         @Override
         public void onUpdatePictureInfo(List<PictureBean> data) {

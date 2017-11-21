@@ -40,6 +40,6 @@ public interface WinXinInfoContacts {
                         super(iView, baseModel);
                 }
 
-                abstract public void getWinXinInfo(int page);
+                abstract public void getWinXinInfo(int page,boolean showLoading);
         }
 }

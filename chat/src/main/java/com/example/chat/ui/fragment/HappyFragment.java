@@ -41,7 +41,6 @@ public class HappyFragment extends BaseFragment<List<HappyBean>,HappyPresenter> 
         private HappyAdapter mHappyAdapter;
         private HappyPresenter mHappyPresenter;
         private int currentPage = 1;
-        private HappyInfoModel mHappyInfoModel;
 
 
         @Override
@@ -69,7 +68,7 @@ public class HappyFragment extends BaseFragment<List<HappyBean>,HappyPresenter> 
 
 
         private void loadMoreData(int currentPage) {
-                mHappyPresenter.getHappyInfo(currentPage);
+                mHappyPresenter.getHappyInfo(currentPage,false);
         }
 
         @Override
@@ -116,16 +115,16 @@ public class HappyFragment extends BaseFragment<List<HappyBean>,HappyPresenter> 
 
         @Override
         protected void updateView() {
-                onRefresh();
+                mHappyPresenter.getHappyInfo(currentPage,true);
         }
 
         @Override
         public void onUpdateHappyInfo(List<HappyBean> data) {
+                currentPage++;
                 if (refresh.isRefreshing()) {
                         mHappyAdapter.refreshData(data);
                 }else {
                         mHappyAdapter.addData(data);
-                        currentPage++;
                 }
         }
 
@@ -157,6 +156,12 @@ public class HappyFragment extends BaseFragment<List<HappyBean>,HappyPresenter> 
         @Override
         public void onDestroyView() {
                 super.onDestroyView();
+//                mHappyPresenter.onDestroy();
+        }
+
+        @Override
+        public void onDestroy() {
+                super.onDestroy();
                 mHappyPresenter.onDestroy();
         }
 

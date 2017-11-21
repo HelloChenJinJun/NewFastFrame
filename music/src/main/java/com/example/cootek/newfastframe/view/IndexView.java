@@ -104,24 +104,32 @@ public class IndexView extends View {
                 float y=event.getY();
                 int index= (int) (y/itemHeight);
                 switch (action){
-                        case MotionEvent.ACTION_UP:
-//                                setBackgroundResource(R.color.transparent);
+                        case MotionEvent.ACTION_DOWN:
+                                case MotionEvent.ACTION_MOVE:
+                                        String item="";
+                                        if (index>=0&&index<letter.length) {
+                                                item = letter[index];
+                                        }
+                                        if (mListener != null) {
+                                                mListener.onLetterChanged(item);
+                                        }
+                                        choose=index;
+                                        invalidate();
+                                        break;
+//                        case MotionEvent.ACTION_UP:
+////                                setBackgroundResource(R.color.transparent);
+//                                choose=-1;
+//                                invalidate();
+//                                if (mListener != null) {
+//                                        mListener.onFinished();
+//                                }
+//                                break;
+                        default:
                                 choose=-1;
                                 invalidate();
                                 if (mListener != null) {
                                         mListener.onFinished();
                                 }
-                                break;
-                        default:
-                                String item="";
-                                if (index>=0&&index<letter.length) {
-                                        item = letter[index];
-                                }
-                                if (mListener != null) {
-                                        mListener.onLetterChanged(item);
-                                }
-                                choose=index;
-                                invalidate();
                                 break;
                 }
                 return true;

@@ -66,7 +66,7 @@ public class HappyContentFragment extends BaseFragment<List<HappyContentBean>,Ha
 
 
         private void loadMoreData(int currentPage) {
-                mHappyPresenter.getHappyContentInfo(currentPage);
+                mHappyPresenter.getHappyContentInfo(currentPage,false);
         }
 
         @Override
@@ -102,7 +102,7 @@ public class HappyContentFragment extends BaseFragment<List<HappyContentBean>,Ha
 
         @Override
         protected void updateView() {
-                loadMoreData(currentPage);
+                mHappyPresenter.getHappyContentInfo(currentPage,true);
         }
 
 
@@ -119,12 +119,16 @@ public class HappyContentFragment extends BaseFragment<List<HappyContentBean>,Ha
         @Override
         public void onDestroyView() {
                 super.onDestroyView();
-                mHappyPresenter.onDestroy();
+//                mHappyPresenter.onDestroy();
 
         }
 
 
-
+        @Override
+        public void onDestroy() {
+                super.onDestroy();
+                mHappyPresenter.onDestroy();
+        }
 
         @Override
         public void loadMore() {
@@ -150,11 +154,12 @@ public class HappyContentFragment extends BaseFragment<List<HappyContentBean>,Ha
 
         @Override
     public void updateData(List<HappyContentBean> happyContentBeen) {
+                currentPage++;
             if (refresh.isRefreshing()) {
                     mHappyAdapter.refreshData(happyContentBeen);
             }else {
                     mHappyAdapter.addData(happyContentBeen);
-                    currentPage++;
+
             }
     }
 }

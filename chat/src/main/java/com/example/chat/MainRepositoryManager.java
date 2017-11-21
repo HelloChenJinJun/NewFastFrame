@@ -1,6 +1,7 @@
 package com.example.chat;
 
-import com.example.commonlibrary.bean.DaoSession;
+
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.repository.BaseRepositoryManager;
 
 import retrofit2.Retrofit;

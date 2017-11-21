@@ -35,11 +35,13 @@ public class PicturePresenter extends PictureContacts.Presenter {
 
 
         @Override
-        public void getPictureInfo(int page) {
+        public void getPictureInfo(int page, final boolean showLoading) {
                 mPage = page;
                 if (mPage == 1) {
                         baseModel.clearAllCacheData();
-                        iView.showLoading("正在加载数据，请稍候..........");
+                        if (showLoading) {
+                                iView.showLoading("正在加载数据，请稍候..........");
+                        }
                 }
                 LogUtil.e("加载的页数" + page);
                 if (!AppUtil.isNetworkAvailable(BaseApplication.getInstance())) {
@@ -47,7 +49,7 @@ public class PicturePresenter extends PictureContacts.Presenter {
                         iView.showError("网络连接失败", new EmptyLayout.OnRetryListener() {
                                 @Override
                                 public void onRetry() {
-                                        getPictureInfo(mPage);
+                                        getPictureInfo(mPage,showLoading);
                                 }
                         });
                         return;
@@ -86,7 +88,7 @@ public class PicturePresenter extends PictureContacts.Presenter {
                                                 iView.showError(e.getMessage(), new EmptyLayout.OnRetryListener() {
                                                         @Override
                                                         public void onRetry() {
-                                                                getPictureInfo(mPage);
+                                                                getPictureInfo(mPage,showLoading);
                                                         }
                                                 });
                                                 iView.showError(e.getMessage(),null);

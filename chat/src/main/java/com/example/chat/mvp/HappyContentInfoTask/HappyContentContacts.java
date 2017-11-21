@@ -47,7 +47,7 @@ public interface HappyContentContacts {
                         super(iView, baseModel);
                 }
 
-                abstract public void getHappyContentInfo(int page);
+                abstract public void getHappyContentInfo(int page,boolean showLoading);
         }
 }
 

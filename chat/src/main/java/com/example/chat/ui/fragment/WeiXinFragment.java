@@ -64,7 +64,7 @@ public class WeiXinFragment extends BaseFragment<List<WinXinBean>,WinXinInfoPres
                         public void onRefresh() {
                                 currentPage = 1;
                                 mAdapter.clear();
-                                mWinXinInfoPresenter.getWinXinInfo(currentPage);
+                                mWinXinInfoPresenter.getWinXinInfo(currentPage,false);
                         }
                 });
         }
@@ -133,28 +133,27 @@ public class WeiXinFragment extends BaseFragment<List<WinXinBean>,WinXinInfoPres
                                 }
                         }
                 });
-
-
                 display.setAdapter(mAdapter);
 
         }
 
         @Override
         protected void updateView() {
-                loadMoreData();
+                currentPage = 1;
+                mWinXinInfoPresenter.getWinXinInfo(currentPage,true);
         }
 
         private void loadMoreData() {
-                mWinXinInfoPresenter.getWinXinInfo(currentPage);
+                mWinXinInfoPresenter.getWinXinInfo(currentPage,false);
         }
 
         @Override
         public void updateData(List<WinXinBean> data) {
+                currentPage++;
                 if (refresh.isRefreshing()) {
                         mAdapter.refreshData(data);
                 }else {
                         mAdapter.addData(data);
-                        currentPage++;
                 }
         }
 

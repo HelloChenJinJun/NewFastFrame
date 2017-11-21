@@ -35,11 +35,13 @@ public class HappyPresenter extends HappyContacts.Presenter {
     }
 
     @Override
-        public void getHappyInfo(int page) {
+        public void getHappyInfo(int page, final boolean showLoading) {
                 mPage = page;
                 if (mPage == 1) {
                         baseModel.clearAllCacheHappyData();
+                    if (showLoading) {
                         iView.showLoading("正在加载数据，请稍候..........");
+                    }
 
                 }
                 LogUtil.e("加载的页数" + mPage);
@@ -48,7 +50,7 @@ public class HappyPresenter extends HappyContacts.Presenter {
                         iView.showError("网络连接失败", new EmptyLayout.OnRetryListener() {
                                 @Override
                                 public void onRetry() {
-                                        getHappyInfo(mPage);
+                                        getHappyInfo(mPage,showLoading);
                                 }
                         });
                         return;
@@ -86,7 +88,7 @@ public class HappyPresenter extends HappyContacts.Presenter {
                                                 iView.showError(e.getMessage(), new EmptyLayout.OnRetryListener() {
                                                         @Override
                                                         public void onRetry() {
-                                                                getHappyInfo(mPage);
+                                                                getHappyInfo(mPage,showLoading);
                                                         }
                                                 });
                                         } else {

@@ -39,6 +39,6 @@ public interface PictureContacts {
                         super(iView, baseModel);
                 }
 
-                abstract public void getPictureInfo(int page);
+                abstract public void getPictureInfo(int page,boolean showLoading);
         }
 }

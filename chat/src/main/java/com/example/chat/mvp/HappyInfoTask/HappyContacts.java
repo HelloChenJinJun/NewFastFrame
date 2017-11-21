@@ -39,6 +39,6 @@ public interface HappyContacts {
                         super(iView, baseModel);
                 }
 
-                abstract public void getHappyInfo(int page);
+                abstract public void getHappyInfo(int page,boolean showLoading);
         }
 }

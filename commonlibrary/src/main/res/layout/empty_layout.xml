@@ -3,8 +3,7 @@
     android:id="@+id/fl_empty_layout_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/custom_attr_app_bg"
-    android:tag="skin"
+    android:background="@color/transparent"
     android:visibility="visible">
 
     <FrameLayout
@@ -12,7 +11,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="?attr/custom_attr_app_content_bg"
         android:tag="skin">
 
         <TextView
@@ -21,7 +19,7 @@
             android:layout_height="wrap_content"
             android:tag="skin"
             android:text="网络加载失败，请点击重试"
-            android:textColor="?attr/custom_attr_text_main"
+            android:textColor="@color/base_color_text_black"
             android:textSize="23sp" />
     </FrameLayout>
 
