@@ -7,7 +7,7 @@
 
 采用组件化开发框架，可以使模块单独编译调试，可以有效地减少编译的时间，更好地进行并发开发，从而极大的提高了并行开发效率。
 
-# screenshots
+## screenshots
 ### 新闻模块
 <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_1.jpg
  width=250 height=450>
