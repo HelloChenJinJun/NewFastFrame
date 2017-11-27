@@ -1,5 +1,12 @@
-# NewFastFrame
-框架测试
+
+# 组件化快速开发框架
+
+
+## 简介
+该项目目前集成现在主流的开发框架和技术，包括okhttp3、rxjava2、retrofit2、glide、greendao3.0、dagger2、mvp、md风格、热修复tinker,bugly和组件化等。
+
+采用组件化开发框架，可以使模块单独编译调试，可以有效地减少编译的时间，更好地进行并发开发，从而极大的提高了并行开发效率。
+
 # screenshots
 ### 新闻模块
 <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_1.jpg
@@ -42,6 +49,7 @@
  width=250 height=450>
  ### 聊天模块
  独立项目github地址:https://github.com/HelloChenJinJun/TestChat
+ 
  聊天项目详解地址:http://www.jianshu.com/p/2d76430617ae
  
    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_1.png
