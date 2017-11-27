@@ -4,7 +4,7 @@
               android:layout_height="220dp"
               android:id="@+id/ll_happy_header_layout"
               android:gravity="bottom|center_horizontal"
-              android:background="@drawable/wallpaper1"
+              android:background="@drawable/wallpaper_bg"
               android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"

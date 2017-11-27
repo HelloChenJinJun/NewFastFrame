@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:maxLines="1"
                 android:layout_height="wrap_content"
-                android:textColor="@color/base_color_text_white"
+                android:textColor="@color/base_color_text_grey"
                 android:text="歌名" />
 
         </LinearLayout>
@@ -78,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:maxLines="1"
                 android:layout_height="wrap_content"
-                android:textColor="@color/base_color_text_white"
+                android:textColor="@color/base_color_text_grey"
                 android:text="歌名" />
 
         </LinearLayout>
@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:maxLines="1"
                 android:layout_height="wrap_content"
-                android:textColor="@color/base_color_text_white"
+                android:textColor="@color/base_color_text_grey"
                 android:text="歌名" />
         </LinearLayout>
 

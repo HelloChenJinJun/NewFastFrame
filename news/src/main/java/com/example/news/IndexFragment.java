@@ -13,7 +13,7 @@ import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
-import com.example.commonlibrary.bean.OtherNewsTypeBeanDao;
+import com.example.commonlibrary.bean.news.OtherNewsTypeBeanDao;
 import com.example.commonlibrary.cusotomview.CustomPopWindow;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;

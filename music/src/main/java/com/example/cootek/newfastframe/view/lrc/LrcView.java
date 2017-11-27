@@ -174,7 +174,8 @@ public class LrcView extends View implements ILrcView {
     public void init(Context context) {
         mScroller = new Scroller(getContext());
         mPaintForHighLightLrc = new Paint();
-        mPaintForHighLightLrc.setColor(mCurColorForHightLightLrc);
+//        mCurColorForHightLightLrc
+        mPaintForHighLightLrc.setColor(getResources().getColor(R.color.light_blue_500));
         mPaintForHighLightLrc.setTextSize(mCurSizeForHightLightLrc);
         mPaintForHighLightLrc.setAntiAlias(true);
 

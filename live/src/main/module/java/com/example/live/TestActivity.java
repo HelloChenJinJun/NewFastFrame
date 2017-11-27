@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.example.live.ui.MainActivity;
+
 public class TestActivity extends AppCompatActivity {
 
     @Override

@@ -3,72 +3,87 @@
     android:id="@+id/fl_empty_layout_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    android:background="@color/base_color_text_white"
     android:visibility="visible">
 
-    <FrameLayout
-        android:id="@+id/fl_empty_layout_error"
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rl_empty_layout_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:tag="skin">
+        android:layout_gravity="center">
+
+        <ImageView
+            android:src="@drawable/websearch_disconnected"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/iv_empty_error_image"
+            android:scaleType="centerInside"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
 
         <TextView
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/iv_empty_error_image"
             android:id="@+id/tv_empty_error_retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tag="skin"
             android:text="网络加载失败，请点击重试"
             android:textColor="@color/base_color_text_black"
-            android:textSize="23sp" />
-    </FrameLayout>
+            android:textSize="20sp" />
+    </RelativeLayout>
 
 
 
-    <FrameLayout
-
-        android:id="@+id/fl_empty_layout_empty"
+    <RelativeLayout
+        android:id="@+id/rl_empty_layout_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="?attr/custom_attr_app_content_bg"
-        android:tag="skin">
+        android:layout_gravity="center">
+    <ImageView
+        android:src="@drawable/websearch_error"
+        android:id="@+id/iv_empty_empty_image"
+        android:layout_centerHorizontal="true"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerInside"/>
 
         <TextView
-            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/iv_empty_empty_image"
             android:id="@+id/tv_empty_empty_retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tag="skin"
             android:text="暂时没有数据，请点击重试"
-            android:textColor="?attr/custom_attr_text_main"
-            android:textSize="23sp" />
-    </FrameLayout>
+            android:textColor="@color/base_color_text_black"
+            android:textSize="20sp" />
+    </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_empty_layout_loading"
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rl_empty_layout_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="?attr/custom_attr_app_content_bg"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:tag="skin"
-        android:visibility="gone">
+        android:orientation="horizontal">
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+       <ImageView
+           android:layout_centerHorizontal="true"
+           android:layout_width="100dp"
+           android:layout_height="100dp"
+           android:scaleType="centerCrop"
+           android:id="@+id/iv_empty_loading_image"/>
 
         <TextView
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/iv_empty_loading_image"
             android:id="@+id/tv_empty_layout_loading_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tag="skin"
             android:text="正在加载，请稍后.........."
-            android:textColor="?attr/custom_attr_text_main"
+            android:textColor="@color/base_color_text_black"
             android:textSize="18sp" />
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </FrameLayout>

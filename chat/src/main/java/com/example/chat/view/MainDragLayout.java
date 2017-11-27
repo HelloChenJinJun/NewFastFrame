@@ -25,7 +25,7 @@ import com.nineoldandroids.view.ViewHelper;
  * QQ:             1981367757
  */
 
-public class DragLayout extends ViewGroup {
+public class MainDragLayout extends ViewGroup {
 
 
         private static final boolean SHADOW = true;
@@ -79,15 +79,15 @@ public class DragLayout extends ViewGroup {
         private boolean isUseAnimation = true;
 
 
-        public DragLayout(Context context) {
+        public MainDragLayout(Context context) {
                 this(context, null);
         }
 
-        public DragLayout(Context context, AttributeSet attrs) {
+        public MainDragLayout(Context context, AttributeSet attrs) {
                 this(context, attrs, 0);
         }
 
-        public DragLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        public MainDragLayout(Context context, AttributeSet attrs, int defStyleAttr) {
                 super(context, attrs, defStyleAttr);
                 mGestureDetector = new GestureDetector(context, new SimpleOnGestureListener() {
                         @Override

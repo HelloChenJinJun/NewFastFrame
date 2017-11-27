@@ -3,7 +3,6 @@ package com.example.chat.ui.fragment;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.example.chat.ChatApplication;
@@ -20,6 +19,7 @@ import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class HappyContentFragment extends BaseFragment<List<HappyContentBean>,Ha
 
         @Override
         public void initData() {
-                display.setLayoutManager( new LinearLayoutManager(getActivity()));
+                display.setLayoutManager( new WrappedLinearLayoutManager(getActivity()));
                 display.addItemDecoration(new ListViewDecoration(getActivity()));
 //                display.setHasFixedSize(true);
                 display.setItemAnimator(new DefaultItemAnimator());

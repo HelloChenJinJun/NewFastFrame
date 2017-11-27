@@ -11,6 +11,7 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.ui.fragment.RankFragment;
 import com.example.cootek.newfastframe.ui.fragment.RecommendFragment;
+import com.example.cootek.newfastframe.ui.fragment.SingerListFragment;
 import com.example.cootek.newfastframe.ui.fragment.SlideMusicBaseActivity;
 
 import java.util.ArrayList;
@@ -60,10 +61,11 @@ public class MusicRepositoryActivity extends SlideMusicBaseActivity {
         List<String> list = new ArrayList<>();
         list.add("推荐");
         list.add("排行");
-//        list.add("歌手");
+        list.add("歌手");
         List<BaseFragment> fragmentList = new ArrayList<>();
         fragmentList.add(RecommendFragment.newInstance());
         fragmentList.add(RankFragment.newInstance());
+        fragmentList.add(SingerListFragment.newInstance());
         viewPagerAdapter.setTitleAndFragments(list, fragmentList);
         tabLayout.setupWithViewPager(display);
         display.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

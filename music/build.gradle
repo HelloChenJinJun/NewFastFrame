@@ -36,6 +36,7 @@ android {
         }
     }
     compileOptions {
+
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
@@ -70,7 +71,7 @@ dependencies {
         apt rootProject.ext.dependencies.arouter_compiler
     }
     testCompile 'junit:junit:4.12'
-    compile files('libs/nineoldandroids-2.4.0.jar')
-    compile files('libs/pinyin4j-2.5.0.jar')
+//    compile files('libs/nineoldandroids-2.4.0.jar')
+//    compile files('libs/pinyin4j-2.5.0.jar')
 }
 

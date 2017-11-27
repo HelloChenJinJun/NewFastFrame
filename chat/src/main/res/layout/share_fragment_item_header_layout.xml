@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/wallpaper1"
+        android:src="@drawable/wallpaper_bg"
     />
     <ImageView
         android:id="@+id/iv_share_fragment_item_header_avatar"

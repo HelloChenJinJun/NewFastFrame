@@ -3,24 +3,22 @@ package com.example.cootek.newfastframe.ui.fragment;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.LayoutInflater;
 import android.view.View;
 
-import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.baseadapter.SuperRecyclerView;
-import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.BaseFragment;
+import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.VideoApplication;
+import com.example.cootek.newfastframe.adapter.RankAdapter;
+import com.example.cootek.newfastframe.bean.RankListBean;
 import com.example.cootek.newfastframe.dagger.rank.DaggerRankFragmentComponent;
+import com.example.cootek.newfastframe.dagger.rank.RankFragmentModule;
+import com.example.cootek.newfastframe.mvp.rank.RankPresenter;
 import com.example.cootek.newfastframe.ui.SongListActivity;
 import com.example.cootek.newfastframe.util.MusicUtil;
-import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.adapter.RankAdapter;
-import com.example.cootek.newfastframe.mvp.rank.RankPresenter;
-import com.example.cootek.newfastframe.bean.RankListBean;
-import com.example.cootek.newfastframe.dagger.rank.RankFragmentModule;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,13 +82,13 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
                 startActivity(intent);
             }
         });
-        display.addHeaderView(getHeaderView());
+//        display.addHeaderView(getHeaderView());
         display.setAdapter(rankAdapter);
     }
 
-    private View getHeaderView() {
-        return LayoutInflater.from(getContext()).inflate(R.layout.view_activity_song_list_header_view, null);
-    }
+//    private View getHeaderView() {
+//        return LayoutInflater.from(getContext()).inflate(R.layout.view_activity_song_list_header_view, null);
+//    }
 
     @Override
     protected void updateView() {
@@ -110,7 +108,6 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
 
     @Override
     public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
-
         hideLoading();
         ToastUtils.showShortToast("网络加载失败，请重新刷新下");
     }

@@ -82,7 +82,7 @@ dependencies {
     compile 'com.komi.slider:slider:0.4.0'
     compile 'com.mabeijianxi:small-video-record:1.2.0'
     compile 'com.github.chihane:JDAddressSelector:1.1.4'
-    compile 'com.android.support:multidex:1.0.1'
+//    compile 'com.android.support:multidex:1.0.1'
     compile rootProject.ext.dependencies.cardview
     apt rootProject.ext.dependencies.dagger2_compiler
 
@@ -93,7 +93,7 @@ dependencies {
     compile files('libs/pldroid-player-1.5.0.jar')
     compile files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
     compile files('libs/BmobStat_v1.1_170114.jar')
-    compile files('libs/nineoldandroids-2.4.0.jar')
-    compile files('libs/pinyin4j-2.5.0.jar')
+//    compile files('libs/nineoldandroids-2.4.0.jar')
+//    compile files('libs/pinyin4j-2.5.0.jar')
 }
 

@@ -17,7 +17,7 @@ android {
         config {
             keyAlias 'chen'
             keyPassword '3929249'
-            storeFile file('C:/Users/Administrator/frame.jks')
+            storeFile file('frame.jks')
             storePassword '3929249'
         }
     }
@@ -29,6 +29,10 @@ android {
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi', 'armeabi-v7a'//, 'x86', 'x86_64', 'arm64-v8a'
+        }
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true

@@ -102,7 +102,7 @@
         <activity android:name=".ui.VideoPlayActivity"/>
         <!--高德地图API_KEY-->
         <meta-data android:name="com.amap.api.v2.apikey"
-            android:value="715d5c1cfab873a2094110d2f124cfac">
+            android:value="d20d35b2237fa46693bfad21e0bc41fe">
         </meta-data>
         <!--定位服务-->
 

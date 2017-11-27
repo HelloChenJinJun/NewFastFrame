@@ -59,7 +59,7 @@ import com.example.chat.ui.fragment.InvitationFragment;
 import com.example.chat.ui.fragment.RecentFragment;
 import com.example.chat.ui.fragment.ShareMessageFragment;
 import com.example.chat.util.LogUtil;
-import com.example.chat.view.DragLayout;
+import com.example.chat.view.MainDragLayout;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
@@ -79,7 +79,7 @@ import static android.view.View.GONE;
 public class MainActivity extends BaseActivity implements OnDragDeltaChangeListener, OnMessageReceiveListener, View.OnClickListener, OnNetWorkChangedListener, LocationChangedListener {
         private Fragment[] mFragments = new Fragment[4];
         private int currentPosition;
-        private DragLayout container;
+        private MainDragLayout container;
         private RecyclerView menuDisplay;
         private List<String> data = new ArrayList<>();
         private MenuDisplayAdapter menuAdapter;
@@ -121,7 +121,6 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
 
         @Override
         public void initView() {
-                LogUtil.e("initMain123");
                 RecentFragment recentFragment = new RecentFragment();
                 ContactsFragment contactsFragment = new ContactsFragment();
                 InvitationFragment invitationFragment = new InvitationFragment();
@@ -130,7 +129,7 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
                 mFragments[1] = contactsFragment;
                 mFragments[2] = invitationFragment;
                 mFragments[3] = shareMessageFragment;
-                container = (DragLayout) findViewById(R.id.drag_container);
+                container = (MainDragLayout) findViewById(R.id.dl_activity_main_drag_container);
                 menuDisplay = (RecyclerView) findViewById(R.id.rev_menu_display);
                 nick = (TextView) findViewById(R.id.tv_menu_nick);
                 signature = (TextView) findViewById(R.id.tv_menu_signature);
@@ -148,6 +147,7 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
                 net.setOnClickListener(this);
                 bottomLayout.setOnClickListener(this);
                 initActionBarView();
+//                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_bg));
         }
 
 
@@ -249,7 +249,7 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
 
 
         public void updateMenuBg() {
-                Glide.with(this).load(user.getWallPaper()).into(new SimpleTarget<GlideDrawable>() {
+                Glide.with(this).load(UserManager.getInstance().getCurrentUser().getWallPaper()).into(new SimpleTarget<GlideDrawable>() {
                         @Override
                         public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
                                 container.setBackground(resource);
@@ -272,7 +272,6 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
 
 
         private void bindPollService(int second) {
-                LogUtil.e("启动定时拉取消息服务");
                 Intent intent = new Intent(this, PollService.class);
                 intent.putExtra("time", second);
                 startService(intent);
@@ -405,8 +404,6 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
                         if (mWeatherInfoBean == null) {
                                 getWeatherInfo();
                         }
-
-
                 } else {
                         net.setVisibility(View.VISIBLE);
                 }
@@ -470,7 +467,6 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
         }
 
         public void notifyContactAndRecent(ChatMessage chatMessage) {
-                LogUtil.e("11222notifyContactAndRecent");
                 ((RecentFragment) mFragments[0]).updateRecentData(chatMessage.getToId());
                 notifyMenuUpdate();
                 updateContactsData(chatMessage.getToId());
@@ -644,7 +640,7 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
 
         @Override
         protected int getContentLayout() {
-                return R.layout.activity_main;
+                return R.layout.activity_main_chat;
         }
 
 
@@ -686,7 +682,7 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
         }
 
         public void closeMenu() {
-                if (container.getCurrentState() == DragLayout.DRAG_STATE_OPEN) {
+                if (container.getCurrentState() == MainDragLayout.DRAG_STATE_OPEN) {
                         container.closeMenu();
                 }
         }
@@ -720,12 +716,6 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
                         addOrReplaceFragment(mFragments[0], R.id.fl_content_container);
                 }
 
-//                LogUtil.e("群消息到主界面了");
-//                if (currentFragment instanceof RecentFragment) {
-//                        ((RecentFragment) currentFragment).updateRecentData(message);
-//                } else {
-//                        menuAdapter.notifyDataSetChanged();
-//                }
         }
 
         @Override
@@ -800,7 +790,7 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
         }
 
         public void openMenu() {
-                if (container.getCurrentState() == DragLayout.DRAG_STATE_CLOSE) {
+                if (container.getCurrentState() == MainDragLayout.DRAG_STATE_CLOSE) {
                         container.openMenu();
                 }
         }
@@ -814,7 +804,7 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
         public void onClick(View view) {
                 LogUtil.e("侧滑关闭");
                 int i = view.getId();
-                if (i == R.id.drag_container) {
+                if (i == R.id.dl_activity_main_drag_container) {
                         openMenu();
 
                 } else if (i == R.id.rl_menu_head_layout) {//                                点击进入个人信息界面之前，先实时监听个人信息界面中的说说

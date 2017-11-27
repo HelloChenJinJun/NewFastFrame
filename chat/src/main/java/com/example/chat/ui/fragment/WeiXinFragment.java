@@ -23,6 +23,7 @@ import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public class WeiXinFragment extends BaseFragment<List<WinXinBean>,WinXinInfoPres
 
         @Override
         public void initData() {
-                display.setLayoutManager(new LinearLayoutManager(getActivity()));
+                display.setLayoutManager(new WrappedLinearLayoutManager(getActivity()));
                 display.addItemDecoration(new ListViewDecoration(getActivity()));
                 mAdapter = new WeiXinAdapter();
                 mWinXinInfoPresenter = new WinXinInfoPresenter(this,new WinXinInfoModel(ChatApplication

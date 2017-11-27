@@ -4,6 +4,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
@@ -53,6 +54,7 @@ public class HolderFragment extends BaseFragment implements View.OnClickListener
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setCustomView(getToolBarView());
         setToolBar(toolBarOption);
+        ((BaseActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_bg));
     }
 
     private View getToolBarView() {

@@ -74,7 +74,7 @@ public class MusicInfoProvider {
             public void subscribe(@NonNull ObservableEmitter<List<MusicPlayBean>> e) throws Exception {
                 List<MusicPlayBean> list = new ArrayList<>();
                 if (cursor != null && cursor.moveToFirst()) {
-                    do {
+                        do {
                         MusicPlayBean music = new MusicPlayBean();
                         CommonLogger.e("data", cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATA)));
                         music.setSongId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID)));

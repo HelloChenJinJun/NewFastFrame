@@ -1,5 +1,5 @@
 ext {
-    isAlone = true;//false:作为Lib组件存在， true:作为application存在
+    isAlone = false;//false:作为Lib组件存在， true:作为application存在
 
     android = [
 
@@ -38,11 +38,10 @@ ext {
             gson_converter = "2.3.0",
             scalars_converter = "2.3.0",
             rxpermission = "0.9.4",
-            eventbus="3.0.0",
-            support_v4="25.4.0",
-            okhttp3="3.8.1"
-
-
+            eventbus = "3.0.0",
+            support_v4 = "25.4.0",
+            okhttp3 = "3.3.1",
+            multidex="1.0.1"
 
 
     ]
@@ -63,7 +62,7 @@ ext {
             butterknife               : "com.jakewharton:butterknife:$rootProject.butterknife",
             butterknife_compiler      : "com.jakewharton:butterknife-compiler:$rootProject.butterknife",
             retrofit                  : "com.squareup.retrofit2:retrofit:$rootProject.retrofit",
-            okhttp3                   : "com.squareup.okhttp3:okhttp:$rootProject.retrofit",
+            okhttp3                   : "com.squareup.okhttp3:okhttp:$rootProject.okhttp3",
 
 
             retrofit_adapter_rxjava2  : "com.squareup.retrofit2:adapter-rxjava2:$rootProject.rxjava_adapter",
@@ -78,7 +77,7 @@ ext {
             dagger2                   : "com.google.dagger:dagger:$rootProject.dagger",
             greenDao                  : "org.greenrobot:greendao:$rootProject.greenDao",
             transformations           : "jp.wasabeef:glide-transformations:$rootProject.transformations",
-
+            multidex                  : "com.android.support:multidex:$rootProject.multidex",
 //路由通讯
             arouter_api               : "com.alibaba:arouter-api:$rootProject.arouter_api",
             arouter_compiler          : "com.alibaba:arouter-compiler:$rootProject.arouter_compiler"

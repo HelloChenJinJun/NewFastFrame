@@ -10,7 +10,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
@@ -64,6 +63,7 @@ import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.io.File;
@@ -90,7 +90,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
 
     private SuperRecyclerView display;
     private SwipeRefreshLayout refresh;
-    private LinearLayoutManager mLinearLayoutManager;
+    private WrappedLinearLayoutManager mLinearLayoutManager;
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener;
     private ShareMultipleLayoutAdapter mAdapter;
     private LinearLayout bottomInput;
@@ -353,7 +353,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
         mAdapter = new ShareMultipleLayoutAdapter();
         display.addHeaderView(getHeaderView());
         mAdapter.setOnShareMessageItemClickListener(this);
-        display.setLayoutManager(mLinearLayoutManager = new LinearLayoutManager(getActivity()));
+        display.setLayoutManager(mLinearLayoutManager = new WrappedLinearLayoutManager(getActivity()));
         display.setItemAnimator(new DefaultItemAnimator());
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);

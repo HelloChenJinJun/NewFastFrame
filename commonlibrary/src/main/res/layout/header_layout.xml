@@ -47,7 +47,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@id/riv_header_layout_icon"
                     android:text="标题"
-                    android:textColor="?attr/custom_attr_title_main_normal"
+                    android:textColor="@color/base_color_text_black"
                     android:textSize="16sp" />
 
                 <TextView

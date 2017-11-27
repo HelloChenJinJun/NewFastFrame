@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/wallpaper1"
+        android:src="@drawable/wallpaper_bg"
     />
     <!--<ImageView-->
         <!--android:id="@+id/iv_background_cover"-->

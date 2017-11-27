@@ -100,7 +100,7 @@ public class SingerListPresenter extends BasePresenter<IView<Object>, SingerList
                         singerListBean.setBirthDay(artistInfo.getBirth());
                         singerListBean.setFirstChat(artistInfo.getFirstchar());
                         singerListBean.setInfo(artistInfo.getIntro());
-                        singerListBean.setSex(Integer.parseInt(artistInfo.getGender()) == 0);
+                        singerListBean.setSex("0".equals(artistInfo.getGender()));
                         CommonLogger.e("歌手信息" + singerListBean.toString());
                         baseModel.getRepositoryManager().getDaoSession().getSingerListBeanDao()
                                 .insertOrReplace(singerListBean);

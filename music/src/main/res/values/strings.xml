@@ -13,4 +13,5 @@
     <string name="color_chooser_cancel">取消</string>
     <string name="color_chooser_custom">自定义</string>
     <string name="color_chooser_preset">系统</string>
+    <string name="app_name">音乐</string>
 </resources>
