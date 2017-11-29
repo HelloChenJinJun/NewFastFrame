@@ -70,6 +70,28 @@
  width=400 height=250>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_9.png
  width=400 height=250>
+ 
+ ## 参考的项目
+MVPArms
+https://github.com/JessYanCoding/MVPArms
+
+全民直播
+https://github.com/jenly1314/KingTV
+
+音乐项目
+https://github.com/hefuyicoder/ListenerMusicPlayer，
+https://github.com/aa112901/remusic
+
+大象：PHPHub客户端
+https://github.com/Freelander/Elephant
+
+MvpApp
+https://github.com/Rukey7/MvpApp
+
+CloudReader
+https://github.com/youlookwhat/CloudReader
+
+非常感谢以上开源项目的作者！谢谢！
 
  
  
