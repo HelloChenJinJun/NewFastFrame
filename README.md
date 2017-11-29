@@ -7,7 +7,14 @@
 
 采用组件化开发框架，可以使模块单独编译调试，可以有效地减少编译的时间，更好地进行并发开发，从而极大的提高了并行开发效率。
 
-项目详解地址为http://www.jianshu.com/p/e6eb9c8d120f
+项目详解地址为
+
+https://juejin.im/entry/5a1cca70f265da432652923f
+
+http://www.jianshu.com/p/e6eb9c8d120f
+
+
+
 
 ## screenshots
 ### 新闻模块
