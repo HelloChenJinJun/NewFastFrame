@@ -33,13 +33,13 @@ public class CustomPopWindow extends PopupWindow {
 
     public void show(int offsetX, int offsetY) {
         if (!isShowing()) {
+            int[] location = calculatePopWindowPos(view, contentView);
             view.post(new Runnable() {
                 @Override
                 public void run() {
                     BlurBitmapUtil.blur(((Activity) view.getContext()), contentView, 25, 8, 300);
                 }
             });
-            int[] location = calculatePopWindowPos(view, contentView);
             showAtLocation(view, Gravity.START | Gravity.TOP, location[0] - offsetX, location[1] - offsetY);
         } else {
             dismiss();

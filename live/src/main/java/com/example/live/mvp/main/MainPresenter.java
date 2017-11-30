@@ -41,7 +41,9 @@ public class MainPresenter extends BasePresenter<IView<List<CategoryLiveBean>>,M
 
                     @Override
                     public void onNext(@NonNull List<CategoryLiveBean> categoryLiveBeen) {
+                        if (categoryLiveBeen!=null) {
                             iView.updateData(categoryLiveBeen);
+                        }
                     }
 
                     @Override

@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity<List<CategoryLiveBean>, MainPrese
     private ImageView list;
     @Inject
     ViewPagerAdapter viewPagerAdapter;
-    private List<CategoryLiveBean> data;
+    private List<CategoryLiveBean> data=new ArrayList<>();
 
 
     @Override
@@ -103,7 +103,8 @@ public class MainActivity extends BaseActivity<List<CategoryLiveBean>, MainPrese
 
     @Override
     public void updateData(List<CategoryLiveBean> categoryLiveBeen) {
-        data = categoryLiveBeen;
+        data.clear();
+        data.addAll(categoryLiveBeen);
         if (data != null && data.size() > 0) {
             List<String> titleList = new ArrayList<>();
             List<BaseFragment> fragmentList = new ArrayList<>();

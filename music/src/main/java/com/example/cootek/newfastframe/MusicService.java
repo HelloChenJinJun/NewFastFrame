@@ -1324,12 +1324,18 @@ public class MusicService extends Service {
         }
 
         public long duration() {
-            return mediaPlayer.getDuration();
+            if (mediaPlayer!=null) {
+                return mediaPlayer.getDuration();
+            }else {
+                return -1;
+            }
         }
 
         void start() {
             CommonLogger.e("播放真正开始啦啦");
-            mediaPlayer.start();
+            if (mediaPlayer!=null) {
+                mediaPlayer.start();
+            }
         }
 
         public long position() {
@@ -1357,7 +1363,9 @@ public class MusicService extends Service {
         }
 
         void release() {
-            mediaPlayer.release();
+            if (mediaPlayer!=null) {
+                mediaPlayer.release();
+            }
         }
 
         @Override
