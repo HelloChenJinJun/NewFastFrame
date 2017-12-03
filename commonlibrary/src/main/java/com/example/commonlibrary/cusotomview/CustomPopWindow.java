@@ -52,6 +52,9 @@ public class CustomPopWindow extends PopupWindow {
         view.post(new Runnable() {
             @Override
             public void run() {
+                if (contentView.getMeasuredWidth() == 0) {
+                    contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                }
                 BlurBitmapUtil.blur(((Activity) view.getContext()), contentView, 25, 8, 200);
             }
         });
