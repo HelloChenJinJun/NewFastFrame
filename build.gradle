@@ -2,6 +2,7 @@
 apply from:"config.gradle"
 buildscript {
     repositories {
+        google()
         jcenter()
     }
     dependencies {
@@ -18,6 +19,7 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
         maven { url "https://raw.github.com/bmob/bmob-android-sdk/master" }
 
