@@ -3,12 +3,10 @@ if (rootProject.ext.isAlone) {
 } else {
     apply plugin: 'com.android.library'
 }
-apply plugin: 'com.neenbedankt.android-apt'
 
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
     defaultConfig {
 
         if (rootProject.ext.isAlone) {
@@ -51,22 +49,23 @@ android {
             } else {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
             }
+//            jniLibs.srcDirs = ['libs']
         }
     }
 }
 
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(':commonlibrary')
-    apt rootProject.ext.dependencies.dagger2_compiler
+    implementation project(':commonlibrary')
+    annotationProcessor rootProject.ext.dependencies.dagger2_compiler
     if (!rootProject.ext.isAlone) {
-        apt rootProject.ext.dependencies.arouter_compiler
+        annotationProcessor rootProject.ext.dependencies.arouter_compiler
     }
-    testCompile 'junit:junit:4.12'
-    compile files('libs/pldroid-player-1.5.0.jar')
+    testImplementation 'junit:junit:4.12'
+    implementation files('libs/pldroid-player-1.5.0.jar')
 }
 

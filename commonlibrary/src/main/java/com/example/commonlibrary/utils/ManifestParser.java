@@ -31,7 +31,7 @@ public final class ManifestParser {
                 }
             }
         } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException("Unable to find metadata to parse IModuleConfig", e);
+            throw new RuntimeException("解析Application失败", e);
         }
 
         return modules;
@@ -42,20 +42,16 @@ public final class ManifestParser {
         try {
             clazz = Class.forName(className);
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Unable to find IModuleConfig implementation", e);
+            throw new IllegalArgumentException(e);
         }
 
         Object module;
         try {
             module = clazz.newInstance();
         } catch (InstantiationException e) {
-            throw new RuntimeException("Unable to instantiate IModuleConfig implementation for " + clazz, e);
+            throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Unable to instantiate IModuleConfig implementation for " + clazz, e);
-        }
-
-        if (!(module instanceof IModuleConfig)) {
-            throw new RuntimeException("Expected instanceof IModuleConfig, but found: " + module);
+            throw new RuntimeException(e);
         }
         return (IModuleConfig) module;
     }

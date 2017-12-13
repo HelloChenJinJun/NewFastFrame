@@ -3,11 +3,10 @@ if (rootProject.ext.isAlone) {
 } else {
     apply plugin: 'com.android.library'
 }
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
+//    buildToolsVersion rootProject.ext.android.buildToolsVersion
     defaultConfig {
 
         if (rootProject.ext.isAlone) {
@@ -58,29 +57,53 @@ android {
 
 
     dependencies {
-        compile fileTree(include: ['*.jar'], dir: 'libs')
-        androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        implementation fileTree(include: ['*.jar'], dir: 'libs')
+        androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
             exclude group: 'com.android.support', module: 'support-annotations'
         })
-        compile project(':commonlibrary')
+        implementation project(':commonlibrary')
 
-        compile 'org.jsoup:jsoup:1.10.1'
-        compile 'com.youth.banner:banner:1.4.9'
-        // LabelView
-        compile 'com.flyco.labelview:FlycoLabelView_Lib:1.0.2@aar'
+        implementation ('org.jsoup:jsoup:1.10.1'){
+            exclude module:"appcompat-v7"
+            exclude module:"support-v4"
+
+        }
+        implementation ('com.youth.banner:banner:1.4.9'){
+            exclude module:"appcompat-v7"
+            exclude module:"support-v4"
+        }
+
+//        implementation        // LabelView
+        implementation ('com.flyco.labelview:FlycoLabelView_Lib:1.0.2@aar'){
+            exclude module:"appcompat-v7"
+            exclude module:"support-v4"
+
+        }
 
 
         // photoview
-        compile 'com.github.chrisbanes.photoview:library:1.2.4'
+        implementation ('com.github.chrisbanes.photoview:library:1.2.4'){
+            exclude module:"appcompat-v7"
+            exclude module:"support-v4"
 
-        compile 'com.zzhoujay.richtext:richtext:2.0.9'
-        apt rootProject.ext.dependencies.dagger2_compiler
-        compile rootProject.ext.dependencies.cardview
+        }
+
+        implementation ('com.zzhoujay.richtext:richtext:2.0.9'){
+            exclude module:"appcompat-v7"
+            exclude module:"support-v4"
+
+        }
+        annotationProcessor rootProject.ext.dependencies.dagger2_compiler
+        implementation (rootProject.ext.dependencies.cardview){
+            exclude module:"appcompat-v7"
+            exclude module:"support-v4"
+        }
         if (!rootProject.ext.isAlone) {
-            apt rootProject.ext.dependencies.arouter_compiler
+            annotationProcessor rootProject.ext.dependencies.arouter_compiler
     }
-        testCompile 'junit:junit:4.12'
-        compile files('libs/pldroid-player-1.5.0.jar')
+        testImplementation 'junit:junit:4.12'
+//        implementation files('libs/pldroid-player-1.5.0.jar')
     }
+    buildToolsVersion '26.0.2'
 }
 

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.example.commonlibrary.bean.music.DaoMaster;
 import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.interceptor.LogInterceptor;
+import com.example.commonlibrary.manager.ActivityManager;
 import com.example.commonlibrary.net.OkHttpGlobalHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by COOTEK on 2017/7/28.
  */
 @Module
-public class NetClientModule {
+public class GlobalConfigModule {
 
 
 
@@ -73,6 +74,16 @@ public class NetClientModule {
             okHttpConfig.config(application, builder);
         }
         return builder;
+    }
+
+
+
+    @Provides
+    @Singleton
+    public ActivityManager provideActivityManager(Application application){
+        ActivityManager activityManager=new ActivityManager(application);
+        application.registerActivityLifecycleCallbacks(activityManager);
+        return activityManager;
     }
 
 

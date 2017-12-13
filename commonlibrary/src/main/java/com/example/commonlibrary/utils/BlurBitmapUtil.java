@@ -39,6 +39,9 @@ public class BlurBitmapUtil {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static void blur(Activity fromView, View toView, float radius,
                             float scaleFactor, int height) {
+        if (fromView == null || toView == null) {
+            return;
+        }
         View view = fromView.getWindow().getDecorView();
         view.destroyDrawingCache();
         view.buildDrawingCache();

@@ -7,8 +7,9 @@ import android.os.Bundle;
 import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.dagger.module.AppConfigModule;
 import com.example.commonlibrary.dagger.module.AppModule;
-import com.example.commonlibrary.dagger.module.NetClientModule;
+import com.example.commonlibrary.dagger.module.GlobalConfigModule;
 import com.example.commonlibrary.imageloader.ImageLoader;
+import com.example.commonlibrary.manager.ActivityManager;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -24,7 +25,7 @@ import retrofit2.Retrofit;
  */
 
 @Singleton
-@Component(modules = {AppModule.class, NetClientModule.class, AppConfigModule.class})
+@Component(modules = {AppModule.class, GlobalConfigModule.class, AppConfigModule.class})
 public interface AppComponent {
     public Application getApplication();
 
@@ -37,6 +38,10 @@ public interface AppComponent {
     public File getCacheFile();
 
     public OkHttpClient getOkHttpClient();
+
+
+
+    public ActivityManager getActivityManager();
 
 
 

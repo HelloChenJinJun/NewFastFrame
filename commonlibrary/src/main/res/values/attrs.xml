@@ -51,7 +51,7 @@
     <!-- 控制副文本字体颜色，如：提示、描述 format:颜色值、资源引用 -->
     <attr name="custom_attr_text_sub" format="color|reference" />
     <!-- 控制主文本字体颜色，如：标题、标签 format:颜色值、资源引用 -->
-    <attr name="custom_attr_text_main" format="color|reference|" />
+    <attr name="custom_attr_text_main" format="color|reference" />
 
     <!-- CheckBox背景色 format:颜色值、资源引用 -->
     <attr name="custom_attr_cb_bg" format="reference" />

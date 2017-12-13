@@ -7,6 +7,12 @@ android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
     buildToolsVersion rootProject.ext.android.buildToolsVersion
 
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         multiDexEnabled true
         minSdkVersion rootProject.ext.android.minSdkVersion
@@ -28,39 +34,37 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion '26.0.2'
 }
 
 
 
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile(rootProject.ext.dependencies.appcompatV7) {
-//        exclude module: "support-v4"
+    api(rootProject.ext.dependencies.appcompatV7) {
         exclude module: "support-annotations"
     }
-    compile rootProject.ext.dependencies.recycleview
-    compile rootProject.ext.dependencies.design
-    //    compile(rootProject.ext.dependencies.support_v4) {
-    //        exclude module: "support-annotations"
-    //    }
-    compile rootProject.ext.dependencies.annotations
-    compile(rootProject.ext.dependencies.butterknife) {
-        exclude module: 'support-annotations'
-    }
-    compile rootProject.ext.dependencies.rxjava2
-    compile(rootProject.ext.dependencies.rxjava2_android) {
+    api rootProject.ext.dependencies.recycleview
+    api rootProject.ext.dependencies.design
+    api(rootProject.ext.dependencies.support_v4) {
+            exclude module: "support-annotations"
+        }
+    api rootProject.ext.dependencies.annotations
+
+    api rootProject.ext.dependencies.rxjava2
+    api(rootProject.ext.dependencies.rxjava2_android) {
         exclude module: "rxjava"
     }
-    compile(rootProject.ext.dependencies.rxlifecycle2) {
+    api(rootProject.ext.dependencies.rxlifecycle2) {
         exclude module: 'rxjava'
         exclude module: 'jsr305'
     }
-    compile(rootProject.ext.dependencies.rxlifecycle2_components) {
+    api(rootProject.ext.dependencies.rxlifecycle2_components) {
         exclude module: 'support-v4'
         exclude module: 'appcompat-v7'
         exclude module: 'support-annotations'
@@ -68,39 +72,38 @@ dependencies {
         exclude module: 'rxandroid'
         exclude module: 'rxlifecycle'
     }
-    compile(rootProject.ext.dependencies.retrofit) {
+    api(rootProject.ext.dependencies.retrofit) {
         exclude module: 'okhttp'
         exclude module: 'okio'
     }
-    compile(rootProject.ext.dependencies.retrofit_converter_gson) {
+    api(rootProject.ext.dependencies.retrofit_converter_gson) {
         exclude module: 'gson'
         exclude module: 'okhttp'
         exclude module: 'okio'
         exclude module: 'retrofit'
     }
 
-    compile(rootProject.ext.dependencies.retrofit_adapter_rxjava2) {
+    api(rootProject.ext.dependencies.retrofit_adapter_rxjava2) {
         exclude module: 'rxjava'
         exclude module: 'okhttp'
         exclude module: 'retrofit'
         exclude module: 'okio'
     }
-    compile rootProject.ext.dependencies.greenDao
+    api rootProject.ext.dependencies.greenDao
 //    compile rootProject.ext.dependencies.okhttp3
-    compile rootProject.ext.dependencies.gson
-    compile rootProject.ext.dependencies.glide
-    //    compile rootProject.ext.dependencies.eventBus
-    compile rootProject.ext.dependencies.dagger2
-    compile(rootProject.ext.dependencies.rxpermission) {
+    api rootProject.ext.dependencies.gson
+    api rootProject.ext.dependencies.glide
+    api rootProject.ext.dependencies.dagger2
+    api(rootProject.ext.dependencies.rxpermission) {
         exclude module: 'rxjava'
     }
-    compile rootProject.ext.dependencies.retrofit_converter_scalars
+    api rootProject.ext.dependencies.retrofit_converter_scalars
     annotationProcessor rootProject.ext.dependencies.dagger2_compiler
     //    annotationProcessor rootProject.ext.dependencies.butterknife_compiler
     //    compile rootProject.ext.dependencies.butterknife
-    compile rootProject.ext.dependencies.transformations
-    compile rootProject.ext.dependencies.multidex
-    compile rootProject.ext.dependencies.arouter_api
-    compile files('libs/nineoldandroids-2.4.0.jar')
-    compile files('libs/pinyin4j-2.5.0.jar')
+    api rootProject.ext.dependencies.transformations
+    implementation rootProject.ext.dependencies.multidex
+    api rootProject.ext.dependencies.arouter_api
+    api files('libs/nineoldandroids-2.4.0.jar')
+    api files('libs/pinyin4j-2.5.0.jar')
 }

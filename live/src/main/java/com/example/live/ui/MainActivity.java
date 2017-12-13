@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity<List<CategoryLiveBean>, MainPrese
     private ImageView list;
     @Inject
     ViewPagerAdapter viewPagerAdapter;
-    private List<CategoryLiveBean> data=new ArrayList<>();
+    private List<CategoryLiveBean> data = new ArrayList<>();
 
 
     @Override
@@ -138,35 +138,34 @@ public class MainActivity extends BaseActivity<List<CategoryLiveBean>, MainPrese
     }
 
 
-
     private CustomPopWindow customPopWindow;
     private PopWindowAdapter popWindowAdapter;
 
 
     @Override
     public void onClick(View v) {
-        int id=v.getId();
-        if (id==R.id.iv_activity_main_expend_list){
+        int id = v.getId();
+        if (id == R.id.iv_activity_main_expend_list) {
             if (customPopWindow == null) {
-                customPopWindow=new CustomPopWindow.Builder().parentView(v).contentView(getContentView())
-                .build();
+                customPopWindow = new CustomPopWindow.Builder().parentView(v).contentView(getContentView()).activity(this)
+                        .build();
             }
             if (!customPopWindow.isShowing()) {
                 customPopWindow.showAsDropDown(v);
-            }else{
+            } else {
                 customPopWindow.dismiss();
             }
         }
     }
 
     private View getContentView() {
-        View contentView=getLayoutInflater().inflate(R.layout.view_activity_main_pop_window,null);
-        SuperRecyclerView display= (SuperRecyclerView) contentView.findViewById(R.id.srcv_view_activity_main_pop_window_display);
-        display.setLayoutManager(new WrappedGridLayoutManager(this,5));
-        popWindowAdapter=new PopWindowAdapter();
+        View contentView = getLayoutInflater().inflate(R.layout.view_activity_main_pop_window, null);
+        SuperRecyclerView display = (SuperRecyclerView) contentView.findViewById(R.id.srcv_view_activity_main_pop_window_display);
+        display.setLayoutManager(new WrappedGridLayoutManager(this, 5));
+        popWindowAdapter = new PopWindowAdapter();
         display.setAdapter(popWindowAdapter);
-        List<CategoryLiveBean> list=new ArrayList<>();
-        CategoryLiveBean categoryLiveBean=new CategoryLiveBean();
+        List<CategoryLiveBean> list = new ArrayList<>();
+        CategoryLiveBean categoryLiveBean = new CategoryLiveBean();
         categoryLiveBean.setIcon_image("");
         categoryLiveBean.setName("推荐");
         list.add(categoryLiveBean);

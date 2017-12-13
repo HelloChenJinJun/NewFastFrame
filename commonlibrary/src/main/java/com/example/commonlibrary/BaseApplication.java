@@ -9,7 +9,7 @@ import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.component.DaggerAppComponent;
 import com.example.commonlibrary.dagger.module.AppConfigModule;
 import com.example.commonlibrary.dagger.module.AppModule;
-import com.example.commonlibrary.dagger.module.NetClientModule;
+import com.example.commonlibrary.dagger.module.GlobalConfigModule;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderStrategy;
 import com.example.commonlibrary.interceptor.LogInterceptor;
 import com.example.commonlibrary.net.OkHttpGlobalHandler;
@@ -61,23 +61,24 @@ public class BaseApplication extends Application {
         initDagger();
         instance = this;
         applicationDelegate.onCreate(this);
+
     }
 
 
     private void initDagger() {
         AppConfigModule.Builder builder = new AppConfigModule.Builder();
         builder.baseUrl(HttpUrl.parse(ConstantUtil.BASE_URL))
-                .gsonConfig(new NetClientModule.GsonConfig() {
+                .gsonConfig(new GlobalConfigModule.GsonConfig() {
                     @Override
                     public void config(Application application, GsonBuilder gsonBuilder) {
                         gsonBuilder.serializeNulls().enableComplexMapKeySerialization();
                     }
-                }).okHttpConfig(new NetClientModule.OkHttpConfig() {
+                }).okHttpConfig(new GlobalConfigModule.OkHttpConfig() {
             @Override
             public void config(Application application, OkHttpClient.Builder builder) {
                 builder.connectTimeout(10, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS);
             }
-        }).retrofitConfig(new NetClientModule.RetrofitConfig() {
+        }).retrofitConfig(new GlobalConfigModule.RetrofitConfig() {
             @Override
             public void config(Application application, Retrofit.Builder builder) {
 //                这里的配置baseURL会覆盖之前的baseUrl
@@ -98,7 +99,7 @@ public class BaseApplication extends Application {
             }
         }).level(LogInterceptor.Level.BODY).cacheFile(FileUtil.getDefaultCacheFile(this))
                 .baseImageLoaderStrategy(new GlideImageLoaderStrategy());
-        appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).netClientModule(new NetClientModule())
+        appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).globalConfigModule(new GlobalConfigModule())
                 .appConfigModule(builder.build())
                 .build();
     }

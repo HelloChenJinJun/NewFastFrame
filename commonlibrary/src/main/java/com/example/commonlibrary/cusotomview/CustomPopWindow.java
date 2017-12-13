@@ -21,9 +21,11 @@ public class CustomPopWindow extends PopupWindow {
 
 
     private View view, contentView;
+    private Activity activity;
 
     private CustomPopWindow(Builder builder) {
         view = builder.parentView;
+        activity = builder.activity;
         contentView = builder.contentView;
         initData(contentView.getContext());
         setContentView(builder.contentView);
@@ -37,7 +39,7 @@ public class CustomPopWindow extends PopupWindow {
             view.post(new Runnable() {
                 @Override
                 public void run() {
-                    BlurBitmapUtil.blur(((Activity) view.getContext()), contentView, 25, 8, 300);
+                    BlurBitmapUtil.blur(activity, contentView, 25, 8, 300);
                 }
             });
             showAtLocation(view, Gravity.START | Gravity.TOP, location[0] - offsetX, location[1] - offsetY);
@@ -55,7 +57,7 @@ public class CustomPopWindow extends PopupWindow {
                 if (contentView.getMeasuredWidth() == 0) {
                     contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                 }
-                BlurBitmapUtil.blur(((Activity) view.getContext()), contentView, 25, 8, 200);
+                BlurBitmapUtil.blur(activity, contentView, 25, 8, 200);
             }
         });
         super.showAsDropDown(anchor, xoff, yoff, gravity);
@@ -114,6 +116,7 @@ public class CustomPopWindow extends PopupWindow {
     public static final class Builder {
         private View contentView;
         private View parentView;
+        private Activity activity;
 
         public Builder() {
         }
@@ -125,6 +128,12 @@ public class CustomPopWindow extends PopupWindow {
 
         public Builder parentView(View parent) {
             this.parentView = parent;
+            return this;
+        }
+
+
+        public Builder activity(Activity activity) {
+            this.activity = activity;
             return this;
         }
 

@@ -24,12 +24,12 @@ import okhttp3.Interceptor;
 @Module
 public class AppConfigModule {
     private HttpUrl baseUrl;
-    private NetClientModule.OkHttpConfig okHttpConfig;
-    private NetClientModule.RetrofitConfig retrofitConfig;
+    private GlobalConfigModule.OkHttpConfig okHttpConfig;
+    private GlobalConfigModule.RetrofitConfig retrofitConfig;
     private OkHttpGlobalHandler okHttpGlobalHandler;
     private List<Interceptor> interceptorList;
     private BaseImageLoaderStrategy baseImageLoaderStrategy;
-    private NetClientModule.GsonConfig gsonConfig;
+    private GlobalConfigModule.GsonConfig gsonConfig;
     private File cacheFile;
     private LogInterceptor.Level level;
 
@@ -42,13 +42,13 @@ public class AppConfigModule {
 
     @Provides
     @Singleton
-    public NetClientModule.OkHttpConfig getOkHttpConfig() {
+    public GlobalConfigModule.OkHttpConfig getOkHttpConfig() {
         return okHttpConfig;
     }
 
     @Provides
     @Singleton
-    public NetClientModule.RetrofitConfig getRetrofitConfig() {
+    public GlobalConfigModule.RetrofitConfig getRetrofitConfig() {
         return retrofitConfig;
     }
 
@@ -79,7 +79,7 @@ public class AppConfigModule {
 
     @Singleton
     @Provides
-    public NetClientModule.GsonConfig getGsonConfig() {
+    public GlobalConfigModule.GsonConfig getGsonConfig() {
         return gsonConfig;
     }
 
@@ -104,12 +104,12 @@ public class AppConfigModule {
 
     public static final class Builder {
         private HttpUrl baseUrl;
-        private NetClientModule.OkHttpConfig okHttpConfig;
-        private NetClientModule.RetrofitConfig retrofitConfig;
+        private GlobalConfigModule.OkHttpConfig okHttpConfig;
+        private GlobalConfigModule.RetrofitConfig retrofitConfig;
         private OkHttpGlobalHandler okHttpGlobalHandler;
         private List<Interceptor> interceptorList;
         private BaseImageLoaderStrategy baseImageLoaderStrategy;
-        private NetClientModule.GsonConfig gsonConfig;
+        private GlobalConfigModule.GsonConfig gsonConfig;
         private File cacheFile;
         private LogInterceptor.Level level;
 
@@ -133,17 +133,17 @@ public class AppConfigModule {
             return this;
         }
 
-        public Builder gsonConfig(NetClientModule.GsonConfig gsonConfig) {
+        public Builder gsonConfig(GlobalConfigModule.GsonConfig gsonConfig) {
             this.gsonConfig = gsonConfig;
             return this;
         }
 
-        public Builder okHttpConfig(NetClientModule.OkHttpConfig val) {
+        public Builder okHttpConfig(GlobalConfigModule.OkHttpConfig val) {
             okHttpConfig = val;
             return this;
         }
 
-        public Builder retrofitConfig(NetClientModule.RetrofitConfig val) {
+        public Builder retrofitConfig(GlobalConfigModule.RetrofitConfig val) {
             retrofitConfig = val;
             return this;
         }

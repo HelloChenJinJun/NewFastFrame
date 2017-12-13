@@ -23,8 +23,6 @@ public class PopWindowAdapter extends BaseRecyclerAdapter<OtherNewsTypeBean, Bas
     }
 
 
-
-
     @Override
     protected void convert(BaseWrappedViewHolder holder, OtherNewsTypeBean data) {
         holder.setText(R.id.item_view_fragment_index_pop_content, data.getName())
@@ -34,6 +32,6 @@ public class PopWindowAdapter extends BaseRecyclerAdapter<OtherNewsTypeBean, Bas
 
     @Override
     protected Animator[] getItemAnimator(BaseWrappedViewHolder holder) {
-        return new Animator[]{ObjectAnimator.ofFloat(holder.itemView, "translationX",DensityUtil.getScreenWidth(holder.getContext())-holder.itemView.getLeft(),0)};
+        return new Animator[]{ObjectAnimator.ofFloat(holder.itemView, "translationX", DensityUtil.getScreenWidth(holder.getContext()) - holder.itemView.getLeft(), 0)};
     }
 }

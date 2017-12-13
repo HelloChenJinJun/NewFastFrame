@@ -3,12 +3,11 @@ if (rootProject.ext.isAlone) {
 } else {
     apply plugin: 'com.android.library'
 }
-apply plugin: 'com.neenbedankt.android-apt'
 
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
+//    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
 
     aaptOptions {
@@ -67,33 +66,73 @@ android {
 
         }
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(':commonlibrary')
-    compile 'cn.bmob.android:bmob-sdk:3.4.7'
-    compile 'cn.bmob.android:bmob-push:1.0.0'
-    compile 'com.zhy:okhttputils:2.6.2'
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.komi.slider:slider:0.4.0'
-    compile 'com.mabeijianxi:small-video-record:1.2.0'
-    compile 'com.github.chihane:JDAddressSelector:1.1.4'
-//    compile 'com.android.support:multidex:1.0.1'
-    compile rootProject.ext.dependencies.cardview
-    apt rootProject.ext.dependencies.dagger2_compiler
+
+    implementation project(':commonlibrary')
+    implementation ('cn.bmob.android:bmob-sdk:3.4.7'){
+        exclude module: "support-v4"
+        exclude module: "support-compat"
+
+    }
+    implementation ('cn.bmob.android:bmob-push:1.0.0'){
+        exclude module: "support-v4"
+        exclude module: "support-compat"
+
+    }
+    implementation ('com.zhy:okhttputils:2.6.2'){
+        exclude module: "support-v4"
+        exclude module: "support-compat"
+
+    }
+    implementation ('com.github.chrisbanes.photoview:library:1.2.4'){
+        exclude module: "support-v4"
+        exclude module: "support-compat"
+
+    }
+
+    implementation ('com.komi.slider:slider:0.4.0'){
+        exclude module: "support-v4"
+        exclude module: "support-compat"
+
+    }
+    implementation ('com.mabeijianxi:small-video-record:1.2.0'){
+        exclude module: "support-v4"
+        exclude module: "support-compat"
+
+    }
+    implementation ('com.github.chihane:JDAddressSelector:1.1.4'){
+        exclude module: "support-v4"
+        exclude module: "support-compat"
+
+    }
+    implementation 'com.android.support:multidex:1.0.1'
+
+    implementation (rootProject.ext.dependencies.cardview){
+        exclude module: "support-v4"
+        exclude module: "support-compat"
+        exclude module: "support-compat"
+
+    }
+    annotationProcessor rootProject.ext.dependencies.dagger2_compiler
+
+
 
     if (!rootProject.ext.isAlone) {
-        apt rootProject.ext.dependencies.arouter_compiler
+        annotationProcessor rootProject.ext.dependencies.arouter_compiler
     }
-    testCompile 'junit:junit:4.12'
-    compile files('libs/pldroid-player-1.5.0.jar')
-    compile files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
-    compile files('libs/BmobStat_v1.1_170114.jar')
+    testImplementation 'junit:junit:4.12'
+//    implementation files('libs/pldroid-player-1.5.0.jar')
+    implementation files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
+    implementation files('libs/BmobStat_v1.1_170114.jar')
 //    compile files('libs/nineoldandroids-2.4.0.jar')
 //    compile files('libs/pinyin4j-2.5.0.jar')
+
 }
 

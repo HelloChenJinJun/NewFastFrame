@@ -180,7 +180,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         int id = v.getId();
         if (id == R.id.iv_fragment_index_expend_list) {
             if (customPopWindow == null) {
-                customPopWindow = new CustomPopWindow.Builder().parentView(v).contentView(getContentView())
+                customPopWindow = new CustomPopWindow.Builder().parentView(v).activity(getActivity()).contentView(getContentView())
                         .build();
             }
             if (!customPopWindow.isShowing()) {

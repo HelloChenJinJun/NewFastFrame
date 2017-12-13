@@ -39,7 +39,7 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public Gson provideGson(Application application, NetClientModule.GsonConfig gsonConfig) {
+    public Gson provideGson(Application application, GlobalConfigModule.GsonConfig gsonConfig) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         if (gsonConfig != null) {
             gsonConfig.config(application, gsonBuilder);

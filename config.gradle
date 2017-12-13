@@ -1,9 +1,9 @@
 ext {
-    isAlone = true;//false:作为Lib组件存在， true:作为application存在
+    isAlone = false;//false:作为Lib组件存在， true:作为application存在
 
     android = [
 
-            compileSdkVersion: 24,
+            compileSdkVersion: 26,
             buildToolsVersion: "25.0.2",
             minSdkVersion    : 16,
             targetSdkVersion : 22,
@@ -15,7 +15,7 @@ ext {
 
     libsVersion = [
             // App dependencies version
-            supportLibraryVersion = "25.3.0",
+            supportLibraryVersion = "25.0.0",
 
             retrofitVersion = "2.1.0",
             glideVersion = "3.7.0",

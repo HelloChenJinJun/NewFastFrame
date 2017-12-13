@@ -1,5 +1,6 @@
 package com.example.cootek.newfastframe.util;
 
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.net.Uri;
