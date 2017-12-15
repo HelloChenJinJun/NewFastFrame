@@ -50,9 +50,9 @@ public class NewsUtil {
     public static final String SPECIAL_ID = "special_id";
     public static final String POST_ID = "post_id";
     public static final String PHOTO_SET_ID = "photo_set_id";
-    public static final String JG_INDEX_URL = "http://jgxy.cug.edu.cn/news.asp?bid=6&sid=1";
-    public static final String JG_NOTICE_URL = "http://jgxy.cug.edu.cn/news.asp?bid=6&sid=2";
-    public static final String JG_SCIENCE_URL = "http://jgxy.cug.edu.cn/news.asp?bid=2&sid=11";
+    public static final String JG_INDEX_URL = "http://jgxy.cug.edu.cn/xwdt/xyxw.htm";
+    public static final String JG_NOTICE_URL = "http://jgxy.cug.edu.cn/xwdt/tzgg.htm";
+    public static final String JG_SCIENCE_URL = "http://jgxy.cug.edu.cn/kxyj/xsdt.htm";
     public static final String JG_BASE_URL = "http://jgxy.cug.edu.cn/";
     public static final String JG_COOKIE = "jg_cookie";
     public static final String COLLEGE_TYPE_JG = "TYPE_JG";
@@ -135,12 +135,12 @@ public class NewsUtil {
     public static final String JD_NOTICE_URL = "http://jidian.cug.edu.cn/index/tzgg.htm";
     public static final String JD_SCIENCE_URL = "http://jidian.cug.edu.cn/index/xsdt.htm";
     public static final String COLLEGE_TYPE_HY = "TYPE_HY";
-    public static final String HY_INDEX_URL = "http://cmst.cug.edu.cn/category/college-news";
-    public static final String HY_NOTICE_URL = "http://cmst.cug.edu.cn/category/notice";
-    public static final String HY_SCIENCE_URL = "http://cmst.cug.edu.cn/category/academic-trends";
-    public static final String HY_STUDENT_URL = "http://cmst.cug.edu.cn/category/undergraduate";
-    public static final String HY_GRADUATE_URL = "http://cmst.cug.edu.cn/category/postgraduate";
-    public static final String HY_STUDENT_WORK_URL = "http://cmst.cug.edu.cn/category/xue-sheng-gong-zuo";
+    public static final String HY_INDEX_URL = "http://cmst.cug.edu.cn/xwzx.htm";
+    public static final String HY_NOTICE_URL = "http://cmst.cug.edu.cn/xwzx/tzgg.htm";
+    public static final String HY_SCIENCE_URL = "http://cmst.cug.edu.cn/xwzx/xsdt.htm";
+//    public static final String HY_STUDENT_URL = "http://cmst.cug.edu.cn/category/undergraduate";
+//    public static final String HY_GRADUATE_URL = "http://cmst.cug.edu.cn/category/postgraduate";
+//    public static final String HY_STUDENT_WORK_URL = "http://cmst.cug.edu.cn/category/xue-sheng-gong-zuo";
     public static final String HY_BASE_URL = "http://cmst.cug.edu.cn/";
     public static final String COLLEGE_TYPE_SL = "TYPE_SL";
     public static final String SL_INDEX_URL = "http://slxy.cug.edu.cn/xygk1/xyxw.htm";
@@ -149,10 +149,10 @@ public class NewsUtil {
     public static final String SL_TECH_URL = "http://slxy.cug.edu.cn/xygk1/jyjx.htm";
     public static final String SL_BASE_URL = "http://slxy.cug.edu.cn/";
     public static final String COLLEGE_TYPE_YM = "TYPE_YM";
-    public static final String YM_INDEX_URL = "http://sac.cug.edu.cn/channels/71.html";
+    public static final String YM_INDEX_URL = "http://sac.cug.edu.cn/channels/126.html";
     public static final String YM_BASE_URL = "http://sac.cug.edu.cn/";
-    public static final String YM_NOTICE_URL = "http://sac.cug.edu.cn/channels/33.html";
-    public static final String YM_STUDENT_WORK_URL = "http://sac.cug.edu.cn/channels/84.html";
+    public static final String YM_NOTICE_URL = "http://sac.cug.edu.cn/channels/128.html";
+    public static final String YM_STUDENT_WORK_URL = "http://sac.cug.edu.cn/channels/127.html";
     public static final String COLLEGE_TYPE_MY = "TYPE_MY";
     public static final String MY_INDEX_URL = "http://mkszyxy.cug.edu.cn/xyxw.htm";
     public static final String MY_NOTICE_URL = "http://mkszyxy.cug.edu.cn/tzgg.htm";
@@ -318,9 +318,7 @@ public class NewsUtil {
 
     public static String getCollegeNewsUrl(String url, int totalPage, int num) {
         StringBuilder builder=new StringBuilder();
-        if (url.startsWith(JG_BASE_URL)) {
-            builder.append(url).append("&Curpage=").append(num);
-        } else if (url.startsWith(GG_BASE_URL)
+        if (url.startsWith(GG_BASE_URL)
                 ||url.startsWith(GC_BASE_URL)
                 ||url.startsWith(HJ_BASE_URL)) {
 //            ggxy2014/?sort=31
@@ -334,15 +332,15 @@ public class NewsUtil {
                 ||url.startsWith(DWK_BASE_URL)
                 ||url.startsWith(JD_BASE_URL)
                 ||url.startsWith(SL_BASE_URL)
-                ||url.startsWith(MY_BASE_URL)) {
+                ||url.startsWith(HY_BASE_URL)
+                ||url.startsWith(MY_BASE_URL)
+                ||url.startsWith(JG_BASE_URL)
+                ||url.startsWith(HY_BASE_URL)) {
             if (totalPage > 0) {
                 builder.append(url.substring(0,url.lastIndexOf(".")))
                         .append("/").append(totalPage - num + 1).append(".htm");
                 return builder.toString();
             }
-        } else if (url.startsWith(HY_BASE_URL)) {
-                builder.append(url).append("/").append(num);
-                return builder.toString();
         } else if (url.startsWith(YM_BASE_URL)) {
             builder.append(url.substring(0,url.lastIndexOf("."))).append("_").append(num)
                     .append(".html");

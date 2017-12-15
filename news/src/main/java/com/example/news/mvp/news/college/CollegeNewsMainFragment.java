@@ -162,15 +162,9 @@ public class CollegeNewsMainFragment extends BaseFragment {
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.JD_SCIENCE_URL));
                     break;
                 case NewsUtil.COLLEGE_TYPE_HY:
-                    titleList.add("本科生");
-                    titleList.add("研究生");
-                    titleList.add("学生动态");
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_INDEX_URL));
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_NOTICE_URL));
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_SCIENCE_URL));
-                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_STUDENT_URL));
-                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_GRADUATE_URL));
-                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.HY_STUDENT_WORK_URL));
                     break;
                 case NewsUtil.COLLEGE_TYPE_SL:
                     titleList.add("教学");
@@ -180,7 +174,7 @@ public class CollegeNewsMainFragment extends BaseFragment {
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.SL_TECH_URL));
                     break;
                 case NewsUtil.COLLEGE_TYPE_YM:
-                    titleList.set(2,"学生动态");
+                    titleList.set(2,"学术");
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.YM_INDEX_URL));
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.YM_NOTICE_URL));
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.YM_STUDENT_WORK_URL));
