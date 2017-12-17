@@ -86,7 +86,6 @@
                 android:layout_height="wrap_content"
                 android:text="金额："/>
             <EditText
-                android:focusable="false"
                 android:id="@+id/et_activity_card_info_input"
                 android:inputType="number"
                 android:layout_marginLeft="10dp"

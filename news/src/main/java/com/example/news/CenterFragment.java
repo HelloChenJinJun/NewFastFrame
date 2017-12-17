@@ -74,6 +74,8 @@ public class CenterFragment extends BaseFragment {
                     } else {
                         CardInfoActivity.start(getContext());
                     }
+                } else if (position == 2) {
+
                 }
             }
         });
@@ -94,6 +96,10 @@ public class CenterFragment extends BaseFragment {
         card.setTitle("一卡通系统");
         card.setResId(R.mipmap.ic_launcher);
         result.add(card);
+        CenterBean system=new CenterBean();
+        system.setTitle("系统");
+        system.setResId(R.mipmap.ic_launcher);
+        result.add(system);
         for (int i = 0; i < 5; i++) {
             CenterBean centerBean = new CenterBean();
             centerBean.setTitle("标题" + i);

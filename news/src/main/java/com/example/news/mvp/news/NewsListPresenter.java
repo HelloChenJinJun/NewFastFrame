@@ -203,6 +203,17 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             }
             newListBean.setNewsItemList(list);
         } else if (url.startsWith(NewsUtil.GG_BASE_URL)) {
+
+            Element page = document.getElementById("fanye200934");
+            String text = page.text();
+            if (text != null) {
+                String num = text.substring(text.lastIndexOf("/") + 1, text.length()).trim();
+                totalPage = Integer.valueOf(num);
+            } else {
+                totalPage = 1;
+            }
+
+
             Elements item = document.select(".sort-log");
             if (item.size() > 0 && item.first().children().size() > 0) {
                 List<NewListBean.NewsItem> result = new ArrayList<>();
@@ -211,7 +222,7 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                     Element image = element.getElementsByTag("img").first();
                     bean.setFrom("公共管理学院");
                     if (image != null) {
-                        bean.setThumb(NewsUtil.getRealUrl(image.attr("data-src"), NewsUtil.GG_BASE_URL));
+                        bean.setThumb(NewsUtil.getRealUrl(image.attr("src"), NewsUtil.GG_BASE_URL));
                     }
                     Element content = element.select(".desc-box").first();
                     if (content != null && content.children().size() > 1) {
@@ -225,15 +236,6 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             }
         } else if (url.startsWith(NewsUtil.JSJ_BASE_URL)) {
             Elements item = document.select("ul.mni09.mni89");
-//            fanye177293
-            Element page = document.getElementById("fanye177293");
-            String text = page.text();
-            if (text != null) {
-                String num = text.substring(text.lastIndexOf("/") + 1, text.length()).trim();
-                totalPage = Integer.valueOf(num);
-            } else {
-                totalPage = 1;
-            }
             if (item.size() > 0 && item.first().getElementsByTag("li").size() > 0) {
                 List<NewListBean.NewsItem> result = new ArrayList<>();
                 for (Element element : item.first().getElementsByTag("li")) {
@@ -851,7 +853,11 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                     String[] temp = string.split("\"");
                     list.add(temp[1]);
                     list.add(temp[3]);
-                    list.add((temp[5]));
+                    if (temp[5].contains("<span")&&temp.length>=7&&temp[7].contains("<")) {
+                        list.add(temp[7].substring(1,temp[7].lastIndexOf("<")));
+                    }else {
+                        list.add((temp[5]));
+                    }
                 }
             }
             int size = list.size();

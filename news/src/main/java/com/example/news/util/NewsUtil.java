@@ -58,15 +58,15 @@ public class NewsUtil {
     public static final String COLLEGE_TYPE_JG = "TYPE_JG";
     public static final String COLLEGE_TYPE = "college_type";
 //    http://ggxy.cug.edu.cn/ggxy2014/?sort=31
-    public static final String GG_BASE_URL = "http://ggxy.cug.edu.cn/ggxy2014/";
+    public static final String GG_BASE_URL = "http://ggxy.cug.edu.cn/";
     public static final String COLLEGE_TYPE_GG = "TYPE_GG";
-    public static final String GG_INDEX_URL = "http://ggxy.cug.edu.cn/ggxy2014/?sort=31";
-    public static final String GG_NOTICE_URL = "http://ggxy.cug.edu.cn/ggxy2014/?sort=32";
-    public static final String GG_SCIENCE_URL = "http://ggxy.cug.edu.cn/ggxy2014/?sort=12";
-    public static final String JSJ_BASE_URL = "http://jsjxy.cug.edu.cn/";
+    public static final String GG_INDEX_URL = "http://ggxy.cug.edu.cn/xyxw.htm";
+    public static final String GG_NOTICE_URL = "http://ggxy.cug.edu.cn/tzgg.htm";
+    public static final String GG_SCIENCE_URL = "http://ggxy.cug.edu.cn/xsdt.htm";
+    public static final String JSJ_BASE_URL = "http://cs.cug.edu.cn/";
     public static final String COLLEGE_TYPE_JSJ = "TYPE_JSJ";
-    public static final String JSJ_INDEX_URL = "http://jsjxy.cug.edu.cn/xyxw/xwdt.htm";
-    public static final String JSJ_NOTICE_URL ="http://jsjxy.cug.edu.cn/tzgg/tzgg.htm" ;
+    public static final String JSJ_INDEX_URL = "http://cs.cug.edu.cn/list-37.html";
+    public static final String JSJ_NOTICE_URL ="http://cs.cug.edu.cn/list-16.html" ;
     public static final String DK_BASE_URL = "http://dxy.cug.edu.cn/";
     public static final String COLLEGE_TYPE_DK = "TYPE_DK";
     public static final String DK_INDEX_URL = "http://dxy.cug.edu.cn/xyxw/xyxw.htm";
@@ -160,6 +160,13 @@ public class NewsUtil {
     public static final String MY_STUDENT_URL = "http://mkszyxy.cug.edu.cn/rcpy/bkspy.htm";
     public static final String MY_GRADUATE_URL = "http://mkszyxy.cug.edu.cn/rcpy/yjspy.htm";
     public static final String MY_BASE_URL = "http://mkszyxy.cug.edu.cn/";
+    public static final String CARD_POST_LOGIN_COOKIE_USER_NAME = "CARD_POST_LOGIN_USER_NAME";
+    public static final String SYSTEM_INFO_COOKIE = "system_info_cookie";
+    public static final String SYSTEM_INFO_INDEX_URL = "http://sfrz.cug.edu.cn/tpass/login?service=http%3A%2F%2Fxyfw.cug.edu.cn%2Ftp_up%2F";
+    public static final String SYSTEM_INFO_LOGIN_LT = "system_info_login_lt";
+    public static final String STSTEM_INFO_CASTGC = "system_info_castgc";
+    public static final String SYSTEM_INFO_GET_TICKET = "system_info_get_ticket";
+    public static final String SYSTEM_INFO_TP_UP = "system_info_tp_up";
 
 
     public static String getRealNewsUrl(String url,int totalPage, int currentNum) {
@@ -218,10 +225,12 @@ public class NewsUtil {
         return Base64.encodeToString(pw.getBytes(),Base64.NO_WRAP);
     }
 
+
+//    sno=20141000341&pwd=MDQxNjMz&ValiCode=62231&remember=1&uclass=1&zqcode=&json=true
     public static RequestBody getLoginRequestBody(String account, String pw, String verifyCode) {
         StringBuilder stringBuilder=new StringBuilder();
         stringBuilder.append("sno=").append(account).append("&pwd=").append(getEncodePassWord(pw))
-                .append("&ValiCode=").append(verifyCode).append("&remember=0&uclass=1&json=true");
+                .append("&ValiCode=").append(verifyCode).append("&remember=1&uclass=1&zqcode=&json=true");
         RequestBody requestBody=RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"),stringBuilder.toString());
         return requestBody;
     }
@@ -318,12 +327,13 @@ public class NewsUtil {
 
     public static String getCollegeNewsUrl(String url, int totalPage, int num) {
         StringBuilder builder=new StringBuilder();
-        if (url.startsWith(GG_BASE_URL)
-                ||url.startsWith(GC_BASE_URL)
+        if (url.startsWith(GC_BASE_URL)
                 ||url.startsWith(HJ_BASE_URL)) {
 //            ggxy2014/?sort=31
             builder.append(url).append("&page=").append(num);
-        } else if (url.startsWith(JSJ_BASE_URL)||url.startsWith(DK_BASE_URL)
+        }else if (url.startsWith(JSJ_BASE_URL)){
+         builder.append(url).append("-").append(num);
+        }else if (url.startsWith(DK_BASE_URL)
                 ||url.startsWith(DY_BASE_URL)
                 ||url.startsWith(XY_BASE_URL)
                 ||url.startsWith(ZDH_BASE_URL)
@@ -335,6 +345,7 @@ public class NewsUtil {
                 ||url.startsWith(HY_BASE_URL)
                 ||url.startsWith(MY_BASE_URL)
                 ||url.startsWith(JG_BASE_URL)
+                ||url.startsWith(GG_BASE_URL)
                 ||url.startsWith(HY_BASE_URL)) {
             if (totalPage > 0) {
                 builder.append(url.substring(0,url.lastIndexOf(".")))
@@ -425,5 +436,33 @@ public class NewsUtil {
         }else {
             return "fanye193184";
         }
+    }
+
+    public static String getRealLoginUrl(String cookie) {
+//        http://sfrz.cug.edu.cn/tpass/login;jsessionid=hyRjRKsMcW6JgBuQFEJ9h8ldLZlhAoBxRsUoVATePff_-GOVH9sn!-552142256?service=http%3A%2F%2Fxyfw.cug.edu.cn%2Ftp_up%2F
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("http://sfrz.cug.edu.cn/tpass/login;")
+                .append(cookie).append("?service=http%3A%2F%2Fxyfw.cug.edu.cn%2Ftp_up%2F");
+        return stringBuilder.toString();
+    }
+
+
+    /*
+    * rsa=0426ECAE0453A1B5938E1D54E79EA79BD1A4399C7F624041962DFA9DCD391CE1EA049D4A54499B6269A20DCA07FB9C08D5A28467F0DB6ABEF2FBDA251839014F2B7CBA490DE1F8F63D382967D02BDD76C9AF7511ED53EB23DA9A93D9C7C61C0991A92D42FB1A8AA95512C6937B185B300032B8F34281760C9668FE464C1DBD45&ul=11&pl=6&lt=LT-471811-NfuB5rxwAIogDMfpHHPXCLnJb7qc9X-tpass
+    * &execution=e1s1&_eventId=submit
+    *
+    *
+    * */
+
+    public static RequestBody getSystemInfoRequestBody(String account, String pw, String lt) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("rsa=")
+                .append(DesUtil.strEnc(account.length()+pw.length()+lt,"1","2","3"))
+                .append("&ul=").append(account.length())
+                .append("&pl=").append(pw.length()).append("&lt=")
+                .append(lt).append("&execution=e1s1&_eventId=submit");
+                RequestBody requestBody=RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
+                ,stringBuilder.toString());
+        return requestBody;
     }
 }

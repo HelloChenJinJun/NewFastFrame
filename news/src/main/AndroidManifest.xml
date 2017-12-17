@@ -25,6 +25,8 @@
         <activity android:name=".mvp.news.othernew.detail.OtherNewsDetailActivity"/>
         <activity android:name=".mvp.news.othernew.photo.OtherNewPhotoSetActivity"/>
         <activity android:name=".AdjustNewsTypeActivity"/>
+        <activity android:name=".mvp.systeminfo.SystemInfoLoginActivity" />
+
         <meta-data
             android:name="com.example.news.NewsApplication"
             android:value="IModuleConfig" />
