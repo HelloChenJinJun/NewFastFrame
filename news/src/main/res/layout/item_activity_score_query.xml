@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardUseCompatPadding="true"
+    >
+    <LinearLayout
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_item_activity_score_query_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="时间"/>
+        <TextView
+            android:id="@+id/tv_item_activity_score_query_exam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="学期"/>
+        <TextView
+            android:id="@+id/tv_item_activity_score_query_course_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="课程号"/>
+        <TextView
+            android:id="@+id/tv_item_activity_score_query_course_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="课程名称"/>
+        <TextView
+            android:id="@+id/tv_item_activity_score_query_xf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="学分"/>
+        <TextView
+            android:id="@+id/tv_item_activity_score_query_course_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="课程成绩"/>
+        <TextView
+            android:id="@+id/tv_item_activity_score_query_jd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="绩点"/>
+
+    </LinearLayout>
+
+
+
+</android.support.v7.widget.CardView>

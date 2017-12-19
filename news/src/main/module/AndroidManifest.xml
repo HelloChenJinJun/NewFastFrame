@@ -35,6 +35,8 @@
         <activity android:name=".mvp.news.othernew.photo.OtherNewPhotoSetActivity"/>
         <activity android:name=".AdjustNewsTypeActivity" />
         <activity android:name=".mvp.systeminfo.SystemInfoLoginActivity" />
+        <activity android:name=".ScoreQueryActivity" />
+        <activity android:name=".mvp.systemcenter.SystemCenterActivity" />
 
         <meta-data
             android:name="com.example.news.NewsApplication"

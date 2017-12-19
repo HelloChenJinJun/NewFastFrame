@@ -22,6 +22,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
+import retrofit2.HttpException;
 
 /**
  * 项目名称:    NewFastFrame
@@ -38,7 +39,7 @@ public class SystemInfoLoginPresenter extends BasePresenter<IView<Object>,System
 
 
     public void login(final String account, final String pw){
-        if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_COOKIE, null) == null) {
+//        if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_COOKIE, null) == null) {
             baseModel.getRepositoryManager().getApi(SystemInfoApi.class).getCookie(NewsUtil.SYSTEM_INFO_INDEX_URL)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -84,10 +85,10 @@ public class SystemInfoLoginPresenter extends BasePresenter<IView<Object>,System
 
                         }
                     });
-        }else {
-            realLogin(account,pw,BaseApplication.getAppComponent()
-            .getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_LOGIN_LT,null));
-        }
+//        }else {
+//            realLogin(account,pw,BaseApplication.getAppComponent()
+//            .getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_LOGIN_LT,null));
+//        }
 
     }
 
@@ -117,6 +118,17 @@ public class SystemInfoLoginPresenter extends BasePresenter<IView<Object>,System
 
                     @Override
                     public void onError(Throwable e) {
+
+                        if (e != null && e instanceof HttpException) {
+                            if (((HttpException) e).code() == 302) {
+                                if (BaseApplication.getAppComponent().getSharedPreferences()
+                                        .getString(NewsUtil.SYSTEM_INFO_GET_TICKET, null) != null) {
+                                    getTp_upCookie(BaseApplication.getAppComponent()
+                                            .getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_GET_TICKET,null));
+                                }
+                                return;
+                            }
+                        }
                         iView.showError(null, new EmptyLayout.OnRetryListener() {
                             @Override
                             public void onRetry() {
@@ -152,13 +164,20 @@ public class SystemInfoLoginPresenter extends BasePresenter<IView<Object>,System
 
                     @Override
                     public void onError(Throwable e) {
-                            iView.showError(null, new EmptyLayout.OnRetryListener() {
-                                @Override
-                                public void onRetry() {
-                                    getTp_upCookie(ticketUrl);
-                                }
-                            });
+                        if (e != null && e instanceof HttpException) {
+                            if (((HttpException) e).code() == 302) {
+                                iView.updateData(null);
+                                return;
+                            }
+                        }
+                        iView.showError(null, new EmptyLayout.OnRetryListener() {
+                            @Override
+                            public void onRetry() {
+                                getTp_upCookie(ticketUrl);
+                            }
+                        });
                     }
+
 
                     @Override
                     public void onComplete() {

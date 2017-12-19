@@ -11,6 +11,7 @@ import com.example.news.bean.CenterBean;
 import com.example.news.mvp.cardinfo.CardInfoActivity;
 import com.example.news.mvp.cardlogin.CardLoginActivity;
 import com.example.news.mvp.librarylogin.LibraryLoginActivity;
+import com.example.news.mvp.systeminfo.SystemInfoLoginActivity;
 import com.example.news.util.NewsUtil;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class CenterFragment extends BaseFragment {
                         CardInfoActivity.start(getContext());
                     }
                 } else if (position == 2) {
-
+                    SystemInfoLoginActivity.start(getActivity());
                 }
             }
         });

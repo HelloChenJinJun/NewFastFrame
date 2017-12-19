@@ -11,6 +11,7 @@ public class DesUtil {
      * @Copyright Copyright (c) 2006
      */
 
+
     public static String strEnc(String data, String firstKey, String secondKey,
                          String thirdKey) {
 

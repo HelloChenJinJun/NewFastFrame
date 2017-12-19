@@ -1,5 +1,7 @@
 package com.example.news.mvp.systemcenter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 
 import com.example.commonlibrary.BaseActivity;
@@ -10,6 +12,7 @@ import com.example.news.CenterAdapter;
 import com.example.news.R;
 import com.example.news.ScoreQueryActivity;
 import com.example.news.bean.CenterBean;
+import com.example.news.mvp.systeminfo.SystemInfoLoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +50,13 @@ public class SystemCenterActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-            display= (SuperRecyclerView) findViewById(R.id.srcv_activity_system_center_display);
+        display = (SuperRecyclerView) findViewById(R.id.srcv_activity_system_center_display);
     }
 
     @Override
     protected void initData() {
-        centerAdapter=new CenterAdapter();
-        display.setLayoutManager(new WrappedGridLayoutManager(this,3));
+        centerAdapter = new CenterAdapter();
+        display.setLayoutManager(new WrappedGridLayoutManager(this, 3));
         display.setAdapter(centerAdapter);
         centerAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
@@ -72,17 +75,22 @@ public class SystemCenterActivity extends BaseActivity {
     }
 
     private List<CenterBean> getDefaultData() {
-            List<CenterBean> data=new ArrayList<>();
-            CenterBean item=new CenterBean();
-            item.setResId(R.mipmap.ic_launcher);
-            item.setTitle("成绩查询");
-            data.add(item);
+        List<CenterBean> data = new ArrayList<>();
+        CenterBean item = new CenterBean();
+        item.setResId(R.mipmap.ic_launcher);
+        item.setTitle("成绩查询");
+        data.add(item);
         for (int i = 0; i < 5; i++) {
-            CenterBean temp=new CenterBean();
+            CenterBean temp = new CenterBean();
             temp.setResId(R.mipmap.ic_launcher);
-            temp.setTitle("标题"+i);
+            temp.setTitle("标题" + i);
             data.add(temp);
         }
         return data;
+    }
+
+    public static void start(Activity activity) {
+        Intent intent=new Intent(activity,SystemCenterActivity.class);
+        activity.startActivity(intent);
     }
 }

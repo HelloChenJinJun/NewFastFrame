@@ -67,6 +67,7 @@ public class NewsModule {
 //                }
 //            });
 //        }
+        builder.followRedirects(false);
         return builder.build();
     }
 
