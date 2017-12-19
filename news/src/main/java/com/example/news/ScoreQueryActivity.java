@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
+import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.news.adapter.ScoreQueryAdapter;
@@ -26,22 +28,25 @@ import javax.inject.Inject;
  * QQ:         1981367757
  */
 
-public class ScoreQueryActivity extends BaseActivity<ScoreBean,ScoreQueryPresenter> implements SwipeRefreshLayout.OnRefreshListener {
+public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
     private SwipeRefreshLayout refresh;
     private SuperRecyclerView display;
     @Inject
-     ScoreQueryAdapter scoreQueryAdapter;
+    ScoreQueryAdapter scoreQueryAdapter;
+    private LoadMoreFooterView loadMoreFooterView;
 
     @Override
     public void updateData(ScoreBean scoreBean) {
-        if (scoreBean != null&&scoreBean.getList()!=null) {
+        if (scoreBean != null && scoreBean.getList() != null) {
             if (refresh.isRefreshing()) {
                 scoreQueryAdapter.refreshData(scoreBean.getList());
-                if (scoreQueryAdapter.getData().size() == 0) {
-                    showEmptyView();
-                }
-            }else {
+            } else {
                 scoreQueryAdapter.addData(scoreBean.getList());
+                if (scoreQueryAdapter.getData().size() == 0) {
+                    if (loadMoreFooterView!=null) {
+                        loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
+                    }
+                }
             }
         }
     }
@@ -63,8 +68,8 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean,ScoreQueryPresent
 
     @Override
     protected void initView() {
-        refresh= (SwipeRefreshLayout) findViewById(R.id.refresh_activity_score_query_refresh);
-        display= (SuperRecyclerView) findViewById(R.id.srcv_activity_score_query_display);
+        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_activity_score_query_refresh);
+        display = (SuperRecyclerView) findViewById(R.id.srcv_activity_score_query_display);
         refresh.setOnRefreshListener(this);
     }
 
@@ -76,7 +81,9 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean,ScoreQueryPresent
                 .build().inject(this);
         display.setLayoutManager(new WrappedLinearLayoutManager(this));
         display.setAdapter(scoreQueryAdapter);
-        ToolBarOption toolBarOption=new ToolBarOption();
+        display.setLoadMoreFooterView(loadMoreFooterView = new LoadMoreFooterView(this));
+        display.setOnLoadMoreListener(this);
+        ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("分数查询");
         setToolBar(toolBarOption);
         runOnUiThread(new Runnable() {
@@ -89,13 +96,13 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean,ScoreQueryPresent
     }
 
     public static void start(Activity activity) {
-        Intent intent=new Intent(activity,ScoreQueryActivity.class);
+        Intent intent = new Intent(activity, ScoreQueryActivity.class);
         activity.startActivity(intent);
     }
 
     @Override
     public void onRefresh() {
-        presenter.getScore(true,"2016-2017",null);
+        presenter.getScore(true, "2016-2017", null);
     }
 
 
@@ -110,9 +117,19 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean,ScoreQueryPresent
 
     @Override
     public void hideLoading() {
-        super.hideLoading();
         if (refresh.isRefreshing()) {
             refresh.setRefreshing(false);
         }
+        if (scoreQueryAdapter.getData().size() == 0) {
+            showEmptyView();
+        }else {
+            super.hideLoading();
+        }
+
+    }
+
+    @Override
+    public void loadMore() {
+        presenter.getScore(false, "2016-2017", null);
     }
 }
