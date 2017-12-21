@@ -201,11 +201,7 @@ public class MainActivity extends BaseActivity implements OnDragDeltaChangeListe
 //                bindPollService(5);
                 getWeatherInfo();
                 initUserInfo();
-                if (getIntent().getBooleanExtra("isFirstLogin", false)) {
-                        ToastUtils.showShortToast("首次登录，设置你的个人资料吧^_^");
-                        Intent intent = new Intent(this, EditUserInfoActivity.class);
-                        startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_USER_INFO);
-                }
+
                 if (from != null && from.equals(Constant.NOTIFICATION_TAG_GROUP_MESSAGE)) {
                         Intent intent = new Intent(this, ChatActivity.class);
                         intent.putExtra("id", getIntent().getStringExtra("groupId"));

@@ -23,6 +23,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
+import retrofit2.HttpException;
 
 /**
  * 项目名称:    NewFastFrame
@@ -76,6 +77,13 @@ public class LibraryLoginPresenter extends BasePresenter<IView<Object>, LibraryL
 
                     @Override
                     public void onError( Throwable e) {
+
+                        if (e != null && e instanceof HttpException) {
+                            if (((HttpException) e).code() == 302) {
+                                iView.updateData(null);
+                                return;
+                            }
+                        }
                         iView.showError("登录失败", new EmptyLayout.OnRetryListener() {
                             @Override
                             public void onRetry() {

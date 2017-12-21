@@ -51,6 +51,8 @@ public class MainActivity extends BaseActivity {
                     addOrReplaceFragment(fragmentList.get(1));
                 } else if (checkedId == R.id.rb_activity_main_bottom_center) {
                     addOrReplaceFragment(fragmentList.get(2));
+                }else if (checkedId==R.id.rb_activity_main_bottom_person){
+                    addOrReplaceFragment(fragmentList.get(3));
                 }
             }
         });
@@ -62,6 +64,7 @@ public class MainActivity extends BaseActivity {
         fragmentList.add(IndexFragment.newInstance());
         fragmentList.add(LibraryFragment.newInstance());
         fragmentList.add(CenterFragment.newInstance());
+        fragmentList.add(PersonFragment.newInstance());
        addOrReplaceFragment(fragmentList.get(0),R.id.fl_activity_main_container);
     }
 }

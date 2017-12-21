@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardUseCompatPadding="true"
+    >
+    <LinearLayout
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_item_activity_consume_query_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="时间"/>
+        <TextView
+            android:id="@+id/tv_item_activity_consume_query_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="地点"/>
+        <TextView
+            android:id="@+id/tv_item_activity_consume_query_consume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="金额"/>
+        <TextView
+            android:id="@+id/tv_item_activity_consume_query_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="余额"/>
+        <TextView
+            android:id="@+id/tv_item_activity_consume_query_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="类型"/>
+
+
+    </LinearLayout>
+
+
+
+</android.support.v7.widget.CardView>

@@ -6,7 +6,6 @@ if (rootProject.ext.isAlone) {
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
-//    buildToolsVersion rootProject.ext.android.buildToolsVersion
     defaultConfig {
 
         if (rootProject.ext.isAlone) {

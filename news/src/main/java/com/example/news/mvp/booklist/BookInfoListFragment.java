@@ -51,9 +51,7 @@ public class BookInfoListFragment extends BaseFragment<List<BookInfoBean>, BookI
     @Override
     public void updateData(List<BookInfoBean> list) {
         if (refreshLayout.isRefreshing()) {
-            bookInfoListAdapter.clearAllData();
-            bookInfoListAdapter.notifyDataSetChanged();
-            bookInfoListAdapter.addData(list);
+           bookInfoListAdapter.refreshData(list);
         } else {
             bookInfoListAdapter.addData(list);
             if (bookInfoListAdapter.getData().size() == 0) {

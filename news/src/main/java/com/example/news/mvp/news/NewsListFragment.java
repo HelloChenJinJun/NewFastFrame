@@ -69,11 +69,15 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
             banner.setImages(imageList);
             banner.setBannerTitles(titleList);
             banner.start();
-        } else  {
+        } else {
             if (refresh.isRefreshing()) {
-                newsListAdapter.refreshData(o!=null?o.getNewsItemList():null);
-            }else {
-                newsListAdapter.addData(o!=null?o.getNewsItemList():null);
+                newsListAdapter.refreshData(o != null ? o.getNewsItemList() : null);
+            } else {
+                if (o == null || o.getNewsItemList() == null || o.getNewsItemList().size() == 0) {
+                    display.setLoadMoreStatus(LoadMoreFooterView.Status.THE_END);
+                }else {
+                    newsListAdapter.addData(o.getNewsItemList());
+                }
             }
         }
     }
@@ -145,24 +149,24 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
         DaggerNewsListComponent.builder().newsListModule(new NewsListModule(this))
                 .newsComponent(NewsApplication.getNewsComponent())
                 .build().inject(this);
-        if (NewsUtil.CUG_NEWS.equals(url)||NewsUtil.DK_INDEX_URL.equals(url)
-                ||NewsUtil.JG_INDEX_URL.equals(url)
-                ||NewsUtil.GG_INDEX_URL.equals(url)
-                ||NewsUtil.JSJ_INDEX_URL.equals(url)
-                ||NewsUtil.WY_INDEX_URL.equals(url)
-                ||NewsUtil.DY_INDEX_URL.equals(url)
-                ||NewsUtil.XY_INDEX_URL.equals(url)
-                ||NewsUtil.ZDH_INDEX_URL.equals(url)
-                ||NewsUtil.ZY_INDEX_URL.equals(url)
-                ||NewsUtil.CH_INDEX_URL.equals(url)
-                ||NewsUtil.GC_INDEX_URL.equals(url)
-                ||NewsUtil.HJ_INDEX_URL.equals(url)
-                ||NewsUtil.DWK_INDEX_URL.equals(url)
-                ||NewsUtil.JD_INDEX_URL.equals(url)
-                ||NewsUtil.HY_INDEX_URL.equals(url)
-                ||NewsUtil.SL_INDEX_URL.equals(url)
-//                ||NewsUtil.YM_INDEX_URL.equals(url)
-                ||NewsUtil.MY_INDEX_URL.equals(url)) {
+        if (NewsUtil.CUG_NEWS.equals(url) || NewsUtil.DK_INDEX_URL.equals(url)
+                ||NewsUtil.CUG_VOICE_INDEX.equals(url)
+                || NewsUtil.JG_INDEX_URL.equals(url)
+                || NewsUtil.GG_INDEX_URL.equals(url)
+                || NewsUtil.JSJ_INDEX_URL.equals(url)
+                || NewsUtil.WY_INDEX_URL.equals(url)
+                || NewsUtil.DY_INDEX_URL.equals(url)
+                || NewsUtil.XY_INDEX_URL.equals(url)
+                || NewsUtil.ZDH_INDEX_URL.equals(url)
+                || NewsUtil.ZY_INDEX_URL.equals(url)
+                || NewsUtil.CH_INDEX_URL.equals(url)
+                || NewsUtil.GC_INDEX_URL.equals(url)
+                || NewsUtil.HJ_INDEX_URL.equals(url)
+                || NewsUtil.DWK_INDEX_URL.equals(url)
+                || NewsUtil.JD_INDEX_URL.equals(url)
+                || NewsUtil.HY_INDEX_URL.equals(url)
+                || NewsUtil.SL_INDEX_URL.equals(url)
+                || NewsUtil.MY_INDEX_URL.equals(url)) {
             display.addHeaderView(getHeaderView());
         }
         refresh.setOnRefreshListener(this);
@@ -216,8 +220,14 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
 
     @Override
     public void hideLoading() {
-        super.hideLoading();
-        refresh.setRefreshing(false);
+        if (refresh.isRefreshing()) {
+            refresh.setRefreshing(false);
+        }
+        if (newsListAdapter.getData().size() == 0) {
+            showEmptyView();
+        } else {
+            super.hideLoading();
+        }
     }
 
     @Override
@@ -225,8 +235,8 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
         if (refresh.isRefreshing()) {
             refresh.setRefreshing(false);
             super.showError(errorMsg, listener);
-        }else {
-            ((LoadMoreFooterView) display.getLoadMoreFooterView()).setStatus(LoadMoreFooterView.Status.ERROR);
+        } else {
+            display.setLoadMoreStatus(LoadMoreFooterView.Status.ERROR);
         }
     }
 }

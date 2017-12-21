@@ -38,18 +38,6 @@ public class NewsInterceptor implements Interceptor {
             return response;
         }
 
-
-//        if (request.url().toString().startsWith("http://xyfw.cug.edu.cn/tp_up/?ticket")) {
-//            Response response=chain.proceed(request);
-//            String location=response.header("Location",null);
-//            String cookie=response.header("Set-Cookie");
-//            if (location != null && cookie != null) {
-//                CommonLogger.e(location+cookie);
-//            }
-//            return response;
-//        }
-
-
         if (request.url().toString().equals(NewsUtil.SYSTEM_INFO_INDEX_URL)) {
 //            _ga=GA1.3.1067555487.1498354603;UM_distinctid=15ee5c241e60-0ccb143b01978-6a11157a-100200-15ee5c241eaa2;
             Request newRequest;
@@ -87,9 +75,8 @@ public class NewsInterceptor implements Interceptor {
             }
             return response;
         }
-
-
-        if (request.url().toString().equals(NewsUtil.SCORE_QUERY_URL)) {
+        if (request.url().toString().equals(NewsUtil.SCORE_QUERY_URL)||
+                request.url().toString().equals(NewsUtil.CONSUME_QUERY_URL)) {
             Request newRequest;
             StringBuilder cookie = new StringBuilder();
             cookie.append("_ga=GA1.3.1067555487.1498354603;UM_distinctid=15ee5c241e60-0ccb143b01978-6a11157a-100200-15ee5c241eaa2;")

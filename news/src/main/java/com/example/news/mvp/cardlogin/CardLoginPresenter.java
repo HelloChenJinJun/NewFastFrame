@@ -122,13 +122,6 @@ public class CardLoginPresenter extends BasePresenter<IView<Object>, CardLoginMo
 
                     @Override
                     public void onNext(@NonNull CardLoginBean cardLoginBean) {
-//                        if (cardLoginBean != null && cardLoginBean.isIsSucceed()) {
-//                            iView.updateData(null);
-////                            getPersonCardInfo();
-//                        } else {
-//
-//                            onError(null);
-//                        }
                         iView.updateData(null);
                     }
 

@@ -3,6 +3,7 @@ package com.example.news.util;
 import android.util.Base64;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.news.bean.ConsumeRequestBean;
 import com.example.news.bean.ScoreRequestJson;
 import com.google.gson.Gson;
 
@@ -60,6 +61,7 @@ public class NewsUtil {
     public static final String JG_BASE_URL = "http://jgxy.cug.edu.cn/";
     public static final String JG_COOKIE = "jg_cookie";
     public static final String COLLEGE_TYPE_JG = "TYPE_JG";
+    public static final String COLLEGE_TYPE_DD = "TYPE_DD";
     public static final String COLLEGE_TYPE = "college_type";
     //    http://ggxy.cug.edu.cn/ggxy2014/?sort=31
     public static final String GG_BASE_URL = "http://ggxy.cug.edu.cn/";
@@ -172,6 +174,13 @@ public class NewsUtil {
     public static final String SYSTEM_INFO_GET_TICKET = "system_info_get_ticket";
     public static final String SYSTEM_INFO_TP_UP = "system_info_tp_up";
     public static final String SCORE_QUERY_URL = "http://xyfw.cug.edu.cn/tp_up/up/sysintegration/findUserCourseScore";
+    public static final String COLLEGE_TYPE_VOICE = "TYPE_VOICE";
+    public static final String CUG_VOICE_INDEX = "http://voice.cug.edu.cn/zhxw.htm";
+    public static final String VOICE_BASE_URL="http://voice.cug.edu.cn/";
+    public static final String CUG_VOICE_NOTIFY = "http://voice.cug.edu.cn/ggtz.htm";
+    public static final String CUG_VOICE_IMAGE = "http://voice.cug.edu.cn/tpxw.htm";
+    public static final String IS_LOGIN = "is_login";
+    public static final String CONSUME_QUERY_URL = "http://xyfw.cug.edu.cn/tp_up/up/sysintegration/getCardConsumList";
 
 
     public static String getRealNewsUrl(String url, int totalPage, int currentNum) {
@@ -340,7 +349,9 @@ public class NewsUtil {
                 || url.startsWith(MY_BASE_URL)
                 || url.startsWith(JG_BASE_URL)
                 || url.startsWith(GG_BASE_URL)
-                || url.startsWith(HY_BASE_URL)) {
+                || url.startsWith(HY_BASE_URL)
+                ||url.startsWith(CUG_INDEX)
+                ||url.startsWith(VOICE_BASE_URL)) {
             if (totalPage > 0) {
                 builder.append(url.substring(0, url.lastIndexOf(".")))
                         .append("/").append(totalPage - num + 1).append(".htm");
@@ -413,7 +424,9 @@ public class NewsUtil {
             return YM_BASE_URL;
         } else if (url.startsWith(MY_BASE_URL)) {
             return MY_BASE_URL;
-        } else {
+        } else if (url.startsWith(VOICE_BASE_URL)){
+            return VOICE_BASE_URL;
+        }else {
             return null;
         }
     }
@@ -475,5 +488,23 @@ public class NewsUtil {
         Gson gson = new Gson();
         String json = gson.toJson(item);
         return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), json);
+    }
+
+    public static RequestBody getConsumeRequestBody(int page,int pageSize) {
+        ConsumeRequestBean consumeRequestBean=new ConsumeRequestBean();
+        ConsumeRequestBean.OrderBean orderBean=new ConsumeRequestBean.OrderBean();
+        orderBean.setColumn(1);
+        orderBean.setDir("desc");
+        orderBean.setName("JYSJ");
+        List<ConsumeRequestBean.OrderBean> list=new ArrayList<>();
+        list.add(orderBean);
+        consumeRequestBean.setOrder(list);
+        consumeRequestBean.setDraw(page);
+        consumeRequestBean.setPageNum(page);
+        consumeRequestBean.setPageSize(pageSize);
+        consumeRequestBean.setStart((page-1)*pageSize);
+        consumeRequestBean.setLength(pageSize);
+        consumeRequestBean.setMapping("getCardListInfo");
+        return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), new Gson().toJson(consumeRequestBean));
     }
 }

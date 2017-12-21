@@ -3,16 +3,13 @@ package com.example.news;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 
-import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.news.bean.CenterBean;
-import com.example.news.mvp.cardinfo.CardInfoActivity;
 import com.example.news.mvp.cardlogin.CardLoginActivity;
 import com.example.news.mvp.librarylogin.LibraryLoginActivity;
 import com.example.news.mvp.systeminfo.SystemInfoLoginActivity;
-import com.example.news.util.NewsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,20 +60,13 @@ public class CenterFragment extends BaseFragment {
             @Override
             public void onItemClick(int position, View view) {
                 if (position == 0) {
-                    if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.LIBRARY_COOKIE, null) == null) {
-                        LibraryLoginActivity.start(getContext(), null);
-                    } else {
-                        LibraryInfoActivity.start(getContext());
-                    }
+                    LibraryLoginActivity.start(getContext(), null);
                 } else if (position == 1) {
-                    if (BaseApplication.getAppComponent().getSharedPreferences()
-                            .getString(NewsUtil.CARD_POST_LOGIN_COOKIE, null) == null) {
-                        CardLoginActivity.start(getContext(), null);
-                    } else {
-                        CardInfoActivity.start(getContext());
-                    }
+                    CardLoginActivity.start(getContext(), null);
                 } else if (position == 2) {
                     SystemInfoLoginActivity.start(getActivity());
+                } else if (position == 3) {
+//                    VoiceCenterActivity.start(getActivity());
                 }
             }
         });
@@ -97,7 +87,7 @@ public class CenterFragment extends BaseFragment {
         card.setTitle("一卡通系统");
         card.setResId(R.mipmap.ic_launcher);
         result.add(card);
-        CenterBean system=new CenterBean();
+        CenterBean system = new CenterBean();
         system.setTitle("系统");
         system.setResId(R.mipmap.ic_launcher);
         result.add(system);

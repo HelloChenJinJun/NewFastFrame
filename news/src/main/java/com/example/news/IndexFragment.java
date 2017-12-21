@@ -78,9 +78,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     @Override
     protected void initData() {
         titleList = new ArrayList<>();
-        titleList.add("要闻");
-        titleList.add("公告");
-        titleList.add("学术");
+        titleList.add("地声");
+        titleList.add("地大");
         titleList.add("马院");
         titleList.add("艺媒");
         titleList.add("数理");
@@ -101,9 +100,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         titleList.add("外院");
         titleList.add("福利");
         fragmentList = new ArrayList<>();
-        fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NEWS));
-        fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NOTIFY));
-        fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_TECHNOLOGY));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_VOICE));
+        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_DD));
         fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_MY));
         fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_YM));
         fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_SL));
@@ -197,8 +195,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     private View getContentView() {
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_index_pop_window, null);
-        Button adjust = (Button) contentView.findViewById(R.id.btn_view_fragment_index_pop_adjust);
-        final SuperRecyclerView display = (SuperRecyclerView) contentView.findViewById(R.id.srcv_view_fragment_index_pop_display);
+        Button adjust =contentView.findViewById(R.id.btn_view_fragment_index_pop_adjust);
+        final SuperRecyclerView display =contentView.findViewById(R.id.srcv_view_fragment_index_pop_display);
         display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 5));
         PopWindowAdapter popWindowAdapter = new PopWindowAdapter();
         display.setAdapter(popWindowAdapter);

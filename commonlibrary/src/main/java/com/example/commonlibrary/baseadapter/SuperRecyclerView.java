@@ -147,6 +147,17 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
     }
 
 
+
+
+
+    public void setLoadMoreStatus(LoadMoreFooterView.Status status){
+        if (mLoadMoreFooterView!= null) {
+            ((LoadMoreFooterView) mLoadMoreFooterView).setStatus(status);
+        }
+    }
+
+
+
     public boolean ismLoadMoreEnabled() {
         return mLoadMoreEnabled;
     }
@@ -182,7 +193,7 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
 
     public void setRefreshHeaderView(View refreshHeaderView) {
         if (!(refreshHeaderView instanceof RefreshTrigger)) {
-            throw new ClassCastException("1Refresh header view must be an implement of RefreshTrigger");
+            throw new ClassCastException("Refresh header view must be an implement of RefreshTrigger");
         }
 
         if (mRefreshHeaderView != null) {
@@ -192,12 +203,6 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
             this.mRefreshHeaderView = refreshHeaderView;
             ensureRefreshHeaderContainer();
             mRefreshHeaderContainer.addView(refreshHeaderView);
-//            mRefreshHeaderContainer.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                        TLog.e(SuperRecyclerView.class,"高度为？？"+mRefreshHeaderContainer.getMeasuredHeight());
-//                }
-//            });
         }
     }
 

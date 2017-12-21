@@ -136,9 +136,9 @@ public class CardLoginActivity extends BaseActivity<Object, CardLoginPresenter> 
     }
 
     public static void start(Context context, String info) {
-        Intent intent=new Intent(context,CardLoginActivity.class);
+        Intent intent = new Intent(context, CardLoginActivity.class);
         if (info != null) {
-            intent.putExtra(NewsUtil.ERROR_INFO,info);
+            intent.putExtra(NewsUtil.ERROR_INFO, info);
         }
         context.startActivity(intent);
     }

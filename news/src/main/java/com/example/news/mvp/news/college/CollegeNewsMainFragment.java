@@ -61,6 +61,17 @@ public class CollegeNewsMainFragment extends BaseFragment {
            String type=getArguments().getString(NewsUtil.COLLEGE_TYPE);
         if (type!=null) {
             switch (type){
+                case NewsUtil.COLLEGE_TYPE_VOICE:
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_VOICE_INDEX));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_VOICE_NOTIFY));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_VOICE_IMAGE));
+                    titleList.set(2,"图片");
+                    break;
+                case NewsUtil.COLLEGE_TYPE_DD:
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NEWS));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_NOTIFY));
+                    fragmentList.add(NewsListFragment.newInstance(NewsUtil.CUG_TECHNOLOGY));
+                    break;
                 case NewsUtil.COLLEGE_TYPE_JG:
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.JG_INDEX_URL));
                     fragmentList.add(NewsListFragment.newInstance(NewsUtil.JG_NOTICE_URL));

@@ -8,11 +8,13 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.dagger.systeminfo.DaggerSystemInfoComponent;
 import com.example.news.dagger.systeminfo.SystemInfoModule;
+import com.example.news.event.UserInfoEvent;
 import com.example.news.mvp.systemcenter.SystemCenterActivity;
 
 /**
@@ -28,7 +30,14 @@ public class SystemInfoLoginActivity extends BaseActivity<Object, SystemInfoLogi
 
     @Override
     public void updateData(Object o) {
-        SystemCenterActivity.start(this);
+//        SystemCenterActivity.start(this);
+        String name=account.getText().toString().trim();
+        String password=pw.getText().toString().trim();
+        UserInfoEvent userInfoEvent=new UserInfoEvent();
+        userInfoEvent.setAccount(name);
+        userInfoEvent.setPassword(password);
+        RxBusManager.getInstance().post(userInfoEvent);
+        finish();
     }
 
     @Override

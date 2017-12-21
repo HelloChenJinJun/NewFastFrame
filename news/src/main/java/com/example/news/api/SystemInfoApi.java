@@ -1,6 +1,7 @@
 package com.example.news.api;
 
 import com.example.news.bean.CardLoginBean;
+import com.example.news.bean.ConsumeQueryBean;
 import com.example.news.bean.ScoreBean;
 
 import io.reactivex.Observable;
@@ -35,4 +36,8 @@ public interface SystemInfoApi {
     @POST
     public Observable<ScoreBean>   getScore(@Url String url,@Body RequestBody requestBody);
 
+
+
+    @POST
+    public Observable<ConsumeQueryBean> getConsumeData(@Url String url,@Body RequestBody requestBody);
 }

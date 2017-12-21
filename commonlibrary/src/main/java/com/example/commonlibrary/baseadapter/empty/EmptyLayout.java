@@ -115,6 +115,7 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
                 errorLayout.setVisibility(GONE);
                 loadingLayout.setVisibility(GONE);
                 emptyLayout.setVisibility(VISIBLE);
+                break;
             case STATUS_NO_NET:
 //                container.setVisibility(VISIBLE);
                 errorLayout.setVisibility(VISIBLE);

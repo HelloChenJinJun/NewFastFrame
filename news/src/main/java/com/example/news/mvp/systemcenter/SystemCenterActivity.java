@@ -12,6 +12,7 @@ import com.example.news.CenterAdapter;
 import com.example.news.R;
 import com.example.news.ScoreQueryActivity;
 import com.example.news.bean.CenterBean;
+import com.example.news.mvp.consume.ConsumeQueryActivity;
 import com.example.news.mvp.systeminfo.SystemInfoLoginActivity;
 
 import java.util.ArrayList;
@@ -63,6 +64,8 @@ public class SystemCenterActivity extends BaseActivity {
             public void onItemClick(int position, View view) {
                 if (position == 0) {
                     ScoreQueryActivity.start(SystemCenterActivity.this);
+                } else if (position == 1) {
+                    ConsumeQueryActivity.start(SystemCenterActivity.this);
                 }
             }
         });
@@ -80,6 +83,10 @@ public class SystemCenterActivity extends BaseActivity {
         item.setResId(R.mipmap.ic_launcher);
         item.setTitle("成绩查询");
         data.add(item);
+        CenterBean consumerQuery=new CenterBean();
+        consumerQuery.setTitle("消费查询");
+        consumerQuery.setResId(R.mipmap.ic_launcher);
+        data.add(consumerQuery);
         for (int i = 0; i < 5; i++) {
             CenterBean temp = new CenterBean();
             temp.setResId(R.mipmap.ic_launcher);
