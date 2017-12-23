@@ -8,6 +8,7 @@ import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.news.api.SystemInfoApi;
 import com.example.news.bean.CardLoginBean;
+import com.example.news.bean.SystemUserBean;
 import com.example.news.util.NewsUtil;
 
 import org.jsoup.Jsoup;
@@ -32,6 +33,7 @@ import retrofit2.HttpException;
  */
 
 public class SystemInfoLoginPresenter extends BasePresenter<IView<Object>,SystemInfoModel> {
+    private String account;
     public SystemInfoLoginPresenter(IView iView, SystemInfoModel baseModel) {
         super(iView, baseModel);
     }
@@ -39,6 +41,7 @@ public class SystemInfoLoginPresenter extends BasePresenter<IView<Object>,System
 
 
     public void login(final String account, final String pw){
+        this.account=account;
 //        if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_COOKIE, null) == null) {
             baseModel.getRepositoryManager().getApi(SystemInfoApi.class).getCookie(NewsUtil.SYSTEM_INFO_INDEX_URL)
                     .subscribeOn(Schedulers.io())
@@ -62,8 +65,6 @@ public class SystemInfoLoginPresenter extends BasePresenter<IView<Object>,System
                           Element element=document.getElementById("lt");
                             if (element != null) {
                                 String value=element.attr("value");
-//                                iView.updateData(BaseApplication.getAppComponent().getSharedPreferences()
-//                                        .getString(NewsUtil.SYSTEM_INFO_COOKIE,null));
                                 BaseApplication.getAppComponent()
                                         .getSharedPreferences().edit().putString(NewsUtil.SYSTEM_INFO_LOGIN_LT,value).apply();
                                 realLogin(account, pw,value);
@@ -85,11 +86,6 @@ public class SystemInfoLoginPresenter extends BasePresenter<IView<Object>,System
 
                         }
                     });
-//        }else {
-//            realLogin(account,pw,BaseApplication.getAppComponent()
-//            .getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_LOGIN_LT,null));
-//        }
-
     }
 
     private void realLogin(final String account, final String pw, final String lt) {
@@ -159,14 +155,14 @@ public class SystemInfoLoginPresenter extends BasePresenter<IView<Object>,System
 
                     @Override
                     public void onNext(ResponseBody responseBody) {
-                            iView.updateData(null);
+                        getUserInfo();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         if (e != null && e instanceof HttpException) {
                             if (((HttpException) e).code() == 302) {
-                                iView.updateData(null);
+                                getUserInfo();
                                 return;
                             }
                         }
@@ -178,6 +174,33 @@ public class SystemInfoLoginPresenter extends BasePresenter<IView<Object>,System
                         });
                     }
 
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    private void getUserInfo() {
+        baseModel.getRepositoryManager().getApi(SystemInfoApi.class)
+                .getUserInfo(NewsUtil.SYSTEM_USER_INFO_URL,NewsUtil
+                .getSystemUserRequestBody(account)).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SystemUserBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDispose(d);
+                    }
+
+                    @Override
+                    public void onNext(SystemUserBean systemUserBean) {
+                        iView.updateData(systemUserBean);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        iView.showError(null,null);
+                    }
 
                     @Override
                     public void onComplete() {

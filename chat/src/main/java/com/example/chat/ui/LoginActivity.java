@@ -30,10 +30,16 @@ import com.example.chat.util.LogUtil;
 import com.example.chat.view.AutoEditText;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.router.Router;
+import com.example.commonlibrary.router.RouterRequest;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.datatype.BmobGeoPoint;
@@ -205,16 +211,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void registerAccount() {
-        RandomData.initAllRanDomData();
+//        RandomData.initAllRanDomData();
         User user = new User();
 //                                默认注册为男性
-        user.setSex(true);
+        user.setSex(getIntent().getBooleanExtra(ConstantUtil.SEX,true));
 //                                 设备类型
         user.setDeviceType("android");
 //                                与设备ID绑定
         user.setInstallId(BmobInstallation.getInstallationId(this));
-        user.setNick(RandomData.getRandomNick());
-        user.setAvatar(RandomData.getRandomAvatar());
+        user.setNick(getIntent().getStringExtra(ConstantUtil.NICK));
+        user.setAvatar(getIntent().getStringExtra(ConstantUtil.AVATAR));
         user.setSortedKey(CommonUtils.getSortedKey(user.getNick()));
         user.setUsername(userName.getText().toString().trim());
         user.setPassword(passWord.getText().toString().trim());
@@ -225,6 +231,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onSuccess() {
                 dismissLoadDialog();
                 ToastUtils.showShortToast("注册成功，登录中...........");
+                isFirstLogin=true;
                 login();
             }
 
@@ -365,13 +372,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void dealResultInfo(User user) {
-        Intent intent = new Intent();
-        intent.putExtra("avatar", user.getAvatar());
-        intent.putExtra("signature", user.getSignature());
-        intent.putExtra("name", user.getNick());
-        intent.putExtra("account", user.getUsername());
-        intent.putExtra("pw", passWord.getText().toString().trim());
-        setResult(Activity.RESULT_OK, intent);
+        Map<String,Object> map=new HashMap<>();
+        map.put(ConstantUtil.AVATAR,user.getAvatar());
+        map.put(ConstantUtil.SIGNATURE,user.getSignature());
+        map.put(ConstantUtil.NICK,user.getNick());
+        map.put(ConstantUtil.ACCOUNT,user.getUsername());
+        map.put(ConstantUtil.NAME,user.getNick());
+        map.put(ConstantUtil.FROM,"chat");
+        map.put(ConstantUtil.SEX,user.isSex());
+        map.put(ConstantUtil.BG_HALF,user.getTitleWallPaper());
+        map.put(ConstantUtil.BG_ALL,user.getWallPaper());
+        map.put(ConstantUtil.STUDENT_TYPE,getIntent().getStringExtra(ConstantUtil.STUDENT_TYPE));
+        map.put(ConstantUtil.COLLEGE,getIntent().getStringExtra(ConstantUtil.COLLEGE));
+        map.put(ConstantUtil.PASSWORD, passWord.getText().toString().trim());
+        Router.getInstance().deal(new RouterRequest.Builder()
+        .paramMap(map).context(this).provideName("news")
+                .actionName("person").build());
         finish();
     }
 

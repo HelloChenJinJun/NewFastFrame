@@ -30,12 +30,61 @@ public class Router {
     }
 
 
-    public void registerProvider(String provideName,BaseProvider baseProvider){
-        if (providerMap == null) {
-            providerMap=new HashMap<>();
+
+    public void clearCache(){
+        for (Map.Entry<String, BaseProvider> entry:
+        providerMap.entrySet()){
+            entry.getValue().removeAll();
         }
-        providerMap.put(provideName, baseProvider);
+        providerMap.clear();
     }
+
+
+
+
+    public RouterResult deal(RouterRequest routerRequest){
+        if (routerRequest != null) {
+            BaseProvider baseProvider=providerMap.get(routerRequest.getProvideName());
+            BaseAction baseAction=baseProvider.getAction(routerRequest.getActionName());
+           return baseAction.invoke(routerRequest);
+        }
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+//    public void registerProvider(String provideName,BaseProvider baseProvider){
+//        if (providerMap == null) {
+//            providerMap=new HashMap<>();
+//        }
+//        providerMap.put(provideName, baseProvider);
+//    }
+
+
+
+
+    public void registerProvider(String name,BaseAction baseAction){
+        if (name.contains(":")) {
+            String providerName=name.split(":")[0];
+            String actionName=name.split(":")[1];
+            BaseProvider baseProvider=new BaseProvider(providerName);
+            baseProvider.putAction(actionName,baseAction);
+            providerMap.put(providerName,baseProvider);
+        }
+
+
+    }
+
+
 
 
     public void unRegisterProvider(String providerName){

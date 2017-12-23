@@ -117,6 +117,9 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        if (e != null) {
+                            CommonLogger.e(e);
+                        }
                         iView.showError(null, new EmptyLayout.OnRetryListener() {
                             @Override
                             public void onRetry() {

@@ -3,6 +3,7 @@ package com.example.news.api;
 import com.example.news.bean.CardLoginBean;
 import com.example.news.bean.ConsumeQueryBean;
 import com.example.news.bean.ScoreBean;
+import com.example.news.bean.SystemUserBean;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
@@ -30,6 +31,13 @@ public interface SystemInfoApi {
 
     @POST
     public Observable<ResponseBody>  login(@Url String url, @Body RequestBody requestBody);
+
+
+
+
+
+    @POST
+    public Observable<SystemUserBean>   getUserInfo(@Url String url,@Body RequestBody requestBody);
 
 
 

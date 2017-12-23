@@ -39,6 +39,9 @@ public class ActivityManager implements Application.ActivityLifecycleCallbacks {
     }
 
 
+
+
+
     public Activity getCurrentActivity() {
         return currentActivity;
     }

@@ -17,7 +17,6 @@ import com.example.news.adapter.ConsumeQueryAdapter;
 import com.example.news.bean.ConsumeQueryBean;
 import com.example.news.dagger.consume.ConsumeQueryModule;
 import com.example.news.dagger.consume.DaggerConsumeQueryComponent;
-import com.example.news.mvp.systemcenter.SystemCenterActivity;
 
 import javax.inject.Inject;
 

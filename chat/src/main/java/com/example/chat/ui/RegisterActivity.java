@@ -141,7 +141,7 @@ public class RegisterActivity extends BaseActivity {
                 ToolBarOption toolBarOption = new ToolBarOption();
                 toolBarOption.setTitle("注册");
                 setToolBar(toolBarOption);
-                RandomData.initAllRanDomData();
+//                RandomData.initAllRanDomData();
         }
 
 

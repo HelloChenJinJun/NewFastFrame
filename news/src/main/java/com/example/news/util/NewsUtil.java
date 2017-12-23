@@ -1,10 +1,16 @@
 package com.example.news.util;
 
+import android.content.SharedPreferences;
 import android.util.Base64;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.bean.ConsumeRequestBean;
 import com.example.news.bean.ScoreRequestJson;
+import com.example.news.bean.SystemUserRequestBean;
+import com.example.news.event.UserInfoEvent;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -46,7 +52,7 @@ public class NewsUtil {
     public static final String CARD_PAGE_INFO_URL = "http://card.cug.edu.cn/Page/page";
     public static final String CARD_BANK_INFO_URL = "http://card.cug.edu.cn/User/GetCardInfoByAccountNoParm";
     public static final String PW = "password";
-    public static final String ACCOUNT = "account";
+    public static final String ACCOUNT = "news_account";
     public static final String PAY_URL = "http://card.cug.edu.cn/User/Account_Pay";
     public static final String PAY_HISTORY_URL = "http://card.cug.edu.cn/Report/GetPersonTrjn";
     public static final String ERROR_INFO = "error_info";
@@ -176,11 +182,12 @@ public class NewsUtil {
     public static final String SCORE_QUERY_URL = "http://xyfw.cug.edu.cn/tp_up/up/sysintegration/findUserCourseScore";
     public static final String COLLEGE_TYPE_VOICE = "TYPE_VOICE";
     public static final String CUG_VOICE_INDEX = "http://voice.cug.edu.cn/zhxw.htm";
-    public static final String VOICE_BASE_URL="http://voice.cug.edu.cn/";
+    public static final String VOICE_BASE_URL = "http://voice.cug.edu.cn/";
     public static final String CUG_VOICE_NOTIFY = "http://voice.cug.edu.cn/ggtz.htm";
     public static final String CUG_VOICE_IMAGE = "http://voice.cug.edu.cn/tpxw.htm";
     public static final String IS_LOGIN = "is_login";
     public static final String CONSUME_QUERY_URL = "http://xyfw.cug.edu.cn/tp_up/up/sysintegration/getCardConsumList";
+    public static final String SYSTEM_USER_INFO_URL = "http://xyfw.cug.edu.cn/tp_up/sys/uacm/profile/getUserById";
 
 
     public static String getRealNewsUrl(String url, int totalPage, int currentNum) {
@@ -350,8 +357,8 @@ public class NewsUtil {
                 || url.startsWith(JG_BASE_URL)
                 || url.startsWith(GG_BASE_URL)
                 || url.startsWith(HY_BASE_URL)
-                ||url.startsWith(CUG_INDEX)
-                ||url.startsWith(VOICE_BASE_URL)) {
+                || url.startsWith(CUG_INDEX)
+                || url.startsWith(VOICE_BASE_URL)) {
             if (totalPage > 0) {
                 builder.append(url.substring(0, url.lastIndexOf(".")))
                         .append("/").append(totalPage - num + 1).append(".htm");
@@ -424,9 +431,9 @@ public class NewsUtil {
             return YM_BASE_URL;
         } else if (url.startsWith(MY_BASE_URL)) {
             return MY_BASE_URL;
-        } else if (url.startsWith(VOICE_BASE_URL)){
+        } else if (url.startsWith(VOICE_BASE_URL)) {
             return VOICE_BASE_URL;
-        }else {
+        } else {
             return null;
         }
     }
@@ -441,10 +448,13 @@ public class NewsUtil {
     }
 
     public static String getRealLoginUrl(String cookie) {
+        if (cookie == null) {
+            return "";
+        }
 //        http://sfrz.cug.edu.cn/tpass/login;jsessionid=hyRjRKsMcW6JgBuQFEJ9h8ldLZlhAoBxRsUoVATePff_-GOVH9sn!-552142256?service=http%3A%2F%2Fxyfw.cug.edu.cn%2Ftp_up%2F
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("http://sfrz.cug.edu.cn/tpass/login;")
-                .append(cookie.replace("JSESSIONID","jsessionid")).append("?service=http%3A%2F%2Fxyfw.cug.edu.cn%2Ftp_up%2F");
+                .append(cookie.replace("JSESSIONID", "jsessionid")).append("?service=http%3A%2F%2Fxyfw.cug.edu.cn%2Ftp_up%2F");
         return stringBuilder.toString();
     }
 
@@ -459,7 +469,7 @@ public class NewsUtil {
     public static RequestBody getSystemInfoRequestBody(String account, String pw, String lt) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("rsa=")
-                .append(DesUtil.strEnc(account+pw + lt, "1", "2", "3"))
+                .append(DesUtil.strEnc(account + pw + lt, "1", "2", "3"))
                 .append("&ul=").append(account.length())
                 .append("&pl=").append(pw.length()).append("&lt=")
                 .append(lt).append("&execution=e1s1&_eventId=submit");
@@ -490,21 +500,60 @@ public class NewsUtil {
         return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), json);
     }
 
-    public static RequestBody getConsumeRequestBody(int page,int pageSize) {
-        ConsumeRequestBean consumeRequestBean=new ConsumeRequestBean();
-        ConsumeRequestBean.OrderBean orderBean=new ConsumeRequestBean.OrderBean();
+    public static RequestBody getConsumeRequestBody(int page, int pageSize) {
+        ConsumeRequestBean consumeRequestBean = new ConsumeRequestBean();
+        ConsumeRequestBean.OrderBean orderBean = new ConsumeRequestBean.OrderBean();
         orderBean.setColumn(1);
         orderBean.setDir("desc");
         orderBean.setName("JYSJ");
-        List<ConsumeRequestBean.OrderBean> list=new ArrayList<>();
+        List<ConsumeRequestBean.OrderBean> list = new ArrayList<>();
         list.add(orderBean);
         consumeRequestBean.setOrder(list);
         consumeRequestBean.setDraw(page);
         consumeRequestBean.setPageNum(page);
         consumeRequestBean.setPageSize(pageSize);
-        consumeRequestBean.setStart((page-1)*pageSize);
+        consumeRequestBean.setStart((page - 1) * pageSize);
         consumeRequestBean.setLength(pageSize);
         consumeRequestBean.setMapping("getCardListInfo");
+        consumeRequestBean.setAppointTime("");
+        consumeRequestBean.setStartDate("");
+        consumeRequestBean.setEndDate("");
+        consumeRequestBean.setDateSearch("");
         return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), new Gson().toJson(consumeRequestBean));
+    }
+
+    public static RequestBody getSystemUserRequestBody(String account) {
+//        {"ID_NUMBER":"20141000111"}
+        SystemUserRequestBean bean = new SystemUserRequestBean();
+        bean.setID_NUMBER(account);
+        return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), new Gson().toJson(bean));
+    }
+
+    public static void clearAllUserCache() {
+//        清除并通知改变
+        ToastUtils.showShortToast("清除并通知改变");
+        UserInfoEvent userInfoEvent = new UserInfoEvent();
+        BaseApplication.getAppComponent().getSharedPreferences()
+                .edit().putBoolean(ConstantUtil.LOGIN_STATUS, true)
+                .putString(ConstantUtil.ACCOUNT, userInfoEvent.getAccount())
+                .putString(ConstantUtil.PASSWORD, userInfoEvent.getPassword())
+                .putString(ConstantUtil.AVATAR, userInfoEvent.getAvatar())
+                .putString(ConstantUtil.NAME, userInfoEvent.getNick())
+                .putBoolean(ConstantUtil.SEX, false)
+                .putString(ConstantUtil.BG_HALF, userInfoEvent.getHalfBg())
+                .putString(ConstantUtil.BG_ALL, userInfoEvent.getAllBg())
+                .putString(ConstantUtil.NICK, userInfoEvent.getNick()).apply();
+        RxBusManager.getInstance()
+                .post(userInfoEvent);
+//        BaseApplication.getAppComponent().getSharedPreferences()
+//                .edit().putBoolean(ConstantUtil.LOGIN_STATUS, false)
+//                .putString(ConstantUtil.ACCOUNT, null)
+//                .putString(ConstantUtil.PASSWORD, null)
+//                .putString(ConstantUtil.AVATAR, null)
+//                .putString(ConstantUtil.NAME, null)
+//                .putBoolean(ConstantUtil.SEX, false)
+//                .putString(ConstantUtil.BG_HALF, null)
+//                .putString(ConstantUtil.BG_ALL, null)
+//                .putString(ConstantUtil.NICK,null).apply();
     }
 }

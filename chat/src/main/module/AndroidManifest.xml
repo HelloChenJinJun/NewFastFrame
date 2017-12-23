@@ -63,7 +63,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.LoginActivity"/>
+        <activity android:name=".ui.LoginActivity"
+            android:exported="true"/>
         <activity android:name=".ui.MainActivity" android:launchMode="singleTask"/>
         <activity android:name=".ui.RegisterActivity"/>
         <activity android:name=".ui.SearchFriendActivity"/>

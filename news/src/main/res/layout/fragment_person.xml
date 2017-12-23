@@ -7,11 +7,13 @@
 
 
     <RelativeLayout
+        android:id="@+id/rl_fragment_person_title_bg"
         android:background="@drawable/cug_index"
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
         <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            android:scaleType="centerCrop"
             android:id="@+id/riv_fragment_person_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"

@@ -8,14 +8,18 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.router.Router;
+import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.NewsApplication;
 import com.example.news.R;
+import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.systeminfo.DaggerSystemInfoComponent;
 import com.example.news.dagger.systeminfo.SystemInfoModule;
-import com.example.news.event.UserInfoEvent;
-import com.example.news.mvp.systemcenter.SystemCenterActivity;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 项目名称:    NewFastFrame
@@ -30,14 +34,21 @@ public class SystemInfoLoginActivity extends BaseActivity<Object, SystemInfoLogi
 
     @Override
     public void updateData(Object o) {
-//        SystemCenterActivity.start(this);
-        String name=account.getText().toString().trim();
-        String password=pw.getText().toString().trim();
-        UserInfoEvent userInfoEvent=new UserInfoEvent();
-        userInfoEvent.setAccount(name);
-        userInfoEvent.setPassword(password);
-        RxBusManager.getInstance().post(userInfoEvent);
-        finish();
+        if (o != null && o instanceof SystemUserBean) {
+            SystemUserBean bean = (SystemUserBean) o;
+            Map<String, Object> map = new HashMap<>();
+            map.put(ConstantUtil.FROM, "news");
+            map.put(ConstantUtil.ACCOUNT, account.getText().toString().trim());
+            map.put(ConstantUtil.PASSWORD, pw.getText().toString().trim());
+            map.put(ConstantUtil.AVATAR, bean.getSCHOOL_PIC());
+            map.put(ConstantUtil.NICK, bean.getUSER_NAME());
+            map.put(ConstantUtil.NAME, bean.getUSER_NAME());
+            map.put(ConstantUtil.SEX, bean.getUSER_SEX().equals("男") ? Boolean.TRUE : Boolean.FALSE);
+            map.put(ConstantUtil.STUDENT_TYPE, bean.getID_TYPE());
+            map.put(ConstantUtil.COLLEGE, bean.getUNIT_NAME());
+            Router.getInstance().deal(new RouterRequest.Builder().provideName("chat")
+                    .actionName("login").paramMap(map).isFinish(true).context(this).build());
+        }
     }
 
     @Override
@@ -84,7 +95,7 @@ public class SystemInfoLoginActivity extends BaseActivity<Object, SystemInfoLogi
     }
 
     public static void start(Activity activity) {
-        Intent intent=new Intent(activity,SystemInfoLoginActivity.class);
+        Intent intent = new Intent(activity, SystemInfoLoginActivity.class);
         activity.startActivity(intent);
     }
 }

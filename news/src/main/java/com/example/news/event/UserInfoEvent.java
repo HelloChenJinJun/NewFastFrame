@@ -10,6 +10,91 @@ package com.example.news.event;
 public class UserInfoEvent {
     private String account;
     private String password;
+    private String from;
+    private String avatar;
+    private String name;
+    private String nick;
+    private Boolean sex;
+    private String studentType;
+//    学院
+    private String college;
+
+
+    private String allBg;
+    private String halfBg;
+
+
+    public String getAllBg() {
+        return allBg;
+    }
+
+    public void setAllBg(String allBg) {
+        this.allBg = allBg;
+    }
+
+    public String getHalfBg() {
+        return halfBg;
+    }
+
+    public void setHalfBg(String halfBg) {
+        this.halfBg = halfBg;
+    }
+
+    public String getStudentType() {
+        return studentType;
+    }
+
+    public void setStudentType(String studentType) {
+        this.studentType = studentType;
+    }
+
+    public String getCollege() {
+        return college;
+    }
+
+    public void setCollege(String college) {
+        this.college = college;
+    }
+
+    public Boolean getSex() {
+        return sex;
+    }
+
+    public void setSex(Boolean sex) {
+        this.sex = sex;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNick() {
+        return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
 
     public String getAccount() {
         return account;
@@ -25,5 +110,21 @@ public class UserInfoEvent {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+
+    @Override
+    public String toString() {
+        return "UserInfoEvent{" +
+                "account='" + account + '\'' +
+                ", password='" + password + '\'' +
+                ", from='" + from + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", name='" + name + '\'' +
+                ", nick='" + nick + '\'' +
+                ", sex=" + sex +
+                ", studentType='" + studentType + '\'' +
+                ", college='" + college + '\'' +
+                '}';
     }
 }

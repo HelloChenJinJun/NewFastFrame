@@ -17,7 +17,6 @@ import com.example.news.bean.ScoreBean;
 import com.example.news.dagger.score.DaggerScoreQueryComponent;
 import com.example.news.dagger.score.ScoreQueryScoreModule;
 import com.example.news.mvp.score.ScoreQueryPresenter;
-import com.example.news.mvp.systemcenter.SystemCenterActivity;
 
 import javax.inject.Inject;
 

@@ -1,23 +1,35 @@
 package com.example.news;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
+import com.example.commonlibrary.router.Router;
+import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.event.UserInfoEvent;
 import com.example.news.mvp.systeminfo.SystemInfoLoginActivity;
 import com.example.news.util.NewsUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.functions.Consumer;
 
@@ -31,6 +43,8 @@ import io.reactivex.functions.Consumer;
 public class PersonFragment extends BaseFragment implements View.OnClickListener {
     private TextView signature;
     private RoundAngleImageView avatar;
+    private RelativeLayout titleBg;
+
     @Override
     public void updateData(Object o) {
 
@@ -53,9 +67,17 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     protected void initView() {
-        signature= (TextView) findViewById(R.id.tv_fragment_person_signature);
-        avatar= (RoundAngleImageView) findViewById(R.id.riv_fragment_person_avatar);
+        signature = (TextView) findViewById(R.id.tv_fragment_person_signature);
+        avatar = (RoundAngleImageView) findViewById(R.id.riv_fragment_person_avatar);
+        titleBg = (RelativeLayout) findViewById(R.id.rl_fragment_person_title_bg);
         avatar.setOnClickListener(this);
+        avatar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                NewsUtil.clearAllUserCache();
+                return true;
+            }
+        });
     }
 
     @Override
@@ -63,26 +85,49 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
         RxBusManager.getInstance().registerEvent(UserInfoEvent.class, new Consumer<UserInfoEvent>() {
             @Override
             public void accept(UserInfoEvent userInfoEvent) throws Exception {
-                Intent intent=new Intent();
-                intent.putExtra("from","news");
-                intent.setClassName("com.example.chat","LoginActivity");
-                intent.putExtra("account",userInfoEvent.getAccount());
-                intent.putExtra("password",userInfoEvent.getPassword());
-                getActivity().startActivityForResult(intent,ConstantUtil.REQUEST_CODE_LOGIN);
+                ToastUtils.showShortToast(userInfoEvent.toString());
+                CommonLogger.e(userInfoEvent.toString());
+                updateUserInfo(userInfoEvent.getAvatar(), userInfoEvent.getNick(), userInfoEvent.getHalfBg());
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(Throwable throwable) throws Exception {
                 if (throwable != null) {
-                    ToastUtils.showShortToast("请求异常"+throwable.getMessage());
+                    ToastUtils.showShortToast("请求异常" + throwable.getMessage());
+                    CommonLogger.e(throwable);
                 }
             }
         });
     }
 
+    private void updateUserInfo(String avatar, String nick, String bg) {
+        if (getContext() != null) {
+            Glide.with(getContext()).load(avatar).placeholder(R.mipmap.ic_launcher_round)
+                    .error(R.mipmap.ic_launcher_round).into(this.avatar);
+            signature.setText(nick);
+            Glide.with(getContext()).load(bg).placeholder(R.drawable.cug_index)
+                    .error(R.drawable.cug_index).into(new SimpleTarget<GlideDrawable>() {
+                @Override
+                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                    titleBg.setBackground(resource);
+                }
+            });
+        }
+    }
+
     @Override
     protected void updateView() {
-
+        boolean loginStatus = BaseApplication.getAppComponent().getSharedPreferences()
+                .getBoolean(ConstantUtil.LOGIN_STATUS, false);
+        if (loginStatus) {
+            SharedPreferences sharedPreferences = BaseApplication.getAppComponent()
+                    .getSharedPreferences();
+            updateUserInfo(sharedPreferences.getString(ConstantUtil.AVATAR, null)
+                    , sharedPreferences.getString(ConstantUtil.NICK, null)
+                    , sharedPreferences.getString(ConstantUtil.BG_HALF, null));
+        } else {
+            ToastUtils.showShortToast("未登录状态，请及时登录");
+        }
     }
 
     public static PersonFragment newInstance() {
@@ -94,23 +139,8 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
         if (BaseApplication.getAppComponent().getSharedPreferences().getBoolean(NewsUtil
                 .IS_LOGIN, false)) {
             ToastUtils.showShortToast("已经登录");
-        }else {
+        } else {
             SystemInfoLoginActivity.start(getActivity());
-        }
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode){
-                case ConstantUtil.REQUEST_CODE_LOGIN:
-                    Glide.with(getContext()).load(data.getStringExtra("avatar")).into(avatar);
-                    signature.setText(data.getStringExtra("signature"));
-                    ToastUtils.showShortToast("登录成功");
-                    break;
-            }
         }
     }
 }

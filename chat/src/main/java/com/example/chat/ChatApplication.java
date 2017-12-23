@@ -1,23 +1,34 @@
 package com.example.chat;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 
 import com.example.chat.base.Constant;
+import com.example.chat.base.RandomData;
 import com.example.chat.bean.CustomInstallation;
 import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.dagger.ChatMainModule;
 import com.example.chat.dagger.DaggerChatMainComponent;
 import com.example.chat.manager.LocationManager;
+import com.example.chat.ui.LoginActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.manager.ActivityManager;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.module.IModuleConfig;
+import com.example.commonlibrary.router.BaseAction;
+import com.example.commonlibrary.router.Router;
+import com.example.commonlibrary.router.RouterRequest;
+import com.example.commonlibrary.router.RouterResult;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cn.bmob.push.BmobPush;
@@ -34,10 +45,11 @@ import okhttp3.OkHttpClient;
  * QQ:             1981367757
  */
 
-public class ChatApplication implements IModuleConfig,IAppLife {
+public class ChatApplication implements IModuleConfig, IAppLife {
 
 
     private static ChatMainComponent chatMainComponent;
+
     @Override
     public void injectAppLifecycle(Context context, List<IAppLife> iAppLifes) {
         iAppLifes.add(this);
@@ -59,7 +71,7 @@ public class ChatApplication implements IModuleConfig,IAppLife {
 
     @Override
     public void onCreate(Application application) {
-        chatMainComponent= DaggerChatMainComponent.builder().appComponent(BaseApplication.getAppComponent())
+        chatMainComponent = DaggerChatMainComponent.builder().appComponent(BaseApplication.getAppComponent())
                 .chatMainModule(new ChatMainModule()).build();
         Bmob.initialize(application, Constant.KEY);
         AppStat.i(Constant.KEY, null);
@@ -71,6 +83,35 @@ public class ChatApplication implements IModuleConfig,IAppLife {
         initOkHttp();
         initSmallVideo(application);
         initLocationClient();
+        RandomData.initAllRanDomData();
+        initRouter();
+    }
+
+    private void initRouter() {
+        Router.getInstance().registerProvider("chat:login", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                if (routerRequest.getParamMap() != null) {
+                    Context context = routerRequest.getContext();
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    for (Map.Entry<String, Object> entry :
+                            routerRequest.getParamMap().entrySet()) {
+                        if (entry.getValue() instanceof String) {
+                            intent.putExtra(entry.getKey(), ((String) entry.getValue()));
+                        } else if (entry.getValue() instanceof Integer) {
+                            intent.putExtra(entry.getKey(), ((Integer) entry.getValue()));
+                        } else if (entry.getValue() instanceof Boolean) {
+                            intent.putExtra(entry.getKey(), ((Boolean) entry.getValue()));
+                        }
+                    }
+                    context.startActivity(intent);
+                    if (context instanceof Activity && routerRequest.isFinish()) {
+                        ((Activity) context).finish();
+                    }
+                }
+                return null;
+            }
+        });
     }
 
 
@@ -106,6 +147,6 @@ public class ChatApplication implements IModuleConfig,IAppLife {
 
     @Override
     public void onTerminate(Application application) {
-        chatMainComponent=null;
+        chatMainComponent = null;
     }
 }

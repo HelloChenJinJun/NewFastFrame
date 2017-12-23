@@ -14,11 +14,41 @@ public class BaseProvider {
     private Map<String,BaseAction> actionMap=new HashMap<>();
 
 
-    public void putAction(String actionName,BaseAction baseAction){
+    private String name;
+
+    public BaseProvider(String name) {
+        this.name = name;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void putAction(String actionName, BaseAction baseAction){
         if (actionMap == null) {
             actionMap=new HashMap<>();
         }
         actionMap.put(actionName, baseAction);
+    }
+
+
+
+
+    public void removeAll(){
+        if (actionMap != null) {
+            actionMap.clear();
+        }
+    }
+
+
+
+
+    public BaseAction getAction(String actionName){
+        if (actionMap != null) {
+            return actionMap.get(actionName);
+        }
+        return null;
     }
 
 

@@ -3,12 +3,16 @@ package com.example.news;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.bean.CenterBean;
 import com.example.news.mvp.cardlogin.CardLoginActivity;
 import com.example.news.mvp.librarylogin.LibraryLoginActivity;
+import com.example.news.mvp.systemcenter.SystemCenterActivity;
 import com.example.news.mvp.systeminfo.SystemInfoLoginActivity;
 
 import java.util.ArrayList;
@@ -64,9 +68,16 @@ public class CenterFragment extends BaseFragment {
                 } else if (position == 1) {
                     CardLoginActivity.start(getContext(), null);
                 } else if (position == 2) {
-                    SystemInfoLoginActivity.start(getActivity());
+                    if (BaseApplication.getAppComponent().getSharedPreferences()
+                            .getBoolean(ConstantUtil.LOGIN_STATUS,false)) {
+                        ToastUtils.showShortToast("");
+                        SystemCenterActivity.start(getActivity());
+                    }else {
+                        ToastUtils.showShortToast("亲！请登录吧!");
+                        SystemInfoLoginActivity.start(getActivity());
+                    }
                 } else if (position == 3) {
-//                    VoiceCenterActivity.start(getActivity());
+
                 }
             }
         });

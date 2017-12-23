@@ -27,7 +27,8 @@ public class NewsInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-        if (request.url().toString().equals(NewsUtil.LIBRARY_LOGIN)) {
+        String url=request.url().toString();
+        if (url.equals(NewsUtil.LIBRARY_LOGIN)) {
             Response response = chain.proceed(request);
             String cookie = response.header("Set-Cookie", null);
             if (cookie != null) {
@@ -38,7 +39,7 @@ public class NewsInterceptor implements Interceptor {
             return response;
         }
 
-        if (request.url().toString().equals(NewsUtil.SYSTEM_INFO_INDEX_URL)) {
+        if (url.equals(NewsUtil.SYSTEM_INFO_INDEX_URL)) {
 //            _ga=GA1.3.1067555487.1498354603;UM_distinctid=15ee5c241e60-0ccb143b01978-6a11157a-100200-15ee5c241eaa2;
             Request newRequest;
             newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
@@ -60,7 +61,7 @@ public class NewsInterceptor implements Interceptor {
         }
 
 
-        if (request.url().toString().startsWith("http://xyfw.cug.edu.cn/tp_up/?ticket")) {
+        if (url.startsWith("http://xyfw.cug.edu.cn/tp_up/?ticket")) {
             Response response = chain.proceed(request);
             List<String> cookieList = response.headers("Set-Cookie");
             if (cookieList != null && cookieList.size() > 0) {
@@ -75,13 +76,18 @@ public class NewsInterceptor implements Interceptor {
             }
             return response;
         }
-        if (request.url().toString().equals(NewsUtil.SCORE_QUERY_URL)||
-                request.url().toString().equals(NewsUtil.CONSUME_QUERY_URL)) {
+        if (url.equals(NewsUtil.SCORE_QUERY_URL)||
+                url.equals(NewsUtil.CONSUME_QUERY_URL)
+                ||url.equals(NewsUtil.SYSTEM_USER_INFO_URL)) {
             Request newRequest;
             StringBuilder cookie = new StringBuilder();
             cookie.append("_ga=GA1.3.1067555487.1498354603;UM_distinctid=15ee5c241e60-0ccb143b01978-6a11157a-100200-15ee5c241eaa2;")
                     .append(BaseApplication.getAppComponent()
                             .getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_TP_UP, null));
+            String loginCookie=BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_COOKIE,null);
+            if (loginCookie != null) {
+                cookie.append(";").append(loginCookie);
+            }
             newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
                     .header("Cookie", cookie.toString())
                     .build();
@@ -89,7 +95,7 @@ public class NewsInterceptor implements Interceptor {
             return response;
         }
 
-        if (request.url().toString().equals(NewsUtil.getRealLoginUrl(BaseApplication
+        if (url.equals(NewsUtil.getRealLoginUrl(BaseApplication
                 .getAppComponent().getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_COOKIE, null)))) {
             Request newRequest;
             newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
@@ -128,7 +134,7 @@ public class NewsInterceptor implements Interceptor {
         }
 
 
-        if (request.url().toString().equals(NewsUtil.CARD_LOGIN_URL)) {
+        if (url.equals(NewsUtil.CARD_LOGIN_URL)) {
             Request newRequest;
             newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
                     .header("Cookie", getCardLoginCookie())
@@ -144,7 +150,7 @@ public class NewsInterceptor implements Interceptor {
         }
 
 
-        if (request.url().toString().startsWith(NewsUtil.CARD_VERIFY_IMAGE_URL)) {
+        if (url.startsWith(NewsUtil.CARD_VERIFY_IMAGE_URL)) {
             Request newRequest;
             if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.CARD_LOGIN_COOKIE, null) != null) {
                 newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
@@ -156,7 +162,7 @@ public class NewsInterceptor implements Interceptor {
             Response response = chain.proceed(newRequest);
             return response;
         }
-        if (request.url().toString().equals(NewsUtil.CARD_POST_LOGIN_URL)) {
+        if (url.equals(NewsUtil.CARD_POST_LOGIN_URL)) {
             Request newRequest;
             if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.CARD_LOGIN_COOKIE, null) != null) {
                 newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
@@ -194,7 +200,7 @@ public class NewsInterceptor implements Interceptor {
 
             return response;
         }
-        if (request.url().toString().equals(NewsUtil.CARD_PAGE_INFO_URL) ||
+        if (url.equals(NewsUtil.CARD_PAGE_INFO_URL) ||
                 request.url().toString().equals(NewsUtil.CARD_BANK_INFO_URL)
                 || request.url().toString().equals(NewsUtil.PAY_URL)) {
             Request newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
@@ -205,14 +211,14 @@ public class NewsInterceptor implements Interceptor {
             Response response = chain.proceed(newRequest);
             return response;
         }
-        if (request.url().toString().startsWith("http://202.114.202.207/")) {
+        if (url.startsWith("http://202.114.202.207/")) {
             if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.LIBRARY_COOKIE, null) != null) {
                 Request newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
                         .header("Cookie", BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.LIBRARY_COOKIE, null))
                         .build();
                 return chain.proceed(newRequest);
             }
-        } else if (request.url().toString().startsWith(NewsUtil.WY_BASE_URL)
+        } else if (url.startsWith(NewsUtil.WY_BASE_URL)
                 ) {
             Response response = chain.proceed(chain.request());
             ResponseBody responseBody = response.body();
