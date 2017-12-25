@@ -30,7 +30,6 @@ import com.example.chat.manager.UserManager;
 import com.example.chat.receiver.NetWorkChangedReceiver;
 import com.example.chat.service.GroupMessageService;
 import com.example.chat.ui.ChatActivity;
-import com.example.chat.ui.MainActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
@@ -204,7 +203,7 @@ public class RecentFragment extends BaseFragment implements SwipeRefreshLayout.O
         public void onHiddenChanged(boolean hidden) {
                 super.onHiddenChanged(hidden);
                 if (!hidden) {
-                        ((MainActivity) getActivity()).initActionBar("聊天");
+                        ((HomeFragment) getParentFragment()).initActionBar("聊天");
                         mAdapter.clearAllData();
                         mAdapter.addData(ChatDB.create().getAllRecentMsg());
                 }

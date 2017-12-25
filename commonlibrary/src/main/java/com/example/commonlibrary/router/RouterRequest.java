@@ -17,7 +17,16 @@ public class RouterRequest {
     private Map<String,Object> paramMap;
     private Context context;
     private boolean isFinish;
+    private Object object;
 
+
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
 
     public boolean isFinish() {
         return isFinish;
@@ -33,6 +42,7 @@ public class RouterRequest {
         setParamMap(builder.paramMap);
         setContext(builder.context);
         setFinish(builder.isFinish);
+        setObject(builder.object);
     }
 
     public Context getContext() {
@@ -73,12 +83,19 @@ public class RouterRequest {
         private Map<String, Object> paramMap;
         private Context context;
         public boolean isFinish=false;
+        public Object object;
 
         public Builder() {
         }
 
         public Builder provideName(String val) {
             provideName = val;
+            return this;
+        }
+
+
+        public Builder object(Object object){
+            this.object=object;
             return this;
         }
 

@@ -13,8 +13,16 @@ import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.dagger.ChatMainModule;
 import com.example.chat.dagger.DaggerChatMainComponent;
 import com.example.chat.manager.LocationManager;
+import com.example.chat.ui.HappyActivity;
 import com.example.chat.ui.LoginActivity;
+import com.example.chat.ui.SearchActivity;
+import com.example.chat.ui.SearchFriendActivity;
+import com.example.chat.ui.SelectedFriendsActivity;
+import com.example.chat.ui.SettingsActivity;
+import com.example.chat.ui.WallPaperActivity;
+import com.example.chat.ui.fragment.HomeFragment;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.manager.ActivityManager;
 import com.example.commonlibrary.module.IAppLife;
@@ -24,9 +32,11 @@ import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.router.RouterResult;
 import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -112,6 +122,74 @@ public class ChatApplication implements IModuleConfig, IAppLife {
                 return null;
             }
         });
+        Router.getInstance().registerProvider("chat:main", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                HomeFragment homeFragment = HomeFragment.newInstance();
+                RouterResult routerResult = new RouterResult();
+                routerResult.setObject(homeFragment);
+                return routerResult;
+            }
+        });
+        Router.getInstance().registerProvider("chat:intent", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                Intent intent = (Intent) routerRequest.getObject();
+                if (intent.getSerializableExtra("url_share_message") != null) {
+                    Serializable sharedMessage = intent.getSerializableExtra("url_share_message");
+                    ((HomeFragment) ((BaseActivity) BaseApplication
+                            .getAppComponent().getActivityManager()
+                            .getCurrentActivity()).getCurrentFragment()).notifyUrlSharedMessageAdd(sharedMessage);
+                }
+                ((HomeFragment) ((BaseActivity) BaseApplication
+                        .getAppComponent().getActivityManager()
+                        .getCurrentActivity()).getCurrentFragment()).notifyNewIntentCome(intent);
+                return null;
+            }
+        });
+        Router.getInstance().registerProvider("chat:menuOnClick", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                Map<String, Object> map = routerRequest.getParamMap();
+                Activity activity = BaseApplication.getAppComponent().getActivityManager()
+                        .getCurrentActivity();
+                String title = (String) map.get(ConstantUtil.TITLE);
+                switch (title) {
+                    case "搜索":
+                        Intent intent = new Intent(activity, SearchActivity.class);
+                        activity.startActivity(intent);
+                        break;
+                    case "添加":
+                        ToastUtils.showShortToast("点击了添加好友");
+                        SearchFriendActivity.start(activity);
+                        break;
+                    case "建群":
+                        ToastUtils.showShortToast("点击了创建群");
+                        Intent selectIntent = new Intent(activity, SelectedFriendsActivity.class);
+                        selectIntent.putExtra("from", "createGroup");
+                        activity.startActivity(selectIntent);
+                        break;
+                    case "背景":
+                        ToastUtils.showShortToast("点击了背景");
+                        Intent wallPaperIntent = new Intent(activity, WallPaperActivity.class);
+                        wallPaperIntent.putExtra("from", "wallpaper");
+                        activity.startActivityForResult(wallPaperIntent, Constant.REQUEST_CODE_SELECT_WALLPAPER);
+                        break;
+                    case "设置":
+                        ToastUtils.showShortToast("点击了设置");
+                        SettingsActivity.start(activity, Constant.REQUEST_CODE_EDIT_USER_INFO);
+                        break;
+                    case "开心时刻":
+                        HappyActivity.startActivity(activity);
+                        break;
+                    default:
+                        break;
+                }
+                return null;
+            }
+        });
+
+
     }
 
 

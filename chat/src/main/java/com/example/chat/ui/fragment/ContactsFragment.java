@@ -17,7 +17,6 @@ import com.example.chat.db.ChatDB;
 import com.example.chat.manager.UserCacheManager;
 import com.example.chat.ui.BlackListActivity;
 import com.example.chat.ui.GroupListActivity;
-import com.example.chat.ui.MainActivity;
 import com.example.chat.ui.NearbyPeopleActivity;
 import com.example.chat.ui.UserInfoActivity;
 import com.example.chat.util.LogUtil;
@@ -123,7 +122,7 @@ public class ContactsFragment extends BaseFragment implements MyLetterView.MyLet
         public void onHiddenChanged(boolean hidden) {
                 super.onHiddenChanged(hidden);
                 if (!hidden) {
-                        ((MainActivity) getActivity()).initActionBar("好友");
+                        ((HomeFragment) getParentFragment()).initActionBar("好友");
                 }
         }
 

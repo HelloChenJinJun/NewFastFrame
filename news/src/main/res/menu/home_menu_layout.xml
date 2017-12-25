@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/main_item_search"
+        android:icon="@drawable/ic_news_search"
+        android:title="搜索"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/main_item_more"
+        android:icon="@drawable/ic_news_more"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/main_sub_item_add"
+                android:icon="@drawable/ic_news_person"
+                android:title="添加好友" />
+            <item
+                android:id="@+id/main_sub_item_create"
+                android:icon="@drawable/ic_news_group"
+                android:title="建群" />
+            <item
+                android:id="@+id/main_sub_item_happy"
+                android:icon="@drawable/ic_news_favorite"
+                android:title="开心时刻" />
+            <item
+                android:id="@+id/main_sub_item_bg"
+                android:icon="@drawable/ic_news_photo"
+                android:title="背景" />
+            <item
+                android:id="@+id/main_sub_item_settings"
+                android:icon="@drawable/ic_news_settings"
+                android:title="设置" />
+
+        </menu>
+
+    </item>
+
+
+</menu>

@@ -635,7 +635,7 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
                         MessageCacheManager.getInstance().saveShareMessageCache(shareMessage.getObjectId(), urlList);
                 } else if (shareMessage.getMsgType().equals(Constant.MSG_TYPE_SHARE_MESSAGE_LINK)) {
                         LogUtil.e("这里是发送链接的消息");
-                        Intent intent = new Intent(this, MainActivity.class);
+                        Intent intent = new Intent(this, HomeActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra("url_share_message", shareMessage);
                         startActivity(intent);

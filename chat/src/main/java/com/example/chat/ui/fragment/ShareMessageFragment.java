@@ -43,8 +43,8 @@ import com.example.chat.service.GroupMessageService;
 import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.EditShareMessageActivity;
 import com.example.chat.ui.HappyContentDisplayActivity;
+import com.example.chat.ui.HomeActivity;
 import com.example.chat.ui.ImageDisplayActivity;
-import com.example.chat.ui.MainActivity;
 import com.example.chat.ui.SelectedPictureActivity;
 import com.example.chat.ui.UserDetailActivity;
 import com.example.chat.ui.VideoPlayActivity;
@@ -119,7 +119,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            ((MainActivity) getActivity()).initActionBar("朋友圈");
+            ((HomeFragment) getParentFragment()).initActionBar("朋友圈");
         }
     }
 
@@ -265,7 +265,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
                         SharedMessage sharedMessage = (SharedMessage) data.getSerializableExtra(Constant.RESULT_CODE_SHARE_MESSAGE);
                         LogUtil.e(sharedMessage);
                         updateShareMessageAdded(sharedMessage);
-                        ((MainActivity) getActivity()).notifySharedMessageChanged(sharedMessage.getObjectId(), true);
+                        ((HomeFragment) getParentFragment()).notifySharedMessageChanged(sharedMessage.getObjectId(), true);
                     }
                     break;
                 case Constant.REQUEST_CODE_SELECT_TITLE_WALLPAPER:
@@ -386,7 +386,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
         if (mAdapter.getData().size() > 0) {
             for (SharedMessage sharedMessage :
                     mAdapter.getData()) {
-                ((MainActivity) getActivity()).notifySharedMessageChanged(sharedMessage.getObjectId(), false);
+                ((HomeFragment) getParentFragment()).notifySharedMessageChanged(sharedMessage.getObjectId(), false);
             }
         }
     }
@@ -457,7 +457,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
             mAdapter.getData().remove(sharedMessage);
             mAdapter.notifyDataSetChanged();
 //                这里通知删除
-            ((MainActivity) getActivity()).notifySharedMessageChanged(sharedMessage.getObjectId(), false);
+            ((HomeFragment) getParentFragment()).notifySharedMessageChanged(sharedMessage.getObjectId(), false);
         } else {
             LogUtil.e("该说说已删除");
         }
@@ -861,7 +861,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
             LogUtil.e(sharedMessage);
             mAdapter.getData().remove(sharedMessage);
             mAdapter.notifyDataSetChanged();
-            ((MainActivity) getActivity()).notifySharedMessageChanged(id, false);
+            ((HomeFragment) getParentFragment()).notifySharedMessageChanged(id, false);
         } else {
             LogUtil.e("删除消息竟然为空，怎么回事?????");
         }
@@ -873,7 +873,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ((MainActivity) getActivity()).dismissBaseDialog();
+        ((HomeActivity) getActivity()).dismissBaseDialog();
         switch (position) {
             case 0:
                 CommonImageLoader.getInstance().initStanderConfig(1);

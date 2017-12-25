@@ -19,7 +19,6 @@ import com.example.chat.listener.OnSendTagMessageListener;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserCacheManager;
 import com.example.chat.manager.UserManager;
-import com.example.chat.ui.MainActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
@@ -115,7 +114,7 @@ public class InvitationFragment extends BaseFragment {
                                                                                                (BaseWrappedViewHolder) display.getChildViewHolder(linearLayoutManager.findViewByPosition(position));
                                                                                        baseWrappedViewHolder.setVisible(R.id.btn_new_friend_item_agree, false)
                                                                                                .setVisible(R.id.tv_new_friend_item_agree, true);
-                                                                                       ((MainActivity) getActivity()).notifyContactAndRecent(chatMessage);
+                                                                                       ((HomeFragment) getParentFragment()).notifyContactAndRecent(chatMessage);
                                                                                }
 
                                                                                @Override
@@ -140,7 +139,7 @@ public class InvitationFragment extends BaseFragment {
                                 InvitationMsg msg = adapter.getData(adapterPosition);
                                 ChatDB.create().deleteInvitationMsg(msg.getBelongId(), msg.getTime());
                                 adapter.removeData(adapterPosition);
-                                ((MainActivity) getActivity()).notifyMenuUpdate();
+                                ((HomeFragment) getParentFragment()).notifyMenuUpdate();
                         }
                 });
                 display.setAdapter(adapter);
@@ -157,7 +156,7 @@ public class InvitationFragment extends BaseFragment {
         public void onHiddenChanged(boolean hidden) {
                 super.onHiddenChanged(hidden);
                 if (!hidden) {
-                        ((MainActivity) getActivity()).initActionBar("邀请");
+                        ((HomeFragment) getParentFragment()).initActionBar("邀请");
                 }
 
         }

@@ -366,7 +366,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         } else if (from!=null&&from.equals("news")){
             dealResultInfo(UserManager.getInstance().getCurrentUser());
         }else {
-            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+            startActivity(new Intent(LoginActivity.this,HomeActivity.class));
             finish();
         }
     }
@@ -411,7 +411,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         User user = (User) data.getSerializableExtra("user");
                         dealResultInfo(user);
                     }else {
-                        startActivity(new Intent(this,MainActivity.class));
+                        startActivity(new Intent(this,HomeActivity.class));
                         finish();
                     }
                     break;

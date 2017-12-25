@@ -12,82 +12,60 @@ import java.util.Map;
 
 public class Router {
     private static Router instance;
-    private Map<String,BaseProvider> providerMap;
-
+    private Map<String, BaseProvider> providerMap;
 
 
     public static Router getInstance() {
         if (instance == null) {
-            instance=new Router();
+            instance = new Router();
         }
         return instance;
     }
 
 
-
-    private Router(){
-        providerMap=new HashMap<>();
+    private Router() {
+        providerMap = new HashMap<>();
     }
 
 
-
-    public void clearCache(){
-        for (Map.Entry<String, BaseProvider> entry:
-        providerMap.entrySet()){
+    public void clearCache() {
+        for (Map.Entry<String, BaseProvider> entry :
+                providerMap.entrySet()) {
             entry.getValue().removeAll();
         }
         providerMap.clear();
     }
 
 
-
-
-    public RouterResult deal(RouterRequest routerRequest){
+    public RouterResult deal(RouterRequest routerRequest) {
         if (routerRequest != null) {
-            BaseProvider baseProvider=providerMap.get(routerRequest.getProvideName());
-            BaseAction baseAction=baseProvider.getAction(routerRequest.getActionName());
-           return baseAction.invoke(routerRequest);
+            BaseProvider baseProvider = providerMap.get(routerRequest.getProvideName());
+            BaseAction baseAction = baseProvider.getAction(routerRequest.getActionName());
+            return baseAction.invoke(routerRequest);
         }
         return null;
     }
 
 
-
-
-
-
-
-
-
-
-
-
-//    public void registerProvider(String provideName,BaseProvider baseProvider){
-//        if (providerMap == null) {
-//            providerMap=new HashMap<>();
-//        }
-//        providerMap.put(provideName, baseProvider);
-//    }
-
-
-
-
-    public void registerProvider(String name,BaseAction baseAction){
+    public void registerProvider(String name, BaseAction baseAction) {
         if (name.contains(":")) {
-            String providerName=name.split(":")[0];
-            String actionName=name.split(":")[1];
-            BaseProvider baseProvider=new BaseProvider(providerName);
-            baseProvider.putAction(actionName,baseAction);
-            providerMap.put(providerName,baseProvider);
+            String providerName = name.split(":")[0];
+            String actionName = name.split(":")[1];
+            BaseProvider baseProvider = providerMap.get(providerName);
+            if (baseProvider != null) {
+                baseProvider.putAction(actionName, baseAction);
+            } else {
+                baseProvider = new BaseProvider(providerName);
+                providerMap.put(providerName, baseProvider);
+            }
+            baseProvider.putAction(actionName, baseAction);
         }
 
 
     }
 
 
-
-
-    public void unRegisterProvider(String providerName){
+    public void unRegisterProvider(String providerName) {
         if (providerMap != null && providerMap.containsKey(providerName)) {
             providerMap.remove(providerName);
         }

@@ -21,7 +21,8 @@ import com.example.chat.manager.MessageCacheManager;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserCacheManager;
 import com.example.chat.manager.UserManager;
-import com.example.chat.ui.MainActivity;
+import com.example.chat.ui.HomeActivity;
+
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
@@ -229,7 +230,7 @@ public class GroupMessageService extends Service {
                                                                 if (BaseApplication.getAppComponent().getSharedPreferences().getBoolean(groupChatMessage.getGroupId(),true)) {
                                                                         ChatNotificationManager.getInstance(getBaseContext()).notify(Constant.NOTIFICATION_TAG_GROUP_MESSAGE, groupChatMessage.getGroupId(), true, true, getBaseContext(),
                                                                                 MessageCacheManager.getInstance().getGroupTableMessage(groupChatMessage.getGroupId()).getGroupName(), R.mipmap.ic_launcher, groupChatMessage.getContent(),
-                                                                                MainActivity.class);
+                                                                                HomeActivity.class);
                                                                 }
                                                         }
                                                 } else if (!JsonUtil.getString(object, "username").equals("")) {

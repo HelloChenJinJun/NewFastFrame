@@ -105,7 +105,7 @@ public class SplashActivity extends BaseActivity {
                                                                                                                                           UserCacheManager.getInstance().setContactsList(BmobUtils.list2map(contacts));
                                                                                                                                   }
                                                                                                                                   MessageCacheManager.getInstance().addGroupTableMessage(newData);
-                                                                                                                                  Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                                                                                                                                  Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                                                                                                                                   startActivity(intent);
                                                                                                                                   finish();
                                                                                                                           }
@@ -126,13 +126,13 @@ public class SplashActivity extends BaseActivity {
                                                                                                                                           if (contacts != null && contacts.size() > 0) {
                                                                                                                                                   UserCacheManager.getInstance().setContactsList(BmobUtils.list2map(contacts));
                                                                                                                                           }
-                                                                                                                                          Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                                                                                                                                          Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                                                                                                                                           startActivity(intent);
                                                                                                                                           finish();
                                                                                                                                   }
                                                                                                                           });
                                                                                                                   }
-                                                                                                                  Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                                                                                                                  Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                                                                                                                   startActivity(intent);
                                                                                                                   finish();
 
@@ -146,7 +146,7 @@ public class SplashActivity extends BaseActivity {
                                                                                   public void onError(int i, String s) {
                                                                                           UserCacheManager.getInstance().setLogin(true);
                                                                                           MessageCacheManager.getInstance().setLogin(true);
-                                                                                          Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                                                                                          Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                                                                                           startActivity(intent);
                                                                                           finish();
                                                                                   }

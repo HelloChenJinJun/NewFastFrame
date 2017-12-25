@@ -63,6 +63,8 @@
         <activity android:name=".ui.LoginActivity"
             android:exported="true"/>
         <activity android:name=".ui.MainActivity" android:launchMode="singleTask"/>
+        <activity android:name=".ui.HomeActivity" android:launchMode="singleTask"/>
+
         <activity android:name=".ui.RegisterActivity"/>
         <activity android:name=".ui.SearchFriendActivity"/>
         <activity android:name=".ui.UserInfoActivity"/>

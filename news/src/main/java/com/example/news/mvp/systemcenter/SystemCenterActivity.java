@@ -25,6 +25,7 @@ import com.example.news.dagger.systemcenter.DaggerSystemCenterComponent;
 import com.example.news.dagger.systemcenter.SystemCenterModule;
 import com.example.news.mvp.cardinfo.CardInfoActivity;
 import com.example.news.mvp.consume.ConsumeQueryActivity;
+import com.example.news.mvp.course.CourseQueryActivity;
 import com.example.news.util.NewsUtil;
 
 import java.util.ArrayList;
@@ -152,6 +153,8 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
                     } else {
                         presenter.getCardVerifyImage();
                     }
+                } else if (position == 4) {
+                    CourseQueryActivity.start(SystemCenterActivity.this);
                 }
             }
         });

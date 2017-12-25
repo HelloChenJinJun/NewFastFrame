@@ -76,11 +76,12 @@ public class ActivityManager implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
         addActivity(activity);
+        currentActivity = activity;
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
-
+        currentActivity = activity;
     }
 
     @Override

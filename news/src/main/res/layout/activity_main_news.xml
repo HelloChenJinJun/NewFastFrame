@@ -13,55 +13,61 @@
 
     <RadioGroup
         android:id="@+id/rg_activity_main_bottom_container"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:checkedButton="@+id/rb_activity_main_bottom_index">
+        android:checkedButton="@+id/rb_activity_main_bottom_index"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <RadioButton
-            android:textColor="@color/tab_text_color"
             android:id="@+id/rb_activity_main_bottom_index"
-            android:gravity="center"
-            android:text="首页"
-            android:button="@null"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:text="首页"
+            android:textColor="@color/tab_text_color" />
+
         <RadioButton
-            android:textColor="@color/tab_text_color"
             android:id="@+id/rb_activity_main_bottom_library"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
             android:gravity="center"
             android:text="图书"
-            android:button="@null"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:textColor="@color/tab_text_color" />
+
         <RadioButton
             android:id="@+id/rb_activity_main_bottom_center"
-            android:textColor="@color/tab_text_color"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
             android:gravity="center"
             android:text="中心"
-            android:button="@null"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:textColor="@color/tab_text_color" />
+
         <RadioButton
             android:id="@+id/rb_activity_main_bottom_person"
-            android:textColor="@color/tab_text_color"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
             android:gravity="center"
             android:text="个人"
-            android:button="@null"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:textColor="@color/tab_text_color" />
+
         <RadioButton
-            android:textColor="@color/tab_text_color"
-            android:gravity="center"
-            android:text="首页"
-            android:button="@null"
+            android:id="@+id/rb_activity_main_bottom_chat"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:text="聊天"
+            android:textColor="@color/tab_text_color" />
 
 
     </RadioGroup>

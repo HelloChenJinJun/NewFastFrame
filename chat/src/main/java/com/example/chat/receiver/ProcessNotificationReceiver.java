@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.chat.base.Constant;
-import com.example.chat.ui.MainActivity;
+import com.example.chat.ui.HomeActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.LogUtil;
 
@@ -23,7 +23,7 @@ public class ProcessNotificationReceiver extends BroadcastReceiver {
                 LogUtil.e("接受到发来的通知，这里统一处理");
                 Intent intent1;
                 if (CommonUtils.isAppAlive(context)) {
-                        intent1 = new Intent(context, MainActivity.class);
+                        intent1 = new Intent(context, HomeActivity.class);
                         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 } else {
                         intent1 = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());

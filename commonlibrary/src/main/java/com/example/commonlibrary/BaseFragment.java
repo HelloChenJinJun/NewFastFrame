@@ -2,6 +2,7 @@ package com.example.commonlibrary;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -314,6 +315,46 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     public ImageView getIcon() {
         return icon;
     }
+
+
+    public void addOrReplaceFragment(Fragment fragment) {
+        addOrReplaceFragment(fragment, 0);
+    }
+
+
+
+    protected int fragmentContainerResId = 0;
+    protected Fragment currentFragment;
+
+    /**
+     * 第一次加载的时候调用该方法设置resId
+     *
+     * @param fragment
+     * @param resId
+     */
+    public void addOrReplaceFragment(Fragment fragment, int resId) {
+        if (resId != 0) {
+            fragmentContainerResId = resId;
+        }
+        if (fragment == null) {
+            return;
+        }
+        if (currentFragment == null) {
+            getChildFragmentManager().beginTransaction().add(resId, fragment).show(fragment).commitAllowingStateLoss();
+            currentFragment = fragment;
+            return;
+        }
+        if (fragment.isAdded()) {
+            getChildFragmentManager().beginTransaction().hide(currentFragment).show(fragment).commit();
+        } else {
+            getChildFragmentManager().beginTransaction().hide(currentFragment).add(fragmentContainerResId, fragment).show(fragment).commitAllowingStateLoss();
+        }
+        currentFragment = fragment;
+    }
+
+
+
+
 
 
 }

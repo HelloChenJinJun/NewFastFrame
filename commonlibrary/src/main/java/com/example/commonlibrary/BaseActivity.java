@@ -289,13 +289,14 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             getSupportFragmentManager().beginTransaction().add(resId, fragment).show(fragment).commitAllowingStateLoss();
             currentFragment = fragment;
             return;
+        } else if (currentFragment != fragment) {
+            if (fragment.isAdded()) {
+                getSupportFragmentManager().beginTransaction().hide(currentFragment).show(fragment).commit();
+            } else {
+                getSupportFragmentManager().beginTransaction().hide(currentFragment).add(fragmentContainerResId, fragment).show(fragment).commitAllowingStateLoss();
+            }
+            currentFragment = fragment;
         }
-        if (fragment.isAdded()) {
-            getSupportFragmentManager().beginTransaction().hide(currentFragment).show(fragment).commit();
-        } else {
-            getSupportFragmentManager().beginTransaction().hide(currentFragment).add(fragmentContainerResId, fragment).show(fragment).commitAllowingStateLoss();
-        }
-        currentFragment = fragment;
     }
 
 
@@ -353,5 +354,9 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         if (presenter != null) {
             presenter.onDestroy();
         }
+    }
+
+    public Fragment getCurrentFragment() {
+        return currentFragment;
     }
 }
