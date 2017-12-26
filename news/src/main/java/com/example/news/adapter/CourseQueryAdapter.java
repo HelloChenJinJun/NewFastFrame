@@ -77,30 +77,30 @@ public class CourseQueryAdapter extends BaseAdapter{
 
 
 
-    Object getRealItem(int position) {
-        int newPosition=position%8;
-        if (newPosition == 0) {
-            return getSignFromPosition(position);
-        }
+    List<CourseQueryBean.KbListBean> getRealItem(int position) {
+        List<CourseQueryBean.KbListBean> result=null;
         if (courseList != null) {
+            result=new ArrayList<>();
+            int newPosition=position%8;
             for (CourseQueryBean.KbListBean classBean :
                     courseList) {
 //                第几节   1-2
 //                xqjmc  星期一
-                String xqjmc=classBean.getJcor();
+                String xqjmc=classBean.getXqjmc();
                 int number=getNumber(xqjmc);
-                if (number == position) {
+                if (number == newPosition) {
                     int start=(position/8)*2+1;
-                    String[] str=xqjmc.split("-");
+                    String jcor=classBean.getJcor();
+                    String[] str=jcor.split("-");
                     int resultStart=Integer.parseInt(str[0]);
                     int end=Integer.parseInt(str[1]);
                     if (resultStart<=start&& end >= start +1) {
-                        return classBean;
+                        result.add(classBean);
                     }
                 }
             }
         }
-        return null;
+        return result;
     }
 
     private int getNumber(String xqjmc) {
@@ -145,19 +145,23 @@ public class CourseQueryAdapter extends BaseAdapter{
         }else {
             holder= (Holder) view.getTag();
         }
-        Object bean=getRealItem(i);
-        if (bean != null) {
-            if (bean instanceof String) {
-//                标签
-                holder.content.setText(((String) bean));
-            }else {
-                CourseQueryBean.KbListBean kbBean= (CourseQueryBean.KbListBean) bean;
-                String stringBuilder = kbBean.getKcmc() + "@" +
-                        kbBean.getCdmc();
-                holder.content.setText(stringBuilder);
-            }
+        if (i%8== 0) {
+            holder.content.setText(getSignFromPosition(i));
         }else {
-            holder.content.setText("");
+            List<CourseQueryBean.KbListBean> listBeans=getRealItem(i);
+            StringBuilder result=new StringBuilder();
+            if (listBeans != null) {
+                int size=listBeans.size();
+                for (int j = 0; j < size; j++) {
+                    CourseQueryBean.KbListBean bean=listBeans.get(j);
+                    if (j != 0) {
+                        result.append("\n");
+                    }
+                    result.append(bean.getKcmc())
+                            .append("@").append(bean.getCdmc());
+                }
+            }
+            holder.content.setText(result.toString());
         }
         return view;
     }

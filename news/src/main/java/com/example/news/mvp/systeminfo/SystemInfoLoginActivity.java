@@ -18,6 +18,7 @@ import com.example.news.R;
 import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.systeminfo.DaggerSystemInfoComponent;
 import com.example.news.dagger.systeminfo.SystemInfoModule;
+
 import java.util.HashMap;
 import java.util.Map;
 

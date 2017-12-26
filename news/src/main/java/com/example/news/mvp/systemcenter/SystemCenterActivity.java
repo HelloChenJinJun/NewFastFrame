@@ -14,6 +14,8 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.CenterAdapter;
 import com.example.news.LibraryInfoActivity;
@@ -23,13 +25,17 @@ import com.example.news.ScoreQueryActivity;
 import com.example.news.bean.CenterBean;
 import com.example.news.dagger.systemcenter.DaggerSystemCenterComponent;
 import com.example.news.dagger.systemcenter.SystemCenterModule;
+import com.example.news.event.ReLoginEvent;
 import com.example.news.mvp.cardinfo.CardInfoActivity;
 import com.example.news.mvp.consume.ConsumeQueryActivity;
 import com.example.news.mvp.course.CourseQueryActivity;
 import com.example.news.util.NewsUtil;
+import com.example.news.util.ReLoginUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -158,6 +164,16 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
                 }
             }
         });
+
+
+        presenter.registerEvent(ReLoginEvent.class, new Consumer<ReLoginEvent>() {
+            @Override
+            public void accept(ReLoginEvent reLoginEvent) throws Exception {
+                if (reLoginEvent.isSuccess() && reLoginEvent.getFrom().equals("center")&&listener != null) {
+                    listener.onRetry();
+                }
+            }
+        });
         display.post(new Runnable() {
             @Override
             public void run() {
@@ -167,10 +183,20 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
     }
 
 
+    private EmptyLayout.OnRetryListener listener;
+
+
     @Override
     public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
-        super.showError(errorMsg, listener);
+        if (AppUtil.isNetworkAvailable(this)) {
+            ToastUtils.showShortToast("Cookie失效");
+            this.listener = listener;
+            ReLoginUtil reLoginUtil=new ReLoginUtil(presenter.getBaseModel(),presenter.getCompositeDisposable());
+            reLoginUtil.login();
+            return;
+        }
         input.setText("");
+        super.showError(errorMsg, listener);
     }
 
 
@@ -212,6 +238,10 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
         cardBean.setResId(R.mipmap.ic_launcher);
         data.add(libraryBean);
         data.add(cardBean);
+        CenterBean courseBean = new CenterBean();
+        courseBean.setTitle("课表查询");
+        courseBean.setResId(R.mipmap.ic_launcher);
+        data.add(courseBean);
         for (int i = 0; i < 5; i++) {
             CenterBean temp = new CenterBean();
             temp.setResId(R.mipmap.ic_launcher);

@@ -12,13 +12,20 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.AppUtil;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.adapter.ScoreQueryAdapter;
 import com.example.news.bean.ScoreBean;
 import com.example.news.dagger.score.DaggerScoreQueryComponent;
 import com.example.news.dagger.score.ScoreQueryScoreModule;
+import com.example.news.event.ReLoginEvent;
 import com.example.news.mvp.score.ScoreQueryPresenter;
+import com.example.news.util.ReLoginUtil;
 
 import javax.inject.Inject;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -42,7 +49,7 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
             } else {
                 scoreQueryAdapter.addData(scoreBean.getList());
                 if (scoreQueryAdapter.getData().size() == 0) {
-                    if (loadMoreFooterView!=null) {
+                    if (loadMoreFooterView != null) {
                         loadMoreFooterView.setStatus(LoadMoreFooterView.Status.THE_END);
                     }
                 }
@@ -85,6 +92,15 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("分数查询");
         setToolBar(toolBarOption);
+        presenter.registerEvent(ReLoginEvent.class, new Consumer<ReLoginEvent>() {
+            @Override
+            public void accept(ReLoginEvent reLoginEvent) throws Exception {
+                if (reLoginEvent.isSuccess() && reLoginEvent.getFrom().equals("score")) {
+                    refresh.setRefreshing(true);
+                    onRefresh();
+                }
+            }
+        });
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -110,7 +126,13 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
         if (refresh.isRefreshing()) {
             refresh.setRefreshing(false);
         }
-        super.showError(errorMsg, listener);
+        if (AppUtil.isNetworkAvailable(this)) {
+            ToastUtils.showShortToast("Cookie过期");
+            ReLoginUtil reLoginUtil=new ReLoginUtil(presenter.getBaseModel(),presenter.getCompositeDisposable());
+            reLoginUtil.login();
+        } else {
+            super.showError(errorMsg, listener);
+        }
     }
 
 
@@ -121,7 +143,7 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
         }
         if (scoreQueryAdapter.getData().size() == 0) {
             showEmptyView();
-        }else {
+        } else {
             super.hideLoading();
         }
 

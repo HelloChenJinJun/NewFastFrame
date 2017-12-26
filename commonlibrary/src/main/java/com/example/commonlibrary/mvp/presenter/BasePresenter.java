@@ -14,6 +14,10 @@ public class BasePresenter<V extends IView, M extends BaseModel> implements IPre
     protected M baseModel;
 
 
+    public M getBaseModel() {
+        return baseModel;
+    }
+
     public BasePresenter(V iView, M baseModel) {
         this.iView = iView;
         this.baseModel = baseModel;
@@ -36,6 +40,14 @@ public class BasePresenter<V extends IView, M extends BaseModel> implements IPre
             mCompositeDisposable = new CompositeDisposable();
         }
         mCompositeDisposable.add(disposable);//将所有disposable放入,集中处理
+    }
+
+
+    public CompositeDisposable getCompositeDisposable() {
+        if (mCompositeDisposable == null) {
+            mCompositeDisposable = new CompositeDisposable();
+        }
+        return mCompositeDisposable;
     }
 
     private void unDispose() {

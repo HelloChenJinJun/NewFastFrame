@@ -52,7 +52,42 @@ public interface SystemInfoApi {
 
 
 
-//    @POST
-//    public Observable<CourseQueryBean>  getQueryCourseData()
+
+
+
+//    http://sfrz.cug.edu.cn/tpass
+// /login?service=http%3A%2F%2F202.114.207.137%3A80%2Fssoserver%2Flogin%3Fywxt%3Djw
+    @GET
+    public Observable<ResponseBody> verifyAccount(@Url String url);
+
+
+
+
+//    http://202.114.207.137:80/ssoserver/login?ywxt=jw&ticket=ST-1289-DwGFQfa3xMLBkVSyifiP-tpass
+    @GET
+    public Observable<ResponseBody>  getTempJsessionIdByTicket(@Url String url);
+
+
+
+
+//    http://202.114.207.137/ssoserver/login;jsessionid=B2D411448CC60F02C5E82297CCE564E5?ywxt=jw
+    @GET
+    public Observable<ResponseBody> getVerifyUrl(@Url String url);
+
+//http://jwgl.cug.edu.cn/jwglxt/zfssologin
+// ?verify=E05058412978C941EBB01C669277F5DF&userName=20141000341&
+// strSysDatetime=2017-12-2520:19:26&jsName=teacher&openType=_blank&
+// url=xtgl%2Findex_initMenu.html
+
+    @GET
+    public Observable<ResponseBody> getRealIdByVerifyUrl(@Url String url);
+
+
+
+
+    @POST
+    public Observable<CourseQueryBean> getCourseQueryData(@Url String url,@Body RequestBody requestBody);
+
+
 
 }

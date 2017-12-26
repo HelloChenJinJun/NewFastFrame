@@ -188,6 +188,13 @@ public class NewsUtil {
     public static final String IS_LOGIN = "is_login";
     public static final String CONSUME_QUERY_URL = "http://xyfw.cug.edu.cn/tp_up/up/sysintegration/getCardConsumList";
     public static final String SYSTEM_USER_INFO_URL = "http://xyfw.cug.edu.cn/tp_up/sys/uacm/profile/getUserById";
+    public static final String COURSE_VERIFY_ACCOUNT_URL = "http://sfrz.cug.edu.cn/tpass/login?service=http%3A%2F%2F202.114.207.137%3A80%2Fssoserver%2Flogin%3Fywxt%3Djw";
+    public static final String COURSE_TICKET_URL = "course_ticket_url";
+    public static final String COURSE_JSESSION_URL = "course_jsession_url";
+    public static final String COURSE_REAL_VERIFY_URL = "course_real_verify_url";
+    public static final String COURSE_JSESSION_ID = "course_jsession_id";
+    public static final String COURSE_QUERY_URL = "http://jwgl.cug.edu.cn/jwglxt/kbcx/xskbcx_cxXsKb.html?gnmkdm=N2151";
+    public static final String COURSE_TEMP_JS_ID = "course_temp_js_id";
 
 
     public static String getRealNewsUrl(String url, int totalPage, int currentNum) {
@@ -534,7 +541,7 @@ public class NewsUtil {
         ToastUtils.showShortToast("清除并通知改变");
         UserInfoEvent userInfoEvent = new UserInfoEvent();
         BaseApplication.getAppComponent().getSharedPreferences()
-                .edit().putBoolean(ConstantUtil.LOGIN_STATUS, true)
+                .edit().putBoolean(ConstantUtil.LOGIN_STATUS, false)
                 .putString(ConstantUtil.ACCOUNT, userInfoEvent.getAccount())
                 .putString(ConstantUtil.PASSWORD, userInfoEvent.getPassword())
                 .putString(ConstantUtil.AVATAR, userInfoEvent.getAvatar())
@@ -555,5 +562,13 @@ public class NewsUtil {
 //                .putString(ConstantUtil.BG_HALF, null)
 //                .putString(ConstantUtil.BG_ALL, null)
 //                .putString(ConstantUtil.NICK,null).apply();
+    }
+
+    public static RequestBody getCourseQueryRequestBody(String year, int examNum) {
+//        xnm=2016&xqm=3
+        String stringBuilder = "xnm=" +
+                year + "&xqm=" + examNum;
+        return RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;charset=UTF-8")
+                , stringBuilder);
     }
 }

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="120dp"
     android:text="测试"
     android:textColor="@color/grey_500"
-    android:maxLines="5"
     android:ellipsize="end"
-    android:id="@+id/tv_item_activity_course_query_content"/>
+    android:textSize="14sp"
+    android:id="@+id/tv_item_activity_course_query_content"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"/>

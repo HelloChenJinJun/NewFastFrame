@@ -11,14 +11,21 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.AppUtil;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.adapter.ConsumeQueryAdapter;
 import com.example.news.bean.ConsumeQueryBean;
 import com.example.news.dagger.consume.ConsumeQueryModule;
 import com.example.news.dagger.consume.DaggerConsumeQueryComponent;
+import com.example.news.event.ReLoginEvent;
+import com.example.news.util.ReLoginUtil;
 
 import javax.inject.Inject;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -72,7 +79,7 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
 
     @Override
     protected void initData() {
-        ToolBarOption toolBarOption=new ToolBarOption();
+        ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("消费明细");
         setToolBar(toolBarOption);
         DaggerConsumeQueryComponent.builder().newsComponent(NewsApplication
@@ -83,6 +90,14 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
         display.setLoadMoreFooterView(new LoadMoreFooterView(this));
         display.setOnLoadMoreListener(this);
         display.setAdapter(consumeQueryAdapter);
+        presenter.registerEvent(ReLoginEvent.class, new Consumer<ReLoginEvent>() {
+            @Override
+            public void accept(ReLoginEvent reLoginEvent) throws Exception {
+                if (reLoginEvent.isSuccess() && reLoginEvent.getFrom().equals("consume")) {
+                    presenter.getQueryData(true);
+                }
+            }
+        });
         display.post(new Runnable() {
             @Override
             public void run() {
@@ -105,6 +120,12 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
 
     @Override
     public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
+        if (AppUtil.isNetworkAvailable(this)) {
+            ToastUtils.showShortToast("Cookie失效");
+            ReLoginUtil reLoginUtil=new ReLoginUtil(presenter.getBaseModel(),presenter.getCompositeDisposable());
+            reLoginUtil.login();
+            return;
+        }
         if (refresh.isRefreshing()) {
             refresh.setRefreshing(false);
             super.showError(errorMsg, listener);

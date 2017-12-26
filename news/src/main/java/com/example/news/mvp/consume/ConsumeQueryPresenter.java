@@ -2,6 +2,7 @@ package com.example.news.mvp.consume;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
+import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.news.api.SystemInfoApi;
 import com.example.news.bean.ConsumeQueryBean;
@@ -19,7 +20,7 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:         1981367757
  */
 
-public class ConsumeQueryPresenter extends BasePresenter<IView<ConsumeQueryBean>,ConsumeQueryModel>{
+public class ConsumeQueryPresenter extends RxBasePresenter<IView<ConsumeQueryBean>,ConsumeQueryModel> {
     private int page=0;
 
     public ConsumeQueryPresenter(IView<ConsumeQueryBean> iView, ConsumeQueryModel baseModel) {

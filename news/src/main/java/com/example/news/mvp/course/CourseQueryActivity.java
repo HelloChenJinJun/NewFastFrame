@@ -5,10 +5,15 @@ import android.content.Intent;
 import android.widget.GridView;
 
 import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.adapter.CourseQueryAdapter;
 import com.example.news.bean.CourseQueryBean;
-import com.example.news.mvp.systemcenter.SystemCenterActivity;
+import com.example.news.dagger.course.CourseQueryModule;
+import com.example.news.dagger.course.DaggerCourseQueryComponent;
+
+import javax.inject.Inject;
 
 /**
  * 项目名称:    NewFastFrame
@@ -17,26 +22,29 @@ import com.example.news.mvp.systemcenter.SystemCenterActivity;
  * QQ:         1981367757
  */
 
-public class CourseQueryActivity extends BaseActivity<CourseQueryBean,CourseQueryPresenter> {
+public class CourseQueryActivity extends BaseActivity<CourseQueryBean, CourseQueryPresenter> {
 
 
     private GridView display;
-    private CourseQueryAdapter courseQueryAdapter;
+    @Inject
+    CourseQueryAdapter courseQueryAdapter;
 
 
     @Override
-    public void updateData(CourseQueryBean o) {
-
+    public void updateData(CourseQueryBean courseQueryBean) {
+        if (courseQueryBean != null && courseQueryBean.getKbList() != null) {
+            courseQueryAdapter.refreshData(courseQueryBean.getKbList());
+        }
     }
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return false;
+        return true;
     }
 
     @Override
     protected boolean isNeedEmptyLayout() {
-        return false;
+        return true;
     }
 
     @Override
@@ -46,13 +54,25 @@ public class CourseQueryActivity extends BaseActivity<CourseQueryBean,CourseQuer
 
     @Override
     protected void initView() {
-            display= (GridView) findViewById(R.id.gv_activity_course_query_display);
+        display = (GridView) findViewById(R.id.gv_activity_course_query_display);
     }
 
     @Override
     protected void initData() {
-        courseQueryAdapter=new CourseQueryAdapter();
+        DaggerCourseQueryComponent.builder().courseQueryModule(new CourseQueryModule(this))
+                .newsComponent(NewsApplication.getNewsComponent())
+                .build().inject(this);
+        courseQueryAdapter = new CourseQueryAdapter();
         display.setAdapter(courseQueryAdapter);
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setTitle("课表查询");
+        setToolBar(toolBarOption);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                presenter.getQueryCourseData("2016", 3);
+            }
+        });
     }
 
     public static void start(Activity activity) {

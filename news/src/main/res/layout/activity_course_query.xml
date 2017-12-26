@@ -48,7 +48,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="一"
-            android:textColor="#ffffff"
+            android:textColor="@color/black"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -56,35 +56,39 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="二"
-            android:textColor="#ffffff"/>
+            android:textColor="@color/black"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:text="三"
-            android:textColor="#ffffff"/>
+            android:textColor="@color/black"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:text="四"
-            android:textColor="#ffffff"/>
+            android:textColor="@color/black"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:text="五"
-            android:textColor="#ffffff"/>
+            android:textColor="@color/black"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:text="六"
-            android:textColor="#ffffff"
+            android:textColor="@color/black"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -92,7 +96,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="日"
-            android:textColor="#ffffff"/>
+            android:textColor="@color/black"
+            />
     </LinearLayout>
     <GridView
         android:id="@+id/gv_activity_course_query_display"
