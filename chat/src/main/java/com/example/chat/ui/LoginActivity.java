@@ -12,17 +12,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.base.Constant;
 import com.example.chat.base.RandomData;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.User;
+import com.example.chat.dagger.login.DaggerLoginComponent;
+import com.example.chat.dagger.login.LoginModule;
 import com.example.chat.db.ChatDB;
 import com.example.chat.manager.LocationManager;
 import com.example.chat.manager.MessageCacheManager;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserCacheManager;
 import com.example.chat.manager.UserManager;
+import com.example.chat.mvp.login.LoginPresenter;
 import com.example.chat.util.BmobUtils;
 import com.example.chat.util.ChatUtil;
 import com.example.chat.util.CommonUtils;
@@ -32,7 +36,9 @@ import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
+import com.example.commonlibrary.router.RouterResult;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.LoginEvent;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
@@ -46,6 +52,7 @@ import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    HappyChat
@@ -53,17 +60,10 @@ import cn.bmob.v3.listener.UpdateListener;
  * 创建时间:    2016/9/11      17:49
  * QQ:             1981367757
  */
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity<Object, LoginPresenter> implements View.OnClickListener {
     private AutoEditText userName;
     private AutoEditText passWord;
-    private Button login;
-    private TextView register;
-    private TextView forget;
     private ImageView bg;
-    private boolean isFirstLogin = false;
-    private String from=null;
-    private List<GroupTableMessage> newData;
-
 
     @Override
     protected void onResume() {
@@ -91,9 +91,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         bg = (ImageView) findViewById(R.id.iv_login_bg);
         userName = (AutoEditText) findViewById(R.id.aet_login_name);
         passWord = (AutoEditText) findViewById(R.id.aet_login_password);
-        login = (Button) findViewById(R.id.btn_login_confirm);
-        register = (TextView) findViewById(R.id.tv_login_register);
-        forget = (TextView) findViewById(R.id.tv_login_forget);
+        Button login = (Button) findViewById(R.id.btn_login_confirm);
+        TextView register = (TextView) findViewById(R.id.tv_login_register);
+        TextView forget = (TextView) findViewById(R.id.tv_login_forget);
         login.setOnClickListener(this);
         register.setOnClickListener(this);
         forget.setOnClickListener(this);
@@ -102,6 +102,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void initData() {
+        DaggerLoginComponent.builder().loginModule(new LoginModule(this))
+                .chatMainComponent(ChatApplication.getChatMainComponent())
+                .build().inject(this);
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
 
@@ -110,17 +113,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 bg.startAnimation(animation);
             }
         }, 200);
-        from=getIntent().getStringExtra("from");
-        if (from != null && from.equals("news")) {
-            passWord.setText(getIntent().getStringExtra("password"));
-            userName.setText(getIntent().getStringExtra("account"));
-           bg.postDelayed(new Runnable() {
-               @Override
-               public void run() {
-                   login();
-               }
-           },200);
-        }
     }
 
     @Override
@@ -159,236 +151,42 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return;
         }
         showLoadDialog("正在登录.........");
-        final User user = new User();
-        user.setUsername(userName.getText().toString().trim());
-        user.setPassword(passWord.getText().toString().trim());
-        if (LocationManager.getInstance().getLatitude() != 0 || LocationManager.getInstance().getLongitude() != 0) {
-            user.setLocation(new BmobGeoPoint(LocationManager.getInstance().getLongitude(), LocationManager.getInstance()
-                    .getLatitude()));
-        }
-        if (newData != null) {
-            newData.clear();
-        }
-        user.login(BaseApplication.getInstance(), new SaveListener() {
-                    @Override
-                    public void onSuccess() {
-                        dismissLoadDialog();
-                        ToastUtils.showShortToast("登录成功");
-                        LogUtil.e("登录成功");
-//                                        登录成功之后，
-//                                        检查其他设备绑定的用户，强迫其下线
-                        LogUtil.e("检查该用户绑定的其他设备.....");
-                        UserManager.getInstance().checkInstallation(new UpdateListener() {
-                            @Override
-                            public void onSuccess() {
-                                ToastUtils.showShortToast("登录成功1");
-                                LogUtil.e("登录成功");
-                                showLoadDialog("正在获取好友资料.........");
-                                updateUserInfo();
-                            }
-
-                            @Override
-                            public void onFailure(int i, String s) {
-                                ToastUtils.showShortToast("登录失败,请重新登录" + s + i);
-                                LogUtil.e("登录失败" + s + i);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onFailure(int i, String s) {
-                        ToastUtils.showShortToast("登录失败" + s + i);
-                        if (from != null && from.equals("news")&&i==101) {
-                            ToastUtils.showShortToast("正在注册");
-//                            说明现在的账号还没有注册
-                            registerAccount();
-                        }else {
-                            dismissLoadDialog();
-                        }
-                    }
+        presenter.registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
+            @Override
+            public void accept(LoginEvent loginEvent) throws Exception {
+                if (loginEvent.isSuccess()) {
+                    presenter.login(userName.getText().toString().trim()
+                            , passWord.getText().toString().trim(), loginEvent.getUserInfoEvent());
+                } else {
+                    ToastUtils.showShortToast(loginEvent.getErrorMessage());
                 }
-        );
-    }
-
-    private void registerAccount() {
-//        RandomData.initAllRanDomData();
-        User user = new User();
-//                                默认注册为男性
-        user.setSex(getIntent().getBooleanExtra(ConstantUtil.SEX,true));
-//                                 设备类型
-        user.setDeviceType("android");
-//                                与设备ID绑定
-        user.setInstallId(BmobInstallation.getInstallationId(this));
-        user.setNick(getIntent().getStringExtra(ConstantUtil.NICK));
-        user.setAvatar(getIntent().getStringExtra(ConstantUtil.AVATAR));
-        user.setSortedKey(CommonUtils.getSortedKey(user.getNick()));
-        user.setUsername(userName.getText().toString().trim());
-        user.setPassword(passWord.getText().toString().trim());
-        user.setTitleWallPaper(RandomData.getRandomTitleWallPaper());
-        user.setWallPaper(RandomData.getRandomWallPaper());
-        user.signUp(BaseApplication.getInstance(), new SaveListener() {
-            @Override
-            public void onSuccess() {
-                dismissLoadDialog();
-                ToastUtils.showShortToast("注册成功，登录中...........");
-                isFirstLogin=true;
-                login();
-            }
-
-            @Override
-            public void onFailure(int i, String s) {
-                dismissLoadDialog();
-                ToastUtils.showShortToast("注册失败" + s + i);
             }
         });
-    }
-
-    /**
-     * 更新用户资料
-     */
-    private void updateUserInfo() {
-        LogUtil.e("更新好友信息中...........");
-        UserManager.getInstance().queryAndSaveCurrentContactsList(new FindListener<User>() {
-                                                                      @Override
-                                                                      public void onSuccess(final List<User> contacts) {
-                                                                          //                               返回的是去除了黑名单的好友列表
-//                                       否则保存到内存中，方便取用
-                                                                          LogUtil.e("查询好友成功");
-                                                                          LogUtil.e("已保存好友资料到内存中11");
-                                                                          String uid = UserManager.getInstance().getCurrentUserObjectId();
-                                                                          MsgManager.getInstance().queryGroupTableMessage(uid, new FindListener<GroupTableMessage>() {
-                                                                                      @Override
-                                                                                      public void onSuccess(final List<GroupTableMessage> list) {
-                                                                                          if (list != null && list.size() > 0) {
-                                                                                              newData = new ArrayList<>();
-                                                                                              for (GroupTableMessage message :
-                                                                                                      list) {
-//                                                                                                                                  这里进行判断出现是因为有可能建群失败的时候，未能把groupId上传上去
-                                                                                                  if (message.getGroupId() != null) {
-                                                                                                      newData.add(message);
-                                                                                                  }
-                                                                                              }
-                                                                                              LogUtil.e("在服务器上查询到该用户所有的群,数目:" + newData.size());
-                                                                                              if (ChatDB.create().saveGroupTableMessage(newData)) {
-                                                                                                  LogUtil.e("保存用户所拥有的群结构消息到数据库中成功");
-//                                                                                                                                  MessageCacheManager.getInstance().addGroupTableMessage(list);
-                                                                                              } else {
-                                                                                                  LogUtil.e("保存用户所拥有的群结构消息到数据库中失败");
-                                                                                              }
-                                                                                          } else {
-                                                                                              LogUtil.e("服务器上没有查到该用户所拥有的群");
-                                                                                          }
-                                                                                          runOnUiThread(new Runnable() {
-                                                                                              @Override
-                                                                                              public void run() {
-                                                                                                  MsgManager.getInstance().updateUserInstallationId(new UpdateListener() {
-                                                                                                      @Override
-                                                                                                      public void onSuccess() {
-                                                                                                          dismissLoadDialog();
-                                                                                                          UserCacheManager.getInstance().setLogin(true);
-                                                                                                          MessageCacheManager.getInstance().setLogin(true);
-                                                                                                          BaseApplication.getAppComponent().getSharedPreferences().edit().putBoolean(ChatUtil.LOGIN_STATUS, true).apply();
-                                                                                                          MessageCacheManager.getInstance().addGroupTableMessage(newData);
-                                                                                                          if (contacts != null && contacts.size() > 0) {
-                                                                                                              UserCacheManager.getInstance().setContactsList(BmobUtils.list2map(contacts));
-                                                                                                          }
-                                                                                                            jumpToMain();
-                                                                                                      }
-
-                                                                                                      @Override
-                                                                                                      public void onFailure(int i, String s) {
-                                                                                                          dismissLoadDialog();
-                                                                                                          ToastUtils.showShortToast("登录失败，请重新登录" + s + i);
-                                                                                                          LogUtil.e("登录失败" + s + i);
-                                                                                                      }
-                                                                                                  });
-                                                                                              }
-                                                                                          });
-                                                                                      }
-
-                                                                                      @Override
-                                                                                      public void onError(int i, String s) {
-                                                                                          dismissLoadDialog();
-                                                                                          LogUtil.e("在服务器上查询所有群结构消息失败" + s + i);
-                                                                                          if (i != 101) {
-                                                                                              ToastUtils.showShortToast("登录失败，请重新登录");
-                                                                                          } else {
-//                                                                                                                          这是群结构消息未创建的错误
-                                                                                              runOnUiThread(new Runnable() {
-                                                                                                  @Override
-                                                                                                  public void run() {
-                                                                                                      MsgManager.getInstance().updateUserInstallationId(new UpdateListener() {
-                                                                                                          @Override
-                                                                                                          public void onSuccess() {
-                                                                                                              dismissLoadDialog();
-                                                                                                              UserCacheManager.getInstance().setLogin(true);
-                                                                                                              MessageCacheManager.getInstance().setLogin(true);
-                                                                                                              BaseApplication.getAppComponent().getSharedPreferences().edit().putBoolean(ChatUtil.LOGIN_STATUS, true).apply();
-
-//                                                                                                                                                          MessageCacheManager.getInstance().addGroupTableMessage(list);
-                                                                                                              if (contacts != null && contacts.size() > 0) {
-                                                                                                                  UserCacheManager.getInstance().setContactsList(BmobUtils.list2map(contacts));
-                                                                                                              }
-                                                                                                              jumpToMain();
-
-                                                                                                          }
-
-                                                                                                          @Override
-                                                                                                          public void onFailure(int i, String s) {
-                                                                                                              dismissLoadDialog();
-                                                                                                              ToastUtils.showShortToast("登录失败，请重新登录" + s + i);
-                                                                                                              LogUtil.e("登录失败" + s + i);
-                                                                                                          }
-                                                                                                      });
-                                                                                                  }
-                                                                                              });
-                                                                                          }
-                                                                                      }
-                                                                                  }
-                                                                          );
-
-                                                                      }
-
-                                                                      @Override
-                                                                      public void onError(int i, String s) {
-                                                                          dismissLoadDialog();
-                                                                          ToastUtils.showShortToast("登录失败，请重新登录");
-                                                                          LogUtil.e("在服务器上面查询好友失败" + s + i);
-                                                                      }
-                                                                  }
-        );
-    }
-
-    private void jumpToMain() {
-        if (isFirstLogin) {
-            Intent intent = new Intent(LoginActivity.this, EditUserInfoActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_USER_INFO);
-        } else if (from!=null&&from.equals("news")){
-            dealResultInfo(UserManager.getInstance().getCurrentUser());
-        }else {
-            startActivity(new Intent(LoginActivity.this,HomeActivity.class));
-            finish();
-        }
-    }
-
-    private void dealResultInfo(User user) {
-        Map<String,Object> map=new HashMap<>();
-        map.put(ConstantUtil.AVATAR,user.getAvatar());
-        map.put(ConstantUtil.SIGNATURE,user.getSignature());
-        map.put(ConstantUtil.NICK,user.getNick());
-        map.put(ConstantUtil.ACCOUNT,user.getUsername());
-        map.put(ConstantUtil.NAME,user.getNick());
-        map.put(ConstantUtil.FROM,"chat");
-        map.put(ConstantUtil.SEX,user.isSex());
-        map.put(ConstantUtil.BG_HALF,user.getTitleWallPaper());
-        map.put(ConstantUtil.BG_ALL,user.getWallPaper());
-        map.put(ConstantUtil.STUDENT_TYPE,getIntent().getStringExtra(ConstantUtil.STUDENT_TYPE));
-        map.put(ConstantUtil.COLLEGE,getIntent().getStringExtra(ConstantUtil.COLLEGE));
+        Map<String, Object> map = new HashMap<>();
+        map.put(ConstantUtil.ACCOUNT, userName.getText().toString().trim());
         map.put(ConstantUtil.PASSWORD, passWord.getText().toString().trim());
         Router.getInstance().deal(new RouterRequest.Builder()
-        .paramMap(map).context(this).provideName("news")
-                .actionName("person").build());
-        finish();
+                .provideName("news").actionName("login").paramMap(map).build());
+    }
+
+
+    private void dealResultInfo(User user) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(ConstantUtil.AVATAR, user.getAvatar());
+        map.put(ConstantUtil.SIGNATURE, user.getSignature());
+        map.put(ConstantUtil.NICK, user.getNick());
+        map.put(ConstantUtil.ACCOUNT, user.getUsername());
+        map.put(ConstantUtil.NAME, user.getNick());
+        map.put(ConstantUtil.SEX, user.isSex());
+        map.put(ConstantUtil.BG_HALF, user.getTitleWallPaper());
+        map.put(ConstantUtil.BG_ALL, user.getWallPaper());
+        map.put(ConstantUtil.STUDENT_TYPE, getIntent().getStringExtra(ConstantUtil.STUDENT_TYPE));
+        map.put(ConstantUtil.COLLEGE, getIntent().getStringExtra(ConstantUtil.COLLEGE));
+        map.put(ConstantUtil.PASSWORD, passWord.getText().toString().trim());
+        map.put(ConstantUtil.FROM, getIntent().getStringExtra(ConstantUtil.FROM));
+        Router.getInstance().deal(new RouterRequest.Builder()
+                .paramMap(map).context(this).provideName("news")
+                .actionName("person").isFinish(true).build());
     }
 
 
@@ -404,16 +202,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         passWord.setText(password);
                         userName.setText(name);
                     }
-                    isFirstLogin = true;
                     break;
                 case Constant.REQUEST_CODE_EDIT_USER_INFO:
-                    if (from!=null&&from.equals("news")) {
-                        User user = (User) data.getSerializableExtra("user");
-                        dealResultInfo(user);
-                    }else {
-                        startActivity(new Intent(this,HomeActivity.class));
-                        finish();
-                    }
+                    User user = (User) data.getSerializableExtra("user");
+                    dealResultInfo(user);
                     break;
             }
         }
@@ -426,6 +218,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void updateData(Object o) {
+        boolean isFirstLogin = BaseApplication.getAppComponent().getSharedPreferences()
+                .getBoolean(ConstantUtil.FIRST_STATUS, false);
+        if (isFirstLogin) {
+            BaseApplication.getAppComponent()
+                    .getSharedPreferences()
+                    .edit().putBoolean(ConstantUtil.FIRST_STATUS, false).apply();
+            Intent intent = new Intent(LoginActivity.this, EditUserInfoActivity.class);
+            startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_USER_INFO);
+        } else {
+            User user = UserManager.getInstance().getCurrentUser();
+            dealResultInfo(user);
+        }
 
     }
 }

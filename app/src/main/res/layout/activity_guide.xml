@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.example.commonlibrary.cusotomview.WrappedViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/wvp_activity_guide_display"/>
+
+    <LinearLayout
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <View
+            android:layout_marginRight="20dp"
+            android:id="@+id/view_activity_guide_one"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/custom_drawable_point_bg"/>
+        <View
+            android:id="@+id/view_activity_guide_two"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/custom_drawable_point_bg"/>
+        <View
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/view_activity_guide_three"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/custom_drawable_point_bg"/>
+        <View
+            android:layout_marginLeft="20dp"
+            android:id="@+id/view_activity_guide_four"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/custom_drawable_point_bg"/>
+    </LinearLayout>
+
+
+
+</RelativeLayout>

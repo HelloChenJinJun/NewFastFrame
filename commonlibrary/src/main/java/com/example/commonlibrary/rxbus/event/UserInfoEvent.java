@@ -1,4 +1,4 @@
-package com.example.news.event;
+package com.example.commonlibrary.rxbus.event;
 
 /**
  * 项目名称:    NewFastFrame

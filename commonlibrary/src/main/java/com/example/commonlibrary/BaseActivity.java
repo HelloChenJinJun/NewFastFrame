@@ -238,7 +238,7 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
 
 
     public void showLoadDialog(final String message) {
-        if (!isFinishing()) {
+        if (!isFinishing()&&!mProgressDialog.isShowing()) {
             mProgressDialog.setMessage(message);
             mProgressDialog.show();
         }

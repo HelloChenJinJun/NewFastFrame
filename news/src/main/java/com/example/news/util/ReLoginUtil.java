@@ -6,9 +6,11 @@ import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.news.MainRepositoryManager;
+import com.example.news.NewsApplication;
 import com.example.news.api.SystemInfoApi;
 import com.example.news.bean.SystemUserBean;
 import com.example.news.event.ReLoginEvent;
+import com.example.news.mvp.systeminfo.SystemInfoModel;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,18 +38,42 @@ public class ReLoginUtil {
     private BaseModel<MainRepositoryManager> baseModel;
     private CompositeDisposable compositeDisposable;
     private String pw;
+    private CallBack callBack;
 
 
-    public ReLoginUtil(BaseModel<MainRepositoryManager> baseModel, CompositeDisposable compositeDisposabl) {
-        this.baseModel = baseModel;
-        this.compositeDisposable = compositeDisposabl;
-        account=BaseApplication.getAppComponent().getSharedPreferences().getString(ConstantUtil
-        .ACCOUNT,null);
-        pw=BaseApplication.getAppComponent().getSharedPreferences().getString(ConstantUtil.PASSWORD,null);
+    public interface CallBack {
+        public void onSuccess(SystemUserBean systemUserBean);
+
+        public void onFailed(String errorMessage);
     }
 
-    public void login() {
-//        if (BaseApplication.getAppComponent().getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_COOKIE, null) == null) {
+
+    private ReLoginUtil() {
+        this.baseModel = new SystemInfoModel(NewsApplication
+        .getNewsComponent().getRepositoryManager());
+        this.compositeDisposable =new CompositeDisposable();
+    }
+    
+    
+    private static ReLoginUtil reLoginUtil;
+    
+    public static ReLoginUtil getInstance(){
+        if (reLoginUtil == null) {
+            reLoginUtil=new ReLoginUtil();
+        }
+        return reLoginUtil;
+    }
+    
+    
+    
+    
+    
+    
+
+    public void login(final String account, final String pw, final ReLoginUtil.CallBack callBack) {
+        this.account = account;
+        this.pw = pw;
+        this.callBack=callBack;
         baseModel.getRepositoryManager().getApi(SystemInfoApi.class).getCookie(NewsUtil.SYSTEM_INFO_INDEX_URL)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,12 +99,14 @@ public class ReLoginUtil {
                             BaseApplication.getAppComponent()
                                     .getSharedPreferences().edit().putString(NewsUtil.SYSTEM_INFO_LOGIN_LT, value).apply();
                             realLogin(account, pw, value);
+                        }else {
+                            callBack.onFailed("lt为空");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        callBack.onFailed(e!=null?e.getMessage():null);
                     }
 
                     @Override
@@ -109,23 +137,24 @@ public class ReLoginUtil {
                                 .getString(NewsUtil.SYSTEM_INFO_GET_TICKET, null) != null) {
                             getTp_upCookie(BaseApplication.getAppComponent()
                                     .getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_GET_TICKET, null));
+                        }else {
+                            callBack.onFailed("system_info_get_ticket is null");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
                         if (e != null && e instanceof HttpException) {
                             if (((HttpException) e).code() == 302) {
                                 if (BaseApplication.getAppComponent().getSharedPreferences()
                                         .getString(NewsUtil.SYSTEM_INFO_GET_TICKET, null) != null) {
                                     getTp_upCookie(BaseApplication.getAppComponent()
                                             .getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_GET_TICKET, null));
+                                    return;
                                 }
-                                return;
                             }
                         }
-
+                        callBack.onFailed(e!=null?e.getMessage():null);
                     }
 
                     @Override
@@ -150,25 +179,18 @@ public class ReLoginUtil {
 
                     @Override
                     public void onNext(ResponseBody responseBody) {
-//                        getUserInfo();
-                        ReLoginEvent reLoginEvent = new ReLoginEvent("login");
-                        reLoginEvent.setSuccess(true);
-                        RxBusManager.getInstance()
-                                .post(reLoginEvent);
+                        getUserInfo();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         if (e != null && e instanceof HttpException) {
                             if (((HttpException) e).code() == 302) {
-//                                getUserInfo();
-                                ReLoginEvent reLoginEvent = new ReLoginEvent("login");
-                                reLoginEvent.setSuccess(true);
-                                RxBusManager.getInstance()
-                                        .post(reLoginEvent);
+                                getUserInfo();
                                 return;
                             }
                         }
+                        callBack.onFailed(e!=null?e.getMessage():null);
 
                     }
 
@@ -192,14 +214,13 @@ public class ReLoginUtil {
 
                     @Override
                     public void onNext(SystemUserBean systemUserBean) {
-
+                            callBack.onSuccess(systemUserBean);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        callBack.onFailed(e!=null?e.getMessage():null);
                     }
-
                     @Override
                     public void onComplete() {
 

@@ -1,5 +1,7 @@
 package com.example.music;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -87,4 +89,8 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    public static void start(Activity activity) {
+        Intent intent =new Intent(activity,MainActivity.class);
+        activity.startActivity(intent);
+    }
 }

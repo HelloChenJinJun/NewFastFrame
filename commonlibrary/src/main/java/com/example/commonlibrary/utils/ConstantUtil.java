@@ -24,4 +24,7 @@ public class ConstantUtil {
     public static final String BG_HALF = "bg_half";
     public static final String BG_ALL = "bg_all";
     public static final String TITLE = "title";
+    public static final String FIRST_STATUS = "first_status";
+    public static final String FROM_LOGIN = "from_login";
+    public static final String FROM_MAIN="from_main";
 }

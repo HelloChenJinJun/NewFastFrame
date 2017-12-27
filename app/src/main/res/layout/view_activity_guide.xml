@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:id="@+id/iv_view_activity_guide_display"/>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_view_activity_guide_enter"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="点击进入"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/custom_color_btn_bg"
+        android:background="@drawable/custom_drawable_btn_bg"
+        />
+</RelativeLayout>

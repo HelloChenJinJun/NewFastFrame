@@ -1,7 +1,9 @@
 package com.example.news;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
@@ -12,19 +14,24 @@ import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.router.RouterResult;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.LoginEvent;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.FileUtil;
+import com.example.commonlibrary.utils.ToastUtils;
+import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.DaggerNewsComponent;
 import com.example.news.dagger.NewsComponent;
 import com.example.news.dagger.NewsModule;
-import com.example.news.event.UserInfoEvent;
+import com.example.commonlibrary.rxbus.event.UserInfoEvent;
+import com.example.news.util.ReLoginUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -104,11 +111,60 @@ public class NewsApplication implements IModuleConfig, IAppLife {
                                 .putString(ConstantUtil.BG_HALF, userInfoEvent.getHalfBg())
                                 .putString(ConstantUtil.BG_ALL, userInfoEvent.getAllBg())
                                 .putString(ConstantUtil.NICK, userInfoEvent.getNick()).apply();
-                        RxBusManager.getInstance()
-                                .post(userInfoEvent);
+                        Activity activity = (Activity) routerRequest.getContext();
+                        if (userInfoEvent.getFrom().equals(ConstantUtil.FROM_LOGIN)) {
+                            Intent intent = new Intent(activity, MainActivity.class);
+                            activity.startActivity(intent);
+                            activity.finish();
+                        } else if (userInfoEvent.getFrom().equals(ConstantUtil.FROM_MAIN)) {
+                            RxBusManager.getInstance().post(userInfoEvent);
+                        }
+                        if (routerRequest.isFinish()) {
+                            activity.finish();
+                        }
                         return null;
                     }
                 });
+        Router.getInstance().registerProvider("news:login", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                Map<String, Object> map = routerRequest.getParamMap();
+                final String account = (String) map.get(ConstantUtil.ACCOUNT);
+                final String password = (String) map.get(ConstantUtil.PASSWORD);
+                ReLoginUtil.getInstance().login(account
+                        , password, new ReLoginUtil.CallBack() {
+                            @Override
+                            public void onSuccess(SystemUserBean bean) {
+                                if (bean != null) {
+                                    LoginEvent loginEvent = new LoginEvent();
+                                    loginEvent.setSuccess(true);
+                                    UserInfoEvent userInfoEvent = new UserInfoEvent();
+                                    userInfoEvent.setAccount(account);
+                                    userInfoEvent.setPassword(password);
+                                    userInfoEvent.setAvatar(bean.getSCHOOL_PIC());
+                                    userInfoEvent.setNick(bean.getUSER_NAME());
+                                    userInfoEvent.setName(bean.getUSER_NAME());
+                                    userInfoEvent.setSex(bean.getUSER_SEX().equals("男") ? Boolean.TRUE : Boolean.FALSE);
+                                    userInfoEvent.setStudentType(bean.getID_TYPE());
+                                    userInfoEvent.setCollege(bean.getUNIT_NAME());
+                                    userInfoEvent.setFrom("news");
+                                    loginEvent.setUserInfoEvent(userInfoEvent);
+                                    RxBusManager.getInstance().post(loginEvent);
+                                }
+                            }
+
+                            @Override
+                            public void onFailed(String errorMessage) {
+                                CommonLogger.e("出错消息" + errorMessage);
+                                LoginEvent loginEvent = new LoginEvent();
+                                loginEvent.setErrorMessage(errorMessage);
+                                loginEvent.setSuccess(false);
+                                RxBusManager.getInstance().post(loginEvent);
+                            }
+                        });
+                return null;
+            }
+        });
     }
 
     private void initDB(Application application) {

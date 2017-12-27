@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
@@ -13,11 +14,13 @@ import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.AppUtil;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.adapter.ConsumeQueryAdapter;
 import com.example.news.bean.ConsumeQueryBean;
+import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.consume.ConsumeQueryModule;
 import com.example.news.dagger.consume.DaggerConsumeQueryComponent;
 import com.example.news.event.ReLoginEvent;
@@ -119,11 +122,27 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
 
 
     @Override
-    public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
+    public void showError(String errorMsg, final EmptyLayout.OnRetryListener listener) {
         if (AppUtil.isNetworkAvailable(this)) {
             ToastUtils.showShortToast("Cookie失效");
-            ReLoginUtil reLoginUtil=new ReLoginUtil(presenter.getBaseModel(),presenter.getCompositeDisposable());
-            reLoginUtil.login();
+            String account= BaseApplication.getAppComponent().getSharedPreferences()
+                    .getString(ConstantUtil.ACCOUNT,null);
+            String password=BaseApplication.getAppComponent().getSharedPreferences()
+                    .getString(ConstantUtil.PASSWORD,null);
+            ReLoginUtil.getInstance().login(account, password, new ReLoginUtil.CallBack() {
+                @Override
+                public void onSuccess(SystemUserBean systemUserBean) {
+                    if (listener!=null) {
+                        listener.onRetry();
+                    }
+                }
+
+                @Override
+                public void onFailed(String errorMessage) {
+                    ToastUtils.showShortToast("重试失败"+errorMessage);
+                    hideLoading();
+                }
+            });
             return;
         }
         if (refresh.isRefreshing()) {
@@ -132,7 +151,6 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
         } else {
             display.setLoadMoreStatus(LoadMoreFooterView.Status.ERROR);
         }
-
     }
 
 

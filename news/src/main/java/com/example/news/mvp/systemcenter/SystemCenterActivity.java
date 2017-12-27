@@ -16,6 +16,7 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.AppUtil;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.CenterAdapter;
 import com.example.news.LibraryInfoActivity;
@@ -23,6 +24,7 @@ import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.ScoreQueryActivity;
 import com.example.news.bean.CenterBean;
+import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.systemcenter.DaggerSystemCenterComponent;
 import com.example.news.dagger.systemcenter.SystemCenterModule;
 import com.example.news.event.ReLoginEvent;
@@ -164,16 +166,6 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
                 }
             }
         });
-
-
-        presenter.registerEvent(ReLoginEvent.class, new Consumer<ReLoginEvent>() {
-            @Override
-            public void accept(ReLoginEvent reLoginEvent) throws Exception {
-                if (reLoginEvent.isSuccess() && reLoginEvent.getFrom().equals("center")&&listener != null) {
-                    listener.onRetry();
-                }
-            }
-        });
         display.post(new Runnable() {
             @Override
             public void run() {
@@ -183,19 +175,31 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
     }
 
 
-    private EmptyLayout.OnRetryListener listener;
-
-
     @Override
-    public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
+    public void showError(String errorMsg, final EmptyLayout.OnRetryListener listener) {
         if (AppUtil.isNetworkAvailable(this)) {
             ToastUtils.showShortToast("Cookie失效");
-            this.listener = listener;
-            ReLoginUtil reLoginUtil=new ReLoginUtil(presenter.getBaseModel(),presenter.getCompositeDisposable());
-            reLoginUtil.login();
+            String account = BaseApplication.getAppComponent().getSharedPreferences()
+                    .getString(ConstantUtil.ACCOUNT, null);
+            String password = BaseApplication.getAppComponent().getSharedPreferences()
+                    .getString(ConstantUtil.PASSWORD, null);
+            ReLoginUtil.getInstance().login(account, password, new ReLoginUtil.CallBack() {
+                @Override
+                public void onSuccess(SystemUserBean systemUserBean) {
+                    if (listener != null) {
+                        listener.onRetry();
+                    }
+                }
+
+                @Override
+                public void onFailed(String errorMessage) {
+                    ToastUtils.showShortToast("重试失败" + errorMessage);
+                    hideLoading();
+                    input.setText("");
+                }
+            });
             return;
         }
-        input.setText("");
         super.showError(errorMsg, listener);
     }
 

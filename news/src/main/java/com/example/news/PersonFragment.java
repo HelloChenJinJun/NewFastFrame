@@ -1,16 +1,10 @@
 package com.example.news;
 
-import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -24,8 +18,7 @@ import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
-import com.example.news.event.UserInfoEvent;
-import com.example.news.mvp.systeminfo.SystemInfoLoginActivity;
+import com.example.commonlibrary.rxbus.event.UserInfoEvent;
 import com.example.news.util.NewsUtil;
 
 import java.util.HashMap;
@@ -140,7 +133,10 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
                 .IS_LOGIN, false)) {
             ToastUtils.showShortToast("已经登录");
         } else {
-            SystemInfoLoginActivity.start(getActivity());
+            Map<String, Object> map = new HashMap<>();
+            map.put(ConstantUtil.FROM, ConstantUtil.FROM_MAIN);
+            Router.getInstance().deal(new RouterRequest.Builder()
+                    .provideName("chat").actionName("login").paramMap(map).build());
         }
     }
 }

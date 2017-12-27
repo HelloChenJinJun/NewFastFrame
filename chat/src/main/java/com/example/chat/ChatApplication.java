@@ -101,25 +101,11 @@ public class ChatApplication implements IModuleConfig, IAppLife {
         Router.getInstance().registerProvider("chat:login", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
-                if (routerRequest.getParamMap() != null) {
-                    Context context = routerRequest.getContext();
-                    Intent intent = new Intent(context, LoginActivity.class);
-                    for (Map.Entry<String, Object> entry :
-                            routerRequest.getParamMap().entrySet()) {
-                        if (entry.getValue() instanceof String) {
-                            intent.putExtra(entry.getKey(), ((String) entry.getValue()));
-                        } else if (entry.getValue() instanceof Integer) {
-                            intent.putExtra(entry.getKey(), ((Integer) entry.getValue()));
-                        } else if (entry.getValue() instanceof Boolean) {
-                            intent.putExtra(entry.getKey(), ((Boolean) entry.getValue()));
-                        }
-                    }
-                    context.startActivity(intent);
-                    if (context instanceof Activity && routerRequest.isFinish()) {
-                        ((Activity) context).finish();
-                    }
-                }
-                return null;
+               Activity activity=BaseApplication.getAppComponent().getActivityManager().getCurrentActivity();
+               Intent intent=new Intent(activity,LoginActivity.class);
+               intent.putExtra(ConstantUtil.FROM, ((String) routerRequest.getParamMap().get(ConstantUtil.FROM)));
+               activity.startActivity(intent);
+               return null;
             }
         });
         Router.getInstance().registerProvider("chat:main", new BaseAction() {

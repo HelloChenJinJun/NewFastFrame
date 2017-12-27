@@ -5,13 +5,20 @@ import android.content.Intent;
 import android.widget.GridView;
 
 import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.utils.AppUtil;
+import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.adapter.CourseQueryAdapter;
 import com.example.news.bean.CourseQueryBean;
+import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.course.CourseQueryModule;
 import com.example.news.dagger.course.DaggerCourseQueryComponent;
+import com.example.news.util.ReLoginUtil;
 
 import javax.inject.Inject;
 
@@ -78,5 +85,33 @@ public class CourseQueryActivity extends BaseActivity<CourseQueryBean, CourseQue
     public static void start(Activity activity) {
         Intent intent = new Intent(activity, CourseQueryActivity.class);
         activity.startActivity(intent);
+    }
+
+
+    @Override
+    public void showError(String errorMsg, final EmptyLayout.OnRetryListener listener) {
+        if (AppUtil.isNetworkAvailable(this)) {
+            ToastUtils.showShortToast("Cookie失效");
+            String account= BaseApplication.getAppComponent().getSharedPreferences()
+                    .getString(ConstantUtil.ACCOUNT,null);
+            String password=BaseApplication.getAppComponent().getSharedPreferences()
+                    .getString(ConstantUtil.PASSWORD,null);
+            ReLoginUtil.getInstance().login(account, password, new ReLoginUtil.CallBack() {
+                @Override
+                public void onSuccess(SystemUserBean systemUserBean) {
+                    if (listener!=null) {
+                        listener.onRetry();
+                    }
+                }
+
+                @Override
+                public void onFailed(String errorMessage) {
+                    ToastUtils.showShortToast("重试失败"+errorMessage);
+                    hideLoading();
+                }
+            });
+            return;
+        }
+        super.showError(errorMsg, listener);
     }
 }

@@ -1,6 +1,5 @@
 package com.example.news.util;
 
-import android.content.SharedPreferences;
 import android.util.Base64;
 
 import com.example.commonlibrary.BaseApplication;
@@ -10,7 +9,7 @@ import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.bean.ConsumeRequestBean;
 import com.example.news.bean.ScoreRequestJson;
 import com.example.news.bean.SystemUserRequestBean;
-import com.example.news.event.UserInfoEvent;
+import com.example.commonlibrary.rxbus.event.UserInfoEvent;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;

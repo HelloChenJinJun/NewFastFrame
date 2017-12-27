@@ -7,6 +7,8 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.router.Router;
+import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.bean.CenterBean;
@@ -16,7 +18,9 @@ import com.example.news.mvp.systemcenter.SystemCenterActivity;
 import com.example.news.mvp.systeminfo.SystemInfoLoginActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 项目名称:    NewFastFrame
@@ -69,12 +73,15 @@ public class CenterFragment extends BaseFragment {
                     CardLoginActivity.start(getContext(), null);
                 } else if (position == 2) {
                     if (BaseApplication.getAppComponent().getSharedPreferences()
-                            .getBoolean(ConstantUtil.LOGIN_STATUS,false)) {
+                            .getBoolean(ConstantUtil.LOGIN_STATUS, false)) {
                         ToastUtils.showShortToast("");
                         SystemCenterActivity.start(getActivity());
-                    }else {
+                    } else {
                         ToastUtils.showShortToast("亲！请登录吧!");
-                        SystemInfoLoginActivity.start(getActivity());
+                        Map<String, Object> map = new HashMap<>();
+                        map.put(ConstantUtil.FROM, ConstantUtil.FROM_MAIN);
+                        Router.getInstance().deal(new RouterRequest.Builder()
+                                .provideName("chat").actionName("login").paramMap(map).build());
                     }
                 } else if (position == 3) {
 
