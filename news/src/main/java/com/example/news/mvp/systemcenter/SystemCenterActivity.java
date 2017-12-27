@@ -64,7 +64,6 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
                 } else {
                     CardInfoActivity.start(this);
                 }
-                finish();
             } else if (o instanceof Bitmap) {
                 verifyImage.setImageBitmap((Bitmap) o);
             } else if (o instanceof String) {

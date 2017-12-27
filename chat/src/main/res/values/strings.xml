@@ -30,4 +30,5 @@
     <string name="bottom_preview_count">预览(%1$d)</string>
     <string name="bottom_preview">预览(0)</string>
     <string name="image_folder_count">一共有%1$d张图片</string>
+    <string name="login_main">进去瞧瞧</string>
 </resources>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -223,6 +224,19 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     public void showBaseDialog(String title, String message, String leftName, String rightName, View.OnClickListener leftListener, View.OnClickListener rightListener) {
         mBaseDialog.setTitle(title).setMessage(message).setLeftButton(leftName, leftListener).setRightButton(rightName, rightListener).show();
     }
+
+
+
+
+
+
+    public void showCustomDialog(String title,View view,String leftName, String rightName, View.OnClickListener leftListener, View.OnClickListener rightListener){
+        mBaseDialog.setDialogContentView(view).setTitle(title)
+                .setLeftButton(leftName,leftListener)
+                .setRightButton(rightName,rightListener).show();
+    }
+
+
 
     public void dismissBaseDialog() {
         if (mBaseDialog != null && mBaseDialog.isShowing()) {

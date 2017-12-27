@@ -25,7 +25,7 @@ public interface CugLibraryApi {
 
 
     @GET
-    public Observable<ResponseBody>  getBorrowBookHistoryInfo(@Url String url);
+    public Observable<ResponseBody> getBorrowBookHistoryInfo(@Url String url);
 
     @GET
     public Observable<ResponseBody> getVerifyImage(@Url String url);
@@ -37,4 +37,7 @@ public interface CugLibraryApi {
 
     @GET
     public Observable<ResponseBody> getNewsBookNumberInfo(@Url String url);
+
+    @GET
+    public Observable<ResponseBody> borrowBook(String url);
 }

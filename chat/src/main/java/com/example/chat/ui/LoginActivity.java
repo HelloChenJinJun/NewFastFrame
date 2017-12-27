@@ -94,6 +94,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
         Button login = (Button) findViewById(R.id.btn_login_confirm);
         TextView register = (TextView) findViewById(R.id.tv_login_register);
         TextView forget = (TextView) findViewById(R.id.tv_login_forget);
+        findViewById(R.id.btn_login_main).setOnClickListener(this);
         login.setOnClickListener(this);
         register.setOnClickListener(this);
         forget.setOnClickListener(this);
@@ -132,6 +133,12 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
 
         } else if (i == R.id.tv_login_forget) {
             LogUtil.e("忘记密码");
+        } else if (i == R.id.btn_login_main) {
+            Router.getInstance().deal(new RouterRequest.Builder()
+                    .context(this).isFinish(true)
+                    .provideName("news")
+                    .actionName("main")
+                    .build());
         }
     }
 
@@ -158,6 +165,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
                     presenter.login(userName.getText().toString().trim()
                             , passWord.getText().toString().trim(), loginEvent.getUserInfoEvent());
                 } else {
+                    hideLoading();
                     ToastUtils.showShortToast(loginEvent.getErrorMessage());
                 }
             }

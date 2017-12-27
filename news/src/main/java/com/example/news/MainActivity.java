@@ -31,7 +31,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Router.getInstance().deal(new RouterRequest.Builder().provideName("chat")
+        Router.getInstance().deal(new RouterRequest.Builder().provideName("chat").context(this)
                 .actionName("intent").object(intent).build());
     }
 
@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Map<String, Object> map = new HashMap<>();
         map.put(ConstantUtil.TITLE, item.getTitle());
-        Router.getInstance().deal(new RouterRequest.Builder()
+        Router.getInstance().deal(new RouterRequest.Builder().context(this)
                 .provideName("chat").actionName("menuOnClick")
                 .paramMap(map).build());
         return true;

@@ -1,5 +1,9 @@
 package com.example.news.mvp.booklist;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
@@ -32,10 +36,10 @@ import okhttp3.ResponseBody;
  * QQ:             1981367757
  */
 
-public class BookInfoListPresenter extends RxBasePresenter<IView<List<BookInfoBean>>, BookInfoListModel> {
+public class BookInfoListPresenter extends RxBasePresenter<IView<Object>, BookInfoListModel> {
     private int num = 0;
 
-    public BookInfoListPresenter(IView<List<BookInfoBean>> iView, BookInfoListModel baseModel) {
+    public BookInfoListPresenter(IView<Object> iView, BookInfoListModel baseModel) {
         super(iView, baseModel);
     }
 
@@ -145,4 +149,84 @@ public class BookInfoListPresenter extends RxBasePresenter<IView<List<BookInfoBe
     }
 
 
+    public void getVerifyImage() {
+        iView.showLoading(null);
+        baseModel.getRepositoryManager().getApi(CugLibraryApi.class)
+                .getVerifyImage(NewsUtil.LIBRARY_BORROW_VERIFY_URL)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDispose(d);
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream());
+                        if (bitmap != null) {
+                            iView.updateData(bitmap);
+                        } else {
+                            iView.updateData("获取验证码失败,请点击重试");
+                            iView.hideLoading();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        iView.updateData("获取验证码失败,请点击重试");
+                        iView.hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                            iView.hideLoading();
+                    }
+                });
+    }
+
+    public void borrowBook(String verify, String number, String check) {
+//        iView.showLoading(null);
+        baseModel.getRepositoryManager().getApi(CugLibraryApi
+        .class).borrowBook(NewsUtil.getBorrowBookUrl(verify,number,check))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDispose(d);
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        Document document = null;
+                        try {
+                            document = Jsoup.parse(responseBody.string());
+                            Element element=document.getElementsByTag("font").first();
+                            if (element != null) {
+                                iView.updateData(element.text());
+                            }else {
+                                iView.updateData("续借失败");
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        iView.updateData("续借失败");
+                        iView.hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        iView.hideLoading();
+                    }
+                });
+
+
+
+
+    }
 }

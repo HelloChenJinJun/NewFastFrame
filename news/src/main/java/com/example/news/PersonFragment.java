@@ -135,7 +135,7 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
         } else {
             Map<String, Object> map = new HashMap<>();
             map.put(ConstantUtil.FROM, ConstantUtil.FROM_MAIN);
-            Router.getInstance().deal(new RouterRequest.Builder()
+            Router.getInstance().deal(new RouterRequest.Builder().context(getActivity())
                     .provideName("chat").actionName("login").paramMap(map).build());
         }
     }

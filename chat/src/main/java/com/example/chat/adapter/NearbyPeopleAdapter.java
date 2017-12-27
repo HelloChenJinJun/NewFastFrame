@@ -27,7 +27,8 @@ public class NearbyPeopleAdapter extends BaseRecyclerAdapter<User, BaseWrappedVi
         protected void convert(BaseWrappedViewHolder holder, User data) {
                 holder.setImageUrl(R.id.riv_nearby_people_avatar, data.getAvatar())
                         .setText(R.id.tv_nearby_people_nick,data.getNick())
-                        .setText(R.id.tv_nearby_people_distance, "距离" + CommonUtils.getDistance(data.getLocation().getLongitude(), data.getLocation().getLatitude()) + "米");
+                        .setText(R.id.tv_nearby_people_distance, "距离" + CommonUtils.getDistance(data.getLocation().getLongitude(), data.getLocation().getLatitude()) + "米")
+                .setOnItemClickListener();
                 if (data.getSignature() != null) {
                         holder.setVisible(R.id.tv_nearby_people_signature, true)
                                 .setText(R.id.tv_nearby_people_signature, data.getSignature());

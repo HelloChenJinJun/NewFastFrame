@@ -194,6 +194,7 @@ public class NewsUtil {
     public static final String COURSE_JSESSION_ID = "course_jsession_id";
     public static final String COURSE_QUERY_URL = "http://jwgl.cug.edu.cn/jwglxt/kbcx/xskbcx_cxXsKb.html?gnmkdm=N2151";
     public static final String COURSE_TEMP_JS_ID = "course_temp_js_id";
+    public static final String LIBRARY_BORROW_VERIFY_URL = "http://202.114.202.207/reader/captcha.php";
 
 
     public static String getRealNewsUrl(String url, int totalPage, int currentNum) {
@@ -551,16 +552,6 @@ public class NewsUtil {
                 .putString(ConstantUtil.NICK, userInfoEvent.getNick()).apply();
         RxBusManager.getInstance()
                 .post(userInfoEvent);
-//        BaseApplication.getAppComponent().getSharedPreferences()
-//                .edit().putBoolean(ConstantUtil.LOGIN_STATUS, false)
-//                .putString(ConstantUtil.ACCOUNT, null)
-//                .putString(ConstantUtil.PASSWORD, null)
-//                .putString(ConstantUtil.AVATAR, null)
-//                .putString(ConstantUtil.NAME, null)
-//                .putBoolean(ConstantUtil.SEX, false)
-//                .putString(ConstantUtil.BG_HALF, null)
-//                .putString(ConstantUtil.BG_ALL, null)
-//                .putString(ConstantUtil.NICK,null).apply();
     }
 
     public static RequestBody getCourseQueryRequestBody(String year, int examNum) {
@@ -569,5 +560,15 @@ public class NewsUtil {
                 year + "&xqm=" + examNum;
         return RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;charset=UTF-8")
                 , stringBuilder);
+    }
+
+    public static String getBorrowBookUrl(String verify, String number, String check) {
+//        http://202.114.202.207/reader/ajax_renew.php?bar_code=C1504828&check=3FE99B17&captcha=5607&time=1514371945828
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("http://202.114.202.207/reader/ajax_renew.php?bar_code=")
+                .append(number)
+                .append("&check=").append(check).append("&captcha=")
+                .append(verify).append("&time=").append(System.currentTimeMillis());
+        return stringBuilder.toString();
     }
 }

@@ -153,7 +153,6 @@ public class ContactsFragment extends BaseFragment implements MyLetterView.MyLet
 
                 } else if (i == R.id.ll_fragment_contacts_nearby) {
                         NearbyPeopleActivity.start(getActivity());
-
                 }
         }
 

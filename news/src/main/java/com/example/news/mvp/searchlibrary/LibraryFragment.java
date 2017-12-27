@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.commonlibrary.BaseFragment;
@@ -46,7 +47,7 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
     private SwipeRefreshLayout refresh;
     private LoadMoreFooterView loadMoreFooterView;
     private EditText input;
-    private TextView search;
+    private ImageView search;
     private boolean isClassSearch;
     @Inject
     LibraryAdapter libraryAdapter;
@@ -87,7 +88,7 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
 
     @Override
     protected void initView() {
-        search = (TextView) findViewById(R.id.tv_fragment_library_search);
+        search = (ImageView) findViewById(R.id.iv_fragment_library_search);
         display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_library_display);
         refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_library_refresh);
         input = (EditText) findViewById(R.id.et_fragment_library_input);

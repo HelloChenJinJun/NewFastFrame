@@ -125,6 +125,18 @@ public class NewsApplication implements IModuleConfig, IAppLife {
                         return null;
                     }
                 });
+        Router.getInstance().registerProvider("news:main", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                Activity activity = (Activity) routerRequest.getContext();
+                Intent intent = new Intent(activity, MainActivity.class);
+                activity.startActivity(intent);
+                if (routerRequest.isFinish()) {
+                    activity.finish();
+                }
+                return null;
+            }
+        });
         Router.getInstance().registerProvider("news:login", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {

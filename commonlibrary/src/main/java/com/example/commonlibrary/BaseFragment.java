@@ -128,6 +128,18 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     }
 
 
+    public void showCustomDialog(String title, View view, String leftName, String rightName, View.OnClickListener leftListener, View.OnClickListener rightListener) {
+        ((BaseActivity) getActivity()).showCustomDialog(title, view, leftName, rightName, leftListener, rightListener);
+    }
+
+
+//    public void dismissBaseDialog(){
+//        if (getActivity() != null) {
+//            ((BaseActivity) getActivity()).dismissBaseDialog();
+//        }
+//    }
+
+
     protected View findViewById(int id) {
         if (root != null) {
             return root.findViewById(id);
@@ -174,11 +186,11 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
             return;
         }
 
-        if (option.getBgColor() !=0) {
+        if (option.getBgColor() != 0) {
             headerLayout.setBackgroundColor(option.getBgColor());
         }
         if (option.getCustomView() != null) {
-            ViewGroup container= ((ViewGroup) headerLayout.findViewById(R.id.toolbar));
+            ViewGroup container = ((ViewGroup) headerLayout.findViewById(R.id.toolbar));
             container.removeAllViews();
             container.addView(option.getCustomView());
             return;
@@ -230,10 +242,15 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
         if (mEmptyLayout != null) {
             mEmptyLayout.setCurrentStatus(EmptyLayout.STATUS_LOADING);
         } else {
-            if (!getActivity().isFinishing()) {
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).showLoadDialog(loadingMsg);
-                }
+            showLoadDialog(loadingMsg);
+        }
+    }
+
+
+    protected void showLoadDialog(String message) {
+        if (!getActivity().isFinishing()) {
+            if (getActivity() instanceof BaseActivity) {
+                ((BaseActivity) getActivity()).showLoadDialog(message);
             }
         }
     }
@@ -241,14 +258,20 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     @Override
     public void hideLoading() {
         if (mEmptyLayout != null) {
-            if (mEmptyLayout.getCurrentStatus() !=EmptyLayout.STATUS_HIDE) {
+            if (mEmptyLayout.getCurrentStatus() != EmptyLayout.STATUS_HIDE) {
                 mEmptyLayout.setCurrentStatus(EmptyLayout.STATUS_HIDE);
             }
         } else {
-            if (!getActivity().isFinishing()) {
-                if (getActivity() instanceof BaseActivity) {
-                    ((BaseActivity) getActivity()).dismissLoadDialog();
-                }
+            dismissLoadDialog();
+        }
+    }
+
+
+
+    protected void dismissLoadDialog(){
+        if (!getActivity().isFinishing()) {
+            if (getActivity() instanceof BaseActivity) {
+                ((BaseActivity) getActivity()).dismissLoadDialog();
             }
         }
     }
@@ -322,7 +345,6 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     }
 
 
-
     protected int fragmentContainerResId = 0;
     protected Fragment currentFragment;
 
@@ -351,10 +373,6 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
         }
         currentFragment = fragment;
     }
-
-
-
-
 
 
 }

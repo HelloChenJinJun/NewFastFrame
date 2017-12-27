@@ -101,11 +101,11 @@ public class ChatApplication implements IModuleConfig, IAppLife {
         Router.getInstance().registerProvider("chat:login", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
-               Activity activity=BaseApplication.getAppComponent().getActivityManager().getCurrentActivity();
-               Intent intent=new Intent(activity,LoginActivity.class);
-               intent.putExtra(ConstantUtil.FROM, ((String) routerRequest.getParamMap().get(ConstantUtil.FROM)));
-               activity.startActivity(intent);
-               return null;
+                Activity activity = (Activity) routerRequest.getContext();
+                Intent intent = new Intent(activity, LoginActivity.class);
+                intent.putExtra(ConstantUtil.FROM, ((String) routerRequest.getParamMap().get(ConstantUtil.FROM)));
+                activity.startActivity(intent);
+                return null;
             }
         });
         Router.getInstance().registerProvider("chat:main", new BaseAction() {
@@ -121,15 +121,16 @@ public class ChatApplication implements IModuleConfig, IAppLife {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
                 Intent intent = (Intent) routerRequest.getObject();
+                BaseActivity activity = (BaseActivity) routerRequest.getContext();
                 if (intent.getSerializableExtra("url_share_message") != null) {
                     Serializable sharedMessage = intent.getSerializableExtra("url_share_message");
-                    ((HomeFragment) ((BaseActivity) BaseApplication
-                            .getAppComponent().getActivityManager()
-                            .getCurrentActivity()).getCurrentFragment()).notifyUrlSharedMessageAdd(sharedMessage);
+                    if (activity.getCurrentFragment() != null && activity.getCurrentFragment() instanceof HomeFragment) {
+                        ((HomeFragment) activity.getCurrentFragment()).notifyUrlSharedMessageAdd(sharedMessage);
+                    }
                 }
-                ((HomeFragment) ((BaseActivity) BaseApplication
-                        .getAppComponent().getActivityManager()
-                        .getCurrentActivity()).getCurrentFragment()).notifyNewIntentCome(intent);
+                if (activity.getCurrentFragment() != null && activity.getCurrentFragment() instanceof HomeFragment) {
+                    ((HomeFragment) activity.getCurrentFragment()).notifyNewIntentCome(intent);
+                }
                 return null;
             }
         });
@@ -137,8 +138,7 @@ public class ChatApplication implements IModuleConfig, IAppLife {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
                 Map<String, Object> map = routerRequest.getParamMap();
-                Activity activity = BaseApplication.getAppComponent().getActivityManager()
-                        .getCurrentActivity();
+                Activity activity = (Activity) routerRequest.getContext();
                 String title = (String) map.get(ConstantUtil.TITLE);
                 switch (title) {
                     case "搜索":

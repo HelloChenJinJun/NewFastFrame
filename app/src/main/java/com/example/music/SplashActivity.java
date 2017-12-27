@@ -8,6 +8,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.utils.ConstantUtil;
+
 
 /**
  * 项目名称:    NewFastFrame
@@ -32,13 +35,8 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
         Animation animation = AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_top_in);
         animation.setAnimationListener(this);
         title.startAnimation(animation);
-//        enterMain();
     }
 
-//    private void enterMain() {
-//        boolean isFirst = BaseApplication.getAppComponent().getSharedPreferences()
-//                .getBoolean(ConstantUtil.FIRST_STATUS, true);
-//    }
 
     @Override
     public void onAnimationStart(Animation animation) {
@@ -47,7 +45,12 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        GuideActivity.start(this);
+        if (BaseApplication.getAppComponent().getSharedPreferences()
+                .getBoolean(ConstantUtil.FIRST_STATUS,false)) {
+            GuideActivity.start(this);
+        }else {
+            MainActivity.start(this);
+        }
         finish();
     }
 
