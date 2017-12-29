@@ -1,5 +1,6 @@
 package com.example.chat.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +29,7 @@ public class HomeActivity extends BaseActivity {
         super.onNewIntent(intent);
         LogUtil.e("onNewIntent");
         if (intent.getSerializableExtra("url_share_message") != null) {
-            Serializable sharedMessage =intent.getSerializableExtra("url_share_message");
+            Serializable sharedMessage = intent.getSerializableExtra("url_share_message");
             ((HomeFragment) currentFragment).notifyUrlSharedMessageAdd(sharedMessage);
             return;
         }
@@ -72,7 +73,6 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void initData() {
         addOrReplaceFragment(HomeFragment.newInstance(), R.id.fl_activity_home_container);
-
     }
 
 
@@ -86,5 +86,10 @@ public class HomeActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, HomeActivity.class);
+        activity.startActivity(intent);
     }
 }

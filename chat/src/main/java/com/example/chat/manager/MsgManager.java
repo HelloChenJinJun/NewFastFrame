@@ -1824,9 +1824,9 @@ public class MsgManager {
                                                 for (SharedMessage message :
                                                         list) {
                                                         LogUtil.e(message);
-                                                        if (message.getBelongId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
-                                                                continue;
-                                                        }
+//                                                        if (message.getBelongId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+//                                                                continue;
+//                                                        }
                                                         if (message.getVisibleType().equals(Constant.SHARE_MESSAGE_VISIBLE_TYPE_PRIVATE)) {
                                                                 result.remove(message);
                                                         } else {

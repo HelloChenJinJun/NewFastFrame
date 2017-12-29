@@ -11,7 +11,7 @@ import com.example.news.bean.CenterBean;
  * QQ:             1981367757
  */
 
-public class CenterAdapter extends BaseRecyclerAdapter<CenterBean,BaseWrappedViewHolder>{
+public class CenterAdapter extends BaseRecyclerAdapter<CenterBean, BaseWrappedViewHolder> {
     @Override
     protected int getLayoutId() {
         return R.layout.item_fragment_center;
@@ -19,8 +19,8 @@ public class CenterAdapter extends BaseRecyclerAdapter<CenterBean,BaseWrappedVie
 
     @Override
     protected void convert(BaseWrappedViewHolder holder, CenterBean data) {
-        holder.setText(R.id.tv_item_Fragment_center_title,data.getTitle())
-                .setImageResource(R.id.riv_header_layout_icon,data.getResId())
+        holder.setText(R.id.tv_item_fragment_center_title, data.getTitle())
+                .setImageResource(R.id.item_fragment_center_icon, data.getResId())
                 .setOnItemClickListener();
     }
 }

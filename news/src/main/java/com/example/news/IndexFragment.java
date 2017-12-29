@@ -141,7 +141,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setBgColor(getResources().getColor(R.color.base_color_text_grey));
         toolBarOption.setTitle("地大新闻");
-        toolBarOption.setNeedNavigation(true);
+        toolBarOption.setNeedNavigation(false);
         setToolBar(toolBarOption);
         RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, new Consumer<TypeNewsEvent>() {
             @Override
@@ -195,8 +195,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     private View getContentView() {
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_index_pop_window, null);
-        Button adjust =contentView.findViewById(R.id.btn_view_fragment_index_pop_adjust);
-        final SuperRecyclerView display =contentView.findViewById(R.id.srcv_view_fragment_index_pop_display);
+        Button adjust = contentView.findViewById(R.id.btn_view_fragment_index_pop_adjust);
+        final SuperRecyclerView display = contentView.findViewById(R.id.srcv_view_fragment_index_pop_display);
         display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 5));
         PopWindowAdapter popWindowAdapter = new PopWindowAdapter();
         display.setAdapter(popWindowAdapter);

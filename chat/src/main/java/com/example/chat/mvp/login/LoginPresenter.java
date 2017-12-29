@@ -225,13 +225,19 @@ public class LoginPresenter extends RxBasePresenter<IView<Object>, LoginModel> {
 //        RandomData.initAllRanDomData();
         User user = new User();
 //                                默认注册为男性
-        user.setSex(userInfoEvent.getSex());
 //                                 设备类型
         user.setDeviceType("android");
 //                                与设备ID绑定
         user.setInstallId(BmobInstallation.getInstallationId(BaseApplication.getInstance()));
-        user.setNick(userInfoEvent.getNick());
-        user.setAvatar(userInfoEvent.getAvatar());
+        if (userInfoEvent!=null) {
+            user.setNick(userInfoEvent.getNick());
+            user.setAvatar(userInfoEvent.getAvatar());
+            user.setSex(userInfoEvent.getSex());
+        }else {
+            user.setNick(RandomData.getRandomNick());
+            user.setAvatar(RandomData.getRandomAvatar());
+            user.setSex(true);
+        }
         user.setSortedKey(CommonUtils.getSortedKey(user.getNick()));
         user.setUsername(account);
         user.setPassword(password);

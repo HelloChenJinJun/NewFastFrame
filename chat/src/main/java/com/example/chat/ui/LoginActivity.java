@@ -158,43 +158,52 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
             return;
         }
         showLoadDialog("正在登录.........");
-        presenter.registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
-            @Override
-            public void accept(LoginEvent loginEvent) throws Exception {
-                if (loginEvent.isSuccess()) {
-                    presenter.login(userName.getText().toString().trim()
-                            , passWord.getText().toString().trim(), loginEvent.getUserInfoEvent());
-                } else {
-                    hideLoading();
-                    ToastUtils.showShortToast(loginEvent.getErrorMessage());
+        if (getIntent().getStringExtra(ConstantUtil.FROM)!=null) {
+            presenter.registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
+                @Override
+                public void accept(LoginEvent loginEvent) throws Exception {
+                    if (loginEvent.isSuccess()) {
+                        presenter.login(userName.getText().toString().trim()
+                                , passWord.getText().toString().trim(), loginEvent.getUserInfoEvent());
+                    } else {
+                        hideLoading();
+                        ToastUtils.showShortToast(loginEvent.getErrorMessage());
+                    }
                 }
-            }
-        });
-        Map<String, Object> map = new HashMap<>();
-        map.put(ConstantUtil.ACCOUNT, userName.getText().toString().trim());
-        map.put(ConstantUtil.PASSWORD, passWord.getText().toString().trim());
-        Router.getInstance().deal(new RouterRequest.Builder()
-                .provideName("news").actionName("login").paramMap(map).build());
+            });
+            Map<String, Object> map = new HashMap<>();
+            map.put(ConstantUtil.ACCOUNT, userName.getText().toString().trim());
+            map.put(ConstantUtil.PASSWORD, passWord.getText().toString().trim());
+            Router.getInstance().deal(new RouterRequest.Builder()
+                    .provideName("news").actionName("login").paramMap(map).build());
+        }else {
+            presenter.login(userName.getText().toString().trim()
+                    , passWord.getText().toString().trim(),null);
+        }
     }
 
 
     private void dealResultInfo(User user) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(ConstantUtil.AVATAR, user.getAvatar());
-        map.put(ConstantUtil.SIGNATURE, user.getSignature());
-        map.put(ConstantUtil.NICK, user.getNick());
-        map.put(ConstantUtil.ACCOUNT, user.getUsername());
-        map.put(ConstantUtil.NAME, user.getNick());
-        map.put(ConstantUtil.SEX, user.isSex());
-        map.put(ConstantUtil.BG_HALF, user.getTitleWallPaper());
-        map.put(ConstantUtil.BG_ALL, user.getWallPaper());
-        map.put(ConstantUtil.STUDENT_TYPE, getIntent().getStringExtra(ConstantUtil.STUDENT_TYPE));
-        map.put(ConstantUtil.COLLEGE, getIntent().getStringExtra(ConstantUtil.COLLEGE));
-        map.put(ConstantUtil.PASSWORD, passWord.getText().toString().trim());
-        map.put(ConstantUtil.FROM, getIntent().getStringExtra(ConstantUtil.FROM));
-        Router.getInstance().deal(new RouterRequest.Builder()
-                .paramMap(map).context(this).provideName("news")
-                .actionName("person").isFinish(true).build());
+        if (getIntent().getStringExtra(ConstantUtil.FROM)!=null) {
+            Map<String, Object> map = new HashMap<>();
+            map.put(ConstantUtil.AVATAR, user.getAvatar());
+            map.put(ConstantUtil.SIGNATURE, user.getSignature());
+            map.put(ConstantUtil.NICK, user.getNick());
+            map.put(ConstantUtil.ACCOUNT, user.getUsername());
+            map.put(ConstantUtil.NAME, user.getNick());
+            map.put(ConstantUtil.SEX, user.isSex());
+            map.put(ConstantUtil.BG_HALF, user.getTitleWallPaper());
+            map.put(ConstantUtil.BG_ALL, user.getWallPaper());
+            map.put(ConstantUtil.STUDENT_TYPE, getIntent().getStringExtra(ConstantUtil.STUDENT_TYPE));
+            map.put(ConstantUtil.COLLEGE, getIntent().getStringExtra(ConstantUtil.COLLEGE));
+            map.put(ConstantUtil.PASSWORD, passWord.getText().toString().trim());
+            map.put(ConstantUtil.FROM, getIntent().getStringExtra(ConstantUtil.FROM));
+            Router.getInstance().deal(new RouterRequest.Builder()
+                    .paramMap(map).context(this).provideName("news")
+                    .actionName("person").isFinish(true).build());
+        }else {
+            HomeActivity.start(this);
+        }
     }
 
 

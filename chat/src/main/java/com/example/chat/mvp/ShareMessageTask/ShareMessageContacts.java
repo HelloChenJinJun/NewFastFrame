@@ -108,7 +108,6 @@ public interface ShareMessageContacts {
                 //                加载所有的说说消息
                 abstract void loadAllShareMessages(boolean isPullRefresh, String time);
 
-//                public abstract void loadAllMyShareMessage(boolean isPullRefresh, String time);
                 public abstract void loadShareMessages(String uid,boolean isPullRefresh,String time);
 
         }

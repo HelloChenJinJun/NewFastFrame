@@ -80,6 +80,12 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
             public void accept(UserInfoEvent userInfoEvent) throws Exception {
                 ToastUtils.showShortToast(userInfoEvent.toString());
                 CommonLogger.e(userInfoEvent.toString());
+                boolean isLogin=BaseApplication.getAppComponent()
+                        .getSharedPreferences().getBoolean(ConstantUtil.LOGIN_STATUS,false);
+                if (!isLogin) {
+//                    注销账号通知
+                    ((MainActivity) getActivity()).notifyLoginStatus(isLogin);
+                }
                 updateUserInfo(userInfoEvent.getAvatar(), userInfoEvent.getNick(), userInfoEvent.getHalfBg());
             }
         }, new Consumer<Throwable>() {

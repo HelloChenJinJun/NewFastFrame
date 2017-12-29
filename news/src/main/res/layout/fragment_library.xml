@@ -12,6 +12,8 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
@@ -19,17 +21,10 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_search_white_24dp" />
-
             <EditText
                 android:id="@+id/et_fragment_library_input"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:hint="请输入书名或作者名"
@@ -37,14 +32,23 @@
                 android:textColor="@color/base_color_text_white"
                 android:textColorHint="@color/base_color_text_grey"
                 android:textSize="16sp" />
-
             <ImageView
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:id="@+id/iv_fragment_library_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_news_search"
                 android:textColor="@color/base_color_text_blue"
-                android:textSize="20sp" />
+                />
+
+            <ImageView
+                android:id="@+id/iv_fragment_library_divide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_divide"
+                android:textColor="@color/base_color_text_blue"
+                />
         </LinearLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout

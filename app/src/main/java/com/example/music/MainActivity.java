@@ -39,7 +39,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
         display= (SuperRecyclerView) findViewById(R.id.srcv_activity_main_display);
     }
 

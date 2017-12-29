@@ -11,6 +11,7 @@ import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.news.mvp.booklist.BookInfoListFragment;
+import com.example.news.mvp.searchlibrary.LibraryFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,14 +60,16 @@ public class LibraryInfoActivity extends BaseActivity{
         List<BaseFragment>  fragmentList=new ArrayList<>();
         titleList.add("当前");
         titleList.add("历史");
+        titleList.add("图书搜索");
         fragmentList.add(BookInfoListFragment.newInstance(titleList.get(0)));
         fragmentList.add(BookInfoListFragment.newInstance(titleList.get(1)));
+        fragmentList.add(LibraryFragment.newInstance());
         viewPagerAdapter.setTitleAndFragments(titleList,fragmentList);
         tabLayout.setupWithViewPager(display);
         display.setAdapter(viewPagerAdapter);
         display.setCurrentItem(0);
         ToolBarOption toolBarOption=new ToolBarOption();
-        toolBarOption.setTitle("图书借阅情况");
+        toolBarOption.setTitle("个人图书馆");
         toolBarOption.setNeedNavigation(true);
         setToolBar(toolBarOption);
     }

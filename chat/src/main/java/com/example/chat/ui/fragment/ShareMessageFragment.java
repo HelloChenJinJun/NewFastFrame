@@ -176,25 +176,26 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
         normal.setOnClickListener(this);
         video.setOnClickListener(this);
         image.setOnClickListener(this);
-        display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
-        display.setOnLoadMoreListener(this);
         display.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                boolean result=false;
                 if (mCommentPopupWindow != null && mCommentPopupWindow.isShowing()) {
                     mCommentPopupWindow.dismiss();
+                    result=true;
                 }
                 if (mMenu.isExpanded()) {
                     mMenu.collapse();
+                    result=true;
                 }
                 LogUtil.e("container:onTouch");
 //                                这里进行点击关闭编辑框
                 if (bottomInput.getVisibility() == View.VISIBLE) {
                     LogUtil.e("触摸界面点击关闭输入法");
                     dealBottomView(false);
-                    return true;
+                    result=true;
                 }
-                return false;
+                return result;
             }
         });
         refresh.setOnRefreshListener(mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -395,8 +396,8 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
         User currentUser = UserManager.getInstance().getCurrentUser();
         headerView = View.inflate(getContext(), R.layout.share_fragment_item_header_layout, null);
         ((TextView) headerView.findViewById(R.id.tv_share_fragment_item_header_name)).setText(currentUser.getNick());
-        ImageView avatar = (ImageView) headerView.findViewById(R.id.iv_share_fragment_item_header_avatar);
-        ImageView bg = (ImageView) headerView.findViewById(R.id.iv_share_fragment_item_header_background);
+        ImageView avatar =headerView.findViewById(R.id.iv_share_fragment_item_header_avatar);
+        ImageView bg =headerView.findViewById(R.id.iv_share_fragment_item_header_background);
         Glide.with(this).load(currentUser.getAvatar()).into(avatar);
         Glide.with(this).load(currentUser.getTitleWallPaper()).into(bg);
         avatar.setOnClickListener(new View.OnClickListener() {
@@ -503,7 +504,11 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
 
     @Override
     public void updateAllShareMessages(List<SharedMessage> data, boolean isPullRefresh) {
-
+        if (isPullRefresh) {
+            mAdapter.refreshData(data);
+        }else {
+            mAdapter.addData(data);
+        }
     }
 
 

@@ -2,12 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:visible="false"
         android:id="@+id/main_item_search"
         android:icon="@drawable/ic_news_search"
         android:title="搜索"
         app:showAsAction="always" />
 
     <item
+        android:visible="false"
         android:id="@+id/main_item_more"
         android:icon="@drawable/ic_news_more"
         android:title=""

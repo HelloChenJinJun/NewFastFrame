@@ -84,7 +84,7 @@ public class ChatApplication implements IModuleConfig, IAppLife {
         chatMainComponent = DaggerChatMainComponent.builder().appComponent(BaseApplication.getAppComponent())
                 .chatMainModule(new ChatMainModule()).build();
         Bmob.initialize(application, Constant.KEY);
-        AppStat.i(Constant.KEY, null);
+//        AppStat.i(Constant.KEY, null);
         LogUtil.e("1服务器端初始化完成");
         CustomInstallation.getCurrentInstallation(application).save();
         LogUtil.e("设备ID在这里上传了");
@@ -145,7 +145,7 @@ public class ChatApplication implements IModuleConfig, IAppLife {
                         Intent intent = new Intent(activity, SearchActivity.class);
                         activity.startActivity(intent);
                         break;
-                    case "添加":
+                    case "添加好友":
                         ToastUtils.showShortToast("点击了添加好友");
                         SearchFriendActivity.start(activity);
                         break;

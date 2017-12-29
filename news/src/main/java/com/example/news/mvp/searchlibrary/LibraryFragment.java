@@ -47,7 +47,6 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
     private SwipeRefreshLayout refresh;
     private LoadMoreFooterView loadMoreFooterView;
     private EditText input;
-    private ImageView search;
     private boolean isClassSearch;
     @Inject
     LibraryAdapter libraryAdapter;
@@ -88,7 +87,7 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
 
     @Override
     protected void initView() {
-        search = (ImageView) findViewById(R.id.iv_fragment_library_search);
+        ImageView search = (ImageView) findViewById(R.id.iv_fragment_library_search);
         display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_library_display);
         refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_library_refresh);
         input = (EditText) findViewById(R.id.et_fragment_library_input);
@@ -99,6 +98,7 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
         timeDisplay = (SuperRecyclerView) findViewById(R.id.srcv_fragment_library_right_time_display);
         findViewById(R.id.btn_fragment_library_right_confirm).setOnClickListener(this);
         search.setOnClickListener(this);
+        findViewById(R.id.iv_fragment_library_divide).setOnClickListener(this);
     }
 
     @Override
@@ -252,7 +252,7 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
                     , typeAdapter.getData(preTypePosition).split("/")[1]
                     , placeAdapter.getData(prePlacePosition).split("/")[1]
                     , classAdapter.getData(preClassPosition));
-        } else {
+        } else if (v.getId()==R.id.iv_fragment_library_search){
             if (TextUtils.isEmpty(input.getText().toString().trim())) {
                 ToastUtils.showShortToast("内容不能为空哦");
             } else {
@@ -260,6 +260,8 @@ public class LibraryFragment extends BaseFragment<List<SearchLibraryBean>, Libra
                 refresh.setRefreshing(true);
                 presenter.searchBook(false, true, input.getText().toString().trim());
             }
+        }else {
+            drawerLayout.openDrawer(GravityCompat.END);
         }
     }
 

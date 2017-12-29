@@ -27,6 +27,7 @@ import java.util.Map;
 public class MainActivity extends BaseActivity {
 
     private List<Fragment> fragmentList;
+    private MenuItem searchItem, expendItem;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -57,6 +58,8 @@ public class MainActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.home_menu_layout, menu);
+        searchItem = menu.getItem(0);
+        expendItem = menu.getItem(1);
         return true;
     }
 
@@ -82,18 +85,22 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 if (checkedId == R.id.rb_activity_main_bottom_index) {
+                    searchItem.setVisible(false);
+                    expendItem.setVisible(false);
                     addOrReplaceFragment(fragmentList.get(0));
-                } else if (checkedId == R.id.rb_activity_main_bottom_library) {
-                    addOrReplaceFragment(fragmentList.get(1));
                 } else if (checkedId == R.id.rb_activity_main_bottom_center) {
-                    addOrReplaceFragment(fragmentList.get(2));
+                    searchItem.setVisible(false);
+                    expendItem.setVisible(false);
+                    addOrReplaceFragment(fragmentList.get(1));
                 } else if (checkedId == R.id.rb_activity_main_bottom_person) {
-                    addOrReplaceFragment(fragmentList.get(3));
+                    addOrReplaceFragment(fragmentList.get(2));
                 } else if (checkedId == R.id.rb_activity_main_bottom_chat) {
+                    searchItem.setVisible(true);
+                    expendItem.setVisible(true);
                     boolean loginStatus = BaseApplication.getAppComponent()
                             .getSharedPreferences().getBoolean(ConstantUtil.LOGIN_STATUS, false);
                     if (loginStatus) {
-                        addOrReplaceFragment(fragmentList.get(4));
+                        addOrReplaceFragment(fragmentList.get(3));
                     } else {
                         ToastUtils.showShortToast("未登录状态，请先登录再进去");
                     }
@@ -106,7 +113,7 @@ public class MainActivity extends BaseActivity {
     protected void initData() {
         fragmentList = new ArrayList<>();
         fragmentList.add(IndexFragment.newInstance());
-        fragmentList.add(LibraryFragment.newInstance());
+//        fragmentList.add(LibraryFragment.newInstance());
         fragmentList.add(CenterFragment.newInstance());
         fragmentList.add(PersonFragment.newInstance());
         Fragment fragment = (Fragment) Router.getInstance().deal(new RouterRequest.Builder()
@@ -128,4 +135,8 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    public void notifyLoginStatus(boolean isLogin) {
+        getSupportFragmentManager().beginTransaction().remove(fragmentList.get(3))
+                .commitAllowingStateLoss();
+    }
 }

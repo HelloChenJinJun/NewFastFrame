@@ -14,6 +14,8 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
+import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ConstantUtil;
@@ -83,7 +85,7 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return false;
+        return true;
     }
 
     @Override
@@ -108,6 +110,7 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
                 .systemCenterModule(new SystemCenterModule(this)).build().inject(this);
         centerAdapter = new CenterAdapter();
         display.setLayoutManager(new WrappedGridLayoutManager(this, 3));
+        display.addItemDecoration(new GridSpaceDecoration(3, getResources().getDimensionPixelSize(R.dimen.padding_middle), true));
         display.setAdapter(centerAdapter);
         centerAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
@@ -165,12 +168,20 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
                 }
             }
         });
+        initToolBar();
         display.post(new Runnable() {
             @Override
             public void run() {
                 centerAdapter.addData(getDefaultData());
             }
         });
+    }
+
+    private void initToolBar() {
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setTitle("功能列表");
+        toolBarOption.setNeedNavigation(true);
+        setToolBar(toolBarOption);
     }
 
 
@@ -226,31 +237,25 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
     private List<CenterBean> getDefaultData() {
         List<CenterBean> data = new ArrayList<>();
         CenterBean item = new CenterBean();
-        item.setResId(R.mipmap.ic_launcher);
+        item.setResId(R.drawable.ic_demo_one);
         item.setTitle("成绩查询");
         data.add(item);
         CenterBean consumerQuery = new CenterBean();
         consumerQuery.setTitle("消费查询");
-        consumerQuery.setResId(R.mipmap.ic_launcher);
+        consumerQuery.setResId(R.drawable.ic_demo_two);
         data.add(consumerQuery);
         CenterBean libraryBean = new CenterBean();
         libraryBean.setTitle("图书馆");
-        libraryBean.setResId(R.mipmap.ic_launcher);
+        libraryBean.setResId(R.drawable.ic_demo_three);
         CenterBean cardBean = new CenterBean();
         cardBean.setTitle("一卡通");
-        cardBean.setResId(R.mipmap.ic_launcher);
+        cardBean.setResId(R.drawable.ic_demo_four);
         data.add(libraryBean);
         data.add(cardBean);
         CenterBean courseBean = new CenterBean();
         courseBean.setTitle("课表查询");
-        courseBean.setResId(R.mipmap.ic_launcher);
+        courseBean.setResId(R.drawable.ic_demo_five);
         data.add(courseBean);
-        for (int i = 0; i < 5; i++) {
-            CenterBean temp = new CenterBean();
-            temp.setResId(R.mipmap.ic_launcher);
-            temp.setTitle("标题" + i);
-            data.add(temp);
-        }
         return data;
     }
 

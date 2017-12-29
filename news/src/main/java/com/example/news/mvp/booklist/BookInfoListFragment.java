@@ -151,6 +151,7 @@ public class BookInfoListFragment extends BaseFragment<Object, BookInfoListPrese
                                     }
                                 }
                             });
+                    presenter.getVerifyImage();
                 }
                 return true;
             }
@@ -225,6 +226,7 @@ public class BookInfoListFragment extends BaseFragment<Object, BookInfoListPrese
     public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
         super.showError(errorMsg, listener);
         refreshLayout.setRefreshing(false);
+
     }
 
 

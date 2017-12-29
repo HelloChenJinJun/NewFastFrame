@@ -4,18 +4,17 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/tv_item_Fragment_center_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="标题"/>
     <ImageView
         android:id="@+id/item_fragment_center_icon"
         android:scaleType="centerCrop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher"/>
+    <TextView
+        android:id="@+id/tv_item_fragment_center_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="标题"/>
 
 
 
