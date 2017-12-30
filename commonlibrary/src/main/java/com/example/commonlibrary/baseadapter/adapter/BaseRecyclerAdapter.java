@@ -400,7 +400,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
                 lastVisiblePosition = gridLayoutManager.findLastVisibleItemPositions(null)[0];
             }
             int position;
-            position = getItemUpCount() + getData().size()+1;
+            position = getItemUpCount() + getData().size();
             if (lastVisiblePosition!=-1&&lastVisiblePosition == position) {
                 if (mLoadMoreFooterContainer.getChildAt(0) instanceof LoadMoreFooterView) {
                     ((LoadMoreFooterView) mLoadMoreFooterContainer.getChildAt(0)).setStatus(LoadMoreFooterView.Status.THE_END);
@@ -423,7 +423,10 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             } else {
                 int index = data.indexOf(newData);
                 data.set(index, newData);
+                notifyDataSetChanged();
             }
+        }else {
+            notifyLoadMoreChanged();
         }
     }
 

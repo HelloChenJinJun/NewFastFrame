@@ -10,6 +10,7 @@ import com.example.chat.bean.HappyBean;
 import com.example.chat.bean.HappyContentBean;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.PictureBean;
+import com.example.chat.bean.PublicPostBean;
 import com.example.chat.bean.RecentMsg;
 import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
@@ -2612,5 +2613,33 @@ public class MsgManager {
                 GroupTableMessage groupTableMessage=new GroupTableMessage();
                 groupTableMessage.setObjectId(objectId);
                 groupTableMessage.delete(BaseApplication.getInstance(),deleteListener);
+        }
+
+        public void getAllPostData(boolean isRefresh, String time,FindListener<PublicPostBean> findCallback) {
+                BmobQuery<PublicPostBean> query=new BmobQuery<>();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                long currentTime = 0;
+                try {
+                        currentTime = simpleDateFormat.parse(time).getTime();
+                } catch (ParseException e) {
+                        e.printStackTrace();
+                }
+                LogUtil.e("现在的时间:" + currentTime);
+                BmobDate bmobDate;
+                if (isRefresh) {
+                        currentTime += 1000;
+                        LogUtil.e("加一秒后的时间" + currentTime);
+                        bmobDate = new BmobDate(new Date(currentTime));
+                        query.addWhereGreaterThan("createdAt", bmobDate);
+                } else {
+                        currentTime -= 1000;
+                        LogUtil.e("减一秒后的时间" + currentTime);
+                        bmobDate = new BmobDate(new Date(currentTime));
+                        query.addWhereLessThan("createdAt", bmobDate);
+                }
+                query.order("-createdAt");
+                query.setLimit(10);
+                query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ONLY);
+                query.findObjects(BaseApplication.getInstance(),findCallback);
         }
 }

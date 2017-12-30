@@ -423,22 +423,21 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
                                         visibleType = Constant.SHARE_MESSAGE_VISIBLE_TYPE_PRIVATE;
                                 } else {
                                         visibleType = Constant.SHARE_MESSAGE_VISIBLE_TYPE_PUBLIC;
-
-                                        showLoadDialog("正在发表说说..........");
-                                        MsgManager.getInstance().createSharedMessage(mHappyBean, mHappyContentBean, mWinXinBean, mPictureBean, location.getText().toString().trim(), mPath, videoScreenshot, edit.getText().toString().trim(), selectedImageList, invisibleUsers, visibleType, new OnCreateSharedMessageListener() {
-                                                @Override
-                                                public void onSuccess(final SharedMessage message) {
-                                                        mShareMessagePresenter.addShareMessage(message);
-                                                }
-
-                                                @Override
-                                                public void onFailed(int errorId, String errorMsg) {
-                                                        dismissBaseDialog();
-                                                        LogUtil.e("总体上传图片失败");
-                                                        LogUtil.e(errorMsg + errorId);
-                                                }
-                                        });
                                 }
+                                showLoadDialog("正在发表说说..........");
+                                MsgManager.getInstance().createSharedMessage(mHappyBean, mHappyContentBean, mWinXinBean, mPictureBean, location.getText().toString().trim(), mPath, videoScreenshot, edit.getText().toString().trim(), selectedImageList, invisibleUsers, visibleType, new OnCreateSharedMessageListener() {
+                                        @Override
+                                        public void onSuccess(final SharedMessage message) {
+                                                mShareMessagePresenter.addShareMessage(message);
+                                        }
+
+                                        @Override
+                                        public void onFailed(int errorId, String errorMsg) {
+                                                dismissBaseDialog();
+                                                LogUtil.e("总体上传图片失败");
+                                                LogUtil.e(errorMsg + errorId);
+                                        }
+                                });
                         }
                 });
                 setToolBar(toolBarOption);

@@ -61,6 +61,7 @@ import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
@@ -85,7 +86,7 @@ import cn.bmob.v3.listener.UploadFileListener;
  * QQ:             1981367757
  */
 
-public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,ShareMessagePresenter> implements ShareMessageContacts.View<List<SharedMessage>>, View.OnClickListener, OnShareMessageReceivedListener, AdapterView.OnItemClickListener, OnShareMessageItemClickListener, OnLoadMoreListener {
+public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, ShareMessagePresenter> implements ShareMessageContacts.View<List<SharedMessage>>, View.OnClickListener, OnShareMessageReceivedListener, AdapterView.OnItemClickListener, OnShareMessageItemClickListener, OnLoadMoreListener {
 
 
     private SuperRecyclerView display;
@@ -179,21 +180,21 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
         display.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                boolean result=false;
+                boolean result = false;
                 if (mCommentPopupWindow != null && mCommentPopupWindow.isShowing()) {
                     mCommentPopupWindow.dismiss();
-                    result=true;
+                    result = true;
                 }
                 if (mMenu.isExpanded()) {
                     mMenu.collapse();
-                    result=true;
+                    result = true;
                 }
                 LogUtil.e("container:onTouch");
 //                                这里进行点击关闭编辑框
                 if (bottomInput.getVisibility() == View.VISIBLE) {
                     LogUtil.e("触摸界面点击关闭输入法");
                     dealBottomView(false);
-                    result=true;
+                    result = true;
                 }
                 return result;
             }
@@ -266,7 +267,6 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
                         SharedMessage sharedMessage = (SharedMessage) data.getSerializableExtra(Constant.RESULT_CODE_SHARE_MESSAGE);
                         LogUtil.e(sharedMessage);
                         updateShareMessageAdded(sharedMessage);
-                        ((HomeFragment) getParentFragment()).notifySharedMessageChanged(sharedMessage.getObjectId(), true);
                     }
                     break;
                 case Constant.REQUEST_CODE_SELECT_TITLE_WALLPAPER:
@@ -362,13 +362,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
         GroupMessageService.registerListener(this);
         mMenu.attachToRecyclerView(display);
 
-        refresh.post(new Runnable() {
-            @Override
-            public void run() {
-                refresh.setRefreshing(true);
-                mOnRefreshListener.onRefresh();
-            }
-        });
+
     }
 
     @Override
@@ -380,24 +374,21 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
         long realServerTime = System.currentTimeMillis() - deltaTime;
         simpleDate = simpleDateFormat.format(new Date(realServerTime));
         LogUtil.e("得到的时间格式为:" + simpleDate);
-//                        display.setRefreshing(true);
         refresh.setRefreshing(true);
         mOnRefreshListener.onRefresh();
         LogUtil.e("说说界面隐藏了，这里取消监听 ");
-        if (mAdapter.getData().size() > 0) {
-            for (SharedMessage sharedMessage :
-                    mAdapter.getData()) {
-                ((HomeFragment) getParentFragment()).notifySharedMessageChanged(sharedMessage.getObjectId(), false);
-            }
-        }
+//        for (SharedMessage sharedMessage :
+//                mAdapter.getData()) {
+//            ((HomeFragment) getParentFragment()).notifySharedMessageChanged(sharedMessage.getObjectId(), false);
+//        }
     }
 
     private View getHeaderView() {
         User currentUser = UserManager.getInstance().getCurrentUser();
         headerView = View.inflate(getContext(), R.layout.share_fragment_item_header_layout, null);
         ((TextView) headerView.findViewById(R.id.tv_share_fragment_item_header_name)).setText(currentUser.getNick());
-        ImageView avatar =headerView.findViewById(R.id.iv_share_fragment_item_header_avatar);
-        ImageView bg =headerView.findViewById(R.id.iv_share_fragment_item_header_background);
+        ImageView avatar = headerView.findViewById(R.id.iv_share_fragment_item_header_avatar);
+        ImageView bg = headerView.findViewById(R.id.iv_share_fragment_item_header_background);
         Glide.with(this).load(currentUser.getAvatar()).into(avatar);
         Glide.with(this).load(currentUser.getTitleWallPaper()).into(bg);
         avatar.setOnClickListener(new View.OnClickListener() {
@@ -445,7 +436,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
     public void updateShareMessageAdded(SharedMessage shareMessage) {
         if (shareMessage != null) {
             mAdapter.addData(0, shareMessage);
-            mAdapter.notifyDataSetChanged();
+            ((HomeFragment) getParentFragment()).notifySharedMessageChanged(shareMessage.getObjectId(), true);
         }
     }
 
@@ -472,10 +463,11 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
         if (!mAdapter.getSharedMessageById(id).getLikerList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
             LogUtil.e("还未点赞，这里添加点赞");
             mAdapter.getSharedMessageById(id).getLikerList().add(UserManager.getInstance().getCurrentUserObjectId());
+            mAdapter.notifyDataSetChanged();
         } else {
             LogUtil.e("已经点赞，这里添加点赞失败,可能的原因是因为实时已经检测到拉");
         }
-        mAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -483,34 +475,59 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
         if (mAdapter.getSharedMessageById(id).getLikerList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
             LogUtil.e("已有点赞，这里删除点赞");
             mAdapter.getSharedMessageById(id).getLikerList().remove(UserManager.getInstance().getCurrentUserObjectId());
+            mAdapter.notifyDataSetChanged();
         } else {
             LogUtil.e("没有点赞，这里删除点赞失败，可能的原因是因为实时已经检测到啦");
         }
-        mAdapter.notifyDataSetChanged();
+
     }
 
     @Override
     public void updateCommentAdded(String id, String content, int position) {
         LogUtil.e("更新添加评论操作，这里就不更新了，因为在实时检测的时候已经更新拉");
         dealBottomView(false);
-        mAdapter.notifyDataSetChanged();
+        SharedMessage sharedMessage=mAdapter.getSharedMessageById(id);
+        if (!sharedMessage.getCommentMsgList().contains(content)) {
+            sharedMessage.getCommentMsgList().add(content);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void updateCommentDeleted(String id, String content, int position) {
         LogUtil.e("更新删除评论操作，这里就不更新了，因为在实时检测的时候已经更新啦啦啦");
-        mAdapter.notifyDataSetChanged();
+        SharedMessage sharedMessage=mAdapter.getSharedMessageById(id);
+        if (sharedMessage.getCommentMsgList().contains(content)) {
+            sharedMessage.getCommentMsgList().remove(content);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void updateAllShareMessages(List<SharedMessage> data, boolean isPullRefresh) {
         if (isPullRefresh) {
-            mAdapter.refreshData(data);
-        }else {
+            mAdapter.addData(0,data);
+        } else {
             mAdapter.addData(data);
+        }
+        if (data != null) {
+            for (SharedMessage shareMessage :
+                    data) {
+                ((HomeFragment) getParentFragment()).notifySharedMessageChanged(shareMessage.getObjectId(), true);
+            }
         }
     }
 
+
+    @Override
+    public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
+        if (refresh.isRefreshing()) {
+            refresh.setRefreshing(false);
+            super.showError(errorMsg, listener);
+        }else {
+            display.setLoadMoreStatus(LoadMoreFooterView.Status.ERROR);
+        }
+    }
 
     @Override
     public void hideLoading() {
@@ -806,7 +823,6 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
                 presenter.addComment(mAdapter.getData(currentPosition - 1).getObjectId(), wrappedContent);
             }
             input.setText("");
-
         } else if (i == R.id.fab_share_message_normal) {
             if (mMenu.isExpanded()) {
                 mMenu.collapse();
@@ -860,12 +876,11 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>,Share
     public void onDeleteShareMessage(String id) {
         LogUtil.e("实时检测到删除说说消息到啦");
         LogUtil.e("消息为：" + id);
-        SharedMessage sharedMessage = mAdapter.getSharedMessageById(id);
-        LogUtil.e("将要移除的说说消息格式");
-        if (sharedMessage != null) {
-            LogUtil.e(sharedMessage);
-            mAdapter.getData().remove(sharedMessage);
-            mAdapter.notifyDataSetChanged();
+//        SharedMessage sharedMessage = mAdapter.getSharedMessageById(id);
+        int position=mAdapter.getPositionById(id);
+        if (position != -1) {
+//            LogUtil.e(sharedMessage);
+            mAdapter.removeData(position);
             ((HomeFragment) getParentFragment()).notifySharedMessageChanged(id, false);
         } else {
             LogUtil.e("删除消息竟然为空，怎么回事?????");

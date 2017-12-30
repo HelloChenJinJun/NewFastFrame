@@ -154,9 +154,6 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
 
         @Override
         public void loadShareMessages(String uid, final boolean isPullRefresh, String time) {
-//                if (isPullRefresh) {
-//                        mView.showLoading("加载说说消息中................");
-//                }
                 baseModel.loadShareMessages(uid, isPullRefresh, time, new LoadShareMessageCallBack() {
                         @Override
                         public void onSuccess(List<SharedMessage> data) {

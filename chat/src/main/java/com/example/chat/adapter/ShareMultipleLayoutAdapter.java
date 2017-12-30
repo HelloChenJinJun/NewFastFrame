@@ -135,4 +135,18 @@ public class ShareMultipleLayoutAdapter extends BaseMultipleRecyclerAdapter<Shar
                 }
                 return null;
         }
+
+
+
+
+        public int getPositionById(String id){
+                int size=data.size();
+                for (int i = 0; i < size; i++) {
+                        SharedMessage sharedMessage=data.get(i);
+                        if (sharedMessage.getObjectId().equals(id)) {
+                                return i;
+                        }
+                }
+                return -1;
+        }
 }
