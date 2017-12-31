@@ -237,7 +237,7 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                BaseApplication.getAppComponent().getSharedPreferences().edit().putBoolean(ChatUtil.PUSH_STATUS,isChecked);
+                BaseApplication.getAppComponent().getSharedPreferences().edit().putBoolean(ChatUtil.PUSH_STATUS,isChecked).apply();
         }
 
         public static void start(Activity activity, int requestCode) {

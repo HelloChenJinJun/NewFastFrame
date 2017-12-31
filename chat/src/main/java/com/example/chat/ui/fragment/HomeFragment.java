@@ -91,7 +91,7 @@ import static android.view.View.GONE;
  */
 
 public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListener, OnMessageReceiveListener, View.OnClickListener, OnNetWorkChangedListener, LocationChangedListener {
-    private Fragment[] mFragments = new Fragment[4];
+    private Fragment[] mFragments = new Fragment[5];
     private int currentPosition;
     private MainDragLayout container;
     private RecyclerView menuDisplay;
@@ -119,10 +119,12 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         ContactsFragment contactsFragment = new ContactsFragment();
         InvitationFragment invitationFragment = new InvitationFragment();
         ShareMessageFragment shareMessageFragment = new ShareMessageFragment();
+        ShareInfoFragment shareInfoFragment=new ShareInfoFragment();
         mFragments[0] = recentFragment;
         mFragments[1] = contactsFragment;
         mFragments[2] = invitationFragment;
         mFragments[3] = shareMessageFragment;
+        mFragments[4]=shareInfoFragment;
         container = (MainDragLayout) findViewById(R.id.dl_activity_main_drag_container);
         menuDisplay = (RecyclerView) findViewById(R.id.rev_menu_display);
         nick = (TextView) findViewById(R.id.tv_menu_nick);
@@ -176,6 +178,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         data.add("好友");
         data.add("邀请");
         data.add("动态");
+        data.add("测试");
         menuAdapter = new MenuDisplayAdapter();
         menuAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override

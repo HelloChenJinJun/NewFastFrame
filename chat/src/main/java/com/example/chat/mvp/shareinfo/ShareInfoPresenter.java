@@ -4,6 +4,7 @@ import com.example.chat.bean.PublicPostBean;
 import com.example.chat.manager.MsgManager;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
+import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import cn.bmob.v3.listener.FindListener;
  * QQ:         1981367757
  */
 
-public class ShareInfoPresenter extends BasePresenter<IView<List<PublicPostBean>>, ShareInfoModel> {
+public class ShareInfoPresenter extends RxBasePresenter<IView<List<PublicPostBean>>, ShareInfoModel> {
     public ShareInfoPresenter(IView<List<PublicPostBean>> iView, ShareInfoModel baseModel) {
         super(iView, baseModel);
     }
@@ -36,12 +37,17 @@ public class ShareInfoPresenter extends BasePresenter<IView<List<PublicPostBean>
 
             @Override
             public void onError(int i, String s) {
-                iView.showError(s + i, new EmptyLayout.OnRetryListener() {
-                    @Override
-                    public void onRetry() {
-                        getAllPostData(isRefresh, time);
-                    }
-                });
+                if (i == 101) {
+                    iView.updateData(null);
+                    iView.hideLoading();
+                }else {
+                    iView.showError(s + i, new EmptyLayout.OnRetryListener() {
+                        @Override
+                        public void onRetry() {
+                            getAllPostData(isRefresh, time);
+                        }
+                    });
+                }
             }
         });
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
@@ -15,4 +15,19 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</LinearLayout>
+
+
+    <com.example.chat.view.fab.FloatingActionButton
+        android:id="@+id/fab_fragment_share_info_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        fab:icon="@drawable/ic_mode_edit_blue_grey_900_24dp"
+        fab:fab_colorNormal="@color/blue_semi_transparent"
+        fab:fab_colorPressed="@color/blue_semi_transparent_pressed"
+        android:layout_marginRight="20dp"/>
+
+
+</RelativeLayout>

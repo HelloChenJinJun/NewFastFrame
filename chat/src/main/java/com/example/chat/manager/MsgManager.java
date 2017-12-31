@@ -15,6 +15,7 @@ import com.example.chat.bean.RecentMsg;
 import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
 import com.example.chat.bean.WinXinBean;
+import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.db.ChatDB;
 import com.example.chat.listener.AddFriendCallBackListener;
 import com.example.chat.listener.AddShareMessageCallBack;
@@ -22,15 +23,18 @@ import com.example.chat.listener.DealCommentMsgCallBack;
 import com.example.chat.listener.DealMessageCallBack;
 import com.example.chat.listener.DealUserInfoCallBack;
 import com.example.chat.listener.LoadShareMessageCallBack;
+import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.chat.listener.OnCreateSharedMessageListener;
 import com.example.chat.listener.OnReceiveListener;
 import com.example.chat.listener.OnSendMessageListener;
 import com.example.chat.listener.OnSendPushMessageListener;
 import com.example.chat.listener.OnSendTagMessageListener;
 import com.example.chat.listener.SendFileListener;
+import com.example.chat.ui.EditShareMessageActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
+import com.example.chat.util.PostUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.google.gson.Gson;
 
@@ -2641,5 +2645,77 @@ public class MsgManager {
                 query.setLimit(10);
                 query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ONLY);
                 query.findObjects(BaseApplication.getInstance(),findCallback);
+        }
+
+        public void sendPublicPostMessage(String content, String location, final ArrayList<ImageItem> imageList, final OnCreatePublicPostListener onCreatePublicPostListener) {
+                final PublicPostBean publicPostBean=new PublicPostBean();
+                final PostDataBean postDataBean=new PostDataBean();
+                postDataBean.setContent(content);
+                postDataBean.setLocation(location);
+                publicPostBean.setAuthor(UserManager.getInstance().getCurrentUser());
+                final List<String> photoUrls = new ArrayList<>();
+                if (imageList != null && imageList.size() > 0) {
+                        publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_IMAGE);
+                        LogUtil.e("发送的全部path为:");
+                        for (ImageItem imageItem :
+                                imageList) {
+                                photoUrls.add(imageItem.getPath());
+                                LogUtil.e(imageItem.getPath());
+                        }
+                        BmobFile.uploadBatch(BaseApplication.getInstance(), photoUrls.toArray(new String[]{}), new UploadBatchListener() {
+                                @Override
+                                public void onSuccess(List<BmobFile> list2, List<String> list1) {
+                                        if (imageList.size() == list1.size()) {
+                                                LogUtil.e("11全部上传图片成功");
+                                                postDataBean.setImageList(list1);
+                                                publicPostBean.setContent(BaseApplication.getAppComponent().getGson().toJson(postDataBean));
+                                                publicPostBean.save(BaseApplication.getInstance(), new SaveListener() {
+                                                        @Override
+                                                        public void onSuccess() {
+                                                                onCreatePublicPostListener.onSuccess(publicPostBean);
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(int i, String s) {
+                                                                onCreatePublicPostListener.onFailed(s,i);
+                                                        }
+                                                });
+                                        } else {
+                                                LogUtil.e("目前得到的URL集合为:");
+                                                for (String url :
+                                                        list1) {
+                                                        LogUtil.e(url);
+                                                }
+                                        }
+                                }
+
+
+                                @Override
+                                public void onProgress(int i, int i1, int i2, int i3) {
+
+                                }
+
+                                @Override
+                                public void onError(int i, String s) {
+                                        onCreatePublicPostListener.onFailed(s,i);
+                                }
+                        });
+                }else {
+                        publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_TEXT);
+                        publicPostBean.setContent(BaseApplication.getAppComponent().getGson().toJson(postDataBean));
+                        publicPostBean.save(BaseApplication.getInstance(), new SaveListener() {
+                                @Override
+                                public void onSuccess() {
+                                        onCreatePublicPostListener.onSuccess(publicPostBean);
+                                }
+
+                                @Override
+                                public void onFailure(int i, String s) {
+                                        onCreatePublicPostListener.onFailed(s,i);
+                                }
+                        });
+
+                }
+
         }
 }

@@ -1,6 +1,8 @@
 package com.example.chat.ui.fragment;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
 
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
@@ -9,6 +11,8 @@ import com.example.chat.bean.PublicPostBean;
 import com.example.chat.dagger.shareinfo.DaggerShareInfoComponent;
 import com.example.chat.dagger.shareinfo.ShareInfoModule;
 import com.example.chat.mvp.shareinfo.ShareInfoPresenter;
+import com.example.chat.ui.EditShareMessageActivity;
+import com.example.chat.view.fab.FloatingActionButton;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
@@ -21,6 +25,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.functions.Consumer;
+
 /**
  * 项目名称:    NewFastFrame
  * 创建人:      陈锦军
@@ -28,7 +34,7 @@ import javax.inject.Inject;
  * QQ:         1981367757
  */
 
-public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareInfoPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
+public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareInfoPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
 
     private SuperRecyclerView display;
         @Inject
@@ -37,7 +43,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return true;
+        return false;
     }
 
     @Override
@@ -54,6 +60,8 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     protected void initView() {
         display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_share_info_display);
         refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_share_info_refresh);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_fragment_share_info_edit);
+        floatingActionButton.setOnClickListener(this);
         refresh.setOnRefreshListener(this);
     }
 
@@ -67,10 +75,18 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         display.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);
-        ToolBarOption toolBarOption=new ToolBarOption();
-        toolBarOption.setTitle("动态");
-        toolBarOption.setNeedNavigation(false);
-        setToolBar(toolBarOption);
+        presenter.registerEvent(PublicPostBean.class, new Consumer<PublicPostBean>() {
+            @Override
+            public void accept(PublicPostBean publicPostBean) throws Exception {
+//                todo
+                shareInfoAdapter.addData(0,publicPostBean);
+            }
+        });
+        ((HomeFragment) getParentFragment()).initActionBar("动态");
+//        ToolBarOption toolBarOption=new ToolBarOption();
+//        toolBarOption.setTitle("动态");
+//        toolBarOption.setNeedNavigation(false);
+//        setToolBar(toolBarOption);
     }
 
     @Override
@@ -92,6 +108,15 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     public void showLoading(String loadingMsg) {
         if (!refresh.isRefreshing()) {
             refresh.setRefreshing(true);
+        }
+    }
+
+
+    @Override
+    public void hideLoading() {
+        super.hideLoading();
+        if (refresh.isRefreshing()) {
+            refresh.setRefreshing(false);
         }
     }
 
@@ -122,5 +147,12 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         } else {
             presenter.getAllPostData(false, "0000-00-00 01:00:00");
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent=new Intent(getActivity(),EditShareMessageActivity.class);
+        intent.putExtra("destination","public");
+        startActivity(intent);
     }
 }
