@@ -8,6 +8,8 @@ import com.example.chat.R;
 import com.example.chat.adapter.holder.BaseShareInfoViewHolder;
 import com.example.chat.adapter.holder.ImageShareInfoHolder;
 import com.example.chat.adapter.holder.ShareShareInfoHolder;
+import com.example.chat.adapter.holder.TextShareInfoHolder;
+import com.example.chat.adapter.holder.VoiceShareInfoHolder;
 import com.example.chat.bean.PublicPostBean;
 import com.example.chat.util.PostUtil;
 import com.example.commonlibrary.baseadapter.adapter.BaseMultipleRecyclerAdapter;
@@ -37,6 +39,10 @@ public class ShareInfoAdapter extends BaseMultipleRecyclerAdapter<PublicPostBean
             return new ImageShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
         }else if (viewType==PostUtil.LAYOUT_TYPE_SHARE){
             return new ShareShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
+        } else if (viewType == PostUtil.LAYOUT_TYPE_TEXT) {
+            return new TextShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
+        } else if (viewType == PostUtil.LAYOUT_TYPE_VOICE) {
+            return new VoiceShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
         }
         return super.onCreateViewHolder(parent, viewType);
     }

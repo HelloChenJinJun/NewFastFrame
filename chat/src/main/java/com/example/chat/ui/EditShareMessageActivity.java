@@ -302,6 +302,8 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
                 selectedFriend.setVisibility(View.GONE);
                 title.setVisibility(View.GONE);
                 display.setVisibility(View.VISIBLE);
+                initCommonImageLoader();
+                initImageAdapter();
             } else {
                 LogUtil.e("这是文本说说");
                 display.setVisibility(View.GONE);
@@ -428,7 +430,7 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
                 }
                 showLoadDialog("正在发表说说..........");
 
-                if (from != null && !from.equals("public")) {
+                if (from != null &&from.equals("public")) {
                     MsgManager.getInstance().sendPublicPostMessage(edit.getText().toString().trim(), location.getText().toString().trim(), selectedImageList, new OnCreatePublicPostListener() {
                         @Override
                         public void onSuccess(PublicPostBean publicPostBean) {

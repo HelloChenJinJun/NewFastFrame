@@ -78,7 +78,6 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         presenter.registerEvent(PublicPostBean.class, new Consumer<PublicPostBean>() {
             @Override
             public void accept(PublicPostBean publicPostBean) throws Exception {
-//                todo
                 shareInfoAdapter.addData(0,publicPostBean);
             }
         });
