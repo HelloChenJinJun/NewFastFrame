@@ -511,23 +511,24 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
                         onGroupTableMessageCome(message);
                         MsgManager.getInstance().queryGroupChatMessage(message.getGroupId(), new FindListener<GroupChatMessage>() {
                             @Override
-                            public void onSuccess(List<GroupChatMessage> list) {
-                                LogUtil.e("拉去得到的最近的群聊消息如下");
-                                for (GroupChatMessage groupChatMessage
-                                        : list
-                                        ) {
-                                    LogUtil.e(groupChatMessage);
-                                    groupChatMessage.setReadStatus(Constant.RECEIVE_UNREAD);
-                                    if (MsgManager.getInstance().saveRecentAndChatGroupMessage(groupChatMessage)) {
-                                        onNewGroupChatMessageCome(groupChatMessage);
+                            public void done(List<GroupChatMessage> list, BmobException e) {
+                                if (e == null) {
+                                    LogUtil.e("拉去得到的最近的群聊消息如下");
+                                    for (GroupChatMessage groupChatMessage
+                                            : list
+                                            ) {
+                                        LogUtil.e(groupChatMessage);
+                                        groupChatMessage.setReadStatus(Constant.RECEIVE_UNREAD);
+                                        if (MsgManager.getInstance().saveRecentAndChatGroupMessage(groupChatMessage)) {
+                                            onNewGroupChatMessageCome(groupChatMessage);
+                                        }
                                     }
+                                }else {
+                                    LogUtil.e("拉取最近的群消息失败" +e.toString());
+
                                 }
                             }
 
-                            @Override
-                            public void onError(int i, String s) {
-                                LogUtil.e("拉取最近的群消息失败" + s + i);
-                            }
                         });
                     }
                 } else if (intent.getStringExtra("from").equals("table")) {

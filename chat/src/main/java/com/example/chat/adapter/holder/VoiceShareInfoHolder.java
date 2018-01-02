@@ -17,7 +17,7 @@ public class VoiceShareInfoHolder extends BaseShareInfoViewHolder {
     }
 
     @Override
-    public void initData(PostDataBean data) {
+    protected void initData(PostDataBean data) {
 
     }
 }

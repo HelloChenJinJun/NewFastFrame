@@ -17,8 +17,7 @@ public class CustomInstallation extends BmobInstallation {
          */
         private String uid;
 
-        public CustomInstallation(Context context) {
-                super(context);
+        public CustomInstallation() {
         }
 
         public String getUid() {

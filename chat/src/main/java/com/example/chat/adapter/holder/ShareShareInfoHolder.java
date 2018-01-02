@@ -28,7 +28,7 @@ public class ShareShareInfoHolder extends BaseShareInfoViewHolder {
     }
 
     @Override
-    public void initData(PostDataBean data) {
+    protected void initData(PostDataBean data) {
         if (data != null&&data.getShareContent()!=null) {
             if (data.getShareType() == PostUtil
                     .LAYOUT_TYPE_IMAGE) {

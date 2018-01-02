@@ -9,6 +9,32 @@ android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
 //    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/rxjava.properties'
+        exclude 'META-INF/rxjava.PROPERTIES'
+        exclude 'META-INF/RXJAVA.properties'
+        exclude 'META-INF/RXJAVA.PROPERTIES'
+        exclude 'META-INF/rxjava'
+        exclude 'META-INF/RXJAVA'
+        exclude 'META-INF/rxjava.properties'
+        exclude 'META-INF/maven/com.squareup.okhttp3/okhttp/pom.xml'
+        exclude 'META-INF/maven/com.squareup.okhttp3/okhttp/pom.properties'
+        exclude 'META-INF/maven/com.squareup.okio/okio/pom.xml'
+        exclude 'META-INF/maven/com.squareup.okio/okio/pom.properties'
+        exclude 'META-INF/maven/com.google.code.gson/gson/pom.xml'
+        exclude 'META-INF/maven/com.google.code.gson/gson/pom.properties'
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+
 
     aaptOptions {
         cruncherEnabled = false
@@ -19,8 +45,8 @@ android {
         if (rootProject.ext.isAlone) {
             applicationId "com.example.chat"
         }
-        multiDexEnabled true
 
+        multiDexEnabled true
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
@@ -66,7 +92,6 @@ android {
 
         }
     }
-    buildToolsVersion '26.0.2'
 }
 
 dependencies {
@@ -74,65 +99,137 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     implementation project(':commonlibrary')
-    implementation ('cn.bmob.android:bmob-sdk:3.4.7'){
+    //        implementation ('cn.bmob.android:bmob-sdk:3.5.8')
+    //        implementation ('cn.bmob.android:bmob-push:1.0.1')
+    implementation('com.zhy:okhttputils:2.6.2') {
         exclude module: "support-v4"
         exclude module: "support-compat"
+        exclude module: 'rxjava'
+        exclude module: 'retrofit'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+        exclude module: 'support-core-utils'
+        exclude module: 'support-media-compat'
+        exclude module: 'support-vector-drawable'
+        exclude module: 'support-fragment'
+        exclude module: 'multidex'
+        exclude module: 'rxandroid'
+        exclude module: 'gson'
+        exclude module: 'okio'
 
     }
-    implementation ('cn.bmob.android:bmob-push:1.0.0'){
+    implementation('com.github.chrisbanes.photoview:library:1.2.4') {
         exclude module: "support-v4"
         exclude module: "support-compat"
+        exclude module: 'rxjava'
+        exclude module: 'retrofit'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+        exclude module: 'support-core-utils'
+        exclude module: 'support-media-compat'
+        exclude module: 'support-vector-drawable'
+        exclude module: 'support-fragment'
+        exclude module: 'multidex'
+        exclude module: 'rxandroid'
+        exclude module: 'gson'
+        exclude module: 'okio'
 
     }
-    implementation ('com.zhy:okhttputils:2.6.2'){
+    implementation('com.komi.slider:slider:0.4.0') {
         exclude module: "support-v4"
         exclude module: "support-compat"
+        exclude module: 'rxjava'
+        exclude module: 'retrofit'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+        exclude module: 'support-core-utils'
+        exclude module: 'support-media-compat'
+        exclude module: 'support-vector-drawable'
+        exclude module: 'support-fragment'
+        exclude module: 'multidex'
+        exclude module: 'rxandroid'
+        exclude module: 'gson'
+        exclude module: 'okio'
 
     }
-    implementation ('com.github.chrisbanes.photoview:library:1.2.4'){
+    implementation('com.mabeijianxi:small-video-record:1.2.0') {
         exclude module: "support-v4"
         exclude module: "support-compat"
+        exclude module: 'rxjava'
+        exclude module: 'retrofit'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+        exclude module: 'support-core-utils'
+        exclude module: 'support-media-compat'
+        exclude module: 'support-vector-drawable'
+        exclude module: 'support-fragment'
+        exclude module: 'multidex'
+        exclude module: 'rxandroid'
+        exclude module: 'gson'
+        exclude module: 'okio'
 
     }
-
-    implementation ('com.komi.slider:slider:0.4.0'){
+    implementation('com.github.chihane:JDAddressSelector:1.1.4') {
         exclude module: "support-v4"
         exclude module: "support-compat"
+        exclude module: 'rxjava'
+        exclude module: 'retrofit'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+        exclude module: 'support-core-utils'
+        exclude module: 'support-media-compat'
+        exclude module: 'support-vector-drawable'
+        exclude module: 'support-fragment'
+        exclude module: 'multidex'
+        exclude module: 'rxandroid'
+        exclude module: 'gson'
+        exclude module: 'okio'
 
     }
-    implementation ('com.mabeijianxi:small-video-record:1.2.0'){
+    //    implementation 'com.android.support:multidex:1.0.1'
+    implementation(rootProject.ext.dependencies.cardview) {
         exclude module: "support-v4"
         exclude module: "support-compat"
-
-    }
-    implementation ('com.github.chihane:JDAddressSelector:1.1.4'){
-        exclude module: "support-v4"
-        exclude module: "support-compat"
-
-    }
-    implementation 'com.android.support:multidex:1.0.1'
-
-    implementation (rootProject.ext.dependencies.cardview){
-        exclude module: "support-v4"
-        exclude module: "support-compat"
-        exclude module: "support-compat"
+        exclude module: 'rxjava'
+        exclude module: 'retrofit'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+        exclude module: 'support-core-utils'
+        exclude module: 'support-media-compat'
+        exclude module: 'support-vector-drawable'
+        exclude module: 'support-fragment'
+        exclude module: 'multidex'
+        exclude module: 'rxandroid'
+        exclude module: 'gson'
+        exclude module: 'okio'
 
     }
     annotationProcessor rootProject.ext.dependencies.dagger2_compiler
-
-
-
     if (!rootProject.ext.isAlone) {
         annotationProcessor rootProject.ext.dependencies.arouter_compiler
     }
     testImplementation 'junit:junit:4.12'
-//    implementation files('libs/pldroid-player-1.5.0.jar')
+    //    implementation files('libs/pldroid-player-1.5.0.jar')
     implementation files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
-    implementation files('libs/BmobStat_v1.1_170114.jar')
-//    compile files('libs/nineoldandroids-2.4.0.jar')
-//    compile files('libs/pinyin4j-2.5.0.jar')
-
+    //    implementation files('libs/BmobStat_v1.1_170114.jar')
+    //    compile files('libs/nineoldandroids-2.4.0.jar')
+    //    compile files('libs/pinyin4j-2.5.0.jar')
+    //    implementation files('libs/Bmob_Push_1.0.1_20170907.jar')
+    //    implementation files('libs/BmobSDK_3.5.8_20171013.jar')
+//        implementation files('libs/gson-2.6.2.jar')
+    //    implementation files('libs/okio-1.12.0.jar')
+    //    implementation files('libs/org.apache.http.legacy.jar')
+        implementation files('libs/rxandroid-1.2.0.jar')
+        implementation files('libs/rxjava-1.1.6.jar')
+    implementation files('libs/BmobSDK_3.5.8_20171013.jar')
+    implementation files('libs/Bmob_Push_1.0.1_20170907.jar')
 }
+
 

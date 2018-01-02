@@ -29,6 +29,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
@@ -215,34 +216,33 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
                                         try {
                                                 showLoadDialog("正在上传头像，请稍候........");
                                                 final BmobFile bmobFile = new BmobFile(new File(new URI(PhotoUtil.buildUri(this).toString())));
-                                                bmobFile.uploadblock(BaseApplication.getInstance(), new UploadFileListener() {
+                                                bmobFile.uploadblock( new UploadFileListener() {
                                                         @Override
-                                                        public void onSuccess() {
-//                                                                这里更新用户信息头像
-                                                                UserManager.getInstance().updateUserInfo("avatar", bmobFile.getFileUrl(BaseApplication.getInstance()), new UpdateListener() {
-                                                                        @Override
-                                                                        public void onSuccess() {
-                                                                                dismissLoadDialog();
-                                                                                LogUtil.e("更新用户头像成功");
-                                                                                Glide.with(EditUserInfoActivity.this).load(bmobFile.getFileUrl(BaseApplication.getInstance())).diskCacheStrategy(DiskCacheStrategy.ALL).into(avatar);
-                                                                                mUser.setAvatar(bmobFile.getFileUrl(EditUserInfoActivity.this));
+                                                        public void done(BmobException e) {
+                                                                if (e == null) {
+                                                                        UserManager.getInstance().updateUserInfo("avatar", bmobFile.getFileUrl(), new UpdateListener() {
+                                                                                @Override
+                                                                                public void done(BmobException e) {
+                                                                                        dismissLoadDialog();
+                                                                                        if (e == null) {
+                                                                                                LogUtil.e("更新用户头像成功");
+                                                                                                Glide.with(EditUserInfoActivity.this).load(bmobFile.getFileUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).into(avatar);
+                                                                                                mUser.setAvatar(bmobFile.getFileUrl());
 //                                                                                更新数据库中消息的头像
-                                                                                ChatDB.create().updateMessageAvatar(UserManager.getInstance().getCurrentUserObjectId(),bmobFile.getFileUrl(EditUserInfoActivity.this));
-                                                                        }
+                                                                                                ChatDB.create().updateMessageAvatar(UserManager.getInstance().getCurrentUserObjectId(),bmobFile.getFileUrl());
+                                                                                        }else {
+                                                                                                LogUtil.e("更新用户头像失败" + e.toString());
+                                                                                        }
+                                                                                }
 
-                                                                        @Override
-                                                                        public void onFailure(int i, String s) {
-                                                                                dismissLoadDialog();
-                                                                                LogUtil.e("更新用户头像失败" + s + i);
-                                                                        }
-                                                                });
+
+                                                                        });
+                                                                }else {
+                                                                        dismissLoadDialog();
+                                                                        LogUtil.e("加载失败");
+                                                                }
                                                         }
 
-                                                        @Override
-                                                        public void onFailure(int i, String s) {
-                                                                dismissLoadDialog();
-                                                                LogUtil.e("加载失败");
-                                                        }
                                                 });
                                         } catch (URISyntaxException e) {
                                                 e.printStackTrace();

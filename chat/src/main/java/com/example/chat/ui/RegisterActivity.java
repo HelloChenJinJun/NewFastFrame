@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.example.chat.R;
 import com.example.chat.base.RandomData;
+import com.example.chat.bean.CustomInstallation;
 import com.example.chat.bean.User;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.CommonUtils;
@@ -23,6 +24,7 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -93,7 +95,8 @@ public class RegisterActivity extends BaseActivity {
 //                                 设备类型
                                 user.setDeviceType("android");
 //                                与设备ID绑定
-                                user.setInstallId(BmobInstallation.getInstallationId(RegisterActivity.this));
+                                CustomInstallation customInstallation=new CustomInstallation();
+                                user.setInstallId(customInstallation.getInstallationId());
                                 user.setNick(RandomData.getRandomNick());
                                 user.setAvatar(RandomData.getRandomAvatar());
                                 LogUtil.e("用户的头像信息:" + user.getAvatar());
@@ -102,26 +105,24 @@ public class RegisterActivity extends BaseActivity {
                                 user.setPassword(passWord.getText().toString().trim());
                                 user.setTitleWallPaper(RandomData.getRandomTitleWallPaper());
                                 user.setWallPaper(RandomData.getRandomWallPaper());
-                                user.signUp(BaseApplication.getInstance(), new SaveListener() {
+                                user.signUp(new SaveListener<String>() {
                                         @Override
-                                        public void onSuccess() {
+                                        public void done(String s, BmobException e) {
                                                 dismissLoadDialog();
-                                                ToastUtils.showShortToast("注册成功");
+                                                if (e == null) {
+                                                        ToastUtils.showShortToast("注册成功");
 //                                                        进行用户Id和设备的绑定
-                                                if (UserManager.getInstance().getCurrentUser() != null) {
-                                                        LogUtil.e("uid：" + UserManager.getInstance().getCurrentUser().getObjectId());
+                                                        if (UserManager.getInstance().getCurrentUser() != null) {
+                                                                LogUtil.e("uid：" + UserManager.getInstance().getCurrentUser().getObjectId());
+                                                        }
+                                                        Intent intent = new Intent();
+                                                        intent.putExtra("username", name.getText().toString().trim());
+                                                        intent.putExtra("password", passWord.getText().toString().trim());
+                                                        setResult(Activity.RESULT_OK, intent);
+                                                        finish();
+                                                }else {
+                                                        ToastUtils.showShortToast("注册失败" +e.toString());
                                                 }
-                                                Intent intent = new Intent();
-                                                intent.putExtra("username", name.getText().toString().trim());
-                                                intent.putExtra("password", passWord.getText().toString().trim());
-                                                setResult(Activity.RESULT_OK, intent);
-                                                finish();
-                                        }
-
-                                        @Override
-                                        public void onFailure(int i, String s) {
-                                                dismissLoadDialog();
-                                                ToastUtils.showShortToast("注册失败" + s + i);
                                         }
                                 });
                         }

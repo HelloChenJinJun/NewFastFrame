@@ -36,7 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobRealTimeData;
-import cn.bmob.v3.listener.DeleteListener;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.ValueEventListener;
 
 /**
@@ -82,9 +83,10 @@ public class GroupMessageService extends Service {
                 LogUtil.e("111111111111启动接受实时监听的服务啦啦啦");
                 table = "_User";
                 data = new BmobRealTimeData();
-                data.start(BaseApplication.getInstance(), new ValueEventListener() {
-                                @Override
-                                public void onConnectCompleted() {
+                data.start(new ValueEventListener() {
+                        @Override
+                        public void onConnectCompleted(Exception e) {
+                                if (e == null) {
                                         LogUtil.e("实时监听：连接服务器成功啦啦啦");
                                         if (data.isConnected()) {
                                                 LogUtil.e("连接啦啦啦");
@@ -127,8 +129,9 @@ public class GroupMessageService extends Service {
                                                 LogUtil.e("未连接");
                                         }
                                 }
+                        }
 
-                                @Override
+                        @Override
                                 public void onDataChange(JSONObject jsonObject) {
                                         LogUtil.e("监听到数据啦啦啦\n");
                                         LogUtil.e("数据格式如下:\n");
@@ -167,18 +170,18 @@ public class GroupMessageService extends Service {
                                                                 LogUtil.e("这里了没??");
                                                                 mNotifyBinder.removeGroup(groupTableMessage.getGroupId());
                                                                 LogUtil.e(MessageCacheManager.getInstance().getGroupTableMessage(groupTableMessage.getGroupId()));
-                                                                MsgManager.getInstance().deleteGroupTableMessage(MessageCacheManager.getInstance().getGroupTableMessage(groupTableMessage.getGroupId()).getObjectId(), new DeleteListener() {
+                                                                MsgManager.getInstance().deleteGroupTableMessage(MessageCacheManager.getInstance().getGroupTableMessage(groupTableMessage.getGroupId()).getObjectId(), new UpdateListener() {
                                                                         @Override
-                                                                        public void onSuccess() {
-                                                                                LogUtil.e("在服务器上删除自己的群结构消息成功1");
-                                                                                MessageCacheManager.getInstance().deleteGroupTableMessage(groupTableMessage.getGroupId());
-                                                                                ChatDB.create().deleteRecentMsg(groupTableMessage.getGroupId());
-                                                                                ChatDB.create().deleteGroupTableMessage(groupTableMessage.getGroupId());
-                                                                                RxBusManager.getInstance().post(new GroupInfoEvent(groupTableMessage.getGroupId(),GroupInfoEvent.TYPE_GROUP_NUMBER));
-                                                                        }
-                                                                        @Override
-                                                                        public void onFailure(int i, String s) {
-                                                                                LogUtil.e("在服务器上删除自己的群结构消息失败");
+                                                                        public void done(BmobException e) {
+                                                                                if (e == null) {
+                                                                                        LogUtil.e("在服务器上删除自己的群结构消息成功1");
+                                                                                        MessageCacheManager.getInstance().deleteGroupTableMessage(groupTableMessage.getGroupId());
+                                                                                        ChatDB.create().deleteRecentMsg(groupTableMessage.getGroupId());
+                                                                                        ChatDB.create().deleteGroupTableMessage(groupTableMessage.getGroupId());
+                                                                                        RxBusManager.getInstance().post(new GroupInfoEvent(groupTableMessage.getGroupId(),GroupInfoEvent.TYPE_GROUP_NUMBER));
+                                                                                }else {
+                                                                                        LogUtil.e("在服务器上删除自己的群结构消息失败");
+                                                                                }
                                                                         }
                                                                 });
                                                                 return;

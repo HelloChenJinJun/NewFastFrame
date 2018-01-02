@@ -25,8 +25,10 @@ public class ImageShareInfoHolder extends BaseShareInfoViewHolder {
         display= (ListImageView) viewStub.inflate();
     }
 
+
+
     @Override
-    public void initData(PostDataBean data) {
+    protected void initData(PostDataBean data) {
         if (data!=null) {
             display.setImagePadding(PixelUtil.todp(3));
             display.bindData(data.getImageList());

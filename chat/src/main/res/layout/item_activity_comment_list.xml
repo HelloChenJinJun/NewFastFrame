@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:roundHeight="25dp"
+        app:roundWidth="25dp"
+        android:scaleType="centerCrop"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+        <!--todo-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_item_activity_comment_list_name"
+            android:textColor="@color/black"/>
+
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

@@ -34,6 +34,7 @@ import com.example.commonlibrary.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -104,18 +105,19 @@ public class SelectedFriendsActivity extends SlideBaseActivity implements MyLett
                                                                 }
                                                                 if (selectedContacts.size() > 0) {
                                                                         showLoadDialog("正在建群中.....");
-                                                                        MsgManager.getInstance().sendCreateGroupMessage(data.get(0), data.get(1), selectedContacts, new SaveListener() {
+                                                                        MsgManager.getInstance().sendCreateGroupMessage(data.get(0), data.get(1), selectedContacts, new SaveListener<String>() {
+
+
                                                                                 @Override
-                                                                                public void onSuccess() {
-                                                                                        LogUtil.e("1总体建群成功");
-                                                                                        ToastUtils.showShortToast("建群成功");
+                                                                                public void done(String s, BmobException e) {
                                                                                         dismissLoadDialog();
-                                                                                        finish();
-                                                                                }
-                                                                                @Override
-                                                                                public void onFailure(int i, String s) {
-                                                                                        dismissLoadDialog();
-                                                                                        LogUtil.e("总体建群失败" + s + i);
+                                                                                        if (e == null) {
+                                                                                                LogUtil.e("1总体建群成功");
+                                                                                                ToastUtils.showShortToast("建群成功");
+                                                                                                finish();
+                                                                                        }else {
+                                                                                                LogUtil.e("总体建群失败" +e.toString());
+                                                                                        }
                                                                                 }
                                                                         });
                                                                 } else {

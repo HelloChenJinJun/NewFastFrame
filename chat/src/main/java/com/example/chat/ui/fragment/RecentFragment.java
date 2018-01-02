@@ -47,6 +47,7 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import io.reactivex.functions.Consumer;
 
@@ -265,25 +266,27 @@ public class RecentFragment extends BaseFragment implements SwipeRefreshLayout.O
 //                        查询好友信息
 
 //                        这里拉取网络中断这段时间内的信息
-//                        queryGroupChatMessage();
+//
                         MsgManager.getInstance().queryGroupChatMessage(MessageCacheManager.getInstance().getAllGroupId(), new FindListener<GroupChatMessage>() {
                                 @Override
-                                public void onSuccess(List<GroupChatMessage> list) {
-                                        for (GroupChatMessage groupChatMessage :
-                                                list) {
-                                                if (MsgManager.getInstance().saveRecentAndChatGroupMessage(groupChatMessage)) {
-                                                        RecentMsg recentMsg1 = ChatDB.create().getRecentMsg(groupChatMessage.getGroupId());
-                                                        if (recentMsg1 != null) {
-                                                                mAdapter.addData(recentMsg1);
+                                public void done(List<GroupChatMessage> list, BmobException e) {
+                                        if (e == null) {
+                                                if (list!=null) {
+                                                        for (GroupChatMessage groupChatMessage :
+                                                                list) {
+                                                                if (MsgManager.getInstance().saveRecentAndChatGroupMessage(groupChatMessage)) {
+                                                                        RecentMsg recentMsg1 = ChatDB.create().getRecentMsg(groupChatMessage.getGroupId());
+                                                                        if (recentMsg1 != null) {
+                                                                                mAdapter.addData(recentMsg1);
+                                                                        }
+                                                                }
                                                         }
                                                 }
+                                        }else {
+                                                LogUtil.e(e.toString());
                                         }
                                 }
 
-                                @Override
-                                public void onError(int i, String s) {
-                                        LogUtil.e(s+i);
-                                }
                         });
 //                        queryUser();
                         UserManager.getInstance().refreshUserInfo();

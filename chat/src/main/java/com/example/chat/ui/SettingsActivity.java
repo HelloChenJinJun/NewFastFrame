@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
@@ -162,37 +163,39 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                                         showLoadDialog("正在上传群头像，请稍后.........");
                                         LogUtil.e("拍照的图片path为" + localImagePath);
                                         final BmobFile bmobFile = new BmobFile(new File(localImagePath));
-                                        bmobFile.uploadblock(BaseApplication.getInstance(), new UploadFileListener() {
+                                        bmobFile.uploadblock(new UploadFileListener() {
                                                 @Override
-                                                public void onSuccess() {
-                                                        LogUtil.e("上传群头像成功");
-                                                        UserManager.getInstance().updateUserInfo("avatar", bmobFile.getFileUrl(BaseApplication.getInstance()), new UpdateListener() {
-                                                                @Override
-                                                                public void onSuccess() {
-                                                                        LogUtil.e("更新用户头像成功");
-                                                                        dismissLoadDialog();
-                                                                        UserManager.getInstance().getCurrentUser().setAvatar(bmobFile.getFileUrl(BaseApplication.getInstance()));
-                                                                        Glide.with(SettingsActivity.this).load(bmobFile.getFileUrl(BaseApplication.getInstance())).into(avatar);
-                                                                        Intent intent = new Intent();
-                                                                        intent.putExtra("user", UserManager.getInstance().getCurrentUser());
-                                                                        setResult(Activity.RESULT_OK, intent);
-                                                                }
+                                                public void done(BmobException e) {
+                                                        if (e == null) {
+                                                                LogUtil.e("上传群头像成功");
+                                                                UserManager.getInstance().updateUserInfo("avatar", bmobFile.getFileUrl(), new UpdateListener() {
+                                                                        @Override
+                                                                        public void done(BmobException e) {
+                                                                                dismissLoadDialog();
+                                                                                if (e == null) {
+                                                                                        LogUtil.e("更新用户头像成功");
+                                                                                        UserManager.getInstance().getCurrentUser().setAvatar(bmobFile.getFileUrl());
+                                                                                        Glide.with(SettingsActivity.this).load(bmobFile.getFileUrl()).into(avatar);
+                                                                                        Intent intent = new Intent();
+                                                                                        intent.putExtra("user", UserManager.getInstance().getCurrentUser());
+                                                                                        setResult(Activity.RESULT_OK, intent);
+                                                                                }else {
+                                                                                        dismissLoadDialog();
+                                                                                        LogUtil.e("更新用户头像失败");
+                                                                                }
+                                                                        }
 
-                                                                @Override
-                                                                public void onFailure(int i, String s) {
-                                                                        dismissLoadDialog();
-                                                                        LogUtil.e("更新用户头像失败");
-                                                                }
-                                                        });
 
+
+                                                                });
+                                                        }else {
+                                                                dismissLoadDialog();
+                                                                ToastUtils.showShortToast("上传群头像失败" +e.toString());
+                                                                LogUtil.e("上传群头像失败" +e.toString());
+                                                        }
                                                 }
 
-                                                @Override
-                                                public void onFailure(int i, String s) {
-                                                        dismissLoadDialog();
-                                                        ToastUtils.showShortToast("上传群头像失败" + s + i);
-                                                        LogUtil.e("上传群头像失败" + s + i);
-                                                }
+
                                         });
                                         break;
                                 case Constant.REQUEST_CODE_SELECT_FROM_LOCAL:
@@ -204,24 +207,23 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                                                         LogUtil.e("挑选的图片path为" + path);
                                                         showLoadDialog("正在上传群头像，请稍后.........");
                                                         final BmobFile bmobFile1 = new BmobFile(new File(path));
-                                                        bmobFile1.uploadblock(BaseApplication.getInstance(), new UploadFileListener() {
+                                                        bmobFile1.uploadblock(new UploadFileListener() {
                                                                 @Override
-                                                                public void onSuccess() {
+                                                                public void done(BmobException e) {
                                                                         dismissLoadDialog();
-                                                                        LogUtil.e("上传群头像成功");
-                                                                        UserManager.getInstance().getCurrentUser().setAvatar(bmobFile1.getFileUrl(BaseApplication.getInstance()));
-                                                                        Glide.with(SettingsActivity.this).load(bmobFile1.getFileUrl(BaseApplication.getInstance())).into(avatar);
-                                                                        Intent intent = new Intent();
-                                                                        intent.putExtra("user", UserManager.getInstance().getCurrentUser());
-                                                                        setResult(Activity.RESULT_OK, intent);
+                                                                        if (e == null) {
+                                                                                LogUtil.e("上传群头像成功");
+                                                                                UserManager.getInstance().getCurrentUser().setAvatar(bmobFile1.getFileUrl());
+                                                                                Glide.with(SettingsActivity.this).load(bmobFile1.getFileUrl()).into(avatar);
+                                                                                Intent intent = new Intent();
+                                                                                intent.putExtra("user", UserManager.getInstance().getCurrentUser());
+                                                                                setResult(Activity.RESULT_OK, intent);
+                                                                        }else {
+                                                                                ToastUtils.showShortToast("上传群头像失败" +e.toString());
+                                                                                LogUtil.e("上传群头像失败" +e.toString());
+                                                                        }
                                                                 }
 
-                                                                @Override
-                                                                public void onFailure(int i, String s) {
-                                                                        dismissLoadDialog();
-                                                                        ToastUtils.showShortToast("上传群头像失败" + s + i);
-                                                                        LogUtil.e("上传群头像失败" + s + i);
-                                                                }
                                                         });
                                                 } else {
                                                         LogUtil.e("挑选的图片的路径为空");

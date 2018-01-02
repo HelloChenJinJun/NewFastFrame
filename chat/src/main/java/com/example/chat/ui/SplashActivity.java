@@ -22,6 +22,7 @@ import com.example.commonlibrary.BaseApplication;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 
@@ -61,62 +62,40 @@ public class SplashActivity extends BaseActivity {
                 }
                 UserManager.getInstance().queryAndSaveCurrentContactsList(new FindListener<User>() {
                                                                                   @Override
-                                                                                  public void onSuccess(final List<User> contacts) {
-                                                                                          // 返回的是去除了黑名单的好友列表
-//                                       否则保存到内存中，方便取用
-                                                                                          LogUtil.e("查询好友成功1");
-                                                                                          LogUtil.e("把服务器上查询得到的好友消息存到内存中");
-                                                                                          LogUtil.e("用户USER");
+                                                                                  public void done(final List<User> contacts, BmobException e) {
+                                                                                          if (e == null) {
+                                                                                                  LogUtil.e("查询好友成功1");
+                                                                                                  LogUtil.e("把服务器上查询得到的好友消息存到内存中");
+                                                                                                  LogUtil.e("用户USER");
 //                                                                                          User user = UserManager.getInstance().getCurrentUser();
 //                                                                                          if (user != null) {
 //                                                                                                  CustomApplication.getInstance().setUser(user);
 //                                                                                          } else {
 //                                                                                                  LogUtil.e("用户USER为空");
 //                                                                                          }
-                                                                                          String uid = UserManager.getInstance().getCurrentUserObjectId();
-                                                                                          MsgManager.getInstance().queryGroupTableMessage(uid, new FindListener<GroupTableMessage>() {
+                                                                                                  String uid = UserManager.getInstance().getCurrentUserObjectId();
+                                                                                                  MsgManager.getInstance().queryGroupTableMessage(uid, new FindListener<GroupTableMessage>() {
                                                                                                           @Override
-                                                                                                          public void onSuccess(final List<GroupTableMessage> list) {
-                                                                                                                  if (list != null && list.size() > 0) {
-                                                                                                                          LogUtil.e("在服务器上查询到该用户所有的群,数目:" + list.size());
-                                                                                                                          newData=new ArrayList<>();
-                                                                                                                          for (GroupTableMessage message :
-                                                                                                                                  list) {
+                                                                                                          public void done(List<GroupTableMessage> list, BmobException e) {
+                                                                                                                  if (e == null) {
+                                                                                                                          if (list != null && list.size() > 0) {
+                                                                                                                                  LogUtil.e("在服务器上查询到该用户所有的群,数目:" + list.size());
+                                                                                                                                  newData=new ArrayList<>();
+                                                                                                                                  for (GroupTableMessage message :
+                                                                                                                                          list) {
 //                                                                                                                                  这里进行判断出现是因为有可能建群失败的时候，未能把groupId上传上去
-                                                                                                                                  if (message.getGroupId()!=null) {
-                                                                                                                                          newData.add(message);
+                                                                                                                                          if (message.getGroupId()!=null) {
+                                                                                                                                                  newData.add(message);
+                                                                                                                                          }
                                                                                                                                   }
-                                                                                                                          }
-                                                                                                                          if (ChatDB.create().saveGroupTableMessage(newData)) {
-                                                                                                                                  LogUtil.e("保存用户所拥有的群结构消息到数据库中成功");
+                                                                                                                                  if (ChatDB.create().saveGroupTableMessage(newData)) {
+                                                                                                                                          LogUtil.e("保存用户所拥有的群结构消息到数据库中成功");
+                                                                                                                                  } else {
+                                                                                                                                          LogUtil.e("保存用户所拥有的群结构消息到数据库中失败");
+                                                                                                                                  }
                                                                                                                           } else {
-                                                                                                                                  LogUtil.e("保存用户所拥有的群结构消息到数据库中失败");
+                                                                                                                                  LogUtil.e("服务器上没有查到该用户所拥有的群");
                                                                                                                           }
-                                                                                                                  } else {
-                                                                                                                          LogUtil.e("服务器上没有查到该用户所拥有的群");
-                                                                                                                  }
-                                                                                                                  runOnUiThread(new Runnable() {
-                                                                                                                          @Override
-                                                                                                                          public void run() {
-                                                                                                                                  LogUtil.e("1执行到这里开始跳转到MainActivity");
-                                                                                                                                  UserCacheManager.getInstance().setLogin(true);
-                                                                                                                                  MessageCacheManager.getInstance().setLogin(true);
-                                                                                                                                  if (contacts != null && contacts.size() > 0) {
-                                                                                                                                          UserCacheManager.getInstance().setContactsList(BmobUtils.list2map(contacts));
-                                                                                                                                  }
-                                                                                                                                  MessageCacheManager.getInstance().addGroupTableMessage(newData);
-                                                                                                                                  Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                                                                                                                                  startActivity(intent);
-                                                                                                                                  finish();
-                                                                                                                          }
-                                                                                                                  });
-                                                                                                          }
-
-                                                                                                          @Override
-                                                                                                          public void onError(int i, String s) {
-                                                                                                                  LogUtil.e("在服务器上查询所有群结构消息失败" + s + i);
-
-                                                                                                                  if (i == 101) {
                                                                                                                           runOnUiThread(new Runnable() {
                                                                                                                                   @Override
                                                                                                                                   public void run() {
@@ -126,30 +105,51 @@ public class SplashActivity extends BaseActivity {
                                                                                                                                           if (contacts != null && contacts.size() > 0) {
                                                                                                                                                   UserCacheManager.getInstance().setContactsList(BmobUtils.list2map(contacts));
                                                                                                                                           }
+                                                                                                                                          MessageCacheManager.getInstance().addGroupTableMessage(newData);
                                                                                                                                           Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                                                                                                                                           startActivity(intent);
                                                                                                                                           finish();
                                                                                                                                   }
                                                                                                                           });
+                                                                                                                  }else {
+                                                                                                                          LogUtil.e("在服务器上查询所有群结构消息失败" +e.toString());
+                                                                                                                          if (e.getErrorCode() == 101) {
+                                                                                                                                  runOnUiThread(new Runnable() {
+                                                                                                                                          @Override
+                                                                                                                                          public void run() {
+                                                                                                                                                  LogUtil.e("1执行到这里开始跳转到MainActivity");
+                                                                                                                                                  UserCacheManager.getInstance().setLogin(true);
+                                                                                                                                                  MessageCacheManager.getInstance().setLogin(true);
+                                                                                                                                                  if (contacts != null && contacts.size() > 0) {
+                                                                                                                                                          UserCacheManager.getInstance().setContactsList(BmobUtils.list2map(contacts));
+                                                                                                                                                  }
+                                                                                                                                                  Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                                                                                                                                                  startActivity(intent);
+                                                                                                                                                  finish();
+                                                                                                                                          }
+                                                                                                                                  });
+                                                                                                                          }
+                                                                                                                          Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                                                                                                                          startActivity(intent);
+                                                                                                                          finish();
                                                                                                                   }
-                                                                                                                  Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                                                                                                                  startActivity(intent);
-                                                                                                                  finish();
+                                                                                                          }
+
+
+
 
                                                                                                           }
-                                                                                                  }
 
-                                                                                          );
+                                                                                                  );
+                                                                                          }else {
+                                                                                                  UserCacheManager.getInstance().setLogin(true);
+                                                                                                  MessageCacheManager.getInstance().setLogin(true);
+                                                                                                  Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                                                                                                  startActivity(intent);
+                                                                                                  finish();
+                                                                                          }
                                                                                   }
 
-                                                                                  @Override
-                                                                                  public void onError(int i, String s) {
-                                                                                          UserCacheManager.getInstance().setLogin(true);
-                                                                                          MessageCacheManager.getInstance().setLogin(true);
-                                                                                          Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                                                                                          startActivity(intent);
-                                                                                          finish();
-                                                                                  }
                                                                           }
 
                 );

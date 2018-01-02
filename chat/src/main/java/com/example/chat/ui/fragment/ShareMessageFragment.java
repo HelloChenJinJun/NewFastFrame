@@ -76,6 +76,7 @@ import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
@@ -285,31 +286,31 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
                     try {
                         showLoading("正在上传背景，请稍候........");
                         final BmobFile bmobFile = new BmobFile(new File(new URI(PhotoUtil.buildUri(getActivity()).toString())));
-                        bmobFile.uploadblock(BaseApplication.getInstance(), new UploadFileListener() {
+                        bmobFile.uploadblock(new UploadFileListener() {
                             @Override
-                            public void onSuccess() {
-                                UserManager.getInstance().updateUserInfo("titleWallPaper", bmobFile.getFileUrl(BaseApplication.getInstance()), new UpdateListener() {
-                                    @Override
-                                    public void onSuccess() {
-                                        hideLoading();
-                                        LogUtil.e("更新用户背景成功");
-                                        UserManager.getInstance().getCurrentUser().setTitleWallPaper(bmobFile.getFileUrl(BaseApplication.getInstance()));
-                                        updateHeaderView();
-                                    }
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    UserManager.getInstance().updateUserInfo("titleWallPaper", bmobFile.getFileUrl(), new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            hideLoading();
+                                            if (e == null) {
+                                                LogUtil.e("更新用户背景成功");
+                                                UserManager.getInstance().getCurrentUser().setTitleWallPaper(bmobFile.getFileUrl());
+                                                updateHeaderView();
+                                            }else {
+                                                LogUtil.e("更新用户背景失败" +e.toString());
 
-                                    @Override
-                                    public void onFailure(int i, String s) {
-                                        hideLoading();
-                                        LogUtil.e("更新用户背景失败" + s + i);
-                                    }
-                                });
+                                            }
+                                        }
+
+                                    });
+                                }else {
+                                    hideLoading();
+                                    LogUtil.e("加载失败");
+                                }
                             }
 
-                            @Override
-                            public void onFailure(int i, String s) {
-                                hideLoading();
-                                LogUtil.e("加载失败");
-                            }
                         });
                     } catch (URISyntaxException e) {
                         e.printStackTrace();

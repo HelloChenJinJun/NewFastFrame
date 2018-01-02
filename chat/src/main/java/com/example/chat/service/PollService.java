@@ -27,6 +27,7 @@ import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobDate;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 /**
@@ -98,22 +99,21 @@ public class PollService extends Service {
 //                按升序进行排序
                 query.setLimit(50);
                 query.order("createdAt");
-                query.findObjects(BaseApplication.getInstance(), new FindListener<ChatMessage>() {
+                query.findObjects(new FindListener<ChatMessage>() {
                         @Override
-                        public void onSuccess(List<ChatMessage> list) {
-                                LogUtil.e("1拉取单聊消息成功");
-                                if (list != null && list.size() > 0) {
-                                        Intent intent = new Intent(Constant.NEW_MESSAGE_ACTION);
-                                        intent.putExtra("from", "person");
-                                        intent.putExtra(Constant.NEW_MESSAGE, (Serializable) list);
-                                        sendOrderedBroadcast(intent, null);
+                        public void done(List<ChatMessage> list, BmobException e) {
+                                if (e == null) {
+                                        LogUtil.e("1拉取单聊消息成功");
+                                        if (list != null && list.size() > 0) {
+                                                Intent intent = new Intent(Constant.NEW_MESSAGE_ACTION);
+                                                intent.putExtra("from", "person");
+                                                intent.putExtra(Constant.NEW_MESSAGE, (Serializable) list);
+                                                sendOrderedBroadcast(intent, null);
+                                        }
+                                }else {
+                                        LogUtil.e("拉取单聊消息失败");
+                                        LogUtil.e("在服务器上查询聊天消息失败：" +e.toString());
                                 }
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-                                LogUtil.e("拉取单聊消息失败");
-                                LogUtil.e("在服务器上查询聊天消息失败：" + s + i);
                         }
                 });
 //                                这里开始检测群结构消息
@@ -152,9 +152,10 @@ public class PollService extends Service {
                         return;
                 }
                 groupTableQuery.order("updatedAt");
-                groupTableQuery.findObjects(BaseApplication.getInstance(), new FindListener<GroupTableMessage>() {
-                                @Override
-                                public void onSuccess(List<GroupTableMessage> list) {
+                groupTableQuery.findObjects( new FindListener<GroupTableMessage>() {
+                        @Override
+                        public void done(List<GroupTableMessage> list, BmobException e) {
+                                if (e == null) {
                                         if (list != null && list.size() > 0) {
                                                 String time = list.get(list.size() - 1).getUpdatedAt();
                                                 LogUtil.e("最大的群结构更新时间：" + time);
@@ -164,12 +165,10 @@ public class PollService extends Service {
                                                 tableIntent.putExtra(Constant.NEW_MESSAGE, (Serializable) list);
                                                 sendOrderedBroadcast(tableIntent, null);
                                         }
+                                }else {
+                                        LogUtil.e("在服务器上查询群结构表消息失败：" +e.toString());
                                 }
-
-                                @Override
-                                public void onError(int i, String s) {
-                                        LogUtil.e("在服务器上查询群结构表消息失败：" + s + i);
-                                }
+                        }
                         }
                 );
                 LogUtil.e("这里开始在服务器上拉取说说消息1");
@@ -212,49 +211,48 @@ public class PollService extends Service {
 //                                拉取最新的10条说说消息
                 shareQuery.order("-createdAt");
                 shareQuery.setLimit(10);
-                shareQuery.findObjects(BaseApplication.getInstance(), new FindListener<SharedMessage>() {
+                shareQuery.findObjects(new FindListener<SharedMessage>() {
                         @Override
-                        public void onSuccess(List<SharedMessage> list) {
-                                if (list != null && list.size() > 0) {
-                                        String time = list.get(0).getUpdatedAt();
-                                        MessageCacheManager.getInstance().setLastShareMessageTime(Constant.SHARE_TIME,time);
-                                        LogUtil.e("最大的说说消息更新时间" + time);
+                        public void done(List<SharedMessage> list, BmobException e) {
+                                if (e == null) {
+                                        if (list != null && list.size() > 0) {
+                                                String time = list.get(0).getUpdatedAt();
+                                                MessageCacheManager.getInstance().setLastShareMessageTime(Constant.SHARE_TIME,time);
+                                                LogUtil.e("最大的说说消息更新时间" + time);
 //                                        这里筛选出不可见人列表是否包含本用户
-                                        LogUtil.e("定时检测到的说说消息如下");
-                                        List<SharedMessage> result = new ArrayList<>(list);
-                                        for (SharedMessage message :
-                                                list) {
-                                                LogUtil.e(message);
-                                                if (message.getBelongId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
-                                                        continue;
-                                                }
-                                                if (message.getVisibleType().equals(Constant.SHARE_MESSAGE_VISIBLE_TYPE_PRIVATE)) {
-                                                        result.remove(message);
-                                                }else {
-                                                        if (message.getInVisibleUserList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
+                                                LogUtil.e("定时检测到的说说消息如下");
+                                                List<SharedMessage> result = new ArrayList<>(list);
+                                                for (SharedMessage message :
+                                                        list) {
+                                                        LogUtil.e(message);
+                                                        if (message.getBelongId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                                                                continue;
+                                                        }
+                                                        if (message.getVisibleType().equals(Constant.SHARE_MESSAGE_VISIBLE_TYPE_PRIVATE)) {
                                                                 result.remove(message);
+                                                        }else {
+                                                                if (message.getInVisibleUserList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
+                                                                        result.remove(message);
+                                                                }
                                                         }
                                                 }
+                                                LogUtil.e("筛选可见后的说说列表");
+                                                for (SharedMessage message :
+                                                        result) {
+                                                        LogUtil.e(message);
+                                                }
+                                                if (result.size() > 0) {
+                                                        Intent intent = new Intent(Constant.NEW_SHARE_MESSAGE_ACTION);
+                                                        intent.putExtra("from", "share");
+                                                        intent.putExtra(Constant.NEW_MESSAGE, (Serializable) result);
+                                                        sendBroadcast(intent);
+                                                }
+                                        } else {
+                                                LogUtil.e("服务器上面暂时没有好友发的说说消息");
                                         }
-                                        LogUtil.e("筛选可见后的说说列表");
-                                        for (SharedMessage message :
-                                                result) {
-                                                LogUtil.e(message);
-                                        }
-                                        if (result.size() > 0) {
-                                                Intent intent = new Intent(Constant.NEW_SHARE_MESSAGE_ACTION);
-                                                intent.putExtra("from", "share");
-                                                intent.putExtra(Constant.NEW_MESSAGE, (Serializable) result);
-                                                sendBroadcast(intent);
-                                        }
-                                } else {
-                                        LogUtil.e("服务器上面暂时没有好友发的说说消息");
+                                }else {
+                                        LogUtil.e("定时拉取数据失败" + e.toString());
                                 }
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-                                LogUtil.e("定时拉取数据失败" + s);
                         }
                 });
         }

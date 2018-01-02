@@ -17,10 +17,38 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
     private int msgType;
     private String content;
     private User author;
+//    User
     private BmobRelation likes;
-    private BmobRelation comments;
+//    User
     private BmobRelation share;
+    private int likeCount;
+    private int commentCount;
+    private int shareCount;
 
+
+    public int getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(int shareCount) {
+        this.shareCount = shareCount;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 
     public BmobRelation getShare() {
         return share;
@@ -38,13 +66,7 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
         this.author = author;
     }
 
-    public BmobRelation getComments() {
-        return comments;
-    }
 
-    public void setComments(BmobRelation comments) {
-        this.comments = comments;
-    }
 
     public int getMsgType() {
         return msgType;

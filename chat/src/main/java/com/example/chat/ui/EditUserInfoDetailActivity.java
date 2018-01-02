@@ -31,6 +31,7 @@ import chihane.jdaddressselector.model.City;
 import chihane.jdaddressselector.model.County;
 import chihane.jdaddressselector.model.Province;
 import chihane.jdaddressselector.model.Street;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
 /**
@@ -256,38 +257,36 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                         if (groupId == null) {
                                                 UserManager.getInstance().updateUserInfo(from, content, new UpdateListener() {
                                                         @Override
-                                                        public void onSuccess() {
+                                                        public void done(BmobException e) {
                                                                 dismissLoadDialog();
-                                                                ToastUtils.showShortToast("修改用户信息成功");
+                                                                if (e == null) {
+                                                                        ToastUtils.showShortToast("修改用户信息成功");
+                                                                }else {
+                                                                        LogUtil.e("更新用户数据失败" +e.toString());
+                                                                        setResult(Activity.RESULT_CANCELED);
+                                                                }
                                                                 finish();
                                                         }
 
-                                                        @Override
-                                                        public void onFailure(int i, String s) {
-                                                                dismissLoadDialog();
-                                                                LogUtil.e("更新用户数据失败" + s + i);
-                                                                setResult(Activity.RESULT_CANCELED);
-                                                                finish();
-                                                        }
                                                 });
                                         } else {
                                                 MsgManager.getInstance().updateGroupMessage(groupId, from, content, new UpdateListener() {
                                                         @Override
-                                                        public void onSuccess() {
+                                                        public void done(BmobException e) {
                                                                 dismissLoadDialog();
-                                                                LogUtil.e("更新群资料成功");
-                                                                ToastUtils.showShortToast("更新群资料成功");
+                                                                if (e == null) {
+                                                                        LogUtil.e("更新群资料成功");
+                                                                        ToastUtils.showShortToast("更新群资料成功");
+
+                                                                }else {
+                                                                        LogUtil.e("更新群资料失败" +e.toString());
+                                                                        ToastUtils.showShortToast("更新群资料失败" + e.toString());
+                                                                        setResult(Activity.RESULT_CANCELED);
+
+                                                                }
                                                                 finish();
                                                         }
 
-                                                        @Override
-                                                        public void onFailure(int i, String s) {
-                                                                dismissLoadDialog();
-                                                                LogUtil.e("更新群资料失败" + s + i);
-                                                                ToastUtils.showShortToast("更新群资料失败" + s);
-                                                                setResult(Activity.RESULT_CANCELED);
-                                                                finish();
-                                                        }
                                                 });
                                         }
                                 }

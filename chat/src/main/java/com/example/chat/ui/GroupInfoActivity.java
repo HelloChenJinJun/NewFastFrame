@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
@@ -180,58 +181,56 @@ public class GroupInfoActivity extends SlideBaseActivity implements View.OnClick
                                         showLoadDialog("正在加载群成员消息，请稍候............");
                                         MsgManager.getInstance().queryAllGroupNumber(mGroupTableMessage.getGroupId(), new FindListener<User>() {
                                                 @Override
-                                                public void onSuccess(final List<User> userList) {
-                                                        if (userList != null && userList.size() > 0) {
-                                                                LogUtil.e("群成员信息");
-                                                                for (User user :
-                                                                        userList) {
-                                                                        LogUtil.e(user);
-                                                                }
-                                                                MsgManager.getInstance().queryAllGroupTableMessage(mGroupTableMessage.getGroupId(), new FindListener<GroupTableMessage>() {
-                                                                        @Override
-                                                                        public void onSuccess(List<GroupTableMessage> list) {
-                                                                                dismissLoadDialog();
-                                                                                List<GroupNumberInfo> groupInfoList;
-                                                                                if (list != null && list.size() > 0) {
-                                                                                        groupInfoList = new ArrayList<>();
-                                                                                        GroupNumberInfo groupNumberInfo;
-                                                                                        LogUtil.e("查询得到的成员群结构消息列表");
-                                                                                        for (GroupTableMessage message :
-                                                                                                list) {
-                                                                                                LogUtil.e(message);
-                                                                                                groupNumberInfo = new GroupNumberInfo();
-                                                                                                groupNumberInfo.setGroupNick(message.getGroupNick());
-                                                                                                for (User user :
-                                                                                                        userList
-                                                                                                        ) {
-                                                                                                        if (user.getObjectId().equals(message.getToId())) {
-                                                                                                                groupNumberInfo.setUser(user);
+                                                public void done(final List<User> userList, BmobException e) {
+                                                        if (e == null) {
+                                                                if (userList != null && userList.size() > 0) {
+                                                                        LogUtil.e("群成员信息");
+                                                                        for (User user :
+                                                                                userList) {
+                                                                                LogUtil.e(user);
+                                                                        }
+                                                                        MsgManager.getInstance().queryAllGroupTableMessage(mGroupTableMessage.getGroupId(), new FindListener<GroupTableMessage>() {
+                                                                                @Override
+                                                                                public void done(List<GroupTableMessage> list, BmobException e) {
+                                                                                        dismissLoadDialog();
+                                                                                        if (e == null) {
+                                                                                                List<GroupNumberInfo> groupInfoList;
+                                                                                                if (list != null && list.size() > 0) {
+                                                                                                        groupInfoList = new ArrayList<>();
+                                                                                                        GroupNumberInfo groupNumberInfo;
+                                                                                                        LogUtil.e("查询得到的成员群结构消息列表");
+                                                                                                        for (GroupTableMessage message :
+                                                                                                                list) {
+                                                                                                                LogUtil.e(message);
+                                                                                                                groupNumberInfo = new GroupNumberInfo();
+                                                                                                                groupNumberInfo.setGroupNick(message.getGroupNick());
+                                                                                                                for (User user :
+                                                                                                                        userList
+                                                                                                                        ) {
+                                                                                                                        if (user.getObjectId().equals(message.getToId())) {
+                                                                                                                                groupNumberInfo.setUser(user);
+                                                                                                                        }
+                                                                                                                }
+                                                                                                                groupInfoList.add(groupNumberInfo);
                                                                                                         }
+                                                                                                        MessageCacheManager.getInstance().setAllGroupNumberInfo(mGroupTableMessage.getGroupId(), groupInfoList);
+                                                                                                        mAdapter.clearAllData();
+                                                                                                        mAdapter.addData(MessageCacheManager.getInstance().getAllGroupNumberInfo(mGroupTableMessage.getGroupId()));
+                                                                                                        mAdapter.notifyDataSetChanged();
+                                                                                                } else {
+                                                                                                        LogUtil.e("在服务器上没有查询到群结构消息");
                                                                                                 }
-                                                                                                groupInfoList.add(groupNumberInfo);
+                                                                                        }else {
+                                                                                                LogUtil.e("查询群成员的群资料失败" +e.toString());
                                                                                         }
-                                                                                        MessageCacheManager.getInstance().setAllGroupNumberInfo(mGroupTableMessage.getGroupId(), groupInfoList);
-                                                                                        mAdapter.clearAllData();
-                                                                                        mAdapter.addData(MessageCacheManager.getInstance().getAllGroupNumberInfo(mGroupTableMessage.getGroupId()));
-                                                                                        mAdapter.notifyDataSetChanged();
-                                                                                } else {
-                                                                                        LogUtil.e("在服务器上没有查询到群结构消息");
                                                                                 }
-                                                                        }
 
-                                                                        @Override
-                                                                        public void onError(int i, String s) {
-                                                                                LogUtil.e("查询群成员的群资料失败" + s + i);
-                                                                                dismissLoadDialog();
-                                                                        }
-                                                                });
+                                                                        });
+                                                                }
+                                                        }else {
+                                                                dismissLoadDialog();
+                                                                LogUtil.e("查询群成员信息失败" +e.toString());
                                                         }
-                                                }
-
-                                                @Override
-                                                public void onError(int i, String s) {
-                                                        dismissLoadDialog();
-                                                        LogUtil.e("查询群成员信息失败" + s + i);
                                                 }
                                         });
                                 } else {
@@ -361,17 +360,17 @@ public class GroupInfoActivity extends SlideBaseActivity implements View.OnClick
                                         numberList.remove(UserManager.getInstance().getCurrentUserObjectId());
                                 }
                                 groupTableMessage.setGroupNumber(numberList);
-                                groupTableMessage.update(this, new UpdateListener() {
+                                groupTableMessage.update(new UpdateListener() {
                                         @Override
-                                        public void onSuccess() {
-                                                LogUtil.e("更新群主的群结构消息成功");
-                                                finish();
+                                        public void done(BmobException e) {
+                                                if (e == null) {
+                                                        LogUtil.e("更新群主的群结构消息成功");
+                                                        finish();
+                                                }else {
+                                                        LogUtil.e("更新群主的群结构消息失败" +e.toString());
+                                                }
                                         }
 
-                                        @Override
-                                        public void onFailure(int i, String s) {
-                                                LogUtil.e("更新群主的群结构消息失败" + s + i);
-                                        }
                                 });
                         }
 
@@ -393,36 +392,34 @@ public class GroupInfoActivity extends SlideBaseActivity implements View.OnClick
                                         showLoadDialog("正在上传群头像，请稍后.........");
                                         LogUtil.e("拍照的图片path为" + localImagePath);
                                         final BmobFile bmobFile = new BmobFile(new File(localImagePath));
-                                        bmobFile.uploadblock(BaseApplication.getInstance(), new UploadFileListener() {
+                                        bmobFile.uploadblock(new UploadFileListener() {
                                                 @Override
-                                                public void onSuccess() {
-                                                        LogUtil.e("上传群头像成功");
-                                                        MsgManager.getInstance().updateGroupMessage(mGroupTableMessage.getGroupId(), "groupAvatar", bmobFile.getFileUrl(BaseApplication.getInstance()), new UpdateListener() {
-                                                                @Override
-                                                                public void onSuccess() {
-                                                                        dismissLoadDialog();
-                                                                        ToastUtils.showShortToast("更新群头像成功");
-                                                                        LogUtil.e("更新群消息的头像成功");
-                                                                        Glide.with(GroupInfoActivity.this).load(new File(localImagePath)).into(groupAvatar);
-                                                                        LogUtil.e("通知聊天界面群头像的改变");
-                                                                        RxBusManager.getInstance().post(new GroupInfoEvent(localImagePath,GroupInfoEvent.TYPE_GROUP_AVATRA));
+                                                public void done(BmobException e) {
+                                                        if (e == null) {
+                                                                LogUtil.e("上传群头像成功");
+                                                                MsgManager.getInstance().updateGroupMessage(mGroupTableMessage.getGroupId(), "groupAvatar", bmobFile.getFileUrl(), new UpdateListener() {
+                                                                        @Override
+                                                                        public void done(BmobException e) {
+                                                                                dismissLoadDialog();
+                                                                                if (e == null) {
+                                                                                        ToastUtils.showShortToast("更新群头像成功");
+                                                                                        LogUtil.e("更新群消息的头像成功");
+                                                                                        Glide.with(GroupInfoActivity.this).load(new File(localImagePath)).into(groupAvatar);
+                                                                                        LogUtil.e("通知聊天界面群头像的改变");
+                                                                                        RxBusManager.getInstance().post(new GroupInfoEvent(localImagePath,GroupInfoEvent.TYPE_GROUP_AVATRA));
+                                                                                }else {
+                                                                                        LogUtil.e("更新群消息的头像失败" + e.toString());
+                                                                                }
+                                                                        }
 
-
-                                                                }
-
-                                                                @Override
-                                                                public void onFailure(int i, String s) {
-                                                                        dismissLoadDialog();
-                                                                        LogUtil.e("更新群消息的头像失败" + s + i);
-                                                                }
-                                                        });
+                                                                });
+                                                        }else {
+                                                                dismissLoadDialog();
+                                                                ToastUtils.showShortToast("上传群头像失败" +e.toString());
+                                                                LogUtil.e("上传群头像失败" +e.toString());
+                                                        }
                                                 }
-                                                @Override
-                                                public void onFailure(int i, String s) {
-                                                        dismissLoadDialog();
-                                                        ToastUtils.showShortToast("上传群头像失败" + s + i);
-                                                        LogUtil.e("上传群头像失败" + s + i);
-                                                }
+
                                         });
                                         break;
                                 case Constant.REQUEST_CODE_SELECT_FROM_LOCAL:
@@ -434,38 +431,35 @@ public class GroupInfoActivity extends SlideBaseActivity implements View.OnClick
                                                         LogUtil.e("挑选的图片path为" + path);
                                                         showLoadDialog("正在上传群头像，请稍后.........");
                                                         final BmobFile bmobFile1 = new BmobFile(new File(path));
-                                                        bmobFile1.uploadblock(BaseApplication.getInstance(), new UploadFileListener() {
+                                                        bmobFile1.uploadblock(new UploadFileListener() {
                                                                 @Override
-                                                                public void onSuccess() {
-                                                                        LogUtil.e("上传群头像成功");
-                                                                        MsgManager.getInstance().updateGroupMessage(mGroupTableMessage.getGroupId(), "groupAvatar", bmobFile1.getFileUrl(BaseApplication.getInstance()), new UpdateListener() {
-                                                                                @Override
-                                                                                public void onSuccess() {
-                                                                                        dismissLoadDialog();
-                                                                                        ToastUtils.showShortToast("更新群头像成功");
-                                                                                        LogUtil.e("更新群消息的头像成功");
-//                                                                                        LogUtil.e("现在的群头像" + mGroupTableMessage.getGroupAvatar());
-//                                                                                        MessageCacheManager.getInstance().getGroupTableMessage(mGroupTableMessage.getGroupId()).setGroupAvatar(bmobFile1.getFileUrl(BaseApplication.getInstance()));
-//                                                                                        LogUtil.e("如今的群头像" + mGroupTableMessage.getGroupAvatar());
-//                                                                                        ChatDB.create().saveGroupTableMessage(mGroupTableMessage);
-                                                                                        Glide.with(GroupInfoActivity.this).load(new File(path)).into(groupAvatar);
-                                                                                        RxBusManager.getInstance().post(new GroupInfoEvent(path,GroupInfoEvent.TYPE_GROUP_AVATRA));
-                                                                                }
+                                                                public void done(BmobException e) {
+                                                                        if (e == null) {
+                                                                                LogUtil.e("上传群头像成功");
+                                                                                MsgManager.getInstance().updateGroupMessage(mGroupTableMessage.getGroupId(), "groupAvatar", bmobFile1.getFileUrl(), new UpdateListener() {
+                                                                                        @Override
+                                                                                        public void done(BmobException e) {
+                                                                                                dismissLoadDialog();
+                                                                                                if (e == null) {
+                                                                                                        ToastUtils.showShortToast("更新群头像成功");
+                                                                                                        LogUtil.e("更新群消息的头像成功");
+                                                                                                        Glide.with(GroupInfoActivity.this).load(new File(path)).into(groupAvatar);
+                                                                                                        RxBusManager.getInstance().post(new GroupInfoEvent(path,GroupInfoEvent.TYPE_GROUP_AVATRA));
 
-                                                                                @Override
-                                                                                public void onFailure(int i, String s) {
-                                                                                        dismissLoadDialog();
-                                                                                        LogUtil.e("更新群消息的头像失败" + s + i);
-                                                                                }
-                                                                        });
+                                                                                                }else {
+                                                                                                        LogUtil.e("更新群消息的头像失败" +e.toString());
+
+                                                                                                }
+                                                                                        }
+
+                                                                                });
+                                                                        }else {
+                                                                                dismissLoadDialog();
+                                                                                ToastUtils.showShortToast("上传群头像失败" +e.toString());
+                                                                                LogUtil.e("上传群头像失败" +e.toString());
+                                                                        }
                                                                 }
 
-                                                                @Override
-                                                                public void onFailure(int i, String s) {
-                                                                        dismissLoadDialog();
-                                                                        ToastUtils.showShortToast("上传群头像失败" + s + i);
-                                                                        LogUtil.e("上传群头像失败" + s + i);
-                                                                }
                                                         });
                                                 } else {
                                                         LogUtil.e("挑选的图片的路径为空");

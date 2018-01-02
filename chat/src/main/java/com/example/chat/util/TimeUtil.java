@@ -8,7 +8,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import cn.bmob.v3.Bmob;
-import cn.bmob.v3.listener.GetServerTimeListener;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
 
 /**
  * 项目名称:    HappyChat
@@ -100,18 +101,17 @@ public class TimeUtil {
         }
 
         public static void getServerTime() {
-                Bmob.getServerTime(BaseApplication.getInstance(), new GetServerTimeListener() {
+                Bmob.getServerTime(new QueryListener<Long>() {
                         @Override
-                        public void onSuccess(long l) {
-                                long deltaTime = System.currentTimeMillis() - l * 1000L;
-                                LogUtil.e("客户端与服务器端的时间差值 :" + deltaTime);
-                            BaseApplication.getAppComponent().getSharedPreferences()
-                                        .edit().putLong(ChatUtil.DELTA_TIME,hashCode()).apply();
-                        }
-
-                        @Override
-                        public void onFailure(int i, String s) {
-                                LogUtil.e("获取服务器上的时间失败" + s + i);
+                        public void done(Long aLong, BmobException e) {
+                                if (e == null) {
+                                        long deltaTime = System.currentTimeMillis() - aLong * 1000L;
+                                        LogUtil.e("客户端与服务器端的时间差值 :" + deltaTime);
+                                        BaseApplication.getAppComponent().getSharedPreferences()
+                                                .edit().putLong(ChatUtil.DELTA_TIME,hashCode()).apply();
+                                }else {
+                                        LogUtil.e("获取服务器上的时间失败" +e.toString());
+                                }
                         }
                 });
         }

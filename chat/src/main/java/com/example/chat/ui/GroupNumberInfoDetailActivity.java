@@ -16,6 +16,7 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.utils.ToastUtils;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
 /**
@@ -103,13 +104,12 @@ public class GroupNumberInfoDetailActivity extends SlideBaseActivity implements 
                         final String deleteId = mGroupNumberInfo.getUser().getObjectId();
                         MsgManager.getInstance().updateGroupMessage(groupId, "deleteNumber", deleteId, new UpdateListener() {
                                 @Override
-                                public void onSuccess() {
-                                        LogUtil.e("1删除群成员成功");
-                                }
-
-                                @Override
-                                public void onFailure(int i, String s) {
-                                        LogUtil.e("删除群成员失败" + s + i);
+                                public void done(BmobException e) {
+                                        if (e == null) {
+                                                LogUtil.e("1删除群成员成功");
+                                        }else {
+                                                LogUtil.e("删除群成员失败" +e.toString());
+                                        }
                                 }
                         });
 

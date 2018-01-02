@@ -22,6 +22,7 @@ import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 
@@ -103,20 +104,19 @@ public class SearchFriendActivity extends SlideBaseActivity implements View.OnCl
                 }
                 UserManager.getInstance().queryUsers(input.getText().toString().trim(), new FindListener<User>() {
                                 @Override
-                                public void onSuccess(List<User> list) {
+                                public void done(List<User> list, BmobException e) {
                                         dismissLoadDialog();
-                                        if (list != null && list.size() > 0) {
-                                                LogUtil.e("查询用户成功：个数为" + list.size());
-                                                LogUtil.e(list.size() + "大小");
-                                                mAdapter.clearAllData();
-                                                mAdapter.addData(list);
+                                        if (e == null) {
+                                                if (list != null && list.size() > 0) {
+                                                        LogUtil.e("查询用户成功：个数为" + list.size());
+                                                        LogUtil.e(list.size() + "大小");
+                                                        mAdapter.clearAllData();
+                                                        mAdapter.addData(list);
 //                                                adapter.setData(list);
+                                                }
+                                        }else {
+                                                LogUtil.e("查询出错!" + e.toString());
                                         }
-                                }
-
-                                @Override
-                                public void onError(int i, String s) {
-                                        LogUtil.e("查询出错!" + s + i);
                                 }
                         }
                 );

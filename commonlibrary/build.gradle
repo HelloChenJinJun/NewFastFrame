@@ -102,7 +102,7 @@ dependencies {
     //    annotationProcessor rootProject.ext.dependencies.butterknife_compiler
     //    compile rootProject.ext.dependencies.butterknife
     api rootProject.ext.dependencies.transformations
-    implementation rootProject.ext.dependencies.multidex
+//    implementation rootProject.ext.dependencies.multidex
     api rootProject.ext.dependencies.arouter_api
     api files('libs/nineoldandroids-2.4.0.jar')
     api files('libs/pinyin4j-2.5.0.jar')

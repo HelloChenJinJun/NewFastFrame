@@ -7,20 +7,28 @@ import android.view.View;
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.ShareInfoAdapter;
+import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.PublicPostBean;
+import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.dagger.shareinfo.DaggerShareInfoComponent;
 import com.example.chat.dagger.shareinfo.ShareInfoModule;
+import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoPresenter;
+import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.EditShareMessageActivity;
 import com.example.chat.view.fab.FloatingActionButton;
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -75,6 +83,48 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         display.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);
+        display.addItemDecoration(new ListViewDecoration(getContext()));
+        display.setAdapter(shareInfoAdapter);
+        shareInfoAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view) {
+                CommentListActivity.start(getActivity(),shareInfoAdapter.getData(position));
+
+            }
+
+
+            @Override
+            public void onItemChildClick(int position, View view, int id) {
+                if (id == R.id.tv_item_fragment_share_info_share) {
+
+                } else if (id == R.id.tv_item_fragment_share_info_comment) {
+
+                } else if (id == R.id.tv_item_fragment_share_info_like) {
+
+                }else if (id==R.id.riv_item_fragment_share_info_avatar){
+
+                } else if (id == R.id.iv_item_fragment_share_info_more) {
+
+                }else {
+                    List<String>  imageList= BaseApplication
+                            .getAppComponent()
+                            .getGson().fromJson(shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount())
+                                    .getContent(), PostDataBean.class).getImageList();
+                    if (imageList != null && imageList.size() > 0) {
+                        List<ImageItem>  result=new ArrayList<>();
+                        for (String str :
+                                imageList) {
+                            ImageItem imageItem=new ImageItem();
+                            imageItem.setPath(str);
+                            result.add(imageItem);
+                        }
+                        BasePreViewActivity.startBasePreview(getActivity(),result,id);
+                    }
+
+                }
+
+            }
+        });
         presenter.registerEvent(PublicPostBean.class, new Consumer<PublicPostBean>() {
             @Override
             public void accept(PublicPostBean publicPostBean) throws Exception {

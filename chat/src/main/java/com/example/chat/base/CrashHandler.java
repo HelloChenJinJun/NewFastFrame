@@ -26,7 +26,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cn.bmob.v3.BmobBatch;
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BatchResult;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListListener;
 import cn.bmob.v3.listener.SaveListener;
 
 
@@ -177,21 +181,20 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                                 }
                                 list.addAll(result);
                                 if (mContext!=null) {
-                                        new BmobObject().insertBatch(mContext, list, new SaveListener() {
+                                        new BmobBatch().insertBatch(list).doBatch(new QueryListListener<BatchResult>() {
                                                 @Override
-                                                public void onSuccess() {
-                                                        LogUtil.e("上传群crash信息成功");
-                                                        if (UserManager.getInstance().getCurrentUser()!=null) {
-                                                                for (String message :
-                                                                        allErrorMessage) {
-                                                                        ChatDB.create().saveOrUpdateCrashMessage(message, true);
+                                                public void done(List<BatchResult> list, BmobException e) {
+                                                        if (e == null) {
+                                                                LogUtil.e("上传群crash信息成功");
+                                                                if (UserManager.getInstance().getCurrentUser()!=null) {
+                                                                        for (String message :
+                                                                                allErrorMessage) {
+                                                                                ChatDB.create().saveOrUpdateCrashMessage(message, true);
+                                                                        }
                                                                 }
+                                                        }else {
+                                                                LogUtil.e("上传批量crash信息到服务器上失败"+e.toString());
                                                         }
-                                                }
-
-                                                @Override
-                                                public void onFailure(int i, String s) {
-                                                        LogUtil.e("上传批量crash信息到服务器上失败"+s+i);
                                                 }
                                         });
                                 }
@@ -199,17 +202,16 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 }
 
                 if (mContext!=null) {
-                        message.save(mContext, new SaveListener() {
+                        message.save(new SaveListener<String>() {
                                 @Override
-                                public void onSuccess() {
-                                        LogUtil.e("上传crash信息到服务器上成功拉拉");
-                                }
-
-                                @Override
-                                public void onFailure(int i, String s) {
-                                        LogUtil.e("上传crash信息到服务器上失败拉拉"+s+i);
-                                        if (UserManager.getInstance().getCurrentUser() != null&&file!=null&&file.exists()) {
-                                                ChatDB.create().saveOrUpdateCrashMessage(file.getAbsolutePath(), false);
+                                public void done(String s, BmobException e) {
+                                        if (e == null) {
+                                                LogUtil.e("上传crash信息到服务器上成功拉拉");
+                                        }else {
+                                                LogUtil.e("上传crash信息到服务器上失败拉拉"+e.toString());
+                                                if (UserManager.getInstance().getCurrentUser() != null&&file!=null&&file.exists()) {
+                                                        ChatDB.create().saveOrUpdateCrashMessage(file.getAbsolutePath(), false);
+                                                }
                                         }
                                 }
                         });

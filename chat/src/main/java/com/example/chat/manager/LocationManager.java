@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.datatype.BmobGeoPoint;
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
 /**
@@ -149,14 +150,14 @@ public class LocationManager implements AMapLocationListener {
                                 if (UserManager.getInstance().getCurrentUser() != null) {
                                         UserManager.getInstance().updateUserInfo("location", longitude + "&" + latitude, new UpdateListener() {
                                                 @Override
-                                                public void onSuccess() {
-                                                        if (UserManager.getInstance().getCurrentUser()!=null) {
-                                                                UserManager.getInstance().getCurrentUser().setLocation(new BmobGeoPoint(longitude,latitude));
+                                                public void done(BmobException e) {
+                                                        if (e == null) {
+                                                                if (UserManager.getInstance().getCurrentUser()!=null) {
+                                                                        UserManager.getInstance().getCurrentUser().setLocation(new BmobGeoPoint(longitude,latitude));
+                                                                }
+                                                        }else {
+                                                                LogUtil.e("定位获取的到的经纬度信息更新到服务器上失败");
                                                         }
-                                                }
-                                                @Override
-                                                public void onFailure(int i, String s) {
-                                                        LogUtil.e("定位获取的到的经纬度信息更新到服务器上失败");
                                                 }
                                         });
                                 }

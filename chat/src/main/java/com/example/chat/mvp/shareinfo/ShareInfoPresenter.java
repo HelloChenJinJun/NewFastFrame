@@ -9,6 +9,7 @@ import com.example.commonlibrary.mvp.view.IView;
 
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 /**
@@ -30,23 +31,22 @@ public class ShareInfoPresenter extends RxBasePresenter<IView<List<PublicPostBea
         MsgManager
                 .getInstance().getAllPostData(isRefresh, time, new FindListener<PublicPostBean>() {
             @Override
-            public void onSuccess(List<PublicPostBean> list) {
-                iView.updateData(list);
-                iView.hideLoading();
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                if (i == 101) {
-                    iView.updateData(null);
+            public void done(List<PublicPostBean> list, BmobException e) {
+                if (e == null) {
+                    iView.updateData(list);
                     iView.hideLoading();
                 }else {
-                    iView.showError(s + i, new EmptyLayout.OnRetryListener() {
-                        @Override
-                        public void onRetry() {
-                            getAllPostData(isRefresh, time);
-                        }
-                    });
+                    if (e.getErrorCode() == 101) {
+                        iView.updateData(null);
+                        iView.hideLoading();
+                    }else {
+                        iView.showError(e.toString(), new EmptyLayout.OnRetryListener() {
+                            @Override
+                            public void onRetry() {
+                                getAllPostData(isRefresh, time);
+                            }
+                        });
+                    }
                 }
             }
         });

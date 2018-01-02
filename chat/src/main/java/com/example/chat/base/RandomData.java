@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 /**
@@ -61,23 +62,23 @@ public class RandomData {
                 }
                 MsgManager.getInstance().getAllDefaultAvatarFromServer(new FindListener<String>() {
                         @Override
-                        public void onSuccess(List<String> list) {
-                                if (list != null && list.size() > 0) {
-                                        LogUtil.e("获取到默认头像数据拉");
-                                        for (String url :
-                                                list) {
-                                                LogUtil.e(url);
+                        public void done(List<String> list, BmobException e) {
+                                if (e == null) {
+                                        if (list != null && list.size() > 0) {
+                                                LogUtil.e("获取到默认头像数据拉");
+                                                for (String url :
+                                                        list) {
+                                                        LogUtil.e(url);
+                                                }
+                                                avatarList.addAll(list);
+                                        } else {
+                                                LogUtil.e("从服务器上获取的到的默认的头像数据为空");
                                         }
-                                        avatarList.addAll(list);
-                                } else {
-                                        LogUtil.e("从服务器上获取的到的默认的头像数据为空");
+                                }else {
+                                        LogUtil.e("从服务器上获取的到的默认的头像数据失败" +e.toString());
                                 }
                         }
 
-                        @Override
-                        public void onError(int i, String s) {
-                                LogUtil.e("从服务器上获取的到的默认的头像数据失败" + s + i);
-                        }
                 });
         }
 
@@ -85,22 +86,21 @@ public class RandomData {
         public static void initRandomWallPaper() {
                 MsgManager.getInstance().getAllDefaultWallPaperFromServer(new FindListener<String>() {
                         @Override
-                        public void onSuccess(List<String> list) {
-                                if (list != null && list.size() > 0) {
-                                        LogUtil.e("获取到默认背景数据拉");
-                                        for (String url :
-                                                list) {
-                                                LogUtil.e(url);
+                        public void done(List<String> list, BmobException e) {
+                                if (e == null) {
+                                        if (list != null && list.size() > 0) {
+                                                LogUtil.e("获取到默认背景数据拉");
+                                                for (String url :
+                                                        list) {
+                                                        LogUtil.e(url);
+                                                }
+                                                wallPaperList.addAll(list);
+                                        } else {
+                                                LogUtil.e("从服务器上获取的到的默认的背景数据为空");
                                         }
-                                        wallPaperList.addAll(list);
-                                } else {
-                                        LogUtil.e("从服务器上获取的到的默认的背景数据为空");
+                                }else {
+                                        LogUtil.e("从服务器上获取的到的默认的背景数据失败" +e.toString());
                                 }
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-                                LogUtil.e("从服务器上获取的到的默认的背景数据失败" + s + i);
                         }
                 });
 
@@ -109,23 +109,23 @@ public class RandomData {
         public static void initTitleWallPaper() {
                 MsgManager.getInstance().getAllDefaultTitleWallPaperFromServer(new FindListener<String>() {
                         @Override
-                        public void onSuccess(List<String> list) {
-                                if (list != null && list.size() > 0) {
-                                        LogUtil.e("获取到默认背景数据拉");
-                                        for (String url :
-                                                list) {
-                                                LogUtil.e(url);
+                        public void done(List<String> list, BmobException e) {
+                                if (e == null) {
+                                        if (list != null && list.size() > 0) {
+                                                LogUtil.e("获取到默认背景数据拉");
+                                                for (String url :
+                                                        list) {
+                                                        LogUtil.e(url);
+                                                }
+                                                titleWallPaper.addAll(list);
+                                        } else {
+                                                LogUtil.e("从服务器上获取的到的默认的背景数据为空");
                                         }
-                                        titleWallPaper.addAll(list);
-                                } else {
-                                        LogUtil.e("从服务器上获取的到的默认的背景数据为空");
+                                }else {
+                                        LogUtil.e("从服务器上获取的到的默认的背景数据失败" +e.toString());
                                 }
                         }
 
-                        @Override
-                        public void onError(int i, String s) {
-                                LogUtil.e("从服务器上获取的到的默认的背景数据失败" + s + i);
-                        }
                 });
         }
 

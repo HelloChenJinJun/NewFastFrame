@@ -43,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
-import cn.bmob.v3.statistics.AppStat;
 import mabeijianxi.camera.VCamera;
 import mabeijianxi.camera.util.DeviceUtils;
 import okhttp3.OkHttpClient;
@@ -86,7 +85,8 @@ public class ChatApplication implements IModuleConfig, IAppLife {
         Bmob.initialize(application, Constant.KEY);
 //        AppStat.i(Constant.KEY, null);
         LogUtil.e("1服务器端初始化完成");
-        CustomInstallation.getCurrentInstallation(application).save();
+        CustomInstallation customInstallation=new CustomInstallation();
+        customInstallation.save();
         LogUtil.e("设备ID在这里上传了");
         BmobPush.startWork(application);
         LogUtil.e("推送服务初始化完成");

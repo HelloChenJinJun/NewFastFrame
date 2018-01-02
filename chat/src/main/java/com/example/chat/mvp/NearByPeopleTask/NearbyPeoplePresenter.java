@@ -6,6 +6,7 @@ import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 /**
@@ -35,21 +36,21 @@ public class NearbyPeoplePresenter extends NearbyPeopleContacts.Presenter {
                 if (mUserFindListener == null) {
                         mUserFindListener = new FindListener<User>() {
                                 @Override
-                                public void onSuccess(List<User> list) {
-                                        iView.hideLoading();
-                                        iView.updateNearbyPeople(list);
+                                public void done(List<User> list, BmobException e) {
+                                        if (e == null) {
+                                                iView.hideLoading();
+                                                iView.updateNearbyPeople(list);
+                                        }else {
+                                                iView.hideLoading();
+                                                iView.showError(e.toString(), new EmptyLayout.OnRetryListener() {
+                                                        @Override
+                                                        public void onRetry() {
+                                                                queryNearbyPeople(NearbyPeoplePresenter.this.longitude, NearbyPeoplePresenter.this.latitude, NearbyPeoplePresenter.this.isAll,NearbyPeoplePresenter.this.sex);
+                                                        }
+                                                });
+                                        }
                                 }
 
-                                @Override
-                                public void onError(int i, String s) {
-                                        iView.hideLoading();
-                                        iView.showError(s, new EmptyLayout.OnRetryListener() {
-                                                @Override
-                                                public void onRetry() {
-                                                        queryNearbyPeople(NearbyPeoplePresenter.this.longitude, NearbyPeoplePresenter.this.latitude, NearbyPeoplePresenter.this.isAll,NearbyPeoplePresenter.this.sex);
-                                                }
-                                        });
-                                }
                         };
                 }
                 iView.showLoading("正在加载附近人消息。。。请稍后");
