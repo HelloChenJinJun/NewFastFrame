@@ -423,7 +423,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             } else {
                 int index = data.indexOf(newData);
                 data.set(index, newData);
-                notifyDataSetChanged();
+                notifyItemChanged(index + getItemUpCount());
             }
         }else {
             notifyLoadMoreChanged();

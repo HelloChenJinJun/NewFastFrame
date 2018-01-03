@@ -1,21 +1,40 @@
 package com.example.chat.mvp.commentlist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.CommentListAdapter;
+import com.example.chat.bean.FaceText;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.PublicPostBean;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
+import com.example.chat.bean.post.PublicCommentBean;
+import com.example.chat.dagger.commentlist.CommentListModule;
+import com.example.chat.dagger.commentlist.DaggerCommentListComponent;
+import com.example.chat.events.CommentEvent;
+import com.example.chat.mvp.commentdetail.CommentListDetailActivity;
 import com.example.chat.ui.BasePreViewActivity;
+import com.example.chat.util.CommonUtils;
+import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.PixelUtil;
 import com.example.chat.util.PostUtil;
 import com.example.chat.util.TimeUtil;
@@ -23,15 +42,26 @@ import com.example.chat.view.ListImageView;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.adapter.CommonPagerAdapter;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
+import com.example.commonlibrary.utils.CommonUtil;
+import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -40,26 +70,41 @@ import java.util.List;
  * QQ:         1981367757
  */
 
-public class CommentListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
+public class CommentListActivity extends BaseActivity<List<PublicCommentBean>, CommentListPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
 
 
     private SwipeRefreshLayout refresh;
     private SuperRecyclerView display;
+    @Inject
     CommentListAdapter commentListAdapter;
+    private String postId;
+
+    private int currentPosition = -1;
+
+
+    //    bottom
+    private EditText input;
+    private Button face, keyboard, send;
+    private WrappedViewPager emotionPager;
+    private PublicPostBean data;
 
     @Override
-    public void updateData(Object o) {
-
+    public void updateData(List<PublicCommentBean> list) {
+        if (refresh.isRefreshing()) {
+            commentListAdapter.refreshData(list);
+        } else {
+            commentListAdapter.addData(list);
+        }
     }
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return false;
+        return true;
     }
 
     @Override
     protected boolean isNeedEmptyLayout() {
-        return false;
+        return true;
     }
 
     @Override
@@ -72,21 +117,235 @@ public class CommentListActivity extends BaseActivity implements SwipeRefreshLay
         refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_activity_comment_list_refresh);
         display = (SuperRecyclerView) findViewById(R.id.srcv_activity_comment_list_display);
         refresh.setOnRefreshListener(this);
+        face = (Button) findViewById(R.id.btn_comment_bottom_face);
+
+        input = (EditText) findViewById(R.id.et_comment_bottom_input);
+        keyboard = (Button) findViewById(R.id.btn_comment_bottom_keyboard);
+        send = (Button) findViewById(R.id.btn_comment_bottom_send);
+        face.setOnClickListener(this);
+        keyboard.setOnClickListener(this);
+        send.setOnClickListener(this);
+        emotionPager = (WrappedViewPager) findViewById(R.id.vp_comment_bottom_emotion);
+        initEmotionInfo();
+    }
+
+
+    private List<FaceText> emotionFaceList;
+    private GridViewAdapter gridViewAdapter, mGridViewAdapter;
+
+    private void initEmotionInfo() {
+        List<View> list = new ArrayList<>();
+        emotionFaceList = FaceTextUtil.getFaceTextList();
+        for (int i = 0; i < 2; i++) {
+            list.add(getGridView(i));
+        }
+        emotionPager.setAdapter(new CommonPagerAdapter(list));
+    }
+
+
+    private View getGridView(int i) {
+        View emotionView = LayoutInflater.from(this).inflate(R.layout.emotion1, null);
+        GridView gridView = emotionView.findViewById(R.id.gv_display);
+        if (i == 0) {
+            gridView.setAdapter(gridViewAdapter = new GridViewAdapter(this, emotionFaceList.subList(0, 21)));
+            gridView.setTag(gridViewAdapter);
+        } else {
+            gridView.setAdapter(mGridViewAdapter = new GridViewAdapter(this, emotionFaceList.subList(21, emotionFaceList.size())));
+            gridView.setTag(mGridViewAdapter);
+        }
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                GridViewAdapter gridViewAdapter = (GridViewAdapter) parent.getTag();
+                FaceText faceText = (FaceText) gridViewAdapter.getItem(position);
+                String content = faceText.getText();
+                if (input != null) {
+                    int startIndex = input.getSelectionStart();
+                    CharSequence content1 = input.getText().insert(startIndex, content);
+                    input.setText(FaceTextUtil.toSpannableString(BaseApplication.getInstance(), content1.toString()));
+//                                        重新定位光标位置
+                    CharSequence info = input.getText();
+                    if (info instanceof Spannable) {
+                        Spannable spannable = (Spannable) info;
+                        Selection.setSelection(spannable, startIndex + content.length());
+                    }
+                }
+            }
+        });
+        return emotionView;
+    }
+
+
+    private class GridViewAdapter extends BaseAdapter {
+        private List<FaceText> mFaceTextList = new ArrayList<>();
+        private Context mContext;
+
+        GridViewAdapter(Context context, List<FaceText> faceTextList) {
+            this.mContext = context;
+            if (faceTextList != null && faceTextList.size() > 0) {
+                mFaceTextList.clear();
+                mFaceTextList.addAll(faceTextList);
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return mFaceTextList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mFaceTextList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.emtion_item, parent, false);
+                viewHolder.display = convertView.findViewById(R.id.iv_emotion_item_display);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            FaceText item = mFaceTextList.get(position);
+            viewHolder.display.setImageDrawable(mContext.getResources().getDrawable(mContext.getResources().getIdentifier(item.getText().substring(1), "mipmap", mContext.getPackageName())));
+            return convertView;
+        }
+    }
+
+
+    private class ViewHolder {
+        ImageView display;
     }
 
     @Override
     protected void initData() {
-        PublicPostBean data = (PublicPostBean) getIntent().getSerializableExtra("data");
+        DaggerCommentListComponent.builder()
+                .chatMainComponent(ChatApplication.getChatMainComponent())
+                .commentListModule(new CommentListModule(this))
+                .build().inject(this);
+        data = (PublicPostBean) getIntent().getSerializableExtra("data");
+        postId = data.getObjectId();
         display.setLayoutManager(new WrappedLinearLayoutManager(this));
         display.addItemDecoration(new ListViewDecoration(this));
         display.setOnLoadMoreListener(this);
         display.setLoadMoreFooterView(new LoadMoreFooterView(this));
         display.addHeaderView(getHeaderView(data));
+        commentListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view) {
+                ToastUtils.showShortToast("展示对话框");
+                currentPosition = position;
+            }
 
+            @Override
+            public void onItemChildClick(int position, View view, int id) {
+                if (id == R.id.iv_item_activity_comment_list_comment) {
+                    currentPosition = position;
+                } else if (id == R.id.tv_item_activity_comment_list_reply) {
+
+                } else if (id == R.id.riv_item_activity_comment_list_avatar) {
+
+                } else if (id == R.id.tv_item_activity_comment_list_look) {
+                    CommentListDetailActivity.start(CommentListActivity.this, commentListAdapter
+                            .getData(position));
+                }
+            }
+        });
+        display.setAdapter(commentListAdapter);
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setNeedNavigation(true);
+        toolBarOption.setTitle("动态详情");
+        setToolBar(toolBarOption);
+        presenter.registerEvent(CommentEvent.class, new Consumer<CommentEvent>() {
+            @Override
+            public void accept(CommentEvent commentEvent) throws Exception {
+                if (commentEvent.getType() == CommentEvent.TYPE_LIKE) {
+                    updateLikeCountAdd(commentEvent.getId());
+                }else {
+                    updateCommentCountAdd(commentEvent.getId());
+                }
+            }
+        });
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                presenter.getCommentListData(postId, true, getRefreshTime(true));
+            }
+        });
+    }
+
+    private void updateCommentCountAdd(String id) {
+        data.setCommentCount(data.getCommentCount()+1);
+        comment.setText(data.getCommentCount()+"");
+    }
+
+    private void updateLikeCountAdd(String id) {
+        data.setLikeCount(data.getLikeCount()+1);
+        like.setText(data.getLikeCount()+"");
+    }
+
+    private String getRefreshTime(boolean isRefresh) {
+        if (isRefresh) {
+            if (commentListAdapter.getData(0) == null) {
+                return "0000-00-00 01:00:00";
+            }
+            return commentListAdapter.getData(0).getCreatedAt();
+        } else {
+            if (commentListAdapter.getData(commentListAdapter.getData().size() - 1) != null) {
+                return commentListAdapter.getData(commentListAdapter.getData().size() - 1).getCreatedAt();
+            } else {
+                return "0000-00-00 01:00:00";
+            }
+        }
     }
 
     private TextView share, comment, like;
 
+
+    @Override
+    public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
+        dismissLoadDialog();
+       if (input.hasFocus()){
+           CommonUtils.hideSoftInput(
+                   this, input);
+           input.setText("");
+       }
+        if (refresh.isRefreshing()) {
+            refresh.setRefreshing(false);
+            super.showError(errorMsg, listener);
+        } else {
+            display.setLoadMoreStatus(LoadMoreFooterView.Status.ERROR);
+        }
+    }
+
+
+    @Override
+    public void hideLoading() {
+        super.hideLoading();
+        dismissLoadDialog();
+        if (input.hasFocus()){
+            CommonUtils.hideSoftInput(
+                    this, input);
+            input.setText("");
+        }
+        if (refresh.isRefreshing()) {
+            refresh.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void showLoading(String loadMessage) {
+        refresh.setRefreshing(true);
+    }
 
     private View getHeaderView(PublicPostBean data) {
         final PostDataBean postDataBean = BaseApplication.getAppComponent().getGson()
@@ -127,16 +386,16 @@ public class CommentListActivity extends BaseActivity implements SwipeRefreshLay
             display.setOnImageViewItemClickListener(new ListImageView.OnImageViewItemClickListener() {
                 @Override
                 public void onImageClick(View view, int position, String url) {
-                    List<String> imageList=postDataBean.getImageList();
+                    List<String> imageList = postDataBean.getImageList();
                     if (imageList != null && imageList.size() > 0) {
-                        List<ImageItem>  result=new ArrayList<>();
+                        List<ImageItem> result = new ArrayList<>();
                         for (String str :
                                 imageList) {
-                            ImageItem imageItem=new ImageItem();
+                            ImageItem imageItem = new ImageItem();
                             imageItem.setPath(str);
                             result.add(imageItem);
                         }
-                        BasePreViewActivity.startBasePreview(CommentListActivity.this,result,position);
+                        BasePreViewActivity.startBasePreview(CommentListActivity.this, result, position);
                     }
                 }
             });
@@ -146,25 +405,22 @@ public class CommentListActivity extends BaseActivity implements SwipeRefreshLay
         } else if (data.getMsgType() == PostUtil.LAYOUT_TYPE_VOICE) {
 
         } else if (data.getMsgType() == PostUtil.LAYOUT_TYPE_SHARE) {
-            if (postDataBean != null&&postDataBean.getShareContent()!=null) {
+            if (postDataBean != null && postDataBean.getShareContent() != null) {
                 ViewStub viewStub = headerView.findViewById(R.id.vs_item_fragment_share_info_stub);
                 if (postDataBean.getShareType() == PostUtil
                         .LAYOUT_TYPE_IMAGE) {
                     viewStub.setLayoutResource(R.layout.item_fragment_share_info_image);
-                    ListImageView listImageView= (ListImageView) viewStub.inflate();
+                    ListImageView listImageView = (ListImageView) viewStub.inflate();
                     listImageView.bindData(postDataBean.getShareContent().getImageList());
                 } else if (postDataBean.getShareType() == PostUtil
                         .LAYOUT_TYPE_TEXT) {
                     viewStub.setLayoutResource(R.layout.item_fragment_share_info_text);
-                    TextView content= (TextView) viewStub.inflate();
+                    TextView content = (TextView) viewStub.inflate();
                     content.setText(postDataBean.getShareContent().getContent());
                 }
             }
-
         }
-
-
-        return null;
+        return headerView;
     }
 
 
@@ -185,16 +441,45 @@ public class CommentListActivity extends BaseActivity implements SwipeRefreshLay
 
     @Override
     public void onRefresh() {
-
+        presenter.getCommentListData(postId, true, getRefreshTime(true));
     }
 
     @Override
     public void loadMore() {
+        presenter.getCommentListData(postId, false, getRefreshTime(false));
 
     }
 
     @Override
     public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.tv_item_fragment_share_info_share) {
 
+        } else if (id == R.id.tv_item_fragment_share_info_comment) {
+            CommonUtils.showSoftInput(this,input);
+
+        } else if (id == R.id.tv_item_fragment_share_info_like) {
+            presenter.addLike(postId);
+
+        } else if (id == R.id.btn_comment_bottom_face) {
+            emotionPager.setVisibility(View.VISIBLE);
+            face.setVisibility(View.GONE);
+            keyboard.setVisibility(View.VISIBLE);
+        } else if (id == R.id.btn_comment_bottom_keyboard) {
+            face.setVisibility(View.VISIBLE);
+            keyboard.setVisibility(View.GONE);
+            emotionPager.setVisibility(View.GONE);
+        } else if (id == R.id.btn_comment_bottom_send) {
+            if (TextUtils.isEmpty(input.getText().toString().trim())) {
+                ToastUtils.showShortToast("输入内容不能为空");
+            } else {
+                PublicCommentBean bean = null;
+                if (currentPosition != -1) {
+                    bean = commentListAdapter.getData(currentPosition);
+                }
+                showLoadDialog("正在发送.....");
+                presenter.sendCommentData(bean, postId, input.getText().toString().trim());
+            }
+        }
     }
 }

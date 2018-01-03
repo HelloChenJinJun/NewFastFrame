@@ -49,6 +49,17 @@ public class ShareInfoAdapter extends BaseMultipleRecyclerAdapter<PublicPostBean
 
     @Override
     protected void convert(BaseShareInfoViewHolder holder, PublicPostBean data) {
+        holder.bindAdapter(this);
         holder.initCommonData(data);
+    }
+
+    public PublicPostBean getPublicPostDataById(String id) {
+        for (PublicPostBean bean :
+                data) {
+            if (bean.getObjectId().equals(id)) {
+                return bean;
+            }
+        }
+        return null;
     }
 }

@@ -16,6 +16,8 @@ import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
 import com.example.chat.bean.WinXinBean;
 import com.example.chat.bean.post.PostDataBean;
+import com.example.chat.bean.post.PublicCommentBean;
+import com.example.chat.bean.post.ReplyCommentListBean;
 import com.example.chat.db.ChatDB;
 import com.example.chat.listener.AddFriendCallBackListener;
 import com.example.chat.listener.AddShareMessageCallBack;
@@ -30,7 +32,6 @@ import com.example.chat.listener.OnSendMessageListener;
 import com.example.chat.listener.OnSendPushMessageListener;
 import com.example.chat.listener.OnSendTagMessageListener;
 import com.example.chat.listener.SendFileListener;
-import com.example.chat.ui.EditShareMessageActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
@@ -1552,7 +1553,7 @@ public class MsgManager {
                     BmobQuery<SharedMessage> query = new BmobQuery<>();
                     query.addWhereEqualTo("createTime", time);
                     query.addWhereEqualTo("belongId", UserManager.getInstance().getCurrentUserObjectId());
-                    query.findObjects( new FindListener<SharedMessage>() {
+                    query.findObjects(new FindListener<SharedMessage>() {
                         @Override
                         public void done(List<SharedMessage> list, BmobException e) {
                             if (e == null) {
@@ -1590,7 +1591,7 @@ public class MsgManager {
                     ChatDB.create().saveSharedMessage(sharedMessage);
                     dealMessageCallBack.onSuccess(sharedMessage.getObjectId());
                 } else {
-                    dealMessageCallBack.onFailed(sharedMessage.getObjectId(),e.getErrorCode(),e.getMessage());
+                    dealMessageCallBack.onFailed(sharedMessage.getObjectId(), e.getErrorCode(), e.getMessage());
                 }
             }
         });
@@ -2360,9 +2361,9 @@ public class MsgManager {
                     if (avatarList == null) {
                         LogUtil.e("服务器上面没有背景数据");
                     }
-                    findListener.done(avatarList,null);
+                    findListener.done(avatarList, null);
                 } else {
-                    findListener.done(null,e);
+                    findListener.done(null, e);
                 }
             }
 
@@ -2399,9 +2400,9 @@ public class MsgManager {
                     if (avatarList == null) {
                         LogUtil.e("服务器上面没有背景数据");
                     }
-                    findListener.done(avatarList,null);
-                }else {
-                    findListener.done(null,e);
+                    findListener.done(avatarList, null);
+                } else {
+                    findListener.done(null, e);
                 }
             }
 
@@ -2444,9 +2445,9 @@ public class MsgManager {
                             LogUtil.e("说说消息为空！！！！！");
                         }
                         loadShareMessageCallBack.onSuccess(list);
-                    }else {
+                    } else {
                         LogUtil.e("在服务器上查找不到说说消息");
-                        loadShareMessageCallBack.onFailed(e.getMessage(),e.getErrorCode());
+                        loadShareMessageCallBack.onFailed(e.getMessage(), e.getErrorCode());
                     }
                 }
 
@@ -2522,8 +2523,8 @@ public class MsgManager {
                             public void done(String s, BmobException e) {
                                 if (e == null) {
                                     onCreatePublicPostListener.onSuccess(publicPostBean);
-                                }else {
-                                    onCreatePublicPostListener.onFailed(e.getMessage(),e.getErrorCode());
+                                } else {
+                                    onCreatePublicPostListener.onFailed(e.getMessage(), e.getErrorCode());
                                 }
                             }
 
@@ -2551,13 +2552,13 @@ public class MsgManager {
         } else {
             publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_TEXT);
             publicPostBean.setContent(BaseApplication.getAppComponent().getGson().toJson(postDataBean));
-            publicPostBean.save( new SaveListener<String>() {
+            publicPostBean.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
                     if (e == null) {
                         onCreatePublicPostListener.onSuccess(publicPostBean);
-                    }else {
-                        onCreatePublicPostListener.onFailed(e.getMessage(),e.getErrorCode());
+                    } else {
+                        onCreatePublicPostListener.onFailed(e.getMessage(), e.getErrorCode());
                     }
                 }
 
@@ -2565,5 +2566,43 @@ public class MsgManager {
 
         }
 
+    }
+
+    public void getCommentListData(String postId, FindListener<PublicCommentBean> listener, boolean isPullRefresh, String time) {
+        PublicPostBean publicPostBean = new PublicPostBean();
+        publicPostBean.setObjectId(postId);
+        BmobQuery<PublicCommentBean> query = new BmobQuery<>();
+        query.addWhereEqualTo("post",publicPostBean);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long currentTime = 0;
+        try {
+            currentTime = simpleDateFormat.parse(time).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        LogUtil.e("现在的时间:" + currentTime);
+        BmobDate bmobDate;
+        if (isPullRefresh) {
+            currentTime += 1000;
+            LogUtil.e("加一秒后的时间" + currentTime);
+            bmobDate = new BmobDate(new Date(currentTime));
+            query.addWhereGreaterThan("createdAt", bmobDate);
+        } else {
+            currentTime -= 1000;
+            LogUtil.e("减一秒后的时间" + currentTime);
+            bmobDate = new BmobDate(new Date(currentTime));
+            query.addWhereLessThan("createdAt", bmobDate);
+        }
+        query.order("-createdAt");
+        query.include("user,post");
+        query.setLimit(10);
+        query.findObjects(listener);
+    }
+
+    public void getCommentListDetailData(String publicId, FindListener<ReplyCommentListBean> listener) {
+        BmobQuery<ReplyCommentListBean> query = new BmobQuery<>();
+        query.addWhereEqualTo("publicId", publicId);
+        query.setLimit(50);
+        query.findObjects(listener);
     }
 }

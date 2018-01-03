@@ -48,7 +48,8 @@ public class BaseShareInfoViewHolder extends BaseWrappedViewHolder {
                 .setOnItemChildClickListener(R.id.iv_item_fragment_share_info_more)
                 .setOnItemChildClickListener(R.id.tv_item_fragment_share_info_share)
                 .setOnItemChildClickListener(R.id.tv_item_fragment_share_info_comment)
-                .setOnItemChildClickListener(R.id.tv_item_fragment_share_info_like);
+                .setOnItemChildClickListener(R.id.tv_item_fragment_share_info_like)
+        .setOnItemClickListener();
         Gson gson = BaseApplication
                 .getAppComponent().getGson();
         PostDataBean postDataBean = gson.fromJson(data.getContent(), PostDataBean.class);

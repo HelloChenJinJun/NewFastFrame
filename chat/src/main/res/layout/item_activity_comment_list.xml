@@ -11,9 +11,15 @@
         app:roundHeight="25dp"
         app:roundWidth="25dp"
         android:scaleType="centerCrop"
+        android:layout_margin="10dp"
+        android:src="@drawable/head"
+        android:id="@+id/riv_item_activity_comment_list_avatar"
         />
 
     <LinearLayout
+        android:layout_alignTop="@+id/riv_item_activity_comment_list_avatar"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/riv_item_activity_comment_list_avatar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -28,7 +34,72 @@
             android:textColor="@color/black"/>
 
 
+
+        <TextView
+            android:textSize="12sp"
+            android:textColor="@color/grey_500"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_item_activity_comment_list_time"/>
+
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:id="@+id/tv_item_activity_comment_list_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"/>
+
+
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/rl_item_activity_comment_list_reply_container"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:background="@color/blue_50"
+                android:textColor="@color/grey_500"
+                android:textSize="16sp"
+                android:id="@+id/tv_item_activity_comment_list_reply"
+                />
+            <TextView
+                android:id="@+id/tv_item_activity_comment_list_look"
+                android:layout_marginTop="15dp"
+                android:text="查看对话"
+                android:textColor="@color/blue_500"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tv_item_activity_comment_list_reply"/>
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider_line_default_color"/>
+
+
+
     </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/iv_item_activity_comment_list_comment"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_comment_public"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/riv_item_activity_comment_list_avatar"/>
 
 
 

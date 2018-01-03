@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -758,5 +759,16 @@ public class UserDetailActivity extends SlideBaseActivity<List<SharedMessage>, S
         } else {
             LogUtil.e("获取更多的时候data为空");
         }
+    }
+
+    public static void start(Activity activity, String uid) {
+        Intent intent = new Intent(activity, UserDetailActivity.class);
+        if (uid.equals(UserManager.getInstance().getCurrentUserObjectId())) {
+            intent.putExtra("from", "me");
+        } else {
+            intent.putExtra("from", "other");
+        }
+        intent.putExtra("uid", uid);
+        activity.startActivity(intent);
     }
 }

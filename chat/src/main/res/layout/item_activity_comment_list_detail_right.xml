@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="13dp">
+
+    <TextView
+        android:id="@+id/tv_comment_detail_right_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="11.00.02.023"
+        android:textColor="@color/base_color_text_grey"
+        android:textSize="12sp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="5dp">
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            android:id="@+id/riv_comment_detail_right_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:roundHeight="25dp"
+            app:roundWidth="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/head"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/riv_comment_detail_right_avatar"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_comment_detail_right_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginRight="10dp"
+                android:text="姓名"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/tv_comment_detail_right_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/chat_right_qp"
+                android:gravity="center"
+                android:lineSpacingExtra="6dp"
+                android:maxWidth="225dp"
+                android:minHeight="50dp"
+                android:minWidth="50dp"
+                android:text="你好xvcb xcv xxc"
+                android:textColor="@color/base_color_text_black"
+                android:textSize="16sp"
+                />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -547,27 +547,13 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
     @Override
     public void onImageAvatarClick(String uid) {
         LogUtil.e("点击用户头像回调");
-        Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-        if (uid.equals(UserManager.getInstance().getCurrentUserObjectId())) {
-            intent.putExtra("from", "me");
-        } else {
-            intent.putExtra("from", "other");
-        }
-        intent.putExtra("uid", uid);
-        startActivity(intent);
+        UserDetailActivity.start(getActivity(),uid);
     }
 
     @Override
     public void onNameClick(String uid) {
         LogUtil.e("点击用户姓名回调");
-        Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-        if (uid.equals(UserManager.getInstance().getCurrentUserObjectId())) {
-            intent.putExtra("from", "me");
-        } else {
-            intent.putExtra("from", "other");
-        }
-        intent.putExtra("uid", uid);
-        startActivity(intent);
+        UserDetailActivity.start(getActivity(),uid);
     }
 
 
@@ -718,14 +704,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
     }
 
     private void enterUserDetailActivity(String uid) {
-        Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-        intent.putExtra("uid", uid);
-        if (!uid.equals(UserManager.getInstance().getCurrentUserObjectId())) {
-            intent.putExtra("from", "other");
-        } else {
-            intent.putExtra("from", "me");
-        }
-        startActivity(intent);
+        UserDetailActivity.start(getActivity(),uid);
     }
 
 

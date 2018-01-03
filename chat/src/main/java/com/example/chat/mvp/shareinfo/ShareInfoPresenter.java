@@ -1,16 +1,19 @@
 package com.example.chat.mvp.shareinfo;
 
 import com.example.chat.bean.PublicPostBean;
+import com.example.chat.events.CommentEvent;
 import com.example.chat.manager.MsgManager;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * 项目名称:    NewFastFrame
@@ -51,5 +54,22 @@ public class ShareInfoPresenter extends RxBasePresenter<IView<List<PublicPostBea
             }
         });
 
+    }
+
+    public void addLike(final String objectId) {
+        PublicPostBean publicPostBean=new PublicPostBean();
+        publicPostBean.increment("likeCount");
+        publicPostBean.update(objectId,new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    RxBusManager
+                            .getInstance().post(new CommentEvent(objectId,CommentEvent.TYPE_LIKE));
+                    ToastUtils.showShortToast("点赞成功");
+                }else {
+                    ToastUtils.showShortToast("点赞失败");
+                }
+            }
+        });
     }
 }

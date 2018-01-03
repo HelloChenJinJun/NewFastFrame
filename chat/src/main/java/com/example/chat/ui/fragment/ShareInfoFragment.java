@@ -12,10 +12,12 @@ import com.example.chat.bean.PublicPostBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.dagger.shareinfo.DaggerShareInfoComponent;
 import com.example.chat.dagger.shareinfo.ShareInfoModule;
+import com.example.chat.events.CommentEvent;
 import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoPresenter;
 import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.EditShareMessageActivity;
+import com.example.chat.ui.UserDetailActivity;
 import com.example.chat.view.fab.FloatingActionButton;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
@@ -26,7 +28,6 @@ import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +90,6 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             @Override
             public void onItemClick(int position, View view) {
                 CommentListActivity.start(getActivity(),shareInfoAdapter.getData(position));
-
             }
 
 
@@ -98,10 +98,13 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 if (id == R.id.tv_item_fragment_share_info_share) {
 
                 } else if (id == R.id.tv_item_fragment_share_info_comment) {
+                    CommentListActivity.start(getActivity(),shareInfoAdapter.getData(position));
 
                 } else if (id == R.id.tv_item_fragment_share_info_like) {
-
+                    presenter.addLike(shareInfoAdapter.getData(position).getObjectId());
                 }else if (id==R.id.riv_item_fragment_share_info_avatar){
+                    UserDetailActivity.start(getActivity(),shareInfoAdapter.getData(position)
+                    .getAuthor().getObjectId());
 
                 } else if (id == R.id.iv_item_fragment_share_info_more) {
 
@@ -131,11 +134,33 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 shareInfoAdapter.addData(0,publicPostBean);
             }
         });
+        presenter.registerEvent(CommentEvent.class, new Consumer<CommentEvent>() {
+            @Override
+            public void accept(CommentEvent likeEvent) throws Exception {
+                if (likeEvent.getType() == CommentEvent.TYPE_LIKE) {
+                    notifyLikeAdd(likeEvent.getId());
+                }else {
+                    notifyCommentAdd(likeEvent.getId());
+                }
+            }
+        });
         ((HomeFragment) getParentFragment()).initActionBar("动态");
 //        ToolBarOption toolBarOption=new ToolBarOption();
 //        toolBarOption.setTitle("动态");
 //        toolBarOption.setNeedNavigation(false);
 //        setToolBar(toolBarOption);
+    }
+
+    private void notifyCommentAdd(String id) {
+        PublicPostBean bean=shareInfoAdapter.getPublicPostDataById(id);
+        bean.setCommentCount(bean.getCommentCount()+1);
+        shareInfoAdapter.addData(bean);
+    }
+
+    private void notifyLikeAdd(String id) {
+        PublicPostBean bean=shareInfoAdapter.getPublicPostDataById(id);
+        bean.setLikeCount(bean.getLikeCount()+1);
+        shareInfoAdapter.addData(bean);
     }
 
     @Override

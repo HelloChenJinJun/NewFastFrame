@@ -14,41 +14,24 @@ import cn.bmob.v3.datatype.BmobRelation;
  */
 
 public class PublicPostBean extends BmobObject implements MultipleItem {
-    private int msgType;
+    private Integer msgType;
     private String content;
     private User author;
-//    User
+    //    User
     private BmobRelation likes;
-//    User
+    //    User
     private BmobRelation share;
-    private int likeCount;
-    private int commentCount;
-    private int shareCount;
+    private Integer likeCount;
+    private Integer commentCount;
+    private Integer shareCount;
 
 
-    public int getShareCount() {
-        return shareCount;
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof PublicPostBean && ((PublicPostBean) obj).getObjectId().equals(getObjectId());
     }
 
-    public void setShareCount(int shareCount) {
-        this.shareCount = shareCount;
-    }
 
-    public int getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
-    }
-
-    public int getCommentCount() {
-        return commentCount;
-    }
-
-    public void setCommentCount(int commentCount) {
-        this.commentCount = commentCount;
-    }
 
     public BmobRelation getShare() {
         return share;
@@ -67,13 +50,45 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
     }
 
 
-
-    public int getMsgType() {
+    public Integer getMsgType() {
         return msgType;
     }
 
-    public void setMsgType(int msgType) {
+    public void setMsgType(Integer msgType) {
         this.msgType = msgType;
+    }
+
+    public Integer getLikeCount() {
+        if (likeCount == null) {
+            return 0;
+        }
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public Integer getCommentCount() {
+        if (commentCount == null) {
+            return 0;
+        }
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Integer getShareCount() {
+        if (shareCount == null) {
+            return 0;
+        }
+        return shareCount;
+    }
+
+    public void setShareCount(Integer shareCount) {
+        this.shareCount = shareCount;
     }
 
     public String getContent() {
@@ -83,7 +98,6 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
     public void setContent(String content) {
         this.content = content;
     }
-
 
 
     public BmobRelation getLikes() {
