@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/chat_bg"
+    android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:id="@+id/refresh_activity_comment_list_refresh">
         <com.example.commonlibrary.baseadapter.SuperRecyclerView
             android:layout_width="match_parent"
@@ -23,4 +26,4 @@
 
 
 
-</RelativeLayout>
+</LinearLayout>

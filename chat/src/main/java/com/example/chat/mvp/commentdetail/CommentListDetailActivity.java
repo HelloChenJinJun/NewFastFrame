@@ -13,6 +13,7 @@ import com.example.chat.bean.post.CommentListDetailBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.dagger.commentdetail.CommentDetailModule;
 import com.example.chat.dagger.commentdetail.DaggerCommentDetailComponent;
+import com.example.chat.ui.SlideBaseActivity;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
@@ -35,7 +36,7 @@ import javax.inject.Inject;
  * QQ:         1981367757
  */
 
-public class CommentListDetailActivity extends BaseActivity<List<CommentListDetailBean>, CommentDetailPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
+public class CommentListDetailActivity extends SlideBaseActivity<List<CommentListDetailBean>, CommentDetailPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
 
 
     @Inject
@@ -65,9 +66,11 @@ public class CommentListDetailActivity extends BaseActivity<List<CommentListDeta
             for (int i = 0; i < size; i++) {
                 CommentListDetailBean item=listDetailBeans.get(i);
                 if (i % 2 == 0) {
+                    item.setMsgType(CommentListDetailBean.TYPE_RIGHT);
                     item.setAvatar(data.getUser().getAvatar());
                     item.setName(data.getUser().getNick());
                 }else {
+                    item.setMsgType(CommentListDetailBean.TYPE_LEFT);
                     item.setAvatar(commentDetailBean.getReplyAvatar());
                     item.setName(commentDetailBean.getReplyName());
                 }

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/base_color_text_grey"
+    android:background="@color/grey_100"
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="15dp">
@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="已经到底啦，"
-        android:textColor="@color/base_color_text_black"></TextView>
+        android:textColor="@color/base_color_text_black"/>
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/to_list_top_textview"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="返回顶部"
-        android:textColor="@color/base_color_text_blue"></TextView>
+        android:textColor="@color/base_color_text_blue"/>
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
@@ -31,5 +31,5 @@
         android:gravity="center"
         android:text="重新挑选"
 
-        android:textColor="@color/base_color_text_blue"></TextView>
+        android:textColor="@color/base_color_text_blue"/>
 </LinearLayout>

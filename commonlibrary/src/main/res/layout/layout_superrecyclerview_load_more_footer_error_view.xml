@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/base_color_text_grey"
+    android:background="@color/grey_100"
     android:gravity="center"
     android:padding="15dp"
     android:text="加载失败,点击重新加载"

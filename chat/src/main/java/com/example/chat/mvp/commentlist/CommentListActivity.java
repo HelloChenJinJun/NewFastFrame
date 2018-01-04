@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -33,6 +34,8 @@ import com.example.chat.dagger.commentlist.DaggerCommentListComponent;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.mvp.commentdetail.CommentListDetailActivity;
 import com.example.chat.ui.BasePreViewActivity;
+import com.example.chat.ui.MainBaseActivity;
+import com.example.chat.ui.SlideBaseActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.PixelUtil;
@@ -70,7 +73,7 @@ import io.reactivex.functions.Consumer;
  * QQ:         1981367757
  */
 
-public class CommentListActivity extends BaseActivity<List<PublicCommentBean>, CommentListPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
+public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBean>, CommentListPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
 
 
     private SwipeRefreshLayout refresh;
@@ -87,11 +90,12 @@ public class CommentListActivity extends BaseActivity<List<PublicCommentBean>, C
     private Button face, keyboard, send;
     private WrappedViewPager emotionPager;
     private PublicPostBean data;
+    private WrappedLinearLayoutManager manager;
 
     @Override
     public void updateData(List<PublicCommentBean> list) {
         if (refresh.isRefreshing()) {
-            commentListAdapter.refreshData(list);
+            commentListAdapter.addData(0,list);
         } else {
             commentListAdapter.addData(list);
         }
@@ -233,11 +237,19 @@ public class CommentListActivity extends BaseActivity<List<PublicCommentBean>, C
                 .build().inject(this);
         data = (PublicPostBean) getIntent().getSerializableExtra("data");
         postId = data.getObjectId();
-        display.setLayoutManager(new WrappedLinearLayoutManager(this));
-        display.addItemDecoration(new ListViewDecoration(this));
+        display.setLayoutManager(manager=new WrappedLinearLayoutManager(this));
+//        display.addItemDecoration(new ListViewDecoration(this));
         display.setOnLoadMoreListener(this);
         display.setLoadMoreFooterView(new LoadMoreFooterView(this));
         display.addHeaderView(getHeaderView(data));
+        display.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState != RecyclerView.SCROLL_STATE_IDLE) {
+                    currentPosition=-1;
+                }
+            }
+        });
         commentListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
@@ -249,9 +261,9 @@ public class CommentListActivity extends BaseActivity<List<PublicCommentBean>, C
             public void onItemChildClick(int position, View view, int id) {
                 if (id == R.id.iv_item_activity_comment_list_comment) {
                     currentPosition = position;
-                } else if (id == R.id.tv_item_activity_comment_list_reply) {
-
-                } else if (id == R.id.riv_item_activity_comment_list_avatar) {
+                    CommonUtils.showSoftInput(CommentListActivity.this,input);
+                    manager.scrollToPositionWithOffset(currentPosition+commentListAdapter.getItemUpCount(),0);
+                }else if (id == R.id.riv_item_activity_comment_list_avatar) {
 
                 } else if (id == R.id.tv_item_activity_comment_list_look) {
                     CommentListDetailActivity.start(CommentListActivity.this, commentListAdapter
@@ -272,6 +284,12 @@ public class CommentListActivity extends BaseActivity<List<PublicCommentBean>, C
                 }else {
                     updateCommentCountAdd(commentEvent.getId());
                 }
+            }
+        });
+        presenter.registerEvent(PublicCommentBean.class, new Consumer<PublicCommentBean>() {
+            @Override
+            public void accept(PublicCommentBean publicCommentBean) throws Exception {
+                commentListAdapter.addData(0,publicCommentBean);
             }
         });
 
@@ -456,7 +474,9 @@ public class CommentListActivity extends BaseActivity<List<PublicCommentBean>, C
         if (id == R.id.tv_item_fragment_share_info_share) {
 
         } else if (id == R.id.tv_item_fragment_share_info_comment) {
+            currentPosition=-1;
             CommonUtils.showSoftInput(this,input);
+
 
         } else if (id == R.id.tv_item_fragment_share_info_like) {
             presenter.addLike(postId);

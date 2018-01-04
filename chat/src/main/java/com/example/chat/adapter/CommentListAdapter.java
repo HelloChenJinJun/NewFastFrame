@@ -39,10 +39,13 @@ public class CommentListAdapter extends BaseRecyclerAdapter<PublicCommentBean,Ba
                 .setText(R.id.tv_item_activity_comment_list_content,detailBean.getContent())
         .setOnItemChildClickListener(R.id.riv_item_activity_comment_list_avatar)
         .setOnItemChildClickListener(R.id.iv_item_activity_comment_list_comment)
+                .setImageResource(R.id.iv_item_activity_comment_list_sex, data.getUser()
+                        .isSex() ? R.drawable.ic_sex_female : R.drawable.ic_sex_male)
         .setOnItemClickListener();
         if (detailBean.getReplyContent() != null) {
             holder.setVisible(R.id.rl_item_activity_comment_list_reply_container,true)
-            .setText(R.id.tv_item_activity_comment_list_reply,detailBean.getReplyContent())
+            .setText(R.id.tv_item_activity_comment_list_reply,"回复@"+detailBean.getReplyName()+"的评论："
+            +detailBean.getReplyContent())
             .setOnItemChildClickListener(R.id.tv_item_activity_comment_list_look);
         }else {
             holder.setVisible(R.id.rl_item_activity_comment_list_reply_container,false);

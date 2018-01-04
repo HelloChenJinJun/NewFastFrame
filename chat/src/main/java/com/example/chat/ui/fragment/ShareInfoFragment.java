@@ -84,7 +84,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         display.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);
-        display.addItemDecoration(new ListViewDecoration(getContext()));
+//        display.addItemDecoration(new ListViewDecoration(getContext()));
         display.setAdapter(shareInfoAdapter);
         shareInfoAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
@@ -101,6 +101,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                     CommentListActivity.start(getActivity(),shareInfoAdapter.getData(position));
 
                 } else if (id == R.id.tv_item_fragment_share_info_like) {
+//                    todo  首次点赞图片说说，刷新时图片没刷新出来，可能是ListImageView内部的Bug
                     presenter.addLike(shareInfoAdapter.getData(position).getObjectId());
                 }else if (id==R.id.riv_item_fragment_share_info_avatar){
                     UserDetailActivity.start(getActivity(),shareInfoAdapter.getData(position)
