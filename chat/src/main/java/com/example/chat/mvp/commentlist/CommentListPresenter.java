@@ -1,5 +1,6 @@
 package com.example.chat.mvp.commentlist;
 
+import com.example.chat.base.Constant;
 import com.example.chat.bean.PublicPostBean;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicCommentBean;
@@ -55,6 +56,13 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
             @Override
             public void done(List<PublicCommentBean> list, BmobException e) {
                 if (e == null || e.getErrorCode() == 101) {
+                    if (isRefresh &&!time.equals("0000-00-00 01:00:00")) {
+                        BaseApplication
+                                .getAppComponent()
+                                .getSharedPreferences()
+                                .edit().putString(Constant.UPDATE_TIME,time)
+                                .apply();
+                    }
                     iView.updateData(list);
                     iView.hideLoading();
                 } else {

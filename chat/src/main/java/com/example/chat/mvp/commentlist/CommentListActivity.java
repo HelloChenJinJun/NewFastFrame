@@ -23,6 +23,8 @@ import android.widget.TextView;
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.CommentListAdapter;
+import com.example.chat.adapter.holder.ImageShareInfoHolder;
+import com.example.chat.base.Constant;
 import com.example.chat.bean.FaceText;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.PublicPostBean;
@@ -50,13 +52,16 @@ import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.utils.CommonUtil;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -95,6 +100,9 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
     @Override
     public void updateData(List<PublicCommentBean> list) {
         if (refresh.isRefreshing()) {
+            if (commentListAdapter.getData().size() > 10) {
+                commentListAdapter.removeEndData(commentListAdapter.getData().size()-10);
+            }
             commentListAdapter.addData(0,list);
         } else {
             commentListAdapter.addData(list);
@@ -316,7 +324,13 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
             if (commentListAdapter.getData(0) == null) {
                 return "0000-00-00 01:00:00";
             }
-            return commentListAdapter.getData(0).getCreatedAt();
+            String updateTime=BaseApplication.getAppComponent().getSharedPreferences()
+                    .getString(Constant.UPDATE_TIME,null);
+            if (updateTime==null) {
+                return commentListAdapter.getData(0).getCreatedAt();
+            }else {
+                return updateTime;
+            }
         } else {
             if (commentListAdapter.getData(commentListAdapter.getData().size() - 1) != null) {
                 return commentListAdapter.getData(commentListAdapter.getData().size() - 1).getCreatedAt();
@@ -390,33 +404,43 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
                 .setImageResource(data.getAuthor().isSex() ? R.drawable.ic_sex_male : R.drawable
                         .ic_sex_female);
         ((TextView) headerView.findViewById(R.id.tv_item_fragment_share_info_sub_text))
-                .setText(getText(data.getAuthor()));
+                .setText(getText(data));
         ((TextView) headerView.findViewById(R.id.tv_item_fragment_share_info_normal_text))
                 .setText(postDataBean.getContent());
 
         if (data.getMsgType() == PostUtil.LAYOUT_TYPE_IMAGE) {
-            ListImageView display = null;
+            SuperRecyclerView display = null;
             ViewStub viewStub = headerView.findViewById(R.id.vs_item_fragment_share_info_stub);
             viewStub.setLayoutResource(R.layout.item_fragment_share_info_image);
-            display = (ListImageView) viewStub.inflate();
-            display.setImagePadding(PixelUtil.todp(3));
-            display.bindData(postDataBean.getImageList());
-            display.setOnImageViewItemClickListener(new ListImageView.OnImageViewItemClickListener() {
+            display = (SuperRecyclerView) viewStub.inflate();
+            int size = postDataBean.getImageList().size();
+            if (size <= 4) {
+                display.setLayoutManager(new WrappedGridLayoutManager(this, 2));
+                display.addItemDecoration(new GridSpaceDecoration(2, PixelUtil.todp(5), false));
+            } else {
+                display.setLayoutManager(new WrappedGridLayoutManager(this, 3));
+                display.addItemDecoration(new GridSpaceDecoration(3, PixelUtil.todp(5), false));
+            }
+
+            final ImageShareInfoHolder.ImageShareAdapter adapter = new ImageShareInfoHolder.ImageShareAdapter();
+            display.setAdapter(adapter);
+            adapter.setOnItemClickListener(new OnSimpleItemClickListener() {
                 @Override
-                public void onImageClick(View view, int position, String url) {
-                    List<String> imageList = postDataBean.getImageList();
+                public void onItemClick(int position, View view) {
+                    List<String> imageList=postDataBean.getImageList();
                     if (imageList != null && imageList.size() > 0) {
-                        List<ImageItem> result = new ArrayList<>();
+                        List<ImageItem>  result=new ArrayList<>();
                         for (String str :
                                 imageList) {
-                            ImageItem imageItem = new ImageItem();
+                            ImageItem imageItem=new ImageItem();
                             imageItem.setPath(str);
                             result.add(imageItem);
                         }
-                        BasePreViewActivity.startBasePreview(CommentListActivity.this, result, position);
+                        BasePreViewActivity.startBasePreview(CommentListActivity.this,result,position);
                     }
                 }
             });
+            adapter.addData(postDataBean.getImageList());
 
         } else if (data.getMsgType() == PostUtil.LAYOUT_TYPE_TEXT) {
 
@@ -442,11 +466,11 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
     }
 
 
-    private String getText(User user) {
+    private String getText(PublicPostBean bean) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(TimeUtil.getRealTime(user.getCreatedAt()))
+        stringBuilder.append(TimeUtil.getRealTime(bean.getCreatedAt()))
                 .append("  来自[")
-                .append(user.getAddress())
+                .append(bean.getAuthor().getAddress())
                 .append("]");
         return stringBuilder.toString();
     }

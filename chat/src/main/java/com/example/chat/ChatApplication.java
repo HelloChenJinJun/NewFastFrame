@@ -21,6 +21,7 @@ import com.example.chat.ui.SelectedFriendsActivity;
 import com.example.chat.ui.SettingsActivity;
 import com.example.chat.ui.WallPaperActivity;
 import com.example.chat.ui.fragment.HomeFragment;
+import com.example.chat.ui.fragment.ShareInfoFragment;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
@@ -114,6 +115,14 @@ public class ChatApplication implements IModuleConfig, IAppLife {
                 HomeFragment homeFragment = HomeFragment.newInstance();
                 RouterResult routerResult = new RouterResult();
                 routerResult.setObject(homeFragment);
+                return routerResult;
+            }
+        });
+        Router.getInstance().registerProvider("chat:public", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                RouterResult routerResult=new RouterResult();
+                routerResult.setObject(ShareInfoFragment.instance());
                 return routerResult;
             }
         });

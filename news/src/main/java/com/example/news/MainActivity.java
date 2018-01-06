@@ -104,6 +104,10 @@ public class MainActivity extends BaseActivity {
                     } else {
                         ToastUtils.showShortToast("未登录状态，请先登录再进去");
                     }
+                } else if (checkedId == R.id.rb_activity_main_bottom_public) {
+                    searchItem.setVisible(false);
+                    expendItem.setVisible(false);
+                    addOrReplaceFragment(fragmentList.get(4));
                 }
             }
         });
@@ -119,6 +123,8 @@ public class MainActivity extends BaseActivity {
         Fragment fragment = (Fragment) Router.getInstance().deal(new RouterRequest.Builder()
                 .provideName("chat").actionName("main").build()).getObject();
         fragmentList.add(fragment);
+        fragmentList.add((Fragment) Router.getInstance().deal(new RouterRequest.Builder()
+        .provideName("chat").actionName("public").build()).getObject());
         addOrReplaceFragment(fragmentList.get(0), R.id.fl_activity_main_container);
     }
 

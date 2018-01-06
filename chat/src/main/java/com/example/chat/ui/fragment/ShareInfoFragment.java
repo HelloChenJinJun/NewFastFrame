@@ -7,6 +7,7 @@ import android.view.View;
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.ShareInfoAdapter;
+import com.example.chat.base.Constant;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.PublicPostBean;
 import com.example.chat.bean.post.PostDataBean;
@@ -166,8 +167,34 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
     @Override
     protected void updateView() {
-        presenter.getAllPostData(true, "0000-00-00 01:00:00");
+        presenter.getAllPostData(true, getRefreshTime(true));
     }
+
+
+
+    private String getRefreshTime(boolean isRefresh) {
+        if (isRefresh) {
+            if (shareInfoAdapter.getData(0) == null) {
+                return "0000-00-00 01:00:00";
+            }
+//todo        解决更新时间问题
+            String updateTime=BaseApplication.getAppComponent().getSharedPreferences()
+                    .getString(Constant.UPDATE_TIME_SHARE,null);
+            if (updateTime==null) {
+                return shareInfoAdapter.getData(0).getCreatedAt();
+            }else {
+                return updateTime;
+            }
+        } else {
+            if (shareInfoAdapter.getData(shareInfoAdapter.getData().size() - 1) != null) {
+                return shareInfoAdapter.getData(shareInfoAdapter.getData().size() - 1).getCreatedAt();
+            } else {
+                return "0000-00-00 01:00:00";
+            }
+        }
+    }
+
+
 
     @Override
     public void updateData(List<PublicPostBean> publicPostBeans) {
@@ -208,19 +235,18 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     @Override
     public void onRefresh() {
         if (shareInfoAdapter.getData().size() > 0) {
-            presenter.getAllPostData(true, shareInfoAdapter.getData(0)
-                    .getCreatedAt());
+            presenter.getAllPostData(true,getRefreshTime(true));
         } else {
-            presenter.getAllPostData(true, "0000-00-00 01:00:00");
+            presenter.getAllPostData(true, getRefreshTime(true));
         }
     }
 
     @Override
     public void loadMore() {
         if (shareInfoAdapter.getData().size() > 0) {
-            presenter.getAllPostData(false, shareInfoAdapter.getData(shareInfoAdapter.getData().size() - 1).getCreatedAt());
+            presenter.getAllPostData(false, getRefreshTime(false));
         } else {
-            presenter.getAllPostData(false, "0000-00-00 01:00:00");
+            presenter.getAllPostData(false, getRefreshTime(false));
         }
     }
 
@@ -229,5 +255,9 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         Intent intent=new Intent(getActivity(),EditShareMessageActivity.class);
         intent.putExtra("destination","public");
         startActivity(intent);
+    }
+
+    public static ShareInfoFragment instance() {
+        return new ShareInfoFragment();
     }
 }

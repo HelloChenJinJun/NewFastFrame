@@ -67,12 +67,12 @@ public class CommentListDetailActivity extends SlideBaseActivity<List<CommentLis
                 CommentListDetailBean item=listDetailBeans.get(i);
                 if (i % 2 == 0) {
                     item.setMsgType(CommentListDetailBean.TYPE_RIGHT);
-                    item.setAvatar(data.getUser().getAvatar());
-                    item.setName(data.getUser().getNick());
-                }else {
-                    item.setMsgType(CommentListDetailBean.TYPE_LEFT);
                     item.setAvatar(commentDetailBean.getReplyAvatar());
                     item.setName(commentDetailBean.getReplyName());
+                }else {
+                    item.setMsgType(CommentListDetailBean.TYPE_LEFT);
+                    item.setAvatar(data.getUser().getAvatar());
+                    item.setName(data.getUser().getNick());
                 }
             }
         }

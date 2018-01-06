@@ -465,11 +465,16 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
 
-    private RecyclerView.LayoutManager layoutManager;
+    protected RecyclerView.LayoutManager layoutManager;
 
     public void bindManager(RecyclerView.LayoutManager layoutManager) {
         this.layoutManager = layoutManager;
 
+    }
+
+
+    public RecyclerView.LayoutManager getLayoutManager() {
+        return layoutManager;
     }
 
     public void refreshData(List<T> list) {
@@ -477,6 +482,16 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         notifyDataSetChanged();
         addData(list);
         layoutManager.scrollToPosition(0);
+    }
+
+    public void removeEndData(int size) {
+        if (data.size() >=size) {
+            int allSize=data.size();
+            for (int i = 1; i<=size; i++) {
+                data.remove(allSize-i);
+            }
+            notifyItemRangeRemoved(allSize-size,size);
+        }
     }
 
     public interface OnItemClickListener {

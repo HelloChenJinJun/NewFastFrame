@@ -105,9 +105,9 @@ public class RegisterActivity extends BaseActivity {
                                 user.setPassword(passWord.getText().toString().trim());
                                 user.setTitleWallPaper(RandomData.getRandomTitleWallPaper());
                                 user.setWallPaper(RandomData.getRandomWallPaper());
-                                user.signUp(new SaveListener<String>() {
+                                user.signUp(new SaveListener<User>() {
                                         @Override
-                                        public void done(String s, BmobException e) {
+                                        public void done(User s, BmobException e) {
                                                 dismissLoadDialog();
                                                 if (e == null) {
                                                         ToastUtils.showShortToast("注册成功");

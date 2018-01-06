@@ -1,8 +1,10 @@
 package com.example.chat.mvp.shareinfo;
 
+import com.example.chat.base.Constant;
 import com.example.chat.bean.PublicPostBean;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.manager.MsgManager;
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
@@ -35,21 +37,24 @@ public class ShareInfoPresenter extends RxBasePresenter<IView<List<PublicPostBea
                 .getInstance().getAllPostData(isRefresh, time, new FindListener<PublicPostBean>() {
             @Override
             public void done(List<PublicPostBean> list, BmobException e) {
-                if (e == null) {
+                if (e == null||e.getErrorCode()==101) {
                     iView.updateData(list);
                     iView.hideLoading();
-                }else {
-                    if (e.getErrorCode() == 101) {
-                        iView.updateData(null);
-                        iView.hideLoading();
-                    }else {
-                        iView.showError(e.toString(), new EmptyLayout.OnRetryListener() {
-                            @Override
-                            public void onRetry() {
-                                getAllPostData(isRefresh, time);
-                            }
-                        });
+                    if (isRefresh&&!time.equals("0000-00-00 01:00:00")){
+                        BaseApplication
+                                .getAppComponent()
+                                .getSharedPreferences()
+                                .edit()
+                                .putString(Constant.UPDATE_TIME_SHARE,time)
+                        .apply();
                     }
+                }else {
+                    iView.showError(e.toString(), new EmptyLayout.OnRetryListener() {
+                        @Override
+                        public void onRetry() {
+                            getAllPostData(isRefresh, time);
+                        }
+                    });
                 }
             }
         });

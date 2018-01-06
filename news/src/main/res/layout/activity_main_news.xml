@@ -36,17 +36,17 @@
             android:text="首页"
             android:textColor="@color/tab_text_color" />
 
-        <!--<RadioButton-->
-            <!--android:drawablePadding="3dp"-->
-            <!--android:id="@+id/rb_activity_main_bottom_library"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:button="@null"-->
-            <!--android:drawableTop="@drawable/ic_demo_two"-->
-            <!--android:gravity="center"-->
-            <!--android:text="图书"-->
-            <!--android:textColor="@color/tab_text_color" />-->
+        <RadioButton
+            android:drawablePadding="3dp"
+            android:id="@+id/rb_activity_main_bottom_public"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/ic_demo_two"
+            android:gravity="center"
+            android:text="闲聊"
+            android:textColor="@color/tab_text_color" />
 
         <RadioButton
             android:drawablePadding="3dp"

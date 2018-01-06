@@ -1584,7 +1584,9 @@ public class MsgManager {
     public void addLiker(final String id, final DealMessageCallBack dealMessageCallBack) {
         final SharedMessage sharedMessage = ChatDB.create().getSharedMessage(id);
         sharedMessage.getLikerList().add(UserManager.getInstance().getCurrentUserObjectId());
-        sharedMessage.update(new UpdateListener() {
+        SharedMessage addLike=new SharedMessage();
+        addLike.setLikerList(sharedMessage.getLikerList());
+        addLike.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -1658,7 +1660,9 @@ public class MsgManager {
             sharedMessage.getLikerList().remove(UserManager.getInstance().getCurrentUserObjectId());
             LogUtil.e("删除点赞消息成功");
         }
-        sharedMessage.update(new UpdateListener() {
+        SharedMessage deleteLike=new SharedMessage();
+        deleteLike.setLikerList(sharedMessage.getLikerList());
+        sharedMessage.update(id,new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -1677,17 +1681,11 @@ public class MsgManager {
 
     public void addComment(final String id, final String content, final DealCommentMsgCallBack dealCommentMsgCallBack) {
         final SharedMessage sharedMessage = ChatDB.create().getSharedMessage(id);
-        LogUtil.e("11之前的评论内容为:");
-        for (int i = 0; i < sharedMessage.getCommentMsgList().size(); i++) {
-            LogUtil.e(sharedMessage.getCommentMsgList().get(i));
-        }
-        LogUtil.e("评论的内容:" + content);
         sharedMessage.getCommentMsgList().add(content);
-        LogUtil.e("现在的评论内容为:");
-        for (int i = 0; i < sharedMessage.getCommentMsgList().size(); i++) {
-            LogUtil.e(sharedMessage.getCommentMsgList().get(i));
-        }
-        sharedMessage.update(new UpdateListener() {
+//        只更新需要的内容
+        SharedMessage update=new SharedMessage();
+        update.setCommentMsgList(sharedMessage.getCommentMsgList());
+        update.update(id, new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -1708,8 +1706,10 @@ public class MsgManager {
         final SharedMessage sharedMessage = ChatDB.create().getSharedMessage(id);
         if (sharedMessage.getCommentMsgList().size() > position) {
             final String commentMsg = sharedMessage.getCommentMsgList().remove(position);
-            LogUtil.e("11将要删除的评论消息:" + commentMsg);
-            sharedMessage.update(new UpdateListener() {
+
+            SharedMessage delete=new SharedMessage();
+            delete.setCommentMsgList(sharedMessage.getCommentMsgList());
+            delete.update(id,new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
                     if (e == null) {
@@ -2580,13 +2580,17 @@ public class MsgManager {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        LogUtil.e("现在的时间:" + currentTime);
         BmobDate bmobDate;
         if (isPullRefresh) {
             currentTime += 1000;
             LogUtil.e("加一秒后的时间" + currentTime);
             bmobDate = new BmobDate(new Date(currentTime));
-            query.addWhereGreaterThan("createdAt", bmobDate);
+            if (time.equals("0000-00-00 01:00:00")) {
+                query.addWhereGreaterThan("createdAt", bmobDate);
+            }else {
+                currentTime+=1000;
+                query.addWhereGreaterThan("updatedAt",currentTime);
+            }
         } else {
             currentTime -= 1000;
             LogUtil.e("减一秒后的时间" + currentTime);

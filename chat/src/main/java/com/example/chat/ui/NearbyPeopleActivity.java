@@ -77,8 +77,10 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<NearbyInfo>,Nea
                 mNearbyPeoplePresenter=new NearbyPeoplePresenter(this,new NearbyPeopleModel(ChatApplication
                 .getChatMainComponent().getMainRepositoryManager()));
                 BmobGeoPoint bmobGeoPoint = UserManager.getInstance().getCurrentUser().getLocation();
-                longitude = bmobGeoPoint.getLongitude();
-                latitude = bmobGeoPoint.getLatitude();
+                if (bmobGeoPoint!=null) {
+                        longitude = bmobGeoPoint.getLongitude();
+                        latitude = bmobGeoPoint.getLatitude();
+                }
                 display.setLayoutManager(new LinearLayoutManager(this));
 //                display.setHasFixedSize(true);
                 display.setItemAnimator(new DefaultItemAnimator());

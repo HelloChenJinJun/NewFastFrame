@@ -189,7 +189,13 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
         View view = views.get(id);
         if (view == null) {
             view = itemView.findViewById(id);
-            views.put(id, view);
+            if (view == null) {
+                if (itemView.getId() == id) {
+                    views.put(id, itemView);
+                }
+            }else {
+                views.put(id, view);
+            }
         }
         return view;
     }

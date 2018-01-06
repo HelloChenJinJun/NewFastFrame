@@ -160,4 +160,6 @@ public class Constant {
     public static final int REQUEST_CODE_SELECT_WALLPAPER = 102;
     public static final int REQUEST_CODE_SELECT_TITLE_WALLPAPER = 203;
     public static final String NOTIFY_CHANGE_ACTION = "notify_share_message_change";
+    public static final String UPDATE_TIME = "update_time";
+    public static final String UPDATE_TIME_SHARE = "update_time_share";
 }

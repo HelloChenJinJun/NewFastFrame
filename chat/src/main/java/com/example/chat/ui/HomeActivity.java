@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.chat.R;
+import com.example.chat.base.Constant;
 import com.example.chat.bean.SharedMessage;
 import com.example.chat.ui.fragment.HomeFragment;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.io.Serializable;
@@ -47,6 +50,44 @@ public class HomeActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu_layout, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String title = (String) item.getTitle();
+        switch (title) {
+            case "搜索":
+                Intent intent = new Intent(this, SearchActivity.class);
+                startActivity(intent);
+                break;
+            case "添加好友":
+                ToastUtils.showShortToast("点击了添加好友");
+                SearchFriendActivity.start(this);
+                break;
+            case "建群":
+                ToastUtils.showShortToast("点击了创建群");
+                Intent selectIntent = new Intent(this, SelectedFriendsActivity.class);
+                selectIntent.putExtra("from", "createGroup");
+                startActivity(selectIntent);
+                break;
+            case "背景":
+                ToastUtils.showShortToast("点击了背景");
+                Intent wallPaperIntent = new Intent(this, WallPaperActivity.class);
+                wallPaperIntent.putExtra("from", "wallpaper");
+                startActivityForResult(wallPaperIntent, Constant.REQUEST_CODE_SELECT_WALLPAPER);
+                break;
+            case "设置":
+                ToastUtils.showShortToast("点击了设置");
+                SettingsActivity.start(this, Constant.REQUEST_CODE_EDIT_USER_INFO);
+                break;
+            case "开心时刻":
+                HappyActivity.startActivity(this);
+                break;
+            default:
+                break;
+        }
         return true;
     }
 
