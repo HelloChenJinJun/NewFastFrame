@@ -2,13 +2,20 @@ package com.example.chat.mvp.ShareMessageTask;
 
 
 import com.example.chat.bean.SharedMessage;
+import com.example.chat.bean.User;
 import com.example.chat.listener.AddShareMessageCallBack;
 import com.example.chat.listener.DealCommentMsgCallBack;
 import com.example.chat.listener.DealMessageCallBack;
 import com.example.chat.listener.LoadShareMessageCallBack;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.rxbus.RxBusManager;
 
 import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * 项目名称:    TestChat
@@ -157,14 +164,40 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
                 baseModel.loadShareMessages(uid, isPullRefresh, time, new LoadShareMessageCallBack() {
                         @Override
                         public void onSuccess(List<SharedMessage> data) {
-                                iView.hideLoading();
                                 iView.updateAllShareMessages(data, isPullRefresh);
+                                iView.hideLoading();
                         }
 
                         @Override
                         public void onFailed(String errorMsg, int errorId) {
-                                iView.hideLoading();
                                 iView.showError(errorMsg + errorId,null);
+                        }
+                });
+        }
+
+        public void getUserInfo(final String uid) {
+                iView.showLoading(null);
+                BmobQuery<User> query=new BmobQuery<>();
+                query.addWhereEqualTo("objectId",uid);
+                query.findObjects(new FindListener<User>() {
+                        @Override
+                        public void done(List<User> list, BmobException e) {
+                                if (e == null) {
+                                        if (list != null && list.size() > 0) {
+                                                RxBusManager.getInstance().post(list.get(0));
+                                                loadShareMessages(uid,true,"0000-00-00 01:00:00");
+                                        }else {
+                                                iView.updateData(null);
+                                                iView.hideLoading();
+                                        }
+                                }else {
+                                        iView.showError(null, new EmptyLayout.OnRetryListener() {
+                                                @Override
+                                                public void onRetry() {
+                                                        getUserInfo(uid);
+                                                }
+                                        });
+                                }
                         }
                 });
         }

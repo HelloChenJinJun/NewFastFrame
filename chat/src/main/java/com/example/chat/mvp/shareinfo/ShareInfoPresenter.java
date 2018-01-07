@@ -40,14 +40,6 @@ public class ShareInfoPresenter extends RxBasePresenter<IView<List<PublicPostBea
                 if (e == null||e.getErrorCode()==101) {
                     iView.updateData(list);
                     iView.hideLoading();
-                    if (isRefresh&&!time.equals("0000-00-00 01:00:00")){
-                        BaseApplication
-                                .getAppComponent()
-                                .getSharedPreferences()
-                                .edit()
-                                .putString(Constant.UPDATE_TIME_SHARE,time)
-                        .apply();
-                    }
                 }else {
                     iView.showError(e.toString(), new EmptyLayout.OnRetryListener() {
                         @Override

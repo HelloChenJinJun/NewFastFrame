@@ -9,6 +9,7 @@ import com.example.chat.listener.DealMessageCallBack;
 import com.example.chat.listener.LoadShareMessageCallBack;
 import com.example.commonlibrary.mvp.model.BaseModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
+import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 
 import java.util.List;
@@ -82,7 +83,7 @@ public interface ShareMessageContacts {
         }
 
 
-        abstract class Presenter extends BasePresenter<View, Model> {
+        abstract class Presenter extends RxBasePresenter<View, Model> {
                 public Presenter(View iView, Model baseModel) {
                         super(iView, baseModel);
                 }

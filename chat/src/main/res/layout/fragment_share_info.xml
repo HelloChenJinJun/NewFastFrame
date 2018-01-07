@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/tools"
     android:background="@color/chat_bg"
-    xmlns:fab="http://schemas.android.com/apk/res-auto">
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    app:ignore="NamespaceTypo">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
@@ -18,17 +20,50 @@
 
 
 
-    <com.example.chat.view.fab.FloatingActionButton
-        android:id="@+id/fab_fragment_share_info_edit"
+    <com.example.chat.view.fab.FloatingActionsMenu
+        android:id="@+id/fam_share_info_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="20dp"
-        fab:icon="@drawable/ic_mode_edit_blue_grey_900_24dp"
-        fab:fab_colorNormal="@color/blue_semi_transparent"
-        fab:fab_colorPressed="@color/blue_semi_transparent_pressed"
-        android:layout_marginRight="20dp"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        fab:fab_addButtonColorNormal="@color/base_color_text_white"
+        fab:fab_addButtonColorPressed="@color/white_pressed"
+        fab:fab_addButtonPlusIconColor="@color/half_black"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        android:layout_alignParentRight="true">
+        <com.example.chat.view.fab.FloatingActionButton
+            android:id="@+id/fab_share_info_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/blue_semi_transparent"
+            fab:fab_colorPressed="@color/blue_semi_transparent_pressed"
+            fab:fab_icon="@drawable/ic_videocam_blue_grey_900_24dp"
+            fab:fab_title="视频"/>
+
+
+        <com.example.chat.view.fab.FloatingActionButton
+            android:id="@+id/fab_share_info_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_title="图片说说"
+            fab:fab_colorNormal="@color/pink"
+            fab:fab_colorPressed="@color/pink_pressed"
+            fab:fab_icon="@drawable/ic_photo_white_24dp"
+
+            />
+        <com.example.chat.view.fab.FloatingActionButton
+            android:id="@+id/fab_share_info_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/pink"
+            fab:fab_colorPressed="@color/pink_pressed"
+            fab:fab_icon="@drawable/ic_mode_edit_blue_grey_900_24dp"
+            fab:fab_title="说说"/>
+
+
+    </com.example.chat.view.fab.FloatingActionsMenu>
 
 
 </RelativeLayout>

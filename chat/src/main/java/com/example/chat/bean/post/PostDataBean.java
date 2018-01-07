@@ -18,6 +18,7 @@ public class PostDataBean {
     private String tag;
     private String location;
 
+
     public String getLocation() {
         return location;
     }

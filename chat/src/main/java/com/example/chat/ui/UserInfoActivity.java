@@ -91,6 +91,7 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
                         isBlack=true;
                 }else if (uid.equals(UserManager.getInstance().getCurrentUserObjectId())){
                        LogUtil.e("本地用户");
+                       user=UserManager.getInstance().getCurrentUser();
                         add.setVisibility(View.GONE);
                         black.setVisibility(View.GONE);
                         chat.setVisibility(View.GONE);

@@ -1584,7 +1584,7 @@ public class MsgManager {
     public void addLiker(final String id, final DealMessageCallBack dealMessageCallBack) {
         final SharedMessage sharedMessage = ChatDB.create().getSharedMessage(id);
         sharedMessage.getLikerList().add(UserManager.getInstance().getCurrentUserObjectId());
-        SharedMessage addLike=new SharedMessage();
+        SharedMessage addLike = new SharedMessage();
         addLike.setLikerList(sharedMessage.getLikerList());
         addLike.update(new UpdateListener() {
             @Override
@@ -1660,9 +1660,9 @@ public class MsgManager {
             sharedMessage.getLikerList().remove(UserManager.getInstance().getCurrentUserObjectId());
             LogUtil.e("删除点赞消息成功");
         }
-        SharedMessage deleteLike=new SharedMessage();
+        SharedMessage deleteLike = new SharedMessage();
         deleteLike.setLikerList(sharedMessage.getLikerList());
-        sharedMessage.update(id,new UpdateListener() {
+        sharedMessage.update(id, new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -1683,7 +1683,7 @@ public class MsgManager {
         final SharedMessage sharedMessage = ChatDB.create().getSharedMessage(id);
         sharedMessage.getCommentMsgList().add(content);
 //        只更新需要的内容
-        SharedMessage update=new SharedMessage();
+        SharedMessage update = new SharedMessage();
         update.setCommentMsgList(sharedMessage.getCommentMsgList());
         update.update(id, new UpdateListener() {
             @Override
@@ -1707,9 +1707,9 @@ public class MsgManager {
         if (sharedMessage.getCommentMsgList().size() > position) {
             final String commentMsg = sharedMessage.getCommentMsgList().remove(position);
 
-            SharedMessage delete=new SharedMessage();
+            SharedMessage delete = new SharedMessage();
             delete.setCommentMsgList(sharedMessage.getCommentMsgList());
-            delete.update(id,new UpdateListener() {
+            delete.update(id, new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
                     if (e == null) {
@@ -2479,10 +2479,9 @@ public class MsgManager {
         LogUtil.e("现在的时间:" + currentTime);
         BmobDate bmobDate;
         if (isRefresh) {
-            currentTime += 1000;
-            LogUtil.e("加一秒后的时间" + currentTime);
             bmobDate = new BmobDate(new Date(currentTime));
-            query.addWhereGreaterThan("createdAt", bmobDate);
+            query.addWhereGreaterThan("updatedAt", bmobDate);
+            query.addWhereGreaterThanOrEqualTo("createdAt", bmobDate);
         } else {
             currentTime -= 1000;
             LogUtil.e("减一秒后的时间" + currentTime);
@@ -2496,7 +2495,8 @@ public class MsgManager {
         query.findObjects(findCallback);
     }
 
-    public void sendPublicPostMessage(String content, String location, final ArrayList<ImageItem> imageList, final OnCreatePublicPostListener onCreatePublicPostListener) {
+    public void sendPublicPostMessage(String content, String location, final ArrayList<ImageItem> imageList,
+                                      String videoPath, String shotScreen, final OnCreatePublicPostListener onCreatePublicPostListener) {
         final PublicPostBean publicPostBean = new PublicPostBean();
         final PostDataBean postDataBean = new PostDataBean();
         postDataBean.setContent(content);
@@ -2549,6 +2549,11 @@ public class MsgManager {
                     onCreatePublicPostListener.onFailed(s, i);
                 }
             });
+        } else if (videoPath != null && shotScreen != null) {
+            photoUrls.add(shotScreen);
+            photoUrls.add(videoPath);
+            publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_VIDEO);
+            new BmobBatch().insertBatch()
         } else {
             publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_TEXT);
             publicPostBean.setContent(BaseApplication.getAppComponent().getGson().toJson(postDataBean));
@@ -2572,7 +2577,7 @@ public class MsgManager {
         PublicPostBean publicPostBean = new PublicPostBean();
         publicPostBean.setObjectId(postId);
         BmobQuery<PublicCommentBean> query = new BmobQuery<>();
-        query.addWhereEqualTo("post",publicPostBean);
+        query.addWhereEqualTo("post", publicPostBean);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTime = 0;
         try {
@@ -2582,14 +2587,13 @@ public class MsgManager {
         }
         BmobDate bmobDate;
         if (isPullRefresh) {
-            currentTime += 1000;
             LogUtil.e("加一秒后的时间" + currentTime);
             bmobDate = new BmobDate(new Date(currentTime));
             if (time.equals("0000-00-00 01:00:00")) {
                 query.addWhereGreaterThan("createdAt", bmobDate);
-            }else {
-                currentTime+=1000;
-                query.addWhereGreaterThan("updatedAt",currentTime);
+            } else {
+                query.addWhereGreaterThan("createdAt", bmobDate);
+                query.addWhereGreaterThan("updatedAt", bmobDate);
             }
         } else {
             currentTime -= 1000;

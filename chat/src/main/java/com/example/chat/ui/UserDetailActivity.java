@@ -58,6 +58,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import io.reactivex.functions.Consumer;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
@@ -231,22 +235,32 @@ public class UserDetailActivity extends SlideBaseActivity<List<SharedMessage>, S
                     }
                     onCommentBtnClick(view, mShareMultipleLayoutAdapter.getData(position).getObjectId(), position, isLike);
                 }
-
             }
         });
 //                设置加载更多点击事件
-
         display.setAdapter(mShareMultipleLayoutAdapter);
 //                        mShareMultipleLayoutAdapter.setOnShareMessageItemClickListener(this);
         GroupMessageService.registerListener(this);
-        display.postDelayed(new Runnable() {
+
+        presenter.registerEvent(User.class, new Consumer<User>() {
             @Override
-            public void run() {
-                refresh.setRefreshing(true);
-                onRefresh();
+            public void accept(User user) throws Exception {
+                mUser=user;
+                updateUserData();
             }
-        }, 200);
-        updateUserData();
+        });
+        if (mUser == null) {
+            presenter.getUserInfo(uid);
+        }else {
+            display.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refresh.setRefreshing(true);
+                    onRefresh();
+                }
+            }, 200);
+            updateUserData();
+        }
     }
 
 
@@ -736,6 +750,7 @@ public class UserDetailActivity extends SlideBaseActivity<List<SharedMessage>, S
             loadData(true, shareMessage.getCreatedAt());
         }
     }
+
 
 
     @Override

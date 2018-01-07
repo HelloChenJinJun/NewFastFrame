@@ -38,6 +38,7 @@ import com.example.chat.mvp.commentdetail.CommentListDetailActivity;
 import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.MainBaseActivity;
 import com.example.chat.ui.SlideBaseActivity;
+import com.example.chat.ui.UserDetailActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.PixelUtil;
@@ -246,7 +247,6 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
         data = (PublicPostBean) getIntent().getSerializableExtra("data");
         postId = data.getObjectId();
         display.setLayoutManager(manager=new WrappedLinearLayoutManager(this));
-//        display.addItemDecoration(new ListViewDecoration(this));
         display.setOnLoadMoreListener(this);
         display.setLoadMoreFooterView(new LoadMoreFooterView(this));
         display.addHeaderView(getHeaderView(data));
@@ -255,6 +255,7 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState != RecyclerView.SCROLL_STATE_IDLE) {
                     currentPosition=-1;
+                    input.setHint("");
                 }
             }
         });
@@ -269,10 +270,11 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
             public void onItemChildClick(int position, View view, int id) {
                 if (id == R.id.iv_item_activity_comment_list_comment) {
                     currentPosition = position;
+                    input.setHint("回复@"+commentListAdapter.getData(position).getUser().getNick()+":");
                     CommonUtils.showSoftInput(CommentListActivity.this,input);
                     manager.scrollToPositionWithOffset(currentPosition+commentListAdapter.getItemUpCount(),0);
                 }else if (id == R.id.riv_item_activity_comment_list_avatar) {
-
+                    UserDetailActivity.start(CommentListActivity.this,commentListAdapter.getData(position).getUser().getObjectId());
                 } else if (id == R.id.tv_item_activity_comment_list_look) {
                     CommentListDetailActivity.start(CommentListActivity.this, commentListAdapter
                             .getData(position));
@@ -321,13 +323,19 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
 
     private String getRefreshTime(boolean isRefresh) {
         if (isRefresh) {
-            if (commentListAdapter.getData(0) == null) {
+            if (commentListAdapter.getData().size()==0) {
                 return "0000-00-00 01:00:00";
             }
+//todo        解决更新时间问题
             String updateTime=BaseApplication.getAppComponent().getSharedPreferences()
                     .getString(Constant.UPDATE_TIME,null);
             if (updateTime==null) {
-                return commentListAdapter.getData(0).getCreatedAt();
+                if (commentListAdapter.getData().size() > 10) {
+                    return commentListAdapter.getData(9).getCreatedAt();
+                }else {
+                    return commentListAdapter.getData(commentListAdapter.getData().size()-1)
+                            .getCreatedAt();
+                }
             }else {
                 return updateTime;
             }
@@ -497,32 +505,39 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
         int id = v.getId();
         if (id == R.id.tv_item_fragment_share_info_share) {
 
+
         } else if (id == R.id.tv_item_fragment_share_info_comment) {
             currentPosition=-1;
+            input.setHint("");
             CommonUtils.showSoftInput(this,input);
 
 
         } else if (id == R.id.tv_item_fragment_share_info_like) {
             presenter.addLike(postId);
 
-        } else if (id == R.id.btn_comment_bottom_face) {
-            emotionPager.setVisibility(View.VISIBLE);
-            face.setVisibility(View.GONE);
-            keyboard.setVisibility(View.VISIBLE);
-        } else if (id == R.id.btn_comment_bottom_keyboard) {
-            face.setVisibility(View.VISIBLE);
-            keyboard.setVisibility(View.GONE);
-            emotionPager.setVisibility(View.GONE);
-        } else if (id == R.id.btn_comment_bottom_send) {
-            if (TextUtils.isEmpty(input.getText().toString().trim())) {
-                ToastUtils.showShortToast("输入内容不能为空");
-            } else {
-                PublicCommentBean bean = null;
-                if (currentPosition != -1) {
-                    bean = commentListAdapter.getData(currentPosition);
+        } else if (id == R.id.riv_item_fragment_share_info_avatar) {
+            UserDetailActivity.start(this,data.getAuthor().getObjectId());
+
+        } else {
+            if (id == R.id.btn_comment_bottom_face) {
+                emotionPager.setVisibility(View.VISIBLE);
+                face.setVisibility(View.GONE);
+                keyboard.setVisibility(View.VISIBLE);
+            } else if (id == R.id.btn_comment_bottom_keyboard) {
+                face.setVisibility(View.VISIBLE);
+                keyboard.setVisibility(View.GONE);
+                emotionPager.setVisibility(View.GONE);
+            } else if (id == R.id.btn_comment_bottom_send) {
+                if (TextUtils.isEmpty(input.getText().toString().trim())) {
+                    ToastUtils.showShortToast("输入内容不能为空");
+                } else {
+                    PublicCommentBean bean = null;
+                    if (currentPosition != -1) {
+                        bean = commentListAdapter.getData(currentPosition);
+                    }
+                    showLoadDialog("正在发送.....");
+                    presenter.sendCommentData(bean, postId, input.getText().toString().trim());
                 }
-                showLoadDialog("正在发送.....");
-                presenter.sendCommentData(bean, postId, input.getText().toString().trim());
             }
         }
     }

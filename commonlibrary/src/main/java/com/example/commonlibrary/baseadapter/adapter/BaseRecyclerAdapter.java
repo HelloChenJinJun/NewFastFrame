@@ -390,6 +390,10 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
 
     private void notifyLoadMoreChanged() {
+        if (data.size() == 0) {
+//            数据为空的时候不要显示脚步布局
+            return;
+        }
         if (hasMoreLoadView()) {
             int lastVisiblePosition;
             if (layoutManager instanceof LinearLayoutManager) {

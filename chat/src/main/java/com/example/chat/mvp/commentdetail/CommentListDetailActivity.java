@@ -13,7 +13,9 @@ import com.example.chat.bean.post.CommentListDetailBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.dagger.commentdetail.CommentDetailModule;
 import com.example.chat.dagger.commentdetail.DaggerCommentDetailComponent;
+import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.chat.ui.SlideBaseActivity;
+import com.example.chat.ui.UserDetailActivity;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
@@ -118,9 +120,13 @@ public class CommentListDetailActivity extends SlideBaseActivity<List<CommentLis
 
             @Override
             public void onItemChildClick(int position, View view, int id) {
-                if (id == R.id.riv_comment_detail_left_avatar
-                        || id == R.id.riv_comment_detail_right_avatar) {
-                    ToastUtils.showShortToast("点击头像");
+                String str[]=publicId.split("&");
+                if (id == R.id.riv_comment_detail_left_avatar) {
+                            UserDetailActivity.start(CommentListDetailActivity.this
+                            ,str[2]);
+                } else if (id == R.id.riv_comment_detail_right_avatar) {
+                    UserDetailActivity.start(CommentListDetailActivity.this
+                            ,str[1]);
                 }
             }
         });

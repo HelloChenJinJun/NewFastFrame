@@ -41,6 +41,7 @@ import com.example.chat.bean.PictureBean;
 import com.example.chat.bean.PublicPostBean;
 import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.WinXinBean;
+import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.chat.listener.OnCreateSharedMessageListener;
 import com.example.chat.manager.LocationManager;
@@ -50,7 +51,9 @@ import com.example.chat.manager.UserCacheManager;
 import com.example.chat.mvp.ShareMessageTask.ShareMessageContacts;
 import com.example.chat.mvp.ShareMessageTask.ShareMessageModel;
 import com.example.chat.mvp.ShareMessageTask.ShareMessagePresenter;
+import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.example.commonlibrary.baseadapter.swipeview.Closeable;
@@ -120,6 +123,8 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
     private TextView title;
     private String from;
     private RelativeLayout visibilityContainer;
+    private String type;
+    private PublicPostBean postBean;
 
 
     @Override
@@ -256,19 +261,7 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
         from = getIntent().getStringExtra("destination");
         if (from != null) {
             if (from.equals("video")) {
-                LogUtil.e("这是视频说说");
-                isVideo = true;
-                MediaRecorderConfig config = new MediaRecorderConfig.Buidler()
-                        .doH264Compress(true)
-                        .smallVideoWidth(480)
-                        .smallVideoHeight(360)
-                        .recordTimeMax(6 * 1000)
-                        .maxFrameRate(20)
-                        .minFrameRate(8)
-                        .captureThumbnailsTime(1)
-                        .recordTimeMin((int) (1.5 * 1000))
-                        .build();
-                MediaRecorderActivity.goSmallVideoRecorder(this, EditShareMessageActivity.class.getName(), config);
+                initVideo();
             } else if (from.equals("url")) {
                 display.setVisibility(View.GONE);
                 video.setVisibility(View.GONE);
@@ -298,18 +291,66 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
                 initCommonImageLoader();
                 initImageAdapter();
             } else if (from.equals("public")) {
+                type=getIntent().getStringExtra("type");
                 visibilityContainer.setVisibility(View.GONE);
                 selectedFriend.setVisibility(View.GONE);
                 title.setVisibility(View.GONE);
-                display.setVisibility(View.VISIBLE);
-                initCommonImageLoader();
-                initImageAdapter();
+                if (type!=null) {
+                    if (type.equals("image")) {
+                        display.setVisibility(View.VISIBLE);
+                        initCommonImageLoader();
+                        initImageAdapter();
+                    }else if (type.equals("video")){
+                        initVideo();
+                        display.setVisibility(View.GONE);
+                    }else if (type.equals("share")){
+//                        todo 编辑分享消息的上传
+                        postBean= (PublicPostBean) getIntent().getSerializableExtra("data");
+                        PostDataBean bean= BaseApplication
+                                .getAppComponent().getGson().fromJson(postBean.getContent(),PostDataBean.class);
+                        display.setVisibility(View.GONE);
+                        mCardView.setVisibility(View.VISIBLE);
+                        if (bean.getImageList()!=null&&bean.getImageList().size()>0) {
+                            urlAvatar.setVisibility(View.VISIBLE);
+                            Glide.with(this).load(bean.getImageList().get(0))
+                                    .into(urlAvatar);
+                        }else {
+                            urlAvatar.setVisibility(View.GONE);
+                        }
+                        urlTitle.setText(bean.getContent());
+                        mCardView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                CommentListActivity.start(EditShareMessageActivity.this,postBean);
+                            }
+                        });
+                    }else {
+                        display.setVisibility(View.GONE);
+                    }
+                }
             } else {
                 LogUtil.e("这是文本说说");
                 display.setVisibility(View.GONE);
             }
         }
         initBottomVisibilityData();
+    }
+
+    private void initVideo() {
+        LogUtil.e("这是视频说说");
+        isVideo = true;
+        MediaRecorderConfig config = new MediaRecorderConfig.Buidler()
+                .doH264Compress(true)
+                .smallVideoWidth(480)
+                .smallVideoHeight(360)
+                .recordTimeMax(6 * 1000)
+                .maxFrameRate(20)
+                .minFrameRate(8)
+                .captureThumbnailsTime(1)
+                .recordTimeMin((int) (1.5 * 1000))
+                .build();
+        MediaRecorderActivity.goSmallVideoRecorder(this, EditShareMessageActivity.class.getName(), config);
+
     }
 
     VisibilityAdapter mAdapter;
@@ -431,7 +472,7 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
                 showLoadDialog("正在发表说说..........");
 
                 if (from != null &&from.equals("public")) {
-                    MsgManager.getInstance().sendPublicPostMessage(edit.getText().toString().trim(), location.getText().toString().trim(), selectedImageList, new OnCreatePublicPostListener() {
+                    MsgManager.getInstance().sendPublicPostMessage(edit.getText().toString().trim(), location.getText().toString().trim(), selectedImageList,mPath, videoScreenshot, new OnCreatePublicPostListener() {
                         @Override
                         public void onSuccess(PublicPostBean publicPostBean) {
                             dismissLoadDialog();
