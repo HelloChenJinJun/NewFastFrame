@@ -13,11 +13,22 @@ public class PostDataBean {
     private List<String> imageList;
     private String content;
     private String voiceUrl;
-    private PostDataBean shareContent;
+//    分享的内容
+    private ShareTypeContent shareContent;
+//    分享的内容类型
     private int shareType;
-    private String tag;
+
+//    定位
     private String location;
 
+
+    public ShareTypeContent getShareContent() {
+        return shareContent;
+    }
+
+    public void setShareContent(ShareTypeContent shareContent) {
+        this.shareContent = shareContent;
+    }
 
     public String getLocation() {
         return location;
@@ -35,13 +46,6 @@ public class PostDataBean {
         this.shareType = shareType;
     }
 
-    public PostDataBean getShareContent() {
-        return shareContent;
-    }
-
-    public void setShareContent(PostDataBean shareContent) {
-        this.shareContent = shareContent;
-    }
 
     public List<String> getImageList() {
         return imageList;
@@ -67,11 +71,4 @@ public class PostDataBean {
         this.voiceUrl = voiceUrl;
     }
 
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
 }

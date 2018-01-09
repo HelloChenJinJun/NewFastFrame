@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_centerInParent="true"/>
-    <chen.testchat.view.CircleLoadView
+    <com.example.chat.view.CircleLoadView
         android:id="@+id/clv_image_display_loading"
         android:layout_width="40dp"
         android:layout_height="40dp"

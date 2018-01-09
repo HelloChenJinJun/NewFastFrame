@@ -40,8 +40,10 @@ import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.PictureBean;
 import com.example.chat.bean.PublicPostBean;
 import com.example.chat.bean.SharedMessage;
+import com.example.chat.bean.User;
 import com.example.chat.bean.WinXinBean;
 import com.example.chat.bean.post.PostDataBean;
+import com.example.chat.bean.post.ShareTypeContent;
 import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.chat.listener.OnCreateSharedMessageListener;
 import com.example.chat.manager.LocationManager;
@@ -53,6 +55,7 @@ import com.example.chat.mvp.ShareMessageTask.ShareMessageModel;
 import com.example.chat.mvp.ShareMessageTask.ShareMessagePresenter;
 import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.chat.util.LogUtil;
+import com.example.chat.util.PostUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
@@ -66,6 +69,7 @@ import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -306,8 +310,30 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
                     }else if (type.equals("share")){
 //                        todo 编辑分享消息的上传
                         postBean= (PublicPostBean) getIntent().getSerializableExtra("data");
-                        PostDataBean bean= BaseApplication
-                                .getAppComponent().getGson().fromJson(postBean.getContent(),PostDataBean.class);
+                        Gson gson=BaseApplication
+                                .getAppComponent().getGson();
+                        if (postBean.getMsgType() == PostUtil.LAYOUT_TYPE_SHARE) {
+                            PostDataBean bean=gson.fromJson(postBean.getContent(),PostDataBean.class);
+                            ShareTypeContent shareTypeContent=bean.getShareContent();
+                            PublicPostBean publicPostBean=new PublicPostBean();
+                            User author=new User();
+                            author.setAvatar(shareTypeContent.getAvatar());
+                            author.setNick(shareTypeContent.getNick());
+                            author.setObjectId(shareTypeContent.getUid());
+                            author.setSex(shareTypeContent.isSex());
+                            author.setAddress(shareTypeContent.getAddress());
+                            publicPostBean.setAuthor(author);
+                            publicPostBean.setContent(gson.toJson(shareTypeContent.getPostDataBean()));
+                            publicPostBean.setMsgType(bean.getShareType());
+                            publicPostBean.setLikeCount(shareTypeContent.getLikeCount());
+                            publicPostBean.setCommentCount(shareTypeContent.getCommentCount());
+                            publicPostBean.setShareCount(shareTypeContent.getShareCount());
+                            publicPostBean.setObjectId(shareTypeContent.getPid());
+                            publicPostBean.setUpdatedAt(shareTypeContent.getCreateAt());
+                            postBean=publicPostBean;
+                            edit.setText(bean.getContent());
+                        }
+                        PostDataBean bean=gson.fromJson(postBean.getContent(),PostDataBean.class);
                         display.setVisibility(View.GONE);
                         mCardView.setVisibility(View.VISIBLE);
                         if (bean.getImageList()!=null&&bean.getImageList().size()>0) {
@@ -472,7 +498,7 @@ public class EditShareMessageActivity extends SlideBaseActivity<List<SharedMessa
                 showLoadDialog("正在发表说说..........");
 
                 if (from != null &&from.equals("public")) {
-                    MsgManager.getInstance().sendPublicPostMessage(edit.getText().toString().trim(), location.getText().toString().trim(), selectedImageList,mPath, videoScreenshot, new OnCreatePublicPostListener() {
+                    MsgManager.getInstance().sendPublicPostMessage(edit.getText().toString().trim(), location.getText().toString().trim(), selectedImageList,mPath, videoScreenshot,postBean, new OnCreatePublicPostListener() {
                         @Override
                         public void onSuccess(PublicPostBean publicPostBean) {
                             dismissLoadDialog();

@@ -9,6 +9,7 @@ import com.example.chat.adapter.holder.BaseShareInfoViewHolder;
 import com.example.chat.adapter.holder.ImageShareInfoHolder;
 import com.example.chat.adapter.holder.ShareShareInfoHolder;
 import com.example.chat.adapter.holder.TextShareInfoHolder;
+import com.example.chat.adapter.holder.VideoShareInfoHolder;
 import com.example.chat.adapter.holder.VoiceShareInfoHolder;
 import com.example.chat.bean.PublicPostBean;
 import com.example.chat.util.PostUtil;
@@ -29,6 +30,7 @@ public class ShareInfoAdapter extends BaseMultipleRecyclerAdapter<PublicPostBean
         sparseArray.put(PostUtil.LAYOUT_TYPE_SHARE, R.layout.item_fragment_share_info);
         sparseArray.put(PostUtil.LAYOUT_TYPE_TEXT, R.layout.item_fragment_share_info);
         sparseArray.put(PostUtil.LAYOUT_TYPE_VOICE,R.layout.item_fragment_share_info);
+        sparseArray.put(PostUtil.LAYOUT_TYPE_VIDEO,R.layout.item_fragment_share_info);
         return sparseArray;
     }
 
@@ -43,6 +45,8 @@ public class ShareInfoAdapter extends BaseMultipleRecyclerAdapter<PublicPostBean
             return new TextShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
         } else if (viewType == PostUtil.LAYOUT_TYPE_VOICE) {
             return new VoiceShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
+        } else if (viewType == PostUtil.LAYOUT_TYPE_VIDEO) {
+            return new VideoShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
         }
         return super.onCreateViewHolder(parent, viewType);
     }

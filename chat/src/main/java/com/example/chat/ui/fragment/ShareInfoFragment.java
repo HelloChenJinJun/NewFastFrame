@@ -1,6 +1,7 @@
 package com.example.chat.ui.fragment;
 
 import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
@@ -10,7 +11,9 @@ import com.example.chat.adapter.ShareInfoAdapter;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.PublicPostBean;
+import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
+import com.example.chat.bean.post.ShareTypeContent;
 import com.example.chat.dagger.shareinfo.DaggerShareInfoComponent;
 import com.example.chat.dagger.shareinfo.ShareInfoModule;
 import com.example.chat.events.CommentEvent;
@@ -18,7 +21,9 @@ import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoPresenter;
 import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.EditShareMessageActivity;
+import com.example.chat.ui.ImageDisplayActivity;
 import com.example.chat.ui.UserDetailActivity;
+import com.example.chat.util.PostUtil;
 import com.example.chat.view.fab.FloatingActionButton;
 import com.example.chat.view.fab.FloatingActionsMenu;
 import com.example.commonlibrary.BaseApplication;
@@ -30,6 +35,7 @@ import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +129,26 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
                 } else if (id == R.id.iv_item_fragment_share_info_more) {
 
-                } else {
+                } else if (id==R.id.iv_item_fragment_share_info_video_display){
+                    Intent videoIntent = new Intent(getContext(), ImageDisplayActivity.class);
+                    PublicPostBean publicPostBean=shareInfoAdapter.getData(position);
+                    PostDataBean item=BaseApplication.getAppComponent()
+                            .getGson().fromJson(publicPostBean.getContent(),PostDataBean.class);
+                    if (item.getImageList()!=null&&item.getImageList().size()>1) {
+                        videoIntent.putExtra("name", "photo");
+                        videoIntent.putExtra("url", item.getImageList().get(0));
+                        videoIntent.putExtra("videoUrl", item.getImageList().get(1));
+                        videoIntent.putExtra("id", id);
+                        startActivity(videoIntent, ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view, "photo").toBundle());
+                    }else if (item.getShareContent()!=null){
+//                        点击的是分享内容中的视频
+                        dealSharePostData(position);
+                    }
+                }else if (id==R.id.ll_item_fragment_share_info_share_image){
+                           dealSharePostData(position);
+                }else if (id==R.id.ll_item_fragment_share_info_share_container){
+                   dealSharePostData(position);
+                }else {
                     List<String> imageList = BaseApplication
                             .getAppComponent()
                             .getGson().fromJson(shareInfoAdapter.getData(position - shareInfoAdapter.getItemUpCount())
@@ -137,11 +162,14 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                             result.add(imageItem);
                         }
                         BasePreViewActivity.startBasePreview(getActivity(), result, id);
+                    }else {
+                        dealSharePostData(position);
                     }
-
                 }
 
             }
+
+
         });
         presenter.registerEvent(PublicPostBean.class, new Consumer<PublicPostBean>() {
             @Override
@@ -164,6 +192,33 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 //        toolBarOption.setTitle("动态");
 //        toolBarOption.setNeedNavigation(false);
 //        setToolBar(toolBarOption);
+    }
+
+    private void dealSharePostData(int position) {
+        Gson gson=BaseApplication.getAppComponent()
+                .getGson();
+        PostDataBean bean=gson.fromJson(shareInfoAdapter.getData(position).getContent(),PostDataBean.class);
+//                            分享文章的ID
+        PublicPostBean publicPostBean=new PublicPostBean();
+        ShareTypeContent shareTypeContent=bean.getShareContent();
+//        while (shareTypeContent.getPostDataBean() == PostUtil.LAYOUT_TYPE_SHARE) {
+//            shareTypeContent=shareTypeContent.getPostDataBean().getShareContent();
+//        }
+        User author=new User();
+        author.setAvatar(shareTypeContent.getAvatar());
+        author.setNick(shareTypeContent.getNick());
+        author.setObjectId(shareTypeContent.getUid());
+        author.setSex(shareTypeContent.isSex());
+        author.setAddress(shareTypeContent.getAddress());
+        publicPostBean.setAuthor(author);
+        publicPostBean.setContent(gson.toJson(shareTypeContent.getPostDataBean()));
+        publicPostBean.setMsgType(bean.getShareType());
+        publicPostBean.setLikeCount(shareTypeContent.getLikeCount());
+        publicPostBean.setCommentCount(shareTypeContent.getCommentCount());
+        publicPostBean.setShareCount(shareTypeContent.getShareCount());
+        publicPostBean.setObjectId(shareTypeContent.getPid());
+        publicPostBean.setUpdatedAt(shareTypeContent.getCreateAt());
+        CommentListActivity.start(getActivity(),publicPostBean);
     }
 
     private void notifyCommentAdd(String id) {

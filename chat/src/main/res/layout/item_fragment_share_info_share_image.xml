@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grey_100"
+    android:padding="10dp"
+    android:id="@+id/ll_item_fragment_share_info_share_image"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:maxLines="5"
+        android:ellipsize="end"
+        android:id="@+id/tv_item_fragment_share_info_share_image_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        />
+    <com.example.commonlibrary.baseadapter.SuperRecyclerView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/srcv_item_fragment_share_info_share_image_display"/>
+
+
+
+
+
+</LinearLayout>

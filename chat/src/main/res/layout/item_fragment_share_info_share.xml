@@ -2,19 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/grey_500"
+    android:background="@color/grey_100"
+    android:id="@+id/ll_item_fragment_share_info_share_container"
+    android:padding="10dp"
     android:orientation="vertical">
+
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxLines="5"
-        android:textColor="@color/black"
+        android:layout_marginBottom="10dp"
         android:textSize="16sp"
-        android:ellipsize="end"
-        android:id="@+id/tv_item_fragment_share_info_share_normal_text"/>
-    <ViewStub
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/vs_item_fragment_share_info_share_stub"/>
+        android:id="@+id/tv_item_fragment_share_info_share_content"/>
+
+    <include layout="@layout/item_fragment_share_info_image"/>
+    <include layout="@layout/item_fragment_share_info_video" />
+
 
 </LinearLayout>

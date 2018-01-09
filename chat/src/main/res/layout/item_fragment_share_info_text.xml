@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:text="分享的内容"
     android:textSize="16sp"
-    android:textColor="@color/black"
+    android:id="@+id/tv_item_fragment_share_info_text"
+    android:background="@color/grey_100"
     android:maxLines="5"
     android:ellipsize="end"/>

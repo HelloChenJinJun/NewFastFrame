@@ -18,6 +18,7 @@ import com.example.chat.bean.WinXinBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.ReplyCommentListBean;
+import com.example.chat.bean.post.ShareTypeContent;
 import com.example.chat.db.ChatDB;
 import com.example.chat.listener.AddFriendCallBackListener;
 import com.example.chat.listener.AddShareMessageCallBack;
@@ -37,6 +38,7 @@ import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
 import com.example.chat.util.PostUtil;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -2496,12 +2498,60 @@ public class MsgManager {
     }
 
     public void sendPublicPostMessage(String content, String location, final ArrayList<ImageItem> imageList,
-                                      String videoPath, String shotScreen, final OnCreatePublicPostListener onCreatePublicPostListener) {
+                                      String videoPath, String shotScreen, final PublicPostBean postBean, final OnCreatePublicPostListener onCreatePublicPostListener) {
         final PublicPostBean publicPostBean = new PublicPostBean();
         final PostDataBean postDataBean = new PostDataBean();
         postDataBean.setContent(content);
         postDataBean.setLocation(location);
         publicPostBean.setAuthor(UserManager.getInstance().getCurrentUser());
+        final Gson gson = BaseApplication
+                .getAppComponent().getGson();
+        if (postBean != null) {
+            ShareTypeContent shareTypeContent=new ShareTypeContent();
+            User user=postBean.getAuthor();
+            shareTypeContent.setAvatar(user.getAvatar());
+            shareTypeContent.setNick(user.getNick());
+            shareTypeContent.setUid(user.getObjectId());
+            shareTypeContent.setSex(user.isSex());
+            shareTypeContent.setAddress(user.getAddress());
+            shareTypeContent.setPid(postBean.getObjectId());
+            shareTypeContent.setLikeCount(postBean.getLikeCount());
+            shareTypeContent.setCommentCount(postBean.getCommentCount());
+            shareTypeContent.setShareCount(postBean.getShareCount());
+            shareTypeContent.setCreateAt(postBean.getCreatedAt());
+            shareTypeContent.setPostDataBean(gson.fromJson(postBean.getContent(), PostDataBean.class));
+            postDataBean.setShareContent(shareTypeContent);
+            postDataBean.setShareType(postBean.getMsgType());
+            publicPostBean.setContent(gson.toJson(postDataBean));
+            publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_SHARE);
+            publicPostBean.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null) {
+                        PublicPostBean temp=new PublicPostBean();
+                        temp.increment("shareCount");
+                        temp.update(postBean.getObjectId(), new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e != null) {
+                                    CommonLogger.e("更新转发个数失败");
+                                }else {
+                                    CommonLogger.e("更新转发个数成功");
+                                    PostDataBean item=gson.fromJson(publicPostBean.getContent(),PostDataBean.class);
+                                    int origin=item.getShareContent().getShareCount();
+                                            item.getShareContent().setShareCount(origin+1);
+                                            publicPostBean.setContent(gson.toJson(item));
+                                }
+                                onCreatePublicPostListener.onSuccess(publicPostBean);
+                            }
+                        });
+                    } else {
+                        onCreatePublicPostListener.onFailed(e.getMessage(), e.getErrorCode());
+                    }
+                }
+            });
+            return;
+        }
         final List<String> photoUrls = new ArrayList<>();
         if (imageList != null && imageList.size() > 0) {
             publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_IMAGE);
@@ -2553,7 +2603,43 @@ public class MsgManager {
             photoUrls.add(shotScreen);
             photoUrls.add(videoPath);
             publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_VIDEO);
-            new BmobBatch().insertBatch()
+            BmobFile.uploadBatch(photoUrls.toArray(new String[]{}), new UploadBatchListener() {
+                @Override
+                public void onSuccess(List<BmobFile> list, List<String> list1) {
+                    if (photoUrls.size() == list1.size()) {
+                        LogUtil.e("11全部上传图片成功");
+                        postDataBean.setImageList(list1);
+                        publicPostBean.setContent(BaseApplication.getAppComponent().getGson().toJson(postDataBean));
+                        publicPostBean.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e == null) {
+                                    onCreatePublicPostListener.onSuccess(publicPostBean);
+                                } else {
+                                    onCreatePublicPostListener.onFailed(e.getMessage(), e.getErrorCode());
+                                }
+                            }
+                        });
+                    } else {
+                        LogUtil.e("目前得到的URL集合为:");
+                        for (String url :
+                                list1) {
+                            LogUtil.e(url);
+                        }
+                    }
+                }
+
+                @Override
+                public void onProgress(int i, int i1, int i2, int i3) {
+
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                    LogUtil.e("上传视频失败" + s + i);
+                    onCreatePublicPostListener.onFailed(s, i);
+                }
+            });
         } else {
             publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_TEXT);
             publicPostBean.setContent(BaseApplication.getAppComponent().getGson().toJson(postDataBean));

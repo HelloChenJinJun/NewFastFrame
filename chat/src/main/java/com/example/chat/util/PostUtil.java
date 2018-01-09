@@ -12,5 +12,5 @@ public class PostUtil {
     public static final int LAYOUT_TYPE_SHARE = 11;
     public static final int LAYOUT_TYPE_TEXT = 12;
     public static final int LAYOUT_TYPE_VOICE = 13;
-    public static final Integer LAYOUT_TYPE_VIDEO = 14;
+    public static final int LAYOUT_TYPE_VIDEO = 14;
 }
