@@ -26,6 +26,11 @@ public class OtherNewsTypeBean implements Parcelable {
     private boolean hasSelected;
 
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj!=null&&obj instanceof OtherNewsTypeBean
+                && ((OtherNewsTypeBean) obj).getTypeId().equals(getTypeId());
+    }
 
     public String getName() {
         return name;

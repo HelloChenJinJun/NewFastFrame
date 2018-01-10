@@ -195,6 +195,9 @@ public class NewsUtil {
     public static final String COURSE_QUERY_URL = "http://jwgl.cug.edu.cn/jwglxt/kbcx/xskbcx_cxXsKb.html?gnmkdm=N2151";
     public static final String COURSE_TEMP_JS_ID = "course_temp_js_id";
     public static final String LIBRARY_BORROW_VERIFY_URL = "http://202.114.202.207/reader/captcha.php";
+    public static final int REQUEST_CODE_ADJUST = 11;
+    public static final String HEADER_AGENT = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11";
+    public static final String CACHE_CONTROL = "Cache-Control: public, max-age=3600";
 
 
     public static String getRealNewsUrl(String url, int totalPage, int currentNum) {

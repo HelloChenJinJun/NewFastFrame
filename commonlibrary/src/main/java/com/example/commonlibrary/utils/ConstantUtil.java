@@ -27,4 +27,5 @@ public class ConstantUtil {
     public static final String FIRST_STATUS = "first_status";
     public static final String FROM_LOGIN = "from_login";
     public static final String FROM_MAIN="from_main";
+    public static final String POSITION = "position";
 }

@@ -15,6 +15,9 @@ import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.news.adapter.PopWindowAdapter;
 import com.example.news.event.TypeNewsEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 项目名称:    NewFastFrame
  * 创建人:        陈锦军
@@ -25,6 +28,7 @@ import com.example.news.event.TypeNewsEvent;
 public class AdjustNewsTypeActivity extends BaseActivity{
     private SuperRecyclerView up,down;
     private PopWindowAdapter upAdapter,downAdapter;
+    private List<OtherNewsTypeBean> list;
     @Override
     public void updateData(Object o) {
 
@@ -62,6 +66,8 @@ public class AdjustNewsTypeActivity extends BaseActivity{
         upAdapter.addData(NewsApplication.getNewsComponent().getRepositoryManager()
         .getDaoSession().getOtherNewsTypeBeanDao().queryBuilder().where(OtherNewsTypeBeanDao.Properties
                 .HasSelected.eq(Boolean.TRUE)).build().list());
+        list=new ArrayList<>();
+        list.addAll(upAdapter.getData());
         downAdapter.addData(NewsApplication.getNewsComponent().getRepositoryManager()
                 .getDaoSession().getOtherNewsTypeBeanDao().queryBuilder().where(OtherNewsTypeBeanDao.Properties
                         .HasSelected.eq(Boolean.FALSE)).build().list());
@@ -73,9 +79,6 @@ public class AdjustNewsTypeActivity extends BaseActivity{
                 NewsApplication.getNewsComponent().getRepositoryManager().getDaoSession()
                         .getOtherNewsTypeBeanDao().update(bean);
                 upAdapter.addData(bean);
-                TypeNewsEvent typeNewsEvent=new TypeNewsEvent(TypeNewsEvent.ADD);
-                typeNewsEvent.setTypeId(bean.getTypeId());
-                RxBusManager.getInstance().post(typeNewsEvent);
             }
         });
         upAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
@@ -86,9 +89,7 @@ public class AdjustNewsTypeActivity extends BaseActivity{
                 NewsApplication.getNewsComponent().getRepositoryManager().getDaoSession()
                         .getOtherNewsTypeBeanDao().update(bean);
                 downAdapter.addData(bean);
-                TypeNewsEvent typeNewsEvent=new TypeNewsEvent(TypeNewsEvent.DELETE);
-                typeNewsEvent.setTypeId(bean.getTypeId());
-                RxBusManager.getInstance().post(typeNewsEvent);
+
             }
         });
         ToolBarOption toolBarOption=new ToolBarOption();
@@ -100,5 +101,17 @@ public class AdjustNewsTypeActivity extends BaseActivity{
     public static void start(Activity activity) {
         Intent intent=new Intent(activity,AdjustNewsTypeActivity.class);
         activity.startActivity(intent);
+    }
+
+
+    @Override
+    public void finish() {
+        List<OtherNewsTypeBean> newBean=upAdapter.getData();
+        if (!newBean.equals(list)) {
+                RxBusManager.getInstance()
+                        .post(new TypeNewsEvent(new ArrayList<>(upAdapter.getData())));
+        }
+        super.finish();
+
     }
 }

@@ -9,10 +9,12 @@ import android.os.Environment;
 import com.example.chat.base.Constant;
 import com.example.chat.base.RandomData;
 import com.example.chat.bean.CustomInstallation;
+import com.example.chat.bean.ImageItem;
 import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.dagger.ChatMainModule;
 import com.example.chat.dagger.DaggerChatMainComponent;
 import com.example.chat.manager.LocationManager;
+import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.HappyActivity;
 import com.example.chat.ui.LoginActivity;
 import com.example.chat.ui.SearchActivity;
@@ -38,6 +40,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -179,6 +182,26 @@ public class ChatApplication implements IModuleConfig, IAppLife {
                         break;
                     default:
                         break;
+                }
+                return null;
+            }
+        });
+        Router.getInstance().registerProvider("chat:preview", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                Map<String,Object> map=routerRequest.getParamMap();
+                List<String>  imageList= (List<String>) routerRequest.getObject();
+                if (imageList != null&&imageList.size()>0) {
+                    List<ImageItem>  list=new ArrayList<>();
+                    for (String item:
+                            imageList
+                         ) {
+                        ImageItem imageItem=new ImageItem();
+                        imageItem.setPath(item);
+                        list.add(imageItem);
+                    }
+                    BasePreViewActivity.startBasePreview(((Activity) routerRequest.getContext()),list
+                    , (Integer) map.get(ConstantUtil.POSITION));
                 }
                 return null;
             }

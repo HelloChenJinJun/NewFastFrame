@@ -14,6 +14,7 @@ import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
+import com.example.commonlibrary.router.RouterResult;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.mvp.searchlibrary.LibraryFragment;
@@ -120,11 +121,16 @@ public class MainActivity extends BaseActivity {
 //        fragmentList.add(LibraryFragment.newInstance());
         fragmentList.add(CenterFragment.newInstance());
         fragmentList.add(PersonFragment.newInstance());
-        Fragment fragment = (Fragment) Router.getInstance().deal(new RouterRequest.Builder()
-                .provideName("chat").actionName("main").build()).getObject();
-        fragmentList.add(fragment);
-        fragmentList.add((Fragment) Router.getInstance().deal(new RouterRequest.Builder()
-        .provideName("chat").actionName("public").build()).getObject());
+        RouterResult  result=Router.getInstance().deal(new RouterRequest.Builder()
+                .provideName("chat").actionName("main").build());
+        if (result!=null&&result.getObject()!=null) {
+            fragmentList.add((Fragment) result.getObject());
+        }
+        RouterResult publicResult=Router.getInstance().deal(new RouterRequest.Builder()
+                .provideName("chat").actionName("public").build());
+        if (publicResult != null && publicResult.getObject() != null) {
+            fragmentList.add((Fragment) publicResult.getObject());
+        }
         addOrReplaceFragment(fragmentList.get(0), R.id.fl_activity_main_container);
     }
 

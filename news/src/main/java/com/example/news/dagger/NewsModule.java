@@ -3,19 +3,23 @@ package com.example.news.dagger;
 
 import android.support.annotation.Nullable;
 
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.news.MainRepositoryManager;
+import com.example.news.interceptor.CacheControlInterceptor;
 import com.example.news.interceptor.NewsInterceptor;
 import com.example.news.util.NewsUtil;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -53,20 +57,14 @@ public class NewsModule {
     @Named("news")
     @PerApplication
     public OkHttpClient provideOkHttpClient(@Named("news")NewsInterceptor interceptor){
-        OkHttpClient.Builder builder=new OkHttpClient.Builder();
-        builder.connectTimeout(10, TimeUnit.SECONDS).readTimeout(10,TimeUnit.SECONDS);
-//        if (logInterceptor!=null) {
-//            builder.addInterceptor(logInterceptor);
-//        }
-        builder.addInterceptor(interceptor);
-//        if (okHttpGlobalHandler != null) {
-//            builder.addInterceptor(new Interceptor() {
-//                @Override
-//                public Response intercept(Chain chain) throws IOException {
-//                    return chain.proceed(okHttpGlobalHandler.onRequestBefore(chain, chain.request()));
-//                }
-//            });
-//        }
+        Cache cache=new Cache(new File(BaseApplication.getInstance().getCacheDir(),"news"),
+                1024*1024*100);
+        OkHttpClient.Builder builder=new OkHttpClient.Builder().cache(cache);
+        CacheControlInterceptor cacheControlInterceptor=new CacheControlInterceptor();
+        builder.connectTimeout(10, TimeUnit.SECONDS).readTimeout(10,TimeUnit.SECONDS)
+        .addInterceptor(interceptor)
+        .addInterceptor(cacheControlInterceptor)
+                .addNetworkInterceptor(cacheControlInterceptor);
         builder.followRedirects(false);
         return builder.build();
     }

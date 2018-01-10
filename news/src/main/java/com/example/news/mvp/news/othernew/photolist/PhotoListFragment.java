@@ -10,12 +10,20 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
+import com.example.commonlibrary.router.Router;
+import com.example.commonlibrary.router.RouterRequest;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.adapter.PhotoListAdapter;
 import com.example.news.bean.PictureBean;
 import com.example.news.dagger.news.othernews.photolist.DaggerPhotoListComponent;
 import com.example.news.dagger.news.othernews.photolist.PhotoListModule;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -73,7 +81,20 @@ public class PhotoListFragment extends BaseFragment<PictureBean,PhotoListPresent
         photoListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-
+                List<PictureBean.PictureEntity> imageList=photoListAdapter.getData();
+                if (imageList != null && imageList.size() > 0) {
+                    List<String> result=new ArrayList<>();
+                    for (PictureBean.PictureEntity item :
+                            imageList) {
+                        result.add(item.getUrl());
+                    }
+                    Map<String,Object> map=new HashMap<>();
+                    map.put(ConstantUtil.POSITION,position);
+                    Router.getInstance().deal(new RouterRequest.Builder()
+                            .provideName("chat").actionName("preview")
+                            .context(view.getContext())
+                            .paramMap(map).object(result).build());
+                }
             }
         });
         display.setAdapter(photoListAdapter);

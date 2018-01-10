@@ -22,6 +22,7 @@ import com.example.news.adapter.SpecialNewsAdapter;
 import com.example.news.bean.SpecialNewsBean;
 import com.example.news.dagger.news.othernews.special.DaggerSpecialNewsComponent;
 import com.example.news.dagger.news.othernews.special.SpecialNewsModule;
+import com.example.news.mvp.news.othernew.detail.OtherNewsDetailActivity;
 import com.example.news.mvp.news.othernew.photo.OtherNewPhotoSetActivity;
 import com.example.news.util.NewsUtil;
 import com.example.news.widget.flowlayout.FlowLayout;
@@ -116,6 +117,8 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
                 SpecialNewsBean bean=specialNewsAdapter.getData(position);
                 if (NewsUtil.PHOTO_SET.equals(bean.getBean().getSkipType())) {
                     OtherNewPhotoSetActivity.start(SpecialNewsActivity.this,bean.getBean().getSkipID());
+                }else {
+                    OtherNewsDetailActivity.start(view.getContext(),bean.getBean().getPostid());
                 }
             }
         });

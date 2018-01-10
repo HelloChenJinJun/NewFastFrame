@@ -180,19 +180,24 @@ public class NewsApplication implements IModuleConfig, IAppLife {
     }
 
     private void initDB(Application application) {
-        Gson gson = new Gson();
-        JsonParser jsonParser = new JsonParser();
-        JsonArray jsonElements = jsonParser.parse(FileUtil.readData(application, "NewsChannel")).getAsJsonArray();
-        List<OtherNewsTypeBean> result = new ArrayList<>();
-        for (JsonElement item :
-                jsonElements) {
-            OtherNewsTypeBean bean = gson.fromJson(item, OtherNewsTypeBean.class);
-            bean.setHasSelected(true);
-            result.add(bean);
-            CommonLogger.e("bean:" + bean.toString());
+        if (newsComponent.getRepositoryManager()
+                .getDaoSession().getOtherNewsTypeBeanDao()
+                .queryBuilder().build().list().size()==0) {
+            List<OtherNewsTypeBean> result;
+            JsonParser jsonParser = new JsonParser();
+            JsonArray jsonElements = jsonParser.parse(FileUtil.readData(application, "NewsChannel")).getAsJsonArray();
+            result = new ArrayList<>();
+            Gson gson =BaseApplication.getAppComponent().getGson();
+            for (JsonElement item :
+                    jsonElements) {
+                OtherNewsTypeBean bean = gson.fromJson(item, OtherNewsTypeBean.class);
+                bean.setHasSelected(true);
+                result.add(bean);
+                CommonLogger.e("bean:" + bean.toString());
+            }
+            newsComponent.getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
+                    .insertInTx(result);
         }
-        newsComponent.getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
-                .insertOrReplaceInTx(result);
     }
 
     @Override
