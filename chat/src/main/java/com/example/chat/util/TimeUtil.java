@@ -24,6 +24,27 @@ public class TimeUtil {
     }
 
 
+
+
+
+    public static String getTime(long time,String timeFormat){
+        SimpleDateFormat format = new SimpleDateFormat(timeFormat);
+        return format.format(new Date(time));
+    }
+
+
+
+    public static long getTime(String time,String timeFormat){
+        SimpleDateFormat format = new SimpleDateFormat(timeFormat);
+        try {
+            return format.parse(time).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+
     public static Date getDateFormalFromString(String message) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
@@ -57,7 +78,7 @@ public class TimeUtil {
             LogUtil.e("现在的客户端的时间:" + System.currentTimeMillis());
             long currentDletaTime = System.currentTimeMillis() - realTime;
             LogUtil.e("差值:" + currentDletaTime);
-            return getShareTime(currentDletaTime);
+            return getShareTime(Math.abs(currentDletaTime));
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -108,7 +129,7 @@ public class TimeUtil {
                     long deltaTime = System.currentTimeMillis() - aLong * 1000L;
                     LogUtil.e("客户端与服务器端的时间差值 :" + deltaTime);
                     BaseApplication.getAppComponent().getSharedPreferences()
-                            .edit().putLong(ChatUtil.DELTA_TIME, hashCode()).apply();
+                            .edit().putLong(ChatUtil.DELTA_TIME, deltaTime).apply();
                 } else {
                     LogUtil.e("获取服务器上的时间失败" + e.toString());
                 }

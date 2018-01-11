@@ -4,11 +4,13 @@ import com.example.chat.base.Constant;
 import com.example.chat.bean.PublicPostBean;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.manager.MsgManager;
+import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;
@@ -37,10 +39,25 @@ public class ShareInfoPresenter extends RxBasePresenter<IView<List<PublicPostBea
                 .getInstance().getAllPostData(isRefresh, time, new FindListener<PublicPostBean>() {
             @Override
             public void done(List<PublicPostBean> list, BmobException e) {
-                if (e == null||e.getErrorCode()==101) {
+                if (e == null || e.getErrorCode() == 101) {
+                    if (list != null && list.size() > 0) {
+                        long time = 0L;
+                        for (PublicPostBean bean :
+                                list) {
+                            long updateTime = TimeUtil.getTime(bean.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss");
+                            if (updateTime > time) {
+                                time = updateTime;
+                            }
+                        }
+                        String strTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
+                        BaseApplication.getAppComponent()
+                                .getSharedPreferences().edit()
+                                .putString(Constant.UPDATE_TIME_SHARE, strTime)
+                                .apply();
+                    }
                     iView.updateData(list);
                     iView.hideLoading();
-                }else {
+                } else {
                     iView.showError(e.toString(), new EmptyLayout.OnRetryListener() {
                         @Override
                         public void onRetry() {
@@ -54,16 +71,16 @@ public class ShareInfoPresenter extends RxBasePresenter<IView<List<PublicPostBea
     }
 
     public void addLike(final String objectId) {
-        PublicPostBean publicPostBean=new PublicPostBean();
+        PublicPostBean publicPostBean = new PublicPostBean();
         publicPostBean.increment("likeCount");
-        publicPostBean.update(objectId,new UpdateListener() {
+        publicPostBean.update(objectId, new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
                     RxBusManager
-                            .getInstance().post(new CommentEvent(objectId,CommentEvent.TYPE_LIKE));
+                            .getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE));
                     ToastUtils.showShortToast("点赞成功");
-                }else {
+                } else {
                     ToastUtils.showShortToast("点赞失败");
                 }
             }

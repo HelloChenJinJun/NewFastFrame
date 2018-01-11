@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.example.chat.R;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
+import com.example.chat.bean.NotifyPostResult;
 import com.example.chat.bean.RecentMsg;
 import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
@@ -28,6 +30,9 @@ import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ToastUtils;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -256,6 +261,42 @@ public class GroupMessageService extends Service {
                                                                         }
                                                                 }
                                                         }
+                                                }else {
+//                                                        监听到公共说说
+                                                        String author=JsonUtil.getString(object,"author");
+                                                        if (!TextUtils.isEmpty(author)&&!author.contains("type")){
+                                                                if (!author.equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                                                                        NotifyPostResult result=new NotifyPostResult();
+                                                                        NotifyPostResult.DataBean bean=new NotifyPostResult.DataBean();
+                                                                        bean.setAuthor(author);
+                                                                        result.setData(bean);
+                                                                        RxBusManager.getInstance().post(result);
+                                                                }
+                                                        }
+//                                                        try {
+//
+//
+//                                                                        String result=jsonObject.toString();
+//                                                                result.replace("\\","");
+//                                                                if (!TextUtils.isEmpty(JsonUtil.getString(object, "content"))) {
+//                                                                        String content=JsonUtil.getString(object,"content");
+//                                                                        NotifyPostResult.DataBean.NewDataBean bean=
+//                                                                                BaseApplication.getAppComponent()
+//                                                                                        .getGson().fromJson(content,NotifyPostResult.DataBean.NewDataBean.class);
+//
+//                                                                }
+//                                                                NotifyPostResult notifyPostResult= BaseApplication.getAppComponent()
+//                                                                         .getGson().fromJson(jsonObject.toString().replace("\\",""), NotifyPostResult.class);
+//                                                                CommonLogger.e("解析成功");
+//                                                                if (!notifyPostResult.getData().getAuthor().contains("type")) {
+////                                                                        新添加的说说
+//                                                                        RxBusManager.getInstance().post(notifyPostResult);
+//                                                                }
+//                                                        } catch (JsonSyntaxException e) {
+//                                                                e.printStackTrace();
+//                                                                CommonLogger.e("解析失败"+e.getMessage());
+//                                                                ToastUtils.showShortToast("解析失败");
+//                                                        }
                                                 }
                                         } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -268,6 +309,13 @@ public class GroupMessageService extends Service {
         }
 
         public class NotifyBinder extends Binder {
+
+
+               public void startPublicPostListener(){
+                       if (data.isConnected()) {
+                               data.subTableUpdate("PublicPostBean");
+                       }
+                }
 
 
                 public void addGroup(String groupId) {
@@ -376,6 +424,7 @@ public class GroupMessageService extends Service {
                 LogUtil.e("这里是实时检测服务的onDestroy");
 
                 if (data != null) {
+                        data.unsubTableUpdate("PublicPostBean");
                         if (uidList.size() > 0) {
                                 LogUtil.e("111111111取消实时监听");
                                 for (String uid : uidList) {

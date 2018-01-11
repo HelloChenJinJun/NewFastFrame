@@ -63,6 +63,7 @@ public class NewsModule {
         CacheControlInterceptor cacheControlInterceptor=new CacheControlInterceptor();
         builder.connectTimeout(10, TimeUnit.SECONDS).readTimeout(10,TimeUnit.SECONDS)
         .addInterceptor(interceptor)
+
         .addInterceptor(cacheControlInterceptor)
                 .addNetworkInterceptor(cacheControlInterceptor);
         builder.followRedirects(false);

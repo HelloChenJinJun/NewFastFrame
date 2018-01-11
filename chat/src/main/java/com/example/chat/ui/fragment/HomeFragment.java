@@ -194,7 +194,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         menuAdapter.addData(data);
 //                注册消息接受器
         initReceiver();
-//                bindPollService(5);
         getWeatherInfo();
         initUserInfo();
 
@@ -376,10 +375,10 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
 //                        这里判断网络的连接类型
             if (type == ConnectivityManager.TYPE_WIFI) {
                 LogUtil.e("wife类型的1");
-                bindPollService(5);
+                bindPollService(10);
             } else {
                 LogUtil.e("非wifi类型");
-                bindPollService(6);
+                bindPollService(15);
             }
             net.setVisibility(GONE);
             if (mWeatherInfoBean == null) {

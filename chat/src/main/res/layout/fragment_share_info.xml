@@ -7,6 +7,9 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     app:ignore="NamespaceTypo">
 
+
+
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,6 +20,37 @@
             android:id="@+id/srcv_fragment_share_info_display"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/ll_fragment_share_info_top_container"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@color/black_transparency_300"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            fab:roundHeight="20dp"
+            fab:roundWidth="20dp"
+            android:src="@drawable/head"
+            android:id="@+id/riv_fragment_share_info_avatar"/>
+        <TextView
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="14sp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue_500"
+            android:text=""
+            android:id="@+id/tv_fragment_share_info_nick"/>
+
+    </LinearLayout>
 
 
 

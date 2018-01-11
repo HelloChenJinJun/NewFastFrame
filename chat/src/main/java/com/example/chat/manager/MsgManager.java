@@ -37,6 +37,7 @@ import com.example.chat.util.CommonUtils;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
 import com.example.chat.util.PostUtil;
+import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.google.gson.Gson;
@@ -176,19 +177,39 @@ public class MsgManager {
      *
      * @param msg 消息
      */
-    private void saveMessageToService(ChatMessage msg) {
-        msg.save(new SaveListener<String>() {
-            @Override
-            public void done(String s, BmobException e) {
-                if (e == null) {
-                    LogUtil.e("保存消息到服务器上成功");
-                } else {
-                    LogUtil.e("保存消息到服务器上失败:" + e.toString());
+    private void saveMessageToService(final ChatMessage msg) {
+        if (msg.getTag() != null && msg.getTag().equals(Constant.TAG_ASK_READ)) {
+//            添加这一步验证主要是为了防止Bmob有时候上传多个回执消息的Bug,
+            findReadTag(msg.getConversationId(), msg.getCreateTime(), new FindListener<ChatMessage>() {
+                @Override
+                public void done(List<ChatMessage> list, BmobException e) {
+                    if (list==null||list.size()==0) {
+                        msg.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e == null) {
+                                    LogUtil.e("保存消息到服务器上成功");
+                                } else {
+                                    LogUtil.e("保存消息到服务器上失败:" + e.toString());
+                                }
+                            }
+                        });
+                    }
                 }
-            }
+            });
+        }else {
+            msg.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null) {
+                        LogUtil.e("保存消息到服务器上成功");
+                    } else {
+                        LogUtil.e("保存消息到服务器上失败:" + e.toString());
+                    }
+                }
 
-        });
-
+            });
+        }
     }
 
 
@@ -430,7 +451,7 @@ public class MsgManager {
      * @return 返回保存到数据库中是否成功的结果
      */
     public boolean saveAndUploadReceiverMessage(boolean isAskRead, BaseMessage baseMessage) {
-        RecentMsg recentMsg = new RecentMsg();
+        RecentMsg recentMsg;
         if (baseMessage instanceof ChatMessage) {
             ChatMessage message = (ChatMessage) baseMessage;
             String toId = message.getToId();
@@ -1588,7 +1609,7 @@ public class MsgManager {
         sharedMessage.getLikerList().add(UserManager.getInstance().getCurrentUserObjectId());
         SharedMessage addLike = new SharedMessage();
         addLike.setLikerList(sharedMessage.getLikerList());
-        addLike.update(new UpdateListener() {
+        addLike.update(sharedMessage.getObjectId(),new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -2482,7 +2503,18 @@ public class MsgManager {
         BmobDate bmobDate;
         if (isRefresh) {
             bmobDate = new BmobDate(new Date(currentTime));
-            query.addWhereGreaterThan("updatedAt", bmobDate);
+            String updateTime=BaseApplication
+                    .getAppComponent()
+
+                    .getSharedPreferences()
+                    .getString(Constant.UPDATE_TIME_SHARE,null);
+            if (updateTime != null&&!time.equals("0000-00-00 01:00:00")) {
+//                这里有个Bug,WhereGreaterThan 也查出相等时间的消息,所以在这里加上一秒的时间
+                long resultTime=TimeUtil.getTime(updateTime,"yyyy-MM-dd HH:mm:ss")+1000;
+                query.addWhereGreaterThan("updatedAt", new BmobDate(new Date(resultTime)));
+            }else {
+                query.addWhereGreaterThan("updatedAt", bmobDate);
+            }
             query.addWhereGreaterThanOrEqualTo("createdAt", bmobDate);
         } else {
             currentTime -= 1000;

@@ -114,14 +114,15 @@
                         android:src="@mipmap/im_snsimg"/>
                 </LinearLayout>
                 <com.example.chat.view.LikerTextView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/ltv_share_fragment_item_main_liker"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="点赞列表"
                     android:textColor="@color/base_color_bg_gray"
                 />
                 <com.example.chat.view.CommentListView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/clv_share_fragment_item_main_comment_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

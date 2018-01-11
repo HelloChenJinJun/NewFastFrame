@@ -153,27 +153,6 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
         video = (FloatingActionButton) findViewById(R.id.fab_share_message_video);
         input = (EditText) findViewById(R.id.et_share_fragment_input);
         image = (FloatingActionButton) findViewById(R.id.fab_share_message_image);
-        container.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect rect = new Rect();
-                container.getWindowVisibleDisplayFrame(rect);
-                screenHeight = container.getRootView().getHeight();
-                int keyBoardHeight = screenHeight - rect.bottom;
-                if (keyBoardHeight != mKeyBoardHeight) {
-                    if (keyBoardHeight > mKeyBoardHeight) {
-                        bottomInput.setVisibility(View.VISIBLE);
-                        mMenu.setVisibility(View.GONE);
-                        mKeyBoardHeight = keyBoardHeight;
-                        mLinearLayoutManager.scrollToPositionWithOffset(currentPosition, getListOffset());
-                    } else {
-                        mKeyBoardHeight = keyBoardHeight;
-                        mMenu.setVisibility(View.VISIBLE);
-                        bottomInput.setVisibility(View.GONE);
-                    }
-                }
-            }
-        });
         send.setOnClickListener(this);
         normal.setOnClickListener(this);
         video.setOnClickListener(this);
@@ -235,29 +214,6 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
             }
         });
     }
-
-
-    private int getListOffset() {
-        int offset = 0;
-        if (currentCommentPosition == -1) {
-            ToastUtils.showShortToast("点击评论");
-            LogUtil.e("点击评论111");
-            int firstVisiblePosition = mLinearLayoutManager.findFirstVisibleItemPosition();
-            View view = mLinearLayoutManager.getChildAt(currentPosition - firstVisiblePosition);
-            offset += view.getHeight();
-        }
-        offset += mKeyBoardHeight;
-        offset += bottomInput.getHeight();
-//                offset += ((BaseActivity) getActivity()).getStatusHeight();
-        if (replyUid != null) {
-            offset += commentItemOffset;
-        }
-        return screenHeight - offset;
-    }
-
-
-    private int mKeyBoardHeight = 0;
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -347,6 +303,10 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
     private void loadData(boolean isPullRefresh, String time) {
         presenter.loadAllShareMessages(isPullRefresh, time);
     }
+
+
+
+
 
     @Override
     public void initData() {
@@ -532,6 +492,11 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
 
     @Override
     public void hideLoading() {
+        if (bottomInput.getVisibility() == View.VISIBLE) {
+            if (getActivity()!=null) {
+                CommonUtils.hideSoftInput(getActivity(),input);
+            }
+        }
         if (refresh.isRefreshing()) {
             refresh.setRefreshing(false);
         }
@@ -613,25 +578,19 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
         LogUtil.e("位置" + shareMessagePosition);
         currentPosition = shareMessagePosition;
         currentCommentPosition = position;
-        ViewParent viewParent = view.getParent();
-        if (viewParent != null) {
-            ViewGroup parent = (ViewGroup) viewParent;
-            commentItemOffset += parent.getHeight() - view.getBottom();
-            if (parent.getParent() != null) {
-                ViewGroup rootParent = (ViewGroup) parent.getParent();
-                commentItemOffset += rootParent.getHeight() + parent.getBottom();
-            }
-        }
         this.replyUid = replyUser;
         dealBottomView(true);
     }
 
     private void dealBottomView(boolean isShow) {
         if (isShow) {
+            mMenu.collapse();
+            mMenu.hide();
             bottomInput.setVisibility(View.VISIBLE);
             CommonUtils.showSoftInput(getContext(), input);
             input.requestFocus();
         } else {
+            mMenu.show();
             bottomInput.setVisibility(View.GONE);
             CommonUtils.hideSoftInput(getContext(), input);
         }
@@ -672,6 +631,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
 
     @Override
     public void onLikerTextViewClick(String uid) {
+
         enterUserDetailActivity(uid);
     }
 
@@ -786,6 +746,8 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
     }
 
 
+
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
@@ -832,6 +794,7 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
 
     @Override
     public void onAddLiker(String id, String uid) {
+
     }
 
     @Override
@@ -856,10 +819,8 @@ public class ShareMessageFragment extends BaseFragment<List<SharedMessage>, Shar
     public void onDeleteShareMessage(String id) {
         LogUtil.e("实时检测到删除说说消息到啦");
         LogUtil.e("消息为：" + id);
-//        SharedMessage sharedMessage = mAdapter.getSharedMessageById(id);
         int position=mAdapter.getPositionById(id);
         if (position != -1) {
-//            LogUtil.e(sharedMessage);
             mAdapter.removeData(position);
             ((HomeFragment) getParentFragment()).notifySharedMessageChanged(id, false);
         } else {

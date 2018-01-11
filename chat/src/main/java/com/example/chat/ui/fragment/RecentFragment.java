@@ -23,6 +23,7 @@ import com.example.chat.bean.RecentMsg;
 import com.example.chat.bean.User;
 import com.example.chat.db.ChatDB;
 import com.example.chat.events.GroupInfoEvent;
+import com.example.chat.events.NotifyEvent;
 import com.example.chat.listener.OnNetWorkChangedListener;
 import com.example.chat.manager.MessageCacheManager;
 import com.example.chat.manager.MsgManager;
@@ -184,6 +185,22 @@ public class RecentFragment extends BaseFragment implements SwipeRefreshLayout.O
                                 }
                         }
                 });
+                RxBusManager.getInstance().registerEvent(NotifyEvent.class, new Consumer<NotifyEvent>() {
+                        @Override
+                        public void accept(NotifyEvent notifyEvent) throws Exception {
+                                if (notifyEvent.getType() == NotifyEvent.TYPE_NOTIFY_POST) {
+                                        if (binder != null) {
+                                                binder.startPublicPostListener();
+                                        }
+                                }
+                        }
+                }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+
+                        }
+                });
+
         }
 
 
@@ -205,8 +222,7 @@ public class RecentFragment extends BaseFragment implements SwipeRefreshLayout.O
                 super.onHiddenChanged(hidden);
                 if (!hidden) {
                         ((HomeFragment) getParentFragment()).initActionBar("聊天");
-                        mAdapter.clearAllData();
-                        mAdapter.addData(ChatDB.create().getAllRecentMsg());
+                        mAdapter.refreshData(ChatDB.create().getAllRecentMsg());
                 }
         }
 
@@ -318,87 +334,6 @@ public class RecentFragment extends BaseFragment implements SwipeRefreshLayout.O
                 }
         }
 
-//        private void queryUser() {
-//                List<String> userList = UserCacheManager.getInstance().getAllUserId();
-//                if (userList != null && userList.size() > 0) {
-//                        for (final String uid :
-//                                userList) {
-//                                BmobQuery<User> query = new BmobQuery<>();
-//                                String lastTime = MessageCacheManager.getInstance().getUserDataLastUpdateTime(uid);
-////                                        第一次断网查询用户数据
-//                                try {
-//                                        query.addWhereGreaterThan("updatedAt", new BmobDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(lastTime)));
-//                                        query.addWhereEqualTo("objectId", uid);
-//                                } catch (ParseException e) {
-//                                        e.printStackTrace();
-//                                        LogUtil.e("解析时间错误");
-//                                }
-//                                query.findObjects(CustomApplication.getInstance(), new FindListener<User>() {
-//                                        @Override
-//                                        public void onSuccess(List<User> list) {
-//                                                if (list != null && list.size() > 0) {
-//                                                        User user = list.get(0);
-//                                                        MessageCacheManager.getInstance().setUserDataLastUpdateTime(uid, user.getUpdatedAt());
-//                                                        ChatDB.create().addOrUpdateContacts(user);
-//                                                        UserCacheManager.getInstance().addContact(user);
-//                                                }
-//                                        }
-//
-//                                        @Override
-//                                        public void onError(int i, String s) {
-//                                                LogUtil.e("断网期间内查询用户失败" + s + i);
-//                                        }
-//                                });
-//                        }
-//                }
-//        }
-//
-//        private void queryGroupChatMessage() {
-//                List<String> groupIdList = MessageCacheManager.getInstance().getAllGroupId();
-//                if (groupIdList.size() > 0) {
-//                        for (String groupId :
-//                                groupIdList) {
-//                                BmobQuery<GroupChatMessage> query = new BmobQuery<>("g" + groupId);
-//                                final RecentMsg recentMsg = ChatDB.create().getRecentMsg(groupId);
-//                                long lastTime;
-//                                if (recentMsg == null) {
-//                                        lastTime = 0;
-//                                } else {
-//                                        lastTime = Long.valueOf(ChatDB.create().getRecentMsg(groupId).getTime());
-//                                }
-//                                query.addWhereGreaterThan("updatedAt", new BmobDate(new Date(lastTime)));
-////                                query.addWhereEqualTo("groupId", groupId);
-//                                query.findObjects(CustomApplication.getInstance(), new FindCallback() {
-//                                        @Override
-//                                        public void onSuccess(JSONArray jsonArray) {
-//                                                LogUtil.e("群消息解析");
-//                                                LogUtil.e("jsonArray：" + jsonArray.toString());
-//                                                for (int i = 0; i < jsonArray.length(); i++) {
-//                                                        try {
-//                                                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                                                                GroupChatMessage groupChatMessage = MsgManager.getInstance().createReceiveGroupChatMsg(jsonObject);
-//                                                                groupChatMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-//                                                                groupChatMessage.setReadStatus(Constant.RECEIVE_UNREAD);
-//                                                                if (MsgManager.getInstance().saveRecentAndChatGroupMessage(groupChatMessage)) {
-//                                                                        RecentMsg recentMsg1 = ChatDB.create().getRecentMsg(groupChatMessage.getGroupId());
-//                                                                        if (recentMsg1 != null) {
-//                                                                                mAdapter.addData(recentMsg1);
-//                                                                        }
-//                                                                }
-//                                                        } catch (JSONException e) {
-//                                                                e.printStackTrace();
-//                                                        }
-//                                                }
-//                                        }
-//
-//                                        @Override
-//                                        public void onFailure(int i, String s) {
-//                                                LogUtil.e("查询断网期间的群消息失败：" + s + i);
-//                                        }
-//                                });
-//                        }
-//                }
-//        }
 
 
         @Override
@@ -443,6 +378,12 @@ public class RecentFragment extends BaseFragment implements SwipeRefreshLayout.O
                         binder.addUser(id);
                 }
         }
+
+
+
+
+
+
 
         @Override
         public void updateData(Object o) {

@@ -129,33 +129,6 @@ public class UserDetailActivity extends SlideBaseActivity<List<SharedMessage>, S
         input = (EditText) findViewById(R.id.et_user_detail_input);
         send = (ImageView) findViewById(R.id.iv_user_detail_send);
         rootContainer = (RelativeLayout) findViewById(R.id.rl_activity_user_detail_container);
-        rootContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect rect = new Rect();
-                rootContainer.getWindowVisibleDisplayFrame(rect);
-                screenHeight = rootContainer.getRootView().getHeight();
-                int keyBoardHeight = screenHeight - rect.bottom;
-//                                int status = getStatusHeight();
-                if (keyBoardHeight != mKeyBoardHeight) {
-                    if (keyBoardHeight > mKeyBoardHeight) {
-                        bottomInput.setVisibility(View.VISIBLE);
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bottomInput.getLayoutParams();
-                        int realHeight = screenHeight - bottomInput.getHeight() - keyBoardHeight;
-                        layoutParams.setMargins(0, realHeight, 0, 0);
-                        bottomInput.setLayoutParams(layoutParams);
-                        mKeyBoardHeight = keyBoardHeight;
-                        floatingActionButton.setVisibility(View.GONE);
-                        mLinearLayoutManager.scrollToPositionWithOffset(currentPosition, getListOffset());
-                    } else {
-                        floatingActionButton.setVisibility(View.VISIBLE);
-                        mKeyBoardHeight = keyBoardHeight;
-                        bottomInput.setVisibility(View.GONE);
-                    }
-                }
-            }
-        });
-//                appBarLayout.addOnOffsetChangedListener(this);
         send.setOnClickListener(this);
         refresh.setOnRefreshListener(this);
         floatingActionButton.setOnClickListener(this);
@@ -447,10 +420,12 @@ public class UserDetailActivity extends SlideBaseActivity<List<SharedMessage>, S
 
     private void dealBottomView(boolean isShow) {
         if (isShow) {
+            floatingActionButton.setVisibility(View.GONE);
             bottomInput.setVisibility(View.VISIBLE);
             CommonUtils.showSoftInput(this, input);
             input.requestFocus();
         } else {
+            floatingActionButton.setVisibility(View.VISIBLE);
             bottomInput.setVisibility(View.GONE);
             CommonUtils.hideSoftInput(this, input);
         }

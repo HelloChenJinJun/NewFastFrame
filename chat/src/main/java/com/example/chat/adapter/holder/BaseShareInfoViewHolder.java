@@ -35,7 +35,7 @@ public class BaseShareInfoViewHolder extends BaseWrappedViewHolder {
                         , user.getNick())
                 .setImageResource(R.id.iv_item_fragment_share_info_sex, user
                         .isSex() ? R.drawable.ic_sex_female : R.drawable.ic_sex_male)
-                .setText(R.id.tv_item_fragment_share_info_sub_text, getText(user))
+                .setText(R.id.tv_item_fragment_share_info_sub_text, getText(data))
                 .setText(R.id.tv_item_fragment_share_info_share, data
                         .getShareCount()==0? "转发" :data
                         .getShareCount()+ "")
@@ -61,11 +61,12 @@ public class BaseShareInfoViewHolder extends BaseWrappedViewHolder {
     }
 
 
-    private String getText(User user) {
+    private String getText(PublicPostBean bean) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(TimeUtil.getRealTime(user.getCreatedAt()))
+        stringBuilder.append(TimeUtil.getRealTime(bean.getCreatedAt()==null?bean.getUpdatedAt():
+        bean.getCreatedAt()))
                 .append("  来自[")
-                .append(user.getAddress())
+                .append(bean.getAuthor().getAddress())
                 .append("]");
         return stringBuilder.toString();
     }

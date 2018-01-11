@@ -4,8 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
 
 import com.example.chat.base.Constant;
@@ -16,7 +14,7 @@ import com.example.chat.manager.MessageCacheManager;
 import com.example.chat.manager.UserCacheManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.LogUtil;
-import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.utils.CommonLogger;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -24,11 +22,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * 项目名称:    TestChat
@@ -41,6 +44,7 @@ public class PollService extends Service {
 
         private Handler mHandler;
         private int time;
+        private Disposable disposable;
 
         @Nullable
         @Override
@@ -52,41 +56,56 @@ public class PollService extends Service {
         @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
                 if (intent != null) {
-                        time = intent.getIntExtra("time", 6);
+                        time = intent.getIntExtra("time", 10);
                 } else {
-                        time = 5;
+                        time = 10;
                 }
                 LogUtil.e("time" + time);
-                new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                                LogUtil.e("后台定时服务run22334566789");
-                                Looper.prepare();
-                                mHandler = new Handler() {
-                                        @Override
-                                        public void handleMessage(Message msg) {
-                                                dealWork();
-                                                sendEmptyMessageDelayed(0, time * 1000);
+                Observable.interval(time, TimeUnit.SECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<Long>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                        disposable=d;
+                                }
+
+                                @Override
+                                public void onNext(Long aLong) {
+                                        dealWork();
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                        if (e!=null) {
+                                                CommonLogger.e("定时任务出错"+e.getMessage());
                                         }
-                                };
-                                mHandler.sendEmptyMessage(0);
-                                Looper.loop();
-                                LogUtil.e("12221");
-                        }
-                }).start();
-                LogUtil.e("这里Thread2");
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                        });
 //                new Thread(new Runnable() {
 //                        @Override
 //                        public void run() {
-//
-//
+//                                LogUtil.e("后台定时服务run22334566789");
+//                                Looper.prepare();
+//                                mHandler = new Handler() {
+//                                        @Override
+//                                        public void handleMessage(Message msg) {
+//                                                dealWork();
+//                                                sendEmptyMessageDelayed(0, time * 1000);
+//                                        }
+//                                };
+//                                mHandler.sendEmptyMessage(0);
+//                                Looper.loop();
 //                        }
 //                }).start();
                 return super.onStartCommand(intent, START_FLAG_RETRY, startId);
         }
 
         private void dealWork() {
-                LogUtil.e("1dealWork");
                 LogUtil.e("拉取单聊消息");
                 BmobQuery<ChatMessage> query = new BmobQuery<>();
                 if (UserManager.getInstance().getCurrentUser() != null) {
@@ -133,14 +152,9 @@ public class PollService extends Service {
                         try {
                                 Date oldDate=sdf1.parse(MessageCacheManager.getInstance().getLastShareMessageTime(Constant.GROUP_TABLE_TIME));
                                 long currentTime=oldDate.getTime();
-                                LogUtil.e("之前的时间"+currentTime+",,,"+sdf1.format(oldDate));
                                 currentTime+=1000;
                                 Date date=new Date(currentTime);
-                                String newTime=sdf1.format(date);
-                                LogUtil.e("Long时间"+currentTime);
-                                LogUtil.e("现在的时间"+newTime);
                                 groupTableQuery.addWhereGreaterThan("updatedAt", new BmobDate(date));
-//                                groupTableQuery.addWhereGreaterThan("updatedAt", new BmobDate(sdf1.parse(lastGroupMessageTime)));
                         } catch (ParseException e) {
                                 e.printStackTrace();
                                 LogUtil.e("解析时间出错");
@@ -177,7 +191,6 @@ public class PollService extends Service {
                 if (UserCacheManager.getInstance().getContacts() != null && UserCacheManager.getInstance().getContacts().size() > 0) {
                         List<String> list = new ArrayList<>(UserCacheManager.getInstance().getContacts().keySet());
                         list.add(UserManager.getInstance().getCurrentUserObjectId());
-//                        list.add(UserCacheManager.getInstance().getUser().getObjectId());
                         shareQuery.addWhereContainedIn("belongId", list);
                 } else {
                         if (UserManager.getInstance().getCurrentUser() == null) {
@@ -190,15 +203,10 @@ public class PollService extends Service {
                 if (!MessageCacheManager.getInstance().getLastShareMessageTime(Constant.SHARE_TIME).equals("0000-00-00 01:00:00")) {
                         try {
 //                                这里是bmob的一个bug，相同时间竟然也能查询得到，所以这里在原有的时间上多添加了一秒
-                                LogUtil.e("时间是多少:"+MessageCacheManager.getInstance().getLastShareMessageTime(Constant.SHARE_TIME));
                                 Date oldDate=simpleDateFormat.parse(MessageCacheManager.getInstance().getLastShareMessageTime(Constant.SHARE_TIME));
                                 long currentTime=oldDate.getTime();
-                                LogUtil.e("之前的时间"+currentTime+",,,"+simpleDateFormat.format(oldDate));
                                 currentTime+=1000;
                                 Date date=new Date(currentTime);
-                               String newTime=simpleDateFormat.format(date);
-                                LogUtil.e("Long时间"+currentTime);
-                                LogUtil.e("现在的时间"+newTime);
                                 shareQuery.addWhereGreaterThan("createdAt", new BmobDate(date));
 
                         } catch (ParseException e) {
@@ -260,6 +268,9 @@ public class PollService extends Service {
 
         @Override
         public void onDestroy() {
+                if (disposable != null) {
+                        disposable.dispose();
+                }
                 super.onDestroy();
 
         }

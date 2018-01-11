@@ -385,6 +385,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             data.addAll(position, newData);
             notifyItemRangeInserted(position + getItemUpCount(), newData.size());
             notifyLoadMoreChanged();
+            if (layoutManager != null) {
+                layoutManager.scrollToPosition(position+getItemUpCount());
+            }
         }
     }
 
@@ -485,7 +488,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         clearAllData();
         notifyDataSetChanged();
         addData(list);
-        layoutManager.scrollToPosition(0);
+        if (layoutManager!=null) {
+            layoutManager.scrollToPosition(0);
+        }
     }
 
     public void removeEndData(int size) {

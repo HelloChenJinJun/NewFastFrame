@@ -129,24 +129,7 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
                 }
         }
 
-//        /**
-//         * 在通知栏展示通知
-//         *
-//         * @param notificationTagAdd 通知消息的类型标签
-//         * @param context            context
-//         * @param userName           用户名
-//         * @param icon               通知栏图标
-//         * @param content            通知栏内容
-//         */
-//        private void showNotification(String notificationTagAdd, Context context, String userName, int icon, CharSequence content, Class<? extends Activity> targetClass) {
-//                boolean isAllowPushNotify = CustomApplication.getInstance().getSharedPreferencesUtil().isAllowPushNotify();
-//                boolean isAllowVoice = CustomApplication.getInstance().getSharedPreferencesUtil().isAllowVoice();
-//                boolean isAllowVibrate = CustomApplication.getInstance().getSharedPreferencesUtil().isAllowVibrate();
-//                if (isAllowPushNotify) {
-//                        ChatNotificationManager.getInstance(context).notify(notificationTagAdd, null, isAllowVibrate, isAllowVoice, context, userName, icon, content, targetClass);
-//                        LogUtil.e("发送通知到通知栏啦啦啦");
-//                }
-//        }
+
 
         public static void registerListener(OnMessageReceiveListener listener) {
                 LogUtil.e("注册监听");

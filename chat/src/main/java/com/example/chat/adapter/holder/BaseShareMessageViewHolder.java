@@ -58,7 +58,7 @@ public class BaseShareMessageViewHolder extends BaseWrappedViewHolder {
                         setVisible(R.id.tv_share_message_item_main_location, false);
                 }
 //                头像
-                setImageUrl(R.id.riv_share_fragment_item_main_avatar, user.getAvatar())
+                setImageUrl(R.id.riv_share_fragment_item_main_avatar, user!=null?user.getAvatar():null)
 //               创建时间
                         .setText(R.id.tv_share_fragment_item_main_time, TimeUtil.getRealTime(shareMessage.getCreatedAt()))
 //                昵称
