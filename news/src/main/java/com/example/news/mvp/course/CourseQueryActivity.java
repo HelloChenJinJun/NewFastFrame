@@ -35,6 +35,7 @@ public class CourseQueryActivity extends BaseActivity<CourseQueryBean, CourseQue
     private GridView display;
     @Inject
     CourseQueryAdapter courseQueryAdapter;
+    private ReLoginUtil reLoginUtil;
 
 
     @Override
@@ -96,7 +97,8 @@ public class CourseQueryActivity extends BaseActivity<CourseQueryBean, CourseQue
                     .getString(ConstantUtil.ACCOUNT,null);
             String password=BaseApplication.getAppComponent().getSharedPreferences()
                     .getString(ConstantUtil.PASSWORD,null);
-            ReLoginUtil.getInstance().login(account, password, new ReLoginUtil.CallBack() {
+            reLoginUtil=new ReLoginUtil();
+            reLoginUtil.login(account, password, new ReLoginUtil.CallBack() {
                 @Override
                 public void onSuccess(SystemUserBean systemUserBean) {
                     if (listener!=null) {
@@ -113,5 +115,14 @@ public class CourseQueryActivity extends BaseActivity<CourseQueryBean, CourseQue
             return;
         }
         super.showError(errorMsg, listener);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (reLoginUtil != null) {
+            reLoginUtil.clear();
+        }
     }
 }

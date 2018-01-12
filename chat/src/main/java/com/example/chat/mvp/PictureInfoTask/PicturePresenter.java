@@ -44,19 +44,9 @@ public class PicturePresenter extends PictureContacts.Presenter {
                         }
                 }
                 LogUtil.e("加载的页数" + page);
-                if (!AppUtil.isNetworkAvailable(BaseApplication.getInstance())) {
-                        iView.hideLoading();
-                        iView.showError("网络连接失败", new EmptyLayout.OnRetryListener() {
-                                @Override
-                                public void onRetry() {
-                                        getPictureInfo(mPage,showLoading);
-                                }
-                        });
-                        return;
-                }
-
                 baseModel.getRepositoryManager().getApi(PictureApi.class)
                         .getPictureInfo(ChatUtil.getPictureUrl(page))
+                        .compose(iView.<PictureResponse>bindLife())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<PictureResponse>() {

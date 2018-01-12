@@ -1,6 +1,7 @@
 package com.example.news.util;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.model.BaseModel;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -39,6 +40,7 @@ public class ReLoginUtil {
     private CompositeDisposable compositeDisposable;
     private String pw;
     private CallBack callBack;
+    private SystemUserBean systemUserBean;
 
 
     public interface CallBack {
@@ -48,32 +50,24 @@ public class ReLoginUtil {
     }
 
 
-    private ReLoginUtil() {
+    public ReLoginUtil() {
         this.baseModel = new SystemInfoModel(NewsApplication
-        .getNewsComponent().getRepositoryManager());
-        this.compositeDisposable =new CompositeDisposable();
+                .getNewsComponent().getRepositoryManager());
+        this.compositeDisposable = new CompositeDisposable();
     }
-    
-    
-    private static ReLoginUtil reLoginUtil;
-    
-    public static ReLoginUtil getInstance(){
-        if (reLoginUtil == null) {
-            reLoginUtil=new ReLoginUtil();
+
+    public void clear() {
+        if (compositeDisposable != null) {
+            compositeDisposable.clear();//保证activity结束时取消所有正在执行的订阅
+            compositeDisposable = null;
         }
-        return reLoginUtil;
     }
-    
-    
-    
-    
-    
-    
+
 
     public void login(final String account, final String pw, final ReLoginUtil.CallBack callBack) {
         this.account = account;
         this.pw = pw;
-        this.callBack=callBack;
+        this.callBack = callBack;
         baseModel.getRepositoryManager().getApi(SystemInfoApi.class).getCookie(NewsUtil.SYSTEM_INFO_INDEX_URL)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -99,14 +93,14 @@ public class ReLoginUtil {
                             BaseApplication.getAppComponent()
                                     .getSharedPreferences().edit().putString(NewsUtil.SYSTEM_INFO_LOGIN_LT, value).apply();
                             realLogin(account, pw, value);
-                        }else {
+                        } else {
                             callBack.onFailed("lt为空");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        callBack.onFailed(e!=null?e.getMessage():null);
+                        callBack.onFailed(e != null ? e.getMessage() : null);
                     }
 
                     @Override
@@ -137,7 +131,7 @@ public class ReLoginUtil {
                                 .getString(NewsUtil.SYSTEM_INFO_GET_TICKET, null) != null) {
                             getTp_upCookie(BaseApplication.getAppComponent()
                                     .getSharedPreferences().getString(NewsUtil.SYSTEM_INFO_GET_TICKET, null));
-                        }else {
+                        } else {
                             callBack.onFailed("system_info_get_ticket is null");
                         }
                     }
@@ -154,7 +148,7 @@ public class ReLoginUtil {
                                 }
                             }
                         }
-                        callBack.onFailed(e!=null?e.getMessage():null);
+                        callBack.onFailed(e != null ? e.getMessage() : null);
                     }
 
                     @Override
@@ -190,7 +184,7 @@ public class ReLoginUtil {
                                 return;
                             }
                         }
-                        callBack.onFailed(e!=null?e.getMessage():null);
+                        callBack.onFailed(e != null ? e.getMessage() : null);
 
                     }
 
@@ -204,7 +198,8 @@ public class ReLoginUtil {
     private void getUserInfo() {
         baseModel.getRepositoryManager().getApi(SystemInfoApi.class)
                 .getUserInfo(NewsUtil.SYSTEM_USER_INFO_URL, NewsUtil
-                        .getSystemUserRequestBody(account)).subscribeOn(Schedulers.io())
+                        .getSystemUserRequestBody(account)).
+                subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<SystemUserBean>() {
                     @Override
@@ -214,17 +209,216 @@ public class ReLoginUtil {
 
                     @Override
                     public void onNext(SystemUserBean systemUserBean) {
-                            callBack.onSuccess(systemUserBean);
+                        ReLoginUtil.this.systemUserBean=systemUserBean;
+                        getOtherLoginCookie();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        callBack.onFailed(e!=null?e.getMessage():null);
+                        callBack.onFailed(e != null ? e.getMessage() : null);
                     }
+
                     @Override
                     public void onComplete() {
 
                     }
                 });
     }
+
+    private void getOtherUserInfo() {
+        baseModel.getRepositoryManager().getApi(SystemInfoApi.class)
+                .getOtherUserInfo(NewsUtil.getOtherUserInfoUrl(account))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        Document document = null;
+                        try {
+                            document = Jsoup.parse(responseBody.string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (document != null) {
+                            String major = document.getElementById("col_zyh_id").text().trim();
+                            String classNumber = document.getElementById("col_bh_id").text().trim();
+//                            临时找两个无效字段
+                            systemUserBean.setADMISSIONS_PIC(major);
+                            systemUserBean.setGRADUATION_PIC(classNumber);
+                        }
+                        callBack.onSuccess(systemUserBean);
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callBack.onFailed(e != null ? e.getMessage() : null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+
+    public void getOtherLoginCookie() {
+        baseModel.getRepositoryManager().getApi(SystemInfoApi.class)
+                .verifyAccount(NewsUtil.COURSE_VERIFY_ACCOUNT_URL)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        getTempJsIdByTicket();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (e != null && e instanceof HttpException) {
+                            if (((HttpException) e).code() == 302) {
+                                getTempJsIdByTicket();
+                                return;
+                            }
+                        }
+                        callBack.onFailed(e != null ? e.getMessage() : null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private void getTempJsIdByTicket() {
+        String url = BaseApplication.getAppComponent()
+                .getSharedPreferences().getString(NewsUtil.COURSE_TICKET_URL, null);
+
+        if (url == null) {
+            return;
+        }
+        baseModel.getRepositoryManager().getApi(SystemInfoApi.class)
+                .getTempJsessionIdByTicket(url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        getVerifyUrl();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (e != null && e instanceof HttpException) {
+                            if (((HttpException) e).code() == 302) {
+                                getVerifyUrl();
+                                return;
+                            }
+                        }
+                        callBack.onFailed(e != null ? e.getMessage() : null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private void getVerifyUrl() {
+        String url = BaseApplication.getAppComponent()
+                .getSharedPreferences().getString(NewsUtil.COURSE_JSESSION_URL, null);
+        if (url == null) {
+            return;
+        }
+        baseModel.getRepositoryManager().getApi(SystemInfoApi.class)
+                .getTempJsessionIdByTicket(url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        getRealIdByVerifyUrl();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (e != null && e instanceof HttpException) {
+                            if (((HttpException) e).code() == 302) {
+                                getRealIdByVerifyUrl();
+                                return;
+                            }
+                        }
+                        callBack.onFailed(e != null ? e.getMessage() : null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private void getRealIdByVerifyUrl() {
+        String url = BaseApplication.getAppComponent()
+                .getSharedPreferences().getString(NewsUtil.COURSE_REAL_VERIFY_URL, null);
+        if (url == null) {
+            return;
+        }
+        baseModel.getRepositoryManager().getApi(SystemInfoApi.class)
+                .getTempJsessionIdByTicket(url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        getOtherUserInfo();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (e != null && e instanceof HttpException) {
+                            if (((HttpException) e).code() == 302) {
+                                getOtherUserInfo();
+                                return;
+                            }
+                        }
+                        callBack.onFailed(e != null ? e.getMessage() : null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+
 }

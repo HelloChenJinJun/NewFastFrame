@@ -173,7 +173,7 @@ public class LibraryPresenter extends BasePresenter<IView<List<SearchLibraryBean
                             if (page != null) {
                                String text=page.getElementsByTag("b").text();
                                 if (text!=null&&text.contains("/")) {
-                                    classTotalNum=Integer.valueOf(text.split("/")[1]);
+                                    classTotalNum=Integer.valueOf(text.split("/")[1].trim());
                                 }else {
                                     classTotalNum=1;
                                 }

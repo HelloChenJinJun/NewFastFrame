@@ -546,6 +546,7 @@ public class NewsUtil {
         BaseApplication.getAppComponent().getSharedPreferences()
                 .edit().putBoolean(ConstantUtil.LOGIN_STATUS, false)
                 .putString(ConstantUtil.ACCOUNT, userInfoEvent.getAccount())
+                .putBoolean(ConstantUtil.FIRST_STATUS,true)
                 .putString(ConstantUtil.PASSWORD, userInfoEvent.getPassword())
                 .putString(ConstantUtil.AVATAR, userInfoEvent.getAvatar())
                 .putString(ConstantUtil.NAME, userInfoEvent.getNick())
@@ -553,8 +554,6 @@ public class NewsUtil {
                 .putString(ConstantUtil.BG_HALF, userInfoEvent.getHalfBg())
                 .putString(ConstantUtil.BG_ALL, userInfoEvent.getAllBg())
                 .putString(ConstantUtil.NICK, userInfoEvent.getNick()).apply();
-        RxBusManager.getInstance()
-                .post(userInfoEvent);
     }
 
     public static RequestBody getCourseQueryRequestBody(String year, int examNum) {
@@ -572,6 +571,15 @@ public class NewsUtil {
                 .append(number)
                 .append("&check=").append(check).append("&captcha=")
                 .append(verify).append("&time=").append(System.currentTimeMillis());
+        return stringBuilder.toString();
+    }
+
+    public static String getOtherUserInfoUrl(String account) {
+//        http://jwgl.cug.edu.cn/jwglxt/xsxxxggl/xsgrxxwh_cxXsgrxx.html?gnmkdm=N100801&layout=default&su=
+
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("http://jwgl.cug.edu.cn/jwglxt/xsxxxggl/xsgrxxwh_cxXsgrxx.html?gnmkdm=N100801&layout=default&su=")
+                .append(account);
         return stringBuilder.toString();
     }
 }

@@ -11,7 +11,9 @@ import com.example.chat.listener.OnEditDataCompletedListener;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -43,6 +45,11 @@ public abstract class MainBaseActivity<T,P extends BasePresenter> extends BaseAc
                 if (UserManager.getInstance().getCurrentUser() == null) {
                         ToastUtils.showShortToast("你的帐号已在其他设备登陆,请重新登录!");
                         Intent intent = new Intent(this, LoginActivity.class);
+                        if (!BaseApplication
+                                .getAppComponent().getSharedPreferences()
+                                .getBoolean(ConstantUtil.IS_ALONE, true)) {
+                                intent.putExtra(ConstantUtil.FROM,ConstantUtil.FROM_MAIN);
+                        }
                         startActivity(intent);
                         finish();
                 }

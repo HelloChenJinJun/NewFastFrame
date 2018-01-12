@@ -42,18 +42,10 @@ public class WinXinInfoPresenter extends WinXinInfoContacts.Presenter {
                     }
                     baseModel.clearAllData();
                 }
-                if (!AppUtil.isNetworkAvailable(BaseApplication.getInstance())) {
-                        iView.hideLoading();
-                        iView.showError("网络连接失败", new EmptyLayout.OnRetryListener() {
-                                @Override
-                                public void onRetry() {
-                                        getWinXinInfo(mPage,showLoading);
-                                }
-                        });
-                        return;
-                }
+
                 baseModel.getRepositoryManager().getApi(TxApi.class)
                         .getWinXinInfo(ChatUtil.getWinXinUrl(page))
+                        .compose(iView.<TxResponse>bindLife())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<TxResponse>() {

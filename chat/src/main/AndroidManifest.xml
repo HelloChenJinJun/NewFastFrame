@@ -102,6 +102,8 @@
         <!--小视频界面-->
         <activity android:name="mabeijianxi.camera.MediaRecorderActivity"/>
         <activity android:name=".ui.VideoPlayActivity"/>
+        <activity android:name=".mvp.commentlist.CommentListActivity" />
+        <activity android:name=".mvp.commentdetail.CommentListDetailActivity" />
         <!--高德地图API_KEY-->
         <meta-data android:name="com.amap.api.v2.apikey"
             android:value="d20d35b2237fa46693bfad21e0bc41fe">

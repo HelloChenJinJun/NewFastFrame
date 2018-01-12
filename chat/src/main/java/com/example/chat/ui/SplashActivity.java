@@ -67,12 +67,6 @@ public class SplashActivity extends BaseActivity {
                                                                                                   LogUtil.e("查询好友成功1");
                                                                                                   LogUtil.e("把服务器上查询得到的好友消息存到内存中");
                                                                                                   LogUtil.e("用户USER");
-//                                                                                          User user = UserManager.getInstance().getCurrentUser();
-//                                                                                          if (user != null) {
-//                                                                                                  CustomApplication.getInstance().setUser(user);
-//                                                                                          } else {
-//                                                                                                  LogUtil.e("用户USER为空");
-//                                                                                          }
                                                                                                   String uid = UserManager.getInstance().getCurrentUserObjectId();
                                                                                                   MsgManager.getInstance().queryGroupTableMessage(uid, new FindListener<GroupTableMessage>() {
                                                                                                           @Override

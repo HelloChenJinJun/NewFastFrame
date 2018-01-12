@@ -15,6 +15,7 @@ import com.example.chat.dagger.ChatMainModule;
 import com.example.chat.dagger.DaggerChatMainComponent;
 import com.example.chat.manager.LocationManager;
 import com.example.chat.ui.BasePreViewActivity;
+import com.example.chat.ui.EditUserInfoActivity;
 import com.example.chat.ui.HappyActivity;
 import com.example.chat.ui.LoginActivity;
 import com.example.chat.ui.SearchActivity;
@@ -102,6 +103,30 @@ public class ChatApplication implements IModuleConfig, IAppLife {
     }
 
     private void initRouter() {
+        Router.getInstance().registerProvider("chat:edit_user_info", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                Activity activity= (Activity) routerRequest.getContext();
+                Intent intent=new Intent(activity, EditUserInfoActivity.class);
+                activity.startActivity(intent);
+                return null;
+            }
+        });
+        Router.getInstance().registerProvider("chat:user_index", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                return null;
+            }
+        });
+        Router.getInstance().registerProvider("chat:setting", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                Activity activity = (Activity) routerRequest.getContext();
+                Intent intent = new Intent(activity, SettingsActivity.class);
+                activity.startActivity(intent);
+                return null;
+            }
+        });
         Router.getInstance().registerProvider("chat:login", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {

@@ -53,6 +53,7 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
     private CenterAdapter centerAdapter;
     private ImageView verifyImage;
     private EditText input;
+    private ReLoginUtil reLoginUtil;
 
     @Override
     public void updateData(Object o) {
@@ -193,7 +194,8 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
                     .getString(ConstantUtil.ACCOUNT, null);
             String password = BaseApplication.getAppComponent().getSharedPreferences()
                     .getString(ConstantUtil.PASSWORD, null);
-            ReLoginUtil.getInstance().login(account, password, new ReLoginUtil.CallBack() {
+            reLoginUtil=new ReLoginUtil();
+            reLoginUtil.login(account, password, new ReLoginUtil.CallBack() {
                 @Override
                 public void onSuccess(SystemUserBean systemUserBean) {
                     if (listener != null) {
@@ -232,6 +234,15 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
             }
         });
         return view;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (reLoginUtil != null) {
+            reLoginUtil.clear();
+        }
     }
 
     private List<CenterBean> getDefaultData() {

@@ -94,6 +94,18 @@ public class NewsApplication implements IModuleConfig, IAppLife {
                                     userInfoEvent.setAllBg(((String) entry.getValue()));
                                 } else if (entry.getKey().equals(ConstantUtil.BG_HALF)) {
                                     userInfoEvent.setHalfBg(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.CLASS_NUMBER)) {
+                                    userInfoEvent.setClassNumber(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.SCHOOL)) {
+                                    userInfoEvent.setSchool(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.MAJOR)) {
+                                    userInfoEvent.setMajor(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.COLLEGE)) {
+                                    userInfoEvent.setCollege(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.YEAR)) {
+                                    userInfoEvent.setYear(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.STUDENT_TYPE)) {
+                                    userInfoEvent.setStudentType(((String) entry.getValue()));
                                 }
                             } else if (entry.getValue() instanceof Boolean) {
                                 if (entry.getKey().equals(ConstantUtil.SEX)) {
@@ -106,10 +118,16 @@ public class NewsApplication implements IModuleConfig, IAppLife {
                                 .putString(ConstantUtil.ACCOUNT, userInfoEvent.getAccount())
                                 .putString(ConstantUtil.PASSWORD, userInfoEvent.getPassword())
                                 .putString(ConstantUtil.AVATAR, userInfoEvent.getAvatar())
-                                .putString(ConstantUtil.NAME, userInfoEvent.getNick())
+                                .putString(ConstantUtil.NAME, userInfoEvent.getName())
                                 .putBoolean(ConstantUtil.SEX, userInfoEvent.getSex())
                                 .putString(ConstantUtil.BG_HALF, userInfoEvent.getHalfBg())
                                 .putString(ConstantUtil.BG_ALL, userInfoEvent.getAllBg())
+                                .putString(ConstantUtil.SCHOOL, userInfoEvent.getSchool())
+                                .putString(ConstantUtil.COLLEGE,userInfoEvent.getCollege())
+                                .putString(ConstantUtil.CLASS_NUMBER,userInfoEvent.getClassNumber())
+                                .putString(ConstantUtil.MAJOR,userInfoEvent.getMajor())
+                                .putString(ConstantUtil.STUDENT_TYPE,userInfoEvent.getStudentType())
+                                .putString(ConstantUtil.YEAR,userInfoEvent.getYear())
                                 .putString(ConstantUtil.NICK, userInfoEvent.getNick()).apply();
                         Activity activity = (Activity) routerRequest.getContext();
                         if (userInfoEvent.getFrom().equals(ConstantUtil.FROM_LOGIN)) {
@@ -143,7 +161,8 @@ public class NewsApplication implements IModuleConfig, IAppLife {
                 Map<String, Object> map = routerRequest.getParamMap();
                 final String account = (String) map.get(ConstantUtil.ACCOUNT);
                 final String password = (String) map.get(ConstantUtil.PASSWORD);
-                ReLoginUtil.getInstance().login(account
+                ReLoginUtil reLoginUtil = new ReLoginUtil();
+                reLoginUtil.login(account
                         , password, new ReLoginUtil.CallBack() {
                             @Override
                             public void onSuccess(SystemUserBean bean) {
@@ -151,6 +170,8 @@ public class NewsApplication implements IModuleConfig, IAppLife {
                                     LoginEvent loginEvent = new LoginEvent();
                                     loginEvent.setSuccess(true);
                                     UserInfoEvent userInfoEvent = new UserInfoEvent();
+                                    userInfoEvent.setMajor(bean.getADMISSIONS_PIC());
+                                    userInfoEvent.setClassNumber(bean.getGRADUATION_PIC());
                                     userInfoEvent.setAccount(account);
                                     userInfoEvent.setPassword(password);
                                     userInfoEvent.setAvatar(bean.getSCHOOL_PIC());
@@ -182,12 +203,12 @@ public class NewsApplication implements IModuleConfig, IAppLife {
     private void initDB(Application application) {
         if (newsComponent.getRepositoryManager()
                 .getDaoSession().getOtherNewsTypeBeanDao()
-                .queryBuilder().build().list().size()==0) {
+                .queryBuilder().build().list().size() == 0) {
             List<OtherNewsTypeBean> result;
             JsonParser jsonParser = new JsonParser();
             JsonArray jsonElements = jsonParser.parse(FileUtil.readData(application, "NewsChannel")).getAsJsonArray();
             result = new ArrayList<>();
-            Gson gson =BaseApplication.getAppComponent().getGson();
+            Gson gson = BaseApplication.getAppComponent().getGson();
             for (JsonElement item :
                     jsonElements) {
                 OtherNewsTypeBean bean = gson.fromJson(item, OtherNewsTypeBean.class);

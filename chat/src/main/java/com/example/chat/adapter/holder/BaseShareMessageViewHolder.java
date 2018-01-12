@@ -62,7 +62,7 @@ public class BaseShareMessageViewHolder extends BaseWrappedViewHolder {
 //               创建时间
                         .setText(R.id.tv_share_fragment_item_main_time, TimeUtil.getRealTime(shareMessage.getCreatedAt()))
 //                昵称
-                        .setText(R.id.tv_share_fragment_item_main_name, user.getNick() != null && user.getNick().equals("") ? user.getNick() : user.getUsername())
+                        .setText(R.id.tv_share_fragment_item_main_name,user!=null?user.getNick():null)
                         .setOnClickListener(R.id.tv_share_fragment_item_main_name, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

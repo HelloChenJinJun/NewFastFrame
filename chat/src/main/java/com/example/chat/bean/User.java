@@ -32,7 +32,86 @@ public class User extends BmobUser implements Comparable<User> {
         private String birthDay;
         private String titleWallPaper;
         private String wallPaper;
+        private String pw;
 
+        public String getPw() {
+                return pw;
+        }
+
+        public void setPw(String pw) {
+                this.pw = pw;
+        }
+
+        //        真实姓名
+        private String name;
+//        学校
+        private String school;
+//        学院
+        private String college;
+//        专业
+        private String major;
+//        学历
+        private String education;
+//        入学年份
+        private String year;
+//        班号
+        private String classNumber;
+
+        public String getClassNumber() {
+                return classNumber;
+        }
+
+        public void setClassNumber(String classNumber) {
+                this.classNumber = classNumber;
+        }
+
+        public String getName() {
+                return name;
+        }
+
+        public void setName(String name) {
+                this.name = name;
+        }
+
+        public String getSchool() {
+                return school;
+        }
+
+        public void setSchool(String school) {
+                this.school = school;
+        }
+
+        public String getCollege() {
+                return college;
+        }
+
+        public void setCollege(String college) {
+                this.college = college;
+        }
+
+        public String getMajor() {
+                return major;
+        }
+
+        public void setMajor(String major) {
+                this.major = major;
+        }
+
+        public String getEducation() {
+                return education;
+        }
+
+        public void setEducation(String education) {
+                this.education = education;
+        }
+
+        public String getYear() {
+                return year;
+        }
+
+        public void setYear(String year) {
+                this.year = year;
+        }
 
         public String getTitleWallPaper() {
                 return titleWallPaper;

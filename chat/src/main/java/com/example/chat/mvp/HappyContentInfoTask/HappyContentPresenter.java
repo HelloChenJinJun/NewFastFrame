@@ -40,18 +40,9 @@ public class HappyContentPresenter extends HappyContentContacts.Presenter {
                         iView.showLoading("正在加载数据，请稍候..........");
                     }
                 }
-                if (!AppUtil.isNetworkAvailable(BaseApplication.getInstance())) {
-                        iView.hideLoading();
-                        iView.showError("网络连接失败", new EmptyLayout.OnRetryListener() {
-                                @Override
-                                public void onRetry() {
-                                        getHappyContentInfo(mPage,showLoading);
-                                }
-                        });
-                        return;
-                }
                 baseModel.getRepositoryManager().getApi(HappyApi.class).getHappyContentInfo(ChatUtil
                 .getHappyContentUrl(page,20))
+                        .compose(iView.<HappyContentResponse>bindLife())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<HappyContentResponse>() {

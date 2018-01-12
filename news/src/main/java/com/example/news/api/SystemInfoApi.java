@@ -25,52 +25,39 @@ import retrofit2.http.Url;
 public interface SystemInfoApi {
 
 
-//    http://sfrz.cug.edu.cn/tpass/login?service=http%3A%2F%2Fxyfw.cug.edu.cn%2Ftp_up%2F
+    //    http://sfrz.cug.edu.cn/tpass/login?service=http%3A%2F%2Fxyfw.cug.edu.cn%2Ftp_up%2F
     @GET
-    public Observable<ResponseBody>  getCookie(@Url String url);
+    public Observable<ResponseBody> getCookie(@Url String url);
 
 
     @POST
-    public Observable<ResponseBody>  login(@Url String url, @Body RequestBody requestBody);
-
-
-
+    public Observable<ResponseBody> login(@Url String url, @Body RequestBody requestBody);
 
 
     @POST
-    public Observable<SystemUserBean>   getUserInfo(@Url String url,@Body RequestBody requestBody);
-
-
-
-    @POST
-    public Observable<ScoreBean>   getScore(@Url String url,@Body RequestBody requestBody);
-
+    public Observable<SystemUserBean> getUserInfo(@Url String url, @Body RequestBody requestBody);
 
 
     @POST
-    public Observable<ConsumeQueryBean> getConsumeData(@Url String url,@Body RequestBody requestBody);
+    public Observable<ScoreBean> getScore(@Url String url, @Body RequestBody requestBody);
 
 
+    @POST
+    public Observable<ConsumeQueryBean> getConsumeData(@Url String url, @Body RequestBody requestBody);
 
 
-
-
-//    http://sfrz.cug.edu.cn/tpass
+    //    http://sfrz.cug.edu.cn/tpass
 // /login?service=http%3A%2F%2F202.114.207.137%3A80%2Fssoserver%2Flogin%3Fywxt%3Djw
     @GET
     public Observable<ResponseBody> verifyAccount(@Url String url);
 
 
-
-
-//    http://202.114.207.137:80/ssoserver/login?ywxt=jw&ticket=ST-1289-DwGFQfa3xMLBkVSyifiP-tpass
+    //    http://202.114.207.137:80/ssoserver/login?ywxt=jw&ticket=ST-1289-DwGFQfa3xMLBkVSyifiP-tpass
     @GET
-    public Observable<ResponseBody>  getTempJsessionIdByTicket(@Url String url);
+    public Observable<ResponseBody> getTempJsessionIdByTicket(@Url String url);
 
 
-
-
-//    http://202.114.207.137/ssoserver/login;jsessionid=B2D411448CC60F02C5E82297CCE564E5?ywxt=jw
+    //    http://202.114.207.137/ssoserver/login;jsessionid=B2D411448CC60F02C5E82297CCE564E5?ywxt=jw
     @GET
     public Observable<ResponseBody> getVerifyUrl(@Url String url);
 
@@ -83,11 +70,9 @@ public interface SystemInfoApi {
     public Observable<ResponseBody> getRealIdByVerifyUrl(@Url String url);
 
 
-
-
     @POST
-    public Observable<CourseQueryBean> getCourseQueryData(@Url String url,@Body RequestBody requestBody);
+    public Observable<CourseQueryBean> getCourseQueryData(@Url String url, @Body RequestBody requestBody);
 
-
-
+    @GET
+    public Observable<ResponseBody> getOtherUserInfo(@Url String url);
 }

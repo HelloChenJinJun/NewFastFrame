@@ -15,15 +15,22 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.LoginEvent;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.commonlibrary.rxbus.event.UserInfoEvent;
+import com.example.news.dagger.person.DaggerPersonComponent;
+import com.example.news.dagger.person.PersonModule;
+import com.example.news.mvp.person.PersonPresenter;
 import com.example.news.util.NewsUtil;
+
+import org.reactivestreams.Subscription;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -33,10 +40,11 @@ import io.reactivex.functions.Consumer;
  * QQ:         1981367757
  */
 
-public class PersonFragment extends BaseFragment implements View.OnClickListener {
+public class PersonFragment extends BaseFragment<Object, PersonPresenter> implements View.OnClickListener {
     private TextView signature;
     private RoundAngleImageView avatar;
     private RelativeLayout titleBg;
+    private RelativeLayout settings,index,edit;
 
     @Override
     public void updateData(Object o) {
@@ -63,7 +71,11 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
         signature = (TextView) findViewById(R.id.tv_fragment_person_signature);
         avatar = (RoundAngleImageView) findViewById(R.id.riv_fragment_person_avatar);
         titleBg = (RelativeLayout) findViewById(R.id.rl_fragment_person_title_bg);
+        settings = (RelativeLayout) findViewById(R.id.rl_fragment_person_settings);
+        edit= (RelativeLayout) findViewById(R.id.rl_fragment_person_edit);
+        index= (RelativeLayout) findViewById(R.id.rl_fragment_person_index);
         avatar.setOnClickListener(this);
+        settings.setOnClickListener(this);
         avatar.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -75,25 +87,30 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     protected void initData() {
-        RxBusManager.getInstance().registerEvent(UserInfoEvent.class, new Consumer<UserInfoEvent>() {
+        DaggerPersonComponent.builder().newsComponent(NewsApplication.getNewsComponent())
+                .personModule(new PersonModule(this))
+                .build().inject(this);
+        presenter.registerEvent(UserInfoEvent.class, new Consumer<UserInfoEvent>() {
             @Override
             public void accept(UserInfoEvent userInfoEvent) throws Exception {
                 ToastUtils.showShortToast(userInfoEvent.toString());
                 CommonLogger.e(userInfoEvent.toString());
-                boolean isLogin=BaseApplication.getAppComponent()
-                        .getSharedPreferences().getBoolean(ConstantUtil.LOGIN_STATUS,false);
+                boolean isLogin = BaseApplication.getAppComponent()
+                        .getSharedPreferences().getBoolean(ConstantUtil.LOGIN_STATUS, false);
                 if (!isLogin) {
-//                    注销账号通知
+//                    注销账号通
                     ((MainActivity) getActivity()).notifyLoginStatus(isLogin);
                 }
                 updateUserInfo(userInfoEvent.getAvatar(), userInfoEvent.getNick(), userInfoEvent.getHalfBg());
             }
-        }, new Consumer<Throwable>() {
+        });
+        presenter.registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
             @Override
-            public void accept(Throwable throwable) throws Exception {
-                if (throwable != null) {
-                    ToastUtils.showShortToast("请求异常" + throwable.getMessage());
-                    CommonLogger.e(throwable);
+            public void accept(LoginEvent loginEvent) throws Exception {
+                if (!loginEvent.isSuccess()) {
+                    ToastUtils.showShortToast(loginEvent.getErrorMessage());
+                    NewsUtil.clearAllUserCache();
+                    updateUserInfo(null,null,null);
                 }
             }
         });
@@ -135,14 +152,30 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        if (BaseApplication.getAppComponent().getSharedPreferences().getBoolean(NewsUtil
-                .IS_LOGIN, false)) {
-            ToastUtils.showShortToast("已经登录");
-        } else {
-            Map<String, Object> map = new HashMap<>();
-            map.put(ConstantUtil.FROM, ConstantUtil.FROM_MAIN);
+        int id = view.getId();
+        if (id == R.id.rl_fragment_person_settings) {
             Router.getInstance().deal(new RouterRequest.Builder().context(getActivity())
-                    .provideName("chat").actionName("login").paramMap(map).build());
+                    .provideName("chat").actionName("setting")
+                    .build());
+        } else if (id==R.id.rl_fragment_person_edit){
+            Router.getInstance().deal(new RouterRequest.Builder()
+            .provideName("chat").actionName("edit_user_info")
+            .context(getActivity()).build());
+
+        }else if (id==R.id.rl_fragment_person_index){
+            Router.getInstance().deal(new RouterRequest.Builder()
+                    .provideName("chat").actionName("user_index")
+                    .context(getActivity()).build());
+        }else {
+            if (BaseApplication.getAppComponent().getSharedPreferences().getBoolean(NewsUtil
+                    .IS_LOGIN, false)) {
+                ToastUtils.showShortToast("已经登录");
+            } else {
+                Map<String, Object> map = new HashMap<>();
+                map.put(ConstantUtil.FROM, ConstantUtil.FROM_MAIN);
+                Router.getInstance().deal(new RouterRequest.Builder().context(getActivity())
+                        .provideName("chat").actionName("login").paramMap(map).build());
+            }
         }
     }
 }

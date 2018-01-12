@@ -43,6 +43,7 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
     @Inject
     ScoreQueryAdapter scoreQueryAdapter;
     private LoadMoreFooterView loadMoreFooterView;
+    private ReLoginUtil reLoginUtil;
 
     @Override
     public void updateData(ScoreBean scoreBean) {
@@ -133,7 +134,8 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
                     .getString(ConstantUtil.ACCOUNT,null);
             String password=BaseApplication.getAppComponent().getSharedPreferences()
                     .getString(ConstantUtil.PASSWORD,null);
-            ReLoginUtil.getInstance().login(account, password, new ReLoginUtil.CallBack() {
+            reLoginUtil =new ReLoginUtil();
+            reLoginUtil.login(account, password, new ReLoginUtil.CallBack() {
                 @Override
                 public void onSuccess(SystemUserBean systemUserBean) {
                     if (listener!=null) {
@@ -157,6 +159,14 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (reLoginUtil != null) {
+            reLoginUtil.clear();
+        }
+    }
 
     @Override
     public void hideLoading() {

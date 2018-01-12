@@ -336,16 +336,12 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
 //todo        解决更新时间问题
             String updateTime = BaseApplication.getAppComponent().getSharedPreferences()
                     .getString(Constant.UPDATE_TIME, null);
-            if (updateTime == null) {
                 if (commentListAdapter.getData().size() > 10) {
                     return commentListAdapter.getData(9).getCreatedAt();
                 } else {
                     return commentListAdapter.getData(commentListAdapter.getData().size() - 1)
                             .getCreatedAt();
                 }
-            } else {
-                return updateTime;
-            }
         } else {
             if (commentListAdapter.getData(commentListAdapter.getData().size() - 1) != null) {
                 return commentListAdapter.getData(commentListAdapter.getData().size() - 1).getCreatedAt();

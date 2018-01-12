@@ -190,13 +190,18 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
             map.put(ConstantUtil.SIGNATURE, user.getSignature());
             map.put(ConstantUtil.NICK, user.getNick());
             map.put(ConstantUtil.ACCOUNT, user.getUsername());
-            map.put(ConstantUtil.NAME, user.getNick());
+            map.put(ConstantUtil.NAME, user.getName());
             map.put(ConstantUtil.SEX, user.isSex());
             map.put(ConstantUtil.BG_HALF, user.getTitleWallPaper());
             map.put(ConstantUtil.BG_ALL, user.getWallPaper());
-            map.put(ConstantUtil.STUDENT_TYPE, getIntent().getStringExtra(ConstantUtil.STUDENT_TYPE));
-            map.put(ConstantUtil.COLLEGE, getIntent().getStringExtra(ConstantUtil.COLLEGE));
-            map.put(ConstantUtil.PASSWORD, passWord.getText().toString().trim());
+            map.put(ConstantUtil.CLASS_NUMBER,user.getClassNumber());
+            map.put(ConstantUtil.SCHOOL,user.getSchool());
+            map.put(ConstantUtil.MAJOR,user.getMajor());
+            map.put(ConstantUtil.YEAR,user.getYear());
+            map.put(ConstantUtil.STUDENT_TYPE, user.getEducation());
+            map.put(ConstantUtil.COLLEGE, user.getCollege());
+            map.put(ConstantUtil.YEAR,user.getYear());
+            map.put(ConstantUtil.PASSWORD,user.getPw());
             map.put(ConstantUtil.FROM, getIntent().getStringExtra(ConstantUtil.FROM));
             Router.getInstance().deal(new RouterRequest.Builder()
                     .paramMap(map).context(this).provideName("news")

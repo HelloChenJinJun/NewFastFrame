@@ -328,6 +328,13 @@ public class NewsInterceptor implements Interceptor {
                     .build();
             return chain.proceed(newRequest);
         }
+        if (url.startsWith("http://jwgl.cug.edu.cn/jwglxt/xsxxxggl/xsgrxxwh_cxXsgrxx.html")) {
+            Request newRequest = request.newBuilder().method(request.method(), request.body()).url(request.url())
+                    .header("Cookie", "_ga=GA1.3.1067555487.1498354603; UM_distinctid=15ee5c241e60-0ccb143b01978-6a11157a-100200-15ee5c241eaa2;"
+                            + sharedPreferences.getString(NewsUtil.COURSE_JSESSION_ID, null))
+                    .build();
+            return chain.proceed(newRequest);
+        }
         return chain.proceed(request);
     }
 

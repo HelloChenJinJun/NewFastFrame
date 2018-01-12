@@ -16,6 +16,12 @@ public class WinXinBean implements Serializable {
         private String title;
 
 
+        @Override
+        public boolean equals(Object obj) {
+                return obj!=null&&obj instanceof WinXinBean
+                        &&(((WinXinBean) obj).getUrl().equals(getUrl()));
+        }
+
         public String getCtime() {
                 return ctime;
         }

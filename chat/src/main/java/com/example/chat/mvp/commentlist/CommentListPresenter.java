@@ -20,7 +20,9 @@ import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import cn.bmob.v3.BmobBatch;
 import cn.bmob.v3.BmobObject;
@@ -30,6 +32,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+import rx.Subscription;
 
 /**
  * 项目名称:    NewFastFrame
@@ -51,11 +54,25 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
         if (isRefresh) {
             iView.showLoading(null);
         }
-        MsgManager
-                .getInstance().getCommentListData(postId, new FindListener<PublicCommentBean>() {
+        Subscription s = MsgManager.getInstance().getCommentListData(postId, new FindListener<PublicCommentBean>() {
             @Override
             public void done(List<PublicCommentBean> list, BmobException e) {
                 if (e == null || e.getErrorCode() == 101) {
+                    if (list != null && list.size() > 0) {
+                        long time = 0L;
+                        for (PublicCommentBean bean :
+                                list) {
+                            long updateTime = TimeUtil.getTime(bean.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss");
+                            if (updateTime > time) {
+                                time = updateTime;
+                            }
+                        }
+                        String strTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
+                        BaseApplication.getAppComponent()
+                                .getSharedPreferences().edit()
+                                .putString(Constant.UPDATE_TIME_COMMENT, strTime)
+                                .apply();
+                    }
                     iView.updateData(list);
                     iView.hideLoading();
                 } else {
@@ -69,15 +86,30 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
                 }
             }
         }, isRefresh, time);
-
+        subscriptionList.add(s);
     }
 
+
+    private Set<Subscription> subscriptionList = new HashSet<>();
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        for (Subscription item :
+                subscriptionList) {
+            if (!item.isUnsubscribed()) {
+                item.unsubscribe();
+            }
+        }
+        subscriptionList.clear();
+        subscriptionList = null;
+    }
 
     public void sendCommentData(final PublicCommentBean publicCommentBean, final String postId, final String content) {
         final CommentDetailBean commentDetailBean = new CommentDetailBean();
         commentDetailBean.setContent(content);
         if (publicCommentBean != null) {
-             CommentDetailBean originBean = gson.fromJson(publicCommentBean.getContent(), CommentDetailBean.class);
+            CommentDetailBean originBean = gson.fromJson(publicCommentBean.getContent(), CommentDetailBean.class);
             if (originBean.getPublicId() != null) {
                 commentDetailBean.setPublicId(originBean.getPublicId());
             } else {
@@ -96,7 +128,7 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
         PublicPostBean publicPostBean = new PublicPostBean();
         publicPostBean.setObjectId(postId);
         newBean.setPost(publicPostBean);
-        newBean.save(new SaveListener<String>() {
+        Subscription subscription = newBean.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
                 if (e == null && commentDetailBean.getPublicId() != null) {
@@ -119,7 +151,7 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
                     replyDetailContent.setTime(System.currentTimeMillis());
                     replyCommentListBean.setContent(gson.toJson(replyDetailContent));
                     list.add(replyCommentListBean);
-                    new BmobBatch().insertBatch(list).doBatch(new QueryListListener<BatchResult>() {
+                    Subscription subscription1 = new BmobBatch().insertBatch(list).doBatch(new QueryListListener<BatchResult>() {
                         @Override
                         public void done(List<BatchResult> list, BmobException e) {
                             if (e == null) {
@@ -127,13 +159,14 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
                                 iView.hideLoading();
                                 PublicPostBean item = new PublicPostBean();
                                 item.increment("commentCount");
-                                item.update(postId, new UpdateListener() {
+                                Subscription subscription1 = item.update(postId, new UpdateListener() {
                                     @Override
                                     public void done(BmobException e) {
                                         RxBusManager.getInstance().post(new CommentEvent(postId, CommentEvent.TYPE_COMMENT));
                                         ToastUtils.showShortToast("评论成功");
                                     }
                                 });
+                                subscriptionList.add(subscription1);
                             } else {
                                 iView.showError(null, new EmptyLayout.OnRetryListener() {
                                     @Override
@@ -144,6 +177,7 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
                             }
                         }
                     });
+                    subscriptionList.add(subscription1);
                 } else if (e != null) {
                     iView.showError(null, new EmptyLayout.OnRetryListener() {
                         @Override
@@ -156,22 +190,24 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
                     iView.hideLoading();
                     PublicPostBean item = new PublicPostBean();
                     item.increment("commentCount");
-                    item.update(postId, new UpdateListener() {
+                    Subscription subscription1 = item.update(postId, new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             RxBusManager.getInstance().post(new CommentEvent(postId, CommentEvent.TYPE_COMMENT));
                             ToastUtils.showShortToast("评论成功");
                         }
                     });
+                    subscriptionList.add(subscription1);
                 }
             }
         });
+        subscriptionList.add(subscription);
     }
 
     public void addLike(final String objectId) {
         PublicPostBean publicPostBean = new PublicPostBean();
         publicPostBean.increment("likeCount");
-        publicPostBean.update(objectId, new UpdateListener() {
+        Subscription subscription = publicPostBean.update(objectId, new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -183,5 +219,6 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
                 }
             }
         });
+        subscriptionList.add(subscription);
     }
 }

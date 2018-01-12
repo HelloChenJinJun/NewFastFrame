@@ -654,6 +654,10 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     }
 
 
+
+
+
+
     @Override
     public void onCloseMenu() {
 //                当侧滑完全关闭的时候调用

@@ -15,14 +15,58 @@ public class UserInfoEvent {
     private String name;
     private String nick;
     private Boolean sex;
+//    本科生
     private String studentType;
 //    学院
     private String college;
 
+//    班号
+    private String classNumber;
+
+
+
+    private String school;
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    //    专业
+    private String major;
+
+//    入学年份
+    private String year;
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     private String allBg;
     private String halfBg;
 
+    public String getClassNumber() {
+        return classNumber;
+    }
+
+    public void setClassNumber(String classNumber) {
+        this.classNumber = classNumber;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
 
     public String getAllBg() {
         return allBg;

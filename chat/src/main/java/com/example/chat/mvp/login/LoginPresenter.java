@@ -234,11 +234,19 @@ public class LoginPresenter extends RxBasePresenter<IView<Object>, LoginModel> {
             user.setNick(userInfoEvent.getNick());
             user.setAvatar(userInfoEvent.getAvatar());
             user.setSex(userInfoEvent.getSex());
+            user.setName(userInfoEvent.getName());
+            user.setCollege(userInfoEvent.getCollege());
+            user.setMajor(userInfoEvent.getMajor());
+            user.setSchool("中国地质大学（武汉）");
+            user.setClassNumber(userInfoEvent.getClassNumber());
+            user.setYear(account.substring(0,4));
+            user.setEducation(userInfoEvent.getStudentType());
         }else {
             user.setNick(RandomData.getRandomNick());
             user.setAvatar(RandomData.getRandomAvatar());
             user.setSex(true);
         }
+        user.setPw(password);
         user.setSortedKey(CommonUtils.getSortedKey(user.getNick()));
         user.setUsername(account);
         user.setPassword(password);

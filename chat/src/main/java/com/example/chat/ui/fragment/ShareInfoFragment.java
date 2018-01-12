@@ -13,6 +13,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.chat.ChatApplication;
@@ -50,6 +51,7 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.google.gson.Gson;
 
@@ -82,7 +84,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return false;
+        return true;
     }
 
     @Override
@@ -211,7 +213,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 }
             }
         });
-        ((HomeFragment) getParentFragment()).initActionBar("动态");
+
         presenter.registerEvent(NotifyPostResult.class, new Consumer<NotifyPostResult>() {
             @Override
             public void accept(NotifyPostResult notifyPostResult) throws Exception {
@@ -233,6 +235,14 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 }
             }
         });
+        initTopBar();
+    }
+
+    private void initTopBar() {
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setTitle("公共说说");
+        toolBarOption.setNeedNavigation(false);
+        setToolBar(toolBarOption);
     }
 
 

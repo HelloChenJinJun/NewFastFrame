@@ -60,7 +60,6 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BatchResult;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.DeleteBatchListener;
 import cn.bmob.v3.listener.FindListener;
@@ -71,6 +70,7 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadBatchListener;
 import cn.bmob.v3.listener.UploadFileListener;
+import rx.Subscription;
 
 /**
  * 项目名称:    TestChat
@@ -2691,7 +2691,7 @@ public class MsgManager {
 
     }
 
-    public void getCommentListData(String postId, FindListener<PublicCommentBean> listener, boolean isPullRefresh, String time) {
+    public Subscription getCommentListData(String postId, FindListener<PublicCommentBean> listener, boolean isPullRefresh, String time) {
         PublicPostBean publicPostBean = new PublicPostBean();
         publicPostBean.setObjectId(postId);
         BmobQuery<PublicCommentBean> query = new BmobQuery<>();
@@ -2705,14 +2705,20 @@ public class MsgManager {
         }
         BmobDate bmobDate;
         if (isPullRefresh) {
-            LogUtil.e("加一秒后的时间" + currentTime);
             bmobDate = new BmobDate(new Date(currentTime));
-            if (time.equals("0000-00-00 01:00:00")) {
-                query.addWhereGreaterThan("createdAt", bmobDate);
-            } else {
-                query.addWhereGreaterThan("createdAt", bmobDate);
+            String updateTime=BaseApplication
+                    .getAppComponent()
+
+                    .getSharedPreferences()
+                    .getString(Constant.UPDATE_TIME_COMMENT,null);
+            if (updateTime != null&&!time.equals("0000-00-00 01:00:00")) {
+//                这里有个Bug,WhereGreaterThan 也查出相等时间的消息,所以在这里加上一秒的时间
+                long resultTime=TimeUtil.getTime(updateTime,"yyyy-MM-dd HH:mm:ss")+1000;
+                query.addWhereGreaterThan("updatedAt", new BmobDate(new Date(resultTime)));
+            }else {
                 query.addWhereGreaterThan("updatedAt", bmobDate);
             }
+            query.addWhereGreaterThanOrEqualTo("createdAt", bmobDate);
         } else {
             currentTime -= 1000;
             LogUtil.e("减一秒后的时间" + currentTime);
@@ -2722,7 +2728,7 @@ public class MsgManager {
         query.order("-createdAt");
         query.include("user,post");
         query.setLimit(10);
-        query.findObjects(listener);
+        return query.findObjects(listener);
     }
 
     public void getCommentListDetailData(String publicId, FindListener<ReplyCommentListBean> listener) {

@@ -28,4 +28,9 @@ public class ConstantUtil {
     public static final String FROM_LOGIN = "from_login";
     public static final String FROM_MAIN="from_main";
     public static final String POSITION = "position";
+    public static final String IS_ALONE = "is_alone";
+    public static final String CLASS_NUMBER = "class_number";
+    public static final String SCHOOL = "school";
+    public static final String MAJOR = "major";
+    public static final String YEAR = "year";
 }

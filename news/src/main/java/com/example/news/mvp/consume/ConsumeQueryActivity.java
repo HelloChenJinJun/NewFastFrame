@@ -42,6 +42,7 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
     private SuperRecyclerView display;
     @Inject
     ConsumeQueryAdapter consumeQueryAdapter;
+    private ReLoginUtil loginUtil;
 
     @Override
     public void updateData(ConsumeQueryBean o) {
@@ -122,6 +123,14 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
 
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (loginUtil != null) {
+            loginUtil.clear();
+        }
+    }
+
+    @Override
     public void showError(String errorMsg, final EmptyLayout.OnRetryListener listener) {
         if (AppUtil.isNetworkAvailable(this)) {
             ToastUtils.showShortToast("Cookie失效");
@@ -129,7 +138,8 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
                     .getString(ConstantUtil.ACCOUNT,null);
             String password=BaseApplication.getAppComponent().getSharedPreferences()
                     .getString(ConstantUtil.PASSWORD,null);
-            ReLoginUtil.getInstance().login(account, password, new ReLoginUtil.CallBack() {
+             loginUtil=new ReLoginUtil();
+            loginUtil.login(account, password, new ReLoginUtil.CallBack() {
                 @Override
                 public void onSuccess(SystemUserBean systemUserBean) {
                     if (listener!=null) {

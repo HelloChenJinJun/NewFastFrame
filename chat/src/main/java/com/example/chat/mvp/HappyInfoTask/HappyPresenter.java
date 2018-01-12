@@ -6,9 +6,7 @@ import com.example.chat.bean.HappyBean;
 import com.example.chat.bean.HappyResponse;
 import com.example.chat.util.ChatUtil;
 import com.example.chat.util.LogUtil;
-import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.utils.AppUtil;
 import com.google.gson.Gson;
 
 import io.reactivex.Observer;
@@ -30,7 +28,7 @@ public class HappyPresenter extends HappyContacts.Presenter {
         private Gson mGson = new Gson();
         private int mPage;
 
-    public HappyPresenter(HappyContacts.View iView, HappyContacts.Model baseModel) {
+    public HappyPresenter(HappyContacts.View<java.util.List<HappyBean>> iView, HappyContacts.Model baseModel) {
         super(iView, baseModel);
     }
 
@@ -44,19 +42,10 @@ public class HappyPresenter extends HappyContacts.Presenter {
                     }
 
                 }
-                LogUtil.e("加载的页数" + mPage);
-                if (!AppUtil.isNetworkAvailable(BaseApplication.getInstance())) {
-                      iView.hideLoading();
-                        iView.showError("网络连接失败", new EmptyLayout.OnRetryListener() {
-                                @Override
-                                public void onRetry() {
-                                        getHappyInfo(mPage,showLoading);
-                                }
-                        });
-                        return;
-                }
+
                 baseModel.getRepositoryManager().getApi(HappyApi.class).
                         getHappyInfo(ChatUtil.getHappyUrl(page,20))
+                        .compose(iView.<HappyResponse>bindLife())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<HappyResponse>() {

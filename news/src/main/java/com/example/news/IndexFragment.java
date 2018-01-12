@@ -83,49 +83,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     protected void initData() {
         titleList = new ArrayList<>();
         fragmentList=new ArrayList<>();
-//        titleList.add("地声");
-//        titleList.add("地大");
-//        titleList.add("马院");
-//        titleList.add("艺媒");
-//        titleList.add("数理");
-//        titleList.add("海洋");
-//        titleList.add("机电");
-//        titleList.add("地空");
-//        titleList.add("环境");
-//        titleList.add("工程");
-//        titleList.add("材化");
-//        titleList.add("资源");
-//        titleList.add("自动化");
-//        titleList.add("信工");
-//        titleList.add("地院");
-//        titleList.add("经管");
-//        titleList.add("公管");
-//        titleList.add("计院 ");
-//        titleList.add("地科");
-//        titleList.add("外院");
-//        titleList.add("福利");
-//        fragmentList = new ArrayList<>();
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_VOICE));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_DD));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_MY));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_YM));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_SL));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_HY));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_JD));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_DWK));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_HJ));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_GC));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_CH));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_ZY));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_ZDH));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_XY));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_DY));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_JG));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_GG));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_JSJ));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_DK));
-//        fragmentList.add(CollegeNewsMainFragment.newInstance(NewsUtil.COLLEGE_TYPE_WY));
-//        fragmentList.add(PhotoListFragment.newInstance());
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
         List<OtherNewsTypeBean> result = NewsApplication
                 .getNewsComponent().getRepositoryManager()
@@ -148,7 +105,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             public void accept(@NonNull TypeNewsEvent typeNewsEvent) throws Exception {
                 List<OtherNewsTypeBean> list=typeNewsEvent.getData();
                 initFragment(list);
-                viewPagerAdapter.notifyDataSetChanged();
+                display.setAdapter(viewPagerAdapter);
+//                viewPagerAdapter.notifyDataSetChanged();
                 display.setCurrentItem(0);
             }
         }, new Consumer<Throwable>() {
@@ -188,10 +146,13 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 customPopWindow = new CustomPopWindow.Builder().parentView(v).activity(getActivity()).contentView(getContentView())
                         .build();
             }
-            List<OtherNewsTypeBean> result = NewsApplication
-                    .getNewsComponent().getRepositoryManager().getDaoSession()
-                    .getOtherNewsTypeBeanDao().queryBuilder().where(OtherNewsTypeBeanDao
-                            .Properties.HasSelected.eq(Boolean.TRUE)).list();
+            List<OtherNewsTypeBean> result=new ArrayList<>();
+            for (String title :
+                    titleList) {
+                OtherNewsTypeBean item=new OtherNewsTypeBean();
+                item.setName(title);
+                result.add(item);
+            }
             popWindowAdapter.addData(result);
             if (!customPopWindow.isShowing()) {
                 customPopWindow.showAsDropDown(v);

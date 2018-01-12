@@ -24,6 +24,9 @@ import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.LoginEvent;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.io.File;
@@ -138,6 +141,15 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                         Intent loginIntent = new Intent(this, LoginActivity.class);
                         startActivity(loginIntent);
                         UserManager.getInstance().logout();
+                        if (!BaseApplication
+                                .getAppComponent().getSharedPreferences()
+                                .getBoolean(ConstantUtil.IS_ALONE, true)) {
+                                LoginEvent loginEvent=new LoginEvent();
+                                loginEvent.setErrorMessage("账号退出");
+                                loginEvent.setSuccess(false);
+                                RxBusManager.getInstance().post(loginEvent);
+                                loginIntent.putExtra(ConstantUtil.FROM,ConstantUtil.FROM_MAIN);
+                        }
                         finish();
 
                 }

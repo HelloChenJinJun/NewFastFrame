@@ -162,4 +162,5 @@ public class Constant {
     public static final String NOTIFY_CHANGE_ACTION = "notify_share_message_change";
     public static final String UPDATE_TIME = "update_time";
     public static final String UPDATE_TIME_SHARE = "update_time_share";
+    public static final String UPDATE_TIME_COMMENT = "update_time_comment";
 }
