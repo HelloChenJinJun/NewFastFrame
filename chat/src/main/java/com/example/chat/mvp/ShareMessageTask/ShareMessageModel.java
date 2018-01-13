@@ -14,6 +14,8 @@ import com.example.chat.util.LogUtil;
 
 import java.util.List;
 
+import rx.Subscription;
+
 /**
  * 项目名称:    TestChat
  * 创建人:        陈锦军
@@ -29,9 +31,9 @@ public class ShareMessageModel extends ShareMessageContacts.Model {
         }
 
         @Override
-        public void addShareMessage(SharedMessage shareMessage, final AddShareMessageCallBack listener) {
+        public Subscription addShareMessage(SharedMessage shareMessage, final AddShareMessageCallBack listener) {
                 if (!ChatDB.create().hasSharedMessage(shareMessage.getObjectId())) {
-                        MsgManager.getInstance().sendShareMessage(shareMessage, new AddShareMessageCallBack() {
+                       return MsgManager.getInstance().sendShareMessage(shareMessage, new AddShareMessageCallBack() {
                                 @Override
                                 public void onSuccess(SharedMessage shareMessage) {
                                         listener.onSuccess(shareMessage);
@@ -45,12 +47,13 @@ public class ShareMessageModel extends ShareMessageContacts.Model {
                 } else {
                         LogUtil.e("数据库中已经保存该说说消息了");
                         listener.onSuccess(shareMessage);
+                        return null;
                 }
         }
 
         @Override
-        public void deleteShareMessage(String id, final DealMessageCallBack dealMessageCallBack) {
-                MsgManager.getInstance().deleteShareMessage(id, new DealMessageCallBack() {
+        public Subscription deleteShareMessage(String id, final DealMessageCallBack dealMessageCallBack) {
+              return   MsgManager.getInstance().deleteShareMessage(id, new DealMessageCallBack() {
                         @Override
                         public void onSuccess(String id) {
 //                                这里可能会删除失败，因为在监听该说说的服务会先于其发送通知消息到服务那里，所以在服务那里已经删除了
@@ -66,8 +69,8 @@ public class ShareMessageModel extends ShareMessageContacts.Model {
         }
 
         @Override
-        public void addLiker(String id, final DealMessageCallBack dealMessageCallBack) {
-                MsgManager.getInstance().addLiker(id, new DealMessageCallBack() {
+        public Subscription addLiker(String id, final DealMessageCallBack dealMessageCallBack) {
+               return MsgManager.getInstance().addLiker(id, new DealMessageCallBack() {
                         @Override
                         public void onSuccess(String id) {
                                 dealMessageCallBack.onSuccess(id);
@@ -82,8 +85,8 @@ public class ShareMessageModel extends ShareMessageContacts.Model {
         }
 
         @Override
-        public void deleteLiker(String id, final DealMessageCallBack dealMessageCallBack) {
-                MsgManager.getInstance().deleteLiker(id, new DealMessageCallBack() {
+        public Subscription deleteLiker(String id, final DealMessageCallBack dealMessageCallBack) {
+              return   MsgManager.getInstance().deleteLiker(id, new DealMessageCallBack() {
                         @Override
                         public void onSuccess(String id) {
                                 dealMessageCallBack.onSuccess(id);
@@ -97,8 +100,8 @@ public class ShareMessageModel extends ShareMessageContacts.Model {
         }
 
         @Override
-        public void addComment(String id, String content, final DealCommentMsgCallBack dealCommentMsgCallBack) {
-                MsgManager.getInstance().addComment(id, content, new DealCommentMsgCallBack() {
+        public Subscription addComment(String id, String content, final DealCommentMsgCallBack dealCommentMsgCallBack) {
+               return MsgManager.getInstance().addComment(id, content, new DealCommentMsgCallBack() {
                         @Override
                         public void onSuccess(String shareMessageId, String content, int position) {
                                 dealCommentMsgCallBack.onSuccess(shareMessageId, content, position);
@@ -112,8 +115,8 @@ public class ShareMessageModel extends ShareMessageContacts.Model {
         }
 
         @Override
-        public void deleteComment(String id, int position, final DealCommentMsgCallBack dealCommentMsgCallBack) {
-                MsgManager.getInstance().deleteComment(id, position, new DealCommentMsgCallBack() {
+        public Subscription deleteComment(String id, int position, final DealCommentMsgCallBack dealCommentMsgCallBack) {
+             return    MsgManager.getInstance().deleteComment(id, position, new DealCommentMsgCallBack() {
                         @Override
                         public void onSuccess(String shareMessageId, String content, int position) {
 //                                这里返回的评论消息，唯一不同点就是是否设置了删除标记，如果设置了，就表明是推送不成功的情况
@@ -129,8 +132,8 @@ public class ShareMessageModel extends ShareMessageContacts.Model {
         }
 
         @Override
-        public void loadAllShareMessages(final boolean isPullRefresh, final String time, final LoadShareMessageCallBack loadShareMessageCallBack) {
-                MsgManager.getInstance().loadAllShareMessages(isPullRefresh, time, new LoadShareMessageCallBack() {
+        public Subscription loadAllShareMessages(final boolean isPullRefresh, final String time, final LoadShareMessageCallBack loadShareMessageCallBack) {
+             return    MsgManager.getInstance().loadAllShareMessages(isPullRefresh, time, new LoadShareMessageCallBack() {
                         @Override
                         public void onSuccess(List<SharedMessage> data) {
                                 LogUtil.e("保存到数据库之前的说说消息");
@@ -162,8 +165,8 @@ public class ShareMessageModel extends ShareMessageContacts.Model {
         }
 
         @Override
-        public void loadShareMessages(final String uid, final boolean isPullRefresh, final String time, final LoadShareMessageCallBack loadShareMessageCallBack) {
-                MsgManager.getInstance().loadShareMessages(false, uid, isPullRefresh, time, new LoadShareMessageCallBack() {
+        public Subscription loadShareMessages(final String uid, final boolean isPullRefresh, final String time, final LoadShareMessageCallBack loadShareMessageCallBack) {
+               return MsgManager.getInstance().loadShareMessages(false, uid, isPullRefresh, time, new LoadShareMessageCallBack() {
                         @Override
                         public void onSuccess(List<SharedMessage> data) {
                                 if (uid.equals(UserManager.getInstance().getCurrentUserObjectId())) {

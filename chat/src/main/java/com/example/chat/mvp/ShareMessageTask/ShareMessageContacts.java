@@ -14,6 +14,8 @@ import com.example.commonlibrary.mvp.view.IView;
 
 import java.util.List;
 
+import rx.Subscription;
+
 /**
  * 项目名称:    TestChat
  * 创建人:        陈锦军
@@ -56,30 +58,30 @@ public interface ShareMessageContacts {
                 }
 
                 //                添加一个说说item id 为objectId
-                abstract void addShareMessage(SharedMessage shareMessage, AddShareMessageCallBack addShareMessageCallBack);
+                abstract Subscription addShareMessage(SharedMessage shareMessage, AddShareMessageCallBack addShareMessageCallBack);
 
                 // 删除一个说说item
-                abstract void deleteShareMessage(String id, DealMessageCallBack dealMessageCallBack);
+                abstract Subscription deleteShareMessage(String id, DealMessageCallBack dealMessageCallBack);
 
                 //                点赞
-                abstract void addLiker(String id, DealMessageCallBack dealMessageCallBack);
+                abstract Subscription addLiker(String id, DealMessageCallBack dealMessageCallBack);
 
                 //                取消赞
-                abstract void deleteLiker(String id, DealMessageCallBack dealMessageCallBack);
+                abstract Subscription deleteLiker(String id, DealMessageCallBack dealMessageCallBack);
 
                 //添加评论
-                abstract void addComment(String id, String content, DealCommentMsgCallBack dealCommentMsgCallBack);
+                abstract Subscription addComment(String id, String content, DealCommentMsgCallBack dealCommentMsgCallBack);
 
                 //删除评论
-                abstract void deleteComment(String id, int position, DealCommentMsgCallBack dealCommentMsgCallBack);
+                abstract Subscription deleteComment(String id, int position, DealCommentMsgCallBack dealCommentMsgCallBack);
 
 
                 //                加载所有的说说消息
-                abstract void loadAllShareMessages(boolean isPullRefresh, String time, LoadShareMessageCallBack loadShareMessageCallBack);
+                abstract Subscription loadAllShareMessages(boolean isPullRefresh, String time, LoadShareMessageCallBack loadShareMessageCallBack);
 
 //                void loadAllMyShareMessages(boolean isPullRefresh, String time, LoadShareMessageCallBack loadShareMessageCallBack);
 
-                abstract  void loadShareMessages(String uid, boolean isPullRefresh, String time, LoadShareMessageCallBack loadShareMessageCallBack);
+                abstract  Subscription loadShareMessages(String uid, boolean isPullRefresh, String time, LoadShareMessageCallBack loadShareMessageCallBack);
         }
 
 

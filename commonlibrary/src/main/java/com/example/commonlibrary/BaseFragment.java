@@ -133,6 +133,13 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     }
 
 
+
+    public void showBaseDialog(String title,String message,String leftName,String rightName,View.OnClickListener leftListener, View.OnClickListener rightListener){
+        ((BaseActivity) getActivity()).showBaseDialog(title, message, leftName, rightName, leftListener, rightListener);
+
+    }
+
+
 //    public void dismissBaseDialog(){
 //        if (getActivity() != null) {
 //            ((BaseActivity) getActivity()).dismissBaseDialog();

@@ -29,7 +29,8 @@ public class OtherNewsTypeBean implements Parcelable {
     @Override
     public boolean equals(Object obj) {
         return obj!=null&&obj instanceof OtherNewsTypeBean
-                && ((OtherNewsTypeBean) obj).getTypeId().equals(getTypeId());
+                && ((OtherNewsTypeBean) obj).getTypeId()!=null
+                &&((OtherNewsTypeBean) obj).getTypeId().equals(getTypeId());
     }
 
     public String getName() {

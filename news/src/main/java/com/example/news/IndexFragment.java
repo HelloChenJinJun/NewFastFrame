@@ -82,7 +82,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     @Override
     protected void initData() {
         titleList = new ArrayList<>();
-        fragmentList=new ArrayList<>();
+        fragmentList = new ArrayList<>();
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
         List<OtherNewsTypeBean> result = NewsApplication
                 .getNewsComponent().getRepositoryManager()
@@ -94,6 +94,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         viewPagerAdapter.setTitleAndFragments(titleList, fragmentList);
         tabLayout.setupWithViewPager(display);
         display.setAdapter(viewPagerAdapter);
+        display.setOffscreenPageLimit(2);
         display.setCurrentItem(0);
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setBgColor(getResources().getColor(R.color.base_color_text_grey));
@@ -103,10 +104,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, new Consumer<TypeNewsEvent>() {
             @Override
             public void accept(@NonNull TypeNewsEvent typeNewsEvent) throws Exception {
-                List<OtherNewsTypeBean> list=typeNewsEvent.getData();
+                List<OtherNewsTypeBean> list = typeNewsEvent.getData();
                 initFragment(list);
-                display.setAdapter(viewPagerAdapter);
-//                viewPagerAdapter.notifyDataSetChanged();
+                viewPagerAdapter.notifyDataSetChanged();
                 display.setCurrentItem(0);
             }
         }, new Consumer<Throwable>() {
@@ -119,6 +119,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     private void initFragment(List<OtherNewsTypeBean> list) {
         if (list != null && list.size() > 0) {
+            for (int i = 0; i < fragmentList.size(); i++) {
+                viewPagerAdapter.destroyItem(null,i,fragmentList.get(i));
+            }
             titleList.clear();
             fragmentList.clear();
             for (OtherNewsTypeBean bean :
@@ -126,9 +129,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 titleList.add(bean.getName());
                 if (bean.getTypeId().startsWith("TYPE")) {
                     fragmentList.add(CollegeNewsMainFragment.newInstance(bean.getTypeId()));
-                }else if (TextUtils.isEmpty(bean.getTypeId())){
+                } else if (TextUtils.isEmpty(bean.getTypeId())) {
                     fragmentList.add(PhotoListFragment.newInstance());
-                }else {
+                } else {
                     fragmentList.add(OtherNewsListFragment.newInstance(bean));
                 }
             }
@@ -146,14 +149,14 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 customPopWindow = new CustomPopWindow.Builder().parentView(v).activity(getActivity()).contentView(getContentView())
                         .build();
             }
-            List<OtherNewsTypeBean> result=new ArrayList<>();
+            List<OtherNewsTypeBean> result = new ArrayList<>();
             for (String title :
                     titleList) {
-                OtherNewsTypeBean item=new OtherNewsTypeBean();
+                OtherNewsTypeBean item = new OtherNewsTypeBean();
                 item.setName(title);
                 result.add(item);
             }
-            popWindowAdapter.addData(result);
+            popWindowAdapter.refreshData(result);
             if (!customPopWindow.isShowing()) {
                 customPopWindow.showAsDropDown(v);
             } else {
@@ -171,9 +174,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
 
     }
-
-
-
 
 
     private View getContentView() {

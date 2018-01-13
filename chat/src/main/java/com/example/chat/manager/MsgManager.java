@@ -60,6 +60,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BatchResult;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.DeleteBatchListener;
 import cn.bmob.v3.listener.FindListener;
@@ -1567,9 +1568,9 @@ public class MsgManager {
         return message;
     }
 
-    public void sendShareMessage(final SharedMessage shareMessage, final AddShareMessageCallBack listener) {
+    public Subscription sendShareMessage(final SharedMessage shareMessage, final AddShareMessageCallBack listener) {
         final String time = shareMessage.getCreateTime();
-        shareMessage.save(new SaveListener<String>() {
+       return shareMessage.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
                 if (e == null) {
@@ -1604,12 +1605,12 @@ public class MsgManager {
     }
 
 
-    public void addLiker(final String id, final DealMessageCallBack dealMessageCallBack) {
+    public Subscription addLiker(final String id, final DealMessageCallBack dealMessageCallBack) {
         final SharedMessage sharedMessage = ChatDB.create().getSharedMessage(id);
         sharedMessage.getLikerList().add(UserManager.getInstance().getCurrentUserObjectId());
         SharedMessage addLike = new SharedMessage();
         addLike.setLikerList(sharedMessage.getLikerList());
-        addLike.update(sharedMessage.getObjectId(),new UpdateListener() {
+       return addLike.update(sharedMessage.getObjectId(),new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -1623,12 +1624,12 @@ public class MsgManager {
     }
 
 
-    public void deleteShareMessage(final String id, final DealMessageCallBack dealMessageCallBack) {
+    public Subscription deleteShareMessage(final String id, final DealMessageCallBack dealMessageCallBack) {
         final SharedMessage sharedMessage = ChatDB.create().getSharedMessage(id);
         LogUtil.e("删除前的说说消息格式");
         LogUtil.e(sharedMessage);
         if (sharedMessage.getMsgType().equals(Constant.MSG_TYPE_SHARE_MESSAGE_IMAGE) || sharedMessage.getMsgType().equals(Constant.MSG_TYPE_SHARE_MESSAGE_VIDEO)) {
-            BmobFile.deleteBatch(sharedMessage.getImageList().toArray(new String[]{}), new DeleteBatchListener() {
+           return BmobFile.deleteBatch(sharedMessage.getImageList().toArray(new String[]{}), new DeleteBatchListener() {
                 @Override
                 public void done(String[] strings, BmobException e) {
                     LogUtil.e("删除的所有文件");
@@ -1660,7 +1661,7 @@ public class MsgManager {
                 }
             });
         } else {
-            sharedMessage.delete(new UpdateListener() {
+           return sharedMessage.delete(new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
                     if (e == null) {
@@ -1677,7 +1678,7 @@ public class MsgManager {
     }
 
 
-    public void deleteLiker(final String id, final DealMessageCallBack dealMessageCallBack) {
+    public Subscription deleteLiker(final String id, final DealMessageCallBack dealMessageCallBack) {
         final SharedMessage sharedMessage = ChatDB.create().getSharedMessage(id);
         if (sharedMessage.getLikerList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
             sharedMessage.getLikerList().remove(UserManager.getInstance().getCurrentUserObjectId());
@@ -1685,7 +1686,7 @@ public class MsgManager {
         }
         SharedMessage deleteLike = new SharedMessage();
         deleteLike.setLikerList(sharedMessage.getLikerList());
-        sharedMessage.update(id, new UpdateListener() {
+       return sharedMessage.update(id, new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -1702,13 +1703,13 @@ public class MsgManager {
         });
     }
 
-    public void addComment(final String id, final String content, final DealCommentMsgCallBack dealCommentMsgCallBack) {
+    public Subscription addComment(final String id, final String content, final DealCommentMsgCallBack dealCommentMsgCallBack) {
         final SharedMessage sharedMessage = ChatDB.create().getSharedMessage(id);
         sharedMessage.getCommentMsgList().add(content);
 //        只更新需要的内容
         SharedMessage update = new SharedMessage();
         update.setCommentMsgList(sharedMessage.getCommentMsgList());
-        update.update(id, new UpdateListener() {
+       return update.update(id, new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -1724,7 +1725,7 @@ public class MsgManager {
     }
 
 
-    public void deleteComment(final String id, final int position, final DealCommentMsgCallBack dealCommentMsgCallBack) {
+    public Subscription deleteComment(final String id, final int position, final DealCommentMsgCallBack dealCommentMsgCallBack) {
 //                这里先进行说说主题的解绑操作
         final SharedMessage sharedMessage = ChatDB.create().getSharedMessage(id);
         if (sharedMessage.getCommentMsgList().size() > position) {
@@ -1732,7 +1733,7 @@ public class MsgManager {
 
             SharedMessage delete = new SharedMessage();
             delete.setCommentMsgList(sharedMessage.getCommentMsgList());
-            delete.update(id, new UpdateListener() {
+           return delete.update(id, new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
                     if (e == null) {
@@ -1745,15 +1746,17 @@ public class MsgManager {
                     }
                 }
             });
+        }else {
+            return null;
         }
     }
 
 
-    public void loadAllShareMessages(boolean isPullRefresh, String time, final LoadShareMessageCallBack loadShareMessageCallBack) {
-        loadShareMessages(true, null, isPullRefresh, time, loadShareMessageCallBack);
+    public Subscription loadAllShareMessages(boolean isPullRefresh, String time, final LoadShareMessageCallBack loadShareMessageCallBack) {
+       return loadShareMessages(true, null, isPullRefresh, time, loadShareMessageCallBack);
     }
 
-    public void loadShareMessages(boolean isAll, String uid, boolean isPullRefresh, String time, final LoadShareMessageCallBack loadShareMessageCallBack) {
+    public Subscription loadShareMessages(boolean isAll, String uid, boolean isPullRefresh, String time, final LoadShareMessageCallBack loadShareMessageCallBack) {
         try {
             BmobQuery<SharedMessage> query = new BmobQuery<>();
             if (isAll) {
@@ -1786,7 +1789,7 @@ public class MsgManager {
             query.order("-createdAt");
             query.setLimit(10);
             query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ONLY);
-            query.findObjects(new FindListener<SharedMessage>() {
+           return query.findObjects(new FindListener<SharedMessage>() {
                 @Override
                 public void done(List<SharedMessage> list, BmobException e) {
                     if (e == null) {
@@ -1830,6 +1833,7 @@ public class MsgManager {
         } catch (ParseException e) {
             e.printStackTrace();
             LogUtil.e("刷新查询说说消息时解析时间失败" + e.getMessage());
+            return null;
         }
     }
 
@@ -2490,7 +2494,7 @@ public class MsgManager {
         groupTableMessage.delete(deleteListener);
     }
 
-    public void getAllPostData(boolean isRefresh, String time, FindListener<PublicPostBean> findCallback) {
+    public void getAllPostData(boolean isRefresh, String uid, String time, FindListener<PublicPostBean> findCallback) {
         BmobQuery<PublicPostBean> query = new BmobQuery<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTime = 0;
@@ -2503,11 +2507,14 @@ public class MsgManager {
         BmobDate bmobDate;
         if (isRefresh) {
             bmobDate = new BmobDate(new Date(currentTime));
+            String key=Constant.UPDATE_TIME_SHARE;
+            if (uid != null) {
+                key=key+uid;
+            }
             String updateTime=BaseApplication
                     .getAppComponent()
-
                     .getSharedPreferences()
-                    .getString(Constant.UPDATE_TIME_SHARE,null);
+                    .getString(key,null);
             if (updateTime != null&&!time.equals("0000-00-00 01:00:00")) {
 //                这里有个Bug,WhereGreaterThan 也查出相等时间的消息,所以在这里加上一秒的时间
                 long resultTime=TimeUtil.getTime(updateTime,"yyyy-MM-dd HH:mm:ss")+1000;
@@ -2521,6 +2528,11 @@ public class MsgManager {
             LogUtil.e("减一秒后的时间" + currentTime);
             bmobDate = new BmobDate(new Date(currentTime));
             query.addWhereLessThan("createdAt", bmobDate);
+        }
+        if (uid != null) {
+            User user=new User();
+            user.setObjectId(uid);
+            query.addWhereEqualTo("author",new BmobPointer(user));
         }
         query.order("-createdAt");
         query.include("author");
@@ -2703,18 +2715,17 @@ public class MsgManager {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        BmobDate bmobDate;
+        BmobDate bmobDate=new BmobDate(new Date(currentTime));
         if (isPullRefresh) {
-            bmobDate = new BmobDate(new Date(currentTime));
-            String updateTime=BaseApplication
-                    .getAppComponent()
-
-                    .getSharedPreferences()
-                    .getString(Constant.UPDATE_TIME_COMMENT,null);
-            if (updateTime != null&&!time.equals("0000-00-00 01:00:00")) {
+//            bmobDate = new BmobDate(new Date(currentTime));
+//            String updateTime=BaseApplication
+//                    .getAppComponent()
+//                    .getSharedPreferences()
+//                    .getString(Constant.UPDATE_TIME_COMMENT,null);
+            if (time.equals("0000-00-00 01:00:00")) {
 //                这里有个Bug,WhereGreaterThan 也查出相等时间的消息,所以在这里加上一秒的时间
-                long resultTime=TimeUtil.getTime(updateTime,"yyyy-MM-dd HH:mm:ss")+1000;
-                query.addWhereGreaterThan("updatedAt", new BmobDate(new Date(resultTime)));
+//                long resultTime=TimeUtil.getTime(updateTime,"yyyy-MM-dd HH:mm:ss")+1000;
+//                query.addWhereGreaterThan("updatedAt", new BmobDate(new Date(resultTime)));
             }else {
                 query.addWhereGreaterThan("updatedAt", bmobDate);
             }

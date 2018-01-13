@@ -64,6 +64,8 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
     private AutoEditText userName;
     private AutoEditText passWord;
     private ImageView bg;
+    private String from;
+    private Button main;
 
     @Override
     protected void onResume() {
@@ -94,7 +96,8 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
         Button login = (Button) findViewById(R.id.btn_login_confirm);
         TextView register = (TextView) findViewById(R.id.tv_login_register);
         TextView forget = (TextView) findViewById(R.id.tv_login_forget);
-        findViewById(R.id.btn_login_main).setOnClickListener(this);
+       main= (Button) findViewById(R.id.btn_login_main);
+       main.setOnClickListener(this);
         login.setOnClickListener(this);
         register.setOnClickListener(this);
         forget.setOnClickListener(this);
@@ -106,6 +109,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
         DaggerLoginComponent.builder().loginModule(new LoginModule(this))
                 .chatMainComponent(ChatApplication.getChatMainComponent())
                 .build().inject(this);
+        from=getIntent().getStringExtra(ConstantUtil.FROM);
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
 
@@ -158,7 +162,11 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
             return;
         }
         showLoadDialog("正在登录.........");
-        if (getIntent().getStringExtra(ConstantUtil.FROM)!=null) {
+
+        if (from!=null) {
+            if (from.equals(ConstantUtil.FROM_MAIN)) {
+                main.setVisibility(View.GONE);
+            }
             presenter.registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
                 @Override
                 public void accept(LoginEvent loginEvent) throws Exception {
@@ -184,7 +192,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
 
 
     private void dealResultInfo(User user) {
-        if (getIntent().getStringExtra(ConstantUtil.FROM)!=null) {
+        if (from!=null) {
             Map<String, Object> map = new HashMap<>();
             map.put(ConstantUtil.AVATAR, user.getAvatar());
             map.put(ConstantUtil.SIGNATURE, user.getSignature());
@@ -202,7 +210,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
             map.put(ConstantUtil.COLLEGE, user.getCollege());
             map.put(ConstantUtil.YEAR,user.getYear());
             map.put(ConstantUtil.PASSWORD,user.getPw());
-            map.put(ConstantUtil.FROM, getIntent().getStringExtra(ConstantUtil.FROM));
+            map.put(ConstantUtil.FROM, from);
             Router.getInstance().deal(new RouterRequest.Builder()
                     .paramMap(map).context(this).provideName("news")
                     .actionName("person").isFinish(true).build());
@@ -247,6 +255,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
                     .getSharedPreferences()
                     .edit().putBoolean(ConstantUtil.FIRST_STATUS, false).apply();
             Intent intent = new Intent(LoginActivity.this, EditUserInfoActivity.class);
+            intent.putExtra("user",UserManager.getInstance().getCurrentUser());
             startActivityForResult(intent, Constant.REQUEST_CODE_EDIT_USER_INFO);
         } else {
             User user = UserManager.getInstance().getCurrentUser();

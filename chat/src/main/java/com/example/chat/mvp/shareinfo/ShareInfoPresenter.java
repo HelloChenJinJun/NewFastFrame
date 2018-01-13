@@ -10,7 +10,6 @@ import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;
@@ -31,12 +30,12 @@ public class ShareInfoPresenter extends RxBasePresenter<IView<List<PublicPostBea
         super(iView, baseModel);
     }
 
-    public void getAllPostData(final boolean isRefresh, final String time) {
+    public void getAllPostData(final boolean isRefresh, final String uid, final String time) {
         if (isRefresh) {
             iView.showLoading(null);
         }
         MsgManager
-                .getInstance().getAllPostData(isRefresh, time, new FindListener<PublicPostBean>() {
+                .getInstance().getAllPostData(isRefresh,uid,time, new FindListener<PublicPostBean>() {
             @Override
             public void done(List<PublicPostBean> list, BmobException e) {
                 if (e == null || e.getErrorCode() == 101) {
@@ -50,9 +49,13 @@ public class ShareInfoPresenter extends RxBasePresenter<IView<List<PublicPostBea
                             }
                         }
                         String strTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
+                        String key=Constant.UPDATE_TIME_SHARE;
+                        if (uid != null) {
+                            key=key+uid;
+                        }
                         BaseApplication.getAppComponent()
                                 .getSharedPreferences().edit()
-                                .putString(Constant.UPDATE_TIME_SHARE, strTime)
+                                .putString(key, strTime)
                                 .apply();
                     }
                     iView.updateData(list);
@@ -61,7 +64,7 @@ public class ShareInfoPresenter extends RxBasePresenter<IView<List<PublicPostBea
                     iView.showError(e.toString(), new EmptyLayout.OnRetryListener() {
                         @Override
                         public void onRetry() {
-                            getAllPostData(isRefresh, time);
+                            getAllPostData(isRefresh, uid, time);
                         }
                     });
                 }

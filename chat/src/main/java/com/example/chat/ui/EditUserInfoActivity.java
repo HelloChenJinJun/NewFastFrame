@@ -117,7 +117,24 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
 
     @Override
     public void initData() {
-        mUser = UserManager.getInstance().getCurrentUser();
+        mUser = (User) getIntent().getSerializableExtra("user");
+        if (mUser.getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+            sexLayout.setEnabled(false);
+            avatarLayout.setEnabled(false);
+            nickLayout.setEnabled(false);
+            birthLayout.setEnabled(false);
+            phoneLayout.setEnabled(false);
+            emailLayout.setEnabled(false);
+            signatureLayout.setEnabled(false);
+            schoolContainer.setEnabled(false);
+            addressLayout.setEnabled(false);
+            collegeContainer.setEnabled(false);
+            majorContainer.setEnabled(false);
+            educationContainer.setEnabled(false);
+            yearContainer.setEnabled(false);
+            classContainer.setEnabled(false);
+            nameContainer.setEnabled(false);
+        }
         nick.setText(mUser.getNick());
         birth.setText(mUser.getBirthDay());
         phone.setText(mUser.getMobilePhoneNumber());

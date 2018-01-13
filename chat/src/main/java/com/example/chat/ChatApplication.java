@@ -14,6 +14,7 @@ import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.dagger.ChatMainModule;
 import com.example.chat.dagger.DaggerChatMainComponent;
 import com.example.chat.manager.LocationManager;
+import com.example.chat.manager.UserManager;
 import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.EditUserInfoActivity;
 import com.example.chat.ui.HappyActivity;
@@ -22,6 +23,7 @@ import com.example.chat.ui.SearchActivity;
 import com.example.chat.ui.SearchFriendActivity;
 import com.example.chat.ui.SelectedFriendsActivity;
 import com.example.chat.ui.SettingsActivity;
+import com.example.chat.ui.UserDetailActivity;
 import com.example.chat.ui.WallPaperActivity;
 import com.example.chat.ui.fragment.HomeFragment;
 import com.example.chat.ui.fragment.ShareInfoFragment;
@@ -108,6 +110,7 @@ public class ChatApplication implements IModuleConfig, IAppLife {
             public RouterResult invoke(RouterRequest routerRequest) {
                 Activity activity= (Activity) routerRequest.getContext();
                 Intent intent=new Intent(activity, EditUserInfoActivity.class);
+                intent.putExtra("user", UserManager.getInstance().getCurrentUser());
                 activity.startActivity(intent);
                 return null;
             }
@@ -115,6 +118,10 @@ public class ChatApplication implements IModuleConfig, IAppLife {
         Router.getInstance().registerProvider("chat:user_index", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
+                Activity activity= (Activity) routerRequest.getContext();
+                Intent intent=new Intent(activity, UserDetailActivity.class);
+                intent.putExtra("uid",UserManager.getInstance().getCurrentUserObjectId());
+                activity.startActivity(intent);
                 return null;
             }
         });
@@ -150,7 +157,7 @@ public class ChatApplication implements IModuleConfig, IAppLife {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
                 RouterResult routerResult=new RouterResult();
-                routerResult.setObject(ShareInfoFragment.instance());
+                routerResult.setObject(ShareInfoFragment.instance(null));
                 return routerResult;
             }
         });

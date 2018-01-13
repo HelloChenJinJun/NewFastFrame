@@ -52,6 +52,9 @@ public class BasePresenter<V extends IView, M extends BaseModel> implements IPre
 
     private void unDispose() {
         if (mCompositeDisposable != null) {
+            if (!mCompositeDisposable.isDisposed()) {
+                mCompositeDisposable.dispose();
+            }
             mCompositeDisposable.clear();//保证activity结束时取消所有正在执行的订阅
         }
     }

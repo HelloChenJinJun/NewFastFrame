@@ -58,21 +58,25 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
             @Override
             public void done(List<PublicCommentBean> list, BmobException e) {
                 if (e == null || e.getErrorCode() == 101) {
-                    if (list != null && list.size() > 0) {
-                        long time = 0L;
-                        for (PublicCommentBean bean :
-                                list) {
-                            long updateTime = TimeUtil.getTime(bean.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss");
-                            if (updateTime > time) {
-                                time = updateTime;
-                            }
-                        }
-                        String strTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
-                        BaseApplication.getAppComponent()
-                                .getSharedPreferences().edit()
-                                .putString(Constant.UPDATE_TIME_COMMENT, strTime)
-                                .apply();
-                    }
+//                    if (list != null && list.size() > 0) {
+//                        long time = 0L;
+//                        for (PublicCommentBean bean :
+//                                list) {
+//                            long updateTime = TimeUtil.getTime(bean.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss");
+//                            if (updateTime > time) {
+//                                time = updateTime;
+//                            }
+//                        }
+//                        String key=Constant.UPDATE_TIME_COMMENT;
+//                        if (uid != null) {
+//                            key=key+uid;
+//                        }
+//                        String strTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
+//                        BaseApplication.getAppComponent()
+//                                .getSharedPreferences().edit()
+//                                .putString(Constant.UPDATE_TIME_COMMENT, strTime)
+//                                .apply();
+//                    }
                     iView.updateData(list);
                     iView.hideLoading();
                 } else {

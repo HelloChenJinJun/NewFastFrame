@@ -76,13 +76,8 @@ public class PersonFragment extends BaseFragment<Object, PersonPresenter> implem
         index= (RelativeLayout) findViewById(R.id.rl_fragment_person_index);
         avatar.setOnClickListener(this);
         settings.setOnClickListener(this);
-        avatar.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                NewsUtil.clearAllUserCache();
-                return true;
-            }
-        });
+        edit.setOnClickListener(this);
+        index.setOnClickListener(this);
     }
 
     @Override
@@ -154,22 +149,39 @@ public class PersonFragment extends BaseFragment<Object, PersonPresenter> implem
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.rl_fragment_person_settings) {
-            Router.getInstance().deal(new RouterRequest.Builder().context(getActivity())
-                    .provideName("chat").actionName("setting")
-                    .build());
+            if (BaseApplication.getAppComponent()
+                    .getSharedPreferences()
+                    .getBoolean(ConstantUtil.LOGIN_STATUS,false)) {
+                Router.getInstance().deal(new RouterRequest.Builder().context(getActivity())
+                        .provideName("chat").actionName("setting")
+                        .build());
+            }else {
+                ToastUtils.showShortToast("请先登录~亲~~~");
+            }
         } else if (id==R.id.rl_fragment_person_edit){
-            Router.getInstance().deal(new RouterRequest.Builder()
-            .provideName("chat").actionName("edit_user_info")
-            .context(getActivity()).build());
-
+            if (BaseApplication.getAppComponent()
+                    .getSharedPreferences()
+                    .getBoolean(ConstantUtil.LOGIN_STATUS,false)) {
+                Router.getInstance().deal(new RouterRequest.Builder()
+                        .provideName("chat").actionName("edit_user_info")
+                        .context(getActivity()).build());
+            }else {
+                ToastUtils.showShortToast("请先登录~亲~~~");
+            }
         }else if (id==R.id.rl_fragment_person_index){
-            Router.getInstance().deal(new RouterRequest.Builder()
-                    .provideName("chat").actionName("user_index")
-                    .context(getActivity()).build());
+            if (BaseApplication.getAppComponent()
+                    .getSharedPreferences()
+                    .getBoolean(ConstantUtil.LOGIN_STATUS,false)) {
+                Router.getInstance().deal(new RouterRequest.Builder()
+                        .provideName("chat").actionName("user_index")
+                        .context(getActivity()).build());
+            }else {
+                ToastUtils.showShortToast("请先登录~亲~~~");
+            }
         }else {
             if (BaseApplication.getAppComponent().getSharedPreferences().getBoolean(NewsUtil
                     .IS_LOGIN, false)) {
-                ToastUtils.showShortToast("已经登录");
+
             } else {
                 Map<String, Object> map = new HashMap<>();
                 map.put(ConstantUtil.FROM, ConstantUtil.FROM_MAIN);

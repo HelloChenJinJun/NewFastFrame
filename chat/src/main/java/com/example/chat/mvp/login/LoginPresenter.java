@@ -252,9 +252,9 @@ public class LoginPresenter extends RxBasePresenter<IView<Object>, LoginModel> {
         user.setPassword(password);
         user.setTitleWallPaper(RandomData.getRandomTitleWallPaper());
         user.setWallPaper(RandomData.getRandomWallPaper());
-        user.signUp( new SaveListener<String>() {
+        user.signUp( new SaveListener<User>() {
             @Override
-            public void done(String s, BmobException e) {
+            public void done(User s, BmobException e) {
                 iView.hideLoading();
                 if (e == null) {
 

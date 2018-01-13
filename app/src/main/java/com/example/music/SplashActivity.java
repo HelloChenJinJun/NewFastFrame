@@ -46,7 +46,7 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
     @Override
     public void onAnimationEnd(Animation animation) {
         if (BaseApplication.getAppComponent().getSharedPreferences()
-                .getBoolean(ConstantUtil.FIRST_STATUS,false)) {
+                .getBoolean(ConstantUtil.FIRST_STATUS,true)) {
             GuideActivity.start(this);
         }else {
             MainActivity.start(this);

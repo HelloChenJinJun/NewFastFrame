@@ -36,6 +36,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.PushListener;
 import cn.bmob.v3.listener.UpdateListener;
+import rx.Subscription;
 
 /**
  * 用户管理类
@@ -260,10 +261,10 @@ public class UserManager {
          * @param uid          用户ID
          * @param findListener 回调
          */
-        private void findUserById(String uid, FindListener<User> findListener) {
+        public Subscription findUserById(String uid, FindListener<User> findListener) {
                 BmobQuery<User> query = new BmobQuery<>();
                 query.addWhereEqualTo("objectId", uid);
-                query.findObjects(findListener);
+               return query.findObjects(findListener);
         }
 
         /**

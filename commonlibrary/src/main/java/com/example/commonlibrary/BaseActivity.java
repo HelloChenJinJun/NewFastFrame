@@ -34,6 +34,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 import static android.view.View.GONE;
 
 
@@ -61,6 +64,16 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     private TextView title;
     private ImageView rightImage;
     protected ImageView back;
+    private CompositeDisposable compositeDisposable=new CompositeDisposable();
+
+
+
+    protected void addDisposable(Disposable disposable){
+        compositeDisposable.add(disposable);
+    }
+
+
+
 
 
     @Nullable
@@ -367,6 +380,13 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         super.onDestroy();
         if (presenter != null) {
             presenter.onDestroy();
+        }
+        if (compositeDisposable != null) {
+            if (!compositeDisposable.isDisposed()) {
+                compositeDisposable.dispose();
+            }
+            compositeDisposable.clear();
+            compositeDisposable=null;
         }
     }
 

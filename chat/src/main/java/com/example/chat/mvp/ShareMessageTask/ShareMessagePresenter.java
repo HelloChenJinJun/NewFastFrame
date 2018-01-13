@@ -11,11 +11,14 @@ import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import rx.Subscription;
 
 /**
  * 项目名称:    TestChat
@@ -26,14 +29,19 @@ import cn.bmob.v3.listener.FindListener;
 
 public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
 
+
+
+        private Set<Subscription> subscriptionList;
+
         public ShareMessagePresenter(ShareMessageContacts.View iView, ShareMessageContacts.Model baseModel) {
                 super(iView, baseModel);
+                subscriptionList=new HashSet<>();
         }
 
         @Override
         public void addShareMessage(final SharedMessage shareMessage) {
                 iView.showLoading("正在发送说说......请稍候.........");
-                baseModel.addShareMessage(shareMessage, new AddShareMessageCallBack() {
+             Subscription subscription=   baseModel.addShareMessage(shareMessage, new AddShareMessageCallBack() {
                         @Override
                         public void onSuccess(SharedMessage shareMessage) {
                                 iView.hideLoading();
@@ -46,12 +54,13 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
                                 iView.showError("发送说说消息失败" + errorMsg + errorId, null);
                         }
                 });
+             subscriptionList.add(subscription);
         }
 
         @Override
         public void deleteShareMessage(String id) {
                 iView.showLoading("正在删除说说.......请稍后.........");
-                baseModel.deleteShareMessage(id, new DealMessageCallBack() {
+              Subscription subscription=  baseModel.deleteShareMessage(id, new DealMessageCallBack() {
                         @Override
                         public void onSuccess(String id) {
                                 iView.hideLoading();
@@ -64,13 +73,14 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
                                 iView.showError("删除说说(ObjectId：" + id + ")消息失败" + errorMsg + errorId, null);
                         }
                 });
+                subscriptionList.add(subscription);
 
         }
 
         @Override
         public void addLiker(String id) {
 //                这里的id为说说的id
-                baseModel.addLiker(id, new DealMessageCallBack() {
+               Subscription subscription= baseModel.addLiker(id, new DealMessageCallBack() {
                         @Override
                         public void onSuccess(String id) {
                                 iView.updateLikerAdd(id);
@@ -81,11 +91,12 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
                                 iView.showError("添加点赞消息失败" + errorMsg + errorId, null);
                         }
                 });
+                subscriptionList.add(subscription);
         }
 
         @Override
         public void deleteLiker(String id) {
-                baseModel.deleteLiker(id, new DealMessageCallBack() {
+              Subscription subscription=  baseModel.deleteLiker(id, new DealMessageCallBack() {
                         @Override
                         public void onSuccess(String id) {
                                 iView.updateLikerDeleted(id);
@@ -97,13 +108,14 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
                                 iView.showError("删除点赞失败" + errorMsg + errorId, null);
                         }
                 });
+                subscriptionList.add(subscription);
 
         }
 
         @Override
         public void addComment(String id, String content) {
                 iView.showLoading("正在添加评论.....");
-                baseModel.addComment(id, content, new DealCommentMsgCallBack() {
+              Subscription subscription=  baseModel.addComment(id, content, new DealCommentMsgCallBack() {
                         @Override
                         public void onSuccess(String shareMessageId, String content, int position) {
                                 iView.hideLoading();
@@ -116,13 +128,14 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
                                 iView.showError("添加评论消息失败:位置为" + position + errorMsg + errorId, null);
                         }
                 });
+                subscriptionList.add(subscription);
 
         }
 
         @Override
         public void deleteComment(String id, int position) {
                 iView.showLoading("正在删除评论");
-                baseModel.deleteComment(id, position, new DealCommentMsgCallBack() {
+               Subscription subscription= baseModel.deleteComment(id, position, new DealCommentMsgCallBack() {
                         @Override
                         public void onSuccess(String shareMessageId, String content, int position) {
                                 iView.hideLoading();
@@ -138,13 +151,14 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
                                 iView.showError("删除评论失败:位置为" + position + errorMsg + errorId, null);
                         }
                 });
+                subscriptionList.add(subscription);
         }
 
         @Override
         public void loadAllShareMessages(final boolean isPullRefresh, String time) {
                 LogUtil.e("加载所有的说说消息");
 //                mView.showLoading("正在加载......请稍后.......");
-                baseModel.loadAllShareMessages(isPullRefresh, time, new LoadShareMessageCallBack() {
+              Subscription subscription=  baseModel.loadAllShareMessages(isPullRefresh, time, new LoadShareMessageCallBack() {
                         @Override
                         public void onSuccess(List<SharedMessage> data) {
                                 iView.hideLoading();
@@ -157,11 +171,12 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
                                 iView.showError(errorMsg + errorId, null);
                         }
                 });
+                subscriptionList.add(subscription);
         }
 
         @Override
         public void loadShareMessages(String uid, final boolean isPullRefresh, String time) {
-                baseModel.loadShareMessages(uid, isPullRefresh, time, new LoadShareMessageCallBack() {
+              Subscription subscription=  baseModel.loadShareMessages(uid, isPullRefresh, time, new LoadShareMessageCallBack() {
                         @Override
                         public void onSuccess(List<SharedMessage> data) {
                                 iView.updateAllShareMessages(data, isPullRefresh);
@@ -173,13 +188,14 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
                                 iView.showError(errorMsg + errorId,null);
                         }
                 });
+                subscriptionList.add(subscription);
         }
 
         public void getUserInfo(final String uid) {
                 iView.showLoading(null);
                 BmobQuery<User> query=new BmobQuery<>();
                 query.addWhereEqualTo("objectId",uid);
-                query.findObjects(new FindListener<User>() {
+              Subscription subscription=  query.findObjects(new FindListener<User>() {
                         @Override
                         public void done(List<User> list, BmobException e) {
                                 if (e == null) {
@@ -200,5 +216,22 @@ public class ShareMessagePresenter extends ShareMessageContacts.Presenter {
                                 }
                         }
                 });
+                subscriptionList.add(subscription);
+        }
+
+
+        @Override
+        public void onDestroy() {
+                super.onDestroy();
+                if (subscriptionList != null) {
+                        for (Subscription item :
+                                subscriptionList) {
+                                if (!item.isUnsubscribed()) {
+                                        item.unsubscribe();
+                                }
+                        }
+                        subscriptionList.clear();
+                subscriptionList=null;
+                }
         }
 }

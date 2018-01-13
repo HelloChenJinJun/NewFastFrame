@@ -3,6 +3,7 @@ package com.example.chat.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
@@ -13,13 +14,11 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.ShareInfoAdapter;
-import com.example.chat.base.Constant;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.NotifyPostResult;
 import com.example.chat.bean.PublicPostBean;
@@ -37,7 +36,6 @@ import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.EditShareMessageActivity;
 import com.example.chat.ui.ImageDisplayActivity;
 import com.example.chat.ui.UserDetailActivity;
-import com.example.chat.util.PostUtil;
 import com.example.chat.view.CustomMoveMethod;
 import com.example.chat.view.fab.FloatingActionButton;
 import com.example.chat.view.fab.FloatingActionsMenu;
@@ -49,7 +47,6 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -76,15 +73,19 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     ShareInfoAdapter shareInfoAdapter;
     private SwipeRefreshLayout refresh;
     private FloatingActionsMenu mMenu;
-    private FloatingActionButton normal,video,image;
     private LinearLayout topContainer;
     private RoundAngleImageView topAvatar;
     private TextView topContent;
     private WrappedLinearLayoutManager manager;
+    private String uid;
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return true;
+        if (getArguments().getString("uid")==null) {
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @Override
@@ -102,9 +103,9 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_share_info_display);
         refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_share_info_refresh);
         mMenu = (FloatingActionsMenu) findViewById(R.id.fam_share_info_menu);
-        normal = (FloatingActionButton) findViewById(R.id.fab_share_info_normal);
-        video = (FloatingActionButton) findViewById(R.id.fab_share_info_video);
-        image = (FloatingActionButton) findViewById(R.id.fab_share_info_image);
+        FloatingActionButton normal = (FloatingActionButton) findViewById(R.id.fab_share_info_normal);
+        FloatingActionButton video = (FloatingActionButton) findViewById(R.id.fab_share_info_video);
+        FloatingActionButton image = (FloatingActionButton) findViewById(R.id.fab_share_info_image);
         topContainer= (LinearLayout) findViewById(R.id.ll_fragment_share_info_top_container);
         topAvatar=topContainer.findViewById(R.id.riv_fragment_share_info_avatar);
         topContent=topContainer.findViewById(R.id.tv_fragment_share_info_nick);
@@ -122,11 +123,17 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 .chatMainComponent(ChatApplication.getChatMainComponent())
                 .shareInfoModule(new ShareInfoModule(this))
                 .build().inject(this);
+        uid=getArguments().getString("uid");
+        if (uid != null) {
+            mMenu.setVisibility(View.GONE);
+        }else {
+            initTopBar();
+        }
+
         display.setLayoutManager(manager=new WrappedLinearLayoutManager(getContext()));
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);
         mMenu.attachToRecyclerView(display);
-//        display.addItemDecoration(new ListViewDecoration(getContext()));
         display.setAdapter(shareInfoAdapter);
         shareInfoAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
@@ -145,9 +152,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                     getActivity().startActivity(intent);
                 } else if (id == R.id.tv_item_fragment_share_info_comment) {
                     CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position));
-
                 } else if (id == R.id.tv_item_fragment_share_info_like) {
-//                    todo  首次点赞图片说说，刷新时图片没刷新出来，可能是ListImageView内部的Bug
                     presenter.addLike(shareInfoAdapter.getData(position).getObjectId());
                 } else if (id == R.id.riv_item_fragment_share_info_avatar) {
                     UserDetailActivity.start(getActivity(), shareInfoAdapter.getData(position)
@@ -217,6 +222,9 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         presenter.registerEvent(NotifyPostResult.class, new Consumer<NotifyPostResult>() {
             @Override
             public void accept(NotifyPostResult notifyPostResult) throws Exception {
+                if (uid != null && !notifyPostResult.getData().getAuthor().equals(uid)) {
+                    return;
+                }
                 topContainer.setVisibility(View.VISIBLE);
                 User user=UserCacheManager.getInstance().getUser(notifyPostResult.getData()
                         .getAuthor());
@@ -235,7 +243,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 }
             }
         });
-        initTopBar();
+
     }
 
     private void initTopBar() {
@@ -302,7 +310,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     @Override
     protected void updateView() {
         RxBusManager.getInstance().post(new NotifyEvent(NotifyEvent.TYPE_NOTIFY_POST));
-        presenter.getAllPostData(true, getRefreshTime(true));
+        presenter.getAllPostData(true, uid,getRefreshTime(true));
     }
 
 
@@ -372,9 +380,9 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             topContainer.setVisibility(View.GONE);
         }
         if (shareInfoAdapter.getData().size() > 0) {
-            presenter.getAllPostData(true, getRefreshTime(true));
+            presenter.getAllPostData(true, uid, getRefreshTime(true));
         } else {
-            presenter.getAllPostData(true, getRefreshTime(true));
+            presenter.getAllPostData(true, uid, getRefreshTime(true));
         }
     }
 
@@ -382,9 +390,9 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     public void loadMore() {
 
         if (shareInfoAdapter.getData().size() > 0) {
-            presenter.getAllPostData(false, getRefreshTime(false));
+            presenter.getAllPostData(false, uid, getRefreshTime(false));
         } else {
-            presenter.getAllPostData(false, getRefreshTime(false));
+            presenter.getAllPostData(false, uid, getRefreshTime(false));
         }
     }
 
@@ -412,7 +420,11 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         }
     }
 
-    public static ShareInfoFragment instance() {
-        return new ShareInfoFragment();
+    public static ShareInfoFragment instance(String uid) {
+        Bundle bundle=new Bundle();
+        bundle.putString("uid",uid);
+        ShareInfoFragment fragment=new ShareInfoFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 }
