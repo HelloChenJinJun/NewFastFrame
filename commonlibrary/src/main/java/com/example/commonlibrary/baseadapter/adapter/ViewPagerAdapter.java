@@ -42,14 +42,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
 
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        return super.instantiateItem(container, position);
-    }
-
-
-
-
 
 
     @Override

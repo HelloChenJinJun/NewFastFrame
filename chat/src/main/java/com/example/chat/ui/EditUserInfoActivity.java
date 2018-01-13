@@ -118,7 +118,7 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
     @Override
     public void initData() {
         mUser = (User) getIntent().getSerializableExtra("user");
-        if (mUser.getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+        if (!mUser.getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
             sexLayout.setEnabled(false);
             avatarLayout.setEnabled(false);
             nickLayout.setEnabled(false);

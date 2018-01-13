@@ -69,6 +69,12 @@ public class NewsApplication implements IModuleConfig, IAppLife {
     }
 
     private void initRouter() {
+        Router.getInstance().registerProvider("chat:pw_change", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                return null;
+            }
+        });
         Router.getInstance().registerProvider("news:person"
                 , new BaseAction() {
                     @Override

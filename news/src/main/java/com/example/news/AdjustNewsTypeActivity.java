@@ -79,6 +79,9 @@ public class AdjustNewsTypeActivity extends BaseActivity{
                 NewsApplication.getNewsComponent().getRepositoryManager().getDaoSession()
                         .getOtherNewsTypeBeanDao().update(bean);
                 upAdapter.addData(bean);
+                TypeNewsEvent typeNewsEvent=new TypeNewsEvent(TypeNewsEvent.ADD);
+                typeNewsEvent.setTypeId(bean.getTypeId());
+                RxBusManager.getInstance().post(typeNewsEvent);
             }
         });
         upAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
@@ -89,7 +92,9 @@ public class AdjustNewsTypeActivity extends BaseActivity{
                 NewsApplication.getNewsComponent().getRepositoryManager().getDaoSession()
                         .getOtherNewsTypeBeanDao().update(bean);
                 downAdapter.addData(bean);
-
+                TypeNewsEvent typeNewsEvent=new TypeNewsEvent(TypeNewsEvent.DELETE);
+                typeNewsEvent.setTypeId(bean.getTypeId());
+                RxBusManager.getInstance().post(typeNewsEvent);
             }
         });
         ToolBarOption toolBarOption=new ToolBarOption();
@@ -103,15 +108,4 @@ public class AdjustNewsTypeActivity extends BaseActivity{
         activity.startActivity(intent);
     }
 
-
-    @Override
-    public void finish() {
-        List<OtherNewsTypeBean> newBean=upAdapter.getData();
-        if (!newBean.equals(list)) {
-                RxBusManager.getInstance()
-                        .post(new TypeNewsEvent(new ArrayList<>(upAdapter.getData())));
-        }
-        super.finish();
-
-    }
 }

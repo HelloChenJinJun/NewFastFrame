@@ -157,6 +157,7 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:textColor="@color/green_500"
         android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -193,13 +194,12 @@
 
         <TextView
             android:id="@+id/tv_view_activity_user_detail_header_look"
-            android:textColor="@color/grey_100"
+            android:textColor="@color/grey_500"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="点击查看"
             android:drawablePadding="10dp"
-
             android:drawableRight="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
     </LinearLayout>
 

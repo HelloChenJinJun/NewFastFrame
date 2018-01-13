@@ -20,6 +20,7 @@ import com.example.commonlibrary.cusotomview.CustomPopWindow;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.adapter.PopWindowAdapter;
 import com.example.news.event.TypeNewsEvent;
 import com.example.news.mvp.news.NewsListFragment;
@@ -104,36 +105,39 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, new Consumer<TypeNewsEvent>() {
             @Override
             public void accept(@NonNull TypeNewsEvent typeNewsEvent) throws Exception {
-                List<OtherNewsTypeBean> list = typeNewsEvent.getData();
-                initFragment(list);
+                OtherNewsTypeBean newsTypeBean = NewsApplication.getNewsComponent()
+                        .getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
+                        .queryBuilder().where(OtherNewsTypeBeanDao.Properties.TypeId.eq(typeNewsEvent.getTypeId()))
+                        .build().list().get(0);
+                if (typeNewsEvent.getType() == TypeNewsEvent.ADD) {
+                    OtherNewsListFragment otherNewsListFragment = OtherNewsListFragment.newInstance(newsTypeBean);
+                    fragmentList.add(otherNewsListFragment);
+                    titleList.add(newsTypeBean.getName());
+                } else {
+                    int index = titleList.indexOf(newsTypeBean.getName());
+                    fragmentList.remove(index);
+                    titleList.remove(newsTypeBean.getName());
+                }
                 viewPagerAdapter.notifyDataSetChanged();
-                display.setCurrentItem(0);
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-
+                ToastUtils.showShortToast("接受模块调整信息失败"+throwable.getMessage());
             }
         });
     }
 
     private void initFragment(List<OtherNewsTypeBean> list) {
-        if (list != null && list.size() > 0) {
-            for (int i = 0; i < fragmentList.size(); i++) {
-                viewPagerAdapter.destroyItem(null,i,fragmentList.get(i));
-            }
-            titleList.clear();
-            fragmentList.clear();
-            for (OtherNewsTypeBean bean :
-                    list) {
-                titleList.add(bean.getName());
-                if (bean.getTypeId().startsWith("TYPE")) {
-                    fragmentList.add(CollegeNewsMainFragment.newInstance(bean.getTypeId()));
-                } else if (TextUtils.isEmpty(bean.getTypeId())) {
-                    fragmentList.add(PhotoListFragment.newInstance());
-                } else {
-                    fragmentList.add(OtherNewsListFragment.newInstance(bean));
-                }
+        for (OtherNewsTypeBean bean :
+                list) {
+            titleList.add(bean.getName());
+            if (bean.getTypeId().startsWith("TYPE")) {
+                fragmentList.add(CollegeNewsMainFragment.newInstance(bean.getTypeId()));
+            } else if (TextUtils.isEmpty(bean.getTypeId())) {
+                fragmentList.add(PhotoListFragment.newInstance());
+            } else {
+                fragmentList.add(OtherNewsListFragment.newInstance(bean));
             }
         }
     }

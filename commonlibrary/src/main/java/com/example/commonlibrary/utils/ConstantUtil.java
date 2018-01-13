@@ -33,4 +33,6 @@ public class ConstantUtil {
     public static final String SCHOOL = "school";
     public static final String MAJOR = "major";
     public static final String YEAR = "year";
+    public static final String PASSWORD_OLD = "pw_old";
+    public static final String PASSWORD_NEW = "pw_new";
 }
