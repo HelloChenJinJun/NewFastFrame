@@ -6,6 +6,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.example.chat.R;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.rxbus.event.PwChangeEvent;
+import com.example.commonlibrary.utils.ToastUtils;
 
 /**
  * 项目名称:    NewFastFrame
@@ -15,7 +18,6 @@ import com.example.chat.R;
  */
 
 public class AccountManageActivity extends SlideBaseActivity implements View.OnClickListener {
-    private RelativeLayout accountProtect,changePw;
     @Override
     public void updateData(Object o) {
 
@@ -23,7 +25,7 @@ public class AccountManageActivity extends SlideBaseActivity implements View.OnC
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return false;
+        return true;
     }
 
     @Override
@@ -38,29 +40,32 @@ public class AccountManageActivity extends SlideBaseActivity implements View.OnC
 
     @Override
     protected void initView() {
-        accountProtect= (RelativeLayout) findViewById(R.id.rl_activity_settings_account_manage);
-        changePw= (RelativeLayout) findViewById(R.id.rl_activity_settings_change_pw);
+        RelativeLayout accountProtect = (RelativeLayout) findViewById(R.id.rl_activity_account_manage_protect);
+        RelativeLayout changePw = (RelativeLayout) findViewById(R.id.rl_activity_account_manage_pw_change);
         accountProtect.setOnClickListener(this);
         changePw.setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
-
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setNeedNavigation(true);
+        toolBarOption.setTitle("账号管理");
+        setToolBar(toolBarOption);
     }
 
     @Override
     public void onClick(View view) {
-        int id= view.getId();
-        if (id == R.id.rl_activity_settings_change_pw) {
-                PasswordChangeActivity.start(this);
-        } else if (id == R.id.rl_activity_settings_account_manage) {
+        int id = view.getId();
+        if (id == R.id.rl_activity_account_manage_pw_change) {
+            PasswordChangeActivity.start(this);
+        } else if (id == R.id.rl_activity_account_manage_protect) {
 
         }
     }
 
     public static void start(Activity activity) {
-    Intent intent=new Intent(activity,AccountManageActivity.class);
-    activity.startActivity(intent);
+        Intent intent = new Intent(activity, AccountManageActivity.class);
+        activity.startActivity(intent);
     }
 }

@@ -10,7 +10,7 @@
         android:background="@color/divider_line_default_color"/>
     <RelativeLayout
         android:layout_marginTop="10dp"
-        android:id="@+id/rl_activity_settings_protect"
+        android:id="@+id/rl_activity_account_manage_protect"
         android:background="@color/white"
         android:padding="10dp"
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
         android:layout_height="1px"
         android:background="@color/divider_line_default_color"/>
     <RelativeLayout
-        android:id="@+id/rl_activity_settings_change_pw"
+        android:id="@+id/rl_activity_account_manage_pw_change"
         android:background="@color/white"
         android:padding="10dp"
         android:layout_width="match_parent"

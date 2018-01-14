@@ -4,11 +4,13 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.model.BaseModel;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.PwChangeEvent;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.news.MainRepositoryManager;
 import com.example.news.NewsApplication;
 import com.example.news.api.SystemInfoApi;
+import com.example.news.bean.ResetPwResult;
 import com.example.news.bean.SystemUserBean;
 import com.example.news.event.ReLoginEvent;
 import com.example.news.mvp.systeminfo.SystemInfoModel;
@@ -62,6 +64,42 @@ public class ReLoginUtil {
             compositeDisposable = null;
         }
     }
+
+
+    public void resetPw(String old,String news){
+        baseModel.getRepositoryManager().getApi(SystemInfoApi.class)
+                .resetPw(NewsUtil.PW_RESET_URL,NewsUtil.getResetPwRequestBody(old,news))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResetPwResult>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(ResetPwResult resetPwResult) {
+                        PwChangeEvent pwChangeEvent=new PwChangeEvent();
+                        pwChangeEvent.setSuccess(resetPwResult.isSuccess());
+                        pwChangeEvent.setErrorMsg(resetPwResult.isSuccess()?null:resetPwResult.getMessage());
+                        RxBusManager.getInstance().post(pwChangeEvent);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        PwChangeEvent pwChangeEvent=new PwChangeEvent();
+                        pwChangeEvent.setSuccess(false);
+                        pwChangeEvent.setErrorMsg(e!=null?e.getMessage():"系统修改密码失败");
+                        RxBusManager.getInstance().post(pwChangeEvent);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
 
 
     public void login(final String account, final String pw, final ReLoginUtil.CallBack callBack) {

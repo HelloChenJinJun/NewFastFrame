@@ -5,6 +5,7 @@ import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.news.MainRepositoryManager;
 
 import dagger.Component;
+import okhttp3.OkHttpClient;
 
 /**
  * 项目名称:    NewFastFrame
@@ -16,4 +17,5 @@ import dagger.Component;
 @Component(dependencies = AppComponent.class,modules =NewsModule.class)
 public interface NewsComponent {
     public MainRepositoryManager getRepositoryManager();
+    public OkHttpClient getOkHttpClient();
 }

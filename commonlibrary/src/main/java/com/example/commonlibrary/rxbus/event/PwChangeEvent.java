@@ -11,6 +11,15 @@ public class PwChangeEvent {
     private String old;
     private String news;
     private boolean isSuccess;
+    private String errorMsg;
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
 
     @Override
     public String toString() {
@@ -18,6 +27,7 @@ public class PwChangeEvent {
                 "old='" + old + '\'' +
                 ", news='" + news + '\'' +
                 ", isSuccess=" + isSuccess +
+                ", errorMsg='" + errorMsg + '\'' +
                 '}';
     }
 

@@ -4,36 +4,53 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.module.IModuleConfig;
+import com.example.commonlibrary.net.NetManager;
 import com.example.commonlibrary.router.BaseAction;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.router.RouterResult;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.LoginEvent;
+import com.example.commonlibrary.rxbus.event.PwChangeEvent;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.FileUtil;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.example.news.bean.ResetPwResult;
 import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.DaggerNewsComponent;
 import com.example.news.dagger.NewsComponent;
 import com.example.news.dagger.NewsModule;
 import com.example.commonlibrary.rxbus.event.UserInfoEvent;
+import com.example.news.util.NewsUtil;
 import com.example.news.util.ReLoginUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * 项目名称:    NewFastFrame
@@ -72,6 +89,10 @@ public class NewsApplication implements IModuleConfig, IAppLife {
         Router.getInstance().registerProvider("chat:pw_change", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
+                Map<String, Object> map = routerRequest.getParamMap();
+                String old = (String) map.get(ConstantUtil.PASSWORD_OLD);
+                String news = (String) map.get(ConstantUtil.PASSWORD_NEW);
+                new ReLoginUtil().resetPw(old, news);
                 return null;
             }
         });
@@ -129,11 +150,11 @@ public class NewsApplication implements IModuleConfig, IAppLife {
                                 .putString(ConstantUtil.BG_HALF, userInfoEvent.getHalfBg())
                                 .putString(ConstantUtil.BG_ALL, userInfoEvent.getAllBg())
                                 .putString(ConstantUtil.SCHOOL, userInfoEvent.getSchool())
-                                .putString(ConstantUtil.COLLEGE,userInfoEvent.getCollege())
-                                .putString(ConstantUtil.CLASS_NUMBER,userInfoEvent.getClassNumber())
-                                .putString(ConstantUtil.MAJOR,userInfoEvent.getMajor())
-                                .putString(ConstantUtil.STUDENT_TYPE,userInfoEvent.getStudentType())
-                                .putString(ConstantUtil.YEAR,userInfoEvent.getYear())
+                                .putString(ConstantUtil.COLLEGE, userInfoEvent.getCollege())
+                                .putString(ConstantUtil.CLASS_NUMBER, userInfoEvent.getClassNumber())
+                                .putString(ConstantUtil.MAJOR, userInfoEvent.getMajor())
+                                .putString(ConstantUtil.STUDENT_TYPE, userInfoEvent.getStudentType())
+                                .putString(ConstantUtil.YEAR, userInfoEvent.getYear())
                                 .putString(ConstantUtil.NICK, userInfoEvent.getNick()).apply();
                         Activity activity = (Activity) routerRequest.getContext();
                         if (userInfoEvent.getFrom().equals(ConstantUtil.FROM_LOGIN)) {
@@ -218,9 +239,14 @@ public class NewsApplication implements IModuleConfig, IAppLife {
             for (JsonElement item :
                     jsonElements) {
                 OtherNewsTypeBean bean = gson.fromJson(item, OtherNewsTypeBean.class);
-                bean.setHasSelected(true);
+                if (bean.getName().equals("头条")
+                        || bean.getName().equals("福利")
+                        || bean.getName().equals("地大")) {
+                    bean.setHasSelected(true);
+                }else {
+                    bean.setHasSelected(false);
+                }
                 result.add(bean);
-                CommonLogger.e("bean:" + bean.toString());
             }
             newsComponent.getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
                     .insertInTx(result);

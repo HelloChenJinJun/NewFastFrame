@@ -26,6 +26,7 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.LoginEvent;
+import com.example.commonlibrary.rxbus.event.UserInfoEvent;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
@@ -136,6 +137,7 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                 } else if (i == R.id.btn_setting_logout) {
                         Intent intent = new Intent(Constant.NEW_MESSAGE_ACTION);
                         intent.putExtra("isLogout", true);
+                        intent.putExtra(ConstantUtil.FROM,ConstantUtil.FROM_MAIN);
                         sendBroadcast(intent);
                         Intent loginIntent = new Intent(this, LoginActivity.class);
                         startActivity(loginIntent);
@@ -145,12 +147,14 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                                 .getBoolean(ConstantUtil.IS_ALONE, true)) {
                                 LoginEvent loginEvent=new LoginEvent();
                                 loginEvent.setErrorMessage("账号退出");
+                                UserInfoEvent userInfoEvent=new UserInfoEvent();
+                                userInfoEvent.setCollege(UserManager.getInstance().getCurrentUser().getCollege());
+                                loginEvent.setUserInfoEvent(userInfoEvent);
                                 loginEvent.setSuccess(false);
                                 RxBusManager.getInstance().post(loginEvent);
                                 loginIntent.putExtra(ConstantUtil.FROM,ConstantUtil.FROM_MAIN);
                         }
                         finish();
-
                 } else if (i == R.id.rl_activity_settings_account_manage) {
                         AccountManageActivity.start(this);
                 }

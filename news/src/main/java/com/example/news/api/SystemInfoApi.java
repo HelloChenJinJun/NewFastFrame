@@ -3,6 +3,7 @@ package com.example.news.api;
 import com.example.news.bean.CardLoginBean;
 import com.example.news.bean.ConsumeQueryBean;
 import com.example.news.bean.CourseQueryBean;
+import com.example.news.bean.ResetPwResult;
 import com.example.news.bean.ScoreBean;
 import com.example.news.bean.SystemUserBean;
 
@@ -75,4 +76,8 @@ public interface SystemInfoApi {
 
     @GET
     public Observable<ResponseBody> getOtherUserInfo(@Url String url);
+
+
+    @POST
+    public Observable<ResetPwResult> resetPw(@Url String url, @Body RequestBody resetPwRequestBody);
 }

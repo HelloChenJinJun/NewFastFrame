@@ -96,8 +96,8 @@
         <activity android:name=".ui.NearbyPeopleActivity"/>
         <activity android:name=".ui.HappyContentDisplayActivity"/>
         <activity android:name=".ui.WallPaperActivity"/>
-
-
+        <activity android:name=".ui.AccountManageActivity"/>
+        <activity android:name=".ui.PasswordChangeActivity"/>
 
         <!--小视频界面-->
         <activity android:name="mabeijianxi.camera.MediaRecorderActivity"/>

@@ -40,8 +40,11 @@ public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean
     }
 
     public void getOtherNewsListData(final boolean isShowLoading, final boolean isRefresh, final String typeId) {
+        if (iView == null) {
+            return;
+        }
         if (isShowLoading) {
-            iView.showLoading(null);
+                iView.showLoading(null);
         }
         if (isRefresh) {
             num=0;
@@ -49,6 +52,7 @@ public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean
         num++;
         baseModel.getRepositoryManager().getApi(OtherNewsApi.class)
                 .getNewsList(typeId.equals("T1348647909107")?"headline":"list",typeId,(num-1)*20)
+                .compose(iView.<Map<String,List<NewInfoBean>>>bindLife())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(new Function<Map<String, List<NewInfoBean>>, ObservableSource<NewInfoBean>>() {

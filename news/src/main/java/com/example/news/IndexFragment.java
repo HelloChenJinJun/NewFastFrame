@@ -19,6 +19,8 @@ import com.example.commonlibrary.bean.news.OtherNewsTypeBeanDao;
 import com.example.commonlibrary.cusotomview.CustomPopWindow;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.LoginEvent;
+import com.example.commonlibrary.rxbus.event.UserInfoEvent;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.adapter.PopWindowAdapter;
@@ -85,7 +87,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         titleList = new ArrayList<>();
         fragmentList = new ArrayList<>();
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
-        List<OtherNewsTypeBean> result = NewsApplication
+        final List<OtherNewsTypeBean> result = NewsApplication
                 .getNewsComponent().getRepositoryManager()
                 .getDaoSession()
                 .getOtherNewsTypeBeanDao()
@@ -95,14 +97,16 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         viewPagerAdapter.setTitleAndFragments(titleList, fragmentList);
         tabLayout.setupWithViewPager(display);
         display.setAdapter(viewPagerAdapter);
-        display.setOffscreenPageLimit(2);
+//        前面不需要刷新
+        viewPagerAdapter.setShouldRefresh(true);
+        display.setOffscreenPageLimit(1);
         display.setCurrentItem(0);
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setBgColor(getResources().getColor(R.color.base_color_text_grey));
         toolBarOption.setTitle("地大新闻");
         toolBarOption.setNeedNavigation(false);
         setToolBar(toolBarOption);
-        RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, new Consumer<TypeNewsEvent>() {
+        addDisposable(RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, new Consumer<TypeNewsEvent>() {
             @Override
             public void accept(@NonNull TypeNewsEvent typeNewsEvent) throws Exception {
                 OtherNewsTypeBean newsTypeBean = NewsApplication.getNewsComponent()
@@ -115,17 +119,60 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                     titleList.add(newsTypeBean.getName());
                 } else {
                     int index = titleList.indexOf(newsTypeBean.getName());
+                    if (index < 0) {
+                        return;
+                    }
                     fragmentList.remove(index);
                     titleList.remove(newsTypeBean.getName());
+                    display.setCurrentItem(0);
                 }
                 viewPagerAdapter.notifyDataSetChanged();
             }
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                ToastUtils.showShortToast("接受模块调整信息失败"+throwable.getMessage());
+                ToastUtils.showShortToast("接受模块调整信息失败" + throwable.getMessage());
             }
-        });
+        }));
+        addDisposable(RxBusManager.getInstance().registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
+            @Override
+            public void accept(LoginEvent loginEvent) throws Exception {
+                UserInfoEvent userInfoEvent = loginEvent.getUserInfoEvent();
+                if (userInfoEvent == null) {
+                    return;
+                }
+                String type = NewsUtil.getTypeFromName(userInfoEvent.getCollege());
+                OtherNewsTypeBean newsTypeBean=null;
+                if (type != null) {
+                    newsTypeBean = NewsApplication.getNewsComponent()
+                            .getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
+                            .queryBuilder().where(OtherNewsTypeBeanDao.Properties.TypeId.eq(type))
+                            .build().list().get(0);
+                }
+                if (newsTypeBean == null) {
+                    return;
+                }
+                TypeNewsEvent event;
+                if (loginEvent.isSuccess()) {
+                    newsTypeBean.setHasSelected(true);
+                    event = new TypeNewsEvent(TypeNewsEvent.ADD);
+                } else {
+                    newsTypeBean.setHasSelected(false);
+                    event = new TypeNewsEvent(TypeNewsEvent.DELETE);
+                }
+                NewsApplication
+                        .getNewsComponent().getRepositoryManager()
+                        .getDaoSession().getOtherNewsTypeBeanDao()
+                        .update(newsTypeBean);
+                event.setTypeId(newsTypeBean.getTypeId());
+                RxBusManager.getInstance().post(event);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                ToastUtils.showShortToast("接受注册信息失败" + throwable.getMessage());
+            }
+        }));
     }
 
     private void initFragment(List<OtherNewsTypeBean> list) {

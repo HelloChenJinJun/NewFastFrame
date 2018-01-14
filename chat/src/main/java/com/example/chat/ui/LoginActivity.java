@@ -110,6 +110,9 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
                 .chatMainComponent(ChatApplication.getChatMainComponent())
                 .build().inject(this);
         from=getIntent().getStringExtra(ConstantUtil.FROM);
+        if (from!=null&&from.equals(ConstantUtil.FROM_MAIN)) {
+            main.setVisibility(View.GONE);
+        }
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
 
@@ -162,11 +165,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
             return;
         }
         showLoadDialog("正在登录.........");
-
         if (from!=null) {
-            if (from.equals(ConstantUtil.FROM_MAIN)) {
-                main.setVisibility(View.GONE);
-            }
             presenter.registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
                 @Override
                 public void accept(LoginEvent loginEvent) throws Exception {
