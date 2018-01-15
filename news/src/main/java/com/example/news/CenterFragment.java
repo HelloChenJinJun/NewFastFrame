@@ -8,6 +8,7 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
@@ -62,6 +63,7 @@ public class CenterFragment extends BaseFragment {
     protected void initData() {
         display.setLayoutManager(new GridLayoutManager(getContext(), 3));
         centerAdapter = new CenterAdapter();
+        display.addItemDecoration(new GridSpaceDecoration(3, getResources().getDimensionPixelSize(R.dimen.padding_middle), true));
         display.setAdapter(centerAdapter);
         centerAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
