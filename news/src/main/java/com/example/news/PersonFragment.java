@@ -44,7 +44,7 @@ public class PersonFragment extends BaseFragment<Object, PersonPresenter> implem
     private TextView signature;
     private RoundAngleImageView avatar;
     private RelativeLayout titleBg;
-    private RelativeLayout settings, index, edit;
+    private RelativeLayout settings, index, edit,notify;
 
     @Override
     public void updateData(Object o) {
@@ -74,10 +74,12 @@ public class PersonFragment extends BaseFragment<Object, PersonPresenter> implem
         settings = (RelativeLayout) findViewById(R.id.rl_fragment_person_settings);
         edit = (RelativeLayout) findViewById(R.id.rl_fragment_person_edit);
         index = (RelativeLayout) findViewById(R.id.rl_fragment_person_index);
+        notify= (RelativeLayout) findViewById(R.id.rl_fragment_person_notify);
         avatar.setOnClickListener(this);
         settings.setOnClickListener(this);
         edit.setOnClickListener(this);
         index.setOnClickListener(this);
+        notify.setOnClickListener(this);
     }
 
     @Override
@@ -179,7 +181,10 @@ public class PersonFragment extends BaseFragment<Object, PersonPresenter> implem
             } else {
                 ToastUtils.showShortToast("请先登录~亲~~~");
             }
-        } else {
+        } else if (id==R.id.rl_fragment_person_notify){
+            Router.getInstance().deal(new RouterRequest.Builder().provideName("chat")
+            .actionName("notify").context(getContext()).build());
+        }else {
             if (BaseApplication.getAppComponent().getSharedPreferences().getBoolean(NewsUtil
                     .IS_LOGIN, false)) {
 

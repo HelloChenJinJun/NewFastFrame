@@ -21,11 +21,9 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.LoginEvent;
 import com.example.commonlibrary.rxbus.event.UserInfoEvent;
-import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.adapter.PopWindowAdapter;
 import com.example.news.event.TypeNewsEvent;
-import com.example.news.mvp.news.NewsListFragment;
 import com.example.news.mvp.news.college.CollegeNewsMainFragment;
 import com.example.news.mvp.news.othernew.OtherNewsListFragment;
 import com.example.news.mvp.news.othernew.photolist.PhotoListFragment;
@@ -84,26 +82,13 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     protected void initData() {
-        titleList = new ArrayList<>();
-        fragmentList = new ArrayList<>();
+        initFragment();
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
-        final List<OtherNewsTypeBean> result = NewsApplication
-                .getNewsComponent().getRepositoryManager()
-                .getDaoSession()
-                .getOtherNewsTypeBeanDao()
-                .queryBuilder().where(OtherNewsTypeBeanDao.Properties.HasSelected.eq(Boolean.TRUE))
-                .build().list();
-        initFragment(result);
         viewPagerAdapter.setTitleAndFragments(titleList, fragmentList);
         tabLayout.setupWithViewPager(display);
         display.setAdapter(viewPagerAdapter);
-//        前面不需要刷新
-        viewPagerAdapter.setShouldRefresh(true);
-        display.setOffscreenPageLimit(1);
-        display.setCurrentItem(0);
         ToolBarOption toolBarOption = new ToolBarOption();
-        toolBarOption.setBgColor(getResources().getColor(R.color.base_color_text_grey));
-        toolBarOption.setTitle("地大新闻");
+        toolBarOption.setTitle("12地大新闻");
         toolBarOption.setNeedNavigation(false);
         setToolBar(toolBarOption);
         addDisposable(RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, new Consumer<TypeNewsEvent>() {
@@ -131,7 +116,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         }, new Consumer<Throwable>() {
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception {
-                ToastUtils.showShortToast("接受模块调整信息失败" + throwable.getMessage());
+                ToastUtils.showShortToast("1接受模块调整信息失败" + throwable.getMessage());
             }
         }));
         addDisposable(RxBusManager.getInstance().registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
@@ -175,9 +160,30 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         }));
     }
 
-    private void initFragment(List<OtherNewsTypeBean> list) {
+    private void initFragment() {
+        titleList = new ArrayList<>();
+        fragmentList = new ArrayList<>();
+       List<OtherNewsTypeBean> list= NewsApplication
+                .getNewsComponent().getRepositoryManager()
+                .getDaoSession()
+                .getOtherNewsTypeBeanDao()
+                .queryBuilder().where(OtherNewsTypeBeanDao.Properties.HasSelected.eq(Boolean.TRUE))
+                .build().list();
+        List<OtherNewsTypeBean> tempList=new ArrayList<>();
+        List<OtherNewsTypeBean> otherList=new ArrayList<>();
         for (OtherNewsTypeBean bean :
                 list) {
+            if (bean.getName().equals("地大")
+                    ||bean.getName().equals("福利")
+                    ||bean.getName().equals("头条")) {
+                tempList.add(bean);
+            }else {
+                otherList.add(bean);
+            }
+        }
+        otherList.addAll(0,tempList);
+        for (OtherNewsTypeBean bean :
+                otherList) {
             titleList.add(bean.getName());
             if (bean.getTypeId().startsWith("TYPE")) {
                 fragmentList.add(CollegeNewsMainFragment.newInstance(bean.getTypeId()));

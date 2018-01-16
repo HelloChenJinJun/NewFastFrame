@@ -27,6 +27,9 @@ public class PhotoListPresenter extends BasePresenter<IView<PictureBean>,PhotoLi
     }
 
     public void getPhotoListData(final boolean isShowLoading, final boolean isRefresh) {
+        if (iView == null) {
+            return;
+        }
         if (isShowLoading) {
             iView.showLoading(null);
         }

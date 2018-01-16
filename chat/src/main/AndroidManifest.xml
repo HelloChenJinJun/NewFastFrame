@@ -98,6 +98,7 @@
         <activity android:name=".ui.WallPaperActivity"/>
         <activity android:name=".ui.AccountManageActivity"/>
         <activity android:name=".ui.PasswordChangeActivity"/>
+        <activity android:name=".mvp.notify.SystemNotifyActivity"/>
 
         <!--小视频界面-->
         <activity android:name="mabeijianxi.camera.MediaRecorderActivity"/>

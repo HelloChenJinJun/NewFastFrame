@@ -42,6 +42,9 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
 
 
     public void getCugNewsData(final boolean isShowLoading, final boolean isRefresh, final String url) {
+        if (iView == null) {
+            return;
+        }
         if (isShowLoading) {
             iView.showLoading(null);
         }

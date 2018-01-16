@@ -15,6 +15,7 @@ import com.example.chat.dagger.ChatMainModule;
 import com.example.chat.dagger.DaggerChatMainComponent;
 import com.example.chat.manager.LocationManager;
 import com.example.chat.manager.UserManager;
+import com.example.chat.mvp.notify.SystemNotifyActivity;
 import com.example.chat.ui.BasePreViewActivity;
 import com.example.chat.ui.EditUserInfoActivity;
 import com.example.chat.ui.HappyActivity;
@@ -53,6 +54,7 @@ import cn.bmob.v3.Bmob;
 import mabeijianxi.camera.VCamera;
 import mabeijianxi.camera.util.DeviceUtils;
 import okhttp3.OkHttpClient;
+import okhttp3.Route;
 
 /**
  * 项目名称:    NewFastFrame
@@ -105,6 +107,17 @@ public class ChatApplication implements IModuleConfig, IAppLife {
     }
 
     private void initRouter() {
+        Router.getInstance().registerProvider("chat:notify", new BaseAction() {
+            @Override
+            public RouterResult invoke(RouterRequest routerRequest) {
+                Activity activity= (Activity) routerRequest.getContext();
+                Intent intent=new Intent(activity,SystemNotifyActivity.class);
+                activity.startActivity(intent);
+                return null;
+            }
+        });
+
+
         Router.getInstance().registerProvider("chat:edit_user_info", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
