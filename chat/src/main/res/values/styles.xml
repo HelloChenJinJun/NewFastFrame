@@ -17,11 +17,11 @@
 
 
     <style name="ImageFolderPopupWindow">
-        <item name="android:windowEnterAnimation">@anim/popup_input</item>
-        <item name="android:windowExitAnimation">@anim/popup_output</item>
-        <item name="android:windowBackground">@color/transparent_middle</item>
-        <!--<item name="android:windowBackground">@color/transparent</item>-->
-    </style>
+    <item name="android:windowEnterAnimation">@anim/popup_input</item>
+    <item name="android:windowExitAnimation">@anim/popup_output</item>
+    <item name="android:windowBackground">@color/transparent_middle</item>
+    <!--<item name="android:windowBackground">@color/transparent</item>-->
+</style>
 
 
     <style name="ActionBar">

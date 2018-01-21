@@ -21,7 +21,7 @@ import com.example.chat.view.ListImageView;
 public class VideoShareInfoHolder extends BaseShareInfoViewHolder {
     public VideoShareInfoHolder(View view) {
         super(view);
-        ViewStub viewStub = (ViewStub) itemView.findViewById(R.id.vs_item_fragment_share_info_stub);
+        ViewStub viewStub = itemView.findViewById(R.id.vs_item_fragment_share_info_stub);
         viewStub.setLayoutResource(R.layout.item_fragment_share_info_video);
         viewStub.inflate();
     }
@@ -34,7 +34,5 @@ public class VideoShareInfoHolder extends BaseShareInfoViewHolder {
                     .get(0))
                     .setOnItemChildClickListener(R.id.iv_item_fragment_share_info_video_display);
         }
-
-
     }
 }

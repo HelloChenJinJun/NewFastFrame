@@ -260,6 +260,5 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
             User user = UserManager.getInstance().getCurrentUser();
             dealResultInfo(user);
         }
-
     }
 }
