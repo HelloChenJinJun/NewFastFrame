@@ -44,7 +44,7 @@ public class PersonFragment extends BaseFragment<Object, PersonPresenter> implem
     private TextView signature;
     private RoundAngleImageView avatar;
     private RelativeLayout titleBg;
-    private RelativeLayout settings,index,edit;
+    private RelativeLayout settings, index, edit,notify;
 
     @Override
     public void updateData(Object o) {
@@ -72,12 +72,14 @@ public class PersonFragment extends BaseFragment<Object, PersonPresenter> implem
         avatar = (RoundAngleImageView) findViewById(R.id.riv_fragment_person_avatar);
         titleBg = (RelativeLayout) findViewById(R.id.rl_fragment_person_title_bg);
         settings = (RelativeLayout) findViewById(R.id.rl_fragment_person_settings);
-        edit= (RelativeLayout) findViewById(R.id.rl_fragment_person_edit);
-        index= (RelativeLayout) findViewById(R.id.rl_fragment_person_index);
+        edit = (RelativeLayout) findViewById(R.id.rl_fragment_person_edit);
+        index = (RelativeLayout) findViewById(R.id.rl_fragment_person_index);
+        notify= (RelativeLayout) findViewById(R.id.rl_fragment_person_notify);
         avatar.setOnClickListener(this);
         settings.setOnClickListener(this);
         edit.setOnClickListener(this);
         index.setOnClickListener(this);
+        notify.setOnClickListener(this);
     }
 
     @Override
@@ -103,9 +105,10 @@ public class PersonFragment extends BaseFragment<Object, PersonPresenter> implem
             @Override
             public void accept(LoginEvent loginEvent) throws Exception {
                 if (!loginEvent.isSuccess()) {
-                    ToastUtils.showShortToast(loginEvent.getErrorMessage());
+//                    ToastUtils.showShortToast(loginEvent.getErrorMessage());
                     NewsUtil.clearAllUserCache();
-                    updateUserInfo(null,null,null);
+                    updateUserInfo(null, null, null);
+//                    getActivity().finish();
                 }
             }
         });
@@ -151,33 +154,36 @@ public class PersonFragment extends BaseFragment<Object, PersonPresenter> implem
         if (id == R.id.rl_fragment_person_settings) {
             if (BaseApplication.getAppComponent()
                     .getSharedPreferences()
-                    .getBoolean(ConstantUtil.LOGIN_STATUS,false)) {
+                    .getBoolean(ConstantUtil.LOGIN_STATUS, false)) {
                 Router.getInstance().deal(new RouterRequest.Builder().context(getActivity())
                         .provideName("chat").actionName("setting")
                         .build());
-            }else {
+            } else {
                 ToastUtils.showShortToast("请先登录~亲~~~");
             }
-        } else if (id==R.id.rl_fragment_person_edit){
+        } else if (id == R.id.rl_fragment_person_edit) {
             if (BaseApplication.getAppComponent()
                     .getSharedPreferences()
-                    .getBoolean(ConstantUtil.LOGIN_STATUS,false)) {
+                    .getBoolean(ConstantUtil.LOGIN_STATUS, false)) {
                 Router.getInstance().deal(new RouterRequest.Builder()
                         .provideName("chat").actionName("edit_user_info")
                         .context(getActivity()).build());
-            }else {
+            } else {
                 ToastUtils.showShortToast("请先登录~亲~~~");
             }
-        }else if (id==R.id.rl_fragment_person_index){
+        } else if (id == R.id.rl_fragment_person_index) {
             if (BaseApplication.getAppComponent()
                     .getSharedPreferences()
-                    .getBoolean(ConstantUtil.LOGIN_STATUS,false)) {
+                    .getBoolean(ConstantUtil.LOGIN_STATUS, false)) {
                 Router.getInstance().deal(new RouterRequest.Builder()
                         .provideName("chat").actionName("user_index")
                         .context(getActivity()).build());
-            }else {
+            } else {
                 ToastUtils.showShortToast("请先登录~亲~~~");
             }
+        } else if (id==R.id.rl_fragment_person_notify){
+            Router.getInstance().deal(new RouterRequest.Builder().provideName("chat")
+            .actionName("notify").context(getContext()).build());
         }else {
             if (BaseApplication.getAppComponent().getSharedPreferences().getBoolean(NewsUtil
                     .IS_LOGIN, false)) {

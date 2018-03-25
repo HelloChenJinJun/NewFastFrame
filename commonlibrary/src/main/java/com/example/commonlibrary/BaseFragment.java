@@ -28,6 +28,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 import static android.view.View.GONE;
 
 /**
@@ -55,6 +58,16 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     @Nullable
     @Inject
     protected P presenter;
+
+
+    private CompositeDisposable compositeDisposable=new CompositeDisposable();
+
+
+
+
+    protected void addDisposable(Disposable disposable){
+        compositeDisposable.add(disposable);
+    }
 
 
     protected abstract boolean isNeedHeadLayout();
@@ -138,13 +151,6 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
         ((BaseActivity) getActivity()).showBaseDialog(title, message, leftName, rightName, leftListener, rightListener);
 
     }
-
-
-//    public void dismissBaseDialog(){
-//        if (getActivity() != null) {
-//            ((BaseActivity) getActivity()).dismissBaseDialog();
-//        }
-//    }
 
 
     protected View findViewById(int id) {
@@ -320,6 +326,11 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (compositeDisposable != null) {
+            if (!compositeDisposable.isDisposed()) {
+                compositeDisposable.dispose();
+            }
+        }
     }
 
 
@@ -380,6 +391,10 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
         }
         currentFragment = fragment;
     }
+
+
+
+
 
 
 }

@@ -2,7 +2,6 @@ package com.example.chat.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -42,8 +41,6 @@ import io.reactivex.disposables.Disposable;
 
 public class PollService extends Service {
 
-        private Handler mHandler;
-        private int time;
         private Disposable disposable;
 
         @Nullable
@@ -55,6 +52,7 @@ public class PollService extends Service {
 
         @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
+                int time;
                 if (intent != null) {
                         time = intent.getIntExtra("time", 10);
                 } else {
@@ -86,22 +84,6 @@ public class PollService extends Service {
 
                                 }
                         });
-//                new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                                LogUtil.e("后台定时服务run22334566789");
-//                                Looper.prepare();
-//                                mHandler = new Handler() {
-//                                        @Override
-//                                        public void handleMessage(Message msg) {
-//                                                dealWork();
-//                                                sendEmptyMessageDelayed(0, time * 1000);
-//                                        }
-//                                };
-//                                mHandler.sendEmptyMessage(0);
-//                                Looper.loop();
-//                        }
-//                }).start();
                 return super.onStartCommand(intent, START_FLAG_RETRY, startId);
         }
 

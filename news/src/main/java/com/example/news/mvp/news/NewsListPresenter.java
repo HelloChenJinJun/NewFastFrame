@@ -42,6 +42,9 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
 
 
     public void getCugNewsData(final boolean isShowLoading, final boolean isRefresh, final String url) {
+        if (iView == null) {
+            return;
+        }
         if (isShowLoading) {
             iView.showLoading(null);
         }
@@ -56,7 +59,6 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             num--;
             return;
         }
-
         if (isRefresh) {
             if (NewsUtil.CUG_NEWS.equals(url) || NewsUtil.DK_INDEX_URL.equals(url)
                     || NewsUtil.JG_INDEX_URL.equals(url)
@@ -82,6 +84,7 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
         String realUrl = isRefresh ? url : NewsUtil.getCollegeNewsUrl(url, totalPage, num);
         baseModel.getRepositoryManager().getApi(CugNewsApi.class)
                 .getCugNewsData(realUrl).subscribeOn(Schedulers.io())
+                .compose(iView.<ResponseBody>bindLife())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseBody>() {
                     @Override

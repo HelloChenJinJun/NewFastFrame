@@ -26,6 +26,7 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.LoginEvent;
+import com.example.commonlibrary.rxbus.event.UserInfoEvent;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
@@ -53,7 +54,7 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
         private TextView account;
         private TextView nick;
         private SwitchCompat notification;
-        private LinearLayout clear;
+        private RelativeLayout clear,accountManage;
         private TextView chatFlow;
         private Button logout;
         private String localImagePath;
@@ -81,17 +82,16 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                 account = (TextView) findViewById(R.id.tv_setting_account);
                 nick = (TextView) findViewById(R.id.tv_tv_setting_nick);
                 avatar = (RoundAngleImageView) findViewById(R.id.riv_setting_avatar);
-                RelativeLayout notificationLayout = (RelativeLayout) findViewById(R.id.rl_setting_notification);
-                ((TextView) notificationLayout.findViewById(R.id.tv_setting_item_title)).setText("通知提醒");
-                notification = (SwitchCompat) findViewById(R.id.switch_setting_item_check);
-                clear = (LinearLayout) findViewById(R.id.ll_setting_clear);
-                ((TextView) clear.findViewById(R.id.tv_group_info_item_layout_title)).setText("清空所有的聊天记录");
-                chatFlow = (TextView) clear.findViewById(R.id.tv_group_info_item_layout_value);
+                notification = (SwitchCompat) findViewById(R.id.sc_activity_settings_notify);
+                clear = (RelativeLayout) findViewById(R.id.rl_activity_settings_clear);
+                accountManage= (RelativeLayout) findViewById(R.id.rl_activity_settings_account_manage);
                 logout = (Button) findViewById(R.id.btn_setting_logout);
                 headerLayout.setOnClickListener(this);
                 clear.setOnClickListener(this);
+                accountManage.setOnClickListener(this);
                 logout.setOnClickListener(this);
                 notification.setOnCheckedChangeListener(this);
+
         }
 
 
@@ -124,7 +124,7 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                         }
                         showChooseDialog("拍照", mStringList, this);
 
-                } else if (i == R.id.ll_setting_clear) {
+                } else if (i == R.id.rl_activity_settings_clear) {
                         showLoadDialog("正在删除所有的聊天记录..........");
                         new Thread(new Runnable() {
                                 @Override
@@ -137,6 +137,7 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                 } else if (i == R.id.btn_setting_logout) {
                         Intent intent = new Intent(Constant.NEW_MESSAGE_ACTION);
                         intent.putExtra("isLogout", true);
+                        intent.putExtra(ConstantUtil.FROM,ConstantUtil.FROM_MAIN);
                         sendBroadcast(intent);
                         Intent loginIntent = new Intent(this, LoginActivity.class);
                         startActivity(loginIntent);
@@ -146,12 +147,16 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                                 .getBoolean(ConstantUtil.IS_ALONE, true)) {
                                 LoginEvent loginEvent=new LoginEvent();
                                 loginEvent.setErrorMessage("账号退出");
+                                UserInfoEvent userInfoEvent=new UserInfoEvent();
+                                userInfoEvent.setCollege(UserManager.getInstance().getCurrentUser().getCollege());
+                                loginEvent.setUserInfoEvent(userInfoEvent);
                                 loginEvent.setSuccess(false);
                                 RxBusManager.getInstance().post(loginEvent);
                                 loginIntent.putExtra(ConstantUtil.FROM,ConstantUtil.FROM_MAIN);
                         }
                         finish();
-
+                } else if (i == R.id.rl_activity_settings_account_manage) {
+                        AccountManageActivity.start(this);
                 }
 
         }

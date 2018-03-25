@@ -19,10 +19,11 @@ import com.example.commonlibrary.bean.news.OtherNewsTypeBeanDao;
 import com.example.commonlibrary.cusotomview.CustomPopWindow;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.rxbus.event.LoginEvent;
+import com.example.commonlibrary.rxbus.event.UserInfoEvent;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.adapter.PopWindowAdapter;
 import com.example.news.event.TypeNewsEvent;
-import com.example.news.mvp.news.NewsListFragment;
 import com.example.news.mvp.news.college.CollegeNewsMainFragment;
 import com.example.news.mvp.news.othernew.OtherNewsListFragment;
 import com.example.news.mvp.news.othernew.photolist.PhotoListFragment;
@@ -81,59 +82,115 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     protected void initData() {
+        initFragment();
+        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        viewPagerAdapter.setTitleAndFragments(titleList, fragmentList);
+        tabLayout.setupWithViewPager(display);
+        display.setAdapter(viewPagerAdapter);
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setTitle("12地大新闻");
+        toolBarOption.setNeedNavigation(false);
+        setToolBar(toolBarOption);
+        addDisposable(RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, new Consumer<TypeNewsEvent>() {
+            @Override
+            public void accept(@NonNull TypeNewsEvent typeNewsEvent) throws Exception {
+                OtherNewsTypeBean newsTypeBean = NewsApplication.getNewsComponent()
+                        .getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
+                        .queryBuilder().where(OtherNewsTypeBeanDao.Properties.TypeId.eq(typeNewsEvent.getTypeId()))
+                        .build().list().get(0);
+                if (typeNewsEvent.getType() == TypeNewsEvent.ADD) {
+                    OtherNewsListFragment otherNewsListFragment = OtherNewsListFragment.newInstance(newsTypeBean);
+                    fragmentList.add(otherNewsListFragment);
+                    titleList.add(newsTypeBean.getName());
+                } else {
+                    int index = titleList.indexOf(newsTypeBean.getName());
+                    if (index < 0) {
+                        return;
+                    }
+                    fragmentList.remove(index);
+                    titleList.remove(newsTypeBean.getName());
+                    display.setCurrentItem(0);
+                }
+                viewPagerAdapter.notifyDataSetChanged();
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                ToastUtils.showShortToast("1接受模块调整信息失败" + throwable.getMessage());
+            }
+        }));
+        addDisposable(RxBusManager.getInstance().registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
+            @Override
+            public void accept(LoginEvent loginEvent) throws Exception {
+                UserInfoEvent userInfoEvent = loginEvent.getUserInfoEvent();
+                if (userInfoEvent == null) {
+                    return;
+                }
+                String type = NewsUtil.getTypeFromName(userInfoEvent.getCollege());
+                OtherNewsTypeBean newsTypeBean=null;
+                if (type != null) {
+                    newsTypeBean = NewsApplication.getNewsComponent()
+                            .getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
+                            .queryBuilder().where(OtherNewsTypeBeanDao.Properties.TypeId.eq(type))
+                            .build().list().get(0);
+                }
+                if (newsTypeBean == null) {
+                    return;
+                }
+                TypeNewsEvent event;
+                if (loginEvent.isSuccess()) {
+                    newsTypeBean.setHasSelected(true);
+                    event = new TypeNewsEvent(TypeNewsEvent.ADD);
+                } else {
+                    newsTypeBean.setHasSelected(false);
+                    event = new TypeNewsEvent(TypeNewsEvent.DELETE);
+                }
+                NewsApplication
+                        .getNewsComponent().getRepositoryManager()
+                        .getDaoSession().getOtherNewsTypeBeanDao()
+                        .update(newsTypeBean);
+                event.setTypeId(newsTypeBean.getTypeId());
+                RxBusManager.getInstance().post(event);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                ToastUtils.showShortToast("接受注册信息失败" + throwable.getMessage());
+            }
+        }));
+    }
+
+    private void initFragment() {
         titleList = new ArrayList<>();
         fragmentList = new ArrayList<>();
-        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
-        List<OtherNewsTypeBean> result = NewsApplication
+       List<OtherNewsTypeBean> list= NewsApplication
                 .getNewsComponent().getRepositoryManager()
                 .getDaoSession()
                 .getOtherNewsTypeBeanDao()
                 .queryBuilder().where(OtherNewsTypeBeanDao.Properties.HasSelected.eq(Boolean.TRUE))
                 .build().list();
-        initFragment(result);
-        viewPagerAdapter.setTitleAndFragments(titleList, fragmentList);
-        tabLayout.setupWithViewPager(display);
-        display.setAdapter(viewPagerAdapter);
-        display.setOffscreenPageLimit(2);
-        display.setCurrentItem(0);
-        ToolBarOption toolBarOption = new ToolBarOption();
-        toolBarOption.setBgColor(getResources().getColor(R.color.base_color_text_grey));
-        toolBarOption.setTitle("地大新闻");
-        toolBarOption.setNeedNavigation(false);
-        setToolBar(toolBarOption);
-        RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, new Consumer<TypeNewsEvent>() {
-            @Override
-            public void accept(@NonNull TypeNewsEvent typeNewsEvent) throws Exception {
-                List<OtherNewsTypeBean> list = typeNewsEvent.getData();
-                initFragment(list);
-                viewPagerAdapter.notifyDataSetChanged();
-                display.setCurrentItem(0);
+        List<OtherNewsTypeBean> tempList=new ArrayList<>();
+        List<OtherNewsTypeBean> otherList=new ArrayList<>();
+        for (OtherNewsTypeBean bean :
+                list) {
+            if (bean.getName().equals("地大")
+                    ||bean.getName().equals("福利")
+                    ||bean.getName().equals("头条")) {
+                tempList.add(bean);
+            }else {
+                otherList.add(bean);
             }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception {
-
-            }
-        });
-    }
-
-    private void initFragment(List<OtherNewsTypeBean> list) {
-        if (list != null && list.size() > 0) {
-            for (int i = 0; i < fragmentList.size(); i++) {
-                viewPagerAdapter.destroyItem(null,i,fragmentList.get(i));
-            }
-            titleList.clear();
-            fragmentList.clear();
-            for (OtherNewsTypeBean bean :
-                    list) {
-                titleList.add(bean.getName());
-                if (bean.getTypeId().startsWith("TYPE")) {
-                    fragmentList.add(CollegeNewsMainFragment.newInstance(bean.getTypeId()));
-                } else if (TextUtils.isEmpty(bean.getTypeId())) {
-                    fragmentList.add(PhotoListFragment.newInstance());
-                } else {
-                    fragmentList.add(OtherNewsListFragment.newInstance(bean));
-                }
+        }
+        otherList.addAll(0,tempList);
+        for (OtherNewsTypeBean bean :
+                otherList) {
+            titleList.add(bean.getName());
+            if (bean.getTypeId().startsWith("TYPE")) {
+                fragmentList.add(CollegeNewsMainFragment.newInstance(bean.getTypeId()));
+            } else if (TextUtils.isEmpty(bean.getTypeId())) {
+                fragmentList.add(PhotoListFragment.newInstance());
+            } else {
+                fragmentList.add(OtherNewsListFragment.newInstance(bean));
             }
         }
     }

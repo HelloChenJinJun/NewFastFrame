@@ -1,9 +1,5 @@
 package com.example.news.event;
 
-import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
-
-import java.util.List;
-
 /**
  * 项目名称:    NewFastFrame
  * 创建人:        陈锦军
@@ -12,18 +8,33 @@ import java.util.List;
  */
 
 public class TypeNewsEvent {
-    private List<OtherNewsTypeBean> data;
+    public static final  int DELETE=0;
+    public static final int ADD=1;
 
 
-    public TypeNewsEvent(List<OtherNewsTypeBean> data) {
-        this.data = data;
+    private int type;
+
+
+    private String typeId;
+
+    public String getTypeId() {
+        return typeId;
     }
 
-    public List<OtherNewsTypeBean> getData() {
-        return data;
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
     }
 
-    public void setData(List<OtherNewsTypeBean> data) {
-        this.data = data;
+    public TypeNewsEvent(int type) {
+        this.type = type;
+    }
+
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

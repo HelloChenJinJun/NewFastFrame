@@ -157,6 +157,5 @@ public class ChatNotificationManager {
                         builder.setContentIntent(pendingIntent);
                 }
                 sNotificationManager.notify(Constant.NOTIFY_ID, builder.build());
-                sNotificationManager.notify(Constant.NOTIFY_ID, builder.build());
         }
 }

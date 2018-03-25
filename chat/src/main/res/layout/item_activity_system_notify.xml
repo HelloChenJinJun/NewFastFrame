@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@color/chat_bg"
+    android:paddingTop="20dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:textSize="12sp"
+        android:text="01-12 15:12"
+        android:background="@drawable/custom_drawable_notify_time_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:id="@+id/tv_item_activity_system_notify_time"
+        android:layout_marginBottom="20dp"/>
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:elevation="20dp">
+
+
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_item_activity_system_notify_title"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="标题"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+
+
+            <ImageView
+                android:src="@drawable/wallpaper_bg"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/iv_item_activity_system_notify_image"
+                android:scaleType="centerCrop"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textColor="@color/grey_500"
+                android:textSize="10sp"
+                android:id="@+id/tv_item_activity_system_notify_sub_title"
+                android:text="子标题"
+                />
+
+
+            <View
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/divider_line_default_color"/>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/black"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="阅读全文"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+            </RelativeLayout>
+
+
+
+
+        </LinearLayout>
+
+
+
+
+
+
+
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

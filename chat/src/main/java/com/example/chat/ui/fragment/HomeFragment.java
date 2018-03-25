@@ -71,6 +71,7 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -80,6 +81,9 @@ import java.util.List;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import rx.Subscription;
 
 import static android.view.View.GONE;
 
@@ -195,8 +199,21 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
 //                注册消息接受器
         initReceiver();
         getWeatherInfo();
+        user = UserManager.getInstance().getCurrentUser();
         initUserInfo();
-
+       Disposable disposable=RxBusManager.getInstance().registerEvent(User.class, new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+                HomeFragment.this.user=user;
+                initUserInfo();
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                    ToastUtils.showShortToast("更新获取用户信息失败"+throwable.getMessage());
+            }
+        });
+       addDisposable(disposable);
         if (from != null && from.equals(Constant.NOTIFICATION_TAG_GROUP_MESSAGE)) {
             Intent intent = new Intent(getActivity(), ChatActivity.class);
             intent.putExtra("id", getActivity().getIntent().getStringExtra("groupId"));
@@ -224,7 +241,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     }
 
     private void initUserInfo() {
-        user = UserManager.getInstance().getCurrentUser();
         if (user!=null) {
             Glide.with(this).load(user.getAvatar()).centerCrop()
                     .into(avatar);

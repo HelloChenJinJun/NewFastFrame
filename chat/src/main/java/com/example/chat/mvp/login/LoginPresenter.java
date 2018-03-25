@@ -56,7 +56,7 @@ public class LoginPresenter extends RxBasePresenter<IView<Object>, LoginModel> {
         super(iView, baseModel);
     }
 
-    public void login(String account, String password, UserInfoEvent userInfoEvent) {
+    public void login(String account, String password, final UserInfoEvent userInfoEvent) {
         if (newData != null) {
             newData.clear();
         }
@@ -98,9 +98,14 @@ public class LoginPresenter extends RxBasePresenter<IView<Object>, LoginModel> {
                         }else {
                             ToastUtils.showShortToast("登录失败" + e.toString());
                             if (e.getErrorCode()== 101) {
-                                ToastUtils.showShortToast("正在注册");
 //                            说明现在的账号还没有注册
-                                registerAccount();
+                                if (userInfoEvent != null) {
+                                    ToastUtils.showShortToast("正在注册");
+                                    registerAccount();
+                                }else {
+//                                    正常登陆
+                                    iView.hideLoading();
+                                }
                             } else {
                                 iView.hideLoading();
                             }

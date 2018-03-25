@@ -55,11 +55,96 @@
             android:layout_centerVertical="true"
             android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
     </RelativeLayout>
-    <include android:id="@+id/rl_setting_notification"
-             layout="@layout/setting_item_layout"/>
-    <include
-        android:id="@+id/ll_setting_clear"
-        layout="@layout/group_info_item_layout"/>
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/rl_activity_settings_account_manage"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="账号管理"/>
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider_line_default_color"/>
+    <RelativeLayout
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="通知提醒"/>
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/sc_activity_settings_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider_line_default_color"/>
+    <RelativeLayout
+        android:id="@+id/rl_activity_settings_clear"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清空聊天记录"/>
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+
+    </RelativeLayout>
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider_line_default_color"/>
+
+
+
+
 
     <Button
         android:id="@+id/btn_setting_logout"

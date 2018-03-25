@@ -4,21 +4,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.view.ViewGroup;
 
 import com.example.commonlibrary.BaseFragment;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
-public class ViewPagerAdapter extends FragmentStatePagerAdapter {
+public class ViewPagerAdapter extends FragmentPagerAdapter {
     private List<String> titleList;
     private List<BaseFragment> fragments;
-    private FragmentManager manager;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
-        this.manager=fm;
     }
 
     @Override
@@ -41,20 +41,4 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         this.fragments = fragments;
     }
 
-
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        return super.instantiateItem(container, position);
-    }
-
-
-
-
-
-
-    @Override
-    public int getItemPosition(Object object) {
-//        触发销毁对象以及重建对象
-        return PagerAdapter.POSITION_NONE;
-    }
 }

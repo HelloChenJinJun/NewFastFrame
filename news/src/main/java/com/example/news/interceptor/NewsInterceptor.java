@@ -89,7 +89,8 @@ public class NewsInterceptor implements Interceptor {
         }
         if (url.equals(NewsUtil.SCORE_QUERY_URL) ||
                 url.equals(NewsUtil.CONSUME_QUERY_URL)
-                || url.equals(NewsUtil.SYSTEM_USER_INFO_URL)) {
+                || url.equals(NewsUtil.SYSTEM_USER_INFO_URL)
+                ||url.equals(NewsUtil.PW_RESET_URL)) {
             Request newRequest;
             StringBuilder cookie = new StringBuilder();
             cookie.append("_ga=GA1.3.1067555487.1498354603;UM_distinctid=15ee5c241e60-0ccb143b01978-6a11157a-100200-15ee5c241eaa2;")

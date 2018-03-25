@@ -166,6 +166,7 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             getSupportActionBar().setTitle("");
         }
         mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
         mBaseDialog = new BaseDialog(this);
         initView();
     }

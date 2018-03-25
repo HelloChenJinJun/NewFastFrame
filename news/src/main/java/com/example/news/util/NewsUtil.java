@@ -198,6 +198,7 @@ public class NewsUtil {
     public static final int REQUEST_CODE_ADJUST = 11;
     public static final String HEADER_AGENT = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11";
     public static final String CACHE_CONTROL = "Cache-Control: public, max-age=3600";
+    public static final String PW_RESET_URL = "http://xyfw.cug.edu.cn/tp_up/sys/uacm/pwdreset/reset";
 
 
     public static String getRealNewsUrl(String url, int totalPage, int currentNum) {
@@ -581,5 +582,58 @@ public class NewsUtil {
         stringBuilder.append("http://jwgl.cug.edu.cn/jwglxt/xsxxxggl/xsgrxxwh_cxXsgrxx.html?gnmkdm=N100801&layout=default&su=")
                 .append(account);
         return stringBuilder.toString();
+    }
+
+    public static RequestBody getResetPwRequestBody(String old, String news) {
+//        oldPwd=041633&newPwd=chen3929249
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("oldPwd=").append(old)
+                .append("&newPwd=").append(news);
+       return RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"),stringBuilder.toString());
+    }
+
+    public static String getTypeFromName(String college) {
+        if (college == null) {
+            return null;
+        }
+        if (college.equals("经济管理学院")) {
+            return COLLEGE_TYPE_JG;
+        } else if (college.equals("外国语学院")) {
+                return COLLEGE_TYPE_WY;
+        } else if (college.equals("艺术与传媒学院")) {
+                return COLLEGE_TYPE_YM;
+        } else if (college.equals("数学与物理学院")) {
+            return COLLEGE_TYPE_SL;
+        } else if (college.equals("海洋学院")) {
+return COLLEGE_TYPE_HY;
+        } else if (college.equals("机械与电子信息学院")) {
+return COLLEGE_TYPE_JD;
+        } else if (college.equals("地球物理与空间信息学院")) {
+return COLLEGE_TYPE_DWK;
+        } else if (college.equals("环境学院")) {
+return COLLEGE_TYPE_HJ;
+        } else if (college.equals("工程学院")) {
+        return COLLEGE_TYPE_GC;
+        } else if (college.equals("材料与化学学院")) {
+return COLLEGE_TYPE_CH;
+        } else if (college.equals("资源学院")) {
+return COLLEGE_TYPE_ZY;
+        } else if (college.equals("自动化学院")) {
+return COLLEGE_TYPE_ZDH;
+        } else if (college.equals("信息工程学院")) {
+return COLLEGE_TYPE_XY;
+        } else if (college.equals("地球科学学院")) {
+return COLLEGE_TYPE_DK;
+        } else if (college.equals("公共管理学院")) {
+return COLLEGE_TYPE_GG;
+        } else if (college.equals("计算机学院")) {
+return COLLEGE_TYPE_JSJ;
+        } else if (college.equals("李四光学院")) {
+            return COLLEGE_TYPE_DY;
+        } else if (college.equals("马克思主义学院")) {
+            return COLLEGE_TYPE_MY;
+        }else {
+            return null;
+        }
     }
 }

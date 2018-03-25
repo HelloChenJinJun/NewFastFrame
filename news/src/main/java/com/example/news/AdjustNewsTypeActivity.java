@@ -2,6 +2,7 @@ package com.example.news;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.example.commonlibrary.BaseActivity;
@@ -12,6 +13,7 @@ import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBeanDao;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.adapter.PopWindowAdapter;
 import com.example.news.event.TypeNewsEvent;
 
@@ -28,7 +30,7 @@ import java.util.List;
 public class AdjustNewsTypeActivity extends BaseActivity{
     private SuperRecyclerView up,down;
     private PopWindowAdapter upAdapter,downAdapter;
-    private List<OtherNewsTypeBean> list;
+
     @Override
     public void updateData(Object o) {
 
@@ -66,8 +68,6 @@ public class AdjustNewsTypeActivity extends BaseActivity{
         upAdapter.addData(NewsApplication.getNewsComponent().getRepositoryManager()
         .getDaoSession().getOtherNewsTypeBeanDao().queryBuilder().where(OtherNewsTypeBeanDao.Properties
                 .HasSelected.eq(Boolean.TRUE)).build().list());
-        list=new ArrayList<>();
-        list.addAll(upAdapter.getData());
         downAdapter.addData(NewsApplication.getNewsComponent().getRepositoryManager()
                 .getDaoSession().getOtherNewsTypeBeanDao().queryBuilder().where(OtherNewsTypeBeanDao.Properties
                         .HasSelected.eq(Boolean.FALSE)).build().list());
@@ -79,17 +79,29 @@ public class AdjustNewsTypeActivity extends BaseActivity{
                 NewsApplication.getNewsComponent().getRepositoryManager().getDaoSession()
                         .getOtherNewsTypeBeanDao().update(bean);
                 upAdapter.addData(bean);
+                TypeNewsEvent typeNewsEvent=new TypeNewsEvent(TypeNewsEvent.ADD);
+                typeNewsEvent.setTypeId(bean.getTypeId());
+                RxBusManager.getInstance().post(typeNewsEvent);
             }
         });
         upAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
+                OtherNewsTypeBean data=upAdapter.getData(position);
+                if (TextUtils.isEmpty(data.getTypeId())
+                        || data.getTypeId().equals("T1348647909107")
+                        || data.getTypeId().equals("TYPE_DD")) {
+                    ToastUtils.showShortToast("固定不可移除");
+                    return;
+                }
                 OtherNewsTypeBean bean=upAdapter.removeData(position);
                 bean.setHasSelected(false);
                 NewsApplication.getNewsComponent().getRepositoryManager().getDaoSession()
                         .getOtherNewsTypeBeanDao().update(bean);
                 downAdapter.addData(bean);
-
+                TypeNewsEvent typeNewsEvent=new TypeNewsEvent(TypeNewsEvent.DELETE);
+                typeNewsEvent.setTypeId(bean.getTypeId());
+                RxBusManager.getInstance().post(typeNewsEvent);
             }
         });
         ToolBarOption toolBarOption=new ToolBarOption();
@@ -103,15 +115,4 @@ public class AdjustNewsTypeActivity extends BaseActivity{
         activity.startActivity(intent);
     }
 
-
-    @Override
-    public void finish() {
-        List<OtherNewsTypeBean> newBean=upAdapter.getData();
-        if (!newBean.equals(list)) {
-                RxBusManager.getInstance()
-                        .post(new TypeNewsEvent(new ArrayList<>(upAdapter.getData())));
-        }
-        super.finish();
-
-    }
 }
