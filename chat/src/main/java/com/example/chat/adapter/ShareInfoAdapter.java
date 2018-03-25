@@ -11,7 +11,7 @@ import com.example.chat.adapter.holder.ShareShareInfoHolder;
 import com.example.chat.adapter.holder.TextShareInfoHolder;
 import com.example.chat.adapter.holder.VideoShareInfoHolder;
 import com.example.chat.adapter.holder.VoiceShareInfoHolder;
-import com.example.chat.bean.PublicPostBean;
+import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.util.PostUtil;
 import com.example.commonlibrary.baseadapter.adapter.BaseMultipleRecyclerAdapter;
 

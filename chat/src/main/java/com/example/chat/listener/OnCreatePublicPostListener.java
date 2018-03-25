@@ -1,6 +1,6 @@
 package com.example.chat.listener;
 
-import com.example.chat.bean.PublicPostBean;
+import com.example.chat.bean.post.PublicPostBean;
 
 /**
  * 项目名称:    NewFastFrame

@@ -10,14 +10,30 @@ package com.example.chat.events;
 public class CommentEvent {
     private String id;
     private int type;
+    private int action;
+
+    public int getAction() {
+        return action;
+    }
+
+    public void setAction(int action) {
+        this.action = action;
+    }
 
     public static final int TYPE_LIKE=0;
     public static final int TYPE_COMMENT=1;
 
 
-    public CommentEvent(String id, int type) {
+
+    public static final int ACTION_ADD=0;
+    public static final int ACTION_DELETE=1;
+
+
+
+    public CommentEvent(String id, int type,int action) {
         this.id = id;
         this.type = type;
+        this.action=action;
     }
 
     public int getType() {

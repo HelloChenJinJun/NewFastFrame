@@ -10,7 +10,7 @@ import com.example.chat.bean.HappyBean;
 import com.example.chat.bean.HappyContentBean;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.PictureBean;
-import com.example.chat.bean.PublicPostBean;
+import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.RecentMsg;
 import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;

@@ -38,7 +38,7 @@ import com.example.chat.bean.HappyBean;
 import com.example.chat.bean.HappyContentBean;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.PictureBean;
-import com.example.chat.bean.PublicPostBean;
+import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
 import com.example.chat.bean.WinXinBean;
@@ -74,7 +74,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.listener.SaveListener;
 import mabeijianxi.camera.MediaRecorderActivity;
 import mabeijianxi.camera.model.MediaRecorderConfig;
 

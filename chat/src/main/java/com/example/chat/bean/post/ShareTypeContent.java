@@ -1,7 +1,5 @@
 package com.example.chat.bean.post;
 
-import com.example.chat.bean.PublicPostBean;
-
 /**
  * 项目名称:    NewFastFrame
  * 创建人:      陈锦军

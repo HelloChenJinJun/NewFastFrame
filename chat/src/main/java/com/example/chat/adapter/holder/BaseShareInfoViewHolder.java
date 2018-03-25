@@ -3,7 +3,7 @@ package com.example.chat.adapter.holder;
 import android.view.View;
 
 import com.example.chat.R;
-import com.example.chat.bean.PublicPostBean;
+import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.util.TimeUtil;

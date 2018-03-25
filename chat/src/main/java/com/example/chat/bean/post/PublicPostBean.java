@@ -1,9 +1,13 @@
-package com.example.chat.bean;
+package com.example.chat.bean.post;
 
+import com.example.chat.bean.User;
 import com.example.commonlibrary.baseadapter.baseitem.MultipleItem;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobRelation;
 
 /**
@@ -25,6 +29,19 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
     private Integer commentCount;
     private Integer shareCount;
 
+    private List<String> likeList;
+
+
+    public List<String> getLikeList() {
+        if (likeList == null) {
+            likeList=new ArrayList<>();
+        }
+        return likeList;
+    }
+
+    public void setLikeList(List<String> likeList) {
+        this.likeList = likeList;
+    }
 
     @Override
     public boolean equals(Object obj) {

@@ -1,16 +1,13 @@
 package com.example.chat.adapter.holder;
 
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 
 import com.example.chat.R;
-import com.example.chat.bean.PublicPostBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.util.PixelUtil;
-import com.example.chat.view.ListImageView;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;

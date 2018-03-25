@@ -1,7 +1,6 @@
 package com.example.chat.mvp.commentlist;
 
-import com.example.chat.base.Constant;
-import com.example.chat.bean.PublicPostBean;
+import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.ReplyCommentListBean;
@@ -12,7 +11,6 @@ import com.example.chat.manager.UserManager;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -166,7 +164,7 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
                                 Subscription subscription1 = item.update(postId, new UpdateListener() {
                                     @Override
                                     public void done(BmobException e) {
-                                        RxBusManager.getInstance().post(new CommentEvent(postId, CommentEvent.TYPE_COMMENT));
+                                        RxBusManager.getInstance().post(new CommentEvent(postId, CommentEvent.TYPE_COMMENT,CommentEvent.ACTION_ADD));
                                         ToastUtils.showShortToast("评论成功");
                                     }
                                 });
@@ -197,7 +195,7 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
                     Subscription subscription1 = item.update(postId, new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
-                            RxBusManager.getInstance().post(new CommentEvent(postId, CommentEvent.TYPE_COMMENT));
+                            RxBusManager.getInstance().post(new CommentEvent(postId, CommentEvent.TYPE_COMMENT,CommentEvent.ACTION_ADD));
                             ToastUtils.showShortToast("评论成功");
                         }
                     });
@@ -216,7 +214,7 @@ public class CommentListPresenter extends RxBasePresenter<IView<List<PublicComme
             public void done(BmobException e) {
                 if (e == null) {
                     RxBusManager
-                            .getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE));
+                            .getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE,CommentEvent.ACTION_ADD));
                     ToastUtils.showShortToast("点赞成功");
                 } else {
                     ToastUtils.showShortToast("点赞失败");

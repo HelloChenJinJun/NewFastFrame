@@ -21,7 +21,7 @@ import com.example.chat.R;
 import com.example.chat.adapter.ShareInfoAdapter;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.NotifyPostResult;
-import com.example.chat.bean.PublicPostBean;
+import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.ShareTypeContent;
@@ -30,6 +30,7 @@ import com.example.chat.dagger.shareinfo.ShareInfoModule;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.events.NotifyEvent;
 import com.example.chat.manager.UserCacheManager;
+import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoPresenter;
 import com.example.chat.ui.BasePreViewActivity;
@@ -50,6 +51,7 @@ import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -153,11 +155,10 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 } else if (id == R.id.tv_item_fragment_share_info_comment) {
                     CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position));
                 } else if (id == R.id.tv_item_fragment_share_info_like) {
-                    presenter.addLike(shareInfoAdapter.getData(position).getObjectId());
+                    dealLike(shareInfoAdapter.getData(position));
                 } else if (id == R.id.riv_item_fragment_share_info_avatar) {
                     UserDetailActivity.start(getActivity(), shareInfoAdapter.getData(position)
                             .getAuthor().getObjectId());
-
                 } else if (id == R.id.iv_item_fragment_share_info_more) {
 
                 } else if (id==R.id.iv_item_fragment_share_info_video_display){
@@ -212,7 +213,13 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             @Override
             public void accept(CommentEvent likeEvent) throws Exception {
                 if (likeEvent.getType() == CommentEvent.TYPE_LIKE) {
-                    notifyLikeAdd(likeEvent.getId());
+                    PublicPostBean bean = shareInfoAdapter.getPublicPostDataById(likeEvent.getId());
+                    if (likeEvent.getAction()==CommentEvent.ACTION_ADD) {
+                        bean.setLikeCount(bean.getLikeCount() + 1);
+                    }else {
+                        bean.setLikeCount(bean.getLikeCount()-1);
+                    }
+                    shareInfoAdapter.addData(bean);
                 } else {
                     notifyCommentAdd(likeEvent.getId());
                 }
@@ -244,6 +251,18 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             }
         });
 
+    }
+
+    private void dealLike(PublicPostBean bean) {
+        if (bean.getLikeList() != null && bean.getLikeList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
+            ToastUtils.showShortToast("已点赞，取消点赞");
+            showLoadDialog("取消赞中...");
+            presenter.dealLike(bean.getObjectId(), false);
+        } else {
+            ToastUtils.showShortToast("未点赞，点赞");
+            showLoadDialog("点赞中...");
+            presenter.dealLike(bean.getObjectId(), true);
+        }
     }
 
     private void initTopBar() {
@@ -300,11 +319,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         shareInfoAdapter.addData(bean);
     }
 
-    private void notifyLikeAdd(String id) {
-        PublicPostBean bean = shareInfoAdapter.getPublicPostDataById(id);
-        bean.setLikeCount(bean.getLikeCount() + 1);
-        shareInfoAdapter.addData(bean);
-    }
+    
 
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.chat.bean.post;
 
-import com.example.chat.bean.PublicPostBean;
 import com.example.chat.bean.User;
 
 import cn.bmob.v3.BmobObject;
