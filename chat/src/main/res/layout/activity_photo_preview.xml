@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.example.commonlibrary.cusotomview.WrappedViewPager
+        android:id="@+id/vp_activity_photo_preview_display"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_activity_photo_preview_top_container"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_left"
+            android:id="@+id/iv_activity_photo_preview_finish"/>
+
+
+        <TextView
+            android:id="@+id/tv_activity_photo_preview_number"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1/5"
+            android:layout_centerInParent="true"/>
+
+
+        <CheckBox
+            android:checked="true"
+            android:id="@+id/cb_activity_photo_preview_check"
+            android:text="选择"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

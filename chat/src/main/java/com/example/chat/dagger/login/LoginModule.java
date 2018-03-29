@@ -3,7 +3,7 @@ package com.example.chat.dagger.login;
 import com.example.chat.MainRepositoryManager;
 import com.example.chat.mvp.login.LoginModel;
 import com.example.chat.mvp.login.LoginPresenter;
-import com.example.chat.ui.LoginActivity;
+import com.example.chat.mvp.login.LoginActivity;
 
 import dagger.Module;
 import dagger.Provides;

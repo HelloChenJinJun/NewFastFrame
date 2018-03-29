@@ -34,7 +34,7 @@ public class Constant {
     public static final String TAG_TO_ID = "toId";
     public static final String TAG_CREATE_TIME = "createTime";
     public static final String TAG_CONTENT = "content";
-    public static final String TAG_MESSAGE_TYPE = "msgType";
+    public static final String TAG_MESSAGE_TYPE = "messageType";
     public static final String TAG_MESSAGE_SEND_STATUS = "sendStatus";
     public static final String TAG_MESSAGE_READ_STATUS = "readStatus";
 
@@ -70,6 +70,8 @@ public class Constant {
      * 位置类型
      */
     public static final Integer TAG_MSG_TYPE_LOCATION = 3;
+
+    public static final int TAG_MSG_TYPE_VIDEO = 5;
     /**
      * 外部缓存数据的目录
      */
@@ -80,16 +82,18 @@ public class Constant {
     public static final String VOICE_CACHE_DIR = BASE_CACHE_DIR + "voice" + File.separator;
 
     public static final String IMAGE_CACHE_DIR = BASE_CACHE_DIR + "image" + File.separator;
-
+    public static final String VIDEO_CACHE_DIR = BASE_CACHE_DIR + "video" + File.separator;
+    public static final String IMAGE_COMPRESS_DIR = BASE_CACHE_DIR + "compress" + File.separator;
     /**
      * 请求地图的中心截屏图回调
      */
     public static final int REQUEST_MAP = 10;
     public static final boolean DEBUG = true;
+//    查询好友的最大限制数量
     public static final int LIMIT_CONTACTS = 100;
     public static final int REQUEST_CODE_TAKE_PICTURE = 0;
     public static final int REQUEST_CODE_SELECT_FROM_LOCAL = 1;
-    public static final int REQUEST_CODE_LOCATION = 2;
+    public static final int REQUEST_CODE_LOCATION = 5;
     //        4de21dc60adabe2dff4e81a3a592459f
     public static final String KEY = "da01a9bd74d83c20b64936b0831918ea";
     /**
@@ -163,4 +167,58 @@ public class Constant {
     public static final String UPDATE_TIME = "update_time";
     public static final String UPDATE_TIME_SHARE = "update_time_share";
     public static final String UPDATE_TIME_COMMENT = "update_time_comment";
+    public static final String LOCATION = "LOCATION";
+    public static final String ADDRESS = "ADDRESS";
+    public static final String IS_EDIT = "IS_EDIT";
+    public static final String EDIT_TYPE = "EDIT_TYPE";
+    public static final int EDIT_TYPE_IMAGE = 1;
+    public static final String DATA = "DATA";
+    public static final int EDIT_TYPE_VIDEO = 2;
+    public static final int EDIT_TYPE_SHARE = 3;
+    public static final int EDIT_TYPE_TEXT = 4;
+
+
+    public static final String DELTA_TIME = "delta_time";
+    public static final String PATH = "PATH";
+    public static final String FROM = "FROM";
+    public static final String POSITION = "POSITION";
+    public static final String IS_SELECT = "IS_SELECT";
+    public static final String IMAGE_PRE_VIEW = "PRE_VIEW";
+    public static final String USER = "USER";
+    public static final int EDIT_TYPE_VOICE = 5;
+
+
+
+
+    public static final String LOGIN_STATUS = "LOGIN_STATUS";
+    public static final String VIBRATE_STATUS = "VIBRATE_STATUS";
+    public static final String VOICE_STATUS = "VOICE_STATUS";
+    public static final String PUSH_NOTIFY = "PUSH_NOTIFY";
+    public static final String BASE_URL = "http://www.quanmin.tv/";
+    public static final String LAST_GROUP_MESSAGE_TIME = "last_group_message_time";
+    public static final String LAST_SHARE_MESSAGE_TIME = "last_share_message_time";
+    public static final String USER_DATA_LAST_UPDATE_TIME = "user_data_last_update_time";
+    public static final String PUSH_STATUS = "PUSH_STATUS";
+    public static final String COLUMN_NAME_CONTACTS = "contacts";
+    public static final String COLUMN_NAME_ADD_BLACKLIST = "addBlack";
+    public static final String COLUMN_NAME_OTHER_BLACKLIST = "otherBlack";
+    public static final String NICK = "nick";
+    public static final String GENDER ="gender" ;
+    public static final String BIRTHDAY ="birthday" ;
+    public static final String PHONE = "phone";
+    public static final String EMAIL = "email";
+    public static final String SIGNATURE = "signature";
+    public static final String AVATAR = "avatar";
+    public static final int REQUEST_CODE_NORMAL = 10;
+    public static final String CONTENT = "CONTENT";
+    public static final String TAG_CONTENT_TYPE = "contentType";
+    public static final String TIME = "time";
+    public static final String TYPE_GROUP = "group";
+    public static final String TYPE_PERSON = "person";
+
+    public static final String LONGITUDE = "longitude";
+    public static final String LATITUDE = "latitude";
+    public static final String IS_ONE = "IS_ONE";
+    public static final String IS_CROP = "IS_CROP";
+    public static final String IS_BROWSE = "is_browse";
 }

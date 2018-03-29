@@ -9,10 +9,12 @@ import android.widget.ImageView;
 
 import com.example.chat.R;
 import com.example.chat.bean.BaseMessage;
+import com.example.chat.bean.MessageContent;
 import com.example.chat.manager.DownLoadManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.FileUtil;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.BaseApplication;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,7 +64,9 @@ public class VoiceRecordPlayListener implements View.OnClickListener {
                 }
                 LogUtil.e("这里开始播放声音");
                 if (mMessage.getBelongId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
-                        String localPath = mMessage.getContent().split("&")[0];
+                        String localPath = BaseApplication
+                                .getAppComponent().getGson().fromJson(mMessage.getContent(), MessageContent.class)
+                                .getUrlList().get(0);
                         LogUtil.e("这里localPath" + localPath);
 
                         if (new File(localPath).exists()) {
@@ -160,22 +164,16 @@ public class VoiceRecordPlayListener implements View.OnClickListener {
                 try {
                         FileInputStream stream = new FileInputStream(file);
                         mPlayer.setDataSource(stream.getFD());
-                        mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                @Override
-                                public void onPrepared(MediaPlayer mp) {
-                                        isPlaying = true;
-                                        startAnimation();
-                                        mp.start();
-                                }
+                        mPlayer.setOnPreparedListener(mp -> {
+                                isPlaying = true;
+                                startAnimation();
+                                mp.start();
                         });
-                        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                @Override
-                                public void onCompletion(MediaPlayer mp) {
-                                        stopAnimation();
-                                        stopRecord();
-                                        LogUtil.e("播放完成,置空");
-                                        currentListener = null;
-                                }
+                        mPlayer.setOnCompletionListener(mp -> {
+                                stopAnimation();
+                                stopRecord();
+                                LogUtil.e("播放完成,置空");
+                                currentListener = null;
                         });
                         mPlayer.prepare();
                         currentListener = this;

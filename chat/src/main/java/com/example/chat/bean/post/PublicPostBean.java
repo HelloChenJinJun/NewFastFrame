@@ -1,5 +1,6 @@
 package com.example.chat.bean.post;
 
+import com.example.chat.base.Constant;
 import com.example.chat.bean.User;
 import com.example.commonlibrary.baseadapter.baseitem.MultipleItem;
 
@@ -31,6 +32,34 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
 
     private List<String> likeList;
 
+
+//    定位信息 是LocationEvent的json
+    private String location;
+
+
+    //    上传是否成功
+    private Integer sendStatus;
+
+
+    public Integer getSendStatus() {
+        if (sendStatus == null) {
+            return Constant.SEND_STATUS_SUCCESS;
+        }
+        return sendStatus;
+    }
+
+    public void setSendStatus(Integer sendStatus) {
+        this.sendStatus = sendStatus;
+    }
+
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public List<String> getLikeList() {
         if (likeList == null) {
@@ -128,5 +157,9 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
     @Override
     public int getItemViewType() {
         return getMsgType();
+    }
+
+    public void setCreateTime(String time) {
+        setCreatedAt(time);
     }
 }

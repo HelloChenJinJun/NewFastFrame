@@ -61,7 +61,7 @@ public class FileUtil {
          * @param createTime 创建时间
          * @return 路径
          */
-        public static String getUserVoiceFilePath(String uid, String createTime) {
+        public static String getUserVoiceFilePath(String uid, long createTime) {
                 try {
                         File file = new File(Constant.VOICE_CACHE_DIR + CommonUtils.md5(UserManager.getInstance().getCurrentUserObjectId()) + File.separator + uid + File.separator + createTime + ".amr");
                         if (!file.exists()) {
@@ -113,7 +113,7 @@ public class FileUtil {
                 }
         }
 
-        public static boolean isExistFileLocalPath(String uid, String createTime) {
+        public static boolean isExistFileLocalPath(String uid, long createTime) {
                 File file = new File(Constant.VOICE_CACHE_DIR + CommonUtils.md5(UserManager.getInstance().getCurrentUserObjectId()) + File.separator + uid + File.separator + createTime + ".amr");
                 return file.exists();
         }
@@ -162,4 +162,5 @@ public class FileUtil {
                 }
                 return false;
         }
+
 }

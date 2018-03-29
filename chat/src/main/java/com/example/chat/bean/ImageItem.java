@@ -15,60 +15,38 @@ import java.io.Serializable;
 /**
  * 图片实体
  */
-public class ImageItem implements Serializable, MultipleItem {
+public class ImageItem implements MultipleItem, Serializable {
+        public static final int ITEM_CAMERA = 1;
+        public static final int ITEM_NORMAL = 2;
 
 
-        public static final int ITEM_CAMERA = 10;
-        public static final int ITEM_NORMAL = 11;
-
-
-        private int itemType = ITEM_NORMAL;
-
-        public void setItemType(int itemType) {
-                this.itemType = itemType;
+        @Override
+        public boolean equals(Object obj) {
+                return obj != null && obj instanceof ImageItem && ((((ImageItem) obj).getPath() != null
+                        && ((ImageItem) obj).getPath().equals(getPath())) ||
+                        (((ImageItem) obj).getItemViewType() == ITEM_CAMERA && getItemViewType() == ITEM_CAMERA));
         }
 
-        public int getItemType() {
-                return itemType;
-        }
-
-        private static final long serialVerisionUID = 1L;
-        /**
-         * 图片的名称
-         */
-        private String name;
-        /**
-         * 图片的路径
-         */
+        private int layoutType;
         private String path;
-        /**
-         * 图片的大小
-         */
-        private long size;
-        /**
-         * 图片的类型
-         */
-        private String imageType;
-        /**
-         * 图片的宽度
-         */
-        private int width;
-        /**
-         * 图片的高度
-         */
-        private int height;
-        /**
-         * 图片的创建时间
-         */
-        private long createdTime;
 
 
-        public String getName() {
-                return name;
+        private boolean isCheck;
+
+        public boolean isCheck() {
+                return isCheck;
         }
 
-        public void setName(String name) {
-                this.name = name;
+        public void setCheck(boolean check) {
+                isCheck = check;
+        }
+
+        public int getLayoutType() {
+                return layoutType;
+        }
+
+        public void setLayoutType(int layoutType) {
+                this.layoutType = layoutType;
         }
 
         public String getPath() {
@@ -79,59 +57,8 @@ public class ImageItem implements Serializable, MultipleItem {
                 this.path = path;
         }
 
-        public long getSize() {
-                return size;
-        }
-
-        public void setSize(long size) {
-                this.size = size;
-        }
-
-        public int getWidth() {
-                return width;
-        }
-
-        public void setWidth(int width) {
-                this.width = width;
-        }
-
-        public String getImageType() {
-                return imageType;
-        }
-
-        public void setImageType(String imageType) {
-                this.imageType = imageType;
-        }
-
-        public int getHeight() {
-                return height;
-        }
-
-        public void setHeight(int height) {
-                this.height = height;
-        }
-
-        public long getCreatedTime() {
-                return createdTime;
-        }
-
-        public void setCreatedTime(long createdTime) {
-                this.createdTime = createdTime;
-        }
-
-
-        @Override
-        public boolean equals(Object obj) {
-                if (obj instanceof ImageItem) {
-                        ImageItem imageItem = (ImageItem) obj;
-//                        只有图片的路径和创建时间一样就被认为是相同的
-                        return imageItem.getPath().equalsIgnoreCase(getPath()) && imageItem.getCreatedTime() == getCreatedTime();
-                }
-                return super.equals(obj);
-        }
-
         @Override
         public int getItemViewType() {
-                return getItemType();
+                return getLayoutType();
         }
 }

@@ -124,12 +124,6 @@ public class SharedMessage extends BmobObject implements MultipleItem {
                 this.likerList = likerList;
         }
 
-//        public List<String> getVisibleUserList() {
-//                if (inVisibleUserList == null) {
-//                        inVisibleUserList = new ArrayList<>();
-//                }
-//                return inVisibleUserList;
-//        }
 
 
 
@@ -146,9 +140,7 @@ public class SharedMessage extends BmobObject implements MultipleItem {
 
 
 
-//        public void setVisibleUserList(List<String> visibleUserList) {
-//                this.inVisibleUserList = visibleUserList;
-//        }
+
 
         public List<String> getCommentMsgList() {
                 if (commentMsgList == null) {

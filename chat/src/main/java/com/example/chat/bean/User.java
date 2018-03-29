@@ -23,8 +23,30 @@ public class User extends BmobUser implements Comparable<User> {
         private String avatar;
         //        好友联系人
         private BmobRelation contacts;
-        //        黑名单
-        private BmobRelation black;
+
+
+        //        主动添加的黑名单
+        private BmobRelation addBlack;
+
+//        被动添加的黑名单
+        private BmobRelation otherBlack;
+
+        public BmobRelation getAddBlack() {
+                return addBlack;
+        }
+
+        public void setAddBlack(BmobRelation addBlack) {
+                this.addBlack = addBlack;
+        }
+
+        public BmobRelation getOtherBlack() {
+                return otherBlack;
+        }
+
+        public void setOtherBlack(BmobRelation otherBlack) {
+                this.otherBlack = otherBlack;
+        }
+
         //        设备类型
         private String deviceType;
 
@@ -224,13 +246,7 @@ public class User extends BmobUser implements Comparable<User> {
                 this.deviceType = deviceType;
         }
 
-        public BmobRelation getBlack() {
-                return black;
-        }
 
-        public void setBlack(BmobRelation black) {
-                this.black = black;
-        }
 
         public boolean isSex() {
                 return sex;
@@ -253,5 +269,9 @@ public class User extends BmobUser implements Comparable<User> {
                         return user.getObjectId().equals(getObjectId());
                 }
                 return false;
+        }
+
+        public void setCreatedTime(String createdTime) {
+                setCreatedAt(createdTime);
         }
 }

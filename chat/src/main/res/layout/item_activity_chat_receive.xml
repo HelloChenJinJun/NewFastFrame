@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="13dp">
+
+    <TextView
+        android:id="@+id/tv_item_activity_chat_receive_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_500"
+        android:textSize="12sp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:id="@+id/iv_item_activity_chat_receive_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/head"/>
+
+        <LinearLayout
+            android:id="@+id/ll_item_activity_chat_receive_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/iv_item_activity_chat_receive_avatar"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_item_activity_chat_receive_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="姓名"
+                android:textSize="16sp"
+                />
+
+            <ViewStub
+                android:id="@+id/vs_item_activity_chat_receive_view_stub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -26,7 +26,6 @@ public class SearchFriendAdapter extends BaseRecyclerAdapter<User, BaseWrappedVi
 
         @Override
         protected void convert(BaseWrappedViewHolder holder, User data) {
-                LogUtil.e("convert转换");
                 holder.setImageUrl(R.id.iv_search_friend_item_avatar, data.getAvatar())
                         .setText(R.id.tv_search_friend_item_name, data.getNick())
                         .setOnItemChildClickListener(R.id.btn_search_friend_item_look);

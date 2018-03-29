@@ -1,20 +1,24 @@
 package com.example.chat.adapter;
-
-
 import com.example.chat.R;
 import com.example.chat.base.Constant;
-import com.example.chat.bean.InvitationMsg;
+import com.example.chat.bean.ChatMessage;
+import com.example.chat.manager.UserDBManager;
 import com.example.commonlibrary.baseadapter.adapter.BaseSwipeRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
+import com.example.commonlibrary.bean.chat.ChatMessageEntity;
+import com.example.commonlibrary.bean.chat.UserEntity;
 
 /**
  * 项目名称:    TestChat
  * 创建人:        陈锦军
  * 创建时间:    2016/10/15      20:30
  * QQ:             1981367757
+ *
+ * 邀请列表适配器
+ *
  */
 
-public class NewFriendAdapter extends BaseSwipeRecyclerAdapter<InvitationMsg, BaseWrappedViewHolder> {
+public class NewFriendAdapter extends BaseSwipeRecyclerAdapter<ChatMessageEntity, BaseWrappedViewHolder> {
 
 
         @Override
@@ -23,13 +27,15 @@ public class NewFriendAdapter extends BaseSwipeRecyclerAdapter<InvitationMsg, Ba
         }
 
         @Override
-        protected void convert(BaseWrappedViewHolder holder, InvitationMsg data, boolean isSwipeItem) {
-                holder.setImageUrl(R.id.iv_new_friend_item_avatar, data.getAvatar())
-                        .setText(R.id.tv_new_friend_item_name, data.getName());
-                if (data.getReadStatus().equals(Constant.RECEIVE_UNREAD)) {
+        protected void convert(BaseWrappedViewHolder holder, ChatMessageEntity data, boolean isSwipeItem) {
+                UserEntity userEntity= UserDBManager.getInstance()
+                        .getUser(data.getBelongId());
+                holder.setImageUrl(R.id.iv_new_friend_item_avatar, userEntity.getAvatar())
+                        .setText(R.id.tv_new_friend_item_name, userEntity.getName());
+                if (data.getReadStatus()==Constant.READ_STATUS_READED) {
                         holder.setVisible(R.id.tv_new_friend_item_agree, false);
                         holder.setVisible(R.id.btn_new_friend_item_agree, true);
-                } else if (data.getReadStatus().equals(Constant.READ_STATUS_READED)) {
+                } else if (data.getReadStatus()==Constant.READ_STATUS_READED) {
                         holder.setVisible(R.id.btn_new_friend_item_agree, false);
                         holder.setVisible(R.id.tv_new_friend_item_agree, true);
                 }
@@ -37,14 +43,5 @@ public class NewFriendAdapter extends BaseSwipeRecyclerAdapter<InvitationMsg, Ba
         }
 
 
-        @Override
-        public void addData(int position, InvitationMsg newData) {
-                if (data.contains(newData)) {
-                        int index = data.indexOf(newData);
-                        data.set(index, newData);
-                        notifyDataSetChanged();
-                } else {
-                        super.addData(position, newData);
-                }
-        }
+
 }

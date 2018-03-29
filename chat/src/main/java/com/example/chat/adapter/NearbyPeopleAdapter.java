@@ -14,6 +14,8 @@ import java.util.List;
  * 创建人:        陈锦军
  * 创建时间:    2017/1/11      12:48
  * QQ:             1981367757
+ *
+ * 附近人列表适配器
  */
 public class NearbyPeopleAdapter extends BaseRecyclerAdapter<User, BaseWrappedViewHolder> {
 

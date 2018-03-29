@@ -1,7 +1,7 @@
 package com.example.chat.mvp.notify;
 
+import com.example.chat.base.AppBasePresenter;
 import com.example.chat.bean.SystemNotifyBean;
-import com.example.chat.mvp.ChatBasePresenter;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.view.IView;
@@ -21,7 +21,7 @@ import cn.bmob.v3.listener.FindListener;
  * QQ:         1981367757
  */
 
-public class SystemNotifyPresenter extends ChatBasePresenter<IView<List<SystemNotifyBean>>,SystemNotifyModel> {
+public class SystemNotifyPresenter extends AppBasePresenter<IView<List<SystemNotifyBean>>,SystemNotifyModel> {
     public SystemNotifyPresenter(IView<List<SystemNotifyBean>> iView, SystemNotifyModel baseModel) {
         super(iView, baseModel);
     }

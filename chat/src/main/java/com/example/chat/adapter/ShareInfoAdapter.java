@@ -5,14 +5,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.example.chat.R;
-import com.example.chat.adapter.holder.BaseShareInfoViewHolder;
-import com.example.chat.adapter.holder.ImageShareInfoHolder;
-import com.example.chat.adapter.holder.ShareShareInfoHolder;
-import com.example.chat.adapter.holder.TextShareInfoHolder;
-import com.example.chat.adapter.holder.VideoShareInfoHolder;
-import com.example.chat.adapter.holder.VoiceShareInfoHolder;
+import com.example.chat.adapter.holder.publicShare.BaseShareInfoViewHolder;
+import com.example.chat.adapter.holder.publicShare.ImageShareInfoHolder;
+import com.example.chat.adapter.holder.publicShare.ShareShareInfoHolder;
+import com.example.chat.adapter.holder.publicShare.TextShareInfoHolder;
+import com.example.chat.adapter.holder.publicShare.VideoShareInfoHolder;
+import com.example.chat.adapter.holder.publicShare.VoiceShareInfoHolder;
+import com.example.chat.base.Constant;
 import com.example.chat.bean.post.PublicPostBean;
-import com.example.chat.util.PostUtil;
 import com.example.commonlibrary.baseadapter.adapter.BaseMultipleRecyclerAdapter;
 
 /**
@@ -26,26 +26,26 @@ public class ShareInfoAdapter extends BaseMultipleRecyclerAdapter<PublicPostBean
     @Override
     protected SparseArray<Integer> getLayoutIdMap() {
         SparseArray<Integer> sparseArray = new SparseArray<>();
-        sparseArray.put(PostUtil.LAYOUT_TYPE_IMAGE, R.layout.item_fragment_share_info);
-        sparseArray.put(PostUtil.LAYOUT_TYPE_SHARE, R.layout.item_fragment_share_info);
-        sparseArray.put(PostUtil.LAYOUT_TYPE_TEXT, R.layout.item_fragment_share_info);
-        sparseArray.put(PostUtil.LAYOUT_TYPE_VOICE,R.layout.item_fragment_share_info);
-        sparseArray.put(PostUtil.LAYOUT_TYPE_VIDEO,R.layout.item_fragment_share_info);
+        sparseArray.put(Constant.EDIT_TYPE_IMAGE, R.layout.item_fragment_share_info);
+        sparseArray.put(Constant.EDIT_TYPE_SHARE, R.layout.item_fragment_share_info);
+        sparseArray.put(Constant.EDIT_TYPE_TEXT, R.layout.item_fragment_share_info);
+        sparseArray.put(Constant.EDIT_TYPE_VOICE,R.layout.item_fragment_share_info);
+        sparseArray.put(Constant.EDIT_TYPE_VIDEO,R.layout.item_fragment_share_info);
         return sparseArray;
     }
 
 
     @Override
     public BaseShareInfoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == PostUtil.LAYOUT_TYPE_IMAGE) {
+        if (viewType == Constant.EDIT_TYPE_IMAGE) {
             return new ImageShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
-        }else if (viewType==PostUtil.LAYOUT_TYPE_SHARE){
+        }else if (viewType==Constant.EDIT_TYPE_SHARE){
             return new ShareShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
-        } else if (viewType == PostUtil.LAYOUT_TYPE_TEXT) {
+        } else if (viewType == Constant.EDIT_TYPE_TEXT) {
             return new TextShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
-        } else if (viewType == PostUtil.LAYOUT_TYPE_VOICE) {
+        } else if (viewType == Constant.EDIT_TYPE_VOICE) {
             return new VoiceShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
-        } else if (viewType == PostUtil.LAYOUT_TYPE_VIDEO) {
+        } else if (viewType == Constant.EDIT_TYPE_VIDEO) {
             return new VideoShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
         }
         return super.onCreateViewHolder(parent, viewType);

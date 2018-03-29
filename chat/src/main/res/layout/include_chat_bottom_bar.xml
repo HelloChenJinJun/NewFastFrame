@@ -134,14 +134,14 @@
                 android:text="照片"/>
 
             <TextView
-                android:id="@+id/tv_chat_bottom_camera"
+                android:id="@+id/tv_chat_bottom_video"
                 android:layout_width="0.0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawablePadding="10dp"
-                android:drawableTop="@drawable/ic_photo_camera_grey_900_48dp"
+                android:drawableTop="@drawable/ic_video"
                 android:gravity="center"
-                android:text="拍照"/>
+                android:text="视频"/>
 
             <TextView
                 android:id="@+id/tv_chat_bottom_location"

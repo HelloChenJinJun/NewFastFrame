@@ -74,8 +74,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     sourceSets {
 
@@ -156,42 +156,42 @@ dependencies {
         exclude module: 'okio'
 
     }
-    implementation('com.mabeijianxi:small-video-record:1.2.0') {
-        exclude module: "support-v4"
-        exclude module: "support-compat"
-        exclude module: 'rxjava'
-        exclude module: 'retrofit'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-        exclude module: 'support-annotations'
-        exclude module: 'support-core-utils'
-        exclude module: 'support-media-compat'
-        exclude module: 'support-vector-drawable'
-        exclude module: 'support-fragment'
-        exclude module: 'multidex'
-        exclude module: 'rxandroid'
-        exclude module: 'gson'
-        exclude module: 'okio'
-
-    }
-    implementation('com.github.chihane:JDAddressSelector:1.1.4') {
-        exclude module: "support-v4"
-        exclude module: "support-compat"
-        exclude module: 'rxjava'
-        exclude module: 'retrofit'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-        exclude module: 'support-annotations'
-        exclude module: 'support-core-utils'
-        exclude module: 'support-media-compat'
-        exclude module: 'support-vector-drawable'
-        exclude module: 'support-fragment'
-        exclude module: 'multidex'
-        exclude module: 'rxandroid'
-        exclude module: 'gson'
-        exclude module: 'okio'
-
-    }
+//    implementation('com.mabeijianxi:small-video-record:1.2.0') {
+//        exclude module: "support-v4"
+//        exclude module: "support-compat"
+//        exclude module: 'rxjava'
+//        exclude module: 'retrofit'
+//        exclude module: 'appcompat-v7'
+//        exclude module: 'support-v4'
+//        exclude module: 'support-annotations'
+//        exclude module: 'support-core-utils'
+//        exclude module: 'support-media-compat'
+//        exclude module: 'support-vector-drawable'
+//        exclude module: 'support-fragment'
+//        exclude module: 'multidex'
+//        exclude module: 'rxandroid'
+//        exclude module: 'gson'
+//        exclude module: 'okio'
+//
+//    }
+//    implementation('com.github.chihane:JDAddressSelector:1.1.4') {
+//        exclude module: "support-v4"
+//        exclude module: "support-compat"
+//        exclude module: 'rxjava'
+//        exclude module: 'retrofit'
+//        exclude module: 'appcompat-v7'
+//        exclude module: 'support-v4'
+//        exclude module: 'support-annotations'
+//        exclude module: 'support-core-utils'
+//        exclude module: 'support-media-compat'
+//        exclude module: 'support-vector-drawable'
+//        exclude module: 'support-fragment'
+//        exclude module: 'multidex'
+//        exclude module: 'rxandroid'
+//        exclude module: 'gson'
+//        exclude module: 'okio'
+//
+//    }
     //    implementation 'com.android.support:multidex:1.0.1'
     implementation(rootProject.ext.dependencies.cardview) {
         exclude module: "support-v4"
@@ -217,6 +217,7 @@ dependencies {
     }
     testImplementation 'junit:junit:4.12'
     //    implementation files('libs/pldroid-player-1.5.0.jar')
+    implementation 'cn.jzvd:jiaozivideoplayer:6.2.4'
     implementation files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
     //    implementation files('libs/BmobStat_v1.1_170114.jar')
     //    compile files('libs/nineoldandroids-2.4.0.jar')

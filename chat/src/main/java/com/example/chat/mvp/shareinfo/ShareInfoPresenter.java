@@ -3,7 +3,10 @@ package com.example.chat.mvp.shareinfo;
 import com.example.chat.base.AppBasePresenter;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.User;
+import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PostLikeBean;
+import com.example.chat.bean.post.PublicCommentBean;
+import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.commonlibrary.bean.chat.PostLikeEntity;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.events.CommentEvent;
@@ -14,16 +17,24 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bmob.v3.BmobBatch;
+import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BatchResult;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.DeleteBatchListener;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
@@ -187,6 +198,180 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                         }
                     }));
                 }
+            }
+        }));
+    }
+
+    public void deleteShareInfo(PublicPostBean data, UpdateListener listener) {
+        if (data.getSendStatus() != Constant.SEND_STATUS_SUCCESS) {
+            baseModel.getRepositoryManager()
+                    .getDaoSession()
+                    .getPublicPostEntityDao().deleteByKey(data.getObjectId());
+            listener.done(null);
+            return;
+        }
+        PublicPostBean publicPostBean = new PublicPostBean();
+        publicPostBean.setObjectId(data.getObjectId());
+        publicPostBean.delete(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    baseModel.getRepositoryManager()
+                            .getDaoSession()
+                            .getPublicPostEntityDao()
+                            .deleteByKey(data.getObjectId());
+                    BmobQuery<PostLikeBean> bmobQuery = new BmobQuery<>();
+                    PublicPostBean item = new PublicPostBean();
+                    item.setObjectId(data.getObjectId());
+                    bmobQuery.addWhereEqualTo("publicPostBean", item);
+                    bmobQuery.findObjects(new FindListener<PostLikeBean>() {
+                        @Override
+                        public void done(List<PostLikeBean> list, BmobException e) {
+                            listener.done(e);
+                            if (e == null) {
+
+                                if (list != null && list.size() > 0) {
+                                    List<BmobObject> list1 = new ArrayList<>();
+                                    list1.addAll(list);
+                                    new BmobBatch().deleteBatch(list1).doBatch(new QueryListListener<BatchResult>() {
+                                        @Override
+                                        public void done(List<BatchResult> list, BmobException e) {
+                                            if (e == null) {
+                                                CommonLogger.e("点赞相关删除成功");
+
+                                                for (int i = 0; i < list.size(); i++) {
+                                                    if (list.get(i).getError() == null) {
+                                                        baseModel
+                                                                .getRepositoryManager()
+                                                                .getDaoSession()
+                                                                .getPostLikeEntityDao()
+                                                                .deleteByKey(list.get(i).getObjectId());
+                                                    }
+                                                }
+                                            } else {
+                                                CommonLogger.e("点赞相关删除失败" + e.toString());
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    CommonLogger.e("点赞相关删除成功");
+                                }
+                            } else {
+                                CommonLogger.e("点赞相关删除失败" + e.toString());
+                            }
+                        }
+                    });
+                    BmobQuery<PublicCommentBean> bmobQuery1 = new BmobQuery<>();
+                    PublicPostBean item1 = new PublicPostBean();
+                    item.setObjectId(data.getObjectId());
+                    bmobQuery1.addWhereEqualTo("posterMessage", item1);
+                    bmobQuery1.findObjects(new FindListener<PublicCommentBean>() {
+                        @Override
+                        public void done(List<PublicCommentBean> list, BmobException e) {
+                            if (e == null) {
+                                if (list != null && list.size() > 0) {
+                                    List<BmobObject> list1 = new ArrayList<>();
+                                    list1.addAll(list);
+                                    new BmobBatch().deleteBatch(list1).doBatch(new QueryListListener<BatchResult>() {
+                                        @Override
+                                        public void done(List<BatchResult> list, BmobException e) {
+                                            if (e == null) {
+                                                CommonLogger.e("评论相关删除成功");
+                                                for (int i = 0; i < list.size(); i++) {
+                                                    if (list.get(i).getError() == null) {
+                                                        baseModel
+                                                                .getRepositoryManager()
+                                                                .getDaoSession()
+                                                                .getPostCommentEntityDao()
+                                                                .deleteByKey(list.get(i).getObjectId());
+                                                    }
+                                                }
+                                            } else {
+                                                CommonLogger.e("评论相关删除失败" + e.toString());
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    CommonLogger.e("评论相关删除成功");
+                                }
+                            } else {
+                                CommonLogger.e("评论相关删除失败" + e.toString());
+                            }
+                        }
+                    });
+                    if (data.getMsgType() == Constant.EDIT_TYPE_VIDEO
+                             ||
+                            data.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
+                        PostDataBean postDataBean = BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
+                        BmobFile.deleteBatch(postDataBean.getImageList().toArray(new String[]{}), new DeleteBatchListener() {
+                            @Override
+                            public void done(String[] strings, BmobException e) {
+                                if (e == null) {
+                                    CommonLogger.e("删除说说相关资源成功");
+                                } else {
+                                    CommonLogger.e("删除说说相关资源失败" + e.toString());
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    listener.done(e);
+                }
+            }
+        });
+    }
+
+    public void reSendPublicPostBean(PublicPostBean data, String objectId) {
+        addSubscription(MsgManager.getInstance().reSendPublicPostBean(data, new OnCreatePublicPostListener() {
+            @Override
+            public void onSuccess(PublicPostBean publicPostBean) {
+                publicPostBean.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                baseModel.getRepositoryManager().getDaoSession()
+                        .getPublicPostEntityDao()
+                        .deleteByKey(objectId);
+                baseModel.getRepositoryManager().getDaoSession().getPublicPostEntityDao().insertOrReplace(MsgManager
+                        .getInstance().cover(publicPostBean));
+                List<PublicPostBean> result = new ArrayList<>();
+                result.add(publicPostBean);
+                iView.updateData(result);
+            }
+
+            @Override
+            public void onFailed(String errorMsg, int errorCode, PublicPostBean publicPostBean) {
+                publicPostBean.setSendStatus(Constant.SEND_STATUS_FAILED);
+                baseModel.getRepositoryManager().getDaoSession().getPublicPostEntityDao().update(MsgManager
+                        .getInstance().cover(publicPostBean));
+                List<PublicPostBean> result = new ArrayList<>();
+                result.add(publicPostBean);
+                iView.updateData(result);
+
+            }
+        }));
+    }
+
+    public void updatePublicPostBean(PublicPostBean data) {
+        addSubscription(MsgManager.getInstance().updatePublicPostBean(data, new OnCreatePublicPostListener() {
+            @Override
+            public void onSuccess(PublicPostBean publicPostBean) {
+                publicPostBean.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                List<PublicPostBean> result = new ArrayList<>();
+                result.add(publicPostBean);
+
+
+                baseModel.getRepositoryManager().getDaoSession().getPublicPostEntityDao().insertOrReplace(MsgManager
+                        .getInstance().cover(publicPostBean));
+
+                iView.updateData(result);
+            }
+
+            @Override
+            public void onFailed(String errorMsg, int errorCode, PublicPostBean publicPostBean) {
+                List<PublicPostBean> result = new ArrayList<>();
+                publicPostBean.setSendStatus(Constant.SEND_STATUS_FAILED);
+                result.add(publicPostBean);
+                baseModel.getRepositoryManager().getDaoSession().getPublicPostEntityDao().insertOrReplace(MsgManager
+                        .getInstance().cover(publicPostBean));
+                iView.updateData(result);
             }
         }));
     }

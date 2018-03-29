@@ -4,7 +4,7 @@ import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.ShareInfoAdapter;
 import com.example.chat.mvp.shareinfo.ShareInfoModel;
 import com.example.chat.mvp.shareinfo.ShareInfoPresenter;
-import com.example.chat.ui.fragment.ShareInfoFragment;
+import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 
 import dagger.Module;
 import dagger.Provides;

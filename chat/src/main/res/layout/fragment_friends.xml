@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <SearchView
+        android:id="@+id/sv_fragment_friends_search"
+        android:background="@color/white"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_below="@+id/sv_fragment_friends_search"
+        android:layout_width="match_parent"
+        android:id="@+id/refresh_fragment_friends_refresh"
+        android:layout_height="match_parent">
+        <com.example.commonlibrary.baseadapter.SuperRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/srcv_fragment_friends_display"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_fragment_friends_index"
+        android:textSize="50sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:background="@drawable/custom_drawable_tv_index_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="H"
+        android:layout_centerInParent="true"/>
+
+
+    <com.example.chat.view.IndexView
+        android:layout_width="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/index_fragment_friends_index"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"/>
+
+
+</RelativeLayout>

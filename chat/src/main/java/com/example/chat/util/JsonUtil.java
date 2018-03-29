@@ -48,4 +48,13 @@ public class JsonUtil {
                 }
                 return result;
         }
+
+        public static Long getLong(JSONObject jsonObject, String tag) {
+                String result = getString(jsonObject, tag);
+                if (!TextUtils.isEmpty(result)) {
+                        return Long.parseLong(result);
+                } else {
+                        return 0L;
+                }
+        }
 }

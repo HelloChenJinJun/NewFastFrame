@@ -13,19 +13,15 @@ import com.example.chat.bean.post.CommentListDetailBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.dagger.commentdetail.CommentDetailModule;
 import com.example.chat.dagger.commentdetail.DaggerCommentDetailComponent;
-import com.example.chat.mvp.commentlist.CommentListActivity;
-import com.example.chat.ui.SlideBaseActivity;
-import com.example.chat.ui.UserDetailActivity;
-import com.example.commonlibrary.BaseActivity;
+import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;
 
@@ -185,20 +181,7 @@ public class CommentListDetailActivity extends SlideBaseActivity<List<CommentLis
 
     }
 
-//    private String getRefreshTime(boolean isRefresh) {
-//        if (isRefresh) {
-//            if (adapter.getData(0) == null) {
-//                return "0000-00-00 01:00:00";
-//            }
-//            return adapter.getData(0).getCreatedAt();
-//        }else {
-//            if (adapter.getData(adapter.getData().size() - 1) != null) {
-//                return adapter.getData(adapter.getData().size() - 1).getCreatedAt();
-//            }else {
-//                return "0000-00-00 01:00:00";
-//            }
-//        }
-//    }
+
 
 
 

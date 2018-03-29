@@ -3,10 +3,10 @@ package com.example.chat.adapter;
 import android.widget.TextView;
 
 import com.example.chat.R;
-import com.example.chat.db.ChatDB;
-import com.example.chat.util.PixelUtil;
+import com.example.chat.manager.UserDBManager;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
+import com.example.commonlibrary.utils.DensityUtil;
 
 
 /**
@@ -28,10 +28,10 @@ public class MenuDisplayAdapter extends BaseRecyclerAdapter<String, BaseWrappedV
         protected void convert(BaseWrappedViewHolder holder, String data) {
                 holder.setText(R.id.tv_menu_item, data).setOnItemClickListener();
                 int position = holder.getAdapterPosition();
-                int size;
+                long size;
                 if (position == 0) {
                         ((TextView) holder.getView(R.id.tv_menu_item)).setCompoundDrawablesWithIntrinsicBounds(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_chat_blue_grey_900_24dp), null, null, null);
-                        if ((size = ChatDB.create().hasUnReadChatMessage()) > 0) {
+                        if ((size = UserDBManager.getInstance().getUnReadMessageSize()) > 0) {
                                 holder.setVisible(R.id.tv_menu_item_tips, true)
                                         .setText(R.id.tv_menu_item_tips, size + "");
                         } else {
@@ -41,7 +41,7 @@ public class MenuDisplayAdapter extends BaseRecyclerAdapter<String, BaseWrappedV
                 } else if (position == 1) {
                         ((TextView) holder.getView(R.id.tv_menu_item)).setCompoundDrawablesWithIntrinsicBounds(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_people_blue_grey_900_24dp), null, null, null);
                 } else if (position == 2) {
-                        if ((size = ChatDB.create().hasUnReadInvitation()) > 0) {
+                        if ((size=UserDBManager.getInstance().getAddInvitationMessageSize()) > 0) {
                                 holder.setVisible(R.id.tv_menu_item_tips, true)
                                         .setText(R.id.tv_menu_item_tips, size + "");
                         } else {
@@ -51,6 +51,6 @@ public class MenuDisplayAdapter extends BaseRecyclerAdapter<String, BaseWrappedV
                 } else if (position == 3) {
                         ((TextView) holder.getView(R.id.tv_menu_item)).setCompoundDrawablesWithIntrinsicBounds(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_fiber_new_blue_grey_900_24dp), null, null, null);
                 }
-                ((TextView) holder.getView(R.id.tv_menu_item)).setCompoundDrawablePadding(PixelUtil.todp(10));
+                ((TextView) holder.getView(R.id.tv_menu_item)).setCompoundDrawablePadding(DensityUtil.toDp(10));
         }
 }

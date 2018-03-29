@@ -9,8 +9,6 @@ import com.example.chat.base.Constant;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.SharedMessage;
-import com.example.chat.manager.MessageCacheManager;
-import com.example.chat.manager.UserCacheManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -54,11 +52,10 @@ public class PollService extends Service {
         public int onStartCommand(Intent intent, int flags, int startId) {
                 int time;
                 if (intent != null) {
-                        time = intent.getIntExtra("time", 10);
+                        time = intent.getIntExtra(Constant.TIME, 10);
                 } else {
                         time = 10;
                 }
-                LogUtil.e("time" + time);
                 Observable.interval(time, TimeUnit.SECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<Long>() {

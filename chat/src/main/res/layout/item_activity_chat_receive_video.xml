@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.jzvd.JZVideoPlayerStandard
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:id="@+id/js_item_activity_chat_receive_video"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

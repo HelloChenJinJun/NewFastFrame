@@ -20,11 +20,6 @@ public class WallPaperAdapter extends BaseRecyclerAdapter<String, BaseWrappedVie
         private int selectedPosition = -1;
 
 
-        public interface OnWallPaperClickListener {
-                public void onClick(BaseWrappedViewHolder holder, int prePosition, int currentPosition);
-        }
-
-
 
 
         @Override

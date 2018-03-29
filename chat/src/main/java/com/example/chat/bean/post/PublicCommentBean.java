@@ -47,4 +47,8 @@ public class PublicCommentBean extends BmobObject {
     public boolean equals(Object obj) {
         return obj!=null&&obj instanceof PublicCommentBean&& ((PublicCommentBean) obj).getObjectId().equals(getObjectId());
     }
+
+    public void setCreatedTime(String createdTime) {
+        setCreatedAt(createdTime);
+    }
 }

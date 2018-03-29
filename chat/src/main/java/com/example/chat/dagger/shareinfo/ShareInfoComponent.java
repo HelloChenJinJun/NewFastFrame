@@ -1,7 +1,7 @@
 package com.example.chat.dagger.shareinfo;
 
 import com.example.chat.dagger.ChatMainComponent;
-import com.example.chat.ui.fragment.ShareInfoFragment;
+import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 import com.example.commonlibrary.dagger.scope.PerFragment;
 
 import dagger.Component;

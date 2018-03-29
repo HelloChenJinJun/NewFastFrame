@@ -8,7 +8,7 @@ import com.example.chat.adapter.SystemNotifyAdapter;
 import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.dagger.notify.DaggerSystemNotifyComponent;
 import com.example.chat.dagger.notify.SystemNotifyModule;
-import com.example.chat.ui.SlideBaseActivity;
+import com.example.chat.base.SlideBaseActivity;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;

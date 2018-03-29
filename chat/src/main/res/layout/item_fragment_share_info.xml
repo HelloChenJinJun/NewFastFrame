@@ -29,22 +29,43 @@ android:orientation="vertical">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
             <TextView
-                android:drawablePadding="5dp"
                 android:id="@+id/tv_item_fragment_share_info_main_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="无聊的->人类"/>
+                android:drawablePadding="5dp"
+                android:text="无聊的->人类" />
+
             <ImageView
-                android:layout_marginLeft="10dp"
                 android:id="@+id/iv_item_fragment_share_info_sex"
-                android:scaleType="centerInside"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:src="@drawable/ic_sex_female"
-                />
+                android:layout_marginLeft="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_sex_female" />
+
+            <RelativeLayout
+                android:id="@+id/rl_item_fragment_share_info_load_container"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/iv_item_fragment_share_info_retry"
+                    android:src="@drawable/ic_retry"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+
+                <ProgressBar
+                    android:visibility="gone"
+                    android:id="@+id/pb_item_fragment_share_info_retry_loading"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+            </RelativeLayout>
+
+
 
         </LinearLayout>
         <TextView

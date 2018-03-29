@@ -13,6 +13,9 @@ import java.util.List;
  * 创建人:        陈锦军
  * 创建时间:    2017/1/1      16:52
  * QQ:             1981367757
+ *
+ *
+ * 群成员头像网格适配器
  */
 public class GroupGridViewAdapter extends BaseRecyclerAdapter<GroupNumberInfo, BaseWrappedViewHolder> {
 

@@ -5,8 +5,13 @@ import android.os.Environment;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
+import com.example.chat.bean.MessageContent;
 import com.example.chat.listener.OnDownLoadFileListener;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.net.NetManager;
+import com.example.commonlibrary.net.download.DownloadListener;
+import com.example.commonlibrary.net.download.FileInfo;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
@@ -57,30 +62,65 @@ public class DownLoadManager {
                 } else {
                         LogUtil.e(((GroupChatMessage) message));
                 }
-                LogUtil.e("语音地址11：" + message.getContent().split("&")[0]);
-                OkHttpUtils.get().url(message.getContent().split("&")[0]).build().execute(new FileCallBack(Environment.getExternalStorageDirectory().getAbsolutePath(), message.getCreateTime() + message.getBelongId() + ".amr") {
+               String url=  BaseApplication
+                        .getAppComponent().getGson().fromJson(message.getContent(), MessageContent.class)
+                        .getUrlList().get(0);
+                NetManager.getInstance().downLoad(url, new DownloadListener() {
                         @Override
-                        public void onBefore(Request request, int id) {
+                        public void onStart(FileInfo fileInfo) {
                                 onDownLoadFileListener.onStart();
                         }
 
                         @Override
-                        public void inProgress(float progress, long total, int id) {
-                                onDownLoadFileListener.onProgress((int) progress);
+                        public void onUpdate(FileInfo fileInfo) {
+
                         }
 
                         @Override
-                        public void onError(Call call, Exception e, int id) {
-                                LogUtil.e("接受语音消息失败");
-                                onDownLoadFileListener.onFailed(new BmobException(e));
+                        public void onStop(FileInfo fileInfo) {
+
                         }
 
                         @Override
-                        public void onResponse(File response, int id) {
-                                onDownLoadFileListener.onSuccess(response.getAbsolutePath());
-                                LogUtil.e("接受到文件啦啦啦，文件路径为：" + response.getAbsolutePath());
+                        public void onComplete(FileInfo fileInfo) {
+                                onDownLoadFileListener.onSuccess(fileInfo.getPath());
+                                LogUtil.e("接受到文件啦啦啦，文件路径为：" + fileInfo.getPath());
+                        }
+
+                        @Override
+                        public void onCancel(FileInfo fileInfo) {
+
+                        }
+
+                        @Override
+                        public void onError(FileInfo fileInfo, String errorMsg) {
+                                onDownLoadFileListener.onFailed(new BmobException(errorMsg));
+                                LogUtil.e("接受语音消息失败"+errorMsg);
                         }
                 });
+//                OkHttpUtils.get().url(url).build().execute(new FileCallBack(Environment.getExternalStorageDirectory().getAbsolutePath(), message.getCreateTime() + message.getBelongId() + ".amr") {
+//                        @Override
+//                        public void onBefore(Request request, int id) {
+//                                onDownLoadFileListener.onStart();
+//                        }
+//
+//                        @Override
+//                        public void inProgress(float progress, long total, int id) {
+//                                onDownLoadFileListener.onProgress((int) progress);
+//                        }
+//
+//                        @Override
+//                        public void onError(Call call, Exception e, int id) {
+//                                LogUtil.e("接受语音消息失败");
+//                                onDownLoadFileListener.onFailed(new BmobException(e));
+//                        }
+//
+//                        @Override
+//                        public void onResponse(File response, int id) {
+//                                onDownLoadFileListener.onSuccess(response.getAbsolutePath());
+//                                LogUtil.e("接受到文件啦啦啦，文件路径为：" + response.getAbsolutePath());
+//                        }
+//                });
         }
 
         public void download(String videoUrl, String id, final OnDownLoadFileListener listener) {

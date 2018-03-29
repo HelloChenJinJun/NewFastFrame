@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView
+    android:id="@+id/iv_item_activity_chat_send_voice_volume"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignParentTop="true"
+android:background="@drawable/chat_right_qp"
+android:minHeight="50dp"
+android:minWidth="80dp"
+android:scaleType="fitCenter"
+android:src="@drawable/voice_left3"
+xmlns:android="http://schemas.android.com/apk/res/android" />

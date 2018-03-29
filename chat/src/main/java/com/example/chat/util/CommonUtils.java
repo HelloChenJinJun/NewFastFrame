@@ -23,6 +23,7 @@ import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.example.chat.manager.UserManager;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.utils.DensityUtil;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -198,32 +199,8 @@ public class CommonUtils {
                 return false;
         }
 
-        public static String getBaseUrl(String url) {
-                return "";
-        }
 
-        /**
-         * 获取圆形图片
-         *
-         * @param bitmap 源bitmap
-         * @return 圆形bitmap
-         */
-        public static Bitmap getCircleBitmap(Bitmap bitmap) {
-                Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(outBitmap);
-                float roundSize;
-                roundSize = Math.min(bitmap.getHeight(), bitmap.getWidth()) / 2f;
-                Paint paint = new Paint();
-                paint.setAntiAlias(true);
-                canvas.drawARGB(0, 0, 0, 0);
-                paint.setColor(Color.WHITE);
-                RectF rectF = new RectF(0, 0, roundSize * 2, roundSize * 2);
-                Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-                canvas.drawRoundRect(rectF, roundSize, roundSize, paint);
-                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-                canvas.drawBitmap(bitmap, rect, new Rect(0, 0, Math.min(bitmap.getHeight(), bitmap.getWidth()), Math.min(bitmap.getHeight(), bitmap.getWidth())), paint);
-                return outBitmap;
-        }
+
 
         public static DisplayMetrics getScreenPix(Context context) {
                 DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -232,12 +209,6 @@ public class CommonUtils {
         }
 
 
-        public static int getLayoutItemSize(Context context, int count, int marginSize) {
-                DisplayMetrics displayMetrics = getScreenPix(context);
-                int screenWidth = displayMetrics.widthPixels;
-                int itemSize = (int) ((screenWidth - (marginSize * (count - 1))) / (float) count);
-                return itemSize;
-        }
 
         public static String list2string(List<String> likeUsers) {
                 if (likeUsers == null || likeUsers.size() == 0) {
@@ -359,6 +330,6 @@ public class CommonUtils {
         }
 
         public static int getStatusBarHeight() {
-                return PixelUtil.todp(55);
+                return DensityUtil.toDp(55);
         }
 }

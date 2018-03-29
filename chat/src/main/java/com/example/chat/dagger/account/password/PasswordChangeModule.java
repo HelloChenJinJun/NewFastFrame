@@ -3,7 +3,7 @@ package com.example.chat.dagger.account.password;
 import com.example.chat.MainRepositoryManager;
 import com.example.chat.mvp.account.password.PasswordChangeModel;
 import com.example.chat.mvp.account.password.PasswordChangePresenter;
-import com.example.chat.ui.PasswordChangeActivity;
+import com.example.chat.mvp.account.password.PasswordChangeActivity;
 
 import dagger.Module;
 import dagger.Provides;

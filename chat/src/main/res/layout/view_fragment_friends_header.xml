@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chat_bg">
+
+
+        <TextView
+            android:id="@+id/tv_view_fragment_friends_header_black"
+            android:padding="10dp"
+            android:background="@color/white"
+            android:drawablePadding="20dp"
+            android:drawableLeft="@drawable/ic_person_grey_900_36dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="黑名单"
+            android:textSize="18sp"/>
+
+
+
+            <TextView
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:drawablePadding="20dp"
+                android:id="@+id/tv_view_fragment_friends_header_nearby"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="附近人"
+                android:drawableLeft="@drawable/ic_people_blue_grey_900_24dp"
+                android:textSize="18sp"/>
+
+
+    <TextView
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:drawablePadding="20dp"
+        android:id="@+id/tv_view_fragment_friends_header_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="群组"
+        android:drawableLeft="@drawable/ic_people_blue_500_36dp"
+        android:textSize="18sp"/>
+</LinearLayout>

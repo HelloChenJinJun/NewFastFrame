@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.chat.R;
 import com.example.chat.util.LogUtil;
-import com.example.chat.util.PixelUtil;
+import com.example.commonlibrary.utils.DensityUtil;
 
 
 /**
@@ -75,7 +75,7 @@ public class UrlTextView extends LinearLayout {
                 setOrientation(VERTICAL);
                 LayoutInflater.from(getContext()).inflate(R.layout.share_fragment_item_content_layout, this);
                 contentText = (TextView) findViewById(R.id.tv_url_text_content);
-                contentText.setTextSize(PixelUtil.dp2px(16));
+                contentText.setTextSize(DensityUtil.dip2sp(getContext(),16));
                 contentText.setTextColor(getResources().getColor(R.color.base_color_text_black));
                 cover = (TextView) findViewById(R.id.tv_url_text_cover);
                 cover.setTextColor(getResources().getColor(R.color.base_color_text_black));

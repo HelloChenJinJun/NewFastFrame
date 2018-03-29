@@ -31,7 +31,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.chat.R;
-import com.example.chat.ui.fragment.ShareInfoFragment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

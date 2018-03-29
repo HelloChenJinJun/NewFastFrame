@@ -1,31 +1,29 @@
 package com.example.chat.manager;
 
+import com.example.chat.ChatApplication;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.CustomInstallation;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
-import com.example.chat.bean.HappyBean;
-import com.example.chat.bean.HappyContentBean;
 import com.example.chat.bean.ImageItem;
-import com.example.chat.bean.PictureBean;
+import com.example.chat.bean.MessageContent;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.RecentMsg;
 import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
-import com.example.chat.bean.WinXinBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.ReplyCommentListBean;
 import com.example.chat.bean.post.ShareTypeContent;
-import com.example.chat.db.ChatDB;
 import com.example.chat.listener.AddFriendCallBackListener;
 import com.example.chat.listener.AddShareMessageCallBack;
 import com.example.chat.listener.DealCommentMsgCallBack;
 import com.example.chat.listener.DealMessageCallBack;
 import com.example.chat.listener.DealUserInfoCallBack;
 import com.example.chat.listener.LoadShareMessageCallBack;
+import com.example.chat.listener.OnCreateChatMessageListener;
 import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.chat.listener.OnCreateSharedMessageListener;
 import com.example.chat.listener.OnReceiveListener;
@@ -36,9 +34,20 @@ import com.example.chat.listener.SendFileListener;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
-import com.example.chat.util.PostUtil;
+import com.example.chat.util.SystemUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.bean.chat.ChatMessageEntity;
+import com.example.commonlibrary.bean.chat.GroupChatEntity;
+import com.example.commonlibrary.bean.chat.GroupTableEntity;
+import com.example.commonlibrary.bean.chat.PostCommentEntity;
+import com.example.commonlibrary.bean.chat.PublicPostEntity;
+import com.example.commonlibrary.bean.chat.PublicPostEntityDao;
+import com.example.commonlibrary.bean.chat.RecentMessageEntity;
+import com.example.commonlibrary.bean.chat.UserEntityDao;
+import com.example.commonlibrary.bean.music.DaoSession;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.google.gson.Gson;
 
@@ -83,6 +92,8 @@ public class MsgManager {
 
     private static MsgManager instance;
     private BmobPushManager<CustomInstallation> mPushManager;
+    private DaoSession daoSession;
+    private Gson gson;
     /**
      * 用于单例模式的双重锁定
      */
@@ -90,6 +101,8 @@ public class MsgManager {
 
     private MsgManager() {
         mPushManager = new BmobPushManager<>();
+        daoSession =UserDBManager.getInstance().getDaoSession();
+        gson=BaseApplication.getAppComponent().getGson();
     }
 
     public static MsgManager getInstance() {
@@ -108,32 +121,32 @@ public class MsgManager {
      * 不保存在本地数据库    ,发送完后上传消息到服务器上面
      *
      * @param targetId 对方的ID
-     * @param tag      消息的类型
+     * @param messageType      消息的类型
      * @param listener 回调
      */
-    public void sendTagMessage(final String targetId, final String tag, final OnSendTagMessageListener listener) {
-        getUserById(targetId, new FindListener<User>() {
+    public void sendTagMessage(final String targetId, int messageType, final OnSendTagMessageListener listener) {
+        UserManager.getInstance().findUserById(targetId, new FindListener<User>() {
                     @Override
                     public void done(List<User> list, BmobException e) {
                         if (e == null) {
                             if (list != null && list.size() > 0) {
                                 LogUtil.e("在服务器上查询好友成功");
-                                final ChatMessage msg = createTagMessage(list.get(0).getObjectId(), tag);
+                                final ChatMessage msg = createTagMessage(list.get(0).getObjectId(), messageType);
 //                                  在这里发送完同意请求后，把消息转为对方发送的消息
-                                if (tag.equals(Constant.TAG_AGREE)) {
-                                    RecentMsg recentMsg = new RecentMsg();
-                                    recentMsg.setNick(list.get(0).getNick());
-                                    recentMsg.setAvatar(list.get(0).getAvatar());
-                                    recentMsg.setMsgType(Constant.TAG_MSG_TYPE_TEXT);
-                                    recentMsg.setLastMsgContent(msg.getContent());
-                                    recentMsg.setBelongId(list.get(0).getObjectId());
-                                    recentMsg.setName(list.get(0).getUsername());
-                                    recentMsg.setTime(msg.getCreateTime());
-                                    LogUtil.e(recentMsg);
+                                if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
+                                    RecentMessageEntity recentMessageEntity=new RecentMessageEntity();
+                                    recentMessageEntity.setId(list.get(0).getObjectId());
+                                    recentMessageEntity.setCreatedTime(msg.getCreateTime());
+                                    recentMessageEntity.setContent(msg.getContent());
+                                    recentMessageEntity.setContentType(msg.getContentType());
+                                    recentMessageEntity.setType(RecentMessageEntity.TYPE_PERSON);
                                     LogUtil.e("保存同意消息到最近会话列表中");
-                                    ChatDB.create().saveRecentMessage(recentMsg);
+                                    UserDBManager.getInstance()
+                                            .getDaoSession().getRecentMessageEntityDao()
+                                            .insertOrReplace(recentMessageEntity);
                                     LogUtil.e("保存同意消息到聊天消息表中");
-                                    ChatDB.create().saveChatMessage(msg);
+                                    UserDBManager.getInstance()
+                                            .addOrUpdateChatMessage(msg);
                                 }
                                 sendJsonMessage(list.get(0).getInstallId(), createJsonMessage(msg),
                                         new OnSendPushMessageListener() {
@@ -184,7 +197,7 @@ public class MsgManager {
             findReadTag(msg.getConversationId(), msg.getCreateTime(), new FindListener<ChatMessage>() {
                 @Override
                 public void done(List<ChatMessage> list, BmobException e) {
-                    if (list==null||list.size()==0) {
+                    if (list == null || list.size() == 0) {
                         msg.save(new SaveListener<String>() {
                             @Override
                             public void done(String s, BmobException e) {
@@ -198,7 +211,7 @@ public class MsgManager {
                     }
                 }
             });
-        }else {
+        } else {
             msg.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
@@ -246,41 +259,16 @@ public class MsgManager {
     private JSONObject createJsonMessage(ChatMessage message) {
         try {
             JSONObject result = new JSONObject();
-//                        添加为好友标签
-            switch (message.getTag()) {
-                case Constant.TAG_ADD_FRIEND:
-                    result.put(Constant.MESSAGE_TAG, message.getTag());
-                    result.put(Constant.TAG_BELONG_AVATAR, message.getBelongAvatar());
-                    result.put(Constant.TAG_BELONG_NICK, message.getBelongNick());
-                    result.put(Constant.TAG_BELONG_NAME, message.getBelongUserName());
-                    result.put(Constant.TAG_CREATE_TIME, message.getCreateTime());
-                    result.put(Constant.TAG_MESSAGE_READ_STATUS, message.getReadStatus());
-//                                已读回执标签
-                    break;
-                case Constant.TAG_ASK_READ:
-                    result.put(Constant.TAG_CONVERSATION, message.getConversationId());
-                    result.put(Constant.TAG_CREATE_TIME, message.getCreateTime());
-                    result.put(Constant.MESSAGE_TAG, message.getTag());
-                    result.put(Constant.TAG_MESSAGE_READ_STATUS, message.getReadStatus());
-                    break;
-                case Constant.TAG_AGREE:
-//                                        alert = message.getBelongUserName() + "已同意添加你为好友";
-                    result.put(Constant.MESSAGE_TAG, message.getTag());
-                    result.put(Constant.TAG_BELONG_AVATAR, message.getBelongAvatar());
-                    result.put(Constant.TAG_BELONG_NICK, message.getBelongNick());
-                    result.put(Constant.TAG_BELONG_NAME, message.getBelongUserName());
-                    result.put(Constant.TAG_CREATE_TIME, message.getCreateTime());
-                    result.put(Constant.TAG_CONTENT, message.getContent());
-                    result.put(Constant.TAG_CONVERSATION, message.getConversationId());
-                    result.put(Constant.TAG_MESSAGE_READ_STATUS, message.getReadStatus());
-                    result.put(Constant.TAG_MESSAGE_TYPE, message.getMsgType());
-                    break;
-                default:
-                    break;
-            }
+            result.put(Constant.TAG_MESSAGE_READ_STATUS, message.getReadStatus());
+            result.put(Constant.TAG_MESSAGE_SEND_STATUS, message.getSendStatus());
+            result.put(Constant.TAG_CONTENT, message.getContent());
+            result.put(Constant.TAG_CONVERSATION, message.getConversationId());
+            result.put(Constant.TAG_CONTENT_TYPE,message.getContentType());
+            result.put(Constant.TAG_MESSAGE_TYPE, message.getMessageType());
+            result.put(Constant.TAG_CREATE_TIME, message.getCreateTime());
             result.put(Constant.TAG_BELONG_ID, message.getBelongId());
             result.put(Constant.TAG_TO_ID, message.getToId());
-            LogUtil.e("组装后的json:" + result.toString());
+            CommonLogger.e("组装后的json:" + result.toString());
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -292,27 +280,31 @@ public class MsgManager {
      * 创建标签实体消息类  目前有的标签类型消息：1、邀请消息2、同意消息3、回执消息
      *
      * @param targetId 对方ID
-     * @param tag      标签
      * @return 标签实体类
      */
-    private ChatMessage createTagMessage(String targetId, String tag) {
-        User user = UserManager.getInstance().getCurrentUser();
-        ChatMessage message = new ChatMessage();
-        if (tag.equals(Constant.TAG_AGREE)) {
-            message.setContent("你们已经成为好友可以聊天啦啦啦");
-            message.setConversationId(user.getObjectId() + "&" + targetId);
-        }
-        message.setMsgType(Constant.TAG_MSG_TYPE_TEXT);
-        message.setToId(targetId);
-        message.setTag(tag);
-        message.setBelongAvatar(user.getAvatar());
-        message.setBelongNick(user.getNick());
-        message.setBelongUserName(user.getUsername());
-        message.setBelongId(user.getObjectId());
-        message.setCreateTime(String.valueOf(System.currentTimeMillis()));
-        message.setReadStatus(Constant.READ_STATUS_UNREAD);
-        return message;
+    public ChatMessage createTagMessage(String targetId,int messageType) {
+        return createTagMessage(targetId,UserManager.getInstance().getCurrentUserObjectId()+"&"+targetId
+        ,System.currentTimeMillis(),messageType);
     }
+
+    public ChatMessage createTagMessage(String targetId,String conversationId,Long time,int messageType) {
+        User user = UserManager.getInstance().getCurrentUser();
+        ChatMessage chatMessage=new ChatMessage();
+        chatMessage.setToId(targetId);
+        chatMessage.setMessageType(messageType);
+        chatMessage.setConversationId(conversationId);
+        chatMessage.setBelongId(user.getObjectId());
+        chatMessage.setCreateTime(time);
+        chatMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+        chatMessage.setReadStatus(Constant.READ_STATUS_UNREAD);
+        if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
+            chatMessage.setContent("你们已经成为好友可以聊天啦啦啦");
+            chatMessage.setContentType(Constant.TAG_MSG_TYPE_TEXT);
+        }
+        return chatMessage;
+
+    }
+
 
     /**
      * 根据用户id到后台服务器去查找用户
@@ -332,89 +324,81 @@ public class MsgManager {
      * @param json     json数据
      * @param listener 回调
      */
-    public void createReceiveMsg(String json, final OnReceiveListener listener) {
+    public void createReceiveMsg(String json,  OnReceiveListener listener) {
         try {
             JSONObject jsonObject = new JSONObject(json);
             final ChatMessage message = new ChatMessage();
-            message.setTag(JsonUtil.getString(jsonObject, Constant.MESSAGE_TAG));
+            message.setContentType(JsonUtil.getInt(jsonObject, Constant.TAG_CONTENT_TYPE));
             message.setToId(JsonUtil.getString(jsonObject, Constant.TAG_TO_ID));
             message.setBelongId(JsonUtil.getString(jsonObject, Constant.TAG_BELONG_ID));
-            message.setBelongUserName(JsonUtil.getString(jsonObject, Constant.TAG_BELONG_NAME));
-            message.setCreateTime(JsonUtil.getString(jsonObject, Constant.TAG_CREATE_TIME));
-            message.setMsgType(JsonUtil.getInt(jsonObject, Constant.TAG_MESSAGE_TYPE));
-            message.setBelongAvatar(JsonUtil.getString(jsonObject, Constant.TAG_BELONG_AVATAR));
-            message.setBelongNick(JsonUtil.getString(jsonObject, Constant.TAG_BELONG_NICK));
+            message.setCreateTime(JsonUtil.getLong(jsonObject, Constant.TAG_CREATE_TIME));
+            message.setMessageType(JsonUtil.getInt(jsonObject, Constant.TAG_MESSAGE_TYPE));
             message.setConversationId(JsonUtil.getString(jsonObject, Constant.TAG_CONVERSATION));
             message.setReadStatus(Constant.RECEIVE_UNREAD);
             message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
             message.setContent(JsonUtil.getString(jsonObject, Constant.TAG_CONTENT));
-            String tag = message.getTag();
-            if (tag != null && !tag.equals("")) {
-                switch (tag) {
-                    case Constant.TAG_AGREE:
-                        LogUtil.e("接收到同意消息");
-                        if (ChatDB.create().isExistChatMessage(message.getConversationId(), message.getCreateTime())) {
-                            LogUtil.e("接受推送过来的同意消息，数据库中已经存在，不需要再接受");
-                            return;
-                        }
-
-                        UserManager.getInstance().addNewFriend(message.getBelongId(), message.getToId(), new AddFriendCallBackListener() {
-                            @Override
-                            public void onSuccess(User user) {
-                                if (saveAndUploadReceiverMessage(true, message)) {
-                                    if (UserManager.getInstance().getCurrentUser() != null && UserManager.getInstance().getCurrentUserObjectId().equals(message.getToId())) {
-                                        UserCacheManager.getInstance().addContact(user);
-                                    }
-                                    listener.onSuccess(message);
-                                } else {
-                                    listener.onFailed(new BmobException("保存同意消息到最近会话列表或聊天消息表中失败"));
-                                }
-                            }
-
-                            @Override
-                            public void onFailed(BmobException e) {
-                                listener.onFailed(e);
-                            }
-                        });
-                        break;
-                    case Constant.TAG_ADD_FRIEND:
-                        if (ChatDB.create().hasInvitation(message.getBelongId(), message.getCreateTime())) {
-                            LogUtil.e("已经有请求消息拉，这里就不许要再次保存");
-                            return;
-                        }
-                        if (saveAndUpdateInvitationMsg(message) > 0) {
-                            listener.onSuccess(message);
-                        } else {
-                            listener.onFailed(new BmobException("保存邀请消息到数据库中失败!!"));
-                        }
-                        break;
-                    case Constant.TAG_ASK_READ:
-                        updateReadTagMsgReaded(message.getConversationId(), message.getCreateTime());
-                        if (uploadAndUpdateChatMessageReadStatus(message, true) > 0) {
-                            listener.onSuccess(message);
-                        } else {
-                            listener.onFailed(new BmobException("更新聊天消息已读状态失败"));
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            } else {
-//                                聊天消息
-//                                接收到的消息有种情况，1、推送接收到的消息，已经在检测得到了，所以推送的就不要了
-                if (ChatDB.create().isExistChatMessage(message.getConversationId(), message.getCreateTime())) {
-                    LogUtil.e("接受推送过来的聊天" +
-                            "消息，数据库中已经存在，不需要再接受");
-                    return;
-                }
-                if (saveAndUploadReceiverMessage(true, message)) {
-                    listener.onSuccess(message);
-                } else {
-                    listener.onFailed(new BmobException("保存聊天消息到最近会话列表或聊天消息表中失败"));
-                }
-            }
+            dealReceiveChatMessage(message,listener);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public void dealReceiveGroupChatMessage(GroupChatMessage groupChatMessage){
+        UserDBManager.getInstance().addOrUpdateGroupChatMessage(groupChatMessage);
+        UserDBManager.getInstance().addOrUpdateRecentMessage(groupChatMessage);
+    }
+
+
+    public void dealReceiveGroupChatMessage(List<GroupChatMessage> groupChatMessageList){
+        UserDBManager.getInstance().addOrUpdateGroupChatMessage(groupChatMessageList);
+        if (groupChatMessageList.size()>0) {
+            UserDBManager.getInstance().addOrUpdateRecentMessage(groupChatMessageList.get(0));
+        }
+    }
+
+    public void dealReceiveChatMessage(ChatMessage message,final OnReceiveListener listener) {
+        switch (message.getMessageType()) {
+            case ChatMessage.MESSAGE_TYPE_AGREE:
+                LogUtil.e("接收到同意消息");
+                if (!UserDBManager.getInstance().hasMessage(message.getConversationId(), message.getCreateTime())) {
+                    UserManager.getInstance().addNewFriend(message.getBelongId(), message.getToId(), new AddFriendCallBackListener() {
+                        @Override
+                        public void onSuccess(User user) {
+                            updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
+                            UserDBManager.getInstance().addChatMessage(message);
+                            UserDBManager.getInstance().addOrUpdateRecentMessage(message);
+                            listener.onSuccess(message);
+                        }
+
+                        @Override
+                        public void onFailed(BmobException e) {
+                            listener.onFailed(e);
+                        }
+                    });
+                }
+                break;
+            case ChatMessage.MESSAGE_TYPE_ADD:
+                if (!UserDBManager.getInstance().hasMessage(message.getConversationId(), message.getCreateTime())) {
+                    UserDBManager.getInstance().addChatMessage(message);
+                    updateMsgReaded(false, message.getBelongId(), message.getCreateTime());
+                    listener.onSuccess(message);
+                }
+                break;
+            case ChatMessage.MESSAGE_TYPE_READED:
+                updateMsgReaded(false, message.getBelongId(), message.getCreateTime());
+                UserDBManager.getInstance().updateMessageReadStatus(message.getConversationId(),message.getCreateTime(),Constant.READ_STATUS_READED);
+                listener.onSuccess(message);
+                break;
+            default:
+                //                                聊天消息
+//                                接收到的消息有种情况，1、推送接收到的消息，已经在检测得到了，所以推送的就不要了
+                if (!UserDBManager.getInstance().hasMessage(message.getConversationId(), message.getCreateTime())){
+                    updateMsgReaded(false,message.getConversationId(), message.getCreateTime());
+                    sendAskReadMsg(message.getConversationId(), message.getCreateTime());
+                    listener.onSuccess(message);
+                }
+                break;
         }
     }
 
@@ -424,15 +408,9 @@ public class MsgManager {
         message.setContent(JsonUtil.getString(jsonObject, Constant.TAG_CONTENT));
         message.setReadStatus(Constant.RECEIVE_UNREAD);
         message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-//                message.setReadStatus(JsonUtil.getInt(jsonObject, Constant.TAG_MESSAGE_READ_STATUS));
-//                message.setSendStatus(JsonUtil.getInt(jsonObject, Constant.TAG_MESSAGE_SEND_STATUS));
-        message.setCreateTime(JsonUtil.getString(jsonObject, Constant.TAG_CREATE_TIME));
-        message.setConversationType(JsonUtil.getString(jsonObject, Constant.TYPE_CONVERSATION));
-        message.setBelongAvatar(JsonUtil.getString(jsonObject, Constant.TAG_BELONG_AVATAR));
+        message.setCreateTime(JsonUtil.getLong(jsonObject, Constant.TAG_CREATE_TIME));
         message.setBelongId(JsonUtil.getString(jsonObject, Constant.TAG_BELONG_ID));
-        message.setBelongNick(JsonUtil.getString(jsonObject, Constant.TAG_BELONG_NICK));
-        message.setBelongUserName(JsonUtil.getString(jsonObject, Constant.TAG_BELONG_NAME));
-        message.setMsgType(JsonUtil.getInt(jsonObject, Constant.TAG_MESSAGE_TYPE));
+        message.setContentType(JsonUtil.getInt(jsonObject, Constant.TAG_CONTENT_TYPE));
         message.setObjectId(JsonUtil.getString(jsonObject, Constant.ID));
         return message;
     }
@@ -496,18 +474,18 @@ public class MsgManager {
      * @param conversationId 会话id
      * @param createTime     消息创建时间
      */
-    private void sendAskReadMsg(final String conversationId, final String createTime) {
+    private void sendAskReadMsg(final String conversationId, final Long createTime) {
         getUserById(conversationId.split("&")[0],
                 new FindListener<User>() {
                     @Override
                     public void done(List<User> list, BmobException e) {
                         if (e == null) {
                             if (list != null && list.size() > 0) {
-                                final ChatMessage chatMessage = createAskReadMessage(conversationId, createTime);
+                                final ChatMessage chatMessage = createTagMessage(list.get(0).getObjectId(),conversationId, createTime,ChatMessage.MESSAGE_TYPE_READED);
                                 sendJsonMessage(list.get(0).getInstallId(), createJsonMessage(chatMessage), new OnSendPushMessageListener() {
                                     @Override
                                     public void onSuccess() {
-                                        LogUtil.e("发送回执已读json消息成功");
+                                        CommonLogger.e("发送回执已读json消息成功");
 //                                                        发送已读回执消息也要上传到服务器上面
                                         chatMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
                                         saveMessageToService(chatMessage);
@@ -515,8 +493,8 @@ public class MsgManager {
 
                                     @Override
                                     public void onFailed(BmobException e) {
-                                        LogUtil.e("发送回执json消息成功失败" + e.getMessage() + e.getErrorCode());
-                                        LogUtil.e("发送失败也要保存回执已读消息到服务器上面啊");
+                                        CommonLogger.e("发送回执json消息成功失败" + e.getMessage() + e.getErrorCode());
+                                        CommonLogger.e("发送失败也要保存回执已读消息到服务器上面啊");
                                         chatMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
                                         saveMessageToService(chatMessage);
 
@@ -539,7 +517,7 @@ public class MsgManager {
      * @return 聊天消息实体
      */
 
-    private ChatMessage createAskReadMessage(String conversationId, String createTime) {
+    private ChatMessage createAskReadMessage(String conversationId, Long createTime) {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setToId(conversationId.split("&")[0]);
         chatMessage.setBelongId(conversationId.split("&")[1]);
@@ -557,8 +535,8 @@ public class MsgManager {
      * @param id         会话ID或者是belongID
      * @param createTime 创建时间
      */
-    public void updateMsgReaded(boolean isBelongId, String id, String createTime) {
-        queryMsg(isBelongId, id, createTime, new FindListener<ChatMessage>() {
+    public void updateMsgReaded(boolean isReadedMessage, String id, Long createTime) {
+        queryMsg(isReadedMessage, id, createTime, new FindListener<ChatMessage>() {
                     @Override
                     public void done(List<ChatMessage> list, BmobException e) {
                         if (e == null) {
@@ -593,29 +571,26 @@ public class MsgManager {
      * @param createTime   创建时间
      * @param findListener 找到消息的回调
      */
-    private void queryMsg(boolean isBelongId, String id, String createTime, FindListener<ChatMessage> findListener) {
+    private void queryMsg(boolean isReadedMessage , String id, Long createTime, FindListener<ChatMessage> findListener) {
         BmobQuery<ChatMessage> query = new BmobQuery<>();
-        if (isBelongId) {
-            query.addWhereEqualTo("belongId", id);
-        } else {
-            query.addWhereEqualTo("conversationId", id);
-            query.addWhereNotEqualTo("tag", Constant.TAG_ASK_READ);
-        }
+        query.addWhereEqualTo("conversationId", id);
         query.addWhereEqualTo("createTime", createTime);
+        if (isReadedMessage){
+            query.addWhereEqualTo("messageType",ChatMessage.MESSAGE_TYPE_READED);
+        }
         query.findObjects(findListener);
     }
 
 
     /**
-     * 更新已读状态到服务器上,然后保存邀请消息到数据库只中
+     * 更新已读状态到服务器上
      *
      * @param message 消息
      * @return 结果
      */
-    public long saveAndUpdateInvitationMsg(ChatMessage message) {
+    public void saveAndUpdateInvitationMsg(ChatMessage message) {
 //                当当前用户是该消息接受者的时候，更新服务器上该消息为已读状态,否则就不更新，以便以后登录其他设备的时候可以通过在服务器上搜索未读取状态在检测到该数据
         updateMsgReaded(true, message.getBelongId(), message.getCreateTime());
-        return ChatDB.create(message.getToId()).saveInvitationMsg(message);
     }
 
 
@@ -639,7 +614,7 @@ public class MsgManager {
             listener.onFailed(new BmobException("没有网络请检查下网络配置"));
             return;
         }
-        if (message.getConversationType().equals(Constant.TYPE_CONVERSATION_PERSON) && ChatDB.create().isBlackUser(((ChatMessage) message).getToId())) {
+        if (message.getCon().equals(Constant.TYPE_CONVERSATION_PERSON) && ChatDB.create().isBlackUser(((ChatMessage) message).getToId())) {
             message.setSendStatus(Constant.SEND_STATUS_FAILED);
             if (!isResend) {
                 ChatDB.create().saveChatMessage((ChatMessage) message);
@@ -765,20 +740,20 @@ public class MsgManager {
 
     public void queryGroupChatMessage(List<String> groupIdList, final FindListener<GroupChatMessage> listener) {
         if (groupIdList != null && groupIdList.size() > 0) {
-            LogUtil.e("12群id列表如下");
+            LogUtil.e("群id列表如下");
             for (int i = 0; i < groupIdList.size(); i++) {
                 String groupId = groupIdList.get(i);
                 LogUtil.e(groupId);
                 BmobQuery<GroupChatMessage> query = new BmobQuery<>("g" + groupId);
-                final RecentMsg recentMsg = ChatDB.create().getRecentMsg(groupId);
+                final RecentMessageEntity recentMsg=UserDBManager.getInstance().getRecentMessage(groupId);
                 long lastTime;
                 if (recentMsg == null) {
                     lastTime = 0;
                 } else {
-                    lastTime = Long.valueOf(ChatDB.create().getRecentMsg(groupId).getTime());
+                    lastTime = recentMsg.getCreatedTime();
                 }
                 query.addWhereGreaterThan("updatedAt", new BmobDate(new Date(lastTime)));
-//                                query.addWhereEqualTo("groupId", groupId);
+                query.order("-updatedAt");
                 query.findObjectsByTable(new QueryListener<JSONArray>() {
                     @Override
                     public void done(JSONArray jsonArray, BmobException e) {
@@ -790,13 +765,12 @@ public class MsgManager {
                                 try {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     GroupChatMessage groupChatMessage = MsgManager.getInstance().createReceiveGroupChatMsg(jsonObject);
-                                    groupChatMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-                                    groupChatMessage.setReadStatus(Constant.RECEIVE_UNREAD);
                                     list.add(groupChatMessage);
                                 } catch (JSONException item) {
                                     item.printStackTrace();
                                 }
                             }
+                            dealReceiveGroupChatMessage(list);
                             listener.done(list, null);
                         } else {
                             LogUtil.e("查询断网期间的群消息失败：" + e.toString());
@@ -863,54 +837,28 @@ public class MsgManager {
                 uploadSendMessage(((GroupChatMessage) baseMessage));
             }
         }
-//                这里的消息是发送的消息，如果要保存到最近会话列表中，必须要弄到对方用户的资料,所以......
-//                1、判断是否是好友
         if (baseMessage instanceof ChatMessage) {
-            final ChatMessage message = (ChatMessage) baseMessage;
-            ChatDB.create().saveChatMessage(message);
-            User user = null;
-            if (UserCacheManager.getInstance().getUser(message.getToId()) != null) {
-                user = UserCacheManager.getInstance().getUser(message.getToId());
-            } else {
-                getUserById(message.getToId(), new FindListener<User>() {
-                            @Override
-                            public void done(List<User> list, BmobException e) {
-                                if (e == null) {
-                                    if (list != null && list.size() > 0) {
-                                        RecentMsg recentMsg = new RecentMsg();
-                                        User user1 = list.get(0);
-                                        recentMsg.setName(user1.getUsername());
-                                        recentMsg.setBelongId(user1.getObjectId());
-                                        recentMsg.setAvatar(user1.getAvatar());
-                                        recentMsg.setTime(message.getCreateTime());
-                                        recentMsg.setNick(user1.getNick());
-                                        recentMsg.setLastMsgContent(message.getContent());
-                                        recentMsg.setMsgType(message.getMsgType());
-                                        ChatDB.create().saveRecentMessage(recentMsg);
-                                    }
-                                } else {
-                                    LogUtil.e("在服务器上查询用户失败" + e.toString());
-                                }
-                            }
-                        }
-                );
-            }
-            if (user != null) {
-                RecentMsg recentMsg = new RecentMsg();
-                recentMsg.setMsgType(message.getMsgType());
-                recentMsg.setBelongId(user.getObjectId());
-                recentMsg.setAvatar(user.getAvatar());
-                recentMsg.setNick(user.getNick());
-                recentMsg.setLastMsgContent(message.getContent());
-                recentMsg.setName(user.getUsername());
-                recentMsg.setTime(message.getCreateTime());
-                LogUtil.e("保存最近消息到数据库中成功");
-                ChatDB.create().saveRecentMessage(recentMsg);
-            }
+           ChatMessage chatMessage= (ChatMessage) baseMessage;
+           UserDBManager.getInstance().addOrUpdateChatMessage(chatMessage);
         } else if (baseMessage instanceof GroupChatMessage) {
-            LogUtil.e("保存到最近群会话和群消息数据库中");
-            saveRecentAndChatGroupMessage(((GroupChatMessage) baseMessage));
+            UserDBManager.getInstance().addOrUpdateGroupChatMessage(((GroupChatMessage) baseMessage));
         }
+        UserDBManager.getInstance().addOrUpdateRecentMessage(baseMessage);
+    }
+
+    private void uploadSendMessage(GroupChatMessage message) {
+        message.save(new SaveListener<String>() {
+                         @Override
+                         public void done(String s, BmobException e) {
+                             if (e == null) {
+                                 LogUtil.e("上传群消息到服务器中成功");
+                             } else {
+                                 LogUtil.e("上传群消息到服务器上失败" + e.toString());
+                             }
+                         }
+
+                     }
+        );
     }
 
     /**
@@ -958,7 +906,7 @@ public class MsgManager {
         query.findObjects(findListener);
     }
 
-    private void uploadSendMessage(GroupChatMessage groupChatMessage) {
+    private void quploadSendMessage(GroupChatMessage groupChatMessage) {
         groupChatMessage.save(new SaveListener<String>() {
                                   @Override
                                   public void done(String s, BmobException e) {
@@ -997,23 +945,19 @@ public class MsgManager {
      * @param uid     用户ID
      * @return 消息实体
      */
-    public ChatMessage createChatMessage(String content, String uid, int msgType) {
+    public ChatMessage createChatMessage(String content, String uid, int contentType) {
         User currentUser = UserManager.getInstance().getCurrentUser();
         ChatMessage message = new ChatMessage();
-        message.setConversationType(Constant.TYPE_CONVERSATION_PERSON);
         message.setBelongId(currentUser.getObjectId());
-        message.setBelongUserName(currentUser.getUsername());
-        message.setBelongNick(currentUser.getNick());
-        message.setBelongAvatar(currentUser.getAvatar());
         message.setToId(uid);
         message.setConversationId(currentUser.getObjectId() + "&" + uid);
 //                 默认设置消息发送成功
         message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
         message.setReadStatus(Constant.READ_STATUS_UNREAD);
         message.setContent(content);
-        message.setCreateTime(String.valueOf(System.currentTimeMillis()));
-        message.setMsgType(msgType);
-        message.setTag("");
+        message.setCreateTime(System.currentTimeMillis());
+        message.setContentType(contentType);
+        message.setMessageType(ChatMessage.MESSAGE_TYPE_NORMAL);
         return message;
     }
 
@@ -1038,9 +982,10 @@ public class MsgManager {
         }
         message.setSendStatus(Constant.SEND_STATUS_START);
         sendFileListener.onStart(message);
-        if (!CommonUtils.isNetWorkAvailable(BaseApplication.getInstance())) {
+        if (!AppUtil.isNetworkAvailable()) {
 //                        如果没有网络
             message.setSendStatus(Constant.SEND_STATUS_FAILED);
+//            todo  这里开始啦啦啦啦
             saveAndUploadSendMessage(false, message);
             sendFileListener.onFailed(new BmobException("没有网络，请检查网络配置"));
             return;
@@ -1072,7 +1017,6 @@ public class MsgManager {
             @Override
             public void onStart() {
                 super.onStart();
-                LogUtil.e("bmobFile.uploadblock：onStart");
                 message.setSendStatus(Constant.SEND_STATUS_SENDING);
             }
 
@@ -1087,9 +1031,9 @@ public class MsgManager {
                 if (e == null) {
                     LogUtil.e("上传文件成功");
                     String fileUrl = bmobFile.getFileUrl();
-                    if (message.getMsgType().equals(Constant.TAG_MSG_TYPE_IMAGE)) {
+                    if (message.getContentType().equals(Constant.TAG_MSG_TYPE_IMAGE)) {
                         message.setContent(fileUrl);
-                    } else if (message.getMsgType().equals(Constant.TAG_MSG_TYPE_VOICE)) {
+                    } else if (message.getContentType().equals(Constant.TAG_MSG_TYPE_VOICE)) {
 //                                                                                     如果是语音则是   服务器上的短连接URL&语音时长length
                         String length = message.getContent().split("&")[1];
                         message.setContent(fileUrl + "&" + length);
@@ -1113,10 +1057,10 @@ public class MsgManager {
 //                                                                                        重新再更改数据库中的消息中的内容
 //                                                                                        内容格式为:   本地地址&网络地址
 
-                                    if (message.getMsgType().equals(Constant.TAG_MSG_TYPE_IMAGE)) {
+                                    if (message.getContentType().equals(Constant.TAG_MSG_TYPE_IMAGE)) {
 //                                                                                             message.setContent(localPath + "&" + message.getContent());
                                         message.setContent(localPath + "&" + message.getContent());
-                                    } else if (message.getMsgType().equals(Constant.TAG_MSG_TYPE_VOICE)) {
+                                    } else if (message.getContentType().equals(Constant.TAG_MSG_TYPE_VOICE)) {
 //                                                                                                             保存到数据库中的格式:  本地地址&服务器URL&length
                                         message.setContent(localPath + "&" + message.getContent());
                                     } else {
@@ -1151,7 +1095,6 @@ public class MsgManager {
                                 }
                             });
                 } else {
-                    LogUtil.e("怎么回事?");
                     LogUtil.e("上传文件失败" + e.toString());
                     message.setSendStatus(Constant.SEND_STATUS_FAILED);
                     if (!isResend) {
@@ -1518,21 +1461,15 @@ public class MsgManager {
         query.findObjects(findListener);
     }
 
-    public GroupChatMessage createGroupChatMessage(String content, String groupId, int msgType) {
-        User user = UserManager.getInstance().getCurrentUser();
+    public GroupChatMessage createGroupChatMessage(String content, String groupId, int contentType) {
         GroupChatMessage message = new GroupChatMessage();
         message.setGroupId(groupId);
         message.setContent(content);
         message.setReadStatus(Constant.READ_STATUS_UNREAD);
-        message.setMsgType(msgType);
-        message.setBelongAvatar(user.getAvatar() == null ? "" : user.getAvatar());
-        message.setBelongId(user.getObjectId());
-        GroupTableMessage groupTableMessage = MessageCacheManager.getInstance().getGroupTableMessage(groupId);
-        message.setBelongNick(groupTableMessage.getGroupNick() == null || groupTableMessage.getGroupNick().equals("") ? user.getNick() : groupTableMessage.getGroupNick());
-        message.setBelongUserName(user.getUsername());
-        message.setConversationType(Constant.TYPE_CONVERSATION_GROUP);
+        message.setContentType(contentType);
+        message.setBelongId(UserManager.getInstance().getCurrentUserObjectId());
         message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-        message.setCreateTime(String.valueOf(System.currentTimeMillis()));
+        message.setCreateTime(System.currentTimeMillis());
         return message;
     }
 
@@ -1558,7 +1495,6 @@ public class MsgManager {
 
 
     public GroupTableMessage createReceiveGroupTableMsg(String json) {
-//                GroupTableMessage message = new GroupTableMessage();
         Gson mGson = new Gson();
         GroupTableMessage message = mGson.fromJson(json, GroupTableMessage.class);
         LogUtil.e("实时监听到的群结构消息如下1");
@@ -1901,123 +1837,7 @@ public class MsgManager {
         query.findObjects(findListener);
     }
 
-    public void createSharedMessage(HappyBean happyBean, HappyContentBean happyContentBean,
-                                    WinXinBean winXinBean, PictureBean pictureBean, String location, String videoPath, String displayPath, String content, final List<ImageItem> imageList, List<String> selectedInVisibleUsers, int visibleType, final OnCreateSharedMessageListener listener) {
-        final SharedMessage sharedMessage = new SharedMessage();
-        if (!location.equals("不显示")) {
-            sharedMessage.setAddress(location);
-        }
-        if (visibleType == Constant.SHARE_MESSAGE_VISIBLE_TYPE_PUBLIC) {
-            sharedMessage.setInVisibleUserList(selectedInVisibleUsers);
-        }
-        sharedMessage.setVisibleType(visibleType);
-        sharedMessage.setBelongId(UserManager.getInstance().getCurrentUser().getObjectId());
-        sharedMessage.setCreateTime(String.valueOf(System.currentTimeMillis()));
-        sharedMessage.setContent(content);
-        if (happyBean != null || happyContentBean != null || winXinBean != null || pictureBean != null) {
-            sharedMessage.setMsgType(Constant.MSG_TYPE_SHARE_MESSAGE_LINK);
-            if (happyBean != null) {
-                List<String> urlList = new ArrayList<>();
-                urlList.add(happyBean.getUrl());
-                sharedMessage.setUrlList(urlList);
-                sharedMessage.setUrlTitle(happyBean.getContent());
-            } else if (happyContentBean != null) {
-                sharedMessage.setUrlTitle(happyContentBean.getContent());
-            } else if (pictureBean != null) {
-                List<String> urlList = new ArrayList<>();
-                urlList.add(pictureBean.getUrl());
-                sharedMessage.setUrlList(urlList);
-            } else {
-                List<String> list = new ArrayList<>();
-                list.add(winXinBean.getPicUrl());
-                list.add(winXinBean.getUrl());
-                sharedMessage.setUrlTitle(winXinBean.getTitle());
-                sharedMessage.setUrlList(list);
-            }
-            listener.onSuccess(sharedMessage);
-            return;
-        }
-//                上面是分享的链接部分
-        sharedMessage.setContent(content);
-        final List<String> photoUrls = new ArrayList<>();
-        if (imageList != null && imageList.size() > 0) {
-            sharedMessage.setMsgType(Constant.MSG_TYPE_SHARE_MESSAGE_IMAGE);
-            LogUtil.e("发送的全部path为:");
-            for (ImageItem imageItem :
-                    imageList) {
-                photoUrls.add(imageItem.getPath());
-                LogUtil.e(imageItem.getPath());
-            }
-            BmobFile.uploadBatch(photoUrls.toArray(new String[]{}), new UploadBatchListener() {
-                @Override
-                public void onSuccess(List<BmobFile> list2, List<String> list1) {
-                    if (imageList.size() == list1.size()) {
-                        LogUtil.e("11全部上传图片成功");
-                        sharedMessage.setImageList(list1);
-                        LogUtil.e("上传得到的全部URL");
-                        for (String url :
-                                sharedMessage.getImageList()) {
-                            LogUtil.e(url);
-                        }
-                        listener.onSuccess(sharedMessage);
-                    } else {
-                        LogUtil.e("目前得到的URL集合为:");
-                        for (String url :
-                                list1) {
-                            LogUtil.e(url);
-                        }
-                    }
-                }
 
-
-                @Override
-                public void onProgress(int i, int i1, int i2, int i3) {
-
-                }
-
-                @Override
-                public void onError(int i, String s) {
-                    listener.onFailed(0, "上传图片失败" + s + i);
-                }
-            });
-        } else if (videoPath != null && displayPath != null) {
-            sharedMessage.setMsgType(Constant.MSG_TYPE_SHARE_MESSAGE_VIDEO);
-            LogUtil.e("视频说说消息");
-            final List<String> urlList = new ArrayList<>();
-            urlList.add(displayPath);
-            urlList.add(videoPath);
-            BmobFile.uploadBatch(urlList.toArray(new String[]{}), new UploadBatchListener() {
-                @Override
-                public void onSuccess(List<BmobFile> list, List<String> list1) {
-                    if (urlList.size() == list1.size()) {
-                        LogUtil.e("视频全部上传成功");
-                        sharedMessage.setImageList(list1);
-                        LogUtil.e("上传得到的全部URL");
-                        for (String url :
-                                sharedMessage.getImageList()) {
-                            LogUtil.e(url);
-                        }
-                        listener.onSuccess(sharedMessage);
-                    }
-                }
-
-                @Override
-                public void onProgress(int i, int i1, int i2, int i3) {
-
-                }
-
-                @Override
-                public void onError(int i, String s) {
-                    LogUtil.e("上传视频失败" + s + i);
-                    listener.onFailed(i, s);
-                }
-            });
-        } else {
-            LogUtil.e("文本说说消息");
-            sharedMessage.setMsgType(Constant.MSG_TYPE_SHARE_MESSAGE_TEXT);
-            listener.onSuccess(sharedMessage);
-        }
-    }
 
     public SharedMessage createSharedMessageFromJson(JSONObject object) {
         try {
@@ -2541,18 +2361,20 @@ public class MsgManager {
         query.findObjects(findCallback);
     }
 
-    public void sendPublicPostMessage(String content, String location, final ArrayList<ImageItem> imageList,
-                                      String videoPath, String shotScreen, final PublicPostBean postBean, final OnCreatePublicPostListener onCreatePublicPostListener) {
+    public Subscription sendPublicPostMessage(int type, String content, String location, final ArrayList<ImageItem> imageList,
+                                              String videoPath, String shotScreen, final PublicPostBean postBean, final OnCreatePublicPostListener listener) {
         final PublicPostBean publicPostBean = new PublicPostBean();
+        publicPostBean.setMsgType(type);
+        publicPostBean.setSendStatus(Constant.SEND_STATUS_SUCCESS);
         final PostDataBean postDataBean = new PostDataBean();
         postDataBean.setContent(content);
-        postDataBean.setLocation(location);
+        publicPostBean.setLocation(location);
         publicPostBean.setAuthor(UserManager.getInstance().getCurrentUser());
         final Gson gson = BaseApplication
                 .getAppComponent().getGson();
-        if (postBean != null) {
-            ShareTypeContent shareTypeContent=new ShareTypeContent();
-            User user=postBean.getAuthor();
+        if (type==Constant.EDIT_TYPE_SHARE) {
+            ShareTypeContent shareTypeContent = new ShareTypeContent();
+            User user = postBean.getAuthor();
             shareTypeContent.setAvatar(user.getAvatar());
             shareTypeContent.setNick(user.getNick());
             shareTypeContent.setUid(user.getObjectId());
@@ -2565,142 +2387,27 @@ public class MsgManager {
             shareTypeContent.setCreateAt(postBean.getCreatedAt());
             shareTypeContent.setPostDataBean(gson.fromJson(postBean.getContent(), PostDataBean.class));
             postDataBean.setShareContent(shareTypeContent);
-            postDataBean.setShareType(postBean.getMsgType());
-            publicPostBean.setContent(gson.toJson(postDataBean));
-            publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_SHARE);
-            publicPostBean.save(new SaveListener<String>() {
-                @Override
-                public void done(String s, BmobException e) {
-                    if (e == null) {
-                        PublicPostBean temp=new PublicPostBean();
-                        temp.increment("shareCount");
-                        temp.update(postBean.getObjectId(), new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if (e != null) {
-                                    CommonLogger.e("更新转发个数失败");
-                                }else {
-                                    CommonLogger.e("更新转发个数成功");
-                                    PostDataBean item=gson.fromJson(publicPostBean.getContent(),PostDataBean.class);
-                                    int origin=item.getShareContent().getShareCount();
-                                            item.getShareContent().setShareCount(origin+1);
-                                            publicPostBean.setContent(gson.toJson(item));
-                                }
-                                onCreatePublicPostListener.onSuccess(publicPostBean);
-                            }
-                        });
-                    } else {
-                        onCreatePublicPostListener.onFailed(e.getMessage(), e.getErrorCode());
-                    }
+            postDataBean.setShareType(postBean.getItemViewType());
+        }else if (type==Constant.EDIT_TYPE_IMAGE) {
+            List<String> photoUrls = new ArrayList<>();
+            if (imageList != null && imageList.size() > 0) {
+                CommonLogger.e("发送的全部path为:");
+                for (ImageItem imageItem :
+                        imageList) {
+                    photoUrls.add(SystemUtil.sizeCompress(imageItem.getPath(), 1080, 1920));
+                    CommonLogger.e(imageItem.getPath());
                 }
-            });
-            return;
-        }
-        final List<String> photoUrls = new ArrayList<>();
-        if (imageList != null && imageList.size() > 0) {
-            publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_IMAGE);
-            LogUtil.e("发送的全部path为:");
-            for (ImageItem imageItem :
-                    imageList) {
-                photoUrls.add(imageItem.getPath());
-                LogUtil.e(imageItem.getPath());
+                postDataBean.setImageList(photoUrls);
             }
-            BmobFile.uploadBatch(photoUrls.toArray(new String[]{}), new UploadBatchListener() {
-                @Override
-                public void onSuccess(List<BmobFile> list2, List<String> list1) {
-                    if (imageList.size() == list1.size()) {
-                        LogUtil.e("11全部上传图片成功");
-                        postDataBean.setImageList(list1);
-                        publicPostBean.setContent(BaseApplication.getAppComponent().getGson().toJson(postDataBean));
-                        publicPostBean.save(new SaveListener<String>() {
-                            @Override
-                            public void done(String s, BmobException e) {
-                                if (e == null) {
-                                    onCreatePublicPostListener.onSuccess(publicPostBean);
-                                } else {
-                                    onCreatePublicPostListener.onFailed(e.getMessage(), e.getErrorCode());
-                                }
-                            }
-
-                        });
-                    } else {
-                        LogUtil.e("目前得到的URL集合为:");
-                        for (String url :
-                                list1) {
-                            LogUtil.e(url);
-                        }
-                    }
-                }
-
-
-                @Override
-                public void onProgress(int i, int i1, int i2, int i3) {
-
-                }
-
-                @Override
-                public void onError(int i, String s) {
-                    onCreatePublicPostListener.onFailed(s, i);
-                }
-            });
-        } else if (videoPath != null && shotScreen != null) {
+        }else if (type==Constant.EDIT_TYPE_VIDEO){
+            List<String> photoUrls = new ArrayList<>();
             photoUrls.add(shotScreen);
             photoUrls.add(videoPath);
-            publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_VIDEO);
-            BmobFile.uploadBatch(photoUrls.toArray(new String[]{}), new UploadBatchListener() {
-                @Override
-                public void onSuccess(List<BmobFile> list, List<String> list1) {
-                    if (photoUrls.size() == list1.size()) {
-                        LogUtil.e("11全部上传图片成功");
-                        postDataBean.setImageList(list1);
-                        publicPostBean.setContent(BaseApplication.getAppComponent().getGson().toJson(postDataBean));
-                        publicPostBean.save(new SaveListener<String>() {
-                            @Override
-                            public void done(String s, BmobException e) {
-                                if (e == null) {
-                                    onCreatePublicPostListener.onSuccess(publicPostBean);
-                                } else {
-                                    onCreatePublicPostListener.onFailed(e.getMessage(), e.getErrorCode());
-                                }
-                            }
-                        });
-                    } else {
-                        LogUtil.e("目前得到的URL集合为:");
-                        for (String url :
-                                list1) {
-                            LogUtil.e(url);
-                        }
-                    }
-                }
-
-                @Override
-                public void onProgress(int i, int i1, int i2, int i3) {
-
-                }
-
-                @Override
-                public void onError(int i, String s) {
-                    LogUtil.e("上传视频失败" + s + i);
-                    onCreatePublicPostListener.onFailed(s, i);
-                }
-            });
-        } else {
-            publicPostBean.setMsgType(PostUtil.LAYOUT_TYPE_TEXT);
-            publicPostBean.setContent(BaseApplication.getAppComponent().getGson().toJson(postDataBean));
-            publicPostBean.save(new SaveListener<String>() {
-                @Override
-                public void done(String s, BmobException e) {
-                    if (e == null) {
-                        onCreatePublicPostListener.onSuccess(publicPostBean);
-                    } else {
-                        onCreatePublicPostListener.onFailed(e.getMessage(), e.getErrorCode());
-                    }
-                }
-
-            });
-
+            postDataBean.setImageList(photoUrls);
         }
-
+        publicPostBean.setContent(gson.toJson(postDataBean));
+        listener.onSuccess(publicPostBean);
+        return null;
     }
 
     public Subscription getCommentListData(String postId, FindListener<PublicCommentBean> listener, boolean isPullRefresh, String time) {
@@ -2748,4 +2455,515 @@ public class MsgManager {
         query.setLimit(50);
         query.findObjects(listener);
     }
+
+
+    public PublicCommentBean cover(PostCommentEntity entity) {
+        PublicCommentBean posterComments = new PublicCommentBean();
+        posterComments.setObjectId(entity.getCid());
+        posterComments.setContent(entity.getContent());
+        posterComments.setCreatedTime(TimeUtil.getTime(entity.getCreatedTime(), "yyyy-MM-dd HH:mm:ss"));
+        posterComments.setUpdatedAt(TimeUtil.getTime(entity.getUpdatedTime(), "yyyy-MM-dd HH:mm:ss"));
+        PublicPostEntity publicPostEntity = null;
+        publicPostEntity =
+                daoSession
+                        .getPublicPostEntityDao()
+                        .queryBuilder().where(PublicPostEntityDao.Properties.Pid.eq(entity.getPid())).build().list().get(0);
+        User user;
+        if (!publicPostEntity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+            user = UserManager.getInstance().cover(daoSession
+                    .getUserEntityDao()
+                    .queryBuilder()
+                    .where(UserEntityDao.Properties.Uid.eq(publicPostEntity.getUid())).build().list().get(0));
+        } else {
+            user = UserManager.getInstance().getCurrentUser();
+        }
+        PublicPostBean publicPostBean = MsgManager.getInstance().cover(publicPostEntity, user);
+        posterComments.setPost(publicPostBean);
+
+        User commentUser;
+        if (!entity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+            commentUser = UserManager.getInstance().cover(daoSession
+                    .getUserEntityDao()
+                    .queryBuilder()
+                    .where(UserEntityDao.Properties.Uid.eq(entity.getUid())).build().list().get(0));
+        } else {
+            commentUser = UserManager.getInstance().getCurrentUser();
+        }
+        posterComments.setUser(commentUser);
+        return posterComments;
+    }
+
+
+    public PublicPostBean cover(PublicPostEntity posterMessageEntity, User user) {
+        PublicPostBean posterMessage = new PublicPostBean();
+        posterMessage.setAuthor(user);
+        posterMessage.setCreateTime(TimeUtil.getTime(posterMessageEntity.getCreatedTime(), "yyyy-MM-dd HH:mm:ss"));
+        posterMessage.setUpdatedAt(TimeUtil.getTime(posterMessageEntity.getUpdatedTime(), "yyyy-MM-dd HH:mm:ss"));
+        posterMessage.setCommentCount(posterMessageEntity.getCommentCount());
+        posterMessage.setLikeCount(posterMessageEntity.getLikeCount());
+        posterMessage.setContent(posterMessageEntity.getContent());
+        posterMessage.setLocation(posterMessageEntity.getLocation());
+        posterMessage.setLikeList(posterMessageEntity.getLikeList());
+        posterMessage.setMsgType(posterMessageEntity.getMsgType());
+        posterMessage.setShareCount(posterMessageEntity.getShareCount());
+        return posterMessage;
+    }
+
+    public PublicPostEntity cover(PublicPostBean bean) {
+        PublicPostEntity entity = new PublicPostEntity();
+        entity.setSendStatus(bean.getSendStatus());
+        entity.setCommentCount(bean.getCommentCount());
+        entity.setLikeCount(bean.getLikeCount());
+        entity.setContent(bean.getContent());
+        entity.setLocation(bean.getLocation());
+        entity.setLikeList(bean.getLikeList());
+        entity.setPid(bean.getObjectId());
+        entity.setUid(bean.getAuthor().getObjectId());
+        entity.setMsgType(bean.getMsgType());
+        entity.setShareCount(bean.getShareCount());
+        entity.setCreatedTime(TimeUtil.getTime(bean.getCreatedAt(), "yyyy-MM-dd HH:mm:ss"));
+        if (bean.getUpdatedAt() != null) {
+            entity.setUpdatedTime(TimeUtil.getTime(bean.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss"));
+        }
+        return entity;
+    }
+
+    public Subscription reSendPublicPostBean(PublicPostBean data, OnCreatePublicPostListener listener) {
+        PostDataBean bean =BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
+        if (data.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
+            List<String> imageList = bean.getImageList();
+            if (imageList != null && imageList.size() > 0) {
+
+                BmobFile.uploadBatch(imageList.toArray(new String[]{}), new UploadBatchListener() {
+                    @Override
+                    public void onSuccess(List<BmobFile> list2, List<String> list1) {
+                        if (imageList.size() == list1.size()) {
+                            CommonLogger.e("11全部上传图片成功");
+                            bean.setImageList(list1);
+                            data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
+                            data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                            data.save(new SaveListener<String>() {
+                                @Override
+                                public void done(String s, BmobException e) {
+                                    bean.setImageList(imageList);
+                                    data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
+                                    if (e == null) {
+                                        data.setObjectId(s);
+                                        listener.onSuccess(data);
+                                    } else {
+                                        listener.onFailed(e.getMessage(), e.getErrorCode(), data);
+                                    }
+                                }
+
+                            });
+                        } else {
+                            CommonLogger.e("目前得到的URL集合为:");
+                            for (String url :
+                                    list1) {
+                                CommonLogger.e(url);
+                            }
+                        }
+                    }
+
+
+                    @Override
+                    public void onProgress(int i, int i1, int i2, int i3) {
+
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+                        listener.onFailed(s, i, data);
+                    }
+                });
+                return null;
+            }
+        } else if (data.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
+            List<String> stringList = new ArrayList<>(bean.getImageList());
+            BmobFile.uploadBatch(bean.getImageList().toArray(new String[]{}), new UploadBatchListener() {
+                @Override
+                public void onSuccess(List<BmobFile> list2, List<String> list1) {
+                    if (bean.getImageList().size() == list1.size()) {
+                        CommonLogger.e("全部上传视频成功");
+                        bean.setImageList(list1);
+                        data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
+                        data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                        data.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                bean.setImageList(stringList);
+                                data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
+                                if (e == null) {
+                                    data.setObjectId(s);
+                                    listener.onSuccess(data);
+                                } else {
+                                    listener.onFailed(e.getMessage(), e.getErrorCode(), data);
+                                }
+                            }
+
+                        });
+                    } else {
+                        CommonLogger.e("目前得到的URL集合为:");
+                        for (String url :
+                                list1) {
+                            CommonLogger.e(url);
+                        }
+                    }
+                }
+
+
+                @Override
+                public void onProgress(int i, int i1, int i2, int i3) {
+
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                    listener.onFailed(s, i, data);
+                }
+            });
+            return null;
+
+        } else if (data.getMsgType() == Constant.EDIT_TYPE_TEXT
+                ) {
+            data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+            return data.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null) {
+                        listener.onSuccess(data);
+                    } else {
+                        listener.onFailed(e.getMessage(), e.getErrorCode(), data);
+                    }
+                }
+            });
+        } else if (data.getMsgType() == Constant.EDIT_TYPE_SHARE) {
+            data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+            return data.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null) {
+                        PublicPostBean temp = new PublicPostBean();
+                        temp.increment("shareCount");
+                        temp.update(bean.getShareContent().getPid(), new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e != null) {
+                                    CommonLogger.e("更新转发个数失败");
+                                } else {
+                                    CommonLogger.e("更新转发个数成功");
+                                    int origin = bean.getShareContent().getShareCount();
+                                    bean.getShareContent().setShareCount(origin + 1);
+                                    data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
+                                }
+                                listener.onSuccess(data);
+                            }
+                        });
+                    } else {
+                        listener.onFailed(e.getMessage(), e.getErrorCode(), data);
+                    }
+                }
+            });
+        }
+        return null;
+    }
+
+    public Subscription updatePublicPostBean(PublicPostBean data, OnCreatePublicPostListener listener) {
+        PostDataBean bean = BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
+        if (data.getMsgType() == Constant.EDIT_TYPE_IMAGE
+                ) {
+            int size = bean.getImageList().size();
+            List<String> upLoad = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                String item = bean.getImageList().get(i);
+                if (item.startsWith("http")
+                        || item.startsWith(Constant.IMAGE_COMPRESS_DIR)) {
+//                    没有改变
+                } else {
+                    upLoad.add(bean.getImageList().get(i));
+                }
+            }
+            List<String> resultList = new ArrayList<>(bean.getImageList());
+            if (upLoad.size() > 0) {
+                BmobFile.uploadBatch(upLoad.toArray(new String[]{}), new UploadBatchListener() {
+                    @Override
+                    public void onSuccess(List<BmobFile> list, List<String> list1) {
+                        if (upLoad.size() == list1.size()) {
+                            int size = list.size();
+                            for (int i = 0; i < size; i++) {
+                                CommonLogger.e("上传文件本地" + list.get(i).getLocalFile().getAbsolutePath()
+                                        + "云端:" + list.get(i).getUrl());
+                                for (int j = 0; j < upLoad.size(); j++) {
+                                    if (upLoad.get(j).equals(list.get(i).getLocalFile().getAbsolutePath())) {
+                                        bean.getImageList().set(bean.getImageList().indexOf(upLoad.get(j)), list.get(i).getUrl());
+                                    }
+                                }
+                            }
+                            if (data.getSendStatus() != Constant.SEND_STATUS_SUCCESS) {
+                                data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                            }
+                            data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
+                            data.update(new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    bean.setImageList(resultList);
+                                    data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
+                                    if (e == null) {
+                                        listener.onSuccess(data);
+                                    } else {
+                                        listener.onFailed(e.getMessage(), e.getErrorCode(), data);
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+
+                    @Override
+                    public void onProgress(int i, int i1, int i2, int i3) {
+
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+                        listener.onFailed(s, i, data);
+                    }
+                });
+                return null;
+            } else {
+                data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
+                if (data.getSendStatus() != Constant.SEND_STATUS_SUCCESS) {
+                    data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                }
+                return data.update(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            listener.onSuccess(data);
+                        } else {
+                            listener.onFailed(e.getMessage(), e.getErrorCode(), data);
+                        }
+                    }
+                });
+            }
+        } else if (data.getMsgType() == Constant.EDIT_TYPE_TEXT
+                || data.getMsgType() == Constant.EDIT_TYPE_SHARE
+                || data.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
+            data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean)
+            );
+            if (data.getSendStatus() != Constant.SEND_STATUS_SUCCESS) {
+                data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+            }
+            return data.update(new UpdateListener() {
+                @Override
+                public void done(BmobException e) {
+                    if (e == null) {
+                        listener.onSuccess(data);
+                    } else {
+                        listener.onFailed(e.getMessage(), e.getErrorCode(), data);
+                    }
+                }
+            });
+        } else {
+            return null;
+        }
+    }
+
+    public GroupTableEntity cover(GroupTableMessage groupTableMessage) {
+        GroupTableEntity groupTableEntity=new GroupTableEntity();
+        groupTableEntity.setCreatedTime(groupTableMessage.getCreatedTime());
+        groupTableEntity.setCreatorId(groupTableMessage.getCreatorId());
+        groupTableEntity.setGroupAvatar(groupTableMessage.getGroupAvatar());
+        groupTableEntity.setGroupDescription(groupTableMessage.getGroupDescription());
+        groupTableEntity.setGroupId(groupTableMessage.getGroupId());
+        groupTableEntity.setGroupName(groupTableMessage.getGroupName());
+        groupTableEntity.setGroupNumber(groupTableMessage.getGroupNumber());
+        groupTableEntity.setNotification(groupTableMessage.getNotification());
+        groupTableEntity.setReadStatus(groupTableMessage.getReadStatus());
+        groupTableEntity.setSendStatus(groupTableMessage.getSendStatus());
+        groupTableEntity.setToId(groupTableMessage.getToId());
+        return groupTableEntity;
+    }
+
+    public ChatMessageEntity cover(ChatMessage message) {
+        ChatMessageEntity chatMessageEntity=new ChatMessageEntity();
+        chatMessageEntity.setBelongId(message.getBelongId());
+        chatMessageEntity.setContent(message.getContent());
+        chatMessageEntity.setContentType(message.getContentType());
+        chatMessageEntity.setConversationId(message.getConversationId());
+        chatMessageEntity.setCreatedTime(message.getCreateTime());
+        chatMessageEntity.setMessageType(message.getMessageType());
+        chatMessageEntity.setReadStatus(message.getReadStatus());
+        chatMessageEntity.setSendStatus(message.getSendStatus());
+        chatMessageEntity.setToId(message.getToId());
+        return chatMessageEntity;
+    }
+
+    public RecentMessageEntity coverRecentMessage(BaseMessage message) {
+        RecentMessageEntity recentMessageEntity=new RecentMessageEntity();
+        if (message instanceof ChatMessage) {
+            recentMessageEntity.setType(RecentMessageEntity.TYPE_PERSON);
+            recentMessageEntity.setId(message.getBelongId());
+        } else if (message instanceof GroupChatMessage) {
+            recentMessageEntity.setType(RecentMessageEntity.TYPE_GROUP);
+            recentMessageEntity.setId(((GroupChatMessage) message).getGroupId());
+        }
+        recentMessageEntity.setContent(message.getContent());
+        recentMessageEntity.setContentType(message.getContentType());
+        recentMessageEntity.setCreatedTime(message.getCreateTime());
+        return recentMessageEntity;
+    }
+
+    public GroupChatEntity cover(GroupChatMessage groupChatMessage) {
+        GroupChatEntity groupChatEntity=new GroupChatEntity();
+        groupChatEntity.setBelongId(groupChatMessage.getBelongId());
+        groupChatEntity.setContent(groupChatMessage.getContent());
+        groupChatEntity.setCreatedTime(groupChatMessage.getCreateTime());
+        groupChatEntity.setGroupId(groupChatMessage.getGroupId());
+        groupChatEntity.setContentType(groupChatMessage.getContentType());
+        groupChatEntity.setSendStatus(groupChatMessage.getSendStatus());
+        groupChatEntity.setReadStatus(groupChatMessage.getReadStatus());
+        return groupChatEntity;
+    }
+
+    public void refreshGroupChatMessage(FindListener<GroupChatMessage> findListener) {
+        MsgManager.getInstance().queryGroupChatMessage(UserDBManager.getInstance().getAllGroupId(),findListener);
+
+
+    }
+
+    public ChatMessage cover(ChatMessageEntity chatMessageEntity) {
+        ChatMessage chatMessage=new ChatMessage();
+        chatMessage.setReadStatus(chatMessageEntity.getReadStatus());
+        chatMessage.setContentType(chatMessageEntity.getContentType());
+        chatMessage.setContent(chatMessageEntity.getContent());
+        chatMessage.setSendStatus(chatMessageEntity.getSendStatus());
+        chatMessage.setCreateTime(chatMessageEntity.getCreatedTime());
+        chatMessage.setBelongId(chatMessageEntity.getBelongId());
+        chatMessage.setConversationId(chatMessageEntity.getConversationId());
+        chatMessage.setMessageType(chatMessageEntity.getMessageType());
+        chatMessage.setToId(chatMessageEntity.getToId());
+        return chatMessage;
+    }
+
+    public GroupChatMessage cover(GroupChatEntity item) {
+        GroupChatMessage groupChatMessage=new GroupChatMessage();
+        groupChatMessage.setContentType(item.getContentType());
+        groupChatMessage.setContent(item.getContent());
+        groupChatMessage.setGroupId(item.getGroupId());
+        groupChatMessage.setBelongId(item.getBelongId());
+        groupChatMessage.setCreateTime(item.getCreatedTime());
+        groupChatMessage.setReadStatus(item.getReadStatus());
+        groupChatMessage.setSendStatus(item.getSendStatus());
+        return groupChatMessage;
+    }
+
+    public Subscription sendChatMessage(ChatMessage message, OnCreateChatMessageListener listener) {
+        MessageContent messageContent=gson.fromJson(message.getContent(),MessageContent.class);
+        int contentType=message.getContentType();
+        if (contentType!=Constant.TAG_MSG_TYPE_TEXT){
+            List<String>  urlList=messageContent.getUrlList();
+            BmobFile.uploadBatch(urlList.toArray(new String[]{}), new UploadBatchListener() {
+                @Override
+                public void onSuccess(List<BmobFile> list, List<String> list1) {
+                    if (urlList.size()==list1.size()){
+                        messageContent.setUrlList(list1);
+                        message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                        message.setContent(gson.toJson(messageContent));
+                        message.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                messageContent.setUrlList(urlList);
+                                message.setContent(gson.toJson(messageContent));
+                                if (e == null) {
+                                    listener.onSuccess(message);
+                                }else {
+                                    listener.onFailed(e.toString(),message);
+                                }
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onProgress(int i, int i1, int i2, int i3) {
+
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                    listener.onFailed(s+i,message);
+                }
+            });
+            return null;
+        }else {
+            message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+            return message.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null) {
+                        listener.onSuccess(message);
+                    }else {
+                        listener.onFailed(e.toString(),message);
+                    }
+                }
+            });
+        }
+    }
+
+    public Subscription sendGroupChatMessage(GroupChatMessage message, OnCreateChatMessageListener listener) {
+        MessageContent messageContent=gson.fromJson(message.getContent(),MessageContent.class);
+        int contentType=message.getContentType();
+        if (contentType!=Constant.TAG_MSG_TYPE_TEXT){
+            List<String>  urlList=messageContent.getUrlList();
+            BmobFile.uploadBatch(urlList.toArray(new String[]{}), new UploadBatchListener() {
+                @Override
+                public void onSuccess(List<BmobFile> list, List<String> list1) {
+                    if (urlList.size()==list1.size()){
+                        messageContent.setUrlList(list1);
+                        message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                        message.setContent(gson.toJson(messageContent));
+                        message.setTableName("g"+message.getGroupId());
+                        message.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                messageContent.setUrlList(urlList);
+                                message.setContent(gson.toJson(messageContent));
+                                if (e == null) {
+                                    listener.onSuccess(message);
+                                }else {
+                                    listener.onFailed(e.toString(),message);
+                                }
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onProgress(int i, int i1, int i2, int i3) {
+
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                    listener.onFailed(s+i,message);
+                }
+            });
+            return null;
+        }else {
+            message.setTableName("g"+message.getGroupId());
+            message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+            return message.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null) {
+                        listener.onSuccess(message);
+                    }else {
+                        listener.onFailed(e.toString(),message);
+                    }
+                }
+            });
+        }
+    }
 }
+

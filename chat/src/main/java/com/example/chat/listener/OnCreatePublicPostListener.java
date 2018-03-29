@@ -11,5 +11,5 @@ import com.example.chat.bean.post.PublicPostBean;
 
 public interface OnCreatePublicPostListener {
     public void onSuccess(PublicPostBean publicPostBean);
-    public void onFailed(String errorMsg,int errorCode);
+    public void onFailed(String errorMsg,int errorCode,PublicPostBean publicPostBean);
 }

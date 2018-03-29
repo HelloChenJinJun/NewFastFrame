@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.example.chat.ChatInterceptor;
 import com.example.chat.MainRepositoryManager;
-import com.example.chat.util.ChatUtil;
+import com.example.chat.base.Constant;
 import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.google.gson.Gson;
@@ -36,11 +36,15 @@ public class ChatMainModule {
         return new MainRepositoryManager(retrofit, daoSession);
     }
 
+
+
+
+
     @Provides
     @Named("chat")
     @PerApplication
     public Retrofit provideRetrofit(@Named("chat") OkHttpClient okHttpClient, @Nullable Gson gson){
-        Retrofit.Builder builder=new Retrofit.Builder().baseUrl(ChatUtil.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        Retrofit.Builder builder=new Retrofit.Builder().baseUrl(Constant.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson)).client(okHttpClient);
         return builder.build();
     }

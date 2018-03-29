@@ -7,32 +7,23 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.example.chat.R;
-import com.example.chat.base.Constant;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.NotifyPostResult;
-import com.example.chat.bean.RecentMsg;
 import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
-import com.example.chat.db.ChatDB;
 import com.example.chat.events.GroupInfoEvent;
-import com.example.chat.listener.OnShareMessageReceivedListener;
+import com.example.chat.events.MessageInfoEvent;
+import com.example.chat.events.RecentEvent;
+import com.example.chat.events.RefreshMenuEvent;
 import com.example.chat.manager.ChatNotificationManager;
-import com.example.chat.manager.MessageCacheManager;
 import com.example.chat.manager.MsgManager;
-import com.example.chat.manager.UserCacheManager;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
-import com.example.chat.ui.HomeActivity;
 
-import com.example.chat.util.CommonUtils;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
-import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.ToastUtils;
-import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,8 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobRealTimeData;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.ValueEventListener;
 
 /**
@@ -58,26 +47,9 @@ public class GroupMessageService extends Service {
         private BmobRealTimeData data;
         private List<String> uidList = new ArrayList<>();
         private String table;
-        //        private List<String> groupTableList = new ArrayList<>();
         private List<String> groupChatMessageList = new ArrayList<>();
-
-
         private NotifyBinder mNotifyBinder = new NotifyBinder();
         private List<String> shareMessageList = new ArrayList<>();
-        private static List<OnShareMessageReceivedListener> sListeners = new ArrayList<>();
-
-        public static void registerListener(OnShareMessageReceivedListener onShareMessageReceivedListener) {
-                if (!sListeners.contains(onShareMessageReceivedListener)) {
-                        sListeners.add(onShareMessageReceivedListener);
-                }
-        }
-
-        public static void unRegisterListener(OnShareMessageReceivedListener listener) {
-                if (sListeners.contains(listener)) {
-                        sListeners.remove(listener);
-                }
-        }
-
 
         @Override
         public void onCreate() {
@@ -85,7 +57,7 @@ public class GroupMessageService extends Service {
         }
 
         private void dealListener() {
-                LogUtil.e("111111111111启动接受实时监听的服务啦啦啦");
+                LogUtil.e("启动接受实时监听的服务啦啦啦");
                 table = "_User";
                 data = new BmobRealTimeData();
                 data.start(new ValueEventListener() {
@@ -95,33 +67,28 @@ public class GroupMessageService extends Service {
                                         LogUtil.e("实时监听：连接服务器成功啦啦啦");
                                         if (data.isConnected()) {
                                                 LogUtil.e("连接啦啦啦");
-                                                if (UserCacheManager.getInstance().getContacts() != null && UserCacheManager.getInstance().getContacts().keySet().size() > 0) {
-                                                        LogUtil.e("有好友数据");
-                                                        uidList.clear();
-                                                        uidList.addAll(UserCacheManager.getInstance().getContacts().keySet());
-                                                        for (String uid : uidList) {
-                                                                if (!uid.equals(UserManager.getInstance().getCurrentUserObjectId())) {
-                                                                        data.subRowUpdate(table, uid);
-                                                                } else {
-                                                                        LogUtil.e("本地用户信息的修改，不监听");
-                                                                }
+                                                List<String>  userIdList= UserDBManager.getInstance()
+                                                        .getAllFriendId();
+                                                uidList.clear();
+                                                uidList.addAll(userIdList);
+                                                for (String uid : uidList) {
+                                                        if (!uid.equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                                                                data.subRowUpdate(table, uid);
+                                                        } else {
+                                                                LogUtil.e("本地用户信息的修改，不监听");
                                                         }
-                                                } else {
-                                                        LogUtil.e("没有好友数据");
+                                                }
+
+                                                List<String>  groupIdList=UserDBManager.getInstance().getAllGroupId();
+                                                groupChatMessageList.clear();
+                                                groupChatMessageList.addAll(groupIdList);
+                                                for (String groupId :
+                                                        groupChatMessageList) {
+                                                        data.subTableUpdate("g" + groupId);
+                                                        data.subRowUpdate("GroupTableMessage", groupId);
                                                 }
                                                 LogUtil.e("这里开始监听群数据");
-                                                if (MessageCacheManager.getInstance().getAllGroupId() != null && MessageCacheManager.getInstance().getAllGroupId().size() > 0) {
-                                                        groupChatMessageList.clear();
-                                                        groupChatMessageList.addAll(MessageCacheManager.getInstance().getAllGroupId());
-                                                        for (String groupId :
-                                                                groupChatMessageList) {
-                                                                data.subTableUpdate("g" + groupId);
-                                                                data.subRowUpdate("GroupTableMessage", groupId);
-                                                        }
 
-                                                } else {
-                                                        LogUtil.e("没有群数据可监听");
-                                                }
                                                 if (shareMessageList.size() > 0) {
                                                         for (String id :
                                                                 shareMessageList) {
@@ -148,74 +115,31 @@ public class GroupMessageService extends Service {
                                                         LogUtil.e("更新行的监听到啦");
                                                 } else if (action.equals("deleteRow")) {
                                                         LogUtil.e("删除行的监听到啦");
-//                                                        这里只有说说消息监听行的删除
-                                                        String id = jsonObject.getString("objectId");
-                                                        LogUtil.e("删除的说说ID为" + id);
-                                                        long result = ChatDB.create().deleteSharedMessage(id);
-                                                        LogUtil.e("删除的行号为" + result);
-                                                        if (result > 0) {
-                                                                if (sListeners.size() > 0) {
-                                                                        for (OnShareMessageReceivedListener listener :
-                                                                                sListeners) {
-                                                                                listener.onDeleteShareMessage(id);
-                                                                        }
-                                                                }
-                                                        } else {
-                                                                LogUtil.e("删除不成功");
-                                                        }
                                                         return;
                                                 }
-                                                if (!JsonUtil.getString(object, "creatorId").equals("")) {
+                                                if (!TextUtils.isEmpty(JsonUtil.getString(object, "creatorId"))) {
                                                         LogUtil.e("实时监听的群结构更新消息到啦1");
                                                         final GroupTableMessage groupTableMessage = MsgManager.getInstance().createReceiveGroupTableMsg(object.toString());
 //                                                        判断是否是踢出群的消息
                                                         if (!groupTableMessage.getGroupNumber().contains(UserManager.getInstance().getCurrentUserObjectId())) {
 //                                                                退出群的消息
 //                                                                在服务器上删除自己的群结构消息
-                                                                LogUtil.e("这里了没??");
                                                                 mNotifyBinder.removeGroup(groupTableMessage.getGroupId());
-                                                                LogUtil.e(MessageCacheManager.getInstance().getGroupTableMessage(groupTableMessage.getGroupId()));
-                                                                MsgManager.getInstance().deleteGroupTableMessage(MessageCacheManager.getInstance().getGroupTableMessage(groupTableMessage.getGroupId()).getObjectId(), new UpdateListener() {
-                                                                        @Override
-                                                                        public void done(BmobException e) {
-                                                                                if (e == null) {
-                                                                                        LogUtil.e("在服务器上删除自己的群结构消息成功1");
-                                                                                        MessageCacheManager.getInstance().deleteGroupTableMessage(groupTableMessage.getGroupId());
-                                                                                        ChatDB.create().deleteRecentMsg(groupTableMessage.getGroupId());
-                                                                                        ChatDB.create().deleteGroupTableMessage(groupTableMessage.getGroupId());
-                                                                                        RxBusManager.getInstance().post(new GroupInfoEvent(groupTableMessage.getGroupId(),GroupInfoEvent.TYPE_GROUP_NUMBER));
-                                                                                }else {
-                                                                                        LogUtil.e("在服务器上删除自己的群结构消息失败");
-                                                                                }
-                                                                        }
-                                                                });
+                                                                UserDBManager.getInstance()
+                                                                        .deleteRecentMessage(groupTableMessage.getGroupId());
+                                                                UserDBManager.getInstance().deleteGroupTableMessage(groupTableMessage.getGroupId());
+                                                                RxBusManager.getInstance().post(new RecentEvent(groupTableMessage.getGroupId(),RecentEvent.ACTION_DELETE));
+                                                                RxBusManager.getInstance().post(new RefreshMenuEvent(0));
+                                                                RxBusManager.getInstance().post(new GroupInfoEvent(groupTableMessage.getGroupId(),GroupInfoEvent.TYPE_GROUP_NUMBER));
                                                                 return;
                                                         }
-                                                        GroupTableMessage message = MessageCacheManager.getInstance().getGroupTableMessage(groupTableMessage.getGroupId());
-                                                        message.setGroupAvatar(groupTableMessage.getGroupAvatar());
-                                                        message.setNotification(groupTableMessage.getNotification());
-                                                        message.setGroupDescription(groupTableMessage.getGroupDescription());
-                                                        message.setGroupNumber(groupTableMessage.getGroupNumber());
-                                                        message.setGroupName(groupTableMessage.getGroupName());
-//                                                        这里也要同步更新自己的群结构消息,如果是群主就不需要更新，非群主才需要
-                                                        if (UserManager.getInstance().getCurrentUser() != null && !UserManager.getInstance().getCurrentUser().getObjectId().equals(message.getCreatorId())) {
-                                                                LogUtil.e("非群主，需要更新");
-                                                                MsgManager.getInstance().updateGroupTableMessage(message);
-                                                        }
-                                                        ChatDB.create().saveGroupTableMessage(message);
-                                                        MessageCacheManager.getInstance().addGroupTableMessage(message);
-                                                        RecentMsg recentMsg=ChatDB.create().getRecentMsg(message.getGroupId());
-                                                        LogUtil.e("1这里更改最近群消息");
-                                                        if (recentMsg != null) {
-                                                                LogUtil.e("这里正式更改最近群消息");
-                                                                recentMsg.setAvatar(message.getGroupAvatar());
-                                                                recentMsg.setName(message.getGroupName());
-                                                                ChatDB.create().saveRecentMessage(recentMsg);
-                                                        }
-                                                        Intent intent1 = new Intent(Constant.NEW_MESSAGE_ACTION);
-                                                        intent1.putExtra("from", "table");
-                                                        intent1.putExtra(Constant.NEW_MESSAGE, message);
-                                                        sendOrderedBroadcast(intent1, null);
+                                                        UserDBManager
+                                                                .getInstance().addOrUpdateGroupTable(groupTableMessage);
+                                                        MessageInfoEvent messageInfoEvent=new MessageInfoEvent(MessageInfoEvent.TYPE_GROUP_TABLE);
+                                                        List<GroupTableMessage>  list=new ArrayList<>();
+                                                        list.add(groupTableMessage);
+                                                        messageInfoEvent.setGroupTableMessageList(list);
+                                                        RxBusManager.getInstance().post(messageInfoEvent);
                                                 } else if (!JsonUtil.getString(object, "groupId").equals("")) {
                                                         LogUtil.e("实时监听的群消息到啦");
                                                         GroupChatMessage groupChatMessage = MsgManager.getInstance().createReceiveGroupChatMsg(object);
@@ -224,43 +148,27 @@ public class GroupMessageService extends Service {
                                                                 LogUtil.e("实时检测到本用户的群消息，不接受");
                                                                 return;
                                                         }
-                                                        Intent intent1 = new Intent(Constant.NEW_MESSAGE_ACTION);
+                                                        MsgManager.getInstance().dealReceiveGroupChatMessage(groupChatMessage);
+                                                        ChatNotificationManager
+                                                                .getInstance(getBaseContext())
+                                                                .sendGroupMessageNotification(groupChatMessage,getBaseContext());
+                                                        MessageInfoEvent messageInfoEvent=new MessageInfoEvent(MessageInfoEvent.TYPE_GROUP_CHAT);
+                                                        List<GroupChatMessage>  list=new ArrayList<>();
+                                                        list.add(groupChatMessage);
+                                                        messageInfoEvent.setGroupChatMessageList(list);
+                                                        RxBusManager.getInstance().post(messageInfoEvent);
 
-                                                        if (ChatDB.create().isExistGroupChatMessage(groupChatMessage.getGroupId(), groupChatMessage.getCreateTime())) {
-                                                                LogUtil.e("这里是更新群消息的昵称或头像");
-                                                                ChatDB.create().saveGroupChatMessage(groupChatMessage);
-                                                                intent1.putExtra("isRefresh",true);
-                                                        }
-                                                        intent1.putExtra("from", "group");
-                                                        intent1.putExtra(Constant.NEW_MESSAGE, groupChatMessage);
-                                                        sendOrderedBroadcast(intent1, null);
-                                                        if (!CommonUtils.isAppOnForeground(getBaseContext())) {
-                                                                if (BaseApplication.getAppComponent().getSharedPreferences().getBoolean(groupChatMessage.getGroupId(),true)) {
-                                                                        ChatNotificationManager.getInstance(getBaseContext()).notify(Constant.NOTIFICATION_TAG_GROUP_MESSAGE, groupChatMessage.getGroupId(), true, true, getBaseContext(),
-                                                                                MessageCacheManager.getInstance().getGroupTableMessage(groupChatMessage.getGroupId()).getGroupName(), R.mipmap.ic_launcher, groupChatMessage.getContent(),
-                                                                                HomeActivity.class);
-                                                                }
-                                                        }
+
                                                 } else if (!JsonUtil.getString(object, "username").equals("")) {
                                                         LogUtil.e("实时监听的用户消息到啦");
                                                         User user = MsgManager.getInstance().createUserFromJsonObject(object);
-                                                        MessageCacheManager.getInstance().setUserDataLastUpdateTime(user.getObjectId(), JsonUtil.getString(object, "updatedAt"));
-                                                        ChatDB.create().addOrUpdateContacts(user);
-                                                        UserCacheManager.getInstance().addContact(user);
+                                                        UserDBManager.getInstance()
+                                                                .addOrUpdateUser(user);
                                                 } else if (JsonUtil.getInt(object, "visibleType") != 0) {
                                                         LogUtil.e("监听到分享消息");
                                                         LogUtil.e("监听到说说数据更新操作");
                                                         SharedMessage sharedMessage = MsgManager.getInstance().createSharedMessageFromJson(object);
-                                                        if (sharedMessage != null) {
-                                                                ChatDB.create().saveSharedMessage(sharedMessage);
-                                                                LogUtil.e(sharedMessage);
-                                                                if (sListeners.size() > 0) {
-                                                                        for (OnShareMessageReceivedListener listener :
-                                                                                sListeners) {
-                                                                                listener.onAddShareMessage(sharedMessage);
-                                                                        }
-                                                                }
-                                                        }
+
                                                 }else {
 //                                                        监听到公共说说
                                                         String author=JsonUtil.getString(object,"author");

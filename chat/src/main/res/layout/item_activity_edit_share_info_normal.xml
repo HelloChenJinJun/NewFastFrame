@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="80dp"
+    android:layout_height="80dp">
+    <ImageView
+        android:layout_centerInParent="true"
+        android:id="@+id/iv_item_activity_edit_share_info_normal"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/selector_image_add"/>
+
+    <ImageView
+        android:id="@+id/iv_item_activity_edit_share_info_normal_delete"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_top_delete"
+        android:layout_alignParentRight="true"/>
+</RelativeLayout>

@@ -5,7 +5,6 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.chat.listener.LocationChangedListener;
-import com.example.chat.util.ChatUtil;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 

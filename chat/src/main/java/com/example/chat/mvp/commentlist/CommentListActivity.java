@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Selection;
@@ -14,7 +13,9 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
+import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ import com.bumptech.glide.Glide;
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.CommentListAdapter;
-import com.example.chat.adapter.holder.ImageShareInfoHolder;
+import com.example.chat.adapter.holder.publicShare.ImageShareInfoHolder;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.FaceText;
 import com.example.chat.bean.ImageItem;
@@ -43,15 +44,15 @@ import com.example.chat.bean.post.ShareTypeContent;
 import com.example.chat.dagger.commentlist.CommentListModule;
 import com.example.chat.dagger.commentlist.DaggerCommentListComponent;
 import com.example.chat.events.CommentEvent;
+import com.example.chat.events.LocationEvent;
+import com.example.chat.manager.UserManager;
+import com.example.chat.mvp.EditShare.EditShareInfoActivity;
 import com.example.chat.mvp.commentdetail.CommentListDetailActivity;
-import com.example.chat.ui.BasePreViewActivity;
-import com.example.chat.ui.ImageDisplayActivity;
-import com.example.chat.ui.SlideBaseActivity;
-import com.example.chat.ui.UserDetailActivity;
+import com.example.chat.mvp.preview.PhotoPreViewActivity;
+import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.FaceTextUtil;
-import com.example.chat.util.PixelUtil;
-import com.example.chat.util.PostUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.chat.view.CustomMoveMethod;
 import com.example.commonlibrary.BaseApplication;
@@ -68,6 +69,9 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
 
@@ -76,6 +80,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.jzvd.JZVideoPlayer;
+import cn.jzvd.JZVideoPlayerStandard;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -163,7 +171,7 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
 
 
     private View getGridView(int i) {
-        View emotionView = LayoutInflater.from(this).inflate(R.layout.emotion1, null);
+        View emotionView = LayoutInflater.from(this).inflate(R.layout.view_activity_chat_emotion, null);
         GridView gridView = emotionView.findViewById(R.id.gv_display);
         if (i == 0) {
             gridView.setAdapter(gridViewAdapter = new GridViewAdapter(this, emotionFaceList.subList(0, 21)));
@@ -417,18 +425,52 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
                 .setText(getText(data));
         ((TextView) headerView.findViewById(R.id.tv_item_fragment_share_info_normal_text))
                 .setText(postDataBean.getContent());
+        headerView.findViewById(R.id.iv_item_fragment_share_info_more).setOnClickListener(view -> {
+            if (UserManager.getInstance().getCurrentUserObjectId().equals(data.getAuthor().getObjectId())) {
+                List<String> list = new ArrayList<>();
+                list.add("删除");
+                list.add("修改");
+                showChooseDialog("帖子操作", list, (adapterView, view1, i, l) -> {
+                    dismissBaseDialog();
+                    if (i == 0) {
+                        showLoadDialog("删除中....");
+                        presenter.deleteShareInfo(data, new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                dismissLoadDialog();
+                                if (e == null) {
+                                    ToastUtils.showShortToast("删除成功");
+                                    CommonLogger.e("删除成功");
+                                    RxBusManager.getInstance().post(new CommentEvent(data.getObjectId(),CommentEvent.TYPE_POST,CommentEvent.ACTION_DELETE));
+                                    finish();
+                                } else {
+                                    ToastUtils.showShortToast("删除失败" + e.toString());
+                                    CommonLogger.e("删除失败" + e.toString());
+                                }
+                            }
+                        });
+                    } else {
+                        EditShareInfoActivity.start(CommentListActivity.this,data.getMsgType(),data,true);
+                        finish();
+                    }
+                });
+            } else {
+                ToastUtils.showShortToast("非帖子作者，不可编辑");
+            }
+        });
+        
         ViewStub viewStub = headerView.findViewById(R.id.vs_item_fragment_share_info_stub);
-        if (data.getMsgType() == PostUtil.LAYOUT_TYPE_IMAGE) {
+        if (data.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
             SuperRecyclerView display = null;
             viewStub.setLayoutResource(R.layout.item_fragment_share_info_image);
             display = (SuperRecyclerView) viewStub.inflate();
             int size = postDataBean.getImageList().size();
             if (size <= 4) {
                 display.setLayoutManager(new WrappedGridLayoutManager(this, 2));
-                display.addItemDecoration(new GridSpaceDecoration(2, PixelUtil.todp(5), false));
+                display.addItemDecoration(new GridSpaceDecoration(2, DensityUtil.toDp(5), false));
             } else {
                 display.setLayoutManager(new WrappedGridLayoutManager(this, 3));
-                display.addItemDecoration(new GridSpaceDecoration(3, PixelUtil.todp(5), false));
+                display.addItemDecoration(new GridSpaceDecoration(3, DensityUtil.toDp(5), false));
             }
 
             final ImageShareInfoHolder.ImageShareAdapter adapter = new ImageShareInfoHolder.ImageShareAdapter();
@@ -438,49 +480,42 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
                 public void onItemClick(int position, View view) {
                     List<String> imageList = postDataBean.getImageList();
                     if (imageList != null && imageList.size() > 0) {
-                        List<ImageItem> result = new ArrayList<>();
+                        ArrayList<ImageItem> result = new ArrayList<>();
                         for (String str :
                                 imageList) {
                             ImageItem imageItem = new ImageItem();
                             imageItem.setPath(str);
                             result.add(imageItem);
                         }
-                        BasePreViewActivity.startBasePreview(CommentListActivity.this, result, position);
+                        PhotoPreViewActivity.start(CommentListActivity.this, position, result, false);
                     }
                 }
             });
             adapter.addData(postDataBean.getImageList());
 
-        } else if (data.getMsgType() == PostUtil.LAYOUT_TYPE_TEXT) {
-        } else if (data.getMsgType() == PostUtil.LAYOUT_TYPE_VOICE) {
-        } else if (data.getMsgType() == PostUtil.LAYOUT_TYPE_SHARE) {
+        } else if (data.getMsgType() == Constant.EDIT_TYPE_TEXT) {
+        } else if (data.getMsgType() == Constant.EDIT_TYPE_SHARE) {
 
             if (postDataBean.getShareContent() != null) {
                 final ShareTypeContent bean = postDataBean.getShareContent();
                viewStub.setLayoutResource(R.layout.item_fragment_share_info_share);
                 View rootView=viewStub.inflate();
-                rootView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        CommentListActivity.start(CommentListActivity.this, getSharePublicPostBean());
-                    }
-                });
+                rootView.setOnClickListener(v -> CommentListActivity.start(CommentListActivity.this, getSharePublicPostBean()));
                 SuperRecyclerView display=rootView.findViewById(R.id.srcv_item_fragment_share_info_display);
-               ImageView videoDisplay=rootView.findViewById(R.id.iv_item_fragment_share_info_video_display);
+                JZVideoPlayerStandard videoDisplay=rootView.findViewById(R.id.js_item_fragment_share_info_video_display);
                TextView content=rootView.findViewById(R.id.tv_item_fragment_share_info_share_content);
                 content.setMovementMethod(new CustomMoveMethod(getResources().getColor(R.color.blue_500),getResources().getColor(R.color.blue_500)));
                 content.setText(getSpannerContent(bean));
-                if (postDataBean.getShareType() == PostUtil
-                        .LAYOUT_TYPE_IMAGE) {
+                if (postDataBean.getShareType() ==Constant.EDIT_TYPE_IMAGE) {
                     display.setVisibility(View.VISIBLE);
                     videoDisplay.setVisibility(View.GONE);
                     int size = bean.getPostDataBean().getImageList().size();
                     if (size <= 4) {
                         display.setLayoutManager(new WrappedGridLayoutManager(this, 2));
-                        display.addItemDecoration(new GridSpaceDecoration(2, PixelUtil.todp(5), false));
+                        display.addItemDecoration(new GridSpaceDecoration(2, DensityUtil.toDp(5), false));
                     } else {
                         display.setLayoutManager(new WrappedGridLayoutManager(this, 3));
-                        display.addItemDecoration(new GridSpaceDecoration(3, PixelUtil.todp(5), false));
+                        display.addItemDecoration(new GridSpaceDecoration(3, DensityUtil.toDp(5), false));
                     }
                     final ImageShareInfoHolder.ImageShareAdapter adapter = new ImageShareInfoHolder.ImageShareAdapter();
                     display.setAdapter(adapter);
@@ -491,45 +526,40 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
                         }
                     });
                     adapter.addData(bean.getPostDataBean().getImageList());
-                    rootView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            CommentListActivity.start(CommentListActivity.this, getSharePublicPostBean());
-                        }
-                    });
-                } else if (postDataBean.getShareType() == PostUtil
-                        .LAYOUT_TYPE_TEXT) {
+                    rootView.setOnClickListener(v -> CommentListActivity.start(CommentListActivity.this, getSharePublicPostBean()));
+                } else if (postDataBean.getShareType() == Constant.EDIT_TYPE_TEXT) {
                     display.setVisibility(View.GONE);
                     videoDisplay.setVisibility(View.GONE);
-                } else if (postDataBean.getShareType() == PostUtil.LAYOUT_TYPE_VIDEO) {
+                } else if (postDataBean.getShareType() == Constant.EDIT_TYPE_VIDEO) {
                     display.setVisibility(View.GONE);
                     videoDisplay.setVisibility(View.VISIBLE);
-                    Glide.with(CommentListActivity.this).load(bean.getPostDataBean().getImageList().get(0))
-                            .into(videoDisplay);
-                    videoDisplay.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            CommentListActivity.start(CommentListActivity.this,getSharePublicPostBean());
+                    if (bean.getPostDataBean().getImageList() != null && bean.getPostDataBean().getImageList().size() > 1) {
+                        for (String item :
+                                bean.getPostDataBean().getImageList()) {
+                            if (item.endsWith(".mp4")) {
+                                videoDisplay.setUp(item, JZVideoPlayer.SCREEN_WINDOW_LIST, "测试");
+                            } else {
+                                Glide.with(this).load(item)
+                                        .into(videoDisplay.thumbImageView);
+                            }
                         }
-                    });
+                    }
                 }
             }
-        } else if (data.getMsgType() == PostUtil.LAYOUT_TYPE_VIDEO) {
+        } else if (data.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
             viewStub.setLayoutResource(R.layout.item_fragment_share_info_video);
-            ImageView imageView=viewStub.inflate().findViewById(R.id.iv_item_fragment_share_info_video_display);
-            Glide.with(CommentListActivity.this).load(postDataBean.getImageList().get(0))
-                    .into(imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                                Intent videoIntent=new Intent(v.getContext(),ImageDisplayActivity.class);
-            videoIntent.putExtra("name", "photo");
-            videoIntent.putExtra("url", postDataBean.getImageList().get(0));
-            videoIntent.putExtra("videoUrl", postDataBean.getImageList().get(1));
-            videoIntent.putExtra("id",data.getObjectId());
-            startActivity(videoIntent, ActivityOptionsCompat.makeSceneTransitionAnimation(CommentListActivity.this, v, "photo").toBundle());
+            JZVideoPlayerStandard videoPlayerStandard=viewStub.inflate().findViewById(R.id.js_item_fragment_share_info_video_display);
+            if (postDataBean.getImageList() != null && postDataBean.getImageList().size() > 1) {
+                for (String item :
+                        postDataBean.getImageList()) {
+                    if (item.endsWith(".mp4")) {
+                        videoPlayerStandard.setUp(item, JZVideoPlayer.SCREEN_WINDOW_LIST, "测试");
+                    } else {
+                        Glide.with(this).load(item)
+                                .into(videoPlayerStandard.thumbImageView);
+                    }
                 }
-            });
+            }
         }
         return headerView;
     }
@@ -575,13 +605,22 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
     }
 
 
-    private String getText(PublicPostBean bean) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(TimeUtil.getRealTime(TextUtils.isEmpty(bean.getCreatedAt()) ? bean.getUpdatedAt() : bean.getCreatedAt()))
-                .append("  来自[")
-                .append(bean.getAuthor().getAddress())
-                .append("]");
-        return stringBuilder.toString();
+    private SpannableStringBuilder getText(PublicPostBean bean) {
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+        SpannableString spannableString = new SpannableString(".");
+        spannableString.setSpan(new ImageSpan(this, R.drawable.ic_location, DynamicDrawableSpan.ALIGN_BASELINE), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        String location = "";
+        if (bean.getLocation() != null) {
+            LocationEvent mLocationEvent = BaseApplication.getAppComponent().getGson().fromJson(bean.getLocation(), LocationEvent.class);
+            if (mLocationEvent.getCity().equals(mLocationEvent.getTitle())) {
+                location = mLocationEvent.getTitle();
+            } else {
+                location = mLocationEvent.getCity() + "." + mLocationEvent.getTitle();
+            }
+        }
+        spannableStringBuilder.append(TimeUtil.getRealTime(bean.getCreatedAt() == null ? bean.getUpdatedAt() :
+                bean.getCreatedAt())).append("   ").append(spannableString).append(location);
+        return spannableStringBuilder;
     }
 
     public static void start(Activity activity, PublicPostBean data) {
@@ -605,16 +644,12 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.tv_item_fragment_share_info_share) {
-
-
         } else if (id == R.id.tv_item_fragment_share_info_comment) {
             currentPosition = -1;
             input.setHint("");
             CommonUtils.showSoftInput(this, input);
-
-
         } else if (id == R.id.tv_item_fragment_share_info_like) {
-            presenter.addLike(postId);
+            dealLike(data);
 
         } else if (id == R.id.riv_item_fragment_share_info_avatar) {
             UserDetailActivity.start(this, data.getAuthor().getObjectId());
@@ -640,6 +675,18 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
                     presenter.sendCommentData(bean, postId, input.getText().toString().trim());
                 }
             }
+        }
+    }
+
+    private void dealLike(PublicPostBean bean) {
+        if (bean.getLikeList() != null && bean.getLikeList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
+            ToastUtils.showShortToast("已点赞，取消点赞");
+            showLoadDialog("取消赞中...");
+            presenter.dealLike(bean.getObjectId(), false);
+        } else {
+            ToastUtils.showShortToast("未点赞，点赞");
+            showLoadDialog("点赞中...");
+            presenter.dealLike(bean.getObjectId(), true);
         }
     }
 }

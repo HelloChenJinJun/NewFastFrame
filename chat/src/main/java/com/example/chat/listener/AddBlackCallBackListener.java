@@ -12,7 +12,7 @@ import cn.bmob.v3.exception.BmobException;
  */
 
 public interface AddBlackCallBackListener {
-        void onSuccess(User user);
+        void onSuccess();
 
         void onFailed(BmobException e);
 }

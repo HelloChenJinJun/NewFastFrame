@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.chat.base.Constant;
-import com.example.chat.ui.HomeActivity;
+import com.example.chat.mvp.main.HomeActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.LogUtil;
 

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_item_fragment_friends_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_200"
+        android:paddingLeft="20dp"
+        android:text="B"
+        android:textSize="12sp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black_transparency_200"/>
+    <RelativeLayout
+        android:id="@+id/rl_item_fragment_friends"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp">
+
+        <ImageView
+            android:id="@+id/iv_item_fragment_friends_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/head"/>
+        <TextView
+            android:id="@+id/tv_item_fragment_friends_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toEndOf="@id/iv_item_fragment_friends_avatar"
+            android:gravity="center_vertical"
+            android:text="姓名"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_toRightOf="@id/iv_item_fragment_friends_avatar"/>
+    </RelativeLayout>
+</LinearLayout>

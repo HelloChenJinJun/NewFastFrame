@@ -32,7 +32,7 @@ public class GroupTableMessage extends BmobObject {
         /**
          * 创建时间
          */
-        private String createdTime;
+        private long createdTime;
         /**
          * 群组成员
          */
@@ -41,7 +41,6 @@ public class GroupTableMessage extends BmobObject {
          * 群头像
          */
         private String groupAvatar;
-        private String groupNick;
 
         /**
          * 去读状态
@@ -66,18 +65,6 @@ public class GroupTableMessage extends BmobObject {
         }
 
 
-        //        /**
-//         * 第几个入的群，位置
-//         */
-//        private Integer position;
-//
-//        public Integer getPosition() {
-//                return position;
-//        }
-//
-//        public void setPosition(Integer position) {
-//                this.position = position;
-//        }
 
         public String getToId() {
                 return toId;
@@ -103,13 +90,7 @@ public class GroupTableMessage extends BmobObject {
                 this.readStatus = readStatus;
         }
 
-        public String getGroupNick() {
-                return groupNick;
-        }
 
-        public void setGroupNick(String groupNick) {
-                this.groupNick = groupNick;
-        }
 
         public String getGroupName() {
                 return groupName;
@@ -143,11 +124,11 @@ public class GroupTableMessage extends BmobObject {
                 this.creatorId = creatorId;
         }
 
-        public String getCreatedTime() {
+        public long getCreatedTime() {
                 return createdTime;
         }
 
-        public void setCreatedTime(String createdTime) {
+        public void setCreatedTime(long createdTime) {
                 this.createdTime = createdTime;
         }
 

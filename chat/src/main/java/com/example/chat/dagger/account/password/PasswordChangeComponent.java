@@ -1,7 +1,7 @@
 package com.example.chat.dagger.account.password;
 
 import com.example.chat.dagger.ChatMainComponent;
-import com.example.chat.ui.PasswordChangeActivity;
+import com.example.chat.mvp.account.password.PasswordChangeActivity;
 import com.example.commonlibrary.dagger.scope.PerActivity;
 
 import dagger.Component;

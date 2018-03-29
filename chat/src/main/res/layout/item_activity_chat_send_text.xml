@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    android:id="@+id/tv_item_activity_chat_send_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:background="@drawable/chat_left_qp"
+    android:gravity="center"
+    android:lineSpacingExtra="6dp"
+    android:maxWidth="225dp"
+    android:minHeight="50dp"
+    android:minWidth="50dp"
+    android:text="xvcb xcv xxc"
+    android:textColor="@color/base_color_text_black"
+    android:textSize="16sp"
+
+    xmlns:android="http://schemas.android.com/apk/res/android" />

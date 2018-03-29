@@ -1,7 +1,7 @@
 package com.example.chat.dagger.login;
 
 import com.example.chat.dagger.ChatMainComponent;
-import com.example.chat.ui.LoginActivity;
+import com.example.chat.mvp.login.LoginActivity;
 import com.example.commonlibrary.dagger.scope.PerActivity;
 
 import dagger.Component;

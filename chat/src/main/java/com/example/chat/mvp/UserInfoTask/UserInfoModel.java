@@ -3,7 +3,6 @@ package com.example.chat.mvp.UserInfoTask;
 
 import com.example.chat.MainRepositoryManager;
 import com.example.chat.bean.User;
-import com.example.chat.db.ChatDB;
 import com.example.chat.listener.DealUserInfoCallBack;
 import com.example.chat.listener.SimpleUserInfoListenerImpl;
 import com.example.chat.manager.MsgManager;

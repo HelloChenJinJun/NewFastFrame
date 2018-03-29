@@ -5,6 +5,7 @@ package com.example.chat.bean;
  * 创建人:        陈锦军
  * 创建时间:    2016/11/16      17:14
  * QQ:             1981367757
+ * 7
  */
 
 public class GroupChatMessage extends BaseMessage {

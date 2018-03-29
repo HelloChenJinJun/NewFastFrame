@@ -5,13 +5,9 @@
     android:orientation="vertical"
     android:gravity="center_horizontal">
 
-    <ImageView
-        android:layout_marginTop="10dp"
-        android:id="@+id/iv_item_fragment_share_info_video_display"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_centerHorizontal="true"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/default_image" />
+    <cn.jzvd.JZVideoPlayerStandard
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/js_item_fragment_share_info_video_display"/>
 
 </LinearLayout>

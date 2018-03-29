@@ -8,6 +8,7 @@ package com.example.chat.events;
  */
 
 public class CommentEvent {
+    public static final int TYPE_POST = 2;
     private String id;
     private int type;
     private int action;

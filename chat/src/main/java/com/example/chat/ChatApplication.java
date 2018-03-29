@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 
 import com.example.chat.base.Constant;
 import com.example.chat.base.RandomData;
@@ -13,25 +12,23 @@ import com.example.chat.bean.ImageItem;
 import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.dagger.ChatMainModule;
 import com.example.chat.dagger.DaggerChatMainComponent;
-import com.example.chat.manager.LocationManager;
+import com.example.chat.manager.NewLocationManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.notify.SystemNotifyActivity;
-import com.example.chat.ui.BasePreViewActivity;
-import com.example.chat.ui.EditUserInfoActivity;
-import com.example.chat.ui.HappyActivity;
-import com.example.chat.ui.LoginActivity;
-import com.example.chat.ui.SearchActivity;
-import com.example.chat.ui.SearchFriendActivity;
-import com.example.chat.ui.SelectedFriendsActivity;
-import com.example.chat.ui.SettingsActivity;
-import com.example.chat.ui.UserDetailActivity;
-import com.example.chat.ui.WallPaperActivity;
-import com.example.chat.ui.fragment.HomeFragment;
-import com.example.chat.ui.fragment.ShareInfoFragment;
+import com.example.chat.mvp.preview.PhotoPreViewActivity;
+import com.example.chat.mvp.editInfo.EditUserInfoActivity;
+import com.example.chat.mvp.login.LoginActivity;
+import com.example.chat.mvp.search.SearchActivity;
+import com.example.chat.mvp.searchFriend.SearchFriendActivity;
+import com.example.chat.mvp.selectFriend.SelectedFriendsActivity;
+import com.example.chat.mvp.settings.SettingsActivity;
+import com.example.chat.mvp.UserDetail.UserDetailActivity;
+import com.example.chat.mvp.wallpaper.WallPaperActivity;
+import com.example.chat.mvp.main.HomeFragment;
+import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.manager.ActivityManager;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.module.IModuleConfig;
 import com.example.commonlibrary.router.BaseAction;
@@ -42,7 +39,6 @@ import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +47,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
-import mabeijianxi.camera.VCamera;
-import mabeijianxi.camera.util.DeviceUtils;
 import okhttp3.OkHttpClient;
-import okhttp3.Route;
 
 /**
  * 项目名称:    NewFastFrame
@@ -99,8 +92,6 @@ public class ChatApplication implements IModuleConfig, IAppLife {
         LogUtil.e("设备ID在这里上传了");
         BmobPush.startWork(application);
         LogUtil.e("推送服务初始化完成");
-        initOkHttp();
-        initSmallVideo(application);
         initLocationClient();
         RandomData.initAllRanDomData();
         initRouter();
@@ -179,12 +170,6 @@ public class ChatApplication implements IModuleConfig, IAppLife {
             public RouterResult invoke(RouterRequest routerRequest) {
                 Intent intent = (Intent) routerRequest.getObject();
                 BaseActivity activity = (BaseActivity) routerRequest.getContext();
-                if (intent.getSerializableExtra("url_share_message") != null) {
-                    Serializable sharedMessage = intent.getSerializableExtra("url_share_message");
-                    if (activity.getCurrentFragment() != null && activity.getCurrentFragment() instanceof HomeFragment) {
-                        ((HomeFragment) activity.getCurrentFragment()).notifyUrlSharedMessageAdd(sharedMessage);
-                    }
-                }
                 if (activity.getCurrentFragment() != null && activity.getCurrentFragment() instanceof HomeFragment) {
                     ((HomeFragment) activity.getCurrentFragment()).notifyNewIntentCome(intent);
                 }
@@ -222,9 +207,6 @@ public class ChatApplication implements IModuleConfig, IAppLife {
                         ToastUtils.showShortToast("点击了设置");
                         SettingsActivity.start(activity, Constant.REQUEST_CODE_EDIT_USER_INFO);
                         break;
-                    case "开心时刻":
-                        HappyActivity.startActivity(activity);
-                        break;
                     default:
                         break;
                 }
@@ -237,7 +219,7 @@ public class ChatApplication implements IModuleConfig, IAppLife {
                 Map<String,Object> map=routerRequest.getParamMap();
                 List<String>  imageList= (List<String>) routerRequest.getObject();
                 if (imageList != null&&imageList.size()>0) {
-                    List<ImageItem>  list=new ArrayList<>();
+                    ArrayList<ImageItem>  list=new ArrayList<>();
                     for (String item:
                             imageList
                          ) {
@@ -245,8 +227,8 @@ public class ChatApplication implements IModuleConfig, IAppLife {
                         imageItem.setPath(item);
                         list.add(imageItem);
                     }
-                    BasePreViewActivity.startBasePreview(((Activity) routerRequest.getContext()),list
-                    , (Integer) map.get(ConstantUtil.POSITION));
+                    PhotoPreViewActivity.start(((Activity) routerRequest.getContext()),(Integer) map.get(ConstantUtil.POSITION),list,false
+                    );
                 }
                 return null;
             }
@@ -257,34 +239,9 @@ public class ChatApplication implements IModuleConfig, IAppLife {
 
 
     private void initLocationClient() {
-//                LocationManager.getInstance().registerLocationListener(this);
-        LocationManager.getInstance().startLocation();
+        NewLocationManager.getInstance().startLocation();
     }
 
-
-    private void initSmallVideo(Application application) {
-        LogUtil.e("初始化小视频缓存目录");
-        // 设置拍摄视频缓存路径
-        File dcim = Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        if (DeviceUtils.isZte()) {
-            if (dcim.exists()) {
-                VCamera.setVideoCachePath(dcim + "/chen/");
-            } else {
-                VCamera.setVideoCachePath(dcim.getPath().replace("/sdcard/",
-                        "/sdcard-ext/")
-                        + "/mabeijianxi/");
-            }
-        } else {
-            VCamera.setVideoCachePath(dcim + "/mabeijianxi/");
-        }
-        VCamera.setDebugMode(true);
-        VCamera.initialize(application);
-    }
-
-    private void initOkHttp() {
-        OkHttpUtils.initClient(new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS).build());
-    }
 
     @Override
     public void onTerminate(Application application) {
