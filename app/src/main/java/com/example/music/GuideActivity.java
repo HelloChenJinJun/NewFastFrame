@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.chat.ui.LoginActivity;
+import com.example.chat.mvp.login.LoginActivity;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;

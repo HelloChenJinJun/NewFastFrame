@@ -1,6 +1,7 @@
 package com.example.commonlibrary.baseadapter.viewholder;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -265,5 +266,13 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
 
     public BaseRecyclerAdapter getAdapter() {
         return adapter;
+    }
+
+    public BaseWrappedViewHolder setImageDrawable(int id, Drawable drawable) {
+        View view=getView(id);
+        if (view!=null&& view instanceof ImageView){
+            ((ImageView) view).setImageDrawable(drawable);
+        }
+        return this;
     }
 }

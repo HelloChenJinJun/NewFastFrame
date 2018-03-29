@@ -60,7 +60,7 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     private ProgressDialog mProgressDialog;
     protected BaseDialog mBaseDialog;
     private RoundAngleImageView icon;
-    private TextView right;
+    protected TextView right;
     private TextView title;
     private ImageView rightImage;
     protected ImageView back;
@@ -222,16 +222,19 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         }
         if (option.isNeedNavigation()) {
             back.setVisibility(View.VISIBLE);
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
+            back.setOnClickListener(v -> finish());
         } else {
             back.setVisibility(GONE);
         }
 
+    }
+
+
+
+    public void updateTitle(String title) {
+        if (isNeedHeadLayout()) {
+            this.title.setText(title);
+        }
     }
 
 

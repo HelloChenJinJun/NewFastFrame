@@ -153,6 +153,11 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     }
 
 
+    protected void updateTitle(String title) {
+        ((BaseActivity) getActivity()).updateTitle(title);
+    }
+
+
     protected View findViewById(int id) {
         if (root != null) {
             return root.findViewById(id);

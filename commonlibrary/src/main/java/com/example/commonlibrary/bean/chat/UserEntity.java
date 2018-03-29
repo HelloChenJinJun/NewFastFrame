@@ -1,14 +1,15 @@
-package com.rationalTiger.poster.bean;
+package com.example.commonlibrary.bean.chat;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * 项目名称:    PostDemo
  * 创建人:      陈锦军
  * 创建时间:    2018/1/17     17:00
  * QQ:         1981367757
+ * 总共20字段
  */
 @Entity
 public class UserEntity {
@@ -16,6 +17,8 @@ public class UserEntity {
     public static final int BLACK_TYPE_OTHER=1;
 //    添加别人的黑名单类型
     public static final int BLACK_TYPE_ADD=2;
+
+    public static final int BLACK_TYPE_NORMAL=0;
 //    用户ID
     @Id
     private String uid;
@@ -26,15 +29,127 @@ public class UserEntity {
 
 
     private boolean isSex;
-
-
     //        封面
     private String titlePaper;
 
+    /**
+     * 地址
+     */
+    private String address;
+    private String birthDay;
+    //        真实姓名
+    private String name;
+    //        学校
+    private String school;
+    //        学院
+    private String college;
+    //        专业
+    private String major;
+    //        学历
+    private String education;
+    //        入学年份
+    private String year;
+    //        班号
+    private String classNumber;
+//    签名
+    private String signature;
+    //    是否为黑名单
+    private boolean isBlack;
+    //   黑名单类型
+    private int blackType;
 
 //    是否为陌生人
     private boolean isStranger;
+//    用户名
+    private String userName;
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(String birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    public String getCollege() {
+        return college;
+    }
+
+    public void setCollege(String college) {
+        this.college = college;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getClassNumber() {
+        return classNumber;
+    }
+
+    public void setClassNumber(String classNumber) {
+        this.classNumber = classNumber;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
 
     public boolean isStranger() {
         return isStranger;
@@ -64,6 +179,42 @@ public class UserEntity {
 
     private String updatedTime;
 
+
+
+    @Generated(hash = 1264149392)
+    public UserEntity(String uid, String nick, String avatar, boolean isSex,
+            String titlePaper, String address, String birthDay, String name,
+            String school, String college, String major, String education,
+            String year, String classNumber, String signature, boolean isBlack,
+            int blackType, boolean isStranger, String userName, String createdTime,
+            String updatedTime) {
+        this.uid = uid;
+        this.nick = nick;
+        this.avatar = avatar;
+        this.isSex = isSex;
+        this.titlePaper = titlePaper;
+        this.address = address;
+        this.birthDay = birthDay;
+        this.name = name;
+        this.school = school;
+        this.college = college;
+        this.major = major;
+        this.education = education;
+        this.year = year;
+        this.classNumber = classNumber;
+        this.signature = signature;
+        this.isBlack = isBlack;
+        this.blackType = blackType;
+        this.isStranger = isStranger;
+        this.userName = userName;
+        this.createdTime = createdTime;
+        this.updatedTime = updatedTime;
+    }
+
+    @Generated(hash = 1433178141)
+    public UserEntity() {
+    }
+
     public String getCreatedTime() {
         return createdTime;
     }
@@ -80,22 +231,11 @@ public class UserEntity {
         this.updatedTime = updatedTime;
     }
 
-    //    是否为黑名单
-    private boolean isBlack;
-//   黑名单类型
-    private int blackType;
 
 
-    private int avatarType;
 
 
-    public int getAvatarType() {
-        return avatarType;
-    }
 
-    public void setAvatarType(int avatarType) {
-        this.avatarType = avatarType;
-    }
 
     public int getBlackType() {
         return blackType;
@@ -113,26 +253,7 @@ public class UserEntity {
         isBlack = black;
     }
 
-    @Generated(hash = 722382895)
-    public UserEntity(String uid, String nick, String avatar, boolean isSex,
-            String titlePaper, boolean isStranger, String createdTime,
-            String updatedTime, boolean isBlack, int blackType, int avatarType) {
-        this.uid = uid;
-        this.nick = nick;
-        this.avatar = avatar;
-        this.isSex = isSex;
-        this.titlePaper = titlePaper;
-        this.isStranger = isStranger;
-        this.createdTime = createdTime;
-        this.updatedTime = updatedTime;
-        this.isBlack = isBlack;
-        this.blackType = blackType;
-        this.avatarType = avatarType;
-    }
 
-    @Generated(hash = 1433178141)
-    public UserEntity() {
-    }
 
 
     public String getUid() {
@@ -167,13 +288,7 @@ public class UserEntity {
         this.isBlack = isBlack;
     }
 
-    public boolean getIsSex() {
-        return this.isSex;
-    }
 
-    public void setIsSex(boolean isSex) {
-        this.isSex = isSex;
-    }
 
     public boolean getIsStranger() {
         return this.isStranger;
@@ -181,5 +296,13 @@ public class UserEntity {
 
     public void setIsStranger(boolean isStranger) {
         this.isStranger = isStranger;
+    }
+
+    public boolean getIsSex() {
+        return this.isSex;
+    }
+
+    public void setIsSex(boolean isSex) {
+        this.isSex = isSex;
     }
 }

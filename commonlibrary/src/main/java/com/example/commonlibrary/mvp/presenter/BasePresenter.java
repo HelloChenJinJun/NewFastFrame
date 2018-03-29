@@ -50,7 +50,7 @@ public class BasePresenter<V extends IView, M extends BaseModel> implements IPre
         return mCompositeDisposable;
     }
 
-    private void unDispose() {
+    public void unDispose() {
         if (mCompositeDisposable != null) {
             if (!mCompositeDisposable.isDisposed()) {
                 mCompositeDisposable.dispose();

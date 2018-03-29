@@ -64,28 +64,25 @@ import io.reactivex.functions.Consumer;
     @Override
     public void update(long read, final long count, boolean done) {
         Flowable.just(read).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(@NonNull Long aLong) throws Exception {
-                        fileInfo.setLoadBytes(aLong.intValue());
-                        fileInfo.setTotalBytes((int) count);
-                        if (fileInfo.getStatus() == DownloadStatus.STOP) {
-                            fileDAO.update(fileInfo);
-                            listener.onStop(fileInfo);
-                            return;
-                        }
-                        if (fileInfo.getStatus() == DownloadStatus.CANCEL) {
-                            fileDAO.update(fileInfo);
-                            listener.onCancel(fileInfo);
-                            return;
-                        }
-                        if (fileInfo == null) {
-                            CommonLogger.e("下载这里出错");
-                        }
-                        fileInfo.setStatus(DownloadStatus.DOWNLOADING);
+                .subscribe(aLong -> {
+                    fileInfo.setLoadBytes(aLong.intValue());
+                    fileInfo.setTotalBytes((int) count);
+                    if (fileInfo.getStatus() == DownloadStatus.STOP) {
                         fileDAO.update(fileInfo);
-                        listener.onUpdate(fileInfo);
+                        listener.onStop(fileInfo);
+                        return;
                     }
+                    if (fileInfo.getStatus() == DownloadStatus.CANCEL) {
+                        fileDAO.update(fileInfo);
+                        listener.onCancel(fileInfo);
+                        return;
+                    }
+                    if (fileInfo == null) {
+                        CommonLogger.e("下载这里出错");
+                    }
+                    fileInfo.setStatus(DownloadStatus.DOWNLOADING);
+                    fileDAO.update(fileInfo);
+                    listener.onUpdate(fileInfo);
                 });
 
     }

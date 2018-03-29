@@ -471,6 +471,10 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         return null;
     }
 
+    public T removeData(T data) {
+        return removeData(this.data.indexOf(data));
+    }
+
 
     protected RecyclerView.LayoutManager layoutManager;
 

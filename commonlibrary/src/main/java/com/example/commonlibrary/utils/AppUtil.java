@@ -6,6 +6,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 
+import com.example.commonlibrary.BaseApplication;
+
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
@@ -39,6 +41,9 @@ public class AppUtil {
             return false;
         }
         return false;
+    }
+    public static boolean isNetworkAvailable(){
+        return isNetworkAvailable(BaseApplication.getInstance());
     }
 
 

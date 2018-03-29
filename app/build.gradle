@@ -96,9 +96,9 @@ dependencies {
     })
     if (!rootProject.ext.isAlone) {
         api project(':chat')
-        api project(':music')
+//        api project(':music')
         api project(':news')
-        api project(':live')
+//        api project(':live')
         annotationProcessor rootProject.ext.dependencies.arouter_compiler
     }
     implementation project(':commonlibrary')

@@ -7,6 +7,8 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 
+import com.example.commonlibrary.BaseApplication;
+
 public class DensityUtil {
 
     public static int getScreenHeight(Context context) {
@@ -41,6 +43,11 @@ public class DensityUtil {
     public static int px2dip(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
+    }
+
+
+    public static int toDp(int i) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,i, BaseApplication.getInstance().getResources().getDisplayMetrics());
     }
 
 

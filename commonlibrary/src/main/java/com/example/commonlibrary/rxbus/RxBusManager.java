@@ -1,5 +1,8 @@
 package com.example.commonlibrary.rxbus;
 
+import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ToastUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +61,14 @@ public class RxBusManager {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action1, error);
+    }
+
+
+    public <T> Disposable registerEvent(Class<T> type, Consumer<T> action1){
+        return registerEvent(type, action1, throwable -> {
+            CommonLogger.e(throwable);
+            ToastUtils.showShortToast("RxBus传递信息出错"+throwable.getMessage());
+        });
     }
 
 
