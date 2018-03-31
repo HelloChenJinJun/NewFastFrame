@@ -65,10 +65,25 @@ public class GroupTableEntity {
     private String notification;
 
 
-    @Generated(hash = 2061230708)
+
+    private Boolean isRemind;
+
+
+
+//    群通知
+    public Boolean getRemind() {
+        return isRemind;
+    }
+
+    public void setRemind(Boolean remind) {
+        isRemind = remind;
+    }
+
+    @Generated(hash = 511628014)
     public GroupTableEntity(String groupName, String groupDescription, String groupId,
             String creatorId, long createdTime, List<String> groupNumber, String groupAvatar,
-            int readStatus, int sendStatus, String toId, String notification) {
+            int readStatus, int sendStatus, String toId, String notification,
+            Boolean isRemind) {
         this.groupName = groupName;
         this.groupDescription = groupDescription;
         this.groupId = groupId;
@@ -80,6 +95,7 @@ public class GroupTableEntity {
         this.sendStatus = sendStatus;
         this.toId = toId;
         this.notification = notification;
+        this.isRemind = isRemind;
     }
 
     @Generated(hash = 1107809041)
@@ -174,5 +190,13 @@ public class GroupTableEntity {
 
     public void setNotification(String notification) {
         this.notification = notification;
+    }
+
+    public Boolean getIsRemind() {
+        return this.isRemind;
+    }
+
+    public void setIsRemind(Boolean isRemind) {
+        this.isRemind = isRemind;
     }
 }

@@ -305,4 +305,11 @@ public class UserEntity {
     public void setIsSex(boolean isSex) {
         this.isSex = isSex;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj!=null&&obj instanceof UserEntity
+                && ((UserEntity) obj).getUid()
+                .equals(getUid());
+    }
 }

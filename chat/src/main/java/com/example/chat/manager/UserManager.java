@@ -189,10 +189,6 @@ public class UserManager {
      * 下线操作
      */
     public void logout() {
-        UserCacheManager.getInstance().setLogin(false);
-        MessageCacheManager.getInstance().setLogin(false);
-        UserCacheManager.getInstance().clear();
-        MessageCacheManager.getInstance().clear();
         uid=null;
         User.logOut();
         BaseApplication.getAppComponent().getSharedPreferences()
@@ -287,15 +283,7 @@ public class UserManager {
         }
     }
 
-    /**
-     * 更新好友的黑名单状态
-     *
-     * @param username 好友用户名
-     * @param isBlack  是否是黑名单
-     */
-    private long updateFriendBlackStatus(String username, boolean isBlack) {
-        return ChatDB.create().updateFriendBlackStatus(username, isBlack);
-    }
+
 
     /**
      * 添加为黑名单
@@ -496,99 +484,48 @@ public class UserManager {
         User user = new User();
         user.setObjectId(UserManager.getInstance().getCurrentUserObjectId());
         switch (name) {
-            case "phone":
+            case Constant.PHONE:
                 user.setMobilePhoneNumber(content);
                 break;
-            case "email":
+            case Constant.EMAIL:
                 user.setEmail(content);
                 break;
-            case "nick":
+            case Constant.NICK:
                 user.setNick(content);
                 user.setSortedKey(CommonUtils.getSortedKey(content));
                 break;
-            case "avatar":
+            case Constant.AVATAR:
                 user.setAvatar(content);
                 break;
-            case "sex":
+            case Constant.GENDER:
                 if (content.equals("男")) {
                     user.setSex(true);
                 } else {
                     user.setSex(false);
                 }
                 break;
-            case "signature":
+            case Constant.SIGNATURE:
                 user.setSignature(content);
                 break;
-            case "birth":
+            case Constant.BIRTHDAY:
                 user.setBirthDay(content);
                 break;
-            case "address":
+            case Constant.ADDRESS:
                 user.setAddress(content);
                 break;
-            case "location":
+            case Constant.LOCATION:
                 LogUtil.e("定位location" + content);
                 String result[] = content.split("&");
                 user.setLocation(new BmobGeoPoint(Double.parseDouble(result[0]), Double.parseDouble(result[1])));
                 break;
-            case "titleWallPaper":
+            case Constant.TITLE_WALLPAPER:
                 user.setTitleWallPaper(content);
                 break;
-            case "wallPaper":
+            case Constant.WALLPAPER:
                 user.setWallPaper(content);
                 break;
         }
-        user.update(new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                if (e == null) {
-                    User currentUser = UserManager.getInstance().getCurrentUser();
-                    switch (name) {
-                        case "phone":
-                            currentUser.setMobilePhoneNumber(content);
-                            break;
-                        case "email":
-                            currentUser.setEmail(content);
-                            break;
-                        case "nick":
-                            currentUser.setNick(content);
-                            currentUser.setSortedKey(CommonUtils.getSortedKey(content));
-                            break;
-                        case "avatar":
-                            currentUser.setAvatar(content);
-                            break;
-                        case "sex":
-                            if (content.equals("男")) {
-                                currentUser.setSex(true);
-                            } else {
-                                currentUser.setSex(false);
-                            }
-                            break;
-                        case "signature":
-                            currentUser.setSignature(content);
-                            break;
-                        case "birth":
-                            currentUser.setBirthDay(content);
-                            break;
-                        case "address":
-                            currentUser.setAddress(content);
-                            break;
-                        case "location":
-                            LogUtil.e("定位location" + content);
-                            String result[] = content.split("&");
-                            currentUser.setLocation(new BmobGeoPoint(Double.parseDouble(result[0]), Double.parseDouble(result[1])));
-                            break;
-                        case "titleWallPaper":
-                            currentUser.setTitleWallPaper(content);
-                            break;
-                        case "wallPaper":
-                            currentUser.setWallPaper(content);
-                            break;
-                    }
-                }
-                listener.done(e);
-            }
-
-        });
+        user.update(listener);
     }
 
     public void queryNearbyPeople(double longitude, double latitude, boolean isAll, boolean isSex, FindListener<User> findListener) {

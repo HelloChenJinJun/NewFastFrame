@@ -74,7 +74,6 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
     protected boolean isNeedHeadLayout() {
         return false;
     }
-
     @Override
     protected boolean isNeedEmptyLayout() {
         return false;

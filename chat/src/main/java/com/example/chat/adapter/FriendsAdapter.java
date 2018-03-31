@@ -24,11 +24,24 @@ public class FriendsAdapter extends BaseRecyclerAdapter<UserEntity, BaseWrappedV
         return R.layout.item_fragment_friends;
     }
 
+    private boolean hasSelected;
+
+
+    public void setHasSelected(boolean hasSelected) {
+        this.hasSelected = hasSelected;
+    }
+
     @Override
     protected void convert(BaseWrappedViewHolder holder, UserEntity data) {
         holder.setText(R.id.tv_item_fragment_friends_name, data.getNick())
-                .setImageUrl(R.id.iv_item_fragment_friends_avatar, data.getAvatar())
-                .setOnItemClickListener();
+                .setImageUrl(R.id.iv_item_fragment_friends_avatar, data.getAvatar());
+        if (hasSelected){
+            holder.setVisible(R.id.cb_item_fragment_friends_check,true)
+                    .setOnItemChildClickListener(R.id.cb_item_fragment_friends_check);
+        }else {
+            holder.setVisible(R.id.cb_item_fragment_friends_check,false)
+                    .setOnItemClickListener();
+        }
         if (isShouldShowTag(holder.getAdapterPosition() - getItemUpCount())) {
             holder.setVisible(R.id.tv_item_fragment_friends_tab, true)
                     .setText(R.id.tv_item_fragment_friends_tab, AppUtil.getSortedKey(data.getNick()));

@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
-
-    <ScrollView
-        style="@style/Custom_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbarStyle="outsideOverlay">
+<ScrollView style="@style/Custom_scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chat_bg"
+    android:scrollbarStyle="outsideOverlay"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/chat_bg"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <RelativeLayout
-                android:id="@+id/rl_group_info_header"
+                android:id="@+id/rl_activity_group_info_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
@@ -25,7 +19,7 @@
                 android:paddingRight="15dp"
                 android:paddingTop="10dp">
                 <com.example.commonlibrary.cusotomview.RoundAngleImageView
-                    android:id="@+id/riv_group_info_avatar"
+                    android:id="@+id/riv_activity_group_info_avatar"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:scaleType="centerCrop"
@@ -37,19 +31,21 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@+id/riv_group_info_avatar"
+                    android:layout_toRightOf="@+id/riv_activity_group_info_avatar"
                     android:orientation="vertical">
-                    <TextView android:id="@+id/tv_group_info_name"
+                    <TextView android:id="@+id/tv_activity_group_info_name"
                               android:layout_width="wrap_content"
                               android:layout_height="wrap_content"
                               android:text="群名"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                               android:textColor="@color/base_color_text_black"/>
-                    <TextView android:id="@+id/tv_group_info_create_time"
+                    <TextView android:id="@+id/tv_activity_group_info_create_time"
                               android:layout_width="wrap_content"
                               android:layout_height="wrap_content"
                               android:layout_marginTop="5dp"
                               android:text="创建时间"
-                              android:textColor="@color/base_color_text_grey"/>
+                              android:textColor="@color/grey_500"/>
                 </LinearLayout>
                 <ImageView android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
@@ -57,48 +53,192 @@
                            android:layout_centerVertical="true"
                            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
             </RelativeLayout>
-            <include android:id="@+id/ll_group_info_number_name"
-                     layout="@layout/group_info_item_layout"
-            />
-            <include android:id="@+id/ll_group_info_number_count"
-                     layout="@layout/group_info_item_layout"
-            />
-            <!--<chen.testchat.view.CustomGridView-->
-            <!--android:id="@+id/cgv_group_info_number_avatar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="center"-->
-            <!--android:numColumns="5"-->
-            <!--android:paddingBottom="20dp"-->
-            <!--android:paddingLeft="15dp"-->
-            <!--android:paddingRight="15dp"-->
-            <!--android:paddingTop="20dp"-->
-            <!--android:verticalSpacing="5dp">-->
-            <!--</chen.testchat.view.CustomGridView>-->
 
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rcv_group_info_number_avatar"
+
+            <RelativeLayout
+                android:id="@+id/rl_activity_group_info_group_name"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="20dp"
-                android:paddingLeft="15dp"
+                android:minHeight="50dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="群名"
+                    android:textColor="@color/black_transparency_800"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/tv_activity_group_info_group_name"
+                    android:layout_alignParentRight="true"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="你好"
+                    android:textSize="15sp"
+                    />
+
+            </RelativeLayout>
+            <View android:layout_width="match_parent" android:layout_height="1px"
+                android:background="@color/grey_500"/>
+
+            <LinearLayout
+                android:id="@+id/ll_activity_group_info_number_container"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:roundWidth="25dp"
+                    app:roundHeight="25dp"
+                    android:id="@+id/riv_activity_group_info_number_avatar_one"
+                    android:src="@drawable/head"/>
+                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:roundWidth="25dp"
+                    app:roundHeight="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/riv_activity_group_info_number_avatar_two"
+                    android:src="@drawable/head"/>
+                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:roundWidth="25dp"
+                    app:roundHeight="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/riv_activity_group_info_number_avatar_three"
+                    android:src="@drawable/head"/>
+                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:roundWidth="25dp"
+                    app:roundHeight="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/riv_activity_group_info_add"
+                    android:src="@drawable/chat_add_normal"/>
+                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                    android:id="@+id/riv_activity_group_info_delete"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:roundWidth="25dp"
+                    app:roundHeight="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_top_delete"/>
+
+                <TextView
+                    android:id="@+id/tv_activity_group_info_group_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="43名成员"
+                    android:layout_marginLeft="10dp"/>
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rl_activity_group_info_description"
                 android:paddingRight="15dp"
-                android:paddingTop="20dp"
-                android:verticalSpacing="5dp"/>
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="50dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="群介绍"
+                    android:textColor="@color/black_transparency_800"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/tv_activity_group_info_group_description"
+                    android:layout_alignParentRight="true"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="你好"
+                    android:textSize="15sp"
+                    />
+
+            </RelativeLayout>
+            <View android:layout_width="match_parent" android:layout_height="1px"
+                android:background="@color/grey_500"/>
 
 
-            <include android:id="@+id/ll_group_info_group_name"
-                     layout="@layout/group_info_item_layout"/>
-            <include android:id="@+id/ll_group_info_group_description"
-                     layout="@layout/group_info_item_layout"/>
-            <include android:id="@+id/ll_group_info_group_notification"
-                     layout="@layout/group_info_item_layout"/>
-            <include android:id="@+id/ll_group_info_remind"
-                     layout="@layout/group_info_item_layout"/>
+            <RelativeLayout
+                android:id="@+id/rl_activity_group_info_notification"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="50dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="群通知"
+                    android:textColor="@color/black_transparency_800"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:id="@+id/tv_activity_group_info_group_notification"
+                    android:layout_alignParentRight="true"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="你好"
+                    android:textSize="15sp"
+                    />
+
+            </RelativeLayout>
+            <View android:layout_width="match_parent" android:layout_height="1px"
+                android:background="@color/grey_500"/>
+            <RelativeLayout
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="50dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="群消息提醒"
+                    android:textColor="@color/black_transparency_800"
+                    android:textSize="15sp"/>
+
+                <CheckBox
+                    android:id="@+id/cb_activity_group_info_remind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:checked="true"/>
+            </RelativeLayout>
+
 
             <Button
-                android:id="@+id/btn_group_info_exit_group"
+                android:id="@+id/btn_activity_group_info_exit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:layout_marginBottom="20dp"
                 android:layout_marginLeft="15dp"
@@ -108,7 +248,5 @@
                 android:text="退出该群"
                 android:textColor="@color/base_color_text_white"/>
         </LinearLayout>
-
     </ScrollView>
 
-</LinearLayout>

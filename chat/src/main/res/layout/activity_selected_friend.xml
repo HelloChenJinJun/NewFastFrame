@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="vertical">
+           <com.example.commonlibrary.baseadapter.SuperRecyclerView
+               android:layout_width="match_parent"
+               android:layout_height="0dp"
+               android:layout_weight="1"
+               android:id="@+id/srcv_activity_selected_friend_display"/>
+
+           <LinearLayout
+               android:id="@+id/ll_activity_selected_friend_bottom"
+               android:layout_width="match_parent"
+               android:layout_height="50dp"
+               android:background="@mipmap/global_bottom_bg_small"
+               android:gravity="center_vertical"
+               android:orientation="horizontal"/>
+       </LinearLayout>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_activity_selected_friend_index"
+        android:textSize="50sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:background="@drawable/custom_drawable_tv_index_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="H"
+        android:layout_centerInParent="true"/>
+
+
+    <com.example.chat.view.IndexView
+        android:layout_width="25dp"
+        android:layout_marginBottom="50dp"
+        android:id="@+id/index_activity_selected_friend_index"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"/>
+
+
+</RelativeLayout>

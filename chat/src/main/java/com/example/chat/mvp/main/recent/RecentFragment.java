@@ -12,11 +12,11 @@ import com.example.chat.R;
 import com.example.chat.adapter.RecentListAdapter;
 import com.example.chat.base.AppBaseFragment;
 import com.example.chat.base.Constant;
-import com.example.chat.events.GroupInfoEvent;
+import com.example.chat.events.GroupTableEvent;
 import com.example.chat.events.RecentEvent;
 import com.example.chat.manager.UserDBManager;
+import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.chat.ChatActivity;
-import com.example.chat.mvp.main.HomeFragment;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.swipeview.Closeable;
@@ -114,17 +114,16 @@ public class RecentFragment extends AppBaseFragment implements SwipeRefreshLayou
 
 
         private void registerRxBus() {
-                addDisposable(RxBusManager.getInstance().registerEvent(GroupInfoEvent.class, groupInfoEvent -> {
+                addDisposable(RxBusManager.getInstance().registerEvent(GroupTableEvent.class, groupTableEvent -> {
 //                                刷新过来的，更新下群结构消息
-                        if (groupInfoEvent.getType()==GroupInfoEvent.TYPE_GROUP_NUMBER){
-                                String content=groupInfoEvent.getContent();
-                                LogUtil.e("recent接收到被提出群的消息");
+                        if (groupTableEvent.getType()== GroupTableEvent.TYPE_GROUP_NUMBER
+                                &&groupTableEvent.getAction()==GroupTableEvent.ACTION_DELETE
+                                && UserManager.getInstance()
+                                .getCurrentUserObjectId().equals(groupTableEvent.getUid())){
+                                String content=groupTableEvent.getGroupId();
                                 RecentMessageEntity recentMsg=new RecentMessageEntity();
                                 recentMsg.setId(content);
-                                if (mAdapter.getData().contains(recentMsg)) {
-                                        mAdapter.getData().remove(recentMsg);
-                                        mAdapter.notifyDataSetChanged();
-                                }
+                                mAdapter.removeData(recentMsg);
                         }
                 }));
                 addDisposable(RxBusManager.getInstance().registerEvent(RecentEvent.class, recentEvent -> {

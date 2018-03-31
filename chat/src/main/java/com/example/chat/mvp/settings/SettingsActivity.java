@@ -130,7 +130,7 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                                 @Override
                                 public void run() {
                                         dismissLoadDialog();
-                                        MsgManager.getInstance().clearAllChatMessage();
+//                                        MsgManager.getInstance().clearAllChatMessage();
                                 }
                         }).start();
 

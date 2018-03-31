@@ -72,13 +72,12 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                 content = getIntent().getStringExtra(Constant.DATA);
                 switch (from) {
                         case Constant.NICK:
-                        case "groupNick":
                         case Constant.PHONE:
                         case Constant.EMAIL:
                         case Constant.SIGNATURE:
-                        case "groupDescription":
-                        case "groupNotification":
-                        case "groupName":
+                        case Constant.GROUP_DESCRIPTION:
+                        case Constant.GROUP_NOTIFICATION:
+                        case Constant.GROUP_NAME:
                                 return R.layout.activity_edit_user_detail;
                         case Constant.GENDER:
                                 return R.layout.activity_edit_user_detail_gender;
@@ -95,13 +94,12 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                 if (from != null) {
                         switch (from) {
                                 case Constant.NICK:
-                                case "groupNick":
                                 case Constant.PHONE:
                                 case Constant.EMAIL:
                                 case Constant.SIGNATURE:
-                                case "groupDescription":
-                                case "groupNotification":
-                                case "groupName":
+                                case Constant.GROUP_DESCRIPTION:
+                                case Constant.GROUP_NOTIFICATION:
+                                case Constant.GROUP_NAME:
                                         initNormalView();
                                         break;
                                 case Constant.GENDER:
@@ -156,12 +154,16 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                 otherLayout.setOnClickListener(this);
                 maleLayout.setOnClickListener(this);
                 if (content != null) {
-                        if (content.equals("男")) {
-                                updateGenderChecked(0);
-                        } else if (content.equals("女")) {
-                                updateGenderChecked(1);
-                        } else {
-                                updateGenderChecked(3);
+                        switch (content) {
+                                case "男":
+                                        updateGenderChecked(0);
+                                        break;
+                                case "女":
+                                        updateGenderChecked(1);
+                                        break;
+                                default:
+                                        updateGenderChecked(3);
+                                        break;
                         }
                 }
         }
@@ -187,10 +189,9 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                 case Constant.PHONE:
                                 case Constant.EMAIL:
                                 case Constant.SIGNATURE:
-                                case "groupNick":
-                                case "groupDescription":
-                                case "groupNotification":
-                                case "groupName":
+                                case Constant.GROUP_DESCRIPTION:
+                                case Constant.GROUP_NOTIFICATION:
+                                case Constant.GROUP_NAME:
                                         if (mAutoEditText.getText() != null && !mAutoEditText.getText().toString().trim().equals("")) {
                                                 if (content != null && content.equals(mAutoEditText.getText().toString().trim())) {
                                                         LogUtil.e("没有修改");
@@ -269,12 +270,10 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                                         if (e == null) {
                                                                 LogUtil.e("更新群资料成功");
                                                                 ToastUtils.showShortToast("更新群资料成功");
-
                                                         }else {
                                                                 LogUtil.e("更新群资料失败" +e.toString());
                                                                 ToastUtils.showShortToast("更新群资料失败" + e.toString());
                                                                 setResult(Activity.RESULT_CANCELED);
-
                                                         }
                                                         finish();
                                                 }
@@ -300,13 +299,11 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                 return "邮箱";
                         case Constant.PHONE:
                                 return "手机号码";
-                        case "groupNick":
-                                return "群名片";
-                        case "groupDescription":
-                                return "群描述";
-                        case "groupNotification":
+                        case Constant.GROUP_DESCRIPTION:
+                                return "群介绍";
+                        case Constant.GROUP_NOTIFICATION:
                                 return "群通知";
-                        case "groupName":
+                        case Constant.GROUP_NAME:
                                 return "群名";
                         case Constant.SIGNATURE:
                                 return "签名";
@@ -334,7 +331,6 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                         openDatePicker();
 
                 } else if (i == R.id.rl_edit_user_info_detail_address) {
-//                        showBottomDialog();
                         AddressListActivity.start(this, null, Constant.REQUEST_CODE_NORMAL);
                 }
         }
@@ -391,5 +387,12 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                 currentSelectedAddress=address;
                         }
                 }
+        }
+
+        public static void start(Activity activity, String from, String data, int requestCode) {
+                Intent intent=new Intent(activity,EditUserInfoDetailActivity.class);
+                intent.putExtra(Constant.FROM,from);
+                intent.putExtra(Constant.DATA,data);
+                activity.startActivityForResult(intent,requestCode);
         }
 }

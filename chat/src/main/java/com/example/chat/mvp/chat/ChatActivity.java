@@ -38,7 +38,6 @@ import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.MessageContent;
 import com.example.chat.dagger.chat.ChatActivityModule;
 import com.example.chat.dagger.chat.DaggerChatActivityComponent;
-import com.example.chat.events.GroupInfoEvent;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
@@ -62,6 +61,7 @@ import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -317,8 +317,12 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                     case GroupInfoEvent.TYPE_GROUP_DESCRIPTION:
                         LogUtil.e("这里要做群描述的界面展示" + content);
                         break;
-                    case GroupInfoEvent.TYPE_GROUP_AVATRA:
+                    case GroupInfoEvent.TYPE_GROUP_AVATAR:
                         LogUtil.e("这里要做群头像的界面展示" + content);
+                        BaseApplication
+                                .getAppComponent()
+                                .getImageLoader().loadImage(ChatActivity.this,new GlideImageLoaderConfig
+                                .Builder().url(content).imageView(getIcon()).build());
                         break;
                     case GroupInfoEvent.TYPE_GROUP_NUMBER:
                         if (groupId != null) {
@@ -387,8 +391,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         if (from.equals(Constant.TYPE_GROUP)) {
             toolBarOption.setRightText("信息");
             toolBarOption.setRightListener(v ->
-//                    todo 明天开始
-                    GroupInfoActivity.start(ChatActivity.this, groupId, Constant.REQUEST_CODE_EDIT_GROUP_INFO));
+                    GroupInfoActivity.start(ChatActivity.this, groupId);
         }
         setToolBar(toolBarOption);
     }

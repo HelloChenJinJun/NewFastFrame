@@ -178,44 +178,30 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
         if (i == R.id.rl_edit_user_info_avatar) {
             PhotoSelectActivity.start(this,null,true,true,null);
         } else if (i == R.id.rl_edit_user_info_nick) {
-            intent.putExtra(Constant.FROM, Constant.NICK);
-            intent.putExtra(Constant.DATA, mUser.getNick());
-            intent.setClass(this, EditUserInfoDetailActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_CODE_NICK);
+            EditUserInfoDetailActivity.start(this,Constant.NICK
+                    ,mUser.getNick(),Constant.REQUEST_CODE_NICK);
         } else if (i == R.id.rl_edit_user_info_sex) {
-            intent.putExtra(Constant.FROM, Constant.GENDER);
-            intent.putExtra(Constant.DATA, mUser.isSex() ? "男" : "女");
-            intent.setClass(this, EditUserInfoDetailActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_CODE_SEX);
+            EditUserInfoDetailActivity.start(this,Constant.GENDER
+                    ,mUser.isSex() ? "男" : "女",Constant.REQUEST_CODE_SEX);
         } else if (i == R.id.rl_edit_user_info_birth) {
-            intent.putExtra(Constant.FROM, Constant.BIRTHDAY);
-            intent.putExtra(Constant.DATA, mUser.getBirthDay());
-            intent.setClass(this, EditUserInfoDetailActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_CODE_BIRTH);
 
+            EditUserInfoDetailActivity.start(this,Constant.BIRTHDAY
+                    ,mUser.getBirthDay(),Constant.REQUEST_CODE_BIRTH);
         } else if (i == R.id.rl_edit_user_info_phone) {
-            intent.putExtra(Constant.FROM, Constant.PHONE);
-            intent.putExtra(Constant.DATA, mUser.getMobilePhoneNumber());
-            intent.setClass(this, EditUserInfoDetailActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_CODE_PHONE);
-
+            EditUserInfoDetailActivity.start(this,Constant.PHONE
+                    ,mUser.getMobilePhoneNumber(),Constant.REQUEST_CODE_PHONE);
         } else if (i == R.id.rl_edit_user_info_email) {
-            intent.putExtra(Constant.FROM, Constant.EMAIL);
-            intent.putExtra(Constant.DATA, mUser.getEmail());
-            intent.setClass(this, EditUserInfoDetailActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_CODE_EMAIL);
 
+            EditUserInfoDetailActivity.start(this,Constant.EMAIL
+                    ,mUser.getEmail(),Constant.REQUEST_CODE_EMAIL);
         } else if (i == R.id.rl_edit_user_info_signature) {
-            intent.putExtra(Constant.FROM, Constant.SIGNATURE);
-            intent.putExtra(Constant.DATA, mUser.getSignature());
-            intent.setClass(this, EditUserInfoDetailActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_CODE_SIGNATURE);
 
+            EditUserInfoDetailActivity.start(this,Constant.SIGNATURE
+            ,mUser.getSignature(),Constant.REQUEST_CODE_SIGNATURE);
         } else if (i == R.id.rl_edit_user_info_address) {
-            intent.putExtra(Constant.FROM, Constant.ADDRESS);
-            intent.putExtra(Constant.DATA, mUser.getAddress());
-            intent.setClass(this, EditUserInfoDetailActivity.class);
-            startActivityForResult(intent, Constant.REQUEST_CODE_ADDRESS);
+            EditUserInfoDetailActivity.start(this,Constant.ADDRESS,mUser.getAddress()
+            ,Constant.REQUEST_CODE_ADDRESS);
+
         } else if (i == R.id.rl_edit_user_info_school) {
 
         } else if (i == R.id.rl_edit_user_info_college) {
@@ -250,7 +236,7 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
-                                    UserManager.getInstance().updateUserInfo("avatar", bmobFile.getFileUrl(), new UpdateListener() {
+                                    UserManager.getInstance().updateUserInfo(Constant.AVATAR, bmobFile.getFileUrl(), new UpdateListener() {
                                         @Override
                                         public void done(BmobException e) {
                                             dismissLoadDialog();

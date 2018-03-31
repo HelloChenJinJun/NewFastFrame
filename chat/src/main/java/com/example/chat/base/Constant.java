@@ -148,7 +148,7 @@ public class Constant {
     public static final int REQUEST_CODE_NICK = 55;
     public static final int REQUEST_CODE_EDIT_USER_INFO = 56;
     public static final int REQUEST_CODE_ADDRESS = 57;
-    public static final String GROUP_NOTIFICATION = "notification";
+    public static final String GROUP_NOTIFICATION = "groupNotification";
     public static final int REQUEST_CODE_EDIT_GROUP_INFO = 50;
     public static final int REQUEST_CODE_EDIT_GROUP_INFO_NICK = 60;
     public static final int REQUEST_CODE_EDIT_GROUP_INFO_DESCRIPTION = 61;
@@ -167,8 +167,8 @@ public class Constant {
     public static final String UPDATE_TIME = "update_time";
     public static final String UPDATE_TIME_SHARE = "update_time_share";
     public static final String UPDATE_TIME_COMMENT = "update_time_comment";
-    public static final String LOCATION = "LOCATION";
-    public static final String ADDRESS = "ADDRESS";
+    public static final String LOCATION = "location";
+    public static final String ADDRESS = "address";
     public static final String IS_EDIT = "IS_EDIT";
     public static final String EDIT_TYPE = "EDIT_TYPE";
     public static final int EDIT_TYPE_IMAGE = 1;
@@ -221,4 +221,14 @@ public class Constant {
     public static final String IS_ONE = "IS_ONE";
     public static final String IS_CROP = "IS_CROP";
     public static final String IS_BROWSE = "is_browse";
+    public static final int REQUEST_CODE_GROUP_NAME = 22;
+    public static final int REQUEST_CODE_GROUP_DESCRIPTION = 23;
+    public static final int REQUEST_CODE_GROUP_NOTIFICATION = 24;
+    public static final String GROUP_REMIND = "reMind";
+    public static final String FROM_CREATE_GROUP = "create_group";
+    public static final int REQUEST_CODE_ADD_GROUP_NUMBER = 12;
+    public static final int REQUEST_CODE_DELETE_GROUP_NUMBER=13;
+    public static final String FROM_GROUP_INFO = "group_info";
+    public static final String TITLE_WALLPAPER = "titleWallPaper";
+    public static final String WALLPAPER = "wallPaper";
 }

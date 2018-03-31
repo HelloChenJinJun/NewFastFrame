@@ -210,6 +210,9 @@ public class UserDBManager {
     }
 
     public UserEntity getUser(String id) {
+        if (id.equals(UserManager.getInstance().getCurrentUserObjectId())){
+            return UserManager.getInstance().cover(UserManager.getInstance().getCurrentUser());
+        }
         List<UserEntity> list = daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
                 .Uid.eq(id)).build().list();
         return list.size() == 0 ? null : list.get(0);

@@ -12,7 +12,7 @@ import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.NotifyPostResult;
 import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
-import com.example.chat.events.GroupInfoEvent;
+import com.example.chat.events.GroupTableEvent;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.RecentEvent;
 import com.example.chat.events.RefreshMenuEvent;
@@ -130,7 +130,8 @@ public class GroupMessageService extends Service {
                                                                 UserDBManager.getInstance().deleteGroupTableMessage(groupTableMessage.getGroupId());
                                                                 RxBusManager.getInstance().post(new RecentEvent(groupTableMessage.getGroupId(),RecentEvent.ACTION_DELETE));
                                                                 RxBusManager.getInstance().post(new RefreshMenuEvent(0));
-                                                                RxBusManager.getInstance().post(new GroupInfoEvent(groupTableMessage.getGroupId(),GroupInfoEvent.TYPE_GROUP_NUMBER));
+                                                                RxBusManager.getInstance().post(new GroupTableEvent(groupTableMessage.getGroupId()
+                                                                        ,GroupTableEvent.TYPE_GROUP_NUMBER,GroupTableEvent.ACTION_DELETE,UserManager.getInstance().getCurrentUserObjectId()));
                                                                 return;
                                                         }
                                                         UserDBManager
@@ -164,11 +165,6 @@ public class GroupMessageService extends Service {
                                                         User user = MsgManager.getInstance().createUserFromJsonObject(object);
                                                         UserDBManager.getInstance()
                                                                 .addOrUpdateUser(user);
-                                                } else if (JsonUtil.getInt(object, "visibleType") != 0) {
-                                                        LogUtil.e("监听到分享消息");
-                                                        LogUtil.e("监听到说说数据更新操作");
-                                                        SharedMessage sharedMessage = MsgManager.getInstance().createSharedMessageFromJson(object);
-
                                                 }else {
 //                                                        监听到公共说说
                                                         String author=JsonUtil.getString(object,"author");
@@ -181,30 +177,6 @@ public class GroupMessageService extends Service {
                                                                         RxBusManager.getInstance().post(result);
                                                                 }
                                                         }
-//                                                        try {
-//
-//
-//                                                                        String result=jsonObject.toString();
-//                                                                result.replace("\\","");
-//                                                                if (!TextUtils.isEmpty(JsonUtil.getString(object, "content"))) {
-//                                                                        String content=JsonUtil.getString(object,"content");
-//                                                                        NotifyPostResult.DataBean.NewDataBean bean=
-//                                                                                BaseApplication.getAppComponent()
-//                                                                                        .getGson().fromJson(content,NotifyPostResult.DataBean.NewDataBean.class);
-//
-//                                                                }
-//                                                                NotifyPostResult notifyPostResult= BaseApplication.getAppComponent()
-//                                                                         .getGson().fromJson(jsonObject.toString().replace("\\",""), NotifyPostResult.class);
-//                                                                CommonLogger.e("解析成功");
-//                                                                if (!notifyPostResult.getData().getAuthor().contains("type")) {
-////                                                                        新添加的说说
-//                                                                        RxBusManager.getInstance().post(notifyPostResult);
-//                                                                }
-//                                                        } catch (JsonSyntaxException e) {
-//                                                                e.printStackTrace();
-//                                                                CommonLogger.e("解析失败"+e.getMessage());
-//                                                                ToastUtils.showShortToast("解析失败");
-//                                                        }
                                                 }
                                         } catch (JSONException e) {
                                                 e.printStackTrace();

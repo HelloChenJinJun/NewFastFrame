@@ -29,7 +29,9 @@ public class FriendsModule {
 
     @Provides
     public FriendsAdapter providerAdapter(){
-        return new FriendsAdapter();
+        FriendsAdapter friendsAdapter=new FriendsAdapter();
+        friendsAdapter.setHasSelected(false);
+        return friendsAdapter;
     }
 
 

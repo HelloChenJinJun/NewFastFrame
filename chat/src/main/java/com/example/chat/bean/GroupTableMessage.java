@@ -56,6 +56,18 @@ public class GroupTableMessage extends BmobObject {
 
         private String notification;
 
+//        消息通知提醒
+        private Boolean isRemind;
+
+
+        public Boolean getRemind() {
+                return isRemind;
+        }
+
+        public void setRemind(Boolean remind) {
+                isRemind = remind;
+        }
+
         public String getNotification() {
                 return notification;
         }
