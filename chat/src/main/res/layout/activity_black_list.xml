@@ -5,7 +5,7 @@
               android:fitsSystemWindows="true"
               android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView android:id="@+id/rcv_black_list_display"
+    <com.example.commonlibrary.baseadapter.SuperRecyclerView android:id="@+id/srcv_black_list_display"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"/>
 

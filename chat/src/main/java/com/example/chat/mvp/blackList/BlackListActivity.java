@@ -11,9 +11,13 @@ import com.example.chat.R;
 import com.example.chat.adapter.BlackAdapter;
 import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.bean.User;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.UserInfoTask.UserInfoActivity;
+import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 
@@ -26,7 +30,7 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
  */
 
 public class BlackListActivity extends SlideBaseActivity {
-        private RecyclerView display;
+        private SuperRecyclerView display;
         private BlackAdapter mBlackAdapter;
 
 
@@ -49,28 +53,24 @@ public class BlackListActivity extends SlideBaseActivity {
 
         @Override
         public void initView() {
-                display = (RecyclerView) findViewById(R.id.rcv_black_list_display);
+                display = (SuperRecyclerView) findViewById(R.id.srcv_black_list_display);
         }
 
 
         @Override
         public void initData() {
-                display.setLayoutManager(new LinearLayoutManager(this));
-                display.setHasFixedSize(true);
-                display.setItemAnimator(new DefaultItemAnimator());
+                display.setLayoutManager(new WrappedLinearLayoutManager(this));
                 display.addItemDecoration(new ListViewDecoration(this));
                 mBlackAdapter = new BlackAdapter();
                 mBlackAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
                         @Override
                         public void onItemClick(int position, View view) {
-                                User user = mBlackAdapter.getData(position);
-                                Intent intent = new Intent(BlackListActivity.this, UserInfoActivity.class);
-                                intent.putExtra("uid", user.getObjectId());
-                                startActivity(intent);
+                                UserEntity user = mBlackAdapter.getData(position);
+                               UserInfoActivity.start(BlackListActivity.this,user.getUid());
                         }
                 });
                 display.setAdapter(mBlackAdapter);
-                mBlackAdapter.addData(UserCacheManager.getInstance().getAllBlackUser());
+                mBlackAdapter.addData(UserDBManager.getInstance().getAllAddBlack());
                 initActionBar();
         }
 

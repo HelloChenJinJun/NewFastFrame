@@ -12,9 +12,11 @@ import com.example.chat.R;
 import com.example.chat.base.Constant;
 import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.bean.User;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
 import com.example.chat.util.SystemUtil;
+import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -43,7 +45,7 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
             emailLayout, signatureLayout, addressLayout, schoolContainer, collegeContainer, majorContainer, educationContainer, yearContainer, classContainer, nameContainer;
     private RoundAngleImageView avatar;
     private TextView nick, sex, birth, phone, email, signature, address, school, college, major, education, year, className, name;
-    private User mUser;
+    private UserEntity mUser;
 
 
     @Override
@@ -113,10 +115,18 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
     }
 
 
+
+    public static  void start(Activity activity,String uid){
+        Intent intent=new Intent(activity,EditUserInfoActivity.class);
+        intent.putExtra(Constant.ID,uid);
+        activity.startActivity(intent);
+    }
+
+
     @Override
     public void initData() {
-        mUser = (User) getIntent().getSerializableExtra(Constant.USER);
-        if (!mUser.getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+        mUser = UserDBManager.getInstance().getUser(getIntent().getStringExtra(Constant.ID));
+        if (!mUser.getUid().equals(UserManager.getInstance().getCurrentUserObjectId())) {
             sexLayout.setEnabled(false);
             avatarLayout.setEnabled(false);
             nickLayout.setEnabled(false);

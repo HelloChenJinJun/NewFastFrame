@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.NotifyPostResult;
-import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
 import com.example.chat.events.GroupTableEvent;
 import com.example.chat.events.MessageInfoEvent;

@@ -220,7 +220,6 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
             switch (requestCode){
                 case Constant.REQUEST_CODE_ADD_GROUP_NUMBER:
                     ArrayList<String>  list= (ArrayList<String>) data.getSerializableExtra(Constant.DATA);
-                    //todo 2018 3 31 这里要做
                     break;
                 case Constant.REQUEST_CODE_DELETE_GROUP_NUMBER:
                     break;

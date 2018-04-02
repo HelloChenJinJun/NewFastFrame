@@ -492,7 +492,6 @@ public class UserManager {
                 break;
             case Constant.NICK:
                 user.setNick(content);
-                user.setSortedKey(CommonUtils.getSortedKey(content));
                 break;
             case Constant.AVATAR:
                 user.setAvatar(content);

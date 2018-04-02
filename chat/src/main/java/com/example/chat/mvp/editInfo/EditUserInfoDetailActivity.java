@@ -21,6 +21,7 @@ import com.example.chat.util.TimeUtil;
 import com.example.chat.view.AutoEditText;
 import com.example.chat.view.CustomDatePickerDialog;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.Calendar;
@@ -201,7 +202,7 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                                                 LogUtil.e("输入的手机号码格式不对，请重新输入");
                                                                 return;
                                                         }
-                                                        if (from.equals("email") && !CommonUtils.isEmail(content)) {
+                                                        if (from.equals("email") && !AppUtil.isEmail(content)) {
                                                                 LogUtil.e("输入的邮箱号码格式不对，请重新输入");
                                                                 return;
                                                         }

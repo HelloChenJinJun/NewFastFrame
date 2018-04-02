@@ -31,6 +31,7 @@ import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.LoginEvent;
+import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
@@ -111,7 +112,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
     public void onClick(View view) {
         int i = view.getId();
         if (i == R.id.btn_login_confirm) {
-            boolean isNetConnected = CommonUtils.isNetWorkAvailable(this);
+            boolean isNetConnected =AppUtil.isNetworkAvailable();
             if (!isNetConnected) {
                 ToastUtils.showShortToast(getString(R.string.network_tip));
             } else {
@@ -144,7 +145,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
             ToastUtils.showShortToast(getString(R.string.password_null));
             return;
         }
-        if (!CommonUtils.isNetWorkAvailable(this)) {
+        if (!AppUtil.isNetworkAvailable()) {
             ToastUtils.showShortToast(getString(R.string.network_tip));
             return;
         }

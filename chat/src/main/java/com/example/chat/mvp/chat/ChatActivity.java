@@ -50,6 +50,7 @@ import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.FaceTextUtil;
+import com.example.chat.util.FileUtil;
 import com.example.chat.util.LogUtil;
 import com.example.chat.util.SystemUtil;
 import com.example.commonlibrary.BaseApplication;
@@ -301,42 +302,42 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
 
 
         if (from.equals(Constant.TYPE_GROUP)) {
-            addDisposable(RxBusManager.getInstance().registerEvent(GroupInfoEvent.class, groupInfoEvent -> {
-                //                                刷新过来的，更新下群结构消息
-                groupTableEntity = UserDBManager.getInstance().getGroupTableEntity(groupId);
-                int type = groupInfoEvent.getType();
-                String content = groupInfoEvent.getContent();
-                switch (type) {
-                    case GroupInfoEvent.TYPE_GROUP_NAME:
-                        String title = groupTableEntity.getGroupName() + "(" + groupTableEntity.getGroupNumber().size() + ")";
-                        updateTitle(title);
-                        break;
-                    case GroupInfoEvent.TYPE_GROUP_NOTIFICATION:
-                        LogUtil.e("这里要做群通知的界面展示" + content);
-                        break;
-                    case GroupInfoEvent.TYPE_GROUP_DESCRIPTION:
-                        LogUtil.e("这里要做群描述的界面展示" + content);
-                        break;
-                    case GroupInfoEvent.TYPE_GROUP_AVATAR:
-                        LogUtil.e("这里要做群头像的界面展示" + content);
-                        BaseApplication
-                                .getAppComponent()
-                                .getImageLoader().loadImage(ChatActivity.this,new GlideImageLoaderConfig
-                                .Builder().url(content).imageView(getIcon()).build());
-                        break;
-                    case GroupInfoEvent.TYPE_GROUP_NUMBER:
-                        if (groupId != null) {
-                            LogUtil.e("这里通知成员的变化" + content);
-                            if (content.equals(groupId)) {
-                                Toast.makeText(ChatActivity.this, "你已经被提出该群", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }));
+//            addDisposable(RxBusManager.getInstance().registerEvent(GroupInfoEvent.class, groupInfoEvent -> {
+//                //                                刷新过来的，更新下群结构消息
+//                groupTableEntity = UserDBManager.getInstance().getGroupTableEntity(groupId);
+//                int type = groupInfoEvent.getType();
+//                String content = groupInfoEvent.getContent();
+//                switch (type) {
+//                    case GroupInfoEvent.TYPE_GROUP_NAME:
+//                        String title = groupTableEntity.getGroupName() + "(" + groupTableEntity.getGroupNumber().size() + ")";
+//                        updateTitle(title);
+//                        break;
+//                    case GroupInfoEvent.TYPE_GROUP_NOTIFICATION:
+//                        LogUtil.e("这里要做群通知的界面展示" + content);
+//                        break;
+//                    case GroupInfoEvent.TYPE_GROUP_DESCRIPTION:
+//                        LogUtil.e("这里要做群描述的界面展示" + content);
+//                        break;
+//                    case GroupInfoEvent.TYPE_GROUP_AVATAR:
+//                        LogUtil.e("这里要做群头像的界面展示" + content);
+//                        BaseApplication
+//                                .getAppComponent()
+//                                .getImageLoader().loadImage(ChatActivity.this,new GlideImageLoaderConfig
+//                                .Builder().url(content).imageView(getIcon()).build());
+//                        break;
+//                    case GroupInfoEvent.TYPE_GROUP_NUMBER:
+//                        if (groupId != null) {
+//                            LogUtil.e("这里通知成员的变化" + content);
+//                            if (content.equals(groupId)) {
+//                                Toast.makeText(ChatActivity.this, "你已经被提出该群", Toast.LENGTH_SHORT).show();
+//                                finish();
+//                            }
+//                        }
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }));
         }
     }
 
@@ -391,7 +392,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         if (from.equals(Constant.TYPE_GROUP)) {
             toolBarOption.setRightText("信息");
             toolBarOption.setRightListener(v ->
-                    GroupInfoActivity.start(ChatActivity.this, groupId);
+                    GroupInfoActivity.start(ChatActivity.this, groupId));
         }
         setToolBar(toolBarOption);
     }
@@ -710,7 +711,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (!CommonUtils.isSupportSdcard()) {
+                if (!FileUtil.isExistSDCard()) {
                     ToastUtils.showShortToast("需要SD卡支持!");
                     return false;
                 }

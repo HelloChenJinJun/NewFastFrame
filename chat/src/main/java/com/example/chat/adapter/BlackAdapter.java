@@ -5,6 +5,7 @@ import com.example.chat.R;
 import com.example.chat.bean.User;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
+import com.example.commonlibrary.bean.chat.UserEntity;
 
 /**
  * 项目名称:    TestChat
@@ -13,7 +14,7 @@ import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
  * QQ:             1981367757
  */
 
-public class BlackAdapter extends BaseRecyclerAdapter<User, BaseWrappedViewHolder> {
+public class BlackAdapter extends BaseRecyclerAdapter<UserEntity, BaseWrappedViewHolder> {
 
 
         @Override
@@ -22,7 +23,7 @@ public class BlackAdapter extends BaseRecyclerAdapter<User, BaseWrappedViewHolde
         }
 
         @Override
-        protected void convert(BaseWrappedViewHolder holder, User data) {
+        protected void convert(BaseWrappedViewHolder holder, UserEntity data) {
                 holder.setText(R.id.tv_black_list_item_nick, data.getNick())
                         .setImageUrl(R.id.riv_black_list_item_avatar, data.getAvatar());
         }

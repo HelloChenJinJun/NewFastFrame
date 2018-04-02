@@ -28,11 +28,6 @@ import okhttp3.Request;
  * QQ:             1981367757
  */
 
-/**
- * 下载管理器
- * 内部采用异步线程AsyncTask下载
- */
-
 public class DownLoadManager {
         private static final Object LOCK = new Object();
         private static DownLoadManager instance = null;

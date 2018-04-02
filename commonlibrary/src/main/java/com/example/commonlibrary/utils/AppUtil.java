@@ -14,6 +14,8 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 方法工具类
@@ -119,4 +121,21 @@ public class AppUtil {
         }
     }
 
+    /**
+     * 邮箱格式是否正确
+     *
+     * @param email
+     * @return
+     */
+    public static boolean isEmail(String email) {
+        if (TextUtils.isEmpty(email))
+            return false;
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+
+    }
 }

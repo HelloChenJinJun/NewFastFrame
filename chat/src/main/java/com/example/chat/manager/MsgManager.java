@@ -9,28 +9,18 @@ import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.MessageContent;
 import com.example.chat.bean.post.PublicPostBean;
-import com.example.chat.bean.RecentMsg;
-import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.ReplyCommentListBean;
 import com.example.chat.bean.post.ShareTypeContent;
 import com.example.chat.listener.AddFriendCallBackListener;
-import com.example.chat.listener.AddShareMessageCallBack;
-import com.example.chat.listener.DealCommentMsgCallBack;
-import com.example.chat.listener.DealMessageCallBack;
-import com.example.chat.listener.DealUserInfoCallBack;
-import com.example.chat.listener.LoadShareMessageCallBack;
 import com.example.chat.listener.OnCreateChatMessageListener;
 import com.example.chat.listener.OnCreateGroupTableListener;
 import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.chat.listener.OnReceiveListener;
-import com.example.chat.listener.OnSendMessageListener;
 import com.example.chat.listener.OnSendPushMessageListener;
 import com.example.chat.listener.OnSendTagMessageListener;
-import com.example.chat.listener.SendFileListener;
-import com.example.chat.util.CommonUtils;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
 import com.example.chat.util.SystemUtil;
@@ -45,7 +35,6 @@ import com.example.commonlibrary.bean.chat.PublicPostEntityDao;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
 import com.example.commonlibrary.bean.music.DaoSession;
-import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.google.gson.Gson;
 
@@ -53,7 +42,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,7 +57,6 @@ import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.DeleteBatchListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.PushListener;
 import cn.bmob.v3.listener.QueryListListener;
@@ -77,7 +64,6 @@ import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadBatchListener;
-import cn.bmob.v3.listener.UploadFileListener;
 import rx.Subscription;
 
 /**
@@ -1631,6 +1617,11 @@ public class MsgManager {
         groupTableMessage.getGroupNumber().remove(uid);
         groupTableMessage.update(updateListener);
 
+    }
+
+    public GroupTableMessage cover(GroupTableEntity
+                                   entity) {
+        return null;
     }
 }
 

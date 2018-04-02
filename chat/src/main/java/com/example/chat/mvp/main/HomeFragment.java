@@ -231,8 +231,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
             }
         }));
         addDisposable(RxBusManager.getInstance().registerEvent(LocationEvent.class, locationEvent -> {
-            if (mWeatherInfoBean.getCity() != null && !mWeatherInfoBean
-                    .getCity().equals(locationEvent.getCity())) {
+            if (!locationEvent.getCity().equals(mWeatherInfoBean.getCity())) {
                 startSearchLiveWeather(locationEvent.getCity());
             }
         }));

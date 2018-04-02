@@ -443,4 +443,18 @@ public class UserDBManager {
         }
 
     }
+
+    public List<UserEntity> getAllAddBlack() {
+        return daoSession.getUserEntityDao().queryBuilder()
+                .where(UserEntityDao.Properties.IsBlack.eq(Boolean.TRUE)
+                ,UserEntityDao.Properties.BlackType.eq(UserEntity.BLACK_TYPE_ADD))
+                .build().list();
+    }
+
+    public List<GroupTableEntity> getAllGroupTableMessage() {
+        List<GroupTableEntity >  list=daoSession
+                .getGroupTableEntityDao().queryBuilder()
+                .build().list();
+        return list;
+    }
 }

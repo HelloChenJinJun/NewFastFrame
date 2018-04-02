@@ -63,59 +63,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".mvp.login.LoginActivity"
-            android:exported="true" />
-        <activity
-            android:name=".mvp.main.MainActivity"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".mvp.main.HomeActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".mvp.register.RegisterActivity" />
-        <activity android:name=".mvp.searchFriend.SearchFriendActivity" />
-        <activity android:name=".mvp.UserInfoTask.UserInfoActivity" />
-        <activity android:name=".mvp.chat.ChatActivity" />
-        <activity android:name=".ui.ImageDisplayActivity" />
-        <activity android:name=".mvp.map.MapActivity" />
-        <activity android:name=".mvp.UserDetail.UserDetailActivity" />
-        <activity android:name=".ui.BasePreViewActivity" />
-        <activity android:name=".ui.SelectedPictureActivity" />
-        <activity
-            android:name=".ui.EditShareMessageActivity"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".mvp.selectFriend.SelectedFriendsActivity" />
-        <activity android:name=".mvp.search.SearchActivity" />
-        <activity android:name=".mvp.editInfo.EditUserInfoDetailActivity" />
-        <activity android:name=".mvp.editInfo.EditUserInfoActivity" />
-        <activity android:name=".mvp.group.groupInfo.GroupInfoActivity" />
-        <activity android:name=".mvp.group.groupInfo.GroupNumberInfoDetailActivity" />
-        <activity android:name=".mvp.group.groupInfo.GroupNumberDisplayActivity" />
-        <activity android:name=".mvp.settings.SettingsActivity" />
-        <activity android:name=".ui.WeiXinNewsActivity" />
-        <activity android:name=".ui.HappyActivity" />
-        <activity android:name=".mvp.group.groupList.GroupListActivity" />
-        <activity android:name=".mvp.blackList.BlackListActivity" />
-        <activity android:name=".mvp.weather.WeatherInfoActivity" />
-        <activity android:name=".mvp.NearByPeopleTask.NearbyPeopleActivity" />
-        <activity android:name=".ui.HappyContentDisplayActivity" />
-        <activity android:name=".mvp.wallpaper.WallPaperActivity" />
-
-
-        <!--小视频界面-->
-        <activity android:name="mabeijianxi.camera.MediaRecorderActivity" />
-        <activity android:name=".ui.VideoPlayActivity" />
-        <activity android:name=".mvp.commentlist.CommentListActivity" />
-        <activity android:name=".mvp.commentdetail.CommentListDetailActivity" />
+        <activity android:name=".mvp.login.LoginActivity"
+            android:exported="true"/>
+        <activity android:name=".mvp.main.HomeActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.register.RegisterActivity"/>
+        <activity android:name=".mvp.searchFriend.SearchFriendActivity"/>
+        <activity android:name=".mvp.chat.ChatActivity"/>
+        <activity android:name=".mvp.map.MapActivity"/>
+        <activity android:name=".mvp.selectFriend.SelectedFriendsActivity"/>
+        <activity android:name=".mvp.search.SearchActivity"/>
+        <activity android:name=".mvp.editInfo.EditUserInfoDetailActivity"/>
+        <activity android:name=".mvp.editInfo.EditUserInfoActivity"/>
+        <activity android:name=".mvp.group.groupInfo.GroupInfoActivity"/>
+        <activity android:name=".mvp.settings.SettingsActivity"/>
+        <activity android:name=".mvp.group.groupList.GroupListActivity"/>
+        <activity android:name=".mvp.blackList.BlackListActivity"/>
+        <activity android:name=".mvp.weather.WeatherInfoActivity"/>
+        <activity android:name=".mvp.wallpaper.WallPaperActivity"/>
         <activity android:name=".mvp.account.AccountManageActivity"/>
         <activity android:name=".mvp.account.password.PasswordChangeActivity"/>
         <activity android:name=".mvp.notify.SystemNotifyActivity"/>
+        <activity android:name=".mvp.commentlist.CommentListActivity" />
+        <activity android:name=".mvp.commentdetail.CommentListDetailActivity" />
+        <activity android:name=".mvp.nearbyList.NearbyListActivity"/>
+        <activity android:name=".mvp.adressList.AddressListActivity"/>
+        <activity android:name=".mvp.UserDetail.UserDetailActivity"/>
+        <activity android:name=".mvp.NearByPeopleTask.NearbyPeopleActivity"/>
+        <activity android:name=".mvp.UserInfoTask.UserInfoActivity"/>
         <!--高德地图API_KEY-->
         <meta-data
             android:name="com.amap.api.v2.apikey"

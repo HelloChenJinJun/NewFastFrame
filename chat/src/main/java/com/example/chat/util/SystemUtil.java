@@ -338,7 +338,7 @@ public class SystemUtil {
     private static final String CROP_NAME = "crop.jpg";
 
     public static Uri buildUri(Activity activity) {
-        if (CommonUtils.isSupportSdcard()) {
+        if (FileUtil.isExistSDCard()) {
             return Uri.fromFile(Environment.getExternalStorageDirectory()).buildUpon().appendPath(CROP_NAME).build();
         } else {
             return Uri.fromFile(activity.getCacheDir()).buildUpon().appendPath(CROP_NAME).build();

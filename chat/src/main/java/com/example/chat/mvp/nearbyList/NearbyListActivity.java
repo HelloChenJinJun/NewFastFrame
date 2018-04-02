@@ -10,6 +10,7 @@ import com.example.chat.R;
 import com.example.chat.adapter.NearbyListAdapter;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.NearbyListBean;
+import com.example.chat.dagger.nearbyList.DaggerNearbyListComponent;
 import com.example.chat.dagger.nearbyList.NearbyListModule;
 import com.example.chat.events.LocationEvent;
 import com.example.chat.manager.NewLocationManager;
@@ -78,7 +79,7 @@ public class NearbyListActivity extends SlideBaseActivity<List<NearbyListBean>, 
 
     @Override
     protected void initData() {
-        DaggerNearbyListComponent.builder().mainComponent(getChatMainComponent())
+        DaggerNearbyListComponent.builder().chatMainComponent(getChatMainComponent())
                 .nearbyListModule(new NearbyListModule(this)).build().inject(this);
         display.setLayoutManager(new WrappedLinearLayoutManager(this));
         display.addItemDecoration(new ListViewDecoration(this));

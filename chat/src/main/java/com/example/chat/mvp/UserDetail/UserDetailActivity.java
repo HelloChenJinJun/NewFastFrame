@@ -8,13 +8,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.chat.R;
+import com.example.chat.base.Constant;
 import com.example.chat.bean.User;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.editInfo.EditUserInfoActivity;
 import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.mvp.editInfo.EditUserInfoDetailActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
+import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -42,7 +46,7 @@ public class UserDetailActivity extends SlideBaseActivity implements View.OnClic
     private TextView name,signature,follow,fans,visit,sexContent,school,major;
     private ImageView sex;
     private WrappedViewPager display;
-    private User user;
+    private UserEntity user;
     @Override
     public void updateData(Object object) {
         
@@ -89,51 +93,14 @@ public class UserDetailActivity extends SlideBaseActivity implements View.OnClic
 
     @Override
     protected void initData() {
-        String uid=getIntent().getStringExtra("uid");
-        if (uid.equals(UserManager.getInstance().getCurrentUserObjectId())) {
-            user=UserManager.getInstance().getCurrentUser();
-           Disposable disposable=RxBusManager.getInstance().registerEvent(User.class
-                    , new Consumer<User>() {
-                        @Override
-                        public void accept(User user) throws Exception {
-                            UserDetailActivity.this.user = user;
-                            updateUserInfo();
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-
-                        }
-                    });
-           addDisposable(disposable);
-        }else {
-            user=UserCacheManager.getInstance().getUser(uid);
-        }
-        if (user == null) {
-           Subscription subscription= UserManager.getInstance().findUserById(uid, new FindListener<User>() {
-                @Override
-                public void done(List<User> list, BmobException e) {
-                    if (e == null) {
-                        if (list != null && list.size() > 0) {
-                            user=list.get(0);
-                            updateUserInfo();
-                        }
-                    }else {
-                        ToastUtils.showShortToast("查询用户失败"+e.toString());
-                    }
-                }
-            });
-           addSubscription(subscription);
-        }else {
-            updateUserInfo();
-        }
+        String uid=getIntent().getStringExtra(Constant.ID);
+        user= UserDBManager.getInstance().getUser(uid);
+        updateUserInfo();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         List<String> titleList=new ArrayList<>();
         titleList.add("公共说说");
-        titleList.add("私人说说");
         List<BaseFragment> fragments=new ArrayList<>();
-        fragments.add(ShareInfoFragment.instance(user));
-        fragments.add(PersonPostFragment.newInstance(user));
+        fragments.add(ShareInfoFragment.instance(UserManager.getInstance().cover(user)));
         adapter.setTitleAndFragments(titleList,fragments);
         display.setAdapter(adapter);
         display.setCurrentItem(0);
@@ -162,7 +129,7 @@ public class UserDetailActivity extends SlideBaseActivity implements View.OnClic
 
     public static void start(Activity activity, String uid) {
         Intent intent=new Intent(activity,UserDetailActivity.class);
-        intent.putExtra("uid",uid);
+        intent.putExtra(Constant.ID,uid);
         activity.startActivity(intent);
     }
 
@@ -170,9 +137,7 @@ public class UserDetailActivity extends SlideBaseActivity implements View.OnClic
     public void onClick(View v) {
         int id=v.getId();
         if (id==R.id.tv_view_activity_user_detail_header_look){
-            Intent intent=new Intent(this,EditUserInfoActivity.class);
-            intent.putExtra("user",user);
-            startActivity(intent);
+            EditUserInfoActivity.start(this,user.getUid());
         }
     }
 }

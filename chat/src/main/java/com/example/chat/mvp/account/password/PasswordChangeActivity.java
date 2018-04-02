@@ -15,6 +15,7 @@ import com.example.chat.util.CommonUtils;
 import com.example.chat.view.AutoEditText;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.event.PwChangeEvent;
+import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 /**
@@ -103,7 +104,7 @@ public class PasswordChangeActivity extends SlideBaseActivity<Object,PasswordCha
             ToastUtils.showShortToast(getString(R.string.register_password_error));
             return;
         }
-        if (!CommonUtils.isNetWorkAvailable(this)) {
+        if (!AppUtil.isNetworkAvailable()) {
             ToastUtils.showShortToast(getString(R.string.network_tip));
             return;
         }

@@ -1,5 +1,7 @@
 package com.example.chat.bean;
 
+import com.example.commonlibrary.utils.AppUtil;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.datatype.BmobRelation;
@@ -50,7 +52,6 @@ public class User extends BmobUser implements Comparable<User> {
         //        设备类型
         private String deviceType;
 
-        private String sortedKey;
         private String birthDay;
         private String titleWallPaper;
         private String wallPaper;
@@ -206,13 +207,7 @@ public class User extends BmobUser implements Comparable<User> {
                 this.birthDay = birthDay;
         }
 
-        public String getSortedKey() {
-                return sortedKey;
-        }
 
-        public void setSortedKey(String sortedKey) {
-                this.sortedKey = sortedKey;
-        }
 
         public String getNick() {
                 return nick;
@@ -258,7 +253,7 @@ public class User extends BmobUser implements Comparable<User> {
 
         @Override
         public int compareTo(User another) {
-                return getSortedKey().compareTo(another.getSortedKey());
+                return AppUtil.getSortedKey(getName()).compareTo(AppUtil.getSortedKey(another.getName()));
         }
 
 

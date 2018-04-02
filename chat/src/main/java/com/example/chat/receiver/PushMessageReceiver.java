@@ -12,7 +12,6 @@ import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.OffLineEvent;
-import com.example.chat.listener.OnMessageReceiveListener;
 import com.example.chat.listener.OnReceiveListener;
 import com.example.chat.manager.ChatNotificationManager;
 import com.example.chat.manager.MsgManager;

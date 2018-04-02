@@ -14,10 +14,7 @@ import com.example.chat.R;
 import com.example.chat.adapter.FriendsAdapter;
 import com.example.chat.base.Constant;
 import com.example.chat.base.SlideBaseActivity;
-import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.events.RecentEvent;
-import com.example.chat.listener.OnCreateGroupTableListener;
-import com.example.chat.listener.OnEditDataCompletedListener;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.view.IndexView;
@@ -33,7 +30,6 @@ import com.example.commonlibrary.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.exception.BmobException;
 
 
 /**

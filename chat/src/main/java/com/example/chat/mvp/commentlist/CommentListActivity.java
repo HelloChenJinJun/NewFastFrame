@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.CommentListAdapter;
+import com.example.chat.adapter.EmotionViewAdapter;
 import com.example.chat.adapter.holder.publicShare.ImageShareInfoHolder;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.FaceText;
@@ -47,6 +48,7 @@ import com.example.chat.events.CommentEvent;
 import com.example.chat.events.LocationEvent;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.EditShare.EditShareInfoActivity;
+import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.mvp.commentdetail.CommentListDetailActivity;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.base.SlideBaseActivity;
@@ -172,27 +174,23 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
 
     private View getGridView(int i) {
         View emotionView = LayoutInflater.from(this).inflate(R.layout.view_activity_chat_emotion, null);
-        GridView gridView = emotionView.findViewById(R.id.gv_display);
-        if (i == 0) {
-            gridView.setAdapter(gridViewAdapter = new GridViewAdapter(this, emotionFaceList.subList(0, 21)));
-            gridView.setTag(gridViewAdapter);
-        } else {
-            gridView.setAdapter(mGridViewAdapter = new GridViewAdapter(this, emotionFaceList.subList(21, emotionFaceList.size())));
-            gridView.setTag(mGridViewAdapter);
-        }
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        SuperRecyclerView superRecyclerView = emotionView.findViewById(R.id.srcv_view_activity_chat_emotion_display);
+        superRecyclerView.setLayoutManager(new WrappedGridLayoutManager(this,7));
+        EmotionViewAdapter emotionViewAdapter = new EmotionViewAdapter();
+        superRecyclerView.setAdapter(emotionViewAdapter);
+        emotionViewAdapter.addData(i == 0 ? emotionFaceList.subList(0, 21) : emotionFaceList.subList(21, emotionFaceList.size()));
+        emotionViewAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GridViewAdapter gridViewAdapter = (GridViewAdapter) parent.getTag();
-                FaceText faceText = (FaceText) gridViewAdapter.getItem(position);
+            public void onItemClick(int position, View view) {
+                FaceText faceText= emotionViewAdapter.getData(position);
                 String content = faceText.getText();
                 if (input != null) {
                     int startIndex = input.getSelectionStart();
                     CharSequence content1 = input.getText().insert(startIndex, content);
-                    input.setText(FaceTextUtil.toSpannableString(BaseApplication.getInstance(), content1.toString()));
+                    input.setText(FaceTextUtil.toSpannableString(CommentListActivity.this.getApplicationContext(), content1.toString()));
 //                                        重新定位光标位置
                     CharSequence info = input.getText();
-                    if (info instanceof Spannable) {
+                    if (info != null) {
                         Spannable spannable = (Spannable) info;
                         Selection.setSelection(spannable, startIndex + content.length());
                     }

@@ -6,8 +6,6 @@ import com.example.chat.base.Constant;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
-import com.example.chat.bean.RecentMsg;
-import com.example.chat.bean.SharedMessage;
 import com.example.chat.bean.User;
 
 /**

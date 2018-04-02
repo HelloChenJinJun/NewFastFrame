@@ -20,6 +20,7 @@ import com.example.chat.util.LogUtil;
 import com.example.chat.view.AutoEditText;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import cn.bmob.v3.exception.BmobException;
@@ -82,7 +83,7 @@ public class RegisterActivity extends BaseActivity {
                                         ToastUtils.showShortToast(getString(R.string.register_password_error));
                                         return;
                                 }
-                                if (!CommonUtils.isNetWorkAvailable(RegisterActivity.this)) {
+                                if (!AppUtil.isNetworkAvailable()) {
                                         ToastUtils.showShortToast(getString(R.string.network_tip));
                                         return;
                                 }
@@ -98,7 +99,6 @@ public class RegisterActivity extends BaseActivity {
                                 user.setNick(RandomData.getRandomNick());
                                 user.setAvatar(RandomData.getRandomAvatar());
                                 LogUtil.e("用户的头像信息:" + user.getAvatar());
-                                user.setSortedKey(CommonUtils.getSortedKey(user.getNick()));
                                 user.setUsername(name.getText().toString().trim());
                                 user.setPassword(passWord.getText().toString().trim());
                                 user.setTitleWallPaper(RandomData.getRandomTitleWallPaper());
@@ -130,12 +130,9 @@ public class RegisterActivity extends BaseActivity {
 
         @Override
         public void initData() {
-                new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                                Animation animation = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.translate_anim);
-                                bg.startAnimation(animation);
-                        }
+                new Handler().postDelayed(() -> {
+                        Animation animation = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.translate_anim);
+                        bg.startAnimation(animation);
                 }, 200);
                 ToolBarOption toolBarOption = new ToolBarOption();
                 toolBarOption.setTitle("注册");

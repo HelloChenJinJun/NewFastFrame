@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.example.chat.R;
 import com.example.chat.adapter.WallPaperAdapter;
+import com.example.chat.base.Constant;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.base.SlideBaseActivity;
@@ -146,7 +147,7 @@ public class WallPaperActivity extends SlideBaseActivity {
                     }
                 } else {
                     if (selectedImage != null && !selectedImage.equals(UserManager.getInstance().getCurrentUser().getWallPaper())) {
-                        UserManager.getInstance().updateUserInfo("wallPaper", selectedImage, new UpdateListener() {
+                        UserManager.getInstance().updateUserInfo(Constant.WALLPAPER, selectedImage, new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {

@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.chat.R;
 import com.example.chat.base.Constant;
-import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.login.LoginActivity;
 import com.example.chat.mvp.account.AccountManageActivity;
@@ -164,11 +163,7 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 dismissBaseDialog();
-                if (position == 0) {
-                        localImagePath = CommonImageLoader.getInstance().takePhoto(this, Constant.REQUEST_CODE_TAKE_PICTURE).getAbsolutePath();
-                } else {
-                        CommonImageLoader.getInstance().pickPhoto(this, Constant.REQUEST_CODE_SELECT_FROM_LOCAL);
-                }
+
         }
 
         @Override
@@ -256,7 +251,7 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                BaseApplication.getAppComponent().getSharedPreferences().edit().putBoolean(ChatUtil.PUSH_STATUS,isChecked).apply();
+//                BaseApplication.getAppComponent().getSharedPreferences().edit().putBoolean(ChatUtil.PUSH_STATUS,isChecked).apply();
         }
 
         public static void start(Activity activity, int requestCode) {

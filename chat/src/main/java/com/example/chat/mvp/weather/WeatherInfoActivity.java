@@ -16,12 +16,14 @@ import com.amap.api.services.weather.WeatherSearchQuery;
 import com.example.chat.R;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.WeatherInfoBean;
-import com.example.chat.manager.LocationManager;
+import com.example.chat.events.LocationEvent;
+import com.example.chat.manager.NewLocationManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.rxbus.RxBusManager;
 
 import java.util.List;
 
@@ -82,6 +84,9 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
 
 
 
+
+
+
         @Override
         public void initData() {
                 WeatherInfoBean weatherInfoBean = (WeatherInfoBean) getIntent().getSerializableExtra(Constant.DATA);
@@ -107,11 +112,13 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
                                 forecastInfo.setText(weatherInfoBean.getForecastInfo());
                         }
                 } else {
+
+
+
                         if (CommonUtils.isNetWorkAvailable()) {
                                 showLoadDialog("正在加载天气数据........请稍候......");
                                 emptyView.setVisibility(View.VISIBLE);
                                 container.setVisibility(View.GONE);
-                                LogUtil.e("网络连接失败，请重新检查网络配置");
                                 getWeatherInfo();
                         } else {
                                 LogUtil.e("网络连接失败，请重新检查网络配置");
@@ -132,29 +139,29 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
 
         private void getWeatherInfo() {
                 mWeatherInfoBean = new WeatherInfoBean();
-                List<String> addressList = LocationManager.getInstance().getLocationList();
-                String cityName = addressList.get(4).substring(addressList.get(4).indexOf("省") + 1);
-                mWeatherInfoBean.setCity(cityName);
-                startSearchLiveWeather();
                 startSearchForecastWeather();
+                NewLocationManager.getInstance().startLocation();
         }
 
 
         private void startSearchForecastWeather() {
-                WeatherSearchQuery query = new WeatherSearchQuery(mWeatherInfoBean.getCity(), WeatherSearchQuery.WEATHER_TYPE_FORECAST);
-                WeatherSearch weatherSearch = new WeatherSearch(this);
-                weatherSearch.setQuery(query);
-                weatherSearch.setOnWeatherSearchListener(this);
-                weatherSearch.searchWeatherAsyn();
+                addDisposable(RxBusManager.getInstance().registerEvent(LocationEvent.class, locationEvent -> {
+                        if (!locationEvent.getCity().equals(mWeatherInfoBean.getCity())) {
+                                mWeatherInfoBean.setCity(mWeatherInfoBean.getCity());
+
+                                WeatherSearchQuery weatherSearchQuery = new WeatherSearchQuery(mWeatherInfoBean.getCity(), WeatherSearchQuery.WEATHER_TYPE_FORECAST);
+                                WeatherSearch weatherSearch = new WeatherSearch(this);
+                                weatherSearch.setQuery(weatherSearchQuery);
+                                weatherSearch.setOnWeatherSearchListener(this);
+                                weatherSearch.searchWeatherAsyn();
+                        }
+                }));
+
+
+
         }
 
-        private void startSearchLiveWeather() {
-                WeatherSearchQuery query = new WeatherSearchQuery(mWeatherInfoBean.getCity(), WeatherSearchQuery.WEATHER_TYPE_LIVE);
-                WeatherSearch weatherSearch = new WeatherSearch(this);
-                weatherSearch.setQuery(query);
-                weatherSearch.setOnWeatherSearchListener(this);
-                weatherSearch.searchWeatherAsyn();
-        }
+
 
         @Override
         public void onWeatherLiveSearched(LocalWeatherLiveResult localWeatherLiveResult, int i) {

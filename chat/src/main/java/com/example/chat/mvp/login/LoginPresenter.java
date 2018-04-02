@@ -1,10 +1,12 @@
 package com.example.chat.mvp.login;
 
+import android.content.SharedPreferences;
+
+import com.example.chat.base.Constant;
 import com.example.chat.base.RandomData;
 import com.example.chat.bean.CustomInstallation;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.User;
-import com.example.chat.manager.LocationManager;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
@@ -53,9 +55,10 @@ public class LoginPresenter extends RxBasePresenter<IView<Object>, LoginModel> {
         final User user = new User();
         user.setUsername(account);
         user.setPassword(password);
-        if (LocationManager.getInstance().getLatitude() != 0 || LocationManager.getInstance().getLongitude() != 0) {
-            user.setLocation(new BmobGeoPoint(LocationManager.getInstance().getLongitude(), LocationManager.getInstance()
-                    .getLatitude()));
+        SharedPreferences sharedPreferences=BaseApplication.getAppComponent().getSharedPreferences();
+        if (sharedPreferences.getString(Constant.LONGITUDE,null)!=null){
+            user.setLocation(new BmobGeoPoint(Double.parseDouble(sharedPreferences.getString(Constant.LONGITUDE,null)),
+                    Double.parseDouble(sharedPreferences.getString(Constant.LATITUDE,null))));
         }
         user.login( new SaveListener<BmobUser>() {
                     @Override
@@ -188,7 +191,6 @@ public class LoginPresenter extends RxBasePresenter<IView<Object>, LoginModel> {
             user.setSex(true);
         }
         user.setPw(password);
-        user.setSortedKey(CommonUtils.getSortedKey(user.getNick()));
         user.setUsername(account);
         user.setPassword(password);
         user.setTitleWallPaper(RandomData.getRandomTitleWallPaper());

@@ -9,11 +9,14 @@ import android.view.View;
 
 import com.example.chat.R;
 import com.example.chat.adapter.GroupListAdapter;
+import com.example.chat.base.Constant;
 import com.example.chat.bean.GroupTableMessage;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.base.SlideBaseActivity;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 
@@ -63,16 +66,15 @@ public class GroupListActivity extends SlideBaseActivity {
                 groupListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
                         @Override
                         public void onItemClick(int position, View view) {
-                                GroupTableMessage message = groupListAdapter.getData(position);
-                                Intent intent = new Intent(GroupListActivity.this, ChatActivity.class);
-                                intent.putExtra("groupId", message.getGroupId());
-                                intent.putExtra("from", "group");
-                                startActivity(intent);
+                                GroupTableEntity message = groupListAdapter.getData(position);
+                               ChatActivity.start(GroupListActivity.this, Constant.TYPE_GROUP
+                               ,message.getGroupId());
                         }
                 });
                 display.setAdapter(groupListAdapter);
                 initActionBar();
-                groupListAdapter.addData(MessageCacheManager.getInstance().getAllGroupTableMessage());
+                groupListAdapter.addData(UserDBManager
+                .getInstance().getAllGroupTableMessage());
         }
 
         private void initActionBar() {

@@ -34,7 +34,6 @@ public class WallPaperAdapter extends BaseRecyclerAdapter<String, BaseWrappedVie
 
         @Override
         protected void convert(BaseWrappedViewHolder holder, String data) {
-                LogUtil.e("重绘" + selectedPosition);
                 holder.setImageBg(R.id.iv_wallpaper_item_display, data).setOnItemClickListener();
                 if (selectedPosition == holder.getAdapterPosition()) {
                         holder.setImageResource(R.id.iv_wallpaper_item_display, R.drawable.change_background_picture_btn);

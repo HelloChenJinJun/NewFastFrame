@@ -74,14 +74,6 @@ public class FileUtil {
                 }
         }
 
-        public static String getUserVoiceFileDir(String uid, String createTime) {
-                File file = newFile(Constant.VOICE_CACHE_DIR + CommonUtils.md5(UserManager.getInstance().getCurrentUserObjectId()) + File.separator + uid
-                        + File.separator + createTime + ".amr");
-                if (file != null) {
-                        return file.getParent();
-                }
-                return "";
-        }
 
 
         /**
@@ -118,43 +110,7 @@ public class FileUtil {
                 return file.exists();
         }
 
-        /**
-         * 把responseBody的字节读入path文件中
-         *
-         * @param responseBody
-         * @param path
-         * @param readLength
-         * @param totalLength
-         */
-        public static void writeToCache(ResponseBody responseBody, String path, long readLength, long totalLength) {
-                try {
-                        File file = newFile(path);
-                        long writeLength;
-                        if (totalLength == 0) {
-                                writeLength = responseBody.contentLength();
-                        } else {
-                                writeLength = totalLength;
-                        }
-                        FileChannel fileChannel;
-                        RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rwd");
-                        fileChannel = randomAccessFile.getChannel();
-                        MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, readLength, writeLength);
-                        byte[] buffer = new byte[1024 * 8];
-                        int length = 0;
-                        while ((length = responseBody.byteStream().read(buffer)) != -1) {
-                                mappedByteBuffer.put(buffer, 0, length);
-                        }
-                        responseBody.byteStream().close();
-                        if (fileChannel != null) {
-                                fileChannel.close();
-                        }
-                        if (randomAccessFile != null) {
-                                randomAccessFile.close();
-                        }
-                } catch (IOException e) {
-                        e.printStackTrace();
-                }
-        }
+
 
         public static boolean isExistSDCard() {
                 if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
