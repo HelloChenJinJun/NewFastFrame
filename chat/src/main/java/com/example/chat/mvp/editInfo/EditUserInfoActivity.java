@@ -145,7 +145,7 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
         }
         nick.setText(mUser.getNick());
         birth.setText(mUser.getBirthDay());
-        phone.setText(mUser.getMobilePhoneNumber());
+        phone.setText(mUser.getPhone());
         sex.setText(mUser.isSex() ? "男" : "女");
         email.setText(mUser.getEmail());
         signature.setText(mUser.getSignature());
@@ -183,7 +183,6 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
     @Override
 
     public void onClick(View v) {
-        Intent intent = new Intent();
         int i = v.getId();
         if (i == R.id.rl_edit_user_info_avatar) {
             PhotoSelectActivity.start(this,null,true,true,null);
@@ -199,19 +198,16 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
                     ,mUser.getBirthDay(),Constant.REQUEST_CODE_BIRTH);
         } else if (i == R.id.rl_edit_user_info_phone) {
             EditUserInfoDetailActivity.start(this,Constant.PHONE
-                    ,mUser.getMobilePhoneNumber(),Constant.REQUEST_CODE_PHONE);
+                    ,mUser.getPhone(),Constant.REQUEST_CODE_PHONE);
         } else if (i == R.id.rl_edit_user_info_email) {
-
             EditUserInfoDetailActivity.start(this,Constant.EMAIL
                     ,mUser.getEmail(),Constant.REQUEST_CODE_EMAIL);
         } else if (i == R.id.rl_edit_user_info_signature) {
-
             EditUserInfoDetailActivity.start(this,Constant.SIGNATURE
             ,mUser.getSignature(),Constant.REQUEST_CODE_SIGNATURE);
         } else if (i == R.id.rl_edit_user_info_address) {
             EditUserInfoDetailActivity.start(this,Constant.ADDRESS,mUser.getAddress()
             ,Constant.REQUEST_CODE_ADDRESS);
-
         } else if (i == R.id.rl_edit_user_info_school) {
 
         } else if (i == R.id.rl_edit_user_info_college) {
@@ -299,7 +295,7 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
                     mUser.setAddress(message);
                 case Constant.REQUEST_CODE_PHONE:
                     phone.setText(message);
-                    mUser.setMobilePhoneNumber(message);
+                    mUser.setPhone(message);
                 default:
                     break;
             }

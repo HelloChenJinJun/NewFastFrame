@@ -20,6 +20,7 @@ import com.example.chat.mvp.NearByPeopleTask.NearbyPeopleActivity;
 import com.example.chat.mvp.blackList.BlackListActivity;
 import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.mvp.group.groupList.GroupListActivity;
+import com.example.chat.mvp.main.HomeFragment;
 import com.example.chat.view.IndexView;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
@@ -136,7 +137,6 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
                 .getData(position).getUid());
             }
         });
-        updateTitle("好友管理");
         presenter.registerEvent(UserEntity.class, user -> {
             if (adapter != null) {
                 List<UserEntity> list = adapter.getData();
@@ -178,7 +178,9 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            updateTitle("好友管理");
+            if (!hidden) {
+                ((HomeFragment) getParentFragment()).updateTitle("好友管理");
+            }
         }
     }
 

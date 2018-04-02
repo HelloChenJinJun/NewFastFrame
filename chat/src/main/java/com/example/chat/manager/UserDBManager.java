@@ -43,6 +43,9 @@ public class UserDBManager {
         return getInstance(UserManager.getInstance().getCurrentUserObjectId());
     }
 
+
+
+
     public static UserDBManager getInstance(String uid) {
         if (uid == null) {
             throw new RuntimeException("创建数据库中用户ID不能为空!!!!!!!!!");
@@ -126,6 +129,13 @@ public class UserDBManager {
                 .cover(user));
     }
 
+
+    public void addOrUpdateUser(UserEntity userEntity){
+        daoSession.getUserEntityDao().insertOrReplace(userEntity);
+    }
+
+
+
     public void addOrUpdateRecentMessage(BaseMessage message) {
         daoSession.getRecentMessageEntityDao().insertOrReplace(MsgManager.getInstance().coverRecentMessage(message));
     }
@@ -179,7 +189,10 @@ public class UserDBManager {
 
     public long getAddInvitationMessageSize() {
         return daoSession.getChatMessageEntityDao().queryBuilder().where(ChatMessageEntityDao
-                .Properties.MessageType.eq(ChatMessage.MESSAGE_TYPE_ADD)).count();
+                .Properties.MessageType.eq(ChatMessage.MESSAGE_TYPE_ADD)
+        ,ChatMessageEntityDao.Properties.ToId.eq(UserManager
+                .getInstance().getCurrentUserObjectId())
+                ,ChatMessageEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD)).count();
     }
 
     public RecentMessageEntity getRecentMessage(String id) {
@@ -457,4 +470,25 @@ public class UserDBManager {
                 .build().list();
         return list;
     }
+
+    public boolean isStranger(String uid) {
+        List<UserEntity> list = daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
+                .Uid.eq(uid)).build().list();
+        return list.size() == 0 || list.get(0).isStranger();
+    }
+
+    public boolean isFriend(String uid) {
+        return daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
+                        .Uid.eq(uid),UserEntityDao.Properties.IsStranger.eq(Boolean.FALSE)
+                ,UserEntityDao.Properties.IsBlack.eq(Boolean.FALSE)).build().list().size()>0;
+    }
+
+
+    public boolean isAddBlack(String uid) {
+        return daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
+                        .Uid.eq(uid),UserEntityDao.Properties.IsStranger.eq(Boolean.FALSE)
+                ,UserEntityDao.Properties.IsBlack.eq(Boolean.FALSE)
+                ,UserEntityDao.Properties.BlackType.eq(UserEntity.BLACK_TYPE_ADD)).build().list().size()>0;
+    }
+
 }

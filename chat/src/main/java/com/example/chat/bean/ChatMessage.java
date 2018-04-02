@@ -84,6 +84,17 @@ public class ChatMessage extends BaseMessage {
             }
         return false ;
     }
+
+
+    @Override
+    public String toString() {
+          String str=super.toString();
+        return str+"ChatMessage{" +
+                "messageType=" + messageType +
+                ", conversationId='" + conversationId + '\'' +
+                ", toId='" + toId + '\'' +
+                '}';
+    }
 }
 
 

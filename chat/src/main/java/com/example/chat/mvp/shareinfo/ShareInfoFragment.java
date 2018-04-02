@@ -300,31 +300,30 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 }
             }
         });
-
-        presenter.registerEvent(NotifyPostResult.class, new Consumer<NotifyPostResult>() {
-            @Override
-            public void accept(NotifyPostResult notifyPostResult) throws Exception {
-                if (uid != null && !notifyPostResult.getData().getAuthor().equals(uid)) {
-                    return;
-                }
-                topContainer.setVisibility(View.VISIBLE);
-                User user=UserCacheManager.getInstance().getUser(notifyPostResult.getData()
-                        .getAuthor());
-                if (user == null) {
-                    topAvatar.setVisibility(View.GONE);
-                    topContent.setText("你有一个非好友动态");
-                }else {
-                    topAvatar.setVisibility(View.VISIBLE);
-                    if (getActivity()!=null) {
-                        Glide.with(getActivity())
-                                .load(user.getAvatar())
-                                .into(topAvatar);
-                    }
-                    topContent.setMovementMethod(new CustomMoveMethod(getContext().getResources().getColor(R.color.blue_500), getContext().getResources().getColor(R.color.blue_500)));
-                    topContent.setText(getSpannerContent(user));
-                }
-            }
-        });
+//        presenter.registerEvent(NotifyPostResult.class, new Consumer<NotifyPostResult>() {
+//            @Override
+//            public void accept(NotifyPostResult notifyPostResult) throws Exception {
+//                if (uid != null && !notifyPostResult.getData().getAuthor().equals(uid)) {
+//                    return;
+//                }
+//                topContainer.setVisibility(View.VISIBLE);
+//                User user=UserCacheManager.getInstance().getUser(notifyPostResult.getData()
+//                        .getAuthor());
+//                if (user == null) {
+//                    topAvatar.setVisibility(View.GONE);
+//                    topContent.setText("你有一个非好友动态");
+//                }else {
+//                    topAvatar.setVisibility(View.VISIBLE);
+//                    if (getActivity()!=null) {
+//                        Glide.with(getActivity())
+//                                .load(user.getAvatar())
+//                                .into(topAvatar);
+//                    }
+//                    topContent.setMovementMethod(new CustomMoveMethod(getContext().getResources().getColor(R.color.blue_500), getContext().getResources().getColor(R.color.blue_500)));
+//                    topContent.setText(getSpannerContent(user));
+//                }
+//            }
+//        });
 
     }
 

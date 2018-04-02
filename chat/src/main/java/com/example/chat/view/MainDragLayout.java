@@ -130,6 +130,8 @@ public class MainDragLayout extends ViewGroup {
                                 openMenu();
                         }
                 }
+
+
                 return result;
         }
 

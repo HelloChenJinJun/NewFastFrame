@@ -49,6 +49,8 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
         private ImageView avatar;
         private TextView address;
         private String uid;
+        private TextView college;
+        private TextView school;
 
 
         @Override
@@ -76,6 +78,8 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
                 address= (TextView) findViewById(R.id.tv_user_info_address);
                 userName = (TextView) findViewById(R.id.tv_user_info_username);
                 black = (Button) findViewById(R.id.btn_user_info_add_black);
+                college= (TextView) findViewById(R.id.tv_user_info_college);
+                school= (TextView) findViewById(R.id.tv_user_info_school);
                 chat.setOnClickListener(this);
                 add.setOnClickListener(this);
                 black.setOnClickListener(this);
@@ -83,6 +87,7 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
 
         @Override
         public void initData() {
+                initActionBar();
                 uid = getIntent().getStringExtra(Constant.ID);
                 if (uid.equals(UserManager.getInstance().getCurrentUserObjectId())){
                         userEntity=UserManager.getInstance().cover(UserManager
@@ -97,11 +102,12 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
                         if (userEntity == null) {
                                 showLoading("正在加载用户数据.....");
                                 loadUserInfo();
-                        }else if (UserManager.getInstance().isFriend(uid)){
+                                return;
+                        }else if (UserDBManager.getInstance().isFriend(uid)){
                                 add.setVisibility(View.GONE);
                                 black.setVisibility(View.VISIBLE);
                                 black.setText("添加为黑名单");
-                        }else if (UserManager.getInstance().isAddBlack(uid)) {
+                        }else if (UserDBManager.getInstance().isAddBlack(uid)) {
                                 black.setText("取消黑名单");
                                 black.setVisibility(View.VISIBLE);
                                 add.setVisibility(View.GONE);
@@ -113,7 +119,7 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
                         }
                 }
                 updateUserInfo();
-                initActionBar();
+
         }
 
         private void loadUserInfo() {
@@ -123,14 +129,16 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
                                 if (list!=null&&list.size()>0){
                                         UserDBManager
                                                 .getInstance()
-                                                .addOrUpdateUser(list.get(0));
+                                                .addOrUpdateUser(UserManager
+                                                .getInstance()
+                                                .cover(list.get(0),true));
                                         userEntity=UserManager.getInstance()
                                                 .cover(list.get(0));
-                                        if (UserManager.getInstance().isFriend(uid)){
+                                        if (UserDBManager.getInstance().isFriend(uid)){
                                                 add.setVisibility(View.GONE);
                                                 black.setVisibility(View.VISIBLE);
                                                 black.setText("添加为黑名单");
-                                        }else if (UserManager.getInstance().isAddBlack(uid)) {
+                                        }else if (UserDBManager.getInstance().isAddBlack(uid)) {
                                                 black.setText("取消黑名单");
                                                 black.setVisibility(View.VISIBLE);
                                                 add.setVisibility(View.GONE);
@@ -159,6 +167,8 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
                 userName.setText(userEntity.getUserName());
                 nick.setText(userEntity.getName());
                 address.setText(userEntity.getAddress());
+                school.setText(userEntity.getSchool());
+                college.setText(userEntity.getCollege());
                 Glide.with(this).load(userEntity.getAvatar()).into(avatar);
         }
 

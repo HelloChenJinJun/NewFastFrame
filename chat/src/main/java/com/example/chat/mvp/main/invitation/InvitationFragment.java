@@ -11,6 +11,8 @@ import com.example.chat.base.Constant;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.User;
 import com.example.chat.events.AddEvent;
+import com.example.chat.events.RecentEvent;
+import com.example.chat.events.RefreshMenuEvent;
 import com.example.chat.events.UserEvent;
 import com.example.chat.listener.AddFriendCallBackListener;
 import com.example.chat.listener.OnSendTagMessageListener;
@@ -25,8 +27,11 @@ import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuItem;
 import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuRecyclerView;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
+import com.example.commonlibrary.bean.chat.ChatMessageEntityDao;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.rxbus.RxBusManager;
+
+import java.util.List;
 
 import cn.bmob.v3.exception.BmobException;
 import io.reactivex.functions.Consumer;
@@ -94,9 +99,6 @@ public class InvitationFragment extends BaseFragment {
                                                new AddFriendCallBackListener() {
                                                        @Override
                                                        public void onSuccess(User user) {
-
-
-
                                                                LogUtil.e("正在发送回执同意消息.........");
                                                                MsgManager.getInstance().sendTagMessage(user.getObjectId(),ChatMessage.MESSAGE_TYPE_AGREE,
                                                                        new OnSendTagMessageListener() {
@@ -112,6 +114,8 @@ public class InvitationFragment extends BaseFragment {
                                                                                                .getChatMessageEntityDao()
                                                                                                .insertOrReplace(chatMessageEntity);
                                                                                        adapter.addData(chatMessageEntity);
+                                                                                       RxBusManager.getInstance().post(new RefreshMenuEvent(2));
+                                                                                       RxBusManager.getInstance().post(new RecentEvent(chatMessageEntity.getBelongId(),RecentEvent.ACTION_ADD));
                                                                                        RxBusManager.getInstance().post(new UserEvent(chatMessageEntity.getBelongId(),UserEvent.ACTION_ADD));
                                                                                }
 
@@ -152,7 +156,7 @@ public class InvitationFragment extends BaseFragment {
         public void onHiddenChanged(boolean hidden) {
                 super.onHiddenChanged(hidden);
                 if (!hidden) {
-                        ((HomeFragment) getParentFragment()).initActionBar("邀请");
+                        ((HomeFragment) getParentFragment()).updateTitle("邀请");
                 }
 
         }
@@ -162,8 +166,16 @@ public class InvitationFragment extends BaseFragment {
 
         @Override
         protected void updateView() {
-                adapter.addData(UserDBManager.getInstance()
-                .getAllChatMessage(ChatMessage.MESSAGE_TYPE_ADD));
+                List<ChatMessageEntity>  list=UserDBManager
+                        .getInstance().getDaoSession()
+                        .getChatMessageEntityDao()
+                        .queryBuilder().where(ChatMessageEntityDao
+                        .Properties.ToId.eq(UserManager
+                                .getInstance()
+                                .getCurrentUserObjectId())
+                        ,ChatMessageEntityDao.Properties.MessageType
+                        .eq(ChatMessage.MESSAGE_TYPE_ADD)).build().list();
+                adapter.addData(list);
         }
 
 

@@ -21,4 +21,12 @@ public class GroupChatMessage extends BaseMessage {
         public void setGroupId(String groupId) {
                 this.groupId = groupId;
         }
+
+
+        @Override
+        public String toString() {
+                return super.toString()+"GroupChatMessage{" +
+                        "groupId='" + groupId + '\'' +
+                        '}';
+        }
 }

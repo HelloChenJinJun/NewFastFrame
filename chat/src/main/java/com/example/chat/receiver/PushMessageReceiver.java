@@ -15,6 +15,7 @@ import com.example.chat.events.OffLineEvent;
 import com.example.chat.listener.OnReceiveListener;
 import com.example.chat.manager.ChatNotificationManager;
 import com.example.chat.manager.MsgManager;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
@@ -88,14 +89,14 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
             String toId = JsonUtil.getString(jsonObject, Constant.TAG_TO_ID);
             if (!TextUtils.isEmpty(toId) && !TextUtils.isEmpty(fromId)) {
                 if (mUserManager.getCurrentUser() != null && mUserManager.getCurrentUser().getObjectId().equals(toId)) {
-                    if (UserManager.getInstance().isFriend(fromId)) {
+                    if (UserDBManager.getInstance().isFriend(fromId)) {
                         CommonLogger.e("本用户的好友");
                         mMsgManager.createReceiveMsg(json, this);
-                    } else if (UserManager.getInstance().isStranger(fromId)) {
+                    } else if (UserDBManager.getInstance().isStranger(fromId)) {
                         CommonLogger.e("陌生人用户");
                         //                                        陌生人发来消息的情况,,,直接接受
                         mMsgManager.createReceiveMsg(json, this);
-                    } else if (UserManager.getInstance().isAddBlack(fromId)) {
+                    } else if (UserDBManager.getInstance().isAddBlack(fromId)) {
                         CommonLogger.e("黑名单用户");
                         //      黑名单的情况,直接在服务器上面更新为已读状态,防止从定时服务那里又可以获取到
                         mMsgManager.updateMsgReaded(false, JsonUtil.getString(jsonObject, Constant.TAG_CONVERSATION), JsonUtil.getLong(jsonObject, Constant.TAG_CREATE_TIME));
@@ -126,7 +127,6 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
             List<ChatMessage> list = new ArrayList<>(1);
             list.add(chatMessage);
             MessageInfoEvent messageInfoEvent = new MessageInfoEvent(MessageInfoEvent.TYPE_PERSON);
-            list.add(chatMessage);
             messageInfoEvent.setChatMessageList(list);
             //                        聊天消息
             RxBusManager.getInstance().post(messageInfoEvent);

@@ -108,7 +108,8 @@ public class NewLocationManager implements AMapLocationListener {
                     RxBusManager.getInstance().post(locationEvent);
                     BaseApplication.getAppComponent().getSharedPreferences().edit().putString(Constant.LATITUDE, latitude+"")
                             .putString(Constant.LONGITUDE,longitude+"")
-                            .putString(Constant.ADDRESS, address).apply();
+                            .putString(Constant.ADDRESS, address)
+                    .putString(Constant.CITY,aMapLocation.getCity()).apply();
                 } else {
                     CommonLogger.e("定位相同,不定位");
                 }

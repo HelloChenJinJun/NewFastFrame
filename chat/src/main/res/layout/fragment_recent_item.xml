@@ -37,13 +37,13 @@
 
         <TextView
             android:id="@+id/tv_recent_unread"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_below="@id/tv_recent_time"
             android:layout_marginRight="10dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/list_newmessage2"
+            android:background="@drawable/custom_drawable_red_point"
             android:gravity="center"
             android:text="2"
             android:textColor="@color/base_color_text_white"

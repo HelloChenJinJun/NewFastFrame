@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,9 +38,6 @@ import cn.bmob.v3.listener.UpdateListener;
 public class EditUserInfoDetailActivity extends SlideBaseActivity implements View.OnClickListener {
         private AutoEditText mAutoEditText;
         private String from;
-        private ImageView male;
-        private ImageView female;
-        private ImageView other;
         private TextView address;
         private int currentDay = 4;
         private int currentMonth = 9;
@@ -51,10 +48,7 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
         private String groupId;
         private String currentSelectedAddress;
 
-        @Override
-        protected void onCreate(@Nullable Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-        }
+
 
         @Override
         protected boolean isNeedHeadLayout() {
@@ -69,7 +63,7 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
         @Override
         protected int getContentLayout() {
                 from = getIntent().getStringExtra(Constant.FROM);
-                groupId = getIntent().getStringExtra("groupId");
+                groupId = getIntent().getStringExtra(Constant.GROUP_ID);
                 content = getIntent().getStringExtra(Constant.DATA);
                 switch (from) {
                         case Constant.NICK:
@@ -145,28 +139,25 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
         }
 
         private void initGenderView() {
-                RelativeLayout femaleLayout = (RelativeLayout) findViewById(R.id.rl_edit_user_info_detail_female);
-                RelativeLayout maleLayout = (RelativeLayout) findViewById(R.id.rl_edit_user_info_detail_male);
-                RelativeLayout otherLayout = (RelativeLayout) findViewById(R.id.rl_edit_user_info_detail_other);
-                female = (ImageView) findViewById(R.id.iv_edit_user_info_detail_female);
-                male = (ImageView) findViewById(R.id.iv_edit_user_info_detail_male);
-                other = (ImageView) findViewById(R.id.iv_edit_user_info_detail_other);
-                femaleLayout.setOnClickListener(this);
-                otherLayout.setOnClickListener(this);
-                maleLayout.setOnClickListener(this);
+                RadioGroup radioGroup= (RadioGroup) findViewById(R.id.rg_edit_user_detail_gender_container);
                 if (content != null) {
                         switch (content) {
                                 case "男":
-                                        updateGenderChecked(0);
+                                        radioGroup.check(R.id.rb_edit_user_detail_gender_male);
                                         break;
                                 case "女":
-                                        updateGenderChecked(1);
+                                        radioGroup.check(R.id.rb_edit_user_detail_gender_female);
                                         break;
-                                default:
-                                        updateGenderChecked(3);
-                                        break;
+
                         }
                 }
+                radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                        if (checkedId == R.id.rb_edit_user_detail_gender_male) {
+                                currentGender="男";
+                        }else {
+                                currentGender="女";
+                        }
+                });
         }
 
         private void initNormalView() {
@@ -180,7 +171,7 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                 toolBarOption.setTitle("编辑" + getTitle(from));
                 toolBarOption.setRightResId(R.drawable.ic_file_upload_blue_grey_900_24dp);
                 toolBarOption.setRightListener(v -> {
-                        if (!CommonUtils.isNetWorkAvailable()) {
+                        if (!AppUtil.isNetworkAvailable()) {
                                 LogUtil.e("网络连接失败");
                                 return;
                         }
@@ -196,17 +187,20 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                         if (mAutoEditText.getText() != null && !mAutoEditText.getText().toString().trim().equals("")) {
                                                 if (content != null && content.equals(mAutoEditText.getText().toString().trim())) {
                                                         LogUtil.e("没有修改");
+                                                        ToastUtils.showShortToast("没有修改");
                                                 } else {
-                                                        content = mAutoEditText.getText().toString().trim();
-                                                        if (from.equals("phone") && !CommonUtils.isPhone(content)) {
+                                                        String temp=mAutoEditText.getText().toString().trim();
+                                                        if (from.equals(Constant.PHONE) && !CommonUtils.isPhone(temp)) {
+                                                                ToastUtils.showShortToast("输入的手机号码格式不对，请重新输入");
                                                                 LogUtil.e("输入的手机号码格式不对，请重新输入");
                                                                 return;
                                                         }
-                                                        if (from.equals("email") && !AppUtil.isEmail(content)) {
+                                                        if (from.equals(Constant.EMAIL) && !AppUtil.isEmail(temp)) {
+                                                                LogUtil.e("输入的邮箱号码格式不对，请重新输入");
                                                                 LogUtil.e("输入的邮箱号码格式不对，请重新输入");
                                                                 return;
                                                         }
-                                                        intent.putExtra("message", content);
+                                                        intent.putExtra(Constant.DATA, temp);
                                                         setResult(Activity.RESULT_OK, intent);
                                                 }
                                         } else {
@@ -219,9 +213,7 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                         if (content != null && content.equals(currentGender)) {
                                                 LogUtil.e("当前的性别未修改");
                                         } else {
-                                                content = currentGender;
-                                                LogUtil.e("当前的性别改变拉");
-                                                intent.putExtra("message", content);
+                                                intent.putExtra(Constant.DATA, currentGender);
                                                 setResult(Activity.RESULT_OK, intent);
                                         }
                                         break;
@@ -229,8 +221,7 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                         if (content != null && content.equals(currentSelectedAddress)) {
                                                 LogUtil.e("现在的地址并没有改变");
                                         } else {
-                                                content = currentSelectedAddress;
-                                                intent.putExtra("message", content);
+                                                intent.putExtra(Constant.DATA, currentSelectedAddress);
                                                 setResult(Activity.RESULT_OK, intent);
                                         }
                                         break;
@@ -240,16 +231,16 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                         if (content != null && content.equals(time)) {
                                                 LogUtil.e("现在时间并没有改变");
                                         } else {
-                                                content = time;
-                                                intent.putExtra(Constant.DATA, content);
+                                                intent.putExtra(Constant.DATA, time);
                                                 setResult(Activity.RESULT_OK, intent);
                                         }
                                         break;
                         }
-                        if (intent.getStringExtra(Constant.DATA) != null) {
+                        String data=intent.getStringExtra(Constant.DATA);
+                        if (data != null) {
                                 showLoadDialog("正在修改........");
                                 if (groupId == null) {
-                                        UserManager.getInstance().updateUserInfo(from, content, new UpdateListener() {
+                                        UserManager.getInstance().updateUserInfo(from, data, new UpdateListener() {
                                                 @Override
                                                 public void done(BmobException e) {
                                                         dismissLoadDialog();
@@ -264,7 +255,7 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
 
                                         });
                                 } else {
-                                        MsgManager.getInstance().updateGroupMessage(groupId, from, content, new UpdateListener() {
+                                        MsgManager.getInstance().updateGroupMessage(groupId, from, data, new UpdateListener() {
                                                 @Override
                                                 public void done(BmobException e) {
                                                         dismissLoadDialog();
@@ -319,16 +310,7 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
         @Override
         public void onClick(View v) {
                 int i = v.getId();
-                if (i == R.id.rl_edit_user_info_detail_female) {
-                        updateGenderChecked(1);
-
-                } else if (i == R.id.rl_edit_user_info_detail_male) {
-                        updateGenderChecked(0);
-
-                } else if (i == R.id.rl_edit_user_info_detail_other) {
-                        updateGenderChecked(2);
-
-                } else if (i == R.id.rl_edit_user_info_detail_birth) {
+               if (i == R.id.rl_edit_user_info_detail_birth) {
                         openDatePicker();
 
                 } else if (i == R.id.rl_edit_user_info_detail_address) {
@@ -353,25 +335,7 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
 
         }
 
-        private void updateGenderChecked(int position) {
 
-                if (position == 0) {
-                        currentGender = "男";
-                        male.setImageResource(R.mipmap.nim_contact_checkbox_checked_green);
-                        female.setImageResource(R.mipmap.nim_contact_checkbox_unchecked);
-                        other.setImageResource(R.mipmap.nim_contact_checkbox_unchecked);
-                } else if (position == 1) {
-                        currentGender = "女";
-                        male.setImageResource(R.mipmap.nim_contact_checkbox_unchecked);
-                        female.setImageResource(R.mipmap.nim_contact_checkbox_checked_green);
-                        other.setImageResource(R.mipmap.nim_contact_checkbox_unchecked);
-                } else {
-                        currentGender = "其他";
-                        male.setImageResource(R.mipmap.nim_contact_checkbox_unchecked);
-                        female.setImageResource(R.mipmap.nim_contact_checkbox_unchecked);
-                        other.setImageResource(R.mipmap.nim_contact_checkbox_checked_green);
-                }
-        }
 
         @Override
         public void updateData(Object o) {
@@ -391,9 +355,14 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
         }
 
         public static void start(Activity activity, String from, String data, int requestCode) {
+                start(activity,null,from,data,requestCode);
+        }
+
+        public static void start(Activity activity, String groupId, String from, String data, int requestCode) {
                 Intent intent=new Intent(activity,EditUserInfoDetailActivity.class);
                 intent.putExtra(Constant.FROM,from);
                 intent.putExtra(Constant.DATA,data);
+                intent.putExtra(Constant.GROUP_ID,groupId);
                 activity.startActivityForResult(intent,requestCode);
         }
 }

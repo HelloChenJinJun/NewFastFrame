@@ -231,4 +231,5 @@ public class Constant {
     public static final String FROM_GROUP_INFO = "group_info";
     public static final String TITLE_WALLPAPER = "titleWallPaper";
     public static final String WALLPAPER = "wallPaper";
+    public static final String CITY = "city";
 }

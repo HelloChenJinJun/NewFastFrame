@@ -77,11 +77,7 @@ public class SearchFriendActivity extends SlideBaseActivity implements View.OnCl
                 mAdapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
                         @Override
                         public void onItemChildClick(int position, View view, int id) {
-                                Intent intent = new Intent(SearchFriendActivity.this, UserInfoActivity.class);
-                                User user = mAdapter.getData(position);
-                                intent.putExtra("uid", user.getObjectId());
-                                intent.putExtra("user", user);
-                                startActivity(intent);
+                                UserInfoActivity.start(SearchFriendActivity.this,mAdapter.getData(position).getObjectId());
                                 finish();
                         }
                 });

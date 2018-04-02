@@ -2,14 +2,17 @@ package com.example.chat.adapter;
 
 import com.example.chat.R;
 import com.example.chat.base.Constant;
+import com.example.chat.bean.MessageContent;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.TimeUtil;
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.adapter.BaseSwipeRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
+import com.google.gson.Gson;
 
 
 /**
@@ -20,6 +23,8 @@ import com.example.commonlibrary.bean.chat.UserEntity;
  */
 
 public class RecentListAdapter extends BaseSwipeRecyclerAdapter<RecentMessageEntity, BaseWrappedViewHolder> {
+
+       private Gson gson= BaseApplication.getAppComponent().getGson();
 
         @Override
         protected int getLayoutId() {
@@ -46,8 +51,9 @@ public class RecentListAdapter extends BaseSwipeRecyclerAdapter<RecentMessageEnt
                         .getGroupId());
                 }
                 holder.setText(R.id.tv_recent_name, name);
-                holder.setText(R.id.tv_recent_content, FaceTextUtil.toSpannableString(holder.itemView.getContext(), data.getContent()))
-                        .setText(R.id.tv_recent_time, TimeUtil.getTime(data.getCreatedTime()))
+
+
+                        holder.setText(R.id.tv_recent_time, TimeUtil.getRecentTime(data.getCreatedTime()))
                         .setImageUrl(R.id.riv_recent_avatar,avatar)
                 .setOnItemClickListener();
                 int contentType = data.getContentType();
@@ -59,11 +65,12 @@ public class RecentListAdapter extends BaseSwipeRecyclerAdapter<RecentMessageEnt
                         holder.setText(R.id.tv_recent_content, "[语音]");
                 } else if (contentType == Constant.TAG_MSG_TYPE_TEXT) {
                         holder.setText(R.id.tv_recent_content, FaceTextUtil.toSpannableString(holder.itemView.getContext(), data.getContent()));
-                } else {
-                        holder.setText(R.id.tv_recent_content, "[未知类型]");
+                } else if (contentType==Constant.TAG_MSG_TYPE_VIDEO){
+                        holder.setText(R.id.tv_recent_content, "[视频]");
+                }else {
+                    MessageContent messageContent=gson.fromJson(data.getContent(),MessageContent.class);
+                    holder.setText(R.id.tv_recent_content, FaceTextUtil.toSpannableString(holder.itemView.getContext(), messageContent.getContent()));
                 }
-
-
                 if (unReadCount > 0) {
                         holder.setVisible(R.id.tv_recent_unread, true);
                         holder.setText(R.id.tv_recent_unread, unReadCount + "");

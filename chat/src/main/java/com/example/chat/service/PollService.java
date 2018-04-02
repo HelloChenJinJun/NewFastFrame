@@ -6,13 +6,18 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.example.chat.base.Constant;
+import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.events.MessageInfoEvent;
+import com.example.chat.listener.OnReceiveListener;
+import com.example.chat.manager.ChatNotificationManager;
+import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -50,6 +55,10 @@ public class PollService extends Service {
                 } else {
                         time = 10;
                 }
+                if (disposable!=null&&!disposable.isDisposed()){
+                        disposable.dispose();
+                }
+
                 Observable.interval(time, TimeUnit.SECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<Long>() {
@@ -97,9 +106,32 @@ public class PollService extends Service {
                                 if (e == null) {
                                         LogUtil.e("1拉取单聊消息成功");
                                         if (list != null && list.size() > 0) {
-                                                MessageInfoEvent messageInfoEvent=new MessageInfoEvent(MessageInfoEvent.TYPE_PERSON);
-                                                messageInfoEvent.setChatMessageList(list);
-                                                RxBusManager.getInstance().post(messageInfoEvent);
+
+                                                for (ChatMessage item :
+                                                        list) {
+                                                        MsgManager.getInstance().dealReceiveChatMessage(item, new OnReceiveListener() {
+                                                                @Override
+                                                                public void onSuccess(BaseMessage baseMessage) {
+                                                                        if (baseMessage instanceof ChatMessage) {
+                                                                                ChatMessage chatMessage = (ChatMessage) baseMessage;
+                                                                                CommonLogger.e("接受成功");
+                                                                                LogUtil.e(chatMessage);
+                                                                                List<ChatMessage> list = new ArrayList<>(1);
+                                                                                list.add(chatMessage);
+                                                                                MessageInfoEvent messageInfoEvent = new MessageInfoEvent(MessageInfoEvent.TYPE_PERSON);
+                                                                                messageInfoEvent.setChatMessageList(list);
+                                                                                //                        聊天消息
+                                                                                RxBusManager.getInstance().post(messageInfoEvent);
+                                                                                ChatNotificationManager.getInstance(getBaseContext()).sendChatMessageNotification(chatMessage, getBaseContext());
+                                                                        }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailed(BmobException e) {
+                                                                        LogUtil.e("接受消息失败!>>>>" + e.getMessage() + e.getErrorCode());
+                                                                }
+                                                        });
+                                                }
                                         }
                                 }else {
                                         LogUtil.e("拉取单聊消息失败");

@@ -10,7 +10,6 @@ import com.example.chat.bean.User;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
-import com.example.chat.util.CommonUtils;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
@@ -66,6 +65,10 @@ public class LoginPresenter extends RxBasePresenter<IView<Object>, LoginModel> {
                         if (e == null) {
                             ToastUtils.showShortToast("登录成功");
                             LogUtil.e("登录成功");
+                            BaseApplication.getAppComponent()
+                                    .getSharedPreferences()
+                                    .edit().putBoolean(Constant.LOGIN_STATUS,true)
+                                    .apply();
 //                                        登录成功之后，
 //                                        检查其他设备绑定的用户，强迫其下线
                             LogUtil.e("检查该用户绑定的其他设备.....");

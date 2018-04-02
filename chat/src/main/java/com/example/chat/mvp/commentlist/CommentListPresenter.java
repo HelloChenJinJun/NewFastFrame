@@ -12,6 +12,7 @@ import com.example.chat.bean.post.ReplyCommentListBean;
 import com.example.chat.bean.post.ReplyDetailContent;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.manager.MsgManager;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
@@ -78,7 +79,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                                 list) {
                             PostCommentEntity entity = new PostCommentEntity();
                             entity.setUid(item.getUser().getObjectId());
-                            if (!entity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId()) && UserManager.getInstance().isStranger(entity.getUid())
+                            if (!entity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId()) && UserDBManager.getInstance().isStranger(entity.getUid())
                                     ) {
                                 UserEntity userEntity = UserManager.getInstance().cover(item.getUser(), true);
                                 userEntityList.add(userEntity);

@@ -19,12 +19,14 @@
         android:textColor="@color/base_color_bg_gray"
         android:textSize="18sp"/>
     <TextView
+        android:text="11"
+        android:gravity="center"
         android:id="@+id/tv_menu_item_tips"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/tv_menu_item"
-        android:background="@mipmap/msg_tips"
+        android:background="@drawable/custom_drawable_red_point"
         android:textColor="@color/base_color_text_white"
         android:textSize="10sp"
         android:visibility="invisible"

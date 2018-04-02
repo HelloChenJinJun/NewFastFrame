@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tv_main_net"
-        android:background="@drawable/global_bg"
+        android:background="@color/chat_bg"
     />
     <ImageView
         android:id="@+id/iv_main_bg"

@@ -65,7 +65,9 @@
         </activity>
         <activity android:name=".mvp.login.LoginActivity"
             android:exported="true"/>
-        <activity android:name=".mvp.main.HomeActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.main.HomeActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:launchMode="singleTask"/>
         <activity android:name=".mvp.register.RegisterActivity"/>
         <activity android:name=".mvp.searchFriend.SearchFriendActivity"/>
         <activity android:name=".mvp.chat.ChatActivity"/>
@@ -90,10 +92,14 @@
         <activity android:name=".mvp.UserDetail.UserDetailActivity"/>
         <activity android:name=".mvp.NearByPeopleTask.NearbyPeopleActivity"/>
         <activity android:name=".mvp.UserInfoTask.UserInfoActivity"/>
+        <activity android:name=".mvp.photoSelect.PhotoSelectActivity"/>
+        <activity android:name=".mvp.preview.PhotoPreViewActivity"/>
+        <activity android:name=".mvp.EditShare.EditShareInfoActivity"/>
+
         <!--高德地图API_KEY-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="715d5c1cfab873a2094110d2f124cfac"></meta-data>
+            android:value="715d5c1cfab873a2094110d2f124cfac"/>
         <!--定位服务-->
 
         <service android:name="com.amap.api.location.APSService" />

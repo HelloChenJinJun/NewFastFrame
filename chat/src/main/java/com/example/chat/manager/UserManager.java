@@ -53,7 +53,6 @@ public class UserManager {
     //        用于同步
     private static final Object INSTANCE_LOCK = new Object();
     private static UserManager INSTANCE;
-    private DaoSession daoSession;
     private String uid;
     public static UserManager getInstance() {
         if (INSTANCE == null) {
@@ -67,9 +66,7 @@ public class UserManager {
     }
 
 
-    private UserManager() {
-        daoSession = UserDBManager.getInstance().getDaoSession();
-    }
+
 
 
     /**
@@ -269,16 +266,30 @@ public class UserManager {
      * @param findListener 回调
      */
     public Subscription findUserById(String uid, FindListener<User> findListener) {
-        List<UserEntity>  list=daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties.Uid.eq(uid))
-                .build().list();
-        if (list.size() == 0) {
+        UserEntity userEntity=UserDBManager.getInstance().getUser(uid);
+        if (userEntity==null) {
             BmobQuery<User> query = new BmobQuery<>();
             query.addWhereEqualTo("objectId", uid);
-            return query.findObjects(findListener);
+            return query.findObjects(new FindListener<User>() {
+                @Override
+                public void done(List<User> list, BmobException e) {
+                    if (e == null) {
+                        if (list != null && list.size() > 0) {
+                            UserDBManager.getInstance()
+                                    .addOrUpdateUser(cover(list.get(0),true));
+                        }
+                    }
+                    if (findListener != null) {
+                        findListener.done(list, e);
+                    }
+                }
+            });
         }else {
             List<User>  list1=new ArrayList<>(1);
-            list1.add(cover(list.get(0)));
-            findListener.done(list1,null);
+            list1.add(cover(userEntity));
+            if (findListener!=null) {
+                findListener.done(list1,null);
+            }
             return null;
         }
     }
@@ -460,15 +471,7 @@ public class UserManager {
                                           }
                                       } else {
 //                                          LogUtil.e("查询不到本用户所对应的设备ID,这里新建一个设备表");
-//                                          bindInstallation(listener);
-                                          CustomInstallation customInstallation=new CustomInstallation();
-                                          customInstallation.setUid(getCurrentUserObjectId());
-                                          customInstallation.save(new SaveListener<String>() {
-                                              @Override
-                                              public void done(String s, BmobException e) {
-                                                  listener.done(e);
-                                              }
-                                          });
+                                          bindInstallation(listener);
                                       }
                                   } else {
                                       LogUtil.e("查询本用户对应的设备表出错" + e.toString());
@@ -573,11 +576,7 @@ public class UserManager {
         }
     }
 
-    public boolean isStranger(String uid) {
-                List<UserEntity> list = daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
-                        .Uid.eq(uid)).build().list();
-                return list.size() == 0 || list.get(0).isStranger();
-    }
+
 
     public UserEntity cover(User currentUser, boolean isStranger) {
         return cover(currentUser, isStranger, false, UserEntity.BLACK_TYPE_NORMAL);
@@ -594,6 +593,8 @@ public class UserManager {
         userEntity.setNick(currentUser.getNick());
         userEntity.setUid(currentUser.getObjectId());
         userEntity.setAddress(currentUser.getAddress());
+        userEntity.setPhone(currentUser.getMobilePhoneNumber());
+        userEntity.setEmail(currentUser.getEmail());
         userEntity.setBirthDay(currentUser.getBirthDay());
         userEntity.setBlack(isBlack);
         userEntity.setBlackType(blackType);
@@ -624,6 +625,8 @@ public class UserManager {
         user.setUpdatedAt(userEntity.getUpdatedTime());
         user.setNick(userEntity.getNick());
         user.setObjectId(userEntity.getUid());
+        user.setMobilePhoneNumber(userEntity.getPhone());
+        user.setEmail(userEntity.getEmail());
         user.setAddress(userEntity.getAddress());
         user.setBirthDay(userEntity.getBirthDay());
         user.setName(userEntity.getName());
@@ -640,16 +643,4 @@ public class UserManager {
         return user;
     }
 
-    public boolean isFriend(String uid) {
-        return daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
-        .Uid.eq(uid),UserEntityDao.Properties.IsStranger.eq(Boolean.FALSE)
-        ,UserEntityDao.Properties.IsBlack.eq(Boolean.FALSE)).build().list().size()>0;
-    }
-
-    public boolean isAddBlack(String uid) {
-        return daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
-                        .Uid.eq(uid),UserEntityDao.Properties.IsStranger.eq(Boolean.FALSE)
-                ,UserEntityDao.Properties.IsBlack.eq(Boolean.FALSE)
-        ,UserEntityDao.Properties.BlackType.eq(UserEntity.BLACK_TYPE_ADD)).build().list().size()>0;
-    }
 }

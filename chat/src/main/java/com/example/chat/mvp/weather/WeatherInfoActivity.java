@@ -24,6 +24,7 @@ import com.example.chat.util.CommonUtils;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.AppUtil;
 
 import java.util.List;
 
@@ -109,13 +110,15 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
                                 wind.setText(weatherInfoBean.getWind());
                                 humidity.setText(weatherInfoBean.getHumidity());
                                 forecastTime.setText(weatherInfoBean.getForecastTime());
-                                forecastInfo.setText(weatherInfoBean.getForecastInfo());
+                                forecastTime.setText(mWeatherInfoBean.getForecastTime() + "发布");
+                                fillForeCast();
+
                         }
                 } else {
 
 
 
-                        if (CommonUtils.isNetWorkAvailable()) {
+                        if (AppUtil.isNetworkAvailable()) {
                                 showLoadDialog("正在加载天气数据........请稍候......");
                                 emptyView.setVisibility(View.VISIBLE);
                                 container.setVisibility(View.GONE);
@@ -154,6 +157,8 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
                                 weatherSearch.setQuery(weatherSearchQuery);
                                 weatherSearch.setOnWeatherSearchListener(this);
                                 weatherSearch.searchWeatherAsyn();
+
+
                         }
                 }));
 
@@ -209,7 +214,7 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
         }
 
         private void fillForeCast() {
-                String forecast = "";
+                StringBuilder forecast = new StringBuilder();
                 for (int i = 0; i < forecastInfoList.size(); i++) {
                         LocalDayWeatherForecast localdayweatherforecast = forecastInfoList.get(i);
                         String week = null;
@@ -242,9 +247,9 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
                                 localdayweatherforecast.getDayTemp() + "°",
                                 localdayweatherforecast.getNightTemp() + "°");
                         String date = localdayweatherforecast.getDate();
-                        forecast += date + "  " + week + "                       " + temp + "\n\n";
+                        forecast.append(date).append("  ").append(week).append("                       ").append(temp).append("\n\n");
                 }
-                mWeatherInfoBean.setForecastInfo(forecast);
+                mWeatherInfoBean.setForecastInfo(forecast.toString());
                 forecastInfo.setText(mWeatherInfoBean.getForecastInfo());
         }
 
@@ -263,5 +268,12 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
         @Override
         public void updateData(Object o) {
 
+        }
+
+
+        @Override
+        protected void onDestroy() {
+                super.onDestroy();
+                NewLocationManager.getInstance().clear();
         }
 }

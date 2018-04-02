@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.services.weather.LocalWeatherForecast;
 import com.amap.api.services.weather.LocalWeatherForecastResult;
 import com.amap.api.services.weather.LocalWeatherLive;
 import com.amap.api.services.weather.LocalWeatherLiveResult;
@@ -59,6 +60,7 @@ import com.example.chat.mvp.weather.WeatherInfoActivity;
 import com.example.chat.util.LogUtil;
 import com.example.chat.view.MainDragLayout;
 import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
@@ -157,8 +159,12 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         addOrReplaceFragment(mFragments[0], R.id.fl_content_container);
         currentPosition = 0;
         initMenu();
+        initActionBar();
         initRxBus();
         updateUserInfo(UserManager.getInstance().getCurrentUser());
+        startSearchLiveWeather(BaseApplication.getAppComponent()
+        .getSharedPreferences().getString(Constant.CITY,null));
+        bindPollService(10);
     }
 
     private void initMenu() {
@@ -303,14 +309,20 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
 
 
 
-    public void initActionBar(String title) {
+    public void initActionBar() {
         ToolBarOption toolBarOption = new ToolBarOption();
-        toolBarOption.setTitle(title);
+        toolBarOption.setTitle("");
+        toolBarOption.setAvatar("");
         toolBarOption.setNeedNavigation(false);
         if (user != null) {
             toolBarOption.setAvatar(user.getAvatar());
         }
         setToolBar(toolBarOption);
+    }
+
+
+    public void updateTitle(String title){
+        title_1.setText(title);
     }
 
 
@@ -384,6 +396,9 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
 
 
     private void startSearchLiveWeather(String city) {
+        if (city == null) {
+            return;
+        }
         mWeatherInfoBean.setCity(city);
         WeatherSearchQuery query = new WeatherSearchQuery(city, WeatherSearchQuery.WEATHER_TYPE_LIVE);
         WeatherSearch weatherSearch = new WeatherSearch(getActivity());
@@ -412,6 +427,20 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
 
             @Override
             public void onWeatherForecastSearched(LocalWeatherForecastResult localWeatherForecastResult, int i) {
+                if (i == 1000) {
+                    if (localWeatherForecastResult != null && localWeatherForecastResult.getForecastResult() != null
+                            && localWeatherForecastResult.getForecastResult().getWeatherForecast() != null
+                            && localWeatherForecastResult.getForecastResult().getWeatherForecast().size() > 0) {
+                        LocalWeatherForecast localWeatherForecast = localWeatherForecastResult.getForecastResult();
+                        mWeatherInfoBean.setForecastTime(localWeatherForecast.getReportTime());
+                        mWeatherInfoBean.setForecastInfoList(localWeatherForecast.getWeatherForecast());
+                    } else {
+                        LogUtil.e("查询不到天气预报的结果");
+                    }
+                } else {
+                    LogUtil.e("查询天气预报的结果失败" + i);
+                }
+
             }
         });
         weatherSearch.searchWeatherAsyn();

@@ -87,7 +87,9 @@
         <activity android:name=".mvp.UserDetail.UserDetailActivity"/>
         <activity android:name=".mvp.NearByPeopleTask.NearbyPeopleActivity"/>
         <activity android:name=".mvp.UserInfoTask.UserInfoActivity"/>
-
+        <activity android:name=".mvp.photoSelect.PhotoSelectActivity"/>
+        <activity android:name=".mvp.preview.PhotoPreViewActivity"/>
+        <activity android:name=".mvp.EditShare.EditShareInfoActivity"/>
 
         <!--高德地图API_KEY-->
         <meta-data android:name="com.amap.api.v2.apikey"

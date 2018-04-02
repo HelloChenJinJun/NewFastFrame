@@ -177,13 +177,13 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
         if (id==R.id.rl_activity_group_info_header){
             PhotoSelectActivity.start(this,null,true,true,null);
         } else if (id == R.id.rl_activity_group_info_group_name) {
-            EditUserInfoDetailActivity.start(this,Constant.GROUP_NAME,groupTableEntity.getGroupName()
+            EditUserInfoDetailActivity.start(this,groupTableEntity.getGroupId(),Constant.GROUP_NAME,groupTableEntity.getGroupName()
             ,Constant.REQUEST_CODE_GROUP_NAME);
         }else if (id==R.id.rl_activity_group_info_description){
-            EditUserInfoDetailActivity.start(this,Constant.GROUP_DESCRIPTION,groupTableEntity.getGroupName()
+            EditUserInfoDetailActivity.start(this,groupTableEntity.getGroupId(),Constant.GROUP_DESCRIPTION,groupTableEntity.getGroupName()
                     ,Constant.REQUEST_CODE_GROUP_DESCRIPTION);
         } else if (id == R.id.rl_activity_group_info_notification) {
-            EditUserInfoDetailActivity.start(this,Constant.GROUP_NOTIFICATION,groupTableEntity.getGroupName()
+            EditUserInfoDetailActivity.start(this,groupTableEntity.getGroupId(),Constant.GROUP_NOTIFICATION,groupTableEntity.getGroupName()
                     ,Constant.REQUEST_CODE_GROUP_NOTIFICATION);
         } else if (id == R.id.btn_activity_group_info_exit) {
             presenter.exitGroup(groupTableEntity.getGroupId(),UserManager.getInstance()

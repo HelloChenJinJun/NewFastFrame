@@ -1,6 +1,9 @@
 package com.example.chat.bean;
 
+import com.amap.api.services.weather.LocalDayWeatherForecast;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 项目名称:    TestChat
@@ -19,6 +22,17 @@ public class WeatherInfoBean implements Serializable {
         private String temperature;
         private String weatherStatus;
 
+
+        private List<LocalDayWeatherForecast> forecastInfoList;
+
+
+        public List<LocalDayWeatherForecast> getForecastInfoList() {
+                return forecastInfoList;
+        }
+
+        public void setForecastInfoList(List<LocalDayWeatherForecast> forecastInfoList) {
+                this.forecastInfoList = forecastInfoList;
+        }
 
         public String getCity() {
                 return city;

@@ -26,6 +26,24 @@ public class TimeUtil {
     }
 
 
+
+
+    public static String getRecentTime(long time){
+            long deltaTime=System.currentTimeMillis()-time;
+            if (deltaTime<ONE_D){
+                SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+                return format.format(new Date(time));
+            }else if (deltaTime<ONE_D*7){
+                int num= (int) (deltaTime/(ONE_D));
+                if (num == 1) {
+                    return "昨天";
+                }
+            }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(new Date(time));
+    }
+
+
     public static long getTime(String time) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -101,6 +119,13 @@ public class TimeUtil {
         }
     }
 
+
+
+    private static final Long ONE_M=1000 * 60 * 60 * 24*30L;
+    private static final Long ONE_Y=1000 * 60 * 60 * 24*30* 12L;
+    private static final Long ONE_D=1000*60*60*24L;
+    private static final Long ONE_H=1000*60*60L;
+
     private static String getShareTime(long currentDletaTime) {
         String result;
         int time = (int) (currentDletaTime / (1000 * 60));
@@ -121,12 +146,19 @@ public class TimeUtil {
                     result = "昨天";
                 } else if (time == 2) {
                     result = "前天";
-                } else {
+                } else if (time>29){
                     result = time + "天前";
+                }else {
+                    time=(int) (currentDletaTime /ONE_M);
+                    if (time > 11) {
+                        time= (int) (currentDletaTime/ONE_Y);
+                        result = time + "年前";
+                    }else {
+                        result = time + "月前";
+                    }
                 }
             }
         }
-        LogUtil.e("时间拉拉：" + result);
         return result;
     }
 

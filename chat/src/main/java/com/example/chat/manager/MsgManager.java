@@ -76,7 +76,6 @@ public class MsgManager {
 
     private static MsgManager instance;
     private BmobPushManager<CustomInstallation> mPushManager;
-    private DaoSession daoSession;
     private Gson gson;
     /**
      * 用于单例模式的双重锁定
@@ -85,7 +84,6 @@ public class MsgManager {
 
     private MsgManager() {
         mPushManager = new BmobPushManager<>();
-        daoSession =UserDBManager.getInstance().getDaoSession();
         gson=BaseApplication.getAppComponent().getGson();
     }
 
@@ -129,8 +127,26 @@ public class MsgManager {
                                             .getDaoSession().getRecentMessageEntityDao()
                                             .insertOrReplace(recentMessageEntity);
                                     LogUtil.e("保存同意消息到聊天消息表中");
+
+
+
+
+
+
+//                                    这里将发送的欢迎消息转为对方发送
+                                    ChatMessage chatMessage=new ChatMessage();
+                                    chatMessage.setToId(msg.getBelongId());
+                                    chatMessage.setMessageType(msg.getMessageType());
+                                    chatMessage.setConversationId(targetId+"&"+UserManager
+                                    .getInstance().getCurrentUserObjectId());
+                                    chatMessage.setBelongId(msg.getToId());
+                                    chatMessage.setCreateTime(msg.getCreateTime());
+                                    chatMessage.setSendStatus(msg.getSendStatus());
+                                    chatMessage.setReadStatus(Constant.RECEIVE_UNREAD);
+                                    chatMessage.setContentType(Constant.TAG_MSG_TYPE_TEXT);
+                                    chatMessage.setContent(msg.getContent());
                                     UserDBManager.getInstance()
-                                            .addOrUpdateChatMessage(msg);
+                                            .addOrUpdateChatMessage(chatMessage);
                                 }
                                 sendJsonMessage(list.get(0).getInstallId(), createJsonMessage(msg),
                                         new OnSendPushMessageListener() {
@@ -281,9 +297,11 @@ public class MsgManager {
         chatMessage.setCreateTime(time);
         chatMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
         chatMessage.setReadStatus(Constant.READ_STATUS_UNREAD);
+        chatMessage.setContentType(Constant.TAG_MSG_TYPE_TEXT);
         if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
-            chatMessage.setContent("你们已经成为好友可以聊天啦啦啦");
-            chatMessage.setContentType(Constant.TAG_MSG_TYPE_TEXT);
+            MessageContent messageContent=new MessageContent();
+            messageContent.setContent("你们已经成为好友可以聊天啦啦啦");
+            chatMessage.setContent(gson.toJson(messageContent));
         }
         return chatMessage;
 
@@ -350,6 +368,7 @@ public class MsgManager {
                         @Override
                         public void onSuccess(User user) {
                             updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
+                            updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                             UserDBManager.getInstance().addChatMessage(message);
                             UserDBManager.getInstance().addOrUpdateRecentMessage(message);
                             listener.onSuccess(message);
@@ -360,17 +379,23 @@ public class MsgManager {
                             listener.onFailed(e);
                         }
                     });
+                }else {
+                    updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                 }
                 break;
             case ChatMessage.MESSAGE_TYPE_ADD:
                 if (!UserDBManager.getInstance().hasMessage(message.getConversationId(), message.getCreateTime())) {
                     UserDBManager.getInstance().addChatMessage(message);
-                    updateMsgReaded(false, message.getBelongId(), message.getCreateTime());
+//                    这里获取邀请列表的用户数据
+                    UserManager.getInstance().findUserById(message.getBelongId(),null);
+                    updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                     listener.onSuccess(message);
+                }else {
+                    updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                 }
                 break;
             case ChatMessage.MESSAGE_TYPE_READED:
-                updateMsgReaded(false, message.getBelongId(), message.getCreateTime());
+                updateMsgReaded(true, message.getConversationId(), message.getCreateTime());
                 UserDBManager.getInstance().updateMessageReadStatus(message.getConversationId(),message.getCreateTime(),Constant.READ_STATUS_READED);
                 listener.onSuccess(message);
                 break;
@@ -381,6 +406,8 @@ public class MsgManager {
                     updateMsgReaded(false,message.getConversationId(), message.getCreateTime());
                     sendAskReadMsg(message.getConversationId(), message.getCreateTime());
                     listener.onSuccess(message);
+                }else {
+                    updateMsgReaded(false, message.getBelongId(), message.getCreateTime());
                 }
                 break;
         }
@@ -1100,6 +1127,7 @@ public class MsgManager {
 
 
     public PublicCommentBean cover(PostCommentEntity entity) {
+        DaoSession daoSession=UserDBManager.getInstance().getDaoSession();
         PublicCommentBean posterComments = new PublicCommentBean();
         posterComments.setObjectId(entity.getCid());
         posterComments.setContent(entity.getContent());
@@ -1121,7 +1149,6 @@ public class MsgManager {
         }
         PublicPostBean publicPostBean = MsgManager.getInstance().cover(publicPostEntity, user);
         posterComments.setPost(publicPostBean);
-
         User commentUser;
         if (!entity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId())) {
             commentUser = UserManager.getInstance().cover(daoSession

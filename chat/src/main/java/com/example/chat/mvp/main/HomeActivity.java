@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import com.example.chat.R;
 import com.example.chat.base.Constant;
+import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
 import com.example.chat.mvp.wallpaper.WallPaperActivity;
 import com.example.chat.mvp.search.SearchActivity;
@@ -24,7 +25,7 @@ import com.example.commonlibrary.utils.ToastUtils;
  * QQ:         1981367757
  */
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends SlideBaseActivity {
 
 
 

@@ -200,6 +200,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
                     .actionName("person").isFinish(true).build());
         }else {
             HomeActivity.start(this);
+            finish();
         }
     }
 
@@ -216,6 +217,10 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
                         passWord.setText(password);
                         userName.setText(name);
                     }
+                    BaseApplication.getAppComponent()
+                            .getSharedPreferences()
+                            .edit().putBoolean(UserManager.getInstance().getCurrentUserObjectId()+ConstantUtil.FIRST_STATUS, true).apply();
+                    login();
                     break;
 
             }
@@ -230,14 +235,12 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
     @Override
     public void updateData(Object o) {
         boolean isFirstLogin = BaseApplication.getAppComponent().getSharedPreferences()
-                .getBoolean(ConstantUtil.FIRST_STATUS, false);
+                .getBoolean(UserManager.getInstance().getCurrentUserObjectId()+ConstantUtil.FIRST_STATUS, false);
         if (isFirstLogin) {
             BaseApplication.getAppComponent()
                     .getSharedPreferences()
-                    .edit().putBoolean(ConstantUtil.FIRST_STATUS, false).apply();
-            Intent intent = new Intent(LoginActivity.this, EditUserInfoActivity.class);
-            intent.putExtra(Constant.USER,UserManager.getInstance().getCurrentUser());
-            startActivity(intent);
+                    .edit().putBoolean(UserManager.getInstance().getCurrentUserObjectId()+ConstantUtil.FIRST_STATUS, false).apply();
+            EditUserInfoActivity.start(this,UserManager.getInstance().getCurrentUserObjectId());
         } else {
             User user = UserManager.getInstance().getCurrentUser();
             dealResultInfo(user);

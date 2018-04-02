@@ -141,4 +141,17 @@ public class BaseMessage extends BmobObject implements MultipleItem {
                 }
                 return false;
         }
+
+
+        @Override
+        public String toString() {
+                return "BaseMessage{" +
+                        "content='" + content + '\'' +
+                        ", belongId='" + belongId + '\'' +
+                        ", contentType=" + contentType +
+                        ", readStatus=" + readStatus +
+                        ", sendStatus=" + sendStatus +
+                        ", createTime=" + createTime +
+                        '}';
+        }
 }

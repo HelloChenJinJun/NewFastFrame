@@ -17,6 +17,7 @@ import com.example.chat.events.RecentEvent;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.chat.ChatActivity;
+import com.example.chat.mvp.main.HomeFragment;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.swipeview.Closeable;
@@ -153,7 +154,7 @@ public class RecentFragment extends AppBaseFragment implements SwipeRefreshLayou
         public void onHiddenChanged(boolean hidden) {
                 super.onHiddenChanged(hidden);
                 if (!hidden) {
-                        updateTitle("聊天");
+                        ((HomeFragment) getParentFragment()).updateTitle("聊天");
                 }
         }
 

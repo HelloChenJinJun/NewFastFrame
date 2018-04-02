@@ -138,12 +138,12 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                         intent.putExtra("isLogout", true);
                         intent.putExtra(ConstantUtil.FROM,ConstantUtil.FROM_MAIN);
                         sendBroadcast(intent);
-                        Intent loginIntent = new Intent(this, LoginActivity.class);
-                        startActivity(loginIntent);
                         UserManager.getInstance().logout();
                         if (!BaseApplication
                                 .getAppComponent().getSharedPreferences()
                                 .getBoolean(ConstantUtil.IS_ALONE, true)) {
+                                Intent loginIntent = new Intent(this, LoginActivity.class);
+                                startActivity(loginIntent);
                                 LoginEvent loginEvent=new LoginEvent();
                                 loginEvent.setErrorMessage("账号退出");
                                 UserInfoEvent userInfoEvent=new UserInfoEvent();
