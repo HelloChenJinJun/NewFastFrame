@@ -26,18 +26,31 @@ public class RecentMessageEntity {
     private int contentType;
     private int type;
 
-    @Generated(hash = 1446945240)
+//    发送状态
+    private int sendStatus;
+
+    @Generated(hash = 1457310003)
     public RecentMessageEntity(String id, String content, long createdTime,
-            int contentType, int type) {
+            int contentType, int type, int sendStatus) {
         this.id = id;
         this.content = content;
         this.createdTime = createdTime;
         this.contentType = contentType;
         this.type = type;
+        this.sendStatus = sendStatus;
     }
 
     @Generated(hash = 122482021)
     public RecentMessageEntity() {
+    }
+
+
+    public int getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(int sendStatus) {
+        this.sendStatus = sendStatus;
     }
 
     public int getType() {

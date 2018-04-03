@@ -78,8 +78,8 @@ public class DownLoadManager {
 
                         @Override
                         public void onComplete(FileInfo fileInfo) {
-                                onDownLoadFileListener.onSuccess(fileInfo.getPath());
-                                LogUtil.e("接受到文件啦啦啦，文件路径为：" + fileInfo.getPath());
+                                onDownLoadFileListener.onSuccess(fileInfo.getPath() + fileInfo.getName());
+                                LogUtil.e("接受到文件啦啦啦，文件路径为：" + fileInfo.getPath() + fileInfo.getName());
                         }
 
                         @Override

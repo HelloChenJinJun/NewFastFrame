@@ -36,7 +36,9 @@ public class SendImageHolder extends BaseChatHolder {
         public void bindData(BaseMessage baseMessage, UserEntity userEntity) {
                 MessageContent messageContent= BaseApplication
                         .getAppComponent().getGson().fromJson(baseMessage.getContent(),MessageContent.class);
-                setImageUrl(R.id.iv_item_activity_chat_send_image,messageContent.getUrlList().get(0));
+                setImageUrl(R.id.iv_item_activity_chat_send_image,messageContent.getUrlList().get(0))
+                .setOnItemChildClickListener(R.id.iv_item_activity_chat_send_image);
+
         }
 
 

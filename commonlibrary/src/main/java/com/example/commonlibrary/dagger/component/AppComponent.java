@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.example.commonlibrary.bean.chat.DaoSession;
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.dagger.module.AppConfigModule;
 import com.example.commonlibrary.dagger.module.AppModule;
 import com.example.commonlibrary.dagger.module.GlobalConfigModule;

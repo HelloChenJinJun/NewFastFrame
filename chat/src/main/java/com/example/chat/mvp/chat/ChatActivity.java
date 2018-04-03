@@ -39,6 +39,7 @@ import com.example.chat.bean.MessageContent;
 import com.example.chat.dagger.chat.ChatActivityModule;
 import com.example.chat.dagger.chat.DaggerChatActivityComponent;
 import com.example.chat.events.MessageInfoEvent;
+import com.example.chat.events.NetStatusEvent;
 import com.example.chat.events.RecentEvent;
 import com.example.chat.events.RefreshMenuEvent;
 import com.example.chat.manager.MsgManager;
@@ -79,6 +80,7 @@ import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayer;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    HappyChat
@@ -118,6 +120,24 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     public void initView() {
         initMiddleView();
         initBottomView();
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        from = getIntent().getStringExtra(Constant.FROM);
+        if (from.equals(Constant.TYPE_PERSON)) {
+            uid = getIntent().getStringExtra(Constant.ID);
+            userEntity = UserDBManager.getInstance().getUser(uid);
+        } else if (from.equals(Constant.TYPE_GROUP)) {
+            groupId = getIntent().getStringExtra(Constant.ID);
+            groupTableEntity = UserDBManager.getInstance().getGroupTableEntity(groupId);
+
+        }
+        initActionBar();
+        refreshData();
+        scrollToBottom();
     }
 
     private void initMiddleView() {
@@ -197,15 +217,27 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         mAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
+
+            }
+            public void onItemChildClick(int position, View view, int id) {
                 BaseMessage baseMessage=mAdapter.getData(position);
-                Integer contentType=baseMessage.getContentType();
-                if (contentType.equals(Constant.TAG_MSG_TYPE_LOCATION)) {
+                if (id == R.id.iv_item_activity_chat_send_retry
+                       ) {
+                    reSendMessage(baseMessage);
+                }else if (id==R.id.iv_item_activity_chat_send_avatar){
+                    UserInfoActivity.start(ChatActivity.this, UserManager.getInstance()
+                    .getCurrentUserObjectId());
+                } else if (id == R.id.iv_item_activity_chat_receive_avatar) {
+                    UserInfoActivity.start(ChatActivity.this,baseMessage.getBelongId());
+                } else if (id == R.id.rl_chat_send_location_item_content
+                        || id == R.id.rl_chat_receive_location_item_content) {
                     MessageContent messageContent=gson.fromJson(baseMessage.getContent(),MessageContent.class);
                     MapActivity.start(ChatActivity.this,true
-                    ,messageContent.getLongitude()
-                    ,messageContent.getLatitude()
-                    ,messageContent.getAddress(),Constant.REQUEST_MAP);
-                }else if (contentType.equals(Constant.TAG_MSG_TYPE_IMAGE)){
+                            ,messageContent.getLongitude()
+                            ,messageContent.getLatitude()
+                            ,messageContent.getAddress(),Constant.REQUEST_MAP);
+                }else if (id==R.id.iv_item_activity_chat_send_image
+                        ||id==R.id.iv_item_activity_chat_receive_image){
                     ArrayList<ImageItem>  list=new ArrayList<>();
                     int temp=0;
                     int currentPosition=0;
@@ -213,7 +245,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                         BaseMessage item=mAdapter.getData(i);
                         if (item.getContentType().equals(Constant.TAG_MSG_TYPE_IMAGE)){
                             MessageContent messageContent=gson.fromJson(item.getContent(),MessageContent
-                            .class);
+                                    .class);
                             if (item.equals(baseMessage)){
                                 currentPosition=temp;
                             }
@@ -224,19 +256,6 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                         }
                     }
                     PhotoPreViewActivity.start(ChatActivity.this,currentPosition,list,false);
-                }
-            }
-
-            @Override
-            public void onItemChildClick(int position, View view, int id) {
-                if (id == R.id.iv_item_activity_chat_send_retry
-                       ) {
-                    reSendMessage(mAdapter.getData(position));
-                }else if (id==R.id.iv_item_activity_chat_send_avatar){
-                    UserInfoActivity.start(ChatActivity.this, UserManager.getInstance()
-                    .getCurrentUserObjectId());
-                } else if (id == R.id.iv_item_activity_chat_receive_avatar) {
-                    UserInfoActivity.start(ChatActivity.this,mAdapter.getData(position).getBelongId());
                 }
             }
         });
@@ -276,12 +295,12 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
 
     private void reSendMessage(BaseMessage data) {
         data.setSendStatus(Constant.SEND_STATUS_SENDING);
+        mAdapter.addData(data);
         if (data instanceof ChatMessage){
             presenter.sendChatMessage(((ChatMessage) data));
         }else {
             presenter.sendGroupChatMessage(((GroupChatMessage) data));
         }
-        mAdapter.addData(data);
     }
 
 
@@ -298,10 +317,23 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                 for (GroupTableMessage message : messageInfoEvent.getGroupTableMessageList()
                         ) {
 //                    onProcessGroupTableMessage(message);
-
                 }
             }
         }));
+
+        presenter.registerEvent(NetStatusEvent.class, netStatusEvent -> {
+            if (netStatusEvent.isConnected()) {
+                ToastUtils.showShortToast("断线重连.......");
+                for (BaseMessage message :
+                        mAdapter.getData()) {
+                    if (message.getSendStatus().equals(Constant.SEND_STATUS_FAILED)
+                            &&message.getBelongId().equals(UserManager.getInstance()
+                    .getCurrentUserObjectId())) {
+                            reSendMessage(message);
+                    }
+                }
+            }
+        });
 
 
         if (from.equals(Constant.TYPE_GROUP)) {
@@ -403,15 +435,17 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
 
     private void refreshData() {
         if (from.equals(Constant.TYPE_PERSON)) {
-            UserDBManager.getInstance().updateMessageReadStatusForUser(userEntity.getUid(), Constant.READ_STATUS_READED);
+            if (UserDBManager.getInstance().updateMessageReadStatusForUser(userEntity.getUid(), Constant.READ_STATUS_READED)) {
+                RxBusManager.getInstance().post(new RecentEvent(uid,RecentEvent.ACTION_ADD));
+                RxBusManager.getInstance().post(new RefreshMenuEvent(0));
+            }
             mAdapter.refreshData(UserDBManager.getInstance().getAllChatMessageById(uid, 0L));
-            RxBusManager.getInstance().post(new RecentEvent(uid,RecentEvent.ACTION_ADD));
-            RxBusManager.getInstance().post(new RefreshMenuEvent(0));
         } else {
-            UserDBManager.getInstance().updateGroupChatReadStatus(groupId, Constant.READ_STATUS_READED);
+            if (UserDBManager.getInstance().updateGroupChatReadStatus(groupId, Constant.READ_STATUS_READED)) {
+                RxBusManager.getInstance().post(new RecentEvent(groupId,RecentEvent.ACTION_ADD));
+                RxBusManager.getInstance().post(new RefreshMenuEvent(0));
+            }
             mAdapter.refreshData(UserDBManager.getInstance().getAllGroupChatMessageById(groupId, 0L));
-            RxBusManager.getInstance().post(new RecentEvent(groupId,RecentEvent.ACTION_ADD));
-            RxBusManager.getInstance().post(new RefreshMenuEvent(0));
         }
     }
 

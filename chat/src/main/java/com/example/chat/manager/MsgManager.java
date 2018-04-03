@@ -27,7 +27,6 @@ import com.example.chat.util.SystemUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
-import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.PostCommentEntity;
@@ -35,6 +34,7 @@ import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.PublicPostEntityDao;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.google.gson.Gson;
 
@@ -110,16 +110,7 @@ public class MsgManager {
         final ChatMessage msg = createTagMessage(targetId, messageType);
 //                                  在这里发送完同意请求后，把消息转为对方发送的消息
         if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
-            RecentMessageEntity recentMessageEntity=new RecentMessageEntity();
-            recentMessageEntity.setId(targetId);
-            recentMessageEntity.setCreatedTime(msg.getCreateTime());
-            recentMessageEntity.setContent(msg.getContent());
-            recentMessageEntity.setContentType(msg.getContentType());
-            recentMessageEntity.setType(RecentMessageEntity.TYPE_PERSON);
-            LogUtil.e("保存同意消息到最近会话列表中");
-            UserDBManager.getInstance()
-                    .getDaoSession().getRecentMessageEntityDao()
-                    .insertOrReplace(recentMessageEntity);
+            UserDBManager.getInstance().addOrUpdateRecentMessage(msg);
             LogUtil.e("保存同意消息到聊天消息表中");
 //                                    这里将发送的欢迎消息转为对方发送
             ChatMessage chatMessage=new ChatMessage();
@@ -1442,6 +1433,7 @@ public class MsgManager {
             recentMessageEntity.setId(((GroupChatMessage) message).getGroupId());
         }
         recentMessageEntity.setContent(message.getContent());
+        recentMessageEntity.setSendStatus(message.getSendStatus());
         recentMessageEntity.setContentType(message.getContentType());
         recentMessageEntity.setCreatedTime(message.getCreateTime());
         return recentMessageEntity;

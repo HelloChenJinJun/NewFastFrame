@@ -9,8 +9,6 @@ import com.example.chat.bean.User;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
 import com.example.commonlibrary.bean.chat.ChatMessageEntityDao;
-import com.example.commonlibrary.bean.chat.DaoMaster;
-import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupChatEntityDao;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
@@ -19,6 +17,8 @@ import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntityDao;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
+import com.example.commonlibrary.bean.music.DaoMaster;
+import com.example.commonlibrary.bean.music.DaoSession;
 
 import org.greenrobot.greendao.database.Database;
 
@@ -324,8 +324,10 @@ public class UserDBManager {
     public void addOrUpdateChatMessage(ChatMessage chatMessage) {
         ChatMessageEntity chatMessageEntity=getChatMessage(chatMessage);
         if (chatMessageEntity != null) {
+           ChatMessageEntity entity= MsgManager.getInstance().cover(chatMessage);
+            entity.setId(chatMessageEntity.getId());
             daoSession.getChatMessageEntityDao()
-                    .update(chatMessageEntity);
+                    .update(entity);
         }else {
             daoSession.getChatMessageEntityDao()
                     .insert(MsgManager.getInstance().cover(chatMessage));
@@ -381,7 +383,7 @@ public class UserDBManager {
         return list.size() == 0 ? null : list.get(0);
     }
 
-    public void updateMessageReadStatusForUser(String uid, int readStatus) {
+    public boolean updateMessageReadStatusForUser(String uid, int readStatus) {
         List<ChatMessageEntity> list = daoSession
                 .getChatMessageEntityDao().queryBuilder()
                 .where(ChatMessageEntityDao.Properties.BelongId.eq(uid)
@@ -395,6 +397,7 @@ public class UserDBManager {
             }
         }
         daoSession.getChatMessageEntityDao().updateInTx(list);
+        return list.size()>0;
     }
 
     public List<BaseMessage> getAllChatMessageById(String uid,long time) {
@@ -416,7 +419,7 @@ public class UserDBManager {
         return result;
     }
 
-    public void updateGroupChatReadStatus(String groupId, Integer readStatus) {
+    public boolean updateGroupChatReadStatus(String groupId, Integer readStatus) {
         List<GroupChatEntity> list = daoSession
                 .getGroupChatEntityDao().queryBuilder()
                 .where(GroupChatEntityDao.Properties.GroupId.eq(groupId)
@@ -429,6 +432,7 @@ public class UserDBManager {
             }
             daoSession.getGroupChatEntityDao().updateInTx(list);
         }
+        return list.size()>0;
     }
 
     public List<BaseMessage> getAllGroupChatMessageById(String groupId, long time) {

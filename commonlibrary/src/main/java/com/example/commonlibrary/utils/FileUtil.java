@@ -29,17 +29,7 @@ public class FileUtil {
             file.mkdir();
         }
         return file;
-//        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//            File file = null;
-//            file = context.getExternalCacheDir();//获取系统管理的sd卡缓存文件
-//            if (file == null) {//如果获取的文件为空,就使用自己定义的缓存文件夹做缓存路径
-//                file = new File(getCacheFilePath(context));
-//                makeDirs(file);
-//            }
-//            return file;
-//        } else {
-//            return context.getCacheDir();
-//        }
+
     }
 
     private static String getCacheFilePath(Context context) {
@@ -68,6 +58,8 @@ public class FileUtil {
             String expendName = path.substring(index + 1);
             if (expendName.contains("?")) {
                 return expendName.substring(0, expendName.indexOf("?"));
+            }else {
+                return expendName;
             }
         }
         return null;

@@ -65,7 +65,7 @@
 
         <activity android:name=".mvp.register.RegisterActivity"/>
         <activity android:name=".mvp.searchFriend.SearchFriendActivity"/>
-        <activity android:name=".mvp.chat.ChatActivity"/>
+        <activity android:name=".mvp.chat.ChatActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.map.MapActivity"/>
         <activity android:name=".mvp.selectFriend.SelectedFriendsActivity"/>
         <activity android:name=".mvp.search.SearchActivity"/>
@@ -91,6 +91,16 @@
         <activity android:name=".mvp.preview.PhotoPreViewActivity"/>
         <activity android:name=".mvp.EditShare.EditShareInfoActivity"/>
 
+
+
+
+        <receiver android:name=".receiver.NetWorkChangedReceiver">
+            <intent-filter>
+                <action android:name="android.NET.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.Net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
         <!--高德地图API_KEY-->
         <meta-data android:name="com.amap.api.v2.apikey"
             android:value="d20d35b2237fa46693bfad21e0bc41fe">

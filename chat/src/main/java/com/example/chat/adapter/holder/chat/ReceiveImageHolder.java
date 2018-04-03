@@ -36,6 +36,7 @@ public class ReceiveImageHolder extends BaseChatHolder {
                 MessageContent messageContent= BaseApplication
                         .getAppComponent().getGson().fromJson(baseMessage.getContent(),MessageContent.class);
                setImageUrl(R.id.iv_item_activity_chat_receive_image,messageContent
-               .getUrlList().get(0));
+               .getUrlList().get(0))
+               .setOnItemChildClickListener(R.id.iv_item_activity_chat_receive_image);
         }
 }

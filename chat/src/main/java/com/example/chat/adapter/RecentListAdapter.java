@@ -1,5 +1,7 @@
 package com.example.chat.adapter;
 
+import android.widget.TextView;
+
 import com.example.chat.R;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.MessageContent;
@@ -55,17 +57,23 @@ public class RecentListAdapter extends BaseSwipeRecyclerAdapter<RecentMessageEnt
                         .setImageUrl(R.id.riv_recent_avatar,avatar)
                 .setOnItemClickListener();
                 int contentType = data.getContentType();
+                boolean isFailed=(data.getSendStatus()==Constant.SEND_STATUS_FAILED);
+            if (isFailed) {
+                ((TextView) holder.getView(R.id.tv_recent_content))
+                        .setTextColor(holder
+                        .getContext().getResources().getColor(R.color.red_500));
+            }
                 if (contentType == Constant.TAG_MSG_TYPE_LOCATION) {
-                        holder.setText(R.id.tv_recent_content, "[位置]");
+                        holder.setText(R.id.tv_recent_content,getContent(isFailed,"[位置]"));
                 } else if (contentType == Constant.TAG_MSG_TYPE_IMAGE) {
-                        holder.setText(R.id.tv_recent_content, "[图片]");
+                        holder.setText(R.id.tv_recent_content,getContent(isFailed,"[图片]"));
                 } else if (contentType == Constant.TAG_MSG_TYPE_VOICE) {
-                        holder.setText(R.id.tv_recent_content, "[语音]");
+                        holder.setText(R.id.tv_recent_content, getContent(isFailed,"[语音]"));
                 } else if (contentType == Constant.TAG_MSG_TYPE_TEXT) {
                     MessageContent messageContent=gson.fromJson(data.getContent(),MessageContent.class);
-                    holder.setText(R.id.tv_recent_content, FaceTextUtil.toSpannableString(holder.itemView.getContext(), messageContent.getContent()));                } else if (contentType==Constant.TAG_MSG_TYPE_VIDEO){
+                    holder.setText(R.id.tv_recent_content, getContent(isFailed,FaceTextUtil.toSpannableString(holder.itemView.getContext(), messageContent.getContent())));
                 } else if (contentType == Constant.TAG_MSG_TYPE_VIDEO) {
-                    holder.setText(R.id.tv_recent_content, "[视频]");
+                    holder.setText(R.id.tv_recent_content,getContent(isFailed,"[视频]"));
                 }
                 if (unReadCount > 0) {
                         holder.setVisible(R.id.tv_recent_unread, true);
@@ -74,6 +82,15 @@ public class RecentListAdapter extends BaseSwipeRecyclerAdapter<RecentMessageEnt
                         holder.setVisible(R.id.tv_recent_unread, false);
                 }
         }
+
+    private CharSequence getContent(boolean isFailed, CharSequence content) {
+            StringBuilder stringBuilder=new StringBuilder();
+        if (isFailed) {
+            stringBuilder.append("[失败]");
+        }
+        stringBuilder.append(content);
+            return stringBuilder;
+    }
 
 
 

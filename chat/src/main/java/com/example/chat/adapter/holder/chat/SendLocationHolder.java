@@ -39,7 +39,7 @@ public class SendLocationHolder extends BaseChatHolder {
                         .getAppComponent().getGson().fromJson(baseMessage.getContent(),MessageContent.class);
                 setImageUrl(R.id.iv_item_activity_chat_send_location_thumb,messageContent.getUrlList().get(0))
                 .setText(R.id.tv_item_activity_chat_send_location_content,messageContent.getAddress())
-                .setOnItemClickListener();
+                .setOnItemChildClickListener(R.id.rl_chat_send_location_item_content);
         }
 
 }

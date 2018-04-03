@@ -68,8 +68,9 @@ public class MapActivity extends SlideBaseActivity implements View.OnClickListen
 
         @Override
         public void initView() {
+                boolean isBrowse=getIntent().getBooleanExtra(Constant.IS_BROWSE,false);
                 if (latitude == 0 || longitude == 0) {
-                        if (getIntent().getBooleanExtra(Constant.IS_BROWSE,false)) {
+                        if (isBrowse) {
                                 longitude = Double.valueOf(getIntent().getStringExtra(Constant.LONGITUDE));
                                 latitude = Double.valueOf(getIntent().getStringExtra(Constant.LATITUDE));
                                 address = getIntent().getStringExtra(Constant.ADDRESS);
@@ -81,6 +82,8 @@ public class MapActivity extends SlideBaseActivity implements View.OnClickListen
                                         address =sharedPreferences.getString(Constant.ADDRESS,null);
                         }
                 }
+
+
 
 
                 send = (Button) findViewById(R.id.btn_map_send);
@@ -103,6 +106,10 @@ public class MapActivity extends SlideBaseActivity implements View.OnClickListen
                         type.setClickable(true);
                         updateMarkerLocation();
                 });
+
+                if (isBrowse){
+                    send.setVisibility(View.GONE);
+                }
         }
 
 

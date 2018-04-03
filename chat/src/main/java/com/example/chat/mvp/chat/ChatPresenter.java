@@ -44,7 +44,8 @@ public class ChatPresenter extends AppBasePresenter<IView<BaseMessage>,ChatModel
                 UserDBManager.getInstance()
                         .addOrUpdateChatMessage((ChatMessage) baseMessage);
                 UserDBManager.getInstance().addOrUpdateRecentMessage(baseMessage);
-                    iView.updateData(baseMessage);
+                RxBusManager.getInstance().post(new RecentEvent(((ChatMessage) baseMessage).getToId(),RecentEvent.ACTION_ADD));
+                iView.updateData(baseMessage);
             }
         });
 

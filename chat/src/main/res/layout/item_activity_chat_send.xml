@@ -43,17 +43,11 @@
                 android:text="姓名"
                 android:textSize="16sp"
                 />
-
-            <RelativeLayout
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
                 <ViewStub
                     android:id="@+id/vs_item_activity_chat_send_view_stub"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
-            </RelativeLayout>
         </LinearLayout>
         <FrameLayout
             android:layout_centerVertical="true"
@@ -63,8 +57,8 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/iv_item_activity_chat_send_retry"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_retry"
                 android:visibility="invisible"/>

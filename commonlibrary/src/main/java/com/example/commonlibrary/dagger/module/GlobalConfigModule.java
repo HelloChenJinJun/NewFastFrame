@@ -3,8 +3,8 @@ package com.example.commonlibrary.dagger.module;
 import android.app.Application;
 import android.support.annotation.Nullable;
 
-import com.example.commonlibrary.bean.chat.DaoMaster;
-import com.example.commonlibrary.bean.chat.DaoSession;
+import com.example.commonlibrary.bean.music.DaoMaster;
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.interceptor.LogInterceptor;
 import com.example.commonlibrary.manager.ActivityManager;
 import com.example.commonlibrary.net.OkHttpGlobalHandler;

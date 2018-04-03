@@ -46,7 +46,8 @@ public abstract class BaseChatHolder extends BaseWrappedViewHolder {
                         setVisible(R.id.tv_item_activity_chat_send_time,isShowTime)
                                 .setImageUrl(R.id.iv_item_activity_chat_send_avatar,userEntity.getAvatar())
                         .setText(R.id.tv_item_activity_chat_send_name,userEntity.getName())
-                        .setOnItemChildClickListener(R.id.iv_item_activity_chat_send_avatar);
+                        .setOnItemChildClickListener(R.id.iv_item_activity_chat_send_avatar)
+                        .setOnItemChildClickListener(R.id.iv_item_activity_chat_send_retry);
                         int sendStatus = baseMessage.getSendStatus();
                         int readStatus = baseMessage.getReadStatus();
                         if (sendStatus == Constant.SEND_STATUS_SUCCESS) {
