@@ -44,10 +44,16 @@
                 android:textSize="16sp"
                 />
 
-            <ViewStub
-                android:id="@+id/vs_item_activity_chat_send_view_stub"
+            <RelativeLayout
+
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+                <ViewStub
+                    android:id="@+id/vs_item_activity_chat_send_view_stub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </RelativeLayout>
         </LinearLayout>
         <FrameLayout
             android:layout_centerVertical="true"
@@ -66,7 +72,7 @@
                 android:id="@+id/tv_item_activity_chat_send_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="已阅读"
+                android:text="已发送"
                 android:textColor="@color/base_color_text_grey"
                 android:textSize="12sp"/>
             <ProgressBar

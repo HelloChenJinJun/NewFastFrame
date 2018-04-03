@@ -258,7 +258,6 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
     }
 
     public BaseWrappedViewHolder bindAdapter(BaseRecyclerAdapter adapter) {
-        CommonLogger.e("绑定adapter");
         this.adapter = adapter;
         return this;
     }

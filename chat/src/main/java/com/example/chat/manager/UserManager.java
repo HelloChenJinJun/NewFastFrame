@@ -18,13 +18,10 @@ import com.example.chat.listener.AddBlackCallBackListener;
 import com.example.chat.listener.AddFriendCallBackListener;
 import com.example.chat.listener.CancelBlackCallBlackListener;
 import com.example.chat.listener.OnSendTagMessageListener;
-import com.example.chat.util.CommonUtils;
 import com.example.chat.util.LogUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.bean.chat.UserEntityDao;
-import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.utils.CommonLogger;
 
 import java.util.ArrayList;

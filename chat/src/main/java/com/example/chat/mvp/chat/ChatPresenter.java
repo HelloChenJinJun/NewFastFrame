@@ -30,7 +30,7 @@ public class ChatPresenter extends AppBasePresenter<IView<BaseMessage>,ChatModel
         MsgManager.getInstance().sendChatMessage(chatMessage, new OnCreateChatMessageListener() {
             @Override
             public void onSuccess(BaseMessage baseMessage) {
-                baseMessage.setReadStatus(Constant.READ_STATUS_READED);
+                baseMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
                 UserDBManager.getInstance()
                         .addOrUpdateChatMessage((ChatMessage) baseMessage);
                 UserDBManager.getInstance().addOrUpdateRecentMessage(baseMessage);

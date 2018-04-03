@@ -98,8 +98,10 @@ public class ChatMessageAdapter extends BaseMultipleRecyclerAdapter<BaseMessage,
                 return new SendTextHolder(layoutInflater.inflate(getLayoutIds().get(viewType), parent, false));
         }
 
+
         @Override
         protected void convert(BaseChatHolder holder, BaseMessage data) {
+                holder.bindAdapter(this);
                 holder.initCommonData(data,shouldShowTime(holder.getAdapterPosition()));
         }
 

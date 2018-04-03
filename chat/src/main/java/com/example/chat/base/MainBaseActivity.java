@@ -71,7 +71,6 @@ public abstract class MainBaseActivity<T, P extends BasePresenter> extends BaseA
 
     private void checkLogin() {
         if (UserManager.getInstance().getCurrentUser() == null) {
-            ToastUtils.showShortToast("你的帐号已在其他设备登陆,请重新登录!");
             Intent intent = new Intent(this, LoginActivity.class);
             if (!BaseApplication
                     .getAppComponent().getSharedPreferences()

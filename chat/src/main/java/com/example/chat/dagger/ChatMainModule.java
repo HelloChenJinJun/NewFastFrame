@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import com.example.chat.ChatInterceptor;
 import com.example.chat.MainRepositoryManager;
 import com.example.chat.base.Constant;
-import com.example.commonlibrary.bean.music.DaoSession;
+import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.google.gson.Gson;
 

@@ -9,6 +9,8 @@ import com.example.chat.bean.User;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
 import com.example.commonlibrary.bean.chat.ChatMessageEntityDao;
+import com.example.commonlibrary.bean.chat.DaoMaster;
+import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupChatEntityDao;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
@@ -17,8 +19,6 @@ import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntityDao;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
-import com.example.commonlibrary.bean.music.DaoMaster;
-import com.example.commonlibrary.bean.music.DaoSession;
 
 import org.greenrobot.greendao.database.Database;
 
@@ -116,7 +116,18 @@ public class UserDBManager {
     public boolean hasMessage(String conversationId, Long time) {
         return daoSession.getChatMessageEntityDao().queryBuilder()
                 .where(ChatMessageEntityDao.Properties.ConversationId.eq(conversationId)
-                        , ChatMessageEntityDao.Properties.CreatedTime.eq(time)).build().list().size() > 0;
+                        , ChatMessageEntityDao.Properties.CreatedTime.eq(time)
+                ,ChatMessageEntityDao.Properties.MessageType.notEq(ChatMessage.MESSAGE_TYPE_READED)).build().list().size() > 0;
+    }
+
+
+
+    public boolean hasReadMessage(String conversationId,Long time){
+        return daoSession.getChatMessageEntityDao().queryBuilder()
+                .where(ChatMessageEntityDao.Properties.ConversationId.eq(conversationId)
+                        , ChatMessageEntityDao.Properties.CreatedTime.eq(time)
+                        ,ChatMessageEntityDao.Properties.MessageType.eq(ChatMessage.MESSAGE_TYPE_READED)
+                ).build().list().size() > 0;
     }
 
     public void addChatMessage(ChatMessage message) {
@@ -170,7 +181,9 @@ public class UserDBManager {
     public long getUnReadChatMessageSize(String id) {
         return daoSession.getChatMessageEntityDao()
                 .queryBuilder().where(ChatMessageEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD)
-                        , ChatMessageEntityDao.Properties.BelongId.eq(id))
+                        , ChatMessageEntityDao.Properties.BelongId.eq(id)
+                ,ChatMessageEntityDao.Properties.MessageType
+                .in(ChatMessage.MESSAGE_TYPE_NORMAL,ChatMessage.MESSAGE_TYPE_AGREE))
                 .count();
     }
 
@@ -377,18 +390,19 @@ public class UserDBManager {
                 ,ChatMessageEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD))
                 .build().list();
         if (list.size()>0) {
-            for (ChatMessageEntity item :
-                    list) {
-                item.setSendStatus(readStatus);
+            for (int i = 0; i < list.size(); i++) {
+                list.get(i).setReadStatus(readStatus);
             }
-            daoSession.getChatMessageEntityDao().updateInTx(list);
         }
+        daoSession.getChatMessageEntityDao().updateInTx(list);
     }
 
     public List<BaseMessage> getAllChatMessageById(String uid,long time) {
+        String currentUserId=UserManager.getInstance().getCurrentUserObjectId();
         List<ChatMessageEntity>  chatMessageEntityList=
                 daoSession.getChatMessageEntityDao().queryBuilder()
-                .where(ChatMessageEntityDao.Properties.BelongId.eq(uid)
+                .where(ChatMessageEntityDao.Properties.ConversationId.in(uid+"&"+
+                                currentUserId,currentUserId+"&"+uid)
                 ,ChatMessageEntityDao.Properties.MessageType.in(ChatMessage.MESSAGE_TYPE_NORMAL,ChatMessage.MESSAGE_TYPE_AGREE)
                 ,ChatMessageEntityDao.Properties.CreatedTime.gt(time))
                         .orderAsc(ChatMessageEntityDao.Properties.CreatedTime)

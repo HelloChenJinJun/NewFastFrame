@@ -40,6 +40,7 @@ import com.example.chat.dagger.chat.ChatActivityModule;
 import com.example.chat.dagger.chat.DaggerChatActivityComponent;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.RecentEvent;
+import com.example.chat.events.RefreshMenuEvent;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
@@ -87,7 +88,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> implements View.OnClickListener, TextWatcher, View.OnLongClickListener, View.OnTouchListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView display;
+    private SuperRecyclerView display;
     private EditText input;
     private Button speak;
     private Button voice;
@@ -124,7 +125,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         record_display = (ImageView) findViewById(R.id.iv_chat_middle_voice_display);
         record_tip = (TextView) findViewById(R.id.tv_chat_middle_voice_tip);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swl_chat_refresh);
-        display = (RecyclerView) findViewById(R.id.rcy_chat_display);
+        display = (SuperRecyclerView) findViewById(R.id.srcv_chat_display);
     }
 
 
@@ -405,10 +406,12 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
             UserDBManager.getInstance().updateMessageReadStatusForUser(userEntity.getUid(), Constant.READ_STATUS_READED);
             mAdapter.refreshData(UserDBManager.getInstance().getAllChatMessageById(uid, 0L));
             RxBusManager.getInstance().post(new RecentEvent(uid,RecentEvent.ACTION_ADD));
+            RxBusManager.getInstance().post(new RefreshMenuEvent(0));
         } else {
             UserDBManager.getInstance().updateGroupChatReadStatus(groupId, Constant.READ_STATUS_READED);
             mAdapter.refreshData(UserDBManager.getInstance().getAllGroupChatMessageById(groupId, 0L));
             RxBusManager.getInstance().post(new RecentEvent(groupId,RecentEvent.ACTION_ADD));
+            RxBusManager.getInstance().post(new RefreshMenuEvent(0));
         }
     }
 
@@ -611,7 +614,6 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
             messageContent.setContent(input.getText().toString().trim());
             sendMessage(messageContent,Constant.TAG_MSG_TYPE_TEXT);
         } else if (i == R.id.tv_chat_bottom_picture) {
-            SystemUtil.pickPhoto(this, SystemUtil.REQUEST_CODE_SELECT_PHOTO);
             PhotoSelectActivity.start(this,null,true,false,null);
         } else if (i == R.id.tv_chat_bottom_location) {
             MapActivity.start(this,false,null,null,null,Constant.REQUEST_MAP);

@@ -14,12 +14,12 @@
             android:id="@+id/swl_chat_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rcy_chat_display"
+            <com.example.commonlibrary.baseadapter.SuperRecyclerView
+                android:id="@+id/srcv_chat_display"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            </android.support.v7.widget.RecyclerView>
+            </com.example.commonlibrary.baseadapter.SuperRecyclerView>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

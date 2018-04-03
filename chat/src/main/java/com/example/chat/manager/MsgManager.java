@@ -27,6 +27,7 @@ import com.example.chat.util.SystemUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
+import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.PostCommentEntity;
@@ -34,7 +35,6 @@ import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.PublicPostEntityDao;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
-import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.google.gson.Gson;
 
@@ -337,7 +337,6 @@ public class MsgManager {
                         @Override
                         public void onSuccess(User user) {
                             updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
-                            updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                             UserDBManager.getInstance().addChatMessage(message);
                             UserDBManager.getInstance().addOrUpdateRecentMessage(message);
                             listener.onSuccess(message);
@@ -364,19 +363,24 @@ public class MsgManager {
                 }
                 break;
             case ChatMessage.MESSAGE_TYPE_READED:
-                updateMsgReaded(true, message.getConversationId(), message.getCreateTime());
-                UserDBManager.getInstance().updateMessageReadStatus(message.getConversationId(),message.getCreateTime(),Constant.READ_STATUS_READED);
-                listener.onSuccess(message);
+                if (!UserDBManager.getInstance().hasReadMessage(message.getConversationId(),message.getCreateTime())) {
+                    UserDBManager.getInstance().addChatMessage(message);
+                    updateMsgReaded(true, message.getConversationId(), message.getCreateTime());
+                    UserDBManager.getInstance().updateMessageReadStatus(message.getConversationId(),message.getCreateTime(),Constant.READ_STATUS_READED);
+                    listener.onSuccess(message);
+                }
                 break;
             default:
                 //                                聊天消息
 //                                接收到的消息有种情况，1、推送接收到的消息，已经在检测得到了，所以推送的就不要了
                 if (!UserDBManager.getInstance().hasMessage(message.getConversationId(), message.getCreateTime())){
+                    UserDBManager.getInstance().addChatMessage(message);
+                    UserDBManager.getInstance().addOrUpdateRecentMessage(message);
                     updateMsgReaded(false,message.getConversationId(), message.getCreateTime());
                     sendAskReadMsg(message.getConversationId(), message.getCreateTime());
                     listener.onSuccess(message);
                 }else {
-                    updateMsgReaded(false, message.getBelongId(), message.getCreateTime());
+                    updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                 }
                 break;
         }

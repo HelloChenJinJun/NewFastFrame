@@ -2,7 +2,7 @@ package com.example.cootek.newfastframe.dagger.main;
 
 import android.support.annotation.Nullable;
 
-import com.example.commonlibrary.bean.music.DaoSession;
+import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.cootek.newfastframe.MainRepositoryManager;
 import com.example.cootek.newfastframe.interceptor.MusicInterceptor;
