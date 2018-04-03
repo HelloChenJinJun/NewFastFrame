@@ -89,7 +89,7 @@ public class SplashActivity extends BaseActivity {
         }
 
         private void jumpToHome() {
-                HomeActivity.start(SplashActivity.this);
+                HomeActivity.start(SplashActivity.this, false);
                 finish();
         }
 

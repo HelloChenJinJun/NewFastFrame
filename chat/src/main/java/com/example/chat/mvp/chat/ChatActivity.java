@@ -39,6 +39,7 @@ import com.example.chat.bean.MessageContent;
 import com.example.chat.dagger.chat.ChatActivityModule;
 import com.example.chat.dagger.chat.DaggerChatActivityComponent;
 import com.example.chat.events.MessageInfoEvent;
+import com.example.chat.events.RecentEvent;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
@@ -181,6 +182,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         } else if (from.equals(Constant.TYPE_GROUP)) {
             groupId = getIntent().getStringExtra(Constant.ID);
             groupTableEntity = UserDBManager.getInstance().getGroupTableEntity(groupId);
+
         }
         initActionBar();
 //                 声音音量变化图片资源
@@ -402,9 +404,11 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         if (from.equals(Constant.TYPE_PERSON)) {
             UserDBManager.getInstance().updateMessageReadStatusForUser(userEntity.getUid(), Constant.READ_STATUS_READED);
             mAdapter.refreshData(UserDBManager.getInstance().getAllChatMessageById(uid, 0L));
+            RxBusManager.getInstance().post(new RecentEvent(groupId,RecentEvent.ACTION_ADD));
         } else {
             UserDBManager.getInstance().updateGroupChatReadStatus(groupId, Constant.READ_STATUS_READED);
             mAdapter.refreshData(UserDBManager.getInstance().getAllGroupChatMessageById(groupId, 0L));
+            RxBusManager.getInstance().post(new RecentEvent(groupId,RecentEvent.ACTION_ADD));
         }
     }
 
@@ -669,14 +673,18 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         if (from.equals(Constant.TYPE_PERSON)) {
             baseMessage=MsgManager.getInstance()
                     .createChatMessage(gson.toJson(messageContent),uid,contentType);
+            baseMessage.setSendStatus(Constant.SEND_STATUS_SENDING);
+            mAdapter.addData(baseMessage);
             presenter.sendChatMessage(((ChatMessage) baseMessage));
         }else {
             baseMessage=MsgManager.getInstance()
                     .createGroupChatMessage(gson.toJson(messageContent),groupId,contentType);
+            baseMessage.setSendStatus(Constant.SEND_STATUS_SENDING);
+            mAdapter.addData(baseMessage);
             presenter.sendGroupChatMessage(((GroupChatMessage) baseMessage));
         }
-        baseMessage.setSendStatus(Constant.SEND_STATUS_SENDING);
-        mAdapter.addData(baseMessage);
+        input.setText("");
+        CommonUtils.hideSoftInput(this,input);
     }
 
 

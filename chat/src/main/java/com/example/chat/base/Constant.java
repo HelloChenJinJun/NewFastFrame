@@ -71,7 +71,7 @@ public class Constant {
      */
     public static final Integer TAG_MSG_TYPE_LOCATION = 3;
 
-    public static final int TAG_MSG_TYPE_VIDEO = 5;
+    public static final Integer TAG_MSG_TYPE_VIDEO = 5;
     /**
      * 外部缓存数据的目录
      */
@@ -232,4 +232,5 @@ public class Constant {
     public static final String TITLE_WALLPAPER = "titleWallPaper";
     public static final String WALLPAPER = "wallPaper";
     public static final String CITY = "city";
+    public static final String FIRST_LOGIN = "first_login";
 }

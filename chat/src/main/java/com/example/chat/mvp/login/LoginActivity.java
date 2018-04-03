@@ -96,7 +96,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
         DaggerLoginComponent.builder().loginModule(new LoginModule(this))
                 .chatMainComponent(ChatApplication.getChatMainComponent())
                 .build().inject(this);
-        addDisposable(RxBusManager.getInstance().registerEvent(User.class, this::dealResultInfo, throwable -> {
+        addDisposable(RxBusManager.getInstance().registerEvent(User.class,user-> dealResultInfo(user,false), throwable -> {
         }));
         from=getIntent().getStringExtra(ConstantUtil.FROM);
         if (from!=null&&from.equals(ConstantUtil.FROM_MAIN)) {
@@ -175,7 +175,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
     }
 
 
-    private void dealResultInfo(User user) {
+    private void dealResultInfo(User user,boolean isFirstLogin) {
         if (from!=null) {
             Map<String, Object> map = new HashMap<>();
             map.put(ConstantUtil.AVATAR, user.getAvatar());
@@ -199,7 +199,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
                     .paramMap(map).context(this).provideName("news")
                     .actionName("person").isFinish(true).build());
         }else {
-            HomeActivity.start(this);
+            HomeActivity.start(this,isFirstLogin);
             finish();
         }
     }
@@ -236,14 +236,11 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
     public void updateData(Object o) {
         boolean isFirstLogin = BaseApplication.getAppComponent().getSharedPreferences()
                 .getBoolean(UserManager.getInstance().getCurrentUserObjectId()+ConstantUtil.FIRST_STATUS, false);
-        if (isFirstLogin) {
+
             BaseApplication.getAppComponent()
                     .getSharedPreferences()
-                    .edit().putBoolean(UserManager.getInstance().getCurrentUserObjectId()+ConstantUtil.FIRST_STATUS, false).apply();
-            EditUserInfoActivity.start(this,UserManager.getInstance().getCurrentUserObjectId());
-        } else {
-            User user = UserManager.getInstance().getCurrentUser();
-            dealResultInfo(user);
-        }
+                    .edit().putBoolean(UserManager.getInstance().getCurrentUserObjectId()+ConstantUtil.FIRST_STATUS, !isFirstLogin).apply();
+        User user = UserManager.getInstance().getCurrentUser();
+        dealResultInfo(user,isFirstLogin);
     }
 }

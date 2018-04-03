@@ -32,6 +32,7 @@ import com.example.commonlibrary.utils.ToastUtils;
 
 
 /**
+ *
  * 项目名称:    HappyChat
  * 创建人:        陈锦军
  * 创建时间:    2016/9/13      12:18
@@ -130,7 +131,11 @@ public class RecentFragment extends AppBaseFragment implements SwipeRefreshLayou
                 addDisposable(RxBusManager.getInstance().registerEvent(RecentEvent.class, recentEvent -> {
                         RecentMessageEntity recentMessageEntity= UserDBManager
                                 .getInstance().getRecentMessage(recentEvent.getId());
-                        mAdapter.addData(0,recentMessageEntity);
+                        if (recentEvent.getAction()==RecentEvent.ACTION_ADD) {
+                                mAdapter.addData(0,recentMessageEntity);
+                        }else {
+                                mAdapter.removeData(recentMessageEntity);
+                        }
                 }));
 
         }

@@ -129,10 +129,10 @@ public class ChatNotificationManager {
          */
         public void showNotification(String notificationTagAdd, Context context, String userName, int icon, CharSequence content, Class<? extends Activity> targetClass) {
                 boolean isAllowPushNotify = BaseApplication.getAppComponent()
-                        .getSharedPreferences().getBoolean(Constant.PUSH_NOTIFY,false);
+                        .getSharedPreferences().getBoolean(Constant.PUSH_NOTIFY,true);
                 boolean isAllowVoice = BaseApplication.getAppComponent()
-                        .getSharedPreferences().getBoolean(Constant.VOICE_STATUS,false);
-                boolean isAllowVibrate = BaseApplication.getAppComponent().getSharedPreferences().getBoolean(Constant.VIBRATE_STATUS,false);
+                        .getSharedPreferences().getBoolean(Constant.VOICE_STATUS,true);
+                boolean isAllowVibrate = BaseApplication.getAppComponent().getSharedPreferences().getBoolean(Constant.VIBRATE_STATUS,true);
                 if (isAllowPushNotify) {
                         ChatNotificationManager.getInstance(context).notify(notificationTagAdd, null, isAllowVibrate, isAllowVoice, context, userName, icon, content, targetClass);
                         CommonLogger.e("发送通知到通知栏啦啦啦");

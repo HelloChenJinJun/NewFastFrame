@@ -420,6 +420,7 @@ public class UserManager {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
+                                    User user=getCurrentUser();
                                     LogUtil.e("绑定设备表中UID成功");
                                 } else {
                                     LogUtil.e("绑定设备表中UID设备失败");

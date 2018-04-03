@@ -6,9 +6,12 @@ import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.MessageContent;
+import com.example.chat.events.RecentEvent;
 import com.example.chat.listener.OnCreateChatMessageListener;
 import com.example.chat.manager.MsgManager;
+import com.example.chat.manager.UserDBManager;
 import com.example.commonlibrary.mvp.view.IView;
+import com.example.commonlibrary.rxbus.RxBusManager;
 
 /**
  * 项目名称:    NewFastFrame
@@ -27,12 +30,20 @@ public class ChatPresenter extends AppBasePresenter<IView<BaseMessage>,ChatModel
         MsgManager.getInstance().sendChatMessage(chatMessage, new OnCreateChatMessageListener() {
             @Override
             public void onSuccess(BaseMessage baseMessage) {
+                baseMessage.setReadStatus(Constant.READ_STATUS_READED);
+                UserDBManager.getInstance()
+                        .addOrUpdateChatMessage((ChatMessage) baseMessage);
+                UserDBManager.getInstance().addOrUpdateRecentMessage(baseMessage);
+                RxBusManager.getInstance().post(new RecentEvent(((ChatMessage) baseMessage).getToId(),RecentEvent.ACTION_ADD));
                 iView.updateData(baseMessage);
             }
 
             @Override
             public void onFailed(String errorMsg, BaseMessage baseMessage) {
                     baseMessage.setSendStatus(Constant.SEND_STATUS_FAILED);
+                UserDBManager.getInstance()
+                        .addOrUpdateChatMessage((ChatMessage) baseMessage);
+                UserDBManager.getInstance().addOrUpdateRecentMessage(baseMessage);
                     iView.updateData(baseMessage);
             }
         });
@@ -43,12 +54,21 @@ public class ChatPresenter extends AppBasePresenter<IView<BaseMessage>,ChatModel
         MsgManager.getInstance().sendGroupChatMessage(groupChatMessage, new OnCreateChatMessageListener() {
             @Override
             public void onSuccess(BaseMessage baseMessage) {
-                       iView.updateData(baseMessage);
+                baseMessage.setReadStatus(Constant.READ_STATUS_READED);
+                UserDBManager.getInstance()
+                        .addOrUpdateGroupChatMessage((GroupChatMessage) baseMessage);
+                UserDBManager.getInstance().addOrUpdateRecentMessage(baseMessage);
+
+                RxBusManager.getInstance().post(new RecentEvent(((GroupChatMessage) baseMessage).getGroupId(),RecentEvent.ACTION_ADD));
+                iView.updateData(baseMessage);
             }
 
             @Override
             public void onFailed(String errorMsg, BaseMessage baseMessage) {
                         baseMessage.setSendStatus(Constant.SEND_STATUS_FAILED);
+                UserDBManager.getInstance()
+                        .addOrUpdateChatMessage((ChatMessage) baseMessage);
+                UserDBManager.getInstance().addOrUpdateRecentMessage(baseMessage);
                         iView.updateData(baseMessage);
             }
         });

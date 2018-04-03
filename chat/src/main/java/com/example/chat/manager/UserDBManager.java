@@ -161,7 +161,8 @@ public class UserDBManager {
 
     public long getUnReadChatMessageSize() {
         return daoSession.getChatMessageEntityDao()
-                .queryBuilder().where(ChatMessageEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD))
+                .queryBuilder().where(ChatMessageEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD)
+                ,ChatMessageEntityDao.Properties.MessageType.in(ChatMessage.MESSAGE_TYPE_AGREE,ChatMessage.MESSAGE_TYPE_NORMAL))
                 .count();
     }
 
@@ -389,7 +390,7 @@ public class UserDBManager {
                 .where(ChatMessageEntityDao.Properties.BelongId.eq(uid)
                 ,ChatMessageEntityDao.Properties.MessageType.in(ChatMessage.MESSAGE_TYPE_NORMAL,ChatMessage.MESSAGE_TYPE_AGREE)
                 ,ChatMessageEntityDao.Properties.CreatedTime.gt(time))
-                        .orderDesc(ChatMessageEntityDao.Properties.CreatedTime)
+                        .orderAsc(ChatMessageEntityDao.Properties.CreatedTime)
                         .limit(10)
                 .build().list();
         List<BaseMessage> result=new ArrayList<>(chatMessageEntityList.size());
@@ -420,7 +421,7 @@ public class UserDBManager {
                 daoSession.getGroupChatEntityDao().queryBuilder()
                         .where(GroupChatEntityDao.Properties.GroupId.eq(groupId)
                                 ,GroupChatEntityDao.Properties.CreatedTime.gt(time))
-                        .orderDesc(GroupChatEntityDao.Properties.CreatedTime)
+                        .orderAsc(GroupChatEntityDao.Properties.CreatedTime)
                         .limit(10)
                         .build().list();
         List<BaseMessage> result=new ArrayList<>(groupChatEntities.size());

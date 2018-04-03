@@ -491,13 +491,14 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
             int messageType = chatMessage.getMessageType();
             switch (messageType) {
                 case ChatMessage.MESSAGE_TYPE_ADD:
-                    notifyMenuUpdate(0);
+                    notifyMenuUpdate(2);
                     if (!mFragments[2].isAdded()) {
                         currentPosition = 2;
                         addOrReplaceFragment(mFragments[2]);
                     }
                     break;
                 case ChatMessage.MESSAGE_TYPE_AGREE:
+                    notifyMenuUpdate(0);
                     if (!mFragments[1].isAdded()) {
                         currentPosition = 1;
                         addOrReplaceFragment(mFragments[1]);

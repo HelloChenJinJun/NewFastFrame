@@ -51,8 +51,6 @@ public class RecentListAdapter extends BaseSwipeRecyclerAdapter<RecentMessageEnt
                         .getGroupId());
                 }
                 holder.setText(R.id.tv_recent_name, name);
-
-
                         holder.setText(R.id.tv_recent_time, TimeUtil.getRecentTime(data.getCreatedTime()))
                         .setImageUrl(R.id.riv_recent_avatar,avatar)
                 .setOnItemClickListener();
@@ -64,12 +62,10 @@ public class RecentListAdapter extends BaseSwipeRecyclerAdapter<RecentMessageEnt
                 } else if (contentType == Constant.TAG_MSG_TYPE_VOICE) {
                         holder.setText(R.id.tv_recent_content, "[语音]");
                 } else if (contentType == Constant.TAG_MSG_TYPE_TEXT) {
-                        holder.setText(R.id.tv_recent_content, FaceTextUtil.toSpannableString(holder.itemView.getContext(), data.getContent()));
-                } else if (contentType==Constant.TAG_MSG_TYPE_VIDEO){
-                        holder.setText(R.id.tv_recent_content, "[视频]");
-                }else {
                     MessageContent messageContent=gson.fromJson(data.getContent(),MessageContent.class);
-                    holder.setText(R.id.tv_recent_content, FaceTextUtil.toSpannableString(holder.itemView.getContext(), messageContent.getContent()));
+                    holder.setText(R.id.tv_recent_content, FaceTextUtil.toSpannableString(holder.itemView.getContext(), messageContent.getContent()));                } else if (contentType==Constant.TAG_MSG_TYPE_VIDEO){
+                } else if (contentType == Constant.TAG_MSG_TYPE_VIDEO) {
+                    holder.setText(R.id.tv_recent_content, "[视频]");
                 }
                 if (unReadCount > 0) {
                         holder.setVisible(R.id.tv_recent_unread, true);

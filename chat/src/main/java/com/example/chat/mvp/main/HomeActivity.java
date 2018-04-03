@@ -9,12 +9,13 @@ import android.view.MenuItem;
 import com.example.chat.R;
 import com.example.chat.base.Constant;
 import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.manager.UserManager;
+import com.example.chat.mvp.editInfo.EditUserInfoActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
 import com.example.chat.mvp.wallpaper.WallPaperActivity;
 import com.example.chat.mvp.search.SearchActivity;
 import com.example.chat.mvp.searchFriend.SearchFriendActivity;
 import com.example.chat.mvp.selectFriend.SelectedFriendsActivity;
-import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.utils.ToastUtils;
 
 
@@ -108,6 +109,10 @@ public class HomeActivity extends SlideBaseActivity {
     @Override
     protected void initData() {
         addOrReplaceFragment(HomeFragment.newInstance(), R.id.fl_activity_home_container);
+        if (getIntent().getBooleanExtra(Constant.FIRST_LOGIN, false)) {
+            EditUserInfoActivity.start(this, UserManager.getInstance()
+            .getCurrentUserObjectId());
+        }
     }
 
 
@@ -123,8 +128,9 @@ public class HomeActivity extends SlideBaseActivity {
         }
     }
 
-    public static void start(Activity activity) {
+    public static void start(Activity activity, boolean isFirstLogin) {
         Intent intent = new Intent(activity, HomeActivity.class);
+        intent.putExtra(Constant.FIRST_LOGIN,isFirstLogin);
         activity.startActivity(intent);
     }
 }

@@ -107,17 +107,17 @@ public class MsgManager {
      * @param listener 回调
      */
     public void sendTagMessage(final String targetId, int messageType, final OnSendTagMessageListener listener) {
-        UserManager.getInstance().findUserById(targetId, new FindListener<User>() {
+        MsgManager.getInstance().findInstallation(targetId, new FindListener<CustomInstallation>() {
                     @Override
-                    public void done(List<User> list, BmobException e) {
+                    public void done(List<CustomInstallation> list, BmobException e) {
                         if (e == null) {
                             if (list != null && list.size() > 0) {
                                 LogUtil.e("在服务器上查询好友成功");
-                                final ChatMessage msg = createTagMessage(list.get(0).getObjectId(), messageType);
+                                final ChatMessage msg = createTagMessage(targetId, messageType);
 //                                  在这里发送完同意请求后，把消息转为对方发送的消息
                                 if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
                                     RecentMessageEntity recentMessageEntity=new RecentMessageEntity();
-                                    recentMessageEntity.setId(list.get(0).getObjectId());
+                                    recentMessageEntity.setId(targetId);
                                     recentMessageEntity.setCreatedTime(msg.getCreateTime());
                                     recentMessageEntity.setContent(msg.getContent());
                                     recentMessageEntity.setContentType(msg.getContentType());
@@ -127,12 +127,6 @@ public class MsgManager {
                                             .getDaoSession().getRecentMessageEntityDao()
                                             .insertOrReplace(recentMessageEntity);
                                     LogUtil.e("保存同意消息到聊天消息表中");
-
-
-
-
-
-
 //                                    这里将发送的欢迎消息转为对方发送
                                     ChatMessage chatMessage=new ChatMessage();
                                     chatMessage.setToId(msg.getBelongId());
@@ -148,34 +142,23 @@ public class MsgManager {
                                     UserDBManager.getInstance()
                                             .addOrUpdateChatMessage(chatMessage);
                                 }
-                                sendJsonMessage(list.get(0).getInstallId(), createJsonMessage(msg),
-                                        new OnSendPushMessageListener() {
-                                            @Override
-                                            public void onSuccess() {
-                                                LogUtil.e("发送json推送消息成功");
-                                                msg.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-                                                LogUtil.e("上传同意消息到服务器上");
-                                                saveMessageToService(msg);
-                                                listener.onSuccess(msg);
-                                            }
-
-                                            @Override
-                                            public void onFailed(BmobException e) {
-//                                                                推送失败后也要把消息保存到服务器上，方便在接收方那边从服务器上拉去数据
-                                                LogUtil.e("推送失败保存消息到服务器上面");
-                                                msg.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-                                                saveMessageToService(msg);
-                                                listener.onSuccess(msg);
-                                            }
+                                saveMessageToService(msg, new SaveListener<String>() {
+                                    @Override
+                                    public void done(String s, BmobException e) {
+                                        if (e==null) {
+                                            listener.onSuccess(msg);
+                                            sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(msg),null);
+                                        }else {
+                                            listener.onFailed(e);
                                         }
-                                );
+                                    }
+                                });
                             } else {
-                                LogUtil.e("未查到该用户" + targetId);
-                                listener.onFailed(new BmobException("服务器上没有该用户"));
+                                LogUtil.e("未查到该设备" + targetId);
+                                listener.onFailed(new BmobException("服务器上没有该设备"));
                             }
                         } else {
-                            LogUtil.e("在服务器上查询用户失败" + e.toString());
-                            listener.onFailed(new BmobException("在服务器上查询用户失败"));
+                            listener.onFailed(new BmobException("在服务器上查询设备失败"));
                         }
                     }
 
@@ -186,12 +169,18 @@ public class MsgManager {
 
     }
 
+    private void findInstallation(String uid, FindListener<CustomInstallation> listener) {
+        BmobQuery<CustomInstallation> query = new BmobQuery<>();
+        query.addWhereEqualTo("uid",uid);
+        query.findObjects(listener);
+    }
+
     /**
      * 上传消息到服务器中
      *
      * @param msg 消息
      */
-    private void saveMessageToService(final ChatMessage msg) {
+    private void saveMessageToService(final ChatMessage msg,SaveListener<String> listener) {
         if (msg.getMessageType()==ChatMessage.MESSAGE_TYPE_READED) {
 //            添加这一步验证主要是为了防止Bmob有时候上传多个回执消息的Bug,
             findReadTag(msg.getConversationId(), msg.getCreateTime(), new FindListener<ChatMessage>() {
@@ -206,8 +195,15 @@ public class MsgManager {
                                 } else {
                                     LogUtil.e("保存消息到服务器上失败:" + e.toString());
                                 }
+                                if (listener != null) {
+                                    listener.done(s, e);
+                                }
                             }
                         });
+                    }else {
+                        if (listener != null) {
+                            listener.done(null, e);
+                        }
                     }
                 }
             });
@@ -220,6 +216,10 @@ public class MsgManager {
                     } else {
                         LogUtil.e("保存消息到服务器上失败:" + e.toString());
                     }
+
+                    if (listener != null) {
+                        listener.done(s, e);
+                    }
                 }
 
             });
@@ -227,28 +227,6 @@ public class MsgManager {
     }
 
 
-    /**
-     * 推送消息
-     *
-     * @param installId 对方用户设备ID
-     * @param message   可推送的消息  JSONObject
-     * @param listener  回调
-     */
-    private void sendJsonMessage(String installId, final JSONObject message, final OnSendPushMessageListener listener) {
-        sendJsonMessage(installId, message, new PushListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if (e == null) {
-                            LogUtil.e("推送消息成功");
-                            listener.onSuccess();
-                        } else {
-                            LogUtil.e("推送消息失败" + e.toString());
-                            listener.onFailed(e);
-                        }
-                    }
-                }
-        );
-    }
 
     /**
      * 创建json
@@ -360,6 +338,8 @@ public class MsgManager {
     }
 
     public void dealReceiveChatMessage(ChatMessage message,final OnReceiveListener listener) {
+        message.setReadStatus(Constant.RECEIVE_UNREAD);
+        message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
         switch (message.getMessageType()) {
             case ChatMessage.MESSAGE_TYPE_AGREE:
                 LogUtil.e("接收到同意消息");
@@ -443,24 +423,19 @@ public class MsgManager {
                         if (e == null) {
                             if (list != null && list.size() > 0) {
                                 final ChatMessage chatMessage = createTagMessage(list.get(0).getObjectId(),conversationId, createTime,ChatMessage.MESSAGE_TYPE_READED);
-                                sendJsonMessage(list.get(0).getInstallId(), createJsonMessage(chatMessage), new OnSendPushMessageListener() {
-                                    @Override
-                                    public void onSuccess() {
-                                        CommonLogger.e("发送回执已读json消息成功");
-//                                                        发送已读回执消息也要上传到服务器上面
-                                        chatMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-                                        saveMessageToService(chatMessage);
-                                    }
 
+                                saveMessageToService(chatMessage, new SaveListener<String>() {
                                     @Override
-                                    public void onFailed(BmobException e) {
-                                        CommonLogger.e("发送回执json消息成功失败" + e.getMessage() + e.getErrorCode());
-                                        CommonLogger.e("发送失败也要保存回执已读消息到服务器上面啊");
-                                        chatMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-                                        saveMessageToService(chatMessage);
-
+                                    public void done(String s, BmobException e) {
+                                        if (e == null) {
+                                            sendJsonMessage(list.get(0).getInstallId(), createJsonMessage(chatMessage),null);
+                                        }else {
+                                            CommonLogger.e("保存到服务器已读类型消息失败"+e.toString());
+                                        }
                                     }
                                 });
+
+
                             }
                         } else {
                             LogUtil.e("查找用户失败" + e.toString());
@@ -1472,7 +1447,12 @@ public class MsgManager {
         RecentMessageEntity recentMessageEntity=new RecentMessageEntity();
         if (message instanceof ChatMessage) {
             recentMessageEntity.setType(RecentMessageEntity.TYPE_PERSON);
-            recentMessageEntity.setId(message.getBelongId());
+            if (message.getBelongId().equals(UserManager.getInstance()
+            .getCurrentUserObjectId())) {
+                recentMessageEntity.setId(((ChatMessage) message).getToId());
+            }else {
+                recentMessageEntity.setId(message.getBelongId());
+            }
         } else if (message instanceof GroupChatMessage) {
             recentMessageEntity.setType(RecentMessageEntity.TYPE_GROUP);
             recentMessageEntity.setId(((GroupChatMessage) message).getGroupId());
@@ -1545,7 +1525,17 @@ public class MsgManager {
                                 messageContent.setUrlList(urlList);
                                 message.setContent(gson.toJson(messageContent));
                                 if (e == null) {
+                                    findInstallation(message.getToId(), new FindListener<CustomInstallation>() {
+                                        @Override
+                                        public void done(List<CustomInstallation> list, BmobException e) {
+                                            if (e == null && list != null
+                                                    && list.size() > 0) {
+                                                sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(message),null);
+                                            }
+                                        }
+                                    });
                                     listener.onSuccess(message);
+//
                                 }else {
                                     listener.onFailed(e.toString(),message);
                                 }
@@ -1571,6 +1561,15 @@ public class MsgManager {
                 @Override
                 public void done(String s, BmobException e) {
                     if (e == null) {
+                        findInstallation(message.getToId(), new FindListener<CustomInstallation>() {
+                            @Override
+                            public void done(List<CustomInstallation> list, BmobException e) {
+                                if (e == null && list != null
+                                        && list.size() > 0) {
+                                    sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(message),null);
+                                }
+                            }
+                        });
                         listener.onSuccess(message);
                     }else {
                         listener.onFailed(e.toString(),message);
