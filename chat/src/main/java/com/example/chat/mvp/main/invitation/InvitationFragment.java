@@ -115,6 +115,7 @@ public class InvitationFragment extends BaseFragment {
                                                                                                .insertOrReplace(chatMessageEntity);
                                                                                        adapter.addData(chatMessageEntity);
                                                                                        RxBusManager.getInstance().post(new RefreshMenuEvent(2));
+                                                                                       RxBusManager.getInstance().post(new RefreshMenuEvent(0));
                                                                                        RxBusManager.getInstance().post(new RecentEvent(chatMessageEntity.getBelongId(),RecentEvent.ACTION_ADD));
                                                                                        RxBusManager.getInstance().post(new UserEvent(chatMessageEntity.getBelongId(),UserEvent.ACTION_ADD));
                                                                                }

@@ -372,7 +372,8 @@ public class UserDBManager {
         List<ChatMessageEntity> list = daoSession
                 .getChatMessageEntityDao().queryBuilder()
                 .where(ChatMessageEntityDao.Properties.BelongId.eq(uid)
-                        , ChatMessageEntityDao.Properties.MessageType.eq(ChatMessage.MESSAGE_TYPE_NORMAL)
+                        , ChatMessageEntityDao.Properties.MessageType.in(ChatMessage.MESSAGE_TYPE_NORMAL
+                        ,ChatMessage.MESSAGE_TYPE_AGREE)
                 ,ChatMessageEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD))
                 .build().list();
         if (list.size()>0) {

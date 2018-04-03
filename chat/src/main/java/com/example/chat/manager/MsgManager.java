@@ -107,64 +107,53 @@ public class MsgManager {
      * @param listener 回调
      */
     public void sendTagMessage(final String targetId, int messageType, final OnSendTagMessageListener listener) {
-        MsgManager.getInstance().findInstallation(targetId, new FindListener<CustomInstallation>() {
-                    @Override
-                    public void done(List<CustomInstallation> list, BmobException e) {
-                        if (e == null) {
-                            if (list != null && list.size() > 0) {
-                                LogUtil.e("在服务器上查询好友成功");
-                                final ChatMessage msg = createTagMessage(targetId, messageType);
+        final ChatMessage msg = createTagMessage(targetId, messageType);
 //                                  在这里发送完同意请求后，把消息转为对方发送的消息
-                                if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
-                                    RecentMessageEntity recentMessageEntity=new RecentMessageEntity();
-                                    recentMessageEntity.setId(targetId);
-                                    recentMessageEntity.setCreatedTime(msg.getCreateTime());
-                                    recentMessageEntity.setContent(msg.getContent());
-                                    recentMessageEntity.setContentType(msg.getContentType());
-                                    recentMessageEntity.setType(RecentMessageEntity.TYPE_PERSON);
-                                    LogUtil.e("保存同意消息到最近会话列表中");
-                                    UserDBManager.getInstance()
-                                            .getDaoSession().getRecentMessageEntityDao()
-                                            .insertOrReplace(recentMessageEntity);
-                                    LogUtil.e("保存同意消息到聊天消息表中");
+        if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
+            RecentMessageEntity recentMessageEntity=new RecentMessageEntity();
+            recentMessageEntity.setId(targetId);
+            recentMessageEntity.setCreatedTime(msg.getCreateTime());
+            recentMessageEntity.setContent(msg.getContent());
+            recentMessageEntity.setContentType(msg.getContentType());
+            recentMessageEntity.setType(RecentMessageEntity.TYPE_PERSON);
+            LogUtil.e("保存同意消息到最近会话列表中");
+            UserDBManager.getInstance()
+                    .getDaoSession().getRecentMessageEntityDao()
+                    .insertOrReplace(recentMessageEntity);
+            LogUtil.e("保存同意消息到聊天消息表中");
 //                                    这里将发送的欢迎消息转为对方发送
-                                    ChatMessage chatMessage=new ChatMessage();
-                                    chatMessage.setToId(msg.getBelongId());
-                                    chatMessage.setMessageType(msg.getMessageType());
-                                    chatMessage.setConversationId(targetId+"&"+UserManager
-                                    .getInstance().getCurrentUserObjectId());
-                                    chatMessage.setBelongId(msg.getToId());
-                                    chatMessage.setCreateTime(msg.getCreateTime());
-                                    chatMessage.setSendStatus(msg.getSendStatus());
-                                    chatMessage.setReadStatus(Constant.RECEIVE_UNREAD);
-                                    chatMessage.setContentType(Constant.TAG_MSG_TYPE_TEXT);
-                                    chatMessage.setContent(msg.getContent());
-                                    UserDBManager.getInstance()
-                                            .addOrUpdateChatMessage(chatMessage);
-                                }
-                                saveMessageToService(msg, new SaveListener<String>() {
-                                    @Override
-                                    public void done(String s, BmobException e) {
-                                        if (e==null) {
-                                            listener.onSuccess(msg);
-                                            sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(msg),null);
-                                        }else {
-                                            listener.onFailed(e);
-                                        }
-                                    }
-                                });
-                            } else {
-                                LogUtil.e("未查到该设备" + targetId);
-                                listener.onFailed(new BmobException("服务器上没有该设备"));
+            ChatMessage chatMessage=new ChatMessage();
+            chatMessage.setToId(msg.getBelongId());
+            chatMessage.setMessageType(msg.getMessageType());
+            chatMessage.setConversationId(targetId+"&"+UserManager
+                    .getInstance().getCurrentUserObjectId());
+            chatMessage.setBelongId(msg.getToId());
+            chatMessage.setCreateTime(msg.getCreateTime());
+            chatMessage.setSendStatus(msg.getSendStatus());
+            chatMessage.setReadStatus(Constant.RECEIVE_UNREAD);
+            chatMessage.setContentType(Constant.TAG_MSG_TYPE_TEXT);
+            chatMessage.setContent(msg.getContent());
+            UserDBManager.getInstance()
+                    .addOrUpdateChatMessage(chatMessage);
+        }
+        saveMessageToService(msg, new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e==null) {
+                    listener.onSuccess(msg);
+                    findInstallation(targetId, new FindListener<CustomInstallation>() {
+                        @Override
+                        public void done(List<CustomInstallation> list, BmobException e) {
+                            if (e==null&&list!=null&&list.size()>0){
+                                sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(msg),null);
                             }
-                        } else {
-                            listener.onFailed(new BmobException("在服务器上查询设备失败"));
                         }
-                    }
-
-
+                    });
+                }else {
+                    listener.onFailed(e);
                 }
-        );
+            }
+        });
 
 
     }
@@ -416,33 +405,24 @@ public class MsgManager {
      * @param createTime     消息创建时间
      */
     private void sendAskReadMsg(final String conversationId, final Long createTime) {
-        getUserById(conversationId.split("&")[0],
-                new FindListener<User>() {
-                    @Override
-                    public void done(List<User> list, BmobException e) {
-                        if (e == null) {
-                            if (list != null && list.size() > 0) {
-                                final ChatMessage chatMessage = createTagMessage(list.get(0).getObjectId(),conversationId, createTime,ChatMessage.MESSAGE_TYPE_READED);
-
-                                saveMessageToService(chatMessage, new SaveListener<String>() {
-                                    @Override
-                                    public void done(String s, BmobException e) {
-                                        if (e == null) {
-                                            sendJsonMessage(list.get(0).getInstallId(), createJsonMessage(chatMessage),null);
-                                        }else {
-                                            CommonLogger.e("保存到服务器已读类型消息失败"+e.toString());
-                                        }
-                                    }
-                                });
-
-
+        final ChatMessage chatMessage = createTagMessage(conversationId.split("&")[0],conversationId, createTime,ChatMessage.MESSAGE_TYPE_READED);
+        saveMessageToService(chatMessage, new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e == null) {
+                    findInstallation(conversationId.split("&")[0], new FindListener<CustomInstallation>() {
+                        @Override
+                        public void done(List<CustomInstallation> list, BmobException e) {
+                            if (e==null&&list!=null&&list.size()>0){
+                                sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(chatMessage),null);
                             }
-                        } else {
-                            LogUtil.e("查找用户失败" + e.toString());
                         }
-                    }
+                    });
+                }else {
+                    CommonLogger.e("保存到服务器已读类型消息失败"+e.toString());
                 }
-        );
+            }
+        });
     }
 
 

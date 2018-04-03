@@ -404,7 +404,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         if (from.equals(Constant.TYPE_PERSON)) {
             UserDBManager.getInstance().updateMessageReadStatusForUser(userEntity.getUid(), Constant.READ_STATUS_READED);
             mAdapter.refreshData(UserDBManager.getInstance().getAllChatMessageById(uid, 0L));
-            RxBusManager.getInstance().post(new RecentEvent(groupId,RecentEvent.ACTION_ADD));
+            RxBusManager.getInstance().post(new RecentEvent(uid,RecentEvent.ACTION_ADD));
         } else {
             UserDBManager.getInstance().updateGroupChatReadStatus(groupId, Constant.READ_STATUS_READED);
             mAdapter.refreshData(UserDBManager.getInstance().getAllGroupChatMessageById(groupId, 0L));
