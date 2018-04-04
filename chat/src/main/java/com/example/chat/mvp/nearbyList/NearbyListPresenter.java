@@ -34,7 +34,6 @@ public class NearbyListPresenter extends AppBasePresenter<IView<List<NearbyListB
     }
 
     public void getNearbyListData(LocationEvent locationEvent, boolean isRefresh) {
-        iView.showLoading("正在搜索周边位置....");
         String mType = "汽车服务|汽车销售|汽车维修|摩托车服务|餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|金融保险服务|公司企业|道路附属设施|地名地址信息|公共设施" +
                 "|学校";
         query = new PoiSearch.Query("", mType, locationEvent.getCity());
@@ -42,6 +41,7 @@ public class NearbyListPresenter extends AppBasePresenter<IView<List<NearbyListB
         // 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query.setPageSize(20);// 设置每页最多返回多少条poiitem
         if (isRefresh) {
+            iView.showLoading("正在搜索周边位置....");
             page = 0;
         } else {
             page++;

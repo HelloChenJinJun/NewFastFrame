@@ -171,7 +171,7 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
         toolBarOption.setTitle("选择图片");
         toolBarOption.setRightText("完成(0/8)");
         toolBarOption.setRightListener(view -> {
-            RxBusManager.getInstance().post(new ImageFolderEvent("select", selectedImageItemList, currentImageFolderPosition));
+            RxBusManager.getInstance().post(new ImageFolderEvent(ImageFolderEvent.FROM_SELECT, selectedImageItemList, currentImageFolderPosition));
             finish();
         });
         setToolBar(toolBarOption);
@@ -263,7 +263,7 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
                     if (!selectedImageItemList.contains(imageItem)) {
                         selectedImageItemList.add(imageItem);
                     }
-                    RxBusManager.getInstance().post(new ImageFolderEvent("select", selectedImageItemList, currentImageFolderPosition));
+                    RxBusManager.getInstance().post(new ImageFolderEvent(ImageFolderEvent.FROM_SELECT, selectedImageItemList, currentImageFolderPosition));
                     finish();
                 } else {
                     if (isCrop) {

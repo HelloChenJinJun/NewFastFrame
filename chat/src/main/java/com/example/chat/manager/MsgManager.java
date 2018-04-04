@@ -34,7 +34,7 @@ import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.PublicPostEntityDao;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
-import com.example.commonlibrary.bean.music.DaoSession;
+import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.google.gson.Gson;
 
@@ -1318,7 +1318,7 @@ public class MsgManager {
                                     }
                                 }
                             }
-                            if (data.getSendStatus() != Constant.SEND_STATUS_SUCCESS) {
+                            if (!data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
                                 data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
                             }
                             data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
@@ -1351,7 +1351,7 @@ public class MsgManager {
                 return null;
             } else {
                 data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
-                if (data.getSendStatus() != Constant.SEND_STATUS_SUCCESS) {
+                if (!data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
                     data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
                 }
                 return data.update(new UpdateListener() {
@@ -1370,7 +1370,7 @@ public class MsgManager {
                 || data.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
             data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean)
             );
-            if (data.getSendStatus() != Constant.SEND_STATUS_SUCCESS) {
+            if (!data.getSendStatus().equals( Constant.SEND_STATUS_SUCCESS)) {
                 data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
             }
             return data.update(new UpdateListener() {

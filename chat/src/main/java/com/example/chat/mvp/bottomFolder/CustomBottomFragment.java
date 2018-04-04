@@ -47,13 +47,13 @@ public class CustomBottomFragment extends BottomSheetDialogFragment {
         imageFolderAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                ImageFolderEvent imageFolderEvent=new ImageFolderEvent("bottom",imageFolderAdapter.getData(position).getAllImages(),position);
+                ImageFolderEvent imageFolderEvent=new ImageFolderEvent(ImageFolderEvent.FROM_FOLDER,imageFolderAdapter.getData(position).getAllImages(),position);
                 imageFolderEvent.setImageFolderName(imageFolderAdapter.getData(position).getName());
                 RxBusManager.getInstance().post(imageFolderEvent);
                 dismiss();
             }
         });
-        List<ImageFolder> list = (List<ImageFolder>) getArguments().getSerializable("data");
+        List<ImageFolder> list = (List<ImageFolder>) getArguments().getSerializable(Constant.DATA);
         int position=getArguments().getInt(Constant.POSITION,0);
         imageFolderAdapter.setCurrentSelectedPosition(position);
         imageFolderAdapter.refreshData(list);
@@ -64,7 +64,7 @@ public class CustomBottomFragment extends BottomSheetDialogFragment {
     public static CustomBottomFragment newInstance(ArrayList<ImageFolder> data, int position) {
         CustomBottomFragment customBottomFragment = new CustomBottomFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("data", data);
+        bundle.putSerializable(Constant.DATA, data);
         bundle.putInt(Constant.POSITION,position);
         customBottomFragment.setArguments(bundle);
         return customBottomFragment;

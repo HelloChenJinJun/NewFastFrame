@@ -85,7 +85,7 @@
         <activity android:name=".mvp.nearbyList.NearbyListActivity"/>
         <activity android:name=".mvp.adressList.AddressListActivity"/>
         <activity android:name=".mvp.UserDetail.UserDetailActivity"/>
-        <activity android:name=".mvp.NearByPeopleTask.NearbyPeopleActivity"/>
+        <activity android:name=".mvp.NearByPeople.NearbyPeopleActivity"/>
         <activity android:name=".mvp.UserInfoTask.UserInfoActivity"/>
         <activity android:name=".mvp.photoSelect.PhotoSelectActivity"/>
         <activity android:name=".mvp.preview.PhotoPreViewActivity"/>
@@ -96,7 +96,7 @@
 
         <receiver android:name=".receiver.NetWorkChangedReceiver">
             <intent-filter>
-                <action android:name="android.NET.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.Net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>

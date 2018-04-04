@@ -6,6 +6,8 @@ import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.User;
+import com.example.chat.bean.post.PostLikeBean;
+import com.example.chat.bean.post.PublicPostBean;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
 import com.example.commonlibrary.bean.chat.ChatMessageEntityDao;
@@ -13,12 +15,14 @@ import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupChatEntityDao;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.GroupTableEntityDao;
+import com.example.commonlibrary.bean.chat.PostCommentEntityDao;
+import com.example.commonlibrary.bean.chat.PostLikeEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntityDao;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
-import com.example.commonlibrary.bean.music.DaoMaster;
-import com.example.commonlibrary.bean.music.DaoSession;
+import com.example.commonlibrary.bean.chat.DaoMaster;
+import com.example.commonlibrary.bean.chat.DaoSession;
 
 import org.greenrobot.greendao.database.Database;
 
@@ -511,4 +515,18 @@ public class UserDBManager {
                 ,UserEntityDao.Properties.BlackType.eq(UserEntity.BLACK_TYPE_ADD)).build().list().size()>0;
     }
 
+    public void addOrUpdatePost(PublicPostBean publicPostBean) {
+        daoSession.getPublicPostEntityDao().insertOrReplace(MsgManager.getInstance().cover(publicPostBean));
+    }
+
+
+    public void deletePostEntity(String id) {
+        daoSession.getPublicPostEntityDao().deleteByKey(id);
+    }
+
+    public void deleteCommentFromPost(String pid) {
+        daoSession.getPostCommentEntityDao()
+                .queryBuilder().where(PostCommentEntityDao.Properties
+        .Pid.eq(pid)).buildDelete().executeDeleteWithoutDetachingEntities();
+    }
 }

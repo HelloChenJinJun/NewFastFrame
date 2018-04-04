@@ -94,7 +94,8 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
 
     @Override
     public void updateData(PublicPostBean publicPostBean) {
-
+                RxBusManager.getInstance().post(publicPostBean);
+                finish();
     }
 
     @Override
@@ -153,12 +154,7 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
             }
         }
 //        监控位置信息
-        presenter.registerEvent(LocationEvent.class, new Consumer<LocationEvent>() {
-            @Override
-            public void accept(LocationEvent locationEvent) throws Exception {
-                updateLocation(locationEvent);
-            }
-        });
+        presenter.registerEvent(LocationEvent.class, locationEvent -> updateLocation(locationEvent));
         type = getIntent().getIntExtra(Constant.EDIT_TYPE, Constant.EDIT_TYPE_IMAGE);
         if (type == Constant.EDIT_TYPE_IMAGE) {
 //            用于接受预览图片界面的对图片的操作事件监听
@@ -363,7 +359,7 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
 
     private void createOrUpdatePostInfo() {
         ArrayList<ImageItem> imageItemList = null;
-        if (editShareAdapter != null) {
+        if (type==Constant.EDIT_TYPE_IMAGE) {
             imageItemList = new ArrayList<>(editShareAdapter.getData());
             if (editShareAdapter.getData(editShareAdapter.getData().size() - 1).getItemViewType() == ImageItem.ITEM_CAMERA) {
                 imageItemList.remove(imageItemList.size() - 1);
@@ -435,12 +431,12 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
                 }
             } else {
                 if (editShareAdapter.getData(editShareAdapter.getData().size() - 1).getItemViewType() != ImageItem.ITEM_CAMERA) {
-                    editShareAdapter.removeData(photoPreViewEvent.getPosition());
+                    editShareAdapter.removeData(photoPreViewEvent.getImageItem());
                     ImageItem imageItem = new ImageItem();
                     imageItem.setLayoutType(ImageItem.ITEM_CAMERA);
                     editShareAdapter.addData(imageItem);
                 } else {
-                    editShareAdapter.removeData(photoPreViewEvent.getPosition());
+                    editShareAdapter.removeData(photoPreViewEvent.getImageItem());
                 }
 
             }
@@ -472,6 +468,15 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
             videoPath = SystemUtil.recorderVideo(this, SystemUtil.REQUEST_CODE_VIDEO_RECORDER);
         }else if (id==R.id.cv_activity_edit_share_info_share_container){
             CommentListActivity.start(this, publicPostBean);
+        }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (disposable!=null&&disposable.isDisposed()){
+            disposable=registerPreViewEvent();
         }
     }
 

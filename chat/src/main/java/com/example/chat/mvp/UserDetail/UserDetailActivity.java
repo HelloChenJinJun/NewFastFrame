@@ -100,7 +100,7 @@ public class UserDetailActivity extends SlideBaseActivity implements View.OnClic
         List<String> titleList=new ArrayList<>();
         titleList.add("公共说说");
         List<BaseFragment> fragments=new ArrayList<>();
-        fragments.add(ShareInfoFragment.instance(UserManager.getInstance().cover(user)));
+        fragments.add(ShareInfoFragment.instance(user.getUid()));
         adapter.setTitleAndFragments(titleList,fragments);
         display.setAdapter(adapter);
         display.setCurrentItem(0);

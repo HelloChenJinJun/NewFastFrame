@@ -5,6 +5,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.chat.base.Constant;
+import com.example.chat.bean.User;
 import com.example.chat.events.LocationEvent;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -110,10 +111,12 @@ public class NewLocationManager implements AMapLocationListener {
                             .putString(Constant.LONGITUDE,longitude+"")
                             .putString(Constant.ADDRESS, address)
                     .putString(Constant.CITY,aMapLocation.getCity()).apply();
+                    if (UserManager.getInstance().getCurrentUser() != null) {
+                        UserManager.getInstance().updateUserInfo(Constant.LOCATION,longitude+"&"+latitude,null);
+                    }
                 } else {
                     CommonLogger.e("定位相同,不定位");
                 }
-//                    locationList.add(aMapLocation.getProvince() + aMapLocation.getCity() + aMapLocation.getDistrict() + aMapLocation.getStreet() + aMapLocation.getAoiName());
             } else {
                 CommonLogger.e("出错消息：" + aMapLocation.getErrorInfo() + "\n" + "错误码:" + aMapLocation.getErrorCode() + "\n" + "错误的细节" +
                         aMapLocation.getLocationDetail());

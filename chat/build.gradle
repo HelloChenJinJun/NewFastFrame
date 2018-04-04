@@ -67,11 +67,46 @@ android {
     }
 
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    if(rootProject.ext.isAlone){
+        signingConfigs {
+            config {
+                keyAlias 'chat'
+                keyPassword '3929249'
+                storeFile file('chat.jks')
+                storePassword '3929249'
+            }
         }
+    }
+
+
+    buildTypes {
+        if(rootProject.ext.isAlone){
+            release {
+                signingConfig signingConfigs.config
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+            debug {
+                signingConfig signingConfigs.config
+            }
+        }else{
+            release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+
+            debug {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+        }
+
+
+
+
+
+
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

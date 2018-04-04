@@ -1,6 +1,7 @@
 package com.example.commonlibrary.utils;
 
 import android.Manifest;
+import android.app.Activity;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -71,6 +72,15 @@ public class PermissionUtil {
      */
     public static void externalStorage(RequestPermissionCallBack requestPermission, RxPermissions rxPermissions) {
         requestPermission(requestPermission, rxPermissions, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
+
+    public static void  requestLocation(RequestPermissionCallBack requestPermissionCallBack, Activity activity){
+        RxPermissions rxPermissions=new RxPermissions(activity);
+        requestPermission(requestPermissionCallBack, rxPermissions, Manifest.permission.ACCESS_FINE_LOCATION
+        ,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS
+        ,Manifest.permission.LOCATION_HARDWARE,Manifest.permission
+        .CONTROL_LOCATION_UPDATES,Manifest.permission.INSTALL_LOCATION_PROVIDER);
     }
 
 

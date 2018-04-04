@@ -13,6 +13,7 @@ import com.example.chat.base.Constant;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
+import com.example.chat.bean.MessageContent;
 import com.example.chat.bean.User;
 import com.example.chat.mvp.main.HomeActivity;
 import com.example.chat.util.FaceTextUtil;
@@ -77,8 +78,11 @@ public class ChatNotificationManager {
                                                         showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[位置]", HomeActivity.class);
                                                 } else if (chatMessage.getContentType().equals(Constant.TAG_MSG_TYPE_VOICE)) {
                                                         showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[语音]", HomeActivity.class);
-                                                } else {
-                                                        showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, FaceTextUtil.toSpannableString(context, chatMessage.getContent()), HomeActivity.class);
+                                                } else if (chatMessage.getContentType().equals(Constant.TAG_MSG_TYPE_VIDEO)){
+                                                        showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[视频]", HomeActivity.class);
+                                                }else {
+                                                        String content=BaseApplication.getAppComponent().getGson().fromJson(chatMessage.getContent(),MessageContent.class).getContent();
+                                                        showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, FaceTextUtil.toSpannableString(context, content), HomeActivity.class);
                                                 }
                                         } else if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
                                                 showNotification(Constant.NOTIFICATION_TAG_AGREE, context,list.get(0).getNick(), R.mipmap.ic_launcher, list.get(0).getName() + "已同意添加你为好友", HomeActivity.class);

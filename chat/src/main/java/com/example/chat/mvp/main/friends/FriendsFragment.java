@@ -16,7 +16,7 @@ import com.example.chat.dagger.friends.DaggerFriendsComponent;
 import com.example.chat.dagger.friends.FriendsModule;
 import com.example.chat.events.UserEvent;
 import com.example.chat.manager.UserDBManager;
-import com.example.chat.mvp.NearByPeopleTask.NearbyPeopleActivity;
+import com.example.chat.mvp.NearByPeople.NearbyPeopleActivity;
 import com.example.chat.mvp.blackList.BlackListActivity;
 import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.mvp.group.groupList.GroupListActivity;

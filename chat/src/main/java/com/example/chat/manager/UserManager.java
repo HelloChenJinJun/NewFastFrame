@@ -8,6 +8,7 @@ package com.example.chat.manager;
  */
 
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.example.chat.base.Constant;
@@ -525,16 +526,49 @@ public class UserManager {
                 user.setWallPaper(content);
                 break;
         }
-        user.update(listener);
+        user.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    CommonLogger.e("用户信息更新成功");
+                }    else {
+                    CommonLogger.e("用户信息更新失败"+e.toString());
+                }
+                if (listener != null) {
+                    listener.done(e);
+                }
+            }
+        });
     }
 
-    public void queryNearbyPeople(double longitude, double latitude, boolean isAll, boolean isSex, FindListener<User> findListener) {
+    public void queryNearbyPeople(int num, int flag, FindListener<User> findListener) {
+        User currentUser=getCurrentUser();
         BmobQuery<User> query = new BmobQuery<>();
-        if (!isAll) {
-            query.addWhereEqualTo("sex", isSex);
+        if (flag==1) {
+            query.addWhereEqualTo("sex", false);
+        } else if (flag == 2) {
+            query.addWhereEqualTo("sex", true);
         }
-        query.addWhereNear("location", new BmobGeoPoint(longitude, latitude));
-        query.addWhereNotEqualTo("objectId", UserManager.getInstance().getCurrentUser().getObjectId());
+        double longitude;
+        double latitude;
+        if (currentUser.getLocation() != null) {
+            longitude=currentUser.getLocation().getLongitude();
+            latitude=currentUser.getLocation().getLatitude();
+        }else {
+            SharedPreferences sharedPreferences=BaseApplication.getAppComponent()
+                    .getSharedPreferences();
+            if (sharedPreferences.getString(Constant.LONGITUDE, null) == null) {
+                findListener.done(null,new BmobException("定位信息为空!!!!"));
+                return;
+            }
+            longitude=Double.parseDouble(sharedPreferences.getString(Constant.LONGITUDE,null));
+            latitude=Double.parseDouble(sharedPreferences.getString(Constant.LATITUDE,null));
+            updateUserInfo(Constant.LOCATION, longitude + "&" + latitude,null);
+        }
+        query.addWhereNear("location", new BmobGeoPoint(longitude,latitude));
+        query.addWhereNotEqualTo("objectId",currentUser.getObjectId());
+        query.setSkip(num);
+        query.setLimit(10);
         query.findObjects(findListener);
     }
 

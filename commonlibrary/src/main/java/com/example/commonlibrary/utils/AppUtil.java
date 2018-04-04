@@ -90,6 +90,9 @@ public class AppUtil {
 
 
     public static String getSortedKey(String name) {
+        if (name == null) {
+            return "";
+        }
         StringBuilder builder = new StringBuilder();
         String singleItem;
         for (int i = 0; i < name.length(); i++) {

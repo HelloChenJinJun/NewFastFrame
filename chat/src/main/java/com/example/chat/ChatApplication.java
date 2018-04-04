@@ -92,7 +92,6 @@ public class ChatApplication implements IModuleConfig, IAppLife {
         LogUtil.e("设备ID在这里上传了");
         BmobPush.startWork(application);
         LogUtil.e("推送服务初始化完成");
-        initLocationClient();
         RandomData.initAllRanDomData();
         initRouter();
     }
@@ -233,15 +232,7 @@ public class ChatApplication implements IModuleConfig, IAppLife {
                 return null;
             }
         });
-
-
     }
-
-
-    private void initLocationClient() {
-        NewLocationManager.getInstance().startLocation();
-    }
-
 
     @Override
     public void onTerminate(Application application) {

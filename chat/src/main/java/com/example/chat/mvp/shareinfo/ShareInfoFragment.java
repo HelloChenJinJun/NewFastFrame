@@ -1,26 +1,16 @@
 package com.example.chat.mvp.shareinfo;
 
-import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.ShareInfoAdapter;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.ImageItem;
-import com.example.chat.bean.NotifyPostResult;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
@@ -29,13 +19,13 @@ import com.example.chat.dagger.shareinfo.DaggerShareInfoComponent;
 import com.example.chat.dagger.shareinfo.ShareInfoModule;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.events.NetStatusEvent;
-import com.example.chat.events.NotifyEvent;
+import com.example.chat.events.UpdatePostEvent;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.EditShare.EditShareInfoActivity;
 import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
-import com.example.chat.view.CustomMoveMethod;
 import com.example.chat.view.fab.FloatingActionButton;
 import com.example.chat.view.fab.FloatingActionsMenu;
 import com.example.commonlibrary.BaseApplication;
@@ -46,6 +36,7 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -85,13 +76,12 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     private RoundAngleImageView topAvatar;
     private TextView topContent;
     private WrappedLinearLayoutManager manager;
-    private String uid;
-    private User mUser;
+    private UserEntity userEntity;
     private Disposable disposable;
 
     @Override
     protected boolean isNeedHeadLayout() {
-        if (getArguments().getString("uid") == null) {
+        if (getArguments().getString(Constant.ID).equals(UserManager.getInstance().getCurrentUserObjectId())) {
             return true;
         } else {
             return false;
@@ -100,7 +90,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
     @Override
     protected boolean isNeedEmptyLayout() {
-        return true;
+        return false;
     }
 
     @Override
@@ -133,18 +123,14 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 .chatMainComponent(ChatApplication.getChatMainComponent())
                 .shareInfoModule(new ShareInfoModule(this))
                 .build().inject(this);
-        mUser= (User) getArguments().getSerializable(Constant.USER);
-        if (mUser!=null) {
-            uid = mUser.getObjectId();
-        }
-        if (uid != null) {
+        String uid=getArguments().getString(Constant.ID);
+        userEntity= UserDBManager.getInstance().getUser(uid);
+        if (uid.equals(UserManager.getInstance().getCurrentUserObjectId())){
+            mMenu.setVisibility(View.VISIBLE);
+        }else {
             mMenu.setVisibility(View.GONE);
-        } else {
-            initTopBar();
         }
-
-
-
+        initTopBar();
         display.setLayoutManager(manager = new WrappedLinearLayoutManager(getContext()));
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);
@@ -165,21 +151,6 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 }
             }
         });
-
-        presenter.registerEvent(PublicPostBean.class, publicPostBean -> {
-            if (!publicPostBean.getObjectId().contains("-") && shareInfoAdapter.getData().contains(publicPostBean)) {
-                ToastUtils.showLongToast("更新帖子中...........");
-                publicPostBean.setSendStatus(Constant.SEND_STATUS_SENDING);
-                shareInfoAdapter.addData(0, publicPostBean);
-                presenter.updatePublicPostBean(publicPostBean);
-            } else {
-                shareInfoAdapter.addData(0, publicPostBean);
-                if (AppUtil.isNetworkAvailable()) {
-                    refreshOfflineMessage();
-                }
-            }
-        });
-        
         shareInfoAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
@@ -200,41 +171,36 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                     UserDetailActivity.start(getActivity(), shareInfoAdapter.getData(position)
                             .getAuthor().getObjectId());
                 } else if (id == R.id.iv_item_fragment_share_info_more) {
-                    List<String>  list=new ArrayList<>();
-                    list.add("修改");
-                    list.add("删除");
-                    showChooseDialog("操作方式", list, (parent, view12, position1, id1) -> {
-                        if (shareInfoAdapter.getData(position1).getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
-                            List<String> list1 = new ArrayList<>();
-                            list1.add("删除");
-                            list1.add("修改");
-                            showChooseDialog("帖子操作", list1, (adapterView, view1, i, l) -> {
-                                hideBaseDialog();
-                                if (i == 0) {
-                                    showLoadDialog("删除中....");
-                                    presenter.deleteShareInfo(shareInfoAdapter.getData(position1), new UpdateListener() {
-                                        @Override
-                                        public void done(BmobException e) {
-                                            dismissLoadDialog();
-                                            if (e == null) {
-                                                ToastUtils.showShortToast("删除成功");
-                                                CommonLogger.e("删除成功");
-                                                shareInfoAdapter.removeData(position1);
-                                            } else {
-                                                ToastUtils.showShortToast("删除失败" + e.toString());
-                                                CommonLogger.e("删除失败" + e.toString());
-                                            }
+                    if (shareInfoAdapter.getData(position).getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                        List<String> list1 = new ArrayList<>();
+                        list1.add("删除");
+                        list1.add("修改");
+                        showChooseDialog("帖子操作", list1, (adapterView, view1, i, l) -> {
+                            hideBaseDialog();
+                            if (i == 0) {
+                                showLoadDialog("删除中....");
+                                presenter.deleteShareInfo(shareInfoAdapter.getData(position), new UpdateListener() {
+                                    @Override
+                                    public void done(BmobException e) {
+                                        dismissLoadDialog();
+                                        if (e == null) {
+                                            ToastUtils.showShortToast("删除成功");
+                                            CommonLogger.e("删除成功");
+                                            shareInfoAdapter.removeData(position);
+                                        } else {
+                                            ToastUtils.showShortToast("删除失败" + e.toString());
+                                            CommonLogger.e("删除失败" + e.toString());
                                         }
-                                    });
-                                } else {
-                                    PublicPostBean publicPostBean = shareInfoAdapter.getData(position1);
-                                    EditShareInfoActivity.start(getActivity(), publicPostBean.getMsgType(), publicPostBean, true);
-                                }
-                            });
-                        } else {
-                            ToastUtils.showShortToast("非帖子作者，不可编辑");
-                        }
-                    });
+                                    }
+                                });
+                            } else {
+                                PublicPostBean publicPostBean = shareInfoAdapter.getData(position);
+                                EditShareInfoActivity.start(getActivity(), publicPostBean.getMsgType(), publicPostBean, true);
+                            }
+                        });
+                    } else {
+                        ToastUtils.showShortToast("非帖子作者，不可编辑");
+                    }
 
 
                 } else if (id == R.id.ll_item_fragment_share_info_share_image) {
@@ -281,6 +247,16 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 }
             }
         });
+
+//        用于接收更新过后的post
+        presenter.registerEvent(UpdatePostEvent.class, updatePostEvent -> {
+            if (!updatePostEvent.getPublicPostBean().getObjectId().contains("-") && shareInfoAdapter.getData().contains(updatePostEvent.getPublicPostBean())) {
+                shareInfoAdapter.addData(updatePostEvent.getPublicPostBean());
+            }
+        });
+
+
+
         presenter.registerEvent(CommentEvent.class, likeEvent -> {
             if (likeEvent.getType() == CommentEvent.TYPE_LIKE) {
                 PublicPostBean bean = shareInfoAdapter.getPublicPostDataById(likeEvent.getId());
@@ -300,31 +276,6 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 }
             }
         });
-//        presenter.registerEvent(NotifyPostResult.class, new Consumer<NotifyPostResult>() {
-//            @Override
-//            public void accept(NotifyPostResult notifyPostResult) throws Exception {
-//                if (uid != null && !notifyPostResult.getData().getAuthor().equals(uid)) {
-//                    return;
-//                }
-//                topContainer.setVisibility(View.VISIBLE);
-//                User user=UserCacheManager.getInstance().getUser(notifyPostResult.getData()
-//                        .getAuthor());
-//                if (user == null) {
-//                    topAvatar.setVisibility(View.GONE);
-//                    topContent.setText("你有一个非好友动态");
-//                }else {
-//                    topAvatar.setVisibility(View.VISIBLE);
-//                    if (getActivity()!=null) {
-//                        Glide.with(getActivity())
-//                                .load(user.getAvatar())
-//                                .into(topAvatar);
-//                    }
-//                    topContent.setMovementMethod(new CustomMoveMethod(getContext().getResources().getColor(R.color.blue_500), getContext().getResources().getColor(R.color.blue_500)));
-//                    topContent.setText(getSpannerContent(user));
-//                }
-//            }
-//        });
-
     }
 
     private void refreshOfflineMessage() {
@@ -363,21 +314,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     }
 
 
-    private SpannableStringBuilder getSpannerContent(final User user) {
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        builder.append("好友[");
-        String name = user.getNick() + "]:";
-        SpannableString spannableString = new SpannableString(name);
-        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#232121")), 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new ClickableSpan() {
-            @Override
-            public void onClick(View widget) {
-                UserDetailActivity.start((Activity) widget.getContext(), user.getObjectId());
-            }
-        }, 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        builder.append(spannableString).append("发布新动态");
-        return builder;
-    }
+
 
     private void dealSharePostData(int position) {
         Gson gson = BaseApplication.getAppComponent()
@@ -414,8 +351,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
     @Override
     protected void updateView() {
-        RxBusManager.getInstance().post(new NotifyEvent(NotifyEvent.TYPE_NOTIFY_POST));
-        presenter.getAllPostData(true, uid, getRefreshTime(true));
+        presenter.getAllPostData(true, userEntity.getUid(), getRefreshTime(true));
     }
 
 
@@ -484,7 +420,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         if (topContainer.getVisibility() == View.VISIBLE) {
             topContainer.setVisibility(View.GONE);
         }
-        presenter.getAllPostData(true, uid, getRefreshTime(true));
+        presenter.getAllPostData(true, userEntity.getUid(), getRefreshTime(true));
     }
 
 
@@ -494,12 +430,15 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
-        disposable = RxBusManager.getInstance().registerEvent(NetStatusEvent.class, netStatusEvent -> {
+        disposable=registerNet();
+    }
+
+    private Disposable registerNet() {
+        return RxBusManager.getInstance().registerEvent(NetStatusEvent.class, netStatusEvent -> {
             if (netStatusEvent.isConnected()) {
-                ToastUtils.showLongToast("断线重连中..............");
                 refreshOfflineMessage();
             }
-        }, throwable -> ToastUtils.showLongToast("传递出错" + throwable.getMessage()));
+        });
     }
 
 
@@ -524,9 +463,9 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     public void loadMore() {
 
         if (shareInfoAdapter.getData().size() > 0) {
-            presenter.getAllPostData(false, uid, getRefreshTime(false));
+            presenter.getAllPostData(false, userEntity.getUid(), getRefreshTime(false));
         } else {
-            presenter.getAllPostData(false, uid, getRefreshTime(false));
+            presenter.getAllPostData(false, userEntity.getUid(), getRefreshTime(false));
         }
     }
 
@@ -549,9 +488,9 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         }
     }
 
-    public static ShareInfoFragment instance(User user) {
+    public static ShareInfoFragment instance(String uid) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constant.USER, user);
+        bundle.putString(Constant.ID,uid);
         ShareInfoFragment fragment = new ShareInfoFragment();
         fragment.setArguments(bundle);
         return fragment;

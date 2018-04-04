@@ -90,7 +90,7 @@
         <activity android:name=".mvp.nearbyList.NearbyListActivity"/>
         <activity android:name=".mvp.adressList.AddressListActivity"/>
         <activity android:name=".mvp.UserDetail.UserDetailActivity"/>
-        <activity android:name=".mvp.NearByPeopleTask.NearbyPeopleActivity"/>
+        <activity android:name=".mvp.NearByPeople.NearbyPeopleActivity"/>
         <activity android:name=".mvp.UserInfoTask.UserInfoActivity"/>
         <activity android:name=".mvp.photoSelect.PhotoSelectActivity"/>
         <activity android:name=".mvp.preview.PhotoPreViewActivity"/>
@@ -100,7 +100,7 @@
 
         <receiver android:name=".receiver.NetWorkChangedReceiver">
             <intent-filter>
-                <action android:name="android.NET.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.Net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
@@ -108,7 +108,7 @@
         <!--高德地图API_KEY-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="715d5c1cfab873a2094110d2f124cfac"/>
+            android:value="0bcbc215f44fac8705559b7809180cb5"/>
         <!--定位服务-->
 
         <service android:name="com.amap.api.location.APSService" />
@@ -133,7 +133,7 @@
         <!-- 用于进程保活 -->
         <service
             android:name="cn.bmob.push.lib.service.PushNotifyService"
-            android:process=":bmobpush"></service>
+            android:process=":bmobpush"/>
 
         <receiver android:name="cn.bmob.push.PushReceiver">
             <!--优先级设置最高/以至于不会被KILL掉-->

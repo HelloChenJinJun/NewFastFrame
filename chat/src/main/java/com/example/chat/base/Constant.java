@@ -233,4 +233,5 @@ public class Constant {
     public static final String WALLPAPER = "wallPaper";
     public static final String CITY = "city";
     public static final String FIRST_LOGIN = "first_login";
+    public static final String POST = "post";
 }

@@ -108,7 +108,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         RecentFragment recentFragment = new RecentFragment();
         FriendsFragment contactsFragment =FriendsFragment.newInstance();
         InvitationFragment invitationFragment = new InvitationFragment();
-        ShareInfoFragment shareInfoFragment = ShareInfoFragment.instance(null);
+        ShareInfoFragment shareInfoFragment = ShareInfoFragment.instance(UserManager.getInstance().getCurrentUserObjectId());
         mFragments[0] = recentFragment;
         mFragments[1] = contactsFragment;
         mFragments[2] = invitationFragment;

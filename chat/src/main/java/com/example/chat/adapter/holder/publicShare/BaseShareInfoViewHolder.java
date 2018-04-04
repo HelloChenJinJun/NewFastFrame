@@ -6,6 +6,7 @@ import android.text.Spanned;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.chat.R;
 import com.example.chat.base.Constant;
@@ -13,6 +14,7 @@ import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.events.LocationEvent;
+import com.example.chat.manager.UserManager;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
@@ -61,7 +63,11 @@ public class BaseShareInfoViewHolder extends BaseWrappedViewHolder {
                 .setOnItemChildClickListener(R.id.tv_item_fragment_share_info_like)
                 .setOnItemChildClickListener(R.id.iv_item_fragment_share_info_retry)
         .setOnItemClickListener();
-
+        if (data.getLikeList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
+            ((TextView)getView(R.id.tv_item_fragment_share_info_like)).setCompoundDrawablesWithIntrinsicBounds(getContext().getResources().getDrawable(R.drawable.ic_favorite_deep_orange_a700_24dp), null, null, null);
+        }else {
+            ((TextView)getView(R.id.tv_item_fragment_share_info_like)).setCompoundDrawablesWithIntrinsicBounds(getContext().getResources().getDrawable(R.drawable.ic_favorite_border_deep_orange_a700_24dp), null, null, null);
+        }
         PostDataBean postDataBean = gson.fromJson(data.getContent(), PostDataBean.class);
         if (postDataBean != null) {
             setText(R.id.tv_item_fragment_share_info_normal_text

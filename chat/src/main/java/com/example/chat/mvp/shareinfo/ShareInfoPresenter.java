@@ -6,8 +6,9 @@ import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PostLikeBean;
 import com.example.chat.bean.post.PublicCommentBean;
+import com.example.chat.events.UpdatePostEvent;
 import com.example.chat.listener.OnCreatePublicPostListener;
-import com.example.commonlibrary.bean.chat.PostLikeEntity;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.manager.MsgManager;
@@ -97,22 +98,14 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
 
 
 
-    Map<String, Long> map = new HashMap<>();
 
     public void dealLike(final String objectId, final boolean isAdd) {
-        if (map.get(objectId) != null && System.currentTimeMillis() - map.get(objectId) < 2000L) {
-            ToastUtils.showShortToast("点赞操作过于频繁，稍后再试");
-            iView.hideLoading();
-            return;
-        }
-        map.put(objectId, System.currentTimeMillis());
         BmobQuery<PublicPostBean> query = new BmobQuery<>();
         query.addWhereEqualTo("objectId", objectId);
         addSubscription(query.findObjects(new FindListener<PublicPostBean>() {
             @Override
             public void done(List<PublicPostBean> list, BmobException e) {
                 if (e == null && list != null && list.size() > 0) {
-
                     PublicPostBean publicPostBean = list.get(0);
                     if (isAdd) {
                         publicPostBean.increment("likeCount");
@@ -128,82 +121,28 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                     addSubscription(publicPostBean.update(objectId, new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
-                            if (isAdd) {
-                                final PostLikeBean posterLikes = new PostLikeBean();
-                                PublicPostBean publicPostBean1 = new PublicPostBean();
-                                publicPostBean1.setObjectId(objectId);
-                                posterLikes.setPublicPostBean(publicPostBean1);
-                                User user = new User();
-                                user.setObjectId(UserManager.getInstance().getCurrentUserObjectId());
-                                posterLikes.setUser(user);
-                                posterLikes.save(new SaveListener<String>() {
-                                    @Override
-                                    public void done(String s, BmobException e) {
-                                        iView.hideLoading();
-                                        if (e == null) {
-                                            PostLikeEntity posterLikesEntity = new PostLikeEntity();
-                                            posterLikesEntity.setLid(s);
-                                            posterLikesEntity.setPid(posterLikes.getPublicPostBean().getObjectId());
-                                            posterLikesEntity.setUid(posterLikes.getUser().getObjectId());
-                                            baseModel
-                                                    .getRepositoryManager()
-                                                    .getDaoSession()
-                                                    .getPostLikeEntityDao()
-                                                    .insertOrReplace(posterLikesEntity);
-                                            RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE, CommentEvent.ACTION_ADD));
-                                        } else {
-                                            ToastUtils.showShortToast("点赞失败" + e.toString());
-                                        }
-                                    }
-                                });
-                            } else {
-                                BmobQuery<PostLikeBean> bmobQuery = new BmobQuery<>();
-                                User user = new User();
-                                user.setObjectId(UserManager.getInstance().getCurrentUserObjectId());
-                                bmobQuery.addWhereEqualTo("user", new BmobPointer(user));
-                                PublicPostBean posterMessage1 = new PublicPostBean();
-                                posterMessage1.setObjectId(objectId);
-                                bmobQuery.addWhereEqualTo("posterMessage", new BmobPointer(posterMessage1));
-                                bmobQuery.findObjects(new FindListener<PostLikeBean>() {
-                                    @Override
-                                    public void done(final List<PostLikeBean> list, BmobException e) {
-                                        if (e == null) {
-                                            if (list != null && list.size() > 0) {
-                                                list.get(0).delete(new UpdateListener() {
-                                                    @Override
-                                                    public void done(BmobException e) {
-                                                        iView.hideLoading();
-                                                        if (e == null) {
-                                                            baseModel.getRepositoryManager()
-                                                                    .getDaoSession()
-                                                                    .getPostLikeEntityDao()
-                                                                    .deleteByKey(list.get(0).getObjectId());
-                                                            RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE,CommentEvent.ACTION_DELETE));
-                                                        } else {
-                                                            ToastUtils.showShortToast("点赞失败" + e.toString());
-                                                        }
-                                                    }
-                                                });
-                                            } else {
-                                                iView.hideLoading();
-                                                RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE,CommentEvent.ACTION_DELETE));
-                                            }
-                                        } else {
-                                            iView.hideLoading();
-                                            ToastUtils.showShortToast("点赞失败" + e.toString());
-                                        }
-                                    }
-                                });
+                            iView.hideLoading();
+                            if (e == null) {
+//                                不管下面操作是否成功
+                                UserDBManager.getInstance()
+                                        .addOrUpdatePost(publicPostBean);
+                                RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE, isAdd?CommentEvent.ACTION_ADD:CommentEvent
+                                .ACTION_DELETE));
+                            }else{
+                                ToastUtils.showShortToast("点赞失败"+e.toString());
                             }
                         }
                     }));
+                }else {
+                    iView.hideLoading();
+                    ToastUtils.showShortToast("点赞失败"+(e!=null?e.toString():""));
                 }
             }
         }));
     }
 
     public void deleteShareInfo(PublicPostBean data, UpdateListener listener) {
-        if (data.getSendStatus() != Constant.SEND_STATUS_SUCCESS) {
+        if (!data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
             baseModel.getRepositoryManager()
                     .getDaoSession()
                     .getPublicPostEntityDao().deleteByKey(data.getObjectId());
@@ -216,55 +155,13 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
             @Override
             public void done(BmobException e) {
                 if (e == null) {
-                    baseModel.getRepositoryManager()
-                            .getDaoSession()
-                            .getPublicPostEntityDao()
-                            .deleteByKey(data.getObjectId());
-                    BmobQuery<PostLikeBean> bmobQuery = new BmobQuery<>();
-                    PublicPostBean item = new PublicPostBean();
-                    item.setObjectId(data.getObjectId());
-                    bmobQuery.addWhereEqualTo("publicPostBean", item);
-                    bmobQuery.findObjects(new FindListener<PostLikeBean>() {
-                        @Override
-                        public void done(List<PostLikeBean> list, BmobException e) {
-                            listener.done(e);
-                            if (e == null) {
-
-                                if (list != null && list.size() > 0) {
-                                    List<BmobObject> list1 = new ArrayList<>();
-                                    list1.addAll(list);
-                                    new BmobBatch().deleteBatch(list1).doBatch(new QueryListListener<BatchResult>() {
-                                        @Override
-                                        public void done(List<BatchResult> list, BmobException e) {
-                                            if (e == null) {
-                                                CommonLogger.e("点赞相关删除成功");
-
-                                                for (int i = 0; i < list.size(); i++) {
-                                                    if (list.get(i).getError() == null) {
-                                                        baseModel
-                                                                .getRepositoryManager()
-                                                                .getDaoSession()
-                                                                .getPostLikeEntityDao()
-                                                                .deleteByKey(list.get(i).getObjectId());
-                                                    }
-                                                }
-                                            } else {
-                                                CommonLogger.e("点赞相关删除失败" + e.toString());
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    CommonLogger.e("点赞相关删除成功");
-                                }
-                            } else {
-                                CommonLogger.e("点赞相关删除失败" + e.toString());
-                            }
-                        }
-                    });
+                    UserDBManager.getInstance()
+                            .deletePostEntity(data.getObjectId());
+                    UserDBManager.getInstance().deleteCommentFromPost(data.getObjectId());
                     BmobQuery<PublicCommentBean> bmobQuery1 = new BmobQuery<>();
                     PublicPostBean item1 = new PublicPostBean();
-                    item.setObjectId(data.getObjectId());
-                    bmobQuery1.addWhereEqualTo("posterMessage", item1);
+                    item1.setObjectId(data.getObjectId());
+                    bmobQuery1.addWhereEqualTo(Constant.POST, new BmobPointer(item1));
                     bmobQuery1.findObjects(new FindListener<PublicCommentBean>() {
                         @Override
                         public void done(List<PublicCommentBean> list, BmobException e) {
@@ -277,15 +174,6 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                                         public void done(List<BatchResult> list, BmobException e) {
                                             if (e == null) {
                                                 CommonLogger.e("评论相关删除成功");
-                                                for (int i = 0; i < list.size(); i++) {
-                                                    if (list.get(i).getError() == null) {
-                                                        baseModel
-                                                                .getRepositoryManager()
-                                                                .getDaoSession()
-                                                                .getPostCommentEntityDao()
-                                                                .deleteByKey(list.get(i).getObjectId());
-                                                    }
-                                                }
                                             } else {
                                                 CommonLogger.e("评论相关删除失败" + e.toString());
                                             }
@@ -303,7 +191,11 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                              ||
                             data.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
                         PostDataBean postDataBean = BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
-                        BmobFile.deleteBatch(postDataBean.getImageList().toArray(new String[]{}), new DeleteBatchListener() {
+                        String[] temp=new String[postDataBean.getImageList().size()];
+                        for (int i = 0; i < postDataBean.getImageList().size(); i++) {
+                            temp[i]=postDataBean.getImageList().get(i);
+                        }
+                        BmobFile.deleteBatch(temp, new DeleteBatchListener() {
                             @Override
                             public void done(String[] strings, BmobException e) {
                                 if (e == null) {
@@ -314,9 +206,8 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                             }
                         });
                     }
-                } else {
-                    listener.done(e);
                 }
+                listener.done(e);
             }
         });
     }
@@ -326,24 +217,18 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
             @Override
             public void onSuccess(PublicPostBean publicPostBean) {
                 publicPostBean.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-                baseModel.getRepositoryManager().getDaoSession()
-                        .getPublicPostEntityDao()
+                UserDBManager.getInstance()
+                        .getDaoSession().getPublicPostEntityDao()
                         .deleteByKey(objectId);
-                baseModel.getRepositoryManager().getDaoSession().getPublicPostEntityDao().insertOrReplace(MsgManager
-                        .getInstance().cover(publicPostBean));
-                List<PublicPostBean> result = new ArrayList<>();
-                result.add(publicPostBean);
-                iView.updateData(result);
+                UserDBManager.getInstance().addOrUpdatePost(publicPostBean);
+                RxBusManager.getInstance().post(new UpdatePostEvent(publicPostBean));
             }
 
             @Override
             public void onFailed(String errorMsg, int errorCode, PublicPostBean publicPostBean) {
                 publicPostBean.setSendStatus(Constant.SEND_STATUS_FAILED);
-                baseModel.getRepositoryManager().getDaoSession().getPublicPostEntityDao().update(MsgManager
-                        .getInstance().cover(publicPostBean));
-                List<PublicPostBean> result = new ArrayList<>();
-                result.add(publicPostBean);
-                iView.updateData(result);
+                UserDBManager.getInstance().addOrUpdatePost(publicPostBean);
+                RxBusManager.getInstance().post(new UpdatePostEvent(publicPostBean));
 
             }
         }));
@@ -354,24 +239,15 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
             @Override
             public void onSuccess(PublicPostBean publicPostBean) {
                 publicPostBean.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-                List<PublicPostBean> result = new ArrayList<>();
-                result.add(publicPostBean);
-
-
-                baseModel.getRepositoryManager().getDaoSession().getPublicPostEntityDao().insertOrReplace(MsgManager
-                        .getInstance().cover(publicPostBean));
-
-                iView.updateData(result);
+                UserDBManager.getInstance().addOrUpdatePost(publicPostBean);
+                RxBusManager.getInstance().post(new UpdatePostEvent(publicPostBean));
             }
 
             @Override
             public void onFailed(String errorMsg, int errorCode, PublicPostBean publicPostBean) {
-                List<PublicPostBean> result = new ArrayList<>();
                 publicPostBean.setSendStatus(Constant.SEND_STATUS_FAILED);
-                result.add(publicPostBean);
-                baseModel.getRepositoryManager().getDaoSession().getPublicPostEntityDao().insertOrReplace(MsgManager
-                        .getInstance().cover(publicPostBean));
-                iView.updateData(result);
+                UserDBManager.getInstance().addOrUpdatePost(publicPostBean);
+                RxBusManager.getInstance().post(new UpdatePostEvent(publicPostBean));
             }
         }));
     }
