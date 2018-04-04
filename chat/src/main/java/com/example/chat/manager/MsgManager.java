@@ -1042,7 +1042,7 @@ public class MsgManager {
         PublicPostBean publicPostBean = new PublicPostBean();
         publicPostBean.setObjectId(postId);
         BmobQuery<PublicCommentBean> query = new BmobQuery<>();
-        query.addWhereEqualTo("post", publicPostBean);
+        query.addWhereEqualTo(Constant.POST, publicPostBean);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTime = 0;
         try {

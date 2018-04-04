@@ -4,7 +4,6 @@ import com.example.chat.base.AppBasePresenter;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
-import com.example.chat.bean.post.PostLikeBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.events.UpdatePostEvent;
 import com.example.chat.listener.OnCreatePublicPostListener;
@@ -143,7 +142,7 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
 
     public void deleteShareInfo(PublicPostBean data, UpdateListener listener) {
         if (!data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
-            baseModel.getRepositoryManager()
+            UserDBManager.getInstance()
                     .getDaoSession()
                     .getPublicPostEntityDao().deleteByKey(data.getObjectId());
             listener.done(null);

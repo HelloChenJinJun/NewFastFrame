@@ -161,8 +161,13 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             @Override
             public void onItemChildClick(int position, View view, int id) {
                 if (id == R.id.tv_item_fragment_share_info_share) {
-                    EditShareInfoActivity.start(getActivity(), Constant.EDIT_TYPE_SHARE
-                    ,shareInfoAdapter.getData(position),false);
+                    PublicPostBean data=shareInfoAdapter.getData(position);
+                    if (data.getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                        ToastUtils.showShortToast("不能转发自己的说说");
+                    }else {
+                        EditShareInfoActivity.start(getActivity(),Constant.EDIT_TYPE_SHARE,data
+                                ,false);
+                    }
                 } else if (id == R.id.tv_item_fragment_share_info_comment) {
                     CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position));
                 } else if (id == R.id.tv_item_fragment_share_info_like) {
@@ -242,6 +247,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 presenter.updatePublicPostBean(publicPostBean);
             } else {
                 shareInfoAdapter.addData(0, publicPostBean);
+                manager.scrollToPositionWithOffset(0,0);
                 if (AppUtil.isNetworkAvailable()) {
                     refreshOfflineMessage();
                 }
@@ -250,9 +256,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
 //        用于接收更新过后的post
         presenter.registerEvent(UpdatePostEvent.class, updatePostEvent -> {
-            if (!updatePostEvent.getPublicPostBean().getObjectId().contains("-") && shareInfoAdapter.getData().contains(updatePostEvent.getPublicPostBean())) {
                 shareInfoAdapter.addData(updatePostEvent.getPublicPostBean());
-            }
         });
 
 
@@ -261,9 +265,11 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             if (likeEvent.getType() == CommentEvent.TYPE_LIKE) {
                 PublicPostBean bean = shareInfoAdapter.getPublicPostDataById(likeEvent.getId());
                 if (likeEvent.getAction()==CommentEvent.ACTION_ADD) {
+                    bean.getLikeList().add(UserManager.getInstance().getCurrentUserObjectId());
                     bean.setLikeCount(bean.getLikeCount() + 1);
                 }else {
                     bean.setLikeCount(bean.getLikeCount()-1);
+                    bean.getLikeList().remove(UserManager.getInstance().getCurrentUserObjectId());
                 }
                 shareInfoAdapter.addData(bean);
             } else if (likeEvent.getType()==CommentEvent.TYPE_COMMENT){

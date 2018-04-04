@@ -2,7 +2,7 @@ package com.example.live;
 
 
 
-import com.example.commonlibrary.bean.chat.DaoSession;
+import com.example.commonlibrary.bean.music.DaoSession;
 import com.example.commonlibrary.repository.BaseRepositoryManager;
 
 import retrofit2.Retrofit;

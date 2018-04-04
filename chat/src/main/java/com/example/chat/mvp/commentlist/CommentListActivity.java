@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -46,6 +47,7 @@ import com.example.chat.dagger.commentlist.CommentListModule;
 import com.example.chat.dagger.commentlist.DaggerCommentListComponent;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.events.LocationEvent;
+import com.example.chat.events.UpdatePostEvent;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.EditShare.EditShareInfoActivity;
 import com.example.chat.mvp.chat.ChatActivity;
@@ -113,6 +115,8 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
     private WrappedViewPager emotionPager;
     private PublicPostBean data;
     private WrappedLinearLayoutManager manager;
+    private ImageView retry;
+    private ProgressBar loading;
 
     @Override
     public void updateData(List<PublicCommentBean> list) {
@@ -298,50 +302,50 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
         toolBarOption.setNeedNavigation(true);
         toolBarOption.setTitle("动态详情");
         setToolBar(toolBarOption);
-        presenter.registerEvent(CommentEvent.class, new Consumer<CommentEvent>() {
-            @Override
-            public void accept(CommentEvent commentEvent) throws Exception {
-                if (commentEvent.getType() == CommentEvent.TYPE_LIKE) {
-                    updateLikeCountAdd(commentEvent.getId());
-                } else {
-                    updateCommentCountAdd(commentEvent.getId());
+        presenter.registerEvent(CommentEvent.class, commentEvent -> {
+            if (commentEvent.getType() == CommentEvent.TYPE_LIKE) {
+                if (commentEvent.getAction() == CommentEvent.ACTION_ADD) {
+                    data.setLikeCount(data.getLikeCount() + 1);
+                    data.getLikeList().add(UserManager.getInstance()
+                            .getCurrentUserObjectId());
+                }else {
+                    data.setLikeCount(data.getLikeCount()-1);
+                    data.getLikeList().remove(UserManager.getInstance()
+                            .getCurrentUserObjectId());
                 }
+                updateLikeStatus();
+            } else {
+                data.setCommentCount(data.getCommentCount() + 1);
+                updateCommentStatus();
             }
         });
-        presenter.registerEvent(PublicCommentBean.class, new Consumer<PublicCommentBean>() {
-            @Override
-            public void accept(PublicCommentBean publicCommentBean) throws Exception {
-                commentListAdapter.addData(0, publicCommentBean);
+        presenter.registerEvent(PublicCommentBean.class, publicCommentBean -> commentListAdapter.addData(0, publicCommentBean));
+        presenter.registerEvent(UpdatePostEvent.class, updatePostEvent -> {
+            PublicPostBean publicPostBean=updatePostEvent.getPublicPostBean();
+            if (data.getObjectId().contains("-")) {
+                if (publicPostBean.getUpdatedAt().equals(data.getUpdatedAt())
+                        && data.getAuthor().equals(data.getAuthor())) {
+                    data=publicPostBean;
+                    updateStatus();
+                }
+            } else if (data.equals(publicPostBean)) {
+                data=publicPostBean;
+                updateStatus();
             }
         });
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                presenter.getCommentListData(postId, true, getRefreshTime(true));
-            }
-        });
+        presenter.getCommentListData(postId, true, getRefreshTime(true));
     }
 
-    private void updateCommentCountAdd(String id) {
-        data.setCommentCount(data.getCommentCount() + 1);
-        comment.setText(data.getCommentCount() + "");
-    }
 
-    private void updateLikeCountAdd(String id) {
-        data.setLikeCount(data.getLikeCount() + 1);
-        like.setText(data.getLikeCount() + "");
-    }
+
+
 
     private String getRefreshTime(boolean isRefresh) {
         if (isRefresh) {
             if (commentListAdapter.getData().size() == 0) {
                 return "0000-00-00 01:00:00";
             }
-//todo        解决更新时间问题
-            String updateTime = BaseApplication.getAppComponent().getSharedPreferences()
-                    .getString(Constant.UPDATE_TIME, null);
-                if (commentListAdapter.getData().size() > 10) {
+                if (commentListAdapter.getData().size() >=10) {
                     return commentListAdapter.getData(9).getCreatedAt();
                 } else {
                     return commentListAdapter.getData(commentListAdapter.getData().size() - 1)
@@ -404,11 +408,25 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
         share.setText(data.getShareCount() == 0 ? "转发" : data.getShareCount() + "");
         share.setOnClickListener(this);
         comment = headerView.findViewById(R.id.tv_item_fragment_share_info_comment);
-        comment.setText(data.getCommentCount() == 0 ? "评论" : data.getCommentCount() + "");
+        updateCommentStatus();
         comment.setOnClickListener(this);
         like = headerView.findViewById(R.id.tv_item_fragment_share_info_like);
-        like.setText(data.getLikeCount() == 0 ? "点赞" : data.getLikeCount() + "");
+        updateLikeStatus();
         like.setOnClickListener(this);
+
+         retry=headerView.findViewById(R.id.iv_item_fragment_share_info_retry);
+         loading=headerView.findViewById(R.id.pb_item_fragment_share_info_retry_loading);
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data.setSendStatus(Constant.SEND_STATUS_SENDING);
+                presenter.reSendPublicPostBean(data,data.getObjectId());
+            }
+        });
+        updateStatus();
+
+
+
         RoundAngleImageView avatar = headerView.findViewById(R.id.riv_item_fragment_share_info_avatar);
         BaseApplication.getAppComponent().getImageLoader()
                 .loadImage(this, new GlideImageLoaderConfig.Builder().url(data.getAuthor()
@@ -562,6 +580,32 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
         return headerView;
     }
 
+    private void updateCommentStatus() {
+        comment.setText(data.getCommentCount() == 0 ? "评论" : data.getCommentCount() + "");
+    }
+
+    private void updateLikeStatus() {
+        like.setText(data.getLikeCount() == 0 ? "点赞" : data.getLikeCount() + "");
+        if (data.getLikeList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
+            like.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_favorite_deep_orange_a700_24dp), null, null, null);
+        }else {
+            like.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_favorite_border_deep_orange_a700_24dp), null, null, null);
+        }
+    }
+
+    private void updateStatus() {
+        if (data.getSendStatus() == Constant.SEND_STATUS_SUCCESS) {
+            retry.setVisibility(View.GONE);
+            loading.setVisibility(View.GONE);
+        } else if (data.getSendStatus() == Constant.SEND_STATUS_SENDING) {
+            loading.setVisibility(View.VISIBLE);
+            retry.setVisibility(View.GONE);
+        } else {
+            loading.setVisibility(View.GONE);
+            retry.setVisibility(View.VISIBLE);
+        }
+    }
+
     private SpannableStringBuilder getSpannerContent(final ShareTypeContent bean) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         String name = "@" + bean.getNick() + ":";
@@ -642,6 +686,13 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.tv_item_fragment_share_info_share) {
+            if (data.getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                ToastUtils.showShortToast("不能转发自己的说说");
+            }else {
+                EditShareInfoActivity.start(this,Constant.EDIT_TYPE_SHARE,data
+                ,false);
+                finish();
+            }
         } else if (id == R.id.tv_item_fragment_share_info_comment) {
             currentPosition = -1;
             input.setHint("");

@@ -4,7 +4,6 @@ import com.example.chat.base.AppBasePresenter;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
-import com.example.chat.bean.post.PostLikeBean;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicCommentBean;
@@ -20,7 +19,6 @@ import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.PostCommentEntity;
 import com.example.commonlibrary.bean.chat.PostCommentEntityDao;
-import com.example.commonlibrary.bean.chat.PostLikeEntity;
 import com.example.commonlibrary.bean.chat.ReplyCommentListEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.mvp.view.IView;
@@ -94,13 +92,13 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                             result.add(entity);
                         }
                         if (result.size() > 0) {
-                            baseModel.getRepositoryManager()
+                            UserDBManager.getInstance()
                                     .getDaoSession().getPostCommentEntityDao()
                                     .insertOrReplaceInTx(result);
+
                         }
                         if (userEntityList.size() > 0) {
-                            baseModel
-                                    .getRepositoryManager()
+                            UserDBManager.getInstance()
                                     .getDaoSession()
                                     .getUserEntityDao()
                                     .insertOrReplaceInTx(userEntityList);
@@ -110,7 +108,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                 } else {
                     CommonLogger.e("评论错误" + e.toString());
                     long currentTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
-                    QueryBuilder<PostCommentEntity> queryBuilder = baseModel.getRepositoryManager().getDaoSession()
+                    QueryBuilder<PostCommentEntity> queryBuilder =UserDBManager.getInstance().getDaoSession()
                             .getPostCommentEntityDao()
                             .queryBuilder();
                     queryBuilder.where(PostCommentEntityDao.Properties.Pid.eq(postId));
@@ -221,7 +219,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                     publicCommentBeanEntity.setContent(newBean.getContent());
                     publicCommentBeanEntity.setPid(postId);
                     publicCommentBeanEntity.setUid(UserManager.getInstance().getCurrentUserObjectId());
-                    baseModel.getRepositoryManager().getDaoSession()
+                    UserDBManager.getInstance().getDaoSession()
                             .getPostCommentEntityDao().insertOrReplace(publicCommentBeanEntity);
                 }
                 if (e == null && commentDetailBean.getPublicId() != null) {
@@ -266,7 +264,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                                 }
 
                                 if (listEntityList.size() > 0) {
-                                    baseModel.getRepositoryManager().getDaoSession()
+                                    UserDBManager.getInstance().getDaoSession()
                                             .getReplyCommentListEntityDao()
                                             .insertOrReplaceInTx(listEntityList);
                                 }
@@ -314,7 +312,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
 
     public void deleteShareInfo(PublicPostBean data, UpdateListener listener) {
         if (data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
-            baseModel.getRepositoryManager()
+            UserDBManager.getInstance()
                     .getDaoSession()
                     .getPublicPostEntityDao().deleteByKey(data.getObjectId());
             listener.done(null);

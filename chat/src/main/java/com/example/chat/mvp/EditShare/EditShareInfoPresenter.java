@@ -6,6 +6,7 @@ import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.chat.manager.MsgManager;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.AppUtil;
@@ -38,7 +39,6 @@ public class EditShareInfoPresenter extends AppBasePresenter<IView<PublicPostBea
     }
 
     public void sendPublicPostBean(int type, String content, ArrayList<ImageItem> imageList, String videoPath, String thumbImage, PublicPostBean bean, String location) {
-        iView.showLoading("正在发送......");
         Subscription subscription = MsgManager.getInstance().sendPublicPostMessage(type, content, location, imageList, videoPath, thumbImage, bean,
                  new OnCreatePublicPostListener() {
 
@@ -66,9 +66,8 @@ public class EditShareInfoPresenter extends AppBasePresenter<IView<PublicPostBea
         bean.setObjectId(UUID.randomUUID().toString());
         bean.setCreateTime(TimeUtil.getTime(TimeUtil.localToServerTime(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss"));
         bean.setUpdatedAt(TimeUtil.getTime(TimeUtil.localToServerTime(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss"));
-        baseModel.getRepositoryManager().getDaoSession().getPublicPostEntityDao()
-                .insertOrReplace(MsgManager.getInstance().cover(bean));
-        iView.hideLoading();
+        UserDBManager.getInstance()
+                .addOrUpdatePost(bean);
         iView.updateData(bean);
     }
 }
