@@ -124,7 +124,7 @@ public class UrlTextView extends LinearLayout {
                         }
                 });
                 contentText.setText(text);
-                contentText.setMovementMethod(new CustomMoveMethod(clickColor, defaultColor));
+                contentText.setMovementMethod(new CustomMoveMethod());
         }
 
 

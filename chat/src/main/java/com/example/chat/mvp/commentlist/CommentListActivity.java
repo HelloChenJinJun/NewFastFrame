@@ -381,7 +381,7 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
                         .getAvatar()).imageView(avatar).build());
         avatar.setOnClickListener(this);
         ((TextView) headerView.findViewById(R.id.tv_item_fragment_share_info_main_text))
-                .setText(data.getAuthor().getNick());
+                .setText(data.getAuthor().getName());
         ((ImageView) headerView.findViewById(R.id.iv_item_fragment_share_info_sex))
                 .setImageResource(data.getAuthor().isSex() ? R.drawable.ic_sex_male : R.drawable
                         .ic_sex_female);

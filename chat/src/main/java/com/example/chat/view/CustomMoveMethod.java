@@ -62,8 +62,6 @@ public class CustomMoveMethod extends BaseMovementMethod {
                                         return true;
                                 } else {
                                         isClickTextView = true;
-                                        widget.setBackgroundColor(Color.parseColor("#979595"));
-                                        LogUtil.e("点击的是正常textView的文字");
                                 }
                                 break;
                         case MotionEvent.ACTION_MOVE:
@@ -78,7 +76,6 @@ public class CustomMoveMethod extends BaseMovementMethod {
                                         return true;
                                 } else {
                                         LogUtil.e("点击textView文字的up11");
-                                        widget.setBackgroundColor(Color.parseColor("#00000000"));
                                 }
                                 break;
                         default:
@@ -86,8 +83,6 @@ public class CustomMoveMethod extends BaseMovementMethod {
                                         text.removeSpan(colorSpan);
 //                                        Selection.removeSelection(text);
                                         return true;
-                                } else {
-                                        widget.setBackgroundColor(Color.parseColor("#00000000"));
                                 }
                                 break;
                 }

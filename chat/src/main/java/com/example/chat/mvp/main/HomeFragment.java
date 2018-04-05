@@ -32,7 +32,6 @@ import com.example.chat.base.Constant;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
-import com.example.chat.bean.User;
 import com.example.chat.bean.WeatherInfoBean;
 import com.example.chat.events.LocationEvent;
 import com.example.chat.events.MessageInfoEvent;
@@ -40,9 +39,8 @@ import com.example.chat.events.NetStatusEvent;
 import com.example.chat.events.RecentEvent;
 import com.example.chat.events.RefreshMenuEvent;
 import com.example.chat.listener.OnDragDeltaChangeListener;
-
-import com.example.chat.manager.BindServiceManager;
 import com.example.chat.manager.MsgManager;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.main.friends.FriendsFragment;
 import com.example.chat.mvp.main.invitation.InvitationFragment;
@@ -64,6 +62,7 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -98,7 +97,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     private RoundAngleImageView avatar;
     private TextView nick;
     private TextView signature;
-    private User user;
+    private UserEntity user;
     private TextView net;
     private TextView weatherCity;
     private TextView weatherTemperature;
@@ -161,7 +160,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         initMenu();
         initActionBar();
         initRxBus();
-        updateUserInfo(UserManager.getInstance().getCurrentUser());
+        updateUserInfo(UserDBManager.getInstance().getUser(UserManager.getInstance().getCurrentUserObjectId()));
         startSearchLiveWeather(BaseApplication.getAppComponent()
         .getSharedPreferences().getString(Constant.CITY,null));
         bindPollService(10);
@@ -204,7 +203,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
                 }
             }
         }));
-        addDisposable(RxBusManager.getInstance().registerEvent(User.class, this::updateUserInfo));
+        addDisposable(RxBusManager.getInstance().registerEvent(UserEntity.class, this::updateUserInfo));
 //        网络变化监听
         addDisposable(RxBusManager.getInstance().registerEvent(NetStatusEvent.class, netStatusEvent -> {
             if (netStatusEvent.isConnected()) {
@@ -230,7 +229,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
                         }
                     }
                 });
-                UserManager.getInstance().refreshUserInfo();
+//                UserManager.getInstance().refreshUserInfo();
             } else {
                 net.setVisibility(View.VISIBLE);
             }
@@ -274,7 +273,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
 
     }
 
-    private void updateUserInfo(User user) {
+    private void updateUserInfo(UserEntity user) {
         this.user = user;
         nick.setText(user.getNick());
         if (user.getSignature() == null) {

@@ -11,7 +11,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.chat.R;
 import com.example.chat.base.Constant;
 import com.example.chat.base.SlideBaseActivity;
-import com.example.chat.bean.User;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
@@ -273,29 +272,36 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
                     if (message != null) {
                         mUser.setSex(message.equals("男"));
                     }
+                    RxBusManager.getInstance().post(mUser);
                     break;
                 case Constant.REQUEST_CODE_BIRTH:
                     birth.setText(message);
                     mUser.setBirthDay(message);
+                    RxBusManager.getInstance().post(mUser);
                     break;
                 case Constant.REQUEST_CODE_SIGNATURE:
                     signature.setText(message);
                     mUser.setSignature(message);
+                    RxBusManager.getInstance().post(mUser);
                     break;
                 case Constant.REQUEST_CODE_EMAIL:
                     email.setText(message);
                     mUser.setEmail(message);
+                    RxBusManager.getInstance().post(mUser);
                     break;
                 case Constant.REQUEST_CODE_NICK:
                     nick.setText(message);
                     mUser.setNick(message);
+                    RxBusManager.getInstance().post(mUser);
                     break;
                 case Constant.REQUEST_CODE_ADDRESS:
                     address.setText(message);
                     mUser.setAddress(message);
+                    RxBusManager.getInstance().post(mUser);
                 case Constant.REQUEST_CODE_PHONE:
                     phone.setText(message);
                     mUser.setPhone(message);
+                    RxBusManager.getInstance().post(mUser);
                 default:
                     break;
             }

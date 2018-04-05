@@ -6,6 +6,8 @@ import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.User;
+import com.example.chat.bean.post.CommentDetailBean;
+import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.commonlibrary.BaseApplication;
@@ -24,6 +26,7 @@ import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
 import com.example.commonlibrary.bean.chat.DaoMaster;
 import com.example.commonlibrary.bean.chat.DaoSession;
+import com.google.gson.Gson;
 
 import org.greenrobot.greendao.database.Database;
 
@@ -42,6 +45,7 @@ import java.util.Map;
 public class UserDBManager {
     private static Map<String, UserDBManager> sMap = new HashMap<>();
     private DaoSession daoSession;
+    private Gson gson;
 
 
     public static UserDBManager getInstance() {
@@ -76,6 +80,7 @@ public class UserDBManager {
         Database database = devOpenHelper.getWritableDb();
         DaoMaster master = new DaoMaster(database);
         daoSession = master.newSession();
+        gson=BaseApplication.getAppComponent().getGson();
     }
 
 
@@ -545,6 +550,14 @@ public class UserDBManager {
                     userEntityList.add(UserManager.getInstance().cover(item.getAuthor(),userEntity.isStranger()
                             ,userEntity.isBlack(),userEntity.getBlackType()));
                 }
+
+                if (item.getMsgType() == Constant.EDIT_TYPE_SHARE) {
+                    String shareUid=gson.fromJson(gson.fromJson(item.getContent(), PostDataBean.class).getShareContent()
+                    ,PublicPostEntity.class).getUid();
+                    UserManager.getInstance().findUserById(shareUid,null);
+                }
+
+
             }
             daoSession.getPublicPostEntityDao().insertOrReplaceInTx(entityList);
             daoSession.getUserEntityDao().insertOrReplaceInTx(userEntityList);
@@ -564,6 +577,16 @@ public class UserDBManager {
                 }else {
                     userEntityList.add(UserManager.getInstance().cover(item.getUser(),userEntity.isStranger()
                             ,userEntity.isBlack(),userEntity.getBlackType()));
+                }
+                CommentDetailBean bean=gson.fromJson(item.getContent(),CommentDetailBean.class);
+                if (bean.getPublicId() != null) {
+                    String[] str=bean.getPublicId().split("&");
+                    for (String uid :
+                            str) {
+                        if (!uid.equals(item.getUser().getObjectId())) {
+                             UserManager.getInstance().findUserById(uid,null);
+                        }
+                    }
                 }
             }
             daoSession.getPostCommentEntityDao().insertOrReplaceInTx(entityList);

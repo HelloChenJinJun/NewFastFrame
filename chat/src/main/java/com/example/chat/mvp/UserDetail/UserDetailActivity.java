@@ -104,6 +104,11 @@ public class UserDetailActivity extends SlideBaseActivity implements View.OnClic
         adapter.setTitleAndFragments(titleList,fragments);
         display.setAdapter(adapter);
         display.setCurrentItem(0);
+        addDisposable(RxBusManager.getInstance().registerEvent(UserEntity.class, user -> {
+            if (user.equals(UserDetailActivity.this.user)) {
+                user=UserDetailActivity.this.user;
+            }
+        }));
     }
 
     private void updateUserInfo() {

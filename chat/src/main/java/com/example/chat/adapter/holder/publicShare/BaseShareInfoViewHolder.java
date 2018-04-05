@@ -44,7 +44,7 @@ public class BaseShareInfoViewHolder extends BaseWrappedViewHolder {
         setImageUrl(R.id.riv_item_fragment_share_info_avatar, user
                 .getAvatar())
                 .setText(R.id.tv_item_fragment_share_info_main_text
-                        , user.getNick())
+                        , user.getName())
                 .setImageResource(R.id.iv_item_fragment_share_info_sex, user
                         .isSex() ? R.drawable.ic_sex_female : R.drawable.ic_sex_male)
                 .setText(R.id.tv_item_fragment_share_info_sub_text, getText(data))
@@ -74,10 +74,10 @@ public class BaseShareInfoViewHolder extends BaseWrappedViewHolder {
                     , postDataBean.getContent());
         }
 
-        if (data.getSendStatus() == Constant.SEND_STATUS_SUCCESS) {
+        if (data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
             setVisible(R.id.iv_item_fragment_share_info_retry, false)
                     .setVisible(R.id.pb_item_fragment_share_info_retry_loading, false);
-        } else if (data.getSendStatus() == Constant.SEND_STATUS_SENDING) {
+        } else if (data.getSendStatus().equals(Constant.SEND_STATUS_SENDING)) {
             setVisible(R.id.pb_item_fragment_share_info_retry_loading, true)
                     .setVisible(R.id.iv_item_fragment_share_info_retry, false);
         } else {

@@ -86,10 +86,8 @@ public class RecentFragment extends AppBaseFragment implements SwipeRefreshLayou
                                 swipeRightMenu.addMenuItem(deleteItem);
                         }
                 });
-                display.setSwipeMenuItemClickListener(new MySwipeItemClickListener());
                 mSwipeRefreshLayout.setOnRefreshListener(this);
                 display.setAdapter(mAdapter = new RecentListAdapter());
-
                 mAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
                         @Override
                         public void onItemClick(int position, View view) {

@@ -48,7 +48,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:background="@drawable/chat_right_qp"
-                android:gravity="center"
                 android:lineSpacingExtra="6dp"
                 android:maxWidth="225dp"
                 android:minHeight="50dp"

@@ -141,7 +141,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             @Override
             public void onChildViewDetachedFromWindow(View view) {
                 JZVideoPlayer jzvd = view.findViewById(R.id.js_item_fragment_share_info_video_display);
-                if (jzvd != null && JZUtils.dataSourceObjectsContainsUri(jzvd.dataSourceObjects, JZMediaManager.getCurrentDataSource())) {
+                if (jzvd != null &&jzvd.getVisibility()!=View.GONE&&JZUtils.dataSourceObjectsContainsUri(jzvd.dataSourceObjects, JZMediaManager.getCurrentDataSource())) {
                     JZVideoPlayer.releaseAllVideos();
                 }
             }

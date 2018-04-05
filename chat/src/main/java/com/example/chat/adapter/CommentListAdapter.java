@@ -51,13 +51,12 @@ public class CommentListAdapter extends BaseRecyclerAdapter<PublicCommentBean, B
 
     @Override
     protected void convert(BaseWrappedViewHolder holder, PublicCommentBean data) {
-
         CommentDetailBean detailBean = gson.fromJson(data.getContent(), CommentDetailBean.class);
         holder.setImageUrl(R.id.riv_item_activity_comment_list_avatar, data
                 .getUser().getAvatar())
                 .setText(R.id.tv_item_activity_comment_list_name, data.getUser()
-                        .getNick())
-                .setText(R.id.tv_item_activity_comment_list_time, getText(data.getUser()))
+                        .getName())
+                .setText(R.id.tv_item_activity_comment_list_time, getText(data))
                 .setText(R.id.tv_item_activity_comment_list_content, FaceTextUtil.toSpannableString(holder.getContext(),detailBean.getContent()))
                 .setOnItemChildClickListener(R.id.riv_item_activity_comment_list_avatar)
                 .setOnItemChildClickListener(R.id.iv_item_activity_comment_list_comment)
@@ -128,11 +127,11 @@ public class CommentListAdapter extends BaseRecyclerAdapter<PublicCommentBean, B
 
     }
 
-    private CharSequence getText(User user) {
+    private CharSequence getText(PublicCommentBean data) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(TimeUtil.getRealTime(user.getCreatedAt()))
+        stringBuilder.append(TimeUtil.getRealTime(data.getCreatedAt()))
                 .append("  来自[")
-                .append(user.getCollege())
+                .append(data.getUser().getCollege())
                 .append("]");
         return stringBuilder.toString();
     }

@@ -1108,6 +1108,7 @@ public class MsgManager {
         posterMessage.setLikeList(posterMessageEntity.getLikeList());
         posterMessage.setMsgType(posterMessageEntity.getMsgType());
         posterMessage.setShareCount(posterMessageEntity.getShareCount());
+        posterMessage.setObjectId(posterMessageEntity.getPid());
         return posterMessage;
     }
 

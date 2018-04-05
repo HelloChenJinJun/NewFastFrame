@@ -309,26 +309,21 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
             }
         } else if (type == Constant.EDIT_TYPE_SHARE) {
 //            处理分享的信息，主要把分享的内容转化为要本地,再分享
-            Gson gson=BaseApplication.getAppComponent()
-                    .getGson();
-            PublicPostEntity publicPostEntity=gson.fromJson(postDataBean.getShareContent(),PublicPostEntity.class);
-            publicPostBean= MsgManager.getInstance().cover(publicPostEntity);
-            PostDataBean shareContent=gson.fromJson(publicPostEntity.getContent(),PostDataBean.class);
-            if (publicPostEntity.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
-                Glide.with(this).load(shareContent.getImageList().get(0))
+            if (publicPostBean.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
+                Glide.with(this).load(postDataBean.getImageList().get(0))
                         .into(shareCover);
-            } else if (publicPostEntity.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
+            } else if (publicPostBean.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
                 for (String url :
-                        shareContent.getImageList()) {
+                        postDataBean.getImageList()) {
                     if (!url.endsWith(".mp4")) {
                         Glide.with(this).load(url)
                                 .into(shareCover);
                     }
                 }
-            } else if (publicPostEntity.getMsgType() == Constant.EDIT_TYPE_TEXT) {
-
+            } else if (publicPostBean.getMsgType() == Constant.EDIT_TYPE_TEXT) {
+                shareCover.setVisibility(View.GONE);
             }
-            shareTitle.setText(shareContent.getContent());
+            shareTitle.setText(postDataBean.getContent());
             display.setVisibility(View.GONE);
             video.setVisibility(View.GONE);
             record.setVisibility(View.GONE);
