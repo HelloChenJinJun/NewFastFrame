@@ -8,18 +8,18 @@ import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.MessageContent;
+import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.ReplyCommentListBean;
-import com.example.chat.bean.post.ShareTypeContent;
+import com.example.chat.bean.post.ReplyDetailContent;
 import com.example.chat.listener.AddFriendCallBackListener;
 import com.example.chat.listener.OnCreateChatMessageListener;
 import com.example.chat.listener.OnCreateGroupTableListener;
 import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.chat.listener.OnReceiveListener;
-import com.example.chat.listener.OnSendPushMessageListener;
 import com.example.chat.listener.OnSendTagMessageListener;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
@@ -46,7 +46,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.bmob.v3.BmobBatch;
 import cn.bmob.v3.BmobObject;
@@ -942,7 +944,7 @@ public class MsgManager {
 
 
 
-    public void getAllPostData(boolean isRefresh, String uid, String time, FindListener<PublicPostBean> findCallback) {
+    public void getAllPostData(boolean isPublic, boolean isRefresh, String uid, String time, FindListener<PublicPostBean> findCallback) {
         BmobQuery<PublicPostBean> query = new BmobQuery<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTime = 0;
@@ -955,9 +957,9 @@ public class MsgManager {
         BmobDate bmobDate;
         if (isRefresh) {
             bmobDate = new BmobDate(new Date(currentTime));
-            String key=Constant.UPDATE_TIME_SHARE;
-            if (uid != null) {
-                key=key+uid;
+            String key=Constant.UPDATE_TIME_SHARE+uid;
+            if (isPublic) {
+                key+=Constant.PUBLIC;
             }
             String updateTime=BaseApplication
                     .getAppComponent()
@@ -977,7 +979,7 @@ public class MsgManager {
             bmobDate = new BmobDate(new Date(currentTime));
             query.addWhereLessThan("createdAt", bmobDate);
         }
-        if (uid != null) {
+        if (!isPublic) {
             User user=new User();
             user.setObjectId(uid);
             query.addWhereEqualTo("author",new BmobPointer(user));
@@ -1001,21 +1003,7 @@ public class MsgManager {
         final Gson gson = BaseApplication
                 .getAppComponent().getGson();
         if (type==Constant.EDIT_TYPE_SHARE) {
-            ShareTypeContent shareTypeContent = new ShareTypeContent();
-            User user = postBean.getAuthor();
-            shareTypeContent.setAvatar(user.getAvatar());
-            shareTypeContent.setNick(user.getNick());
-            shareTypeContent.setUid(user.getObjectId());
-            shareTypeContent.setSex(user.isSex());
-            shareTypeContent.setAddress(user.getAddress());
-            shareTypeContent.setPid(postBean.getObjectId());
-            shareTypeContent.setLikeCount(postBean.getLikeCount());
-            shareTypeContent.setCommentCount(postBean.getCommentCount());
-            shareTypeContent.setShareCount(postBean.getShareCount());
-            shareTypeContent.setCreateAt(postBean.getCreatedAt());
-            shareTypeContent.setPostDataBean(gson.fromJson(postBean.getContent(), PostDataBean.class));
-            postDataBean.setShareContent(shareTypeContent);
-            postDataBean.setShareType(postBean.getItemViewType());
+            postDataBean.setShareContent(gson.toJson(MsgManager.getInstance().cover(postBean)));
         }else if (type==Constant.EDIT_TYPE_IMAGE) {
             List<String> photoUrls = new ArrayList<>();
             if (imageList != null && imageList.size() > 0) {
@@ -1043,16 +1031,18 @@ public class MsgManager {
         publicPostBean.setObjectId(postId);
         BmobQuery<PublicCommentBean> query = new BmobQuery<>();
         query.addWhereEqualTo(Constant.POST, publicPostBean);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long currentTime = 0;
-        try {
-            currentTime = simpleDateFormat.parse(time).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        long currentTime=TimeUtil.getTime(time);
         BmobDate bmobDate=new BmobDate(new Date(currentTime));
         if (isPullRefresh) {
-            if (!time.equals("0000-00-00 01:00:00")) {
+            String key = Constant.UPDATE_TIME_COMMENT + postId;
+            String updateTime = BaseApplication
+                    .getAppComponent().getSharedPreferences()
+                    .getString(key, null);
+            if (updateTime != null&&!time.equals("0000-00-00 01:00:00")) {
+//                这里有个Bug,WhereGreaterThan 也查出相等时间的消息,所以在这里加上一秒的时间
+                long resultTime=TimeUtil.getTime(updateTime,"yyyy-MM-dd HH:mm:ss")+1000;
+                query.addWhereGreaterThan("updatedAt", new BmobDate(new Date(resultTime)));
+            }else {
                 query.addWhereGreaterThan("updatedAt", bmobDate);
             }
             query.addWhereGreaterThanOrEqualTo("createdAt", bmobDate);
@@ -1080,6 +1070,7 @@ public class MsgManager {
         DaoSession daoSession=UserDBManager.getInstance().getDaoSession();
         PublicCommentBean posterComments = new PublicCommentBean();
         posterComments.setObjectId(entity.getCid());
+        posterComments.setSendStatus(entity.getSendStatus());
         posterComments.setContent(entity.getContent());
         posterComments.setCreatedTime(TimeUtil.getTime(entity.getCreatedTime(), "yyyy-MM-dd HH:mm:ss"));
         posterComments.setUpdatedAt(TimeUtil.getTime(entity.getUpdatedTime(), "yyyy-MM-dd HH:mm:ss"));
@@ -1088,16 +1079,7 @@ public class MsgManager {
                 daoSession
                         .getPublicPostEntityDao()
                         .queryBuilder().where(PublicPostEntityDao.Properties.Pid.eq(entity.getPid())).build().list().get(0);
-        User user;
-        if (!publicPostEntity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId())) {
-            user = UserManager.getInstance().cover(daoSession
-                    .getUserEntityDao()
-                    .queryBuilder()
-                    .where(UserEntityDao.Properties.Uid.eq(publicPostEntity.getUid())).build().list().get(0));
-        } else {
-            user = UserManager.getInstance().getCurrentUser();
-        }
-        PublicPostBean publicPostBean = MsgManager.getInstance().cover(publicPostEntity, user);
+        PublicPostBean publicPostBean =cover(publicPostEntity);
         posterComments.setPost(publicPostBean);
         User commentUser;
         if (!entity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId())) {
@@ -1113,7 +1095,8 @@ public class MsgManager {
     }
 
 
-    public PublicPostBean cover(PublicPostEntity posterMessageEntity, User user) {
+    public PublicPostBean cover(PublicPostEntity posterMessageEntity) {
+        User user=UserManager.getInstance().cover(UserDBManager.getInstance().getUser(posterMessageEntity.getUid()));
         PublicPostBean posterMessage = new PublicPostBean();
         posterMessage.setAuthor(user);
         posterMessage.setCreateTime(TimeUtil.getTime(posterMessageEntity.getCreatedTime(), "yyyy-MM-dd HH:mm:ss"));
@@ -1264,15 +1247,16 @@ public class MsgManager {
                     if (e == null) {
                         PublicPostBean temp = new PublicPostBean();
                         temp.increment("shareCount");
-                        temp.update(bean.getShareContent().getPid(), new UpdateListener() {
+                        PublicPostEntity publicPostEntity=gson.fromJson(bean.getShareContent(),PublicPostEntity.class);
+                        temp.update(publicPostEntity.getPid(), new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
                                 if (e != null) {
                                     CommonLogger.e("更新转发个数失败");
                                 } else {
                                     CommonLogger.e("更新转发个数成功");
-                                    int origin = bean.getShareContent().getShareCount();
-                                    bean.getShareContent().setShareCount(origin + 1);
+                                    publicPostEntity.setShareCount(publicPostEntity.getShareCount()+1);
+                                    bean.setShareContent(gson.toJson(publicPostEntity));
                                     data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
                                 }
                                 listener.onSuccess(data);
@@ -1624,6 +1608,70 @@ public class MsgManager {
     public GroupTableMessage cover(GroupTableEntity
                                    entity) {
         return null;
+    }
+
+    public PostCommentEntity cover(PublicCommentBean item) {
+        PostCommentEntity entity = new PostCommentEntity();
+        entity.setUid(item.getUser().getObjectId());
+        entity.setPid(item.getPost().getObjectId());
+        entity.setSendStatus(item.getSendStatus());
+        entity.setContent(item.getContent());
+        entity.setCreatedTime(TimeUtil.getTime(item.getCreatedAt(), "yyyy-MM-dd HH:mm:ss"));
+        entity.setUpdatedTime(TimeUtil.getTime(item.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss"));
+        entity.setCid(item.getObjectId());
+        return entity;
+    }
+
+    public PublicCommentBean createPostCommentBean(PublicCommentBean publicCommentBean, String postId, String content) {
+        final CommentDetailBean commentDetailBean = new CommentDetailBean();
+        commentDetailBean.setContent(content);
+        if (publicCommentBean != null) {
+            CommentDetailBean originBean = gson.fromJson(publicCommentBean.getContent(), CommentDetailBean.class);
+            String publicId=publicCommentBean.getUser().getObjectId() + "&" +
+                    UserManager.getInstance().getCurrentUserObjectId();
+            List<ReplyDetailContent>  list=originBean.getConversationList().get(publicId);
+            if (list == null) {
+                publicId=UserManager.getInstance().getCurrentUserObjectId()+"&"+publicCommentBean.getUser().getObjectId();
+                list=originBean.getConversationList().get(publicId);
+            }
+            Map<String,List<ReplyDetailContent>> map=new HashMap<>();
+            if (list == null) {
+//                首次双方对话
+                List<ReplyDetailContent> replyDetailContents=new ArrayList<>();
+                ReplyDetailContent one=new ReplyDetailContent();
+                one.setTime(TimeUtil.severToLocalTime(publicCommentBean.getCreatedAt()));
+                one.setContent(originBean.getContent());
+                one.setUid(publicCommentBean.getUser().getObjectId());
+                replyDetailContents.add(one);
+                ReplyDetailContent two=new ReplyDetailContent();
+                two.setTime(System.currentTimeMillis());
+                two.setUid(UserManager.getInstance().getCurrentUserObjectId());
+                two.setContent(content);
+                replyDetailContents.add(two);
+                map.put(publicId,replyDetailContents);
+            }else {
+                ReplyDetailContent two=new ReplyDetailContent();
+                two.setTime(System.currentTimeMillis());
+                two.setContent(content);
+                two.setUid(UserManager.getInstance().getCurrentUserObjectId());
+                List<ReplyDetailContent>  other=new ArrayList<>();
+                other.addAll(list);
+                other.add(two);
+                map.put(publicId,other);
+            }
+            commentDetailBean.setConversationList(map);
+            commentDetailBean.setPublicId(publicId);
+            commentDetailBean.setReplyContent(originBean.getContent());
+        }
+        final PublicCommentBean newBean = new PublicCommentBean();
+        newBean.setContent(gson.toJson(commentDetailBean));
+        newBean.setUser(UserManager.getInstance().getCurrentUser());
+        PublicPostBean posterMessage = new PublicPostBean();
+        posterMessage.setObjectId(postId);
+        newBean.setPost(posterMessage);
+        newBean.setCreateTime(TimeUtil.getTime(TimeUtil.localToServerTime(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss"));
+        newBean.setUpdatedAt(TimeUtil.getTime(TimeUtil.localToServerTime(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss"));
+        return newBean;
     }
 }
 

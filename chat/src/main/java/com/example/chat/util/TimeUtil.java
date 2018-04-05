@@ -104,20 +104,28 @@ public class TimeUtil {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             long serverTime = simpleDateFormat.parse(time).getTime();
-            LogUtil.e("服务器上的时间:" + serverTime);
-            long deltaTime = BaseApplication.getAppComponent().getSharedPreferences()
-                    .getLong(Constant.DELTA_TIME, -1L);
-            long realTime = serverTime + deltaTime;
-            LogUtil.e("客户端的时间:" + realTime);
-            LogUtil.e("现在的客户端的时间:" + System.currentTimeMillis());
-            long currentDletaTime = System.currentTimeMillis() - realTime;
-            LogUtil.e("差值:" + currentDletaTime);
-            return getShareTime(Math.abs(currentDletaTime));
+            return getRealTime(serverTime);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }
     }
+
+
+    public static String getRealTime(long serverTime) {
+        LogUtil.e("服务器上的时间:" + serverTime);
+        long deltaTime = BaseApplication.getAppComponent().getSharedPreferences()
+                .getLong(Constant.DELTA_TIME, -1L);
+        long realTime = serverTime + deltaTime;
+        LogUtil.e("客户端的时间:" + realTime);
+        LogUtil.e("现在的客户端的时间:" + System.currentTimeMillis());
+        long currentDletaTime = System.currentTimeMillis() - realTime;
+        LogUtil.e("差值:" + currentDletaTime);
+        return getShareTime(Math.abs(currentDletaTime));
+    }
+
+
+
 
 
 

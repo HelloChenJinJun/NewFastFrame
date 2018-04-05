@@ -6,6 +6,7 @@ import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.User;
+import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
@@ -14,7 +15,9 @@ import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupChatEntityDao;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.GroupTableEntityDao;
+import com.example.commonlibrary.bean.chat.PostCommentEntity;
 import com.example.commonlibrary.bean.chat.PostCommentEntityDao;
+import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntityDao;
 import com.example.commonlibrary.bean.chat.UserEntity;
@@ -526,5 +529,49 @@ public class UserDBManager {
         daoSession.getPostCommentEntityDao()
                 .queryBuilder().where(PostCommentEntityDao.Properties
         .Pid.eq(pid)).buildDelete().executeDeleteWithoutDetachingEntities();
+    }
+
+    public void addOrUpdatePost(List<PublicPostBean> list) {
+        if (list != null && list.size() > 0) {
+            List<PublicPostEntity>  entityList=new ArrayList<>(list.size());
+            List<UserEntity>  userEntityList=new ArrayList<>(list.size());
+            for (PublicPostBean item :
+                    list) {
+                entityList.add(MsgManager.getInstance().cover(item));
+                UserEntity userEntity=getUser(item.getAuthor().getObjectId());
+                if (userEntity == null) {
+                    userEntityList.add(UserManager.getInstance().cover(item.getAuthor(),true));
+                }else {
+                    userEntityList.add(UserManager.getInstance().cover(item.getAuthor(),userEntity.isStranger()
+                            ,userEntity.isBlack(),userEntity.getBlackType()));
+                }
+            }
+            daoSession.getPublicPostEntityDao().insertOrReplaceInTx(entityList);
+            daoSession.getUserEntityDao().insertOrReplaceInTx(userEntityList);
+        }
+    }
+
+    public void addOrUpdateComment(List<PublicCommentBean> list) {
+        if (list != null && list.size() > 0) {
+            List<PostCommentEntity>  entityList=new ArrayList<>(list.size());
+            List<UserEntity>  userEntityList=new ArrayList<>(list.size());
+            for (PublicCommentBean item :
+                    list) {
+                entityList.add(MsgManager.getInstance().cover(item));
+                UserEntity userEntity=getUser(item.getUser().getObjectId());
+                if (userEntity == null) {
+                    userEntityList.add(UserManager.getInstance().cover(item.getUser(),true));
+                }else {
+                    userEntityList.add(UserManager.getInstance().cover(item.getUser(),userEntity.isStranger()
+                            ,userEntity.isBlack(),userEntity.getBlackType()));
+                }
+            }
+            daoSession.getPostCommentEntityDao().insertOrReplaceInTx(entityList);
+            daoSession.getUserEntityDao().insertOrReplaceInTx(userEntityList);
+        }
+    }
+
+    public void addOrUpdateComment(PublicCommentBean newBean) {
+        daoSession.getPostCommentEntityDao().insertOrReplace(MsgManager.getInstance().cover(newBean));
     }
 }

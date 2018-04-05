@@ -108,7 +108,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         RecentFragment recentFragment = new RecentFragment();
         FriendsFragment contactsFragment =FriendsFragment.newInstance();
         InvitationFragment invitationFragment = new InvitationFragment();
-        ShareInfoFragment shareInfoFragment = ShareInfoFragment.instance(UserManager.getInstance().getCurrentUserObjectId());
+        ShareInfoFragment shareInfoFragment = ShareInfoFragment.instance(UserManager.getInstance().getCurrentUserObjectId(),true);
         mFragments[0] = recentFragment;
         mFragments[1] = contactsFragment;
         mFragments[2] = invitationFragment;
@@ -231,7 +231,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
                     }
                 });
                 UserManager.getInstance().refreshUserInfo();
-                BindServiceManager.getInstance().bindService(getActivity());
             } else {
                 net.setVisibility(View.VISIBLE);
             }
@@ -504,8 +503,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
                         addOrReplaceFragment(mFragments[1]);
                     }
                     RxBusManager.getInstance().post(new RecentEvent(chatMessage.getBelongId(),RecentEvent.ACTION_ADD));
-                    BindServiceManager.getInstance()
-                            .addUser(chatMessage.getBelongId());
                     break;
                 case ChatMessage.MESSAGE_TYPE_READED:
                     LogUtil.e("接收到的回执已读标签消息");
@@ -640,7 +637,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     public void onDestroy() {
         Intent intent = new Intent(getActivity(), PollService.class);
         getActivity().stopService(intent);
-        BindServiceManager.getInstance().onDestroy();
         super.onDestroy();
     }
 

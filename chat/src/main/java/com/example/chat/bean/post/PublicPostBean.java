@@ -6,10 +6,8 @@ import com.example.commonlibrary.baseadapter.baseitem.MultipleItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.datatype.BmobRelation;
 
 /**
  * 项目名称:    NewFastFrame
@@ -22,21 +20,12 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
     private Integer msgType;
     private String content;
     private User author;
-    //    User
-    private BmobRelation likes;
-    //    User
-    private BmobRelation share;
     private Integer likeCount;
     private Integer commentCount;
     private Integer shareCount;
-
     private List<String> likeList;
-
-
 //    定位信息 是LocationEvent的json
     private String location;
-
-
     //    上传是否成功
     private Integer sendStatus;
 
@@ -79,13 +68,7 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
 
 
 
-    public BmobRelation getShare() {
-        return share;
-    }
 
-    public void setShare(BmobRelation share) {
-        this.share = share;
-    }
 
     public User getAuthor() {
         return author;
@@ -145,14 +128,6 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
         this.content = content;
     }
 
-
-    public BmobRelation getLikes() {
-        return likes;
-    }
-
-    public void setLikes(BmobRelation likes) {
-        this.likes = likes;
-    }
 
     @Override
     public int getItemViewType() {

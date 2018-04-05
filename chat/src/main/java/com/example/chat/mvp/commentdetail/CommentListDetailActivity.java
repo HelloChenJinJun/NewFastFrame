@@ -8,14 +8,13 @@ import android.view.View;
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.CommentDetailAdapter;
-import com.example.chat.bean.post.CommentDetailBean;
-import com.example.chat.bean.post.CommentListDetailBean;
+import com.example.chat.base.Constant;
 import com.example.chat.bean.post.PublicCommentBean;
+import com.example.chat.bean.post.ReplyDetailContent;
 import com.example.chat.dagger.commentdetail.CommentDetailModule;
 import com.example.chat.dagger.commentdetail.DaggerCommentDetailComponent;
 import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
-import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
@@ -34,22 +33,18 @@ import javax.inject.Inject;
  * QQ:         1981367757
  */
 
-public class CommentListDetailActivity extends SlideBaseActivity<List<CommentListDetailBean>, CommentDetailPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
+public class CommentListDetailActivity extends SlideBaseActivity<List<ReplyDetailContent>, CommentDetailPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
 
 
     @Inject
     CommentDetailAdapter adapter;
-
-
     private SwipeRefreshLayout refresh;
     private SuperRecyclerView display;
-    private String publicId;
     private PublicCommentBean data;
-    private CommentDetailBean commentDetailBean;
 
 
     @Override
-    public void updateData(List<CommentListDetailBean> listDetailBeans) {
+    public void updateData(List<ReplyDetailContent> listDetailBeans) {
         addOtherData(listDetailBeans);
         if (refresh.isRefreshing()) {
             adapter.refreshData(listDetailBeans);
@@ -58,19 +53,15 @@ public class CommentListDetailActivity extends SlideBaseActivity<List<CommentLis
         }
     }
 
-    private void addOtherData(List<CommentListDetailBean> listDetailBeans) {
+    private void addOtherData(List<ReplyDetailContent> listDetailBeans) {
         if (listDetailBeans != null) {
             int size=listDetailBeans.size();
             for (int i = 0; i < size; i++) {
-                CommentListDetailBean item=listDetailBeans.get(i);
+                ReplyDetailContent item=listDetailBeans.get(i);
                 if (i % 2 == 0) {
-                    item.setMsgType(CommentListDetailBean.TYPE_RIGHT);
-                    item.setAvatar(commentDetailBean.getReplyAvatar());
-                    item.setName(commentDetailBean.getReplyName());
+                    item.setMsgType(ReplyDetailContent.TYPE_RIGHT);
                 }else {
-                    item.setMsgType(CommentListDetailBean.TYPE_LEFT);
-                    item.setAvatar(data.getUser().getAvatar());
-                    item.setName(data.getUser().getNick());
+                    item.setMsgType(ReplyDetailContent.TYPE_LEFT);
                 }
             }
         }
@@ -104,34 +95,22 @@ public class CommentListDetailActivity extends SlideBaseActivity<List<CommentLis
                 .getChatMainComponent())
                 .commentDetailModule(new CommentDetailModule(this))
                 .build().inject(this);
-        data = (PublicCommentBean) getIntent().getSerializableExtra("data");
-        commentDetailBean= BaseApplication.getAppComponent()
-                .getGson().fromJson(data.getContent(), CommentDetailBean.class);
-        publicId=commentDetailBean.getPublicId();
+        data = (PublicCommentBean) getIntent().getSerializableExtra(Constant.DATA);
         display.setLayoutManager(new WrappedLinearLayoutManager(this));
-//        display.setLoadMoreFooterView(new LoadMoreFooterView(this));
-//        display.setOnLoadMoreListener(this);
         display.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
 
             @Override
             public void onItemChildClick(int position, View view, int id) {
-                String str[]=publicId.split("&");
-                if (id == R.id.riv_comment_detail_left_avatar) {
-                            UserDetailActivity.start(CommentListDetailActivity.this
-                            ,str[2]);
-                } else if (id == R.id.riv_comment_detail_right_avatar) {
+                if (id == R.id.riv_comment_detail_left_avatar
+                        ||id == R.id.riv_comment_detail_right_avatar) {
                     UserDetailActivity.start(CommentListDetailActivity.this
-                            ,str[1]);
+                            ,adapter
+                    .getData(position).getUid());
                 }
             }
         });
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                presenter.getCommentListDetailData(publicId,true);
-            }
-        });
+        runOnUiThread(() -> presenter.getCommentListDetailData(data,true));
         ToolBarOption toolBarOption=new ToolBarOption();
         toolBarOption.setTitle("对话列表");
         toolBarOption.setNeedNavigation(true);
@@ -140,7 +119,7 @@ public class CommentListDetailActivity extends SlideBaseActivity<List<CommentLis
 
     public static void start(Activity activity, PublicCommentBean data) {
         Intent intent = new Intent(activity, CommentListDetailActivity.class);
-        intent.putExtra("data", data);
+        intent.putExtra(Constant.DATA, data);
         activity.startActivity(intent);
     }
 
@@ -156,8 +135,6 @@ public class CommentListDetailActivity extends SlideBaseActivity<List<CommentLis
         if (refresh.isRefreshing()) {
             refresh.setRefreshing(false);
             super.showError(errorMsg, listener);
-        }else {
-//            display.setLoadMoreStatus(LoadMoreFooterView.Status.ERROR);
         }
     }
 
@@ -172,12 +149,12 @@ public class CommentListDetailActivity extends SlideBaseActivity<List<CommentLis
 
     @Override
     public void onRefresh() {
-        presenter.getCommentListDetailData( publicId,true);
+        presenter.getCommentListDetailData( data,true);
     }
 
     @Override
     public void loadMore() {
-        presenter.getCommentListDetailData( publicId,false);
+        presenter.getCommentListDetailData(data,false);
 
     }
 

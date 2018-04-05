@@ -184,10 +184,18 @@ public class UserManager {
      * 下线操作
      */
     public void logout() {
+        List<String>  list=UserDBManager.getInstance().getAllFriendId();
+        list.add(uid);
+        SharedPreferences.Editor edit=BaseApplication.getAppComponent().getSharedPreferences()
+                .edit();
+        for (String item :
+                list) {
+            edit.putString(Constant.UPDATE_TIME_SHARE+item,null);
+        }
+        edit.putBoolean(Constant.LOGIN_STATUS,false);
+        edit.apply();
         uid=null;
         User.logOut();
-        BaseApplication.getAppComponent().getSharedPreferences()
-                .edit().putBoolean(Constant.LOGIN_STATUS, false).apply();
     }
 
     /**

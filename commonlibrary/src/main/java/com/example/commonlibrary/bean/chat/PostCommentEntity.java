@@ -27,16 +27,29 @@ public class PostCommentEntity {
 
     private long updatedTime;
 
+    private int sendStatus;
 
-    @Generated(hash = 1526460864)
+
+
+    @Generated(hash = 549348361)
     public PostCommentEntity(String cid, String pid, String uid, String content,
-            long createdTime, long updatedTime) {
+            long createdTime, long updatedTime, int sendStatus) {
         this.cid = cid;
         this.pid = pid;
         this.uid = uid;
         this.content = content;
         this.createdTime = createdTime;
         this.updatedTime = updatedTime;
+        this.sendStatus = sendStatus;
+    }
+
+
+    public int getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(int sendStatus) {
+        this.sendStatus = sendStatus;
     }
 
     @Generated(hash = 699674789)

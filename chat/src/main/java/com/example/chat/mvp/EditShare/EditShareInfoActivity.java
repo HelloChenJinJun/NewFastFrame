@@ -18,15 +18,14 @@ import com.example.chat.R;
 import com.example.chat.adapter.EditShareInfoAdapter;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.ImageItem;
-import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicPostBean;
-import com.example.chat.bean.post.ShareTypeContent;
 import com.example.chat.dagger.EditShare.DaggerEditShareInfoComponent;
 import com.example.chat.dagger.EditShare.EditShareInfoModule;
 import com.example.chat.events.ImageFolderEvent;
 import com.example.chat.events.LocationEvent;
 import com.example.chat.events.PhotoPreViewEvent;
+import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.NewLocationManager;
 import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.chat.mvp.nearbyList.NearbyListActivity;
@@ -38,11 +37,13 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
+import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -308,33 +309,30 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
             }
         } else if (type == Constant.EDIT_TYPE_SHARE) {
 //            处理分享的信息，主要把分享的内容转化为要本地,再分享
-            ShareTypeContent shareTypeContent = postDataBean.getShareContent();
-            PublicPostBean publicPostBean = new PublicPostBean();
-            User author = new User();
-            author.setAvatar(shareTypeContent.getAvatar());
-            author.setNick(shareTypeContent.getNick());
-            author.setObjectId(shareTypeContent.getUid());
-            author.setSex(shareTypeContent.isSex());
-            author.setAddress(shareTypeContent.getAddress());
-            publicPostBean.setAuthor(author);
-            publicPostBean.setContent(BaseApplication.getAppComponent().getGson().toJson(shareTypeContent.getPostDataBean()));
-            publicPostBean.setMsgType(postDataBean.getShareType());
-            publicPostBean.setLikeCount(shareTypeContent.getLikeCount());
-            publicPostBean.setCommentCount(shareTypeContent.getCommentCount());
-            publicPostBean.setShareCount(shareTypeContent.getShareCount());
-            publicPostBean.setObjectId(shareTypeContent.getPid());
-            publicPostBean.setUpdatedAt(shareTypeContent.getCreateAt());
-            this.publicPostBean = publicPostBean;
-            input.setText(postDataBean.getContent());
+            Gson gson=BaseApplication.getAppComponent()
+                    .getGson();
+            PublicPostEntity publicPostEntity=gson.fromJson(postDataBean.getShareContent(),PublicPostEntity.class);
+            publicPostBean= MsgManager.getInstance().cover(publicPostEntity);
+            PostDataBean shareContent=gson.fromJson(publicPostEntity.getContent(),PostDataBean.class);
+            if (publicPostEntity.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
+                Glide.with(this).load(shareContent.getImageList().get(0))
+                        .into(shareCover);
+            } else if (publicPostEntity.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
+                for (String url :
+                        shareContent.getImageList()) {
+                    if (!url.endsWith(".mp4")) {
+                        Glide.with(this).load(url)
+                                .into(shareCover);
+                    }
+                }
+            } else if (publicPostEntity.getMsgType() == Constant.EDIT_TYPE_TEXT) {
+
+            }
+            shareTitle.setText(shareContent.getContent());
             display.setVisibility(View.GONE);
             video.setVisibility(View.GONE);
             record.setVisibility(View.GONE);
             shareContainer.setVisibility(View.VISIBLE);
-            if (postDataBean.getImageList() != null && postDataBean.getImageList().size() > 0) {
-                Glide.with(this).load(postDataBean.getImageList().get(0))
-                        .into(shareCover);
-            }
-            shareTitle.setText(postDataBean.getContent());
         } else if (type == Constant.EDIT_TYPE_TEXT) {
 //            正常的文本内容
             display.setVisibility(View.GONE);
@@ -408,7 +406,6 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
             return;
         }
         presenter.sendPublicPostBean(type, input.getText().toString().trim(), imageItemList, videoPath, thumbImage, publicPostBean, getRealLocation());
-        // todo  这里
     }
 
     private String getRealLocation() {

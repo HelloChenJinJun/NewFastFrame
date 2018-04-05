@@ -1,5 +1,7 @@
 package com.example.chat.bean.post;
 
+import com.example.commonlibrary.bean.chat.PublicPostEntity;
+
 import java.util.List;
 
 /**
@@ -12,23 +14,10 @@ import java.util.List;
 public class PostDataBean {
     private List<String> imageList;
     private String content;
-    private String voiceUrl;
-//    分享的内容
-    private ShareTypeContent shareContent;
-//    分享的内容类型
-    private int shareType;
-
+//    分享的内容PublicPostEntity的json内容
+    private String shareContent;
 //    定位
     private String location;
-
-
-    public ShareTypeContent getShareContent() {
-        return shareContent;
-    }
-
-    public void setShareContent(ShareTypeContent shareContent) {
-        this.shareContent = shareContent;
-    }
 
     public String getLocation() {
         return location;
@@ -38,13 +27,7 @@ public class PostDataBean {
         this.location = location;
     }
 
-    public int getShareType() {
-        return shareType;
-    }
 
-    public void setShareType(int shareType) {
-        this.shareType = shareType;
-    }
 
 
     public List<String> getImageList() {
@@ -63,12 +46,12 @@ public class PostDataBean {
         this.content = content;
     }
 
-    public String getVoiceUrl() {
-        return voiceUrl;
+
+    public String getShareContent() {
+        return shareContent;
     }
 
-    public void setVoiceUrl(String voiceUrl) {
-        this.voiceUrl = voiceUrl;
+    public void setShareContent(String shareContent) {
+        this.shareContent = shareContent;
     }
-
 }

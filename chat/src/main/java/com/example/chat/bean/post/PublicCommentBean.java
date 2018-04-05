@@ -17,6 +17,15 @@ public class PublicCommentBean extends BmobObject {
     private User user;
     private String content;
 
+    private Integer sendStatus;
+
+    public Integer getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(Integer sendStatus) {
+        this.sendStatus = sendStatus;
+    }
 
     public PublicPostBean getPost() {
         return post;
@@ -50,5 +59,9 @@ public class PublicCommentBean extends BmobObject {
 
     public void setCreatedTime(String createdTime) {
         setCreatedAt(createdTime);
+    }
+
+    public void setCreateTime(String time) {
+        setCreatedAt(time);
     }
 }

@@ -79,13 +79,7 @@ public class BindServiceManager {
 
 
 
-    public void addUser(String id) {
-        makeSure();
-        if (binder != null) {
-            LogUtil.e("实时监听新增的用户信息");
-            binder.addUser(id);
-        }
-    }
+
 
 
     public void notifySharedMessageChanged(String objectId, boolean isAdd) {

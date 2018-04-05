@@ -2,13 +2,9 @@ package com.example.chat.mvp.commentlist;
 
 import com.example.chat.base.AppBasePresenter;
 import com.example.chat.base.Constant;
-import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicPostBean;
-import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicCommentBean;
-import com.example.chat.bean.post.ReplyCommentListBean;
-import com.example.chat.bean.post.ReplyDetailContent;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.events.UpdatePostEvent;
 import com.example.chat.listener.OnCreatePublicPostListener;
@@ -19,8 +15,6 @@ import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.PostCommentEntity;
 import com.example.commonlibrary.bean.chat.PostCommentEntityDao;
-import com.example.commonlibrary.bean.chat.ReplyCommentListEntity;
-import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -30,9 +24,7 @@ import com.google.gson.Gson;
 import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.bmob.v3.BmobBatch;
 import cn.bmob.v3.BmobObject;
@@ -73,50 +65,43 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
             public void done(List<PublicCommentBean> list, BmobException e) {
                 if (e == null || e.getErrorCode() == 101) {
                     if (list != null && list.size() > 0) {
-                        List<PostCommentEntity> result = new ArrayList<>();
-                        List<UserEntity> userEntityList = new ArrayList<>();
-                        for (PublicCommentBean item :
+                        long time = 0L;
+                        for (PublicCommentBean bean :
                                 list) {
-                            PostCommentEntity entity = new PostCommentEntity();
-                            entity.setUid(item.getUser().getObjectId());
-                            if (!entity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId()) && UserDBManager.getInstance().isStranger(entity.getUid())
-                                    ) {
-                                UserEntity userEntity = UserManager.getInstance().cover(item.getUser(), true);
-                                userEntityList.add(userEntity);
+                            long updateTime = TimeUtil.getTime(bean.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss");
+                            if (updateTime > time) {
+                                time = updateTime;
                             }
-                            entity.setPid(postId);
-                            entity.setContent(item.getContent());
-                            entity.setCreatedTime(TimeUtil.getTime(item.getCreatedAt(), "yyyy-MM-dd HH:mm:ss"));
-                            entity.setUpdatedTime(TimeUtil.getTime(item.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss"));
-                            entity.setCid(item.getObjectId());
-                            result.add(entity);
                         }
-                        if (result.size() > 0) {
-                            UserDBManager.getInstance()
-                                    .getDaoSession().getPostCommentEntityDao()
-                                    .insertOrReplaceInTx(result);
-
-                        }
-                        if (userEntityList.size() > 0) {
-                            UserDBManager.getInstance()
-                                    .getDaoSession()
-                                    .getUserEntityDao()
-                                    .insertOrReplaceInTx(userEntityList);
-                        }
+                        String strTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
+                        String key = Constant.UPDATE_TIME_COMMENT + postId;
+                        BaseApplication.getAppComponent()
+                                .getSharedPreferences().edit()
+                                .putString(key, strTime)
+                                .apply();
+                        UserDBManager.getInstance().addOrUpdateComment(list);
                     }
                     iView.updateData(list);
                 } else {
                     CommonLogger.e("评论错误" + e.toString());
                     long currentTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
-                    QueryBuilder<PostCommentEntity> queryBuilder =UserDBManager.getInstance().getDaoSession()
+                    QueryBuilder<PostCommentEntity> queryBuilder = UserDBManager.getInstance().getDaoSession()
                             .getPostCommentEntityDao()
                             .queryBuilder();
                     queryBuilder.where(PostCommentEntityDao.Properties.Pid.eq(postId));
                     if (isRefresh) {
+                        String key = Constant.UPDATE_TIME_COMMENT + postId;
+                        String updateTime = BaseApplication
+                                .getAppComponent().getSharedPreferences()
+                                .getString(key, null);
                         queryBuilder.where(PostCommentEntityDao.Properties.CreatedTime.gt(currentTime));
-                        if (!time.equals("0000-00-00 01:00:00")) {
+                        if (updateTime != null && !time.equals(Constant.REFRESH_TIME)) {
+                            long resultTime = TimeUtil.getTime(updateTime, "yyyy-MM-dd HH:mm:ss");
+                            queryBuilder.where(PostCommentEntityDao.Properties.UpdatedTime.gt(resultTime));
+                        } else {
                             queryBuilder.where(PostCommentEntityDao.Properties.UpdatedTime.gt(currentTime));
                         }
+                        queryBuilder.where(PostCommentEntityDao.Properties.CreatedTime.gt(currentTime));
                     } else {
                         queryBuilder.where(PostCommentEntityDao.Properties.CreatedTime.lt(currentTime));
                     }
@@ -124,24 +109,18 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                     queryBuilder.limit(10);
                     List<PostCommentEntity> entityList
                             = queryBuilder.build().list();
-                    List<PublicCommentBean> commentsList = null;
-                    if (entityList.size() > 0) {
-                        commentsList = new ArrayList<>();
-                        for (PostCommentEntity entity :
-                                entityList) {
-
-                            commentsList.add(MsgManager.getInstance().cover(entity));
-                        }
+                    List<PublicCommentBean>  result=new ArrayList<>(entityList.size());
+                    for (PostCommentEntity item :
+                            entityList) {
+                        result.add(MsgManager.getInstance().cover(item));
                     }
-                    ToastUtils.showLongToast("获取缓存评论消息");
-                    iView.updateData(commentsList);
+                    iView.updateData(result);
                 }
                 iView.hideLoading();
             }
         }, isRefresh, time);
         addSubscription(s);
     }
-
 
 
     public void updatePublicPostBean(PublicPostBean data) {
@@ -185,129 +164,32 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
     }
 
 
-
-   
-
-    public void sendCommentData(final PublicCommentBean publicCommentBean, final String postId, final String content) {
-        final CommentDetailBean commentDetailBean = new CommentDetailBean();
-        commentDetailBean.setContent(content);
-        if (publicCommentBean != null) {
-            CommentDetailBean originBean = gson.fromJson(publicCommentBean.getContent(), CommentDetailBean.class);
-            if (originBean.getPublicId() != null) {
-                commentDetailBean.setPublicId(originBean.getPublicId());
-            } else {
-                commentDetailBean.setPublicId(postId + "&" + publicCommentBean.getUser().getObjectId() + "&" +
-                        UserManager.getInstance().getCurrentUserObjectId());
-            }
-            commentDetailBean.setReplyAvatar(publicCommentBean.getUser().getAvatar());
-            commentDetailBean.setReplyName(publicCommentBean.getUser().getNick());
-            commentDetailBean.setReplyContent(originBean.getContent());
-        }
-        final PublicCommentBean newBean = new PublicCommentBean();
-        newBean.setContent(gson.toJson(commentDetailBean));
-        newBean.setUser(UserManager.getInstance().getCurrentUser());
-        PublicPostBean posterMessage = new PublicPostBean();
-        posterMessage.setObjectId(postId);
-        newBean.setPost(posterMessage);
-        Subscription subscription = newBean.save(new SaveListener<String>() {
+    public void sendCommentData( PublicCommentBean newBean) {
+        newBean.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+        addSubscription(newBean.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
+                iView.hideLoading();
                 if (e == null) {
-                    newBean.setObjectId(s);
-                    PostCommentEntity publicCommentBeanEntity = new PostCommentEntity();
-                    publicCommentBeanEntity.setCid(s);
-                    publicCommentBeanEntity.setContent(newBean.getContent());
-                    publicCommentBeanEntity.setPid(postId);
-                    publicCommentBeanEntity.setUid(UserManager.getInstance().getCurrentUserObjectId());
-                    UserDBManager.getInstance().getDaoSession()
-                            .getPostCommentEntityDao().insertOrReplace(publicCommentBeanEntity);
-                }
-                if (e == null && commentDetailBean.getPublicId() != null) {
-//                    属于回复评论操作
-                    List<BmobObject> list = new ArrayList<>();
-                    CommentDetailBean originBean = gson.fromJson(publicCommentBean.getContent(), CommentDetailBean.class);
-                    if (originBean.getPublicId() == null) {
-//                        首次回复评论，需要把回复的内容和原评论的内容上传到对话列表中
-                        ReplyCommentListBean origin = new ReplyCommentListBean();
-                        origin.setPublicId(commentDetailBean.getPublicId());
-                        ReplyDetailContent originContent = new ReplyDetailContent();
-                        originContent.setContent(originBean.getContent());
-                        originContent.setTime(TimeUtil.severToLocalTime(publicCommentBean.getCreatedAt()));
-                        origin.setContent(gson.toJson(originContent));
-                        list.add(origin);
-                    }
-                    ReplyCommentListBean replyCommentListBean = new ReplyCommentListBean();
-                    replyCommentListBean.setPublicId(commentDetailBean.getPublicId());
-                    ReplyDetailContent replyDetailContent = new ReplyDetailContent();
-                    replyDetailContent.setContent(content);
-                    replyDetailContent.setTime(System.currentTimeMillis());
-                    replyCommentListBean.setContent(gson.toJson(replyDetailContent));
-                    list.add(replyCommentListBean);
-                    Subscription subscription1 = new BmobBatch().insertBatch(list).doBatch(new QueryListListener<BatchResult>() {
-                        @Override
-                        public void done(List<BatchResult> list1, BmobException e) {
-                            if (e == null) {
-                                List<ReplyCommentListEntity> listEntityList = new ArrayList<>();
-                                for (int i = 0; i < list1.size(); i++) {
-                                    if (list1.get(i).getError() == null) {
-                                        CommonLogger.e("第" + i + "个评论上传成功");
-                                        ReplyCommentListEntity entity = new ReplyCommentListEntity();
-                                        ReplyCommentListBean bean = ((ReplyCommentListBean) list.get(i));
-                                        entity.setContent(bean.getContent());
-                                        entity.setPublicId(bean.getPublicId());
-                                        entity.setRid(list1.get(i).getObjectId());
-                                        listEntityList.add(entity);
-                                    } else {
-                                        CommonLogger.e("第" + i + "个评论上传失败" + list1.get(i)
-                                                .getError().toString());
-                                    }
-                                }
-
-                                if (listEntityList.size() > 0) {
-                                    UserDBManager.getInstance().getDaoSession()
-                                            .getReplyCommentListEntityDao()
-                                            .insertOrReplaceInTx(listEntityList);
-                                }
-                                RxBusManager.getInstance().post(newBean);
-                                iView.hideLoading();
-                                PublicPostBean item = new PublicPostBean();
-                                item.increment("commentCount");
-                                Subscription subscription1 = item.update(postId, new UpdateListener() {
-                                    @Override
-                                    public void done(BmobException e) {
-                                        RxBusManager.getInstance().post(new CommentEvent(postId,CommentEvent.TYPE_COMMENT,CommentEvent.ACTION_ADD));
-                                        ToastUtils.showShortToast("评论成功");
-                                    }
-                                });
-                                addSubscription(subscription1);
-                            } else {
-                                iView.showError(null, () -> sendCommentData(publicCommentBean, postId, content));
-                            }
-                        }
-                    });
-                    addSubscription(subscription1);
-                } else if (e != null) {
-
-
-                    iView.showError(null, () -> sendCommentData(publicCommentBean, postId, content));
-                } else {
-//                    单评论操作
-                    RxBusManager.getInstance().post(newBean);
-                    iView.hideLoading();
+                    newBean.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                    ToastUtils.showShortToast("评论成功");
                     PublicPostBean item = new PublicPostBean();
                     item.increment("commentCount");
-                    Subscription subscription1 = item.update(postId, new UpdateListener() {
+                    addSubscription(item.update(newBean.getPost().getObjectId(), new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
-                            RxBusManager.getInstance().post(new CommentEvent( postId,CommentEvent.TYPE_COMMENT,CommentEvent.ACTION_ADD));
-                            ToastUtils.showShortToast("评论成功");
+                            RxBusManager.getInstance().post(new CommentEvent(newBean.getPost().getObjectId(), CommentEvent.TYPE_COMMENT, CommentEvent.ACTION_ADD));
                         }
-                    });
-                    addSubscription(subscription1);
+                    }));
+                }else {
+                    newBean.setSendStatus(Constant.SEND_STATUS_FAILED);
+                    ToastUtils.showShortToast("评论失败"+e.toString());
                 }
+                UserDBManager.getInstance()
+                        .addOrUpdateComment(newBean);
+                RxBusManager.getInstance().post(newBean);
             }
-        });
-        addSubscription(subscription);
+        }));
     }
 
     public void deleteShareInfo(PublicPostBean data, UpdateListener listener) {
@@ -360,9 +242,9 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                             ||
                             data.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
                         PostDataBean postDataBean = BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
-                        String[] temp=new String[postDataBean.getImageList().size()];
+                        String[] temp = new String[postDataBean.getImageList().size()];
                         for (int i = 0; i < postDataBean.getImageList().size(); i++) {
-                            temp[i]=postDataBean.getImageList().get(i);
+                            temp[i] = postDataBean.getImageList().get(i);
                         }
                         BmobFile.deleteBatch(temp, new DeleteBatchListener() {
                             @Override
@@ -410,10 +292,10 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
 //                                不管下面操作是否成功
                                 UserDBManager.getInstance()
                                         .addOrUpdatePost(publicPostBean);
-                                RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE, isAdd?CommentEvent.ACTION_ADD:CommentEvent
+                                RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE, isAdd ? CommentEvent.ACTION_ADD : CommentEvent
                                         .ACTION_DELETE));
-                            }else{
-                                ToastUtils.showShortToast("点赞失败"+e.toString());
+                            } else {
+                                ToastUtils.showShortToast("点赞失败" + e.toString());
                             }
                         }
                     }));

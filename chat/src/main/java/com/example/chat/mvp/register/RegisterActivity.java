@@ -102,6 +102,13 @@ public class RegisterActivity extends BaseActivity {
                                 user.setUsername(name.getText().toString().trim());
                                 user.setPassword(passWord.getText().toString().trim());
                                 user.setTitleWallPaper(RandomData.getRandomTitleWallPaper());
+                                user.setSchool("中国地质大学(武汉)");
+                                user.setName(RandomData.getRandomName());
+                                user.setCollege(RandomData.getRandomCollege());
+                                user.setYear(RandomData.getRandomYear());
+                                user.setEducation(RandomData.getRandomEducation());
+                                user.setClassNumber(RandomData.getRandomClassNumber());
+                                user.setMajor(RandomData.getRandomMajor());
                                 user.setWallPaper(RandomData.getRandomWallPaper());
                                 user.signUp(new SaveListener<User>() {
                                         @Override

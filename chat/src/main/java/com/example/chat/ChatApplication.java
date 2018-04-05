@@ -160,7 +160,8 @@ public class ChatApplication implements IModuleConfig, IAppLife {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
                 RouterResult routerResult=new RouterResult();
-                routerResult.setObject(ShareInfoFragment.instance(null));
+                routerResult.setObject(ShareInfoFragment.instance(UserManager
+                .getInstance().getCurrentUserObjectId(),true));
                 return routerResult;
             }
         });

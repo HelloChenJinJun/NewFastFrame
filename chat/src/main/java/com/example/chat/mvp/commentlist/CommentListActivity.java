@@ -1,7 +1,6 @@
 package com.example.chat.mvp.commentlist;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,13 +17,9 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,15 +37,14 @@ import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
-import com.example.chat.bean.post.ShareTypeContent;
 import com.example.chat.dagger.commentlist.CommentListModule;
 import com.example.chat.dagger.commentlist.DaggerCommentListComponent;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.events.LocationEvent;
 import com.example.chat.events.UpdatePostEvent;
+import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.EditShare.EditShareInfoActivity;
-import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.mvp.commentdetail.CommentListDetailActivity;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.base.SlideBaseActivity;
@@ -68,6 +62,7 @@ import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
@@ -85,10 +80,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
-import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -164,7 +159,6 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
 
 
     private List<FaceText> emotionFaceList;
-    private GridViewAdapter gridViewAdapter, mGridViewAdapter;
 
     private void initEmotionInfo() {
         List<View> list = new ArrayList<>();
@@ -204,56 +198,6 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
         return emotionView;
     }
 
-
-    private class GridViewAdapter extends BaseAdapter {
-        private List<FaceText> mFaceTextList = new ArrayList<>();
-        private Context mContext;
-
-        GridViewAdapter(Context context, List<FaceText> faceTextList) {
-            this.mContext = context;
-            if (faceTextList != null && faceTextList.size() > 0) {
-                mFaceTextList.clear();
-                mFaceTextList.addAll(faceTextList);
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return mFaceTextList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mFaceTextList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                viewHolder = new ViewHolder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.emtion_item, parent, false);
-                viewHolder.display = convertView.findViewById(R.id.iv_emotion_item_display);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            FaceText item = mFaceTextList.get(position);
-            viewHolder.display.setImageDrawable(mContext.getResources().getDrawable(mContext.getResources().getIdentifier(item.getText().substring(1), "mipmap", mContext.getPackageName())));
-            return convertView;
-        }
-    }
-
-
-    private class ViewHolder {
-        ImageView display;
-    }
-
     @Override
     protected void initData() {
         DaggerCommentListComponent.builder()
@@ -287,7 +231,7 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
                 if (id == R.id.iv_item_activity_comment_list_comment) {
                     currentPosition = position;
                     input.setHint("回复@" + commentListAdapter.getData(position).getUser().getNick() + ":");
-                    CommonUtils.showSoftInput(CommentListActivity.this, input);
+                    dealBottomInput(true);
                     manager.scrollToPositionWithOffset(currentPosition + commentListAdapter.getItemUpCount(), 0);
                 } else if (id == R.id.riv_item_activity_comment_list_avatar) {
                     UserDetailActivity.start(CommentListActivity.this, commentListAdapter.getData(position).getUser().getObjectId());
@@ -367,9 +311,7 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
     public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
         dismissLoadDialog();
         if (input.hasFocus()) {
-            CommonUtils.hideSoftInput(
-                    this, input);
-            input.setText("");
+            dealBottomInput(false);
         }
         if (refresh.isRefreshing()) {
             refresh.setRefreshing(false);
@@ -379,15 +321,23 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
         }
     }
 
+    private void dealBottomInput(boolean isShow) {
+        if (!isShow) {
+            CommonUtils.hideSoftInput(
+                    this, input);
+            input.setText("");
+        }else {
+            CommonUtils.showSoftInput(this,input);
+        }
+    }
+
 
     @Override
     public void hideLoading() {
         super.hideLoading();
         dismissLoadDialog();
         if (input.hasFocus()) {
-            CommonUtils.hideSoftInput(
-                    this, input);
-            input.setText("");
+            dealBottomInput(false);
         }
         if (refresh.isRefreshing()) {
             refresh.setRefreshing(false);
@@ -416,17 +366,15 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
 
          retry=headerView.findViewById(R.id.iv_item_fragment_share_info_retry);
          loading=headerView.findViewById(R.id.pb_item_fragment_share_info_retry_loading);
-        retry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                data.setSendStatus(Constant.SEND_STATUS_SENDING);
+        retry.setOnClickListener(v -> {
+            data.setSendStatus(Constant.SEND_STATUS_SENDING);
+            if (data.getObjectId().contains("-")) {
                 presenter.reSendPublicPostBean(data,data.getObjectId());
+            }else {
+                presenter.updatePublicPostBean(data);
             }
         });
         updateStatus();
-
-
-
         RoundAngleImageView avatar = headerView.findViewById(R.id.riv_item_fragment_share_info_avatar);
         BaseApplication.getAppComponent().getImageLoader()
                 .loadImage(this, new GlideImageLoaderConfig.Builder().url(data.getAuthor()
@@ -511,57 +459,75 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
 
         } else if (data.getMsgType() == Constant.EDIT_TYPE_TEXT) {
         } else if (data.getMsgType() == Constant.EDIT_TYPE_SHARE) {
-
-            if (postDataBean.getShareContent() != null) {
-                final ShareTypeContent bean = postDataBean.getShareContent();
-               viewStub.setLayoutResource(R.layout.item_fragment_share_info_share);
-                View rootView=viewStub.inflate();
-                rootView.setOnClickListener(v -> CommentListActivity.start(CommentListActivity.this, getSharePublicPostBean()));
-                SuperRecyclerView display=rootView.findViewById(R.id.srcv_item_fragment_share_info_display);
-                JZVideoPlayerStandard videoDisplay=rootView.findViewById(R.id.js_item_fragment_share_info_video_display);
-               TextView content=rootView.findViewById(R.id.tv_item_fragment_share_info_share_content);
-                content.setMovementMethod(new CustomMoveMethod(getResources().getColor(R.color.blue_500),getResources().getColor(R.color.blue_500)));
-                content.setText(getSpannerContent(bean));
-                if (postDataBean.getShareType() ==Constant.EDIT_TYPE_IMAGE) {
-                    display.setVisibility(View.VISIBLE);
-                    videoDisplay.setVisibility(View.GONE);
-                    int size = bean.getPostDataBean().getImageList().size();
-                    if (size <= 4) {
-                        display.setLayoutManager(new WrappedGridLayoutManager(this, 2));
-                        display.addItemDecoration(new GridSpaceDecoration(2, DensityUtil.toDp(5), false));
-                    } else {
-                        display.setLayoutManager(new WrappedGridLayoutManager(this, 3));
-                        display.addItemDecoration(new GridSpaceDecoration(3, DensityUtil.toDp(5), false));
-                    }
-                    final ImageShareInfoHolder.ImageShareAdapter adapter = new ImageShareInfoHolder.ImageShareAdapter();
-                    display.setAdapter(adapter);
-                    adapter.setOnItemClickListener(new OnSimpleItemClickListener() {
-                        @Override
-                        public void onItemClick(int position, View view) {
-                            CommentListActivity.start(CommentListActivity.this, getSharePublicPostBean());
+            Gson gson= BaseApplication.getAppComponent().getGson();
+            PublicPostEntity bean=gson.fromJson(postDataBean.getShareContent(),PublicPostEntity.class);
+            PostDataBean shareBean=gson.fromJson(bean.getContent(),PostDataBean.class);
+            viewStub.setLayoutResource(R.layout.item_fragment_share_info_share);
+            View shareView=viewStub.inflate();
+            shareView.findViewById(R.id.ll_item_fragment_share_info_share_container)
+                    .setOnClickListener(this);
+            TextView shareContent=shareView.findViewById(R.id.tv_item_fragment_share_info_share_content);
+            shareContent.setText(getSpannerContent(null,null
+                    , FaceTextUtil.toSpannableString(this,shareBean.getContent())));
+            shareContent.setMovementMethod(new CustomMoveMethod());
+            UserManager.getInstance().findUserById(bean.getUid(), new FindListener<User>() {
+                @Override
+                public void done(List<User> list, BmobException e) {
+                    String nick=null;
+                    if (e == null) {
+                        if (list != null && list.size() > 0) {
+                            shareContent.setText(getSpannerContent(list.get(0).getName(),
+                                    list.get(0).getObjectId()
+                                    , FaceTextUtil.toSpannableString(CommentListActivity.this,shareBean.getContent())));
                         }
-                    });
-                    adapter.addData(bean.getPostDataBean().getImageList());
-                    rootView.setOnClickListener(v -> CommentListActivity.start(CommentListActivity.this, getSharePublicPostBean()));
-                } else if (postDataBean.getShareType() == Constant.EDIT_TYPE_TEXT) {
-                    display.setVisibility(View.GONE);
-                    videoDisplay.setVisibility(View.GONE);
-                } else if (postDataBean.getShareType() == Constant.EDIT_TYPE_VIDEO) {
-                    display.setVisibility(View.GONE);
-                    videoDisplay.setVisibility(View.VISIBLE);
-                    if (bean.getPostDataBean().getImageList() != null && bean.getPostDataBean().getImageList().size() > 1) {
-                        for (String item :
-                                bean.getPostDataBean().getImageList()) {
-                            if (item.endsWith(".mp4")) {
-                                videoDisplay.setUp(item, JZVideoPlayer.SCREEN_WINDOW_LIST, "测试");
-                            } else {
-                                Glide.with(this).load(item)
-                                        .into(videoDisplay.thumbImageView);
-                            }
+                    }else {
+                        ToastUtils.showShortToast("加载用户信息失败"+e.toString());
+                    }
+                }
+            });
+            SuperRecyclerView display=shareView.findViewById(R.id.srcv_item_fragment_share_info_display);
+            JZVideoPlayerStandard videoDisplay=shareView.findViewById(R.id.js_item_fragment_share_info_video_display);
+            if (bean.getMsgType() ==Constant.EDIT_TYPE_IMAGE) {
+                display.setVisibility(View.VISIBLE);
+                videoDisplay.setVisibility(View.GONE);
+                shareView.findViewById(R.id.ll_item_fragment_share_info_share_image)
+                        .setOnClickListener(this);
+                int size = shareBean.getImageList().size();
+                if (size <= 4) {
+                    display.setLayoutManager(new WrappedGridLayoutManager(this, 2));
+                    display.addItemDecoration(new GridSpaceDecoration(2, DensityUtil.toDp(5), false));
+                } else {
+                    display.setLayoutManager(new WrappedGridLayoutManager(this, 3));
+                    display.addItemDecoration(new GridSpaceDecoration(3, DensityUtil.toDp(5), false));
+                }
+                final ImageShareInfoHolder.ImageShareAdapter adapter = new ImageShareInfoHolder.ImageShareAdapter();
+                display.setAdapter(adapter);
+                adapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+                    @Override
+                    public void onItemClick(int position, View view) {
+                        dealShareInfo();
+                    }
+                });
+                adapter.addData(shareBean.getImageList());
+            } else if (bean.getMsgType() ==Constant.EDIT_TYPE_TEXT) {
+                display.setVisibility(View.GONE);
+                videoDisplay.setVisibility(View.GONE);
+            } else if (bean.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
+                display.setVisibility(View.GONE);
+                videoDisplay.setVisibility(View.VISIBLE);
+                if (shareBean.getImageList() != null && shareBean.getImageList().size() > 1) {
+                    for (String item :
+                            shareBean.getImageList()) {
+                        if (item.endsWith(".mp4")) {
+                            videoDisplay.setUp(item, JZVideoPlayer.SCREEN_WINDOW_LIST, "测试");
+                        } else {
+                            Glide.with(this).load(item)
+                                    .into(videoDisplay.thumbImageView);
                         }
                     }
                 }
             }
+
         } else if (data.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
             viewStub.setLayoutResource(R.layout.item_fragment_share_info_video);
             JZVideoPlayerStandard videoPlayerStandard=viewStub.inflate().findViewById(R.id.js_item_fragment_share_info_video_display);
@@ -580,6 +546,15 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
         return headerView;
     }
 
+    private void dealShareInfo() {
+        Gson gson = BaseApplication.getAppComponent()
+                .getGson();
+        PostDataBean bean = gson.fromJson(data.getContent(), PostDataBean.class);
+//                            分享文章的ID
+        PublicPostBean publicPostBean = MsgManager.getInstance().cover(gson.fromJson(bean.getShareContent(), PublicPostEntity.class));
+        CommentListActivity.start(this,publicPostBean);
+    }
+
     private void updateCommentStatus() {
         comment.setText(data.getCommentCount() == 0 ? "评论" : data.getCommentCount() + "");
     }
@@ -594,10 +569,10 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
     }
 
     private void updateStatus() {
-        if (data.getSendStatus() == Constant.SEND_STATUS_SUCCESS) {
+        if (data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
             retry.setVisibility(View.GONE);
             loading.setVisibility(View.GONE);
-        } else if (data.getSendStatus() == Constant.SEND_STATUS_SENDING) {
+        } else if (data.getSendStatus().equals(Constant.SEND_STATUS_SENDING)) {
             loading.setVisibility(View.VISIBLE);
             retry.setVisibility(View.GONE);
         } else {
@@ -606,45 +581,25 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
         }
     }
 
-    private SpannableStringBuilder getSpannerContent(final ShareTypeContent bean) {
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        String name = "@" + bean.getNick() + ":";
-        SpannableString spannableString = new SpannableString(name);
-        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#232121")), 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    private SpannableStringBuilder getSpannerContent(String name,String uid,CharSequence content) {
+        SpannableStringBuilder builder=new SpannableStringBuilder();
+        String str="@"+name+":";
+        SpannableString spannableString = new SpannableString(str);
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#232121")), 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                UserDetailActivity.start(CommentListActivity.this, bean.getUid());
+                if (uid!=null) {
+                    UserDetailActivity.start((Activity) widget.getContext(),uid);
+                }else {
+                    ToastUtils.showShortToast("用户数据加载失败");
+                }
             }
-        }, 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        builder.append(spannableString).append(bean.getPostDataBean().getContent());
+        }, 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.append(spannableString).append(content);
         return builder;
     }
 
-    private PublicPostBean getSharePublicPostBean() {
-        Gson gson = BaseApplication.getAppComponent()
-                .getGson();
-        PostDataBean bean = gson.fromJson(data.getContent(), PostDataBean.class);
-//                            分享文章的ID
-        PublicPostBean publicPostBean = new PublicPostBean();
-        ShareTypeContent shareTypeContent = bean.getShareContent();
-        User author = new User();
-        author.setAvatar(shareTypeContent.getAvatar());
-        author.setNick(shareTypeContent.getNick());
-        author.setObjectId(shareTypeContent.getUid());
-        author.setSex(shareTypeContent.isSex());
-        author.setAddress(shareTypeContent.getAddress());
-        publicPostBean.setAuthor(author);
-        publicPostBean.setContent(gson.toJson(shareTypeContent.getPostDataBean()));
-        publicPostBean.setMsgType(bean.getShareType());
-        publicPostBean.setLikeCount(shareTypeContent.getLikeCount());
-        publicPostBean.setCommentCount(shareTypeContent.getCommentCount());
-        publicPostBean.setShareCount(shareTypeContent.getShareCount());
-        publicPostBean.setObjectId(shareTypeContent.getPid());
-//        用于不能设置创建时间，所以把创建时间放在更新时间那里
-        publicPostBean.setUpdatedAt(shareTypeContent.getCreateAt());
-        return publicPostBean;
-    }
 
 
     private SpannableStringBuilder getText(PublicPostBean bean) {
@@ -695,15 +650,19 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
             }
         } else if (id == R.id.tv_item_fragment_share_info_comment) {
             currentPosition = -1;
-            input.setHint("");
-            CommonUtils.showSoftInput(this, input);
+            dealBottomInput(true);
         } else if (id == R.id.tv_item_fragment_share_info_like) {
             dealLike(data);
 
         } else if (id == R.id.riv_item_fragment_share_info_avatar) {
             UserDetailActivity.start(this, data.getAuthor().getObjectId());
 
-        } else {
+        }else if (id==R.id.ll_item_fragment_share_info_share_image){
+            dealShareInfo();
+        }else if (id==R.id.ll_item_fragment_share_info_share_container){
+            dealShareInfo();
+        }
+        else {
             if (id == R.id.btn_comment_bottom_face) {
                 emotionPager.setVisibility(View.VISIBLE);
                 face.setVisibility(View.GONE);
@@ -719,12 +678,33 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
                     PublicCommentBean bean = null;
                     if (currentPosition != -1) {
                         bean = commentListAdapter.getData(currentPosition);
+                        if (bean.getUser().getObjectId().equals(UserManager
+                                .getInstance().getCurrentUserObjectId())) {
+                            ToastUtils.showShortToast("不能回复自己的评论!!!");
+                            dealBottomInput(false);
+                           return;
+                        }
                     }
-                    showLoadDialog("正在发送.....");
-                    presenter.sendCommentData(bean, postId, input.getText().toString().trim());
+                    PublicCommentBean publicCommentBean=MsgManager.getInstance().createPostCommentBean(bean,postId,input.getText().toString().trim());
+                    publicCommentBean.setSendStatus(Constant.SEND_STATUS_SENDING);
+                    commentListAdapter.addData(0,publicCommentBean);
+                    presenter.sendCommentData(publicCommentBean);
+                    dealBottomInput(false);
                 }
             }
         }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        把刷新评论的更新时间置空
+        String key = Constant.UPDATE_TIME_COMMENT + postId;
+        BaseApplication.getAppComponent()
+                .getSharedPreferences().edit()
+                .putString(key, null)
+                .apply();
     }
 
     private void dealLike(PublicPostBean bean) {

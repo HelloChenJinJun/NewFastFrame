@@ -46,6 +46,22 @@
                 android:layout_height="15dp"
                 android:scaleType="centerCrop"/>
 
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/iv_item_activity_comment_list_retry"
+                    android:src="@drawable/ic_retry"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+
+                <ProgressBar
+                    android:visibility="gone"
+                    android:id="@+id/pb_item_activity_comment_list_loading"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+            </FrameLayout>
+
         </LinearLayout>
 
 

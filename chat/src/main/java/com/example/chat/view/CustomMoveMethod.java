@@ -27,16 +27,14 @@ public class CustomMoveMethod extends BaseMovementMethod {
         private BackgroundColorSpan colorSpan;
         private boolean isClickTextView = true;
         private int selectedColor;
-        private int defaultColor;
 
 
-        public boolean isClickTextView() {
-                return isClickTextView;
+        public CustomMoveMethod(int selectedColor) {
+                this.selectedColor = selectedColor;
         }
 
-        public CustomMoveMethod(int selectedColor, int defaultColor) {
-                this.selectedColor = selectedColor;
-                this.defaultColor = defaultColor;
+        public CustomMoveMethod(){
+                selectedColor=Color.GREEN;
         }
 
 

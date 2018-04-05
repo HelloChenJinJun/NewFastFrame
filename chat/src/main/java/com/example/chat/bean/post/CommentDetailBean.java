@@ -1,6 +1,10 @@
 package com.example.chat.bean.post;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 项目名称:    NewFastFrame
@@ -13,8 +17,21 @@ public class CommentDetailBean implements Serializable{
     private String content;
     private String replyContent;
     private String publicId;
-    private String replyAvatar;
-    private String replyName;
+
+
+    private Map<String,List<ReplyDetailContent>> conversationList;
+
+
+    public Map<String, List<ReplyDetailContent>> getConversationList() {
+        if (conversationList == null) {
+            conversationList=new HashMap<>();
+        }
+        return conversationList;
+    }
+
+    public void setConversationList(Map<String, List<ReplyDetailContent>> conversationList) {
+        this.conversationList = conversationList;
+    }
 
     public String getPublicId() {
         return publicId;
@@ -40,21 +57,4 @@ public class CommentDetailBean implements Serializable{
         this.replyContent = replyContent;
     }
 
-
-
-    public String getReplyAvatar() {
-        return replyAvatar;
-    }
-
-    public void setReplyAvatar(String replyAvatar) {
-        this.replyAvatar = replyAvatar;
-    }
-
-    public String getReplyName() {
-        return replyName;
-    }
-
-    public void setReplyName(String replyName) {
-        this.replyName = replyName;
-    }
 }

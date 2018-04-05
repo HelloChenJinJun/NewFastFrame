@@ -159,11 +159,6 @@ public class GroupMessageService extends Service {
                                                         RxBusManager.getInstance().post(messageInfoEvent);
 
 
-                                                } else if (!JsonUtil.getString(object, "username").equals("")) {
-                                                        LogUtil.e("实时监听的用户消息到啦");
-                                                        User user = MsgManager.getInstance().createUserFromJsonObject(object);
-                                                        UserDBManager.getInstance()
-                                                                .addOrUpdateUser(user);
                                                 }else {
 //                                                        监听到公共说说
                                                         String author=JsonUtil.getString(object,"author");
@@ -190,11 +185,7 @@ public class GroupMessageService extends Service {
         public class NotifyBinder extends Binder {
 
 
-               public void startPublicPostListener(){
-                       if (data.isConnected()) {
-                               data.subTableUpdate("PublicPostBean");
-                       }
-                }
+
 
 
                 public void addGroup(String groupId) {
@@ -213,17 +204,7 @@ public class GroupMessageService extends Service {
                 }
 
 
-                public void addUser(String uid){
-                        if (data.isConnected()) {
-                                if (!uidList.contains(uid)) {
-                                        data.subRowUpdate(table, uid);
-                                }else {
-                                        LogUtil.e("已经监听该好友");
-                                }
-                        }else {
-                                LogUtil.e("网络异常，数据也服务器连接不上");
-                        }
-                }
+
 
 
                 public void removeGroup(String groupId) {

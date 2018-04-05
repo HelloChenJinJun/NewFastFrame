@@ -22,6 +22,11 @@ public class RandomData {
         private static List<String> avatarList = new ArrayList<>();
         private static List<String> wallPaperList = new ArrayList<>();
         private static List<String> titleWallPaper = new ArrayList<>();
+        private static List<String>  collegeList=new ArrayList<>();
+        private static List<String> nameList=new ArrayList<>();
+        private static List<String> yearList=new ArrayList<>();
+        private static List<String> majorList=new ArrayList<>();
+        private static List<String> classList=new ArrayList<>();
 
         static {
                 String a = "你好帅";
@@ -36,12 +41,45 @@ public class RandomData {
                 nickList.add(d);
                 nickList.add(e);
                 nickList.add(f);
+                collegeList.add("经济管理学院");
+                collegeList.add("艺术与传媒学院");
+                collegeList.add("马克思主义学院");
+                collegeList.add("计算机学院");
+                collegeList.add("李四光学院");
+                collegeList.add("工程学院");
+                collegeList.add("外国语学院");
+                yearList.add("2013级");
+                yearList.add("2014级");
+                yearList.add("2015级");
+                yearList.add("2016级");
+                yearList.add("2017级");
+                nameList.add("陈锦军");
+                nameList.add("习近平");
+                nameList.add("李克强");
+                nameList.add("毛泽东");
+                nameList.add("周恩来");
+                nameList.add("温家宝");
+                nameList.add("胡锦涛");
+                majorList.add("信息管理与信息系统");
+                majorList.add("计算机科学技术");
+                majorList.add("会计学");
+                majorList.add("金融学");
+                majorList.add("旅游管理");
+                majorList.add("工商管理");
+                majorList.add("信息安全");
+                majorList.add("软件工程");
+                classList.add("086141");
+                classList.add("054863");
+                classList.add("089653");
+                classList.add("053246");
+                classList.add("087546");
+                classList.add("095642");
         }
 
 
         public static String getRandomNick() {
                 Random random = new Random();
-                int index = random.nextInt(nickList.size() - 1);
+                int index = random.nextInt(nickList.size());
                 if (index >= 0 && index < nickList.size()) {
                         return nickList.get(index);
                 } else {
@@ -171,5 +209,69 @@ public class RandomData {
                         LogUtil.e("为空？？？？？？？");
                 }
                 return null;
+        }
+
+        public static String getRandomCollege() {
+                Random random = new Random();
+                int index = random.nextInt(collegeList.size());
+                if (index >= 0 && index < collegeList.size()) {
+                        return collegeList.get(index);
+                } else {
+                        return collegeList.get(0);
+                }
+        }
+
+
+
+        public static String getRandomName(){
+                Random random = new Random();
+                int index = random.nextInt(nameList.size());
+                if (index >= 0 && index < nameList.size()) {
+                        return nameList.get(index);
+                } else {
+                        return nameList.get(0);
+                }
+        }
+
+
+        public static String getRandomEducation(){
+                Random random = new Random();
+                if (random.nextInt(10) % 2 == 0) {
+                        return "本科";
+                }else {
+                        return "研究生";
+                }
+        }
+
+
+        public static String getRandomYear(){
+                Random random = new Random();
+                int index = random.nextInt(yearList.size());
+                if (index >= 0 && index < yearList.size()) {
+                        return yearList.get(index);
+                } else {
+                        return yearList.get(0);
+                }
+        }
+
+
+        public static String getRandomMajor(){
+                Random random = new Random();
+                int index = random.nextInt(majorList.size());
+                if (index >= 0 && index < majorList.size()) {
+                        return majorList.get(index);
+                } else {
+                        return majorList.get(0);
+                }
+        }
+
+        public static String getRandomClassNumber(){
+                Random random = new Random();
+                int index = random.nextInt(classList.size());
+                if (index >= 0 && index < classList.size()) {
+                        return classList.get(index);
+                } else {
+                        return classList.get(0);
+                }
         }
 }

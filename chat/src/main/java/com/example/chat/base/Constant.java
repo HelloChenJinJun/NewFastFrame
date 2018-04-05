@@ -234,4 +234,7 @@ public class Constant {
     public static final String CITY = "city";
     public static final String FIRST_LOGIN = "first_login";
     public static final String POST = "post";
+    public static final String IS_PUBLIC = "is_public";
+    public static final String PUBLIC = "public";
+    public static final String REFRESH_TIME = "0000-00-00 01:00:00";
 }
