@@ -82,26 +82,23 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         RadioGroup bottomContainer = (RadioGroup) findViewById(R.id.rg_activity_main_bottom_container);
-        bottomContainer.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                if (checkedId == R.id.rb_activity_main_bottom_index) {
-                    addOrReplaceFragment(fragmentList.get(0));
-                } else if (checkedId == R.id.rb_activity_main_bottom_center) {
-                    addOrReplaceFragment(fragmentList.get(1));
-                } else if (checkedId == R.id.rb_activity_main_bottom_person) {
-                    addOrReplaceFragment(fragmentList.get(2));
-                } else if (checkedId == R.id.rb_activity_main_bottom_chat) {
-                    boolean loginStatus = BaseApplication.getAppComponent()
-                            .getSharedPreferences().getBoolean(ConstantUtil.LOGIN_STATUS, false);
-                    if (loginStatus) {
-                        addOrReplaceFragment(fragmentList.get(3));
-                    } else {
-                        ToastUtils.showShortToast("未登录状态，请先登录再进去");
-                    }
-                } else if (checkedId == R.id.rb_activity_main_bottom_public) {
-                    addOrReplaceFragment(fragmentList.get(4));
+        bottomContainer.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rb_activity_main_bottom_index) {
+                addOrReplaceFragment(fragmentList.get(0));
+            } else if (checkedId == R.id.rb_activity_main_bottom_center) {
+                addOrReplaceFragment(fragmentList.get(1));
+            } else if (checkedId == R.id.rb_activity_main_bottom_person) {
+                addOrReplaceFragment(fragmentList.get(2));
+            } else if (checkedId == R.id.rb_activity_main_bottom_chat) {
+                boolean loginStatus = BaseApplication.getAppComponent()
+                        .getSharedPreferences().getBoolean(ConstantUtil.LOGIN_STATUS, false);
+                if (loginStatus) {
+                    addOrReplaceFragment(fragmentList.get(3));
+                } else {
+                    ToastUtils.showShortToast("未登录状态，请先登录再进去");
                 }
+            } else if (checkedId == R.id.rb_activity_main_bottom_public) {
+                addOrReplaceFragment(fragmentList.get(4));
             }
         });
     }
@@ -112,7 +109,14 @@ public class MainActivity extends BaseActivity {
         fragmentList.add(IndexFragment.newInstance());
 //        fragmentList.add(LibraryFragment.newInstance());
         fragmentList.add(CenterFragment.newInstance());
-        fragmentList.add(PersonFragment.newInstance());
+        RouterResult  person=Router.getInstance().deal(new RouterRequest.Builder()
+                .provideName("chat").actionName("person").build());
+        if (person!=null&&person.getObject()!=null) {
+            fragmentList.add((Fragment) person.getObject());
+        }
+
+
+
         RouterResult  result=Router.getInstance().deal(new RouterRequest.Builder()
                 .provideName("chat").actionName("main").build());
         if (result!=null&&result.getObject()!=null) {

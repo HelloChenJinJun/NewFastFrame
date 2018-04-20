@@ -21,18 +21,12 @@
                 android:id="@+id/main_sub_item_create"
                 android:icon="@drawable/ic_news_group"
                 android:title="建群" />
-            <item
-                android:id="@+id/main_sub_item_happy"
-                android:icon="@drawable/ic_news_favorite"
-                android:title="开心时刻" />
+
             <item
                 android:id="@+id/main_sub_item_bg"
                 android:icon="@drawable/ic_news_photo"
                 android:title="背景" />
-            <item
-                android:id="@+id/main_sub_item_settings"
-                android:icon="@drawable/ic_news_settings"
-                android:title="设置" />
+
 
         </menu>
 

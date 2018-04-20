@@ -4,7 +4,7 @@ package com.example.news.dagger;
 import android.support.annotation.Nullable;
 
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.bean.music.DaoSession;
+import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.news.MainRepositoryManager;
 import com.example.news.interceptor.CacheControlInterceptor;

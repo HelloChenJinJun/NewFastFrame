@@ -36,4 +36,8 @@ public class ConstantUtil {
     public static final String PASSWORD_OLD = "pw_old";
     public static final String PASSWORD_NEW = "pw_new";
     public static final String PW_SYSTEM = "pw_system";
+
+    public static final String PATH = "PATH";
+    public static final int REQUEST_CODE_ONE_PHOTO = 5;
+    public static final int REQUEST_CODE_CROP = 4;
 }

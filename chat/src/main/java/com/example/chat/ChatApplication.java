@@ -15,6 +15,8 @@ import com.example.chat.dagger.DaggerChatMainComponent;
 import com.example.chat.manager.NewLocationManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.notify.SystemNotifyActivity;
+import com.example.chat.mvp.person.PersonFragment;
+import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.mvp.editInfo.EditUserInfoActivity;
 import com.example.chat.mvp.login.LoginActivity;
@@ -97,37 +99,20 @@ public class ChatApplication implements IModuleConfig, IAppLife {
     }
 
     private void initRouter() {
-        Router.getInstance().registerProvider("chat:notify", new BaseAction() {
+
+
+
+        Router.getInstance().registerProvider("chat:person", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
-                Activity activity= (Activity) routerRequest.getContext();
-                Intent intent=new Intent(activity,SystemNotifyActivity.class);
-                activity.startActivity(intent);
-                return null;
+                PersonFragment personFragment=PersonFragment.newInstance();
+                RouterResult result=new RouterResult();
+                result.setObject(personFragment);
+                return result;
             }
         });
 
 
-        Router.getInstance().registerProvider("chat:edit_user_info", new BaseAction() {
-            @Override
-            public RouterResult invoke(RouterRequest routerRequest) {
-                Activity activity= (Activity) routerRequest.getContext();
-                Intent intent=new Intent(activity, EditUserInfoActivity.class);
-                intent.putExtra("user", UserManager.getInstance().getCurrentUser());
-                activity.startActivity(intent);
-                return null;
-            }
-        });
-        Router.getInstance().registerProvider("chat:user_index", new BaseAction() {
-            @Override
-            public RouterResult invoke(RouterRequest routerRequest) {
-                Activity activity= (Activity) routerRequest.getContext();
-                Intent intent=new Intent(activity, UserDetailActivity.class);
-                intent.putExtra("uid",UserManager.getInstance().getCurrentUserObjectId());
-                activity.startActivity(intent);
-                return null;
-            }
-        });
         Router.getInstance().registerProvider("chat:setting", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
@@ -192,20 +177,11 @@ public class ChatApplication implements IModuleConfig, IAppLife {
                         SearchFriendActivity.start(activity);
                         break;
                     case "建群":
-                        ToastUtils.showShortToast("点击了创建群");
-                        Intent selectIntent = new Intent(activity, SelectedFriendsActivity.class);
-                        selectIntent.putExtra("from", "createGroup");
-                        activity.startActivity(selectIntent);
+                        ToastUtils.showShortToast("建群由于后台存费用问题暂时不开放");
                         break;
                     case "背景":
                         ToastUtils.showShortToast("点击了背景");
-                        Intent wallPaperIntent = new Intent(activity, WallPaperActivity.class);
-                        wallPaperIntent.putExtra("from", "wallpaper");
-                        activity.startActivityForResult(wallPaperIntent, Constant.REQUEST_CODE_SELECT_WALLPAPER);
-                        break;
-                    case "设置":
-                        ToastUtils.showShortToast("点击了设置");
-                        SettingsActivity.start(activity, Constant.REQUEST_CODE_EDIT_USER_INFO);
+                        WallPaperActivity.start(activity,Constant.WALLPAPER);
                         break;
                     default:
                         break;

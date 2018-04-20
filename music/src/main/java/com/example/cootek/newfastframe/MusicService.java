@@ -32,7 +32,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 
-import com.example.commonlibrary.bean.music.DaoSession;
+import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.bean.music.MusicHistoryInfo;
 import com.example.commonlibrary.bean.music.MusicHistoryInfoDao;
 import com.example.commonlibrary.bean.music.MusicPlayBean;

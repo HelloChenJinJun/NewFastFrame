@@ -27,6 +27,7 @@ import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
                             cropUri = SystemUtil.cropPhoto(PhotoSelectActivity.this, photoSelectAdapter.getData(position).getPath());
                         } else {
                             Intent intent = new Intent();
-                            intent.putExtra(Constant.PATH, photoSelectAdapter.getData(position).getPath());
+                            intent.putExtra(ConstantUtil.PATH, photoSelectAdapter.getData(position).getPath());
                             intent.putExtra(Constant.FROM, getIntent().getStringExtra(Constant.FROM));
                             setResult(RESULT_OK, intent);
                             finish();
@@ -270,15 +271,15 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
                         cropUri = SystemUtil.cropPhoto(this, takePhotoPath);
                     } else {
                         Intent intent = new Intent();
-                        intent.putExtra(Constant.PATH, takePhotoPath);
+                        intent.putExtra(ConstantUtil.PATH, takePhotoPath);
                         intent.putExtra(Constant.FROM, getIntent().getStringExtra(Constant.FROM));
                         setResult(RESULT_OK, intent);
                         finish();
                     }
                 }
-            } else if (requestCode == SystemUtil.REQUEST_CODE_CROP) {
+            } else if (requestCode == ConstantUtil.REQUEST_CODE_CROP) {
                 Intent intent = new Intent();
-                intent.putExtra(Constant.PATH, cropUri.toString());
+                intent.putExtra(ConstantUtil.PATH, cropUri.toString());
                 intent.putExtra(Constant.FROM, getIntent().getStringExtra(Constant.FROM));
                 setResult(RESULT_OK, intent);
                 finish();
@@ -293,7 +294,7 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
         intent.putExtra(Constant.IS_CROP, isCrop);
         intent.putExtra(Constant.FROM, from);
         if (isOne) {
-            activity.startActivityForResult(intent, SystemUtil.REQUEST_CODE_ONE_PHOTO);
+            activity.startActivityForResult(intent, ConstantUtil.REQUEST_CODE_ONE_PHOTO);
         } else {
             activity.startActivity(intent);
         }

@@ -362,35 +362,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.main_item_search) {
-            Intent intent = new Intent(getActivity(), SearchActivity.class);
-            startActivity(intent);
 
-        } else if (i == R.id.main_sub_item_add) {
-            ToastUtils.showShortToast("点击了添加好友");
-            SearchFriendActivity.start(getActivity());
-
-        } else if (i == R.id.main_sub_item_create) {
-            ToastUtils.showShortToast("点击了创建群");
-            Intent selectIntent = new Intent(getActivity(), SelectedFriendsActivity.class);
-            selectIntent.putExtra("from", "createGroup");
-            startActivity(selectIntent);
-
-        } else if (i == R.id.main_sub_item_settings) {
-            ToastUtils.showShortToast("点击了设置");
-            SettingsActivity.start(getActivity(), Constant.REQUEST_CODE_EDIT_USER_INFO);
-
-        } else if (i == R.id.main_sub_item_bg) {
-            ToastUtils.showShortToast("点击了背景");
-            Intent wallPaperIntent = new Intent(getActivity(), WallPaperActivity.class);
-            wallPaperIntent.putExtra("from", "wallpaper");
-            startActivityForResult(wallPaperIntent, Constant.REQUEST_CODE_SELECT_WALLPAPER);
-        }
-        return true;
-    }
 
 
     private void startSearchLiveWeather(String city) {

@@ -24,6 +24,7 @@ import com.example.chat.bean.ImageFolder;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.listener.OnImageLoadListener;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.DensityUtil;
 
 import java.io.BufferedOutputStream;
@@ -48,10 +49,6 @@ public class SystemUtil {
     public static final int REQUEST_CODE_TAKE_PHOTO = 1;
     public static final int REQUEST_CODE_SELECT_PHOTO = 2;
     public static final int REQUEST_CODE_VIDEO_RECORDER = 3;
-    public static final String RECORDER_VIDEO_PATH = "video_path";
-    public static final String RECORDER_VIDEO_THUMB = "video_thumb";
-    public static final int REQUEST_CODE_CROP = 4;
-    public static final int REQUEST_CODE_ONE_PHOTO = 5;
 
 
     public static String takePhoto(Activity activity, int requestCode) {
@@ -253,7 +250,7 @@ public class SystemUtil {
         Uri cropUri =buildUri(activity);
         cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
         if (cropIntent.resolveActivity(activity.getPackageManager()) != null) {
-            activity.startActivityForResult(cropIntent, SystemUtil.REQUEST_CODE_CROP);
+            activity.startActivityForResult(cropIntent, ConstantUtil.REQUEST_CODE_CROP);
         }
         return cropUri;
     }

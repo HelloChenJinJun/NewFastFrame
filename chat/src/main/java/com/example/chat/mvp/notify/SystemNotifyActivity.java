@@ -1,5 +1,7 @@
 package com.example.chat.mvp.notify;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.example.chat.ChatApplication;
@@ -129,4 +131,11 @@ public class SystemNotifyActivity extends SlideBaseActivity<List<SystemNotifyBea
     public void loadMore() {
         presenter.getAllSystemNotifyData(false,getRefreshTime(false));
     }
+
+
+    public static void start(Activity activity){
+        Intent intent=new Intent(activity,SystemNotifyActivity.class);
+        activity.startActivity(intent);
+    }
+
 }

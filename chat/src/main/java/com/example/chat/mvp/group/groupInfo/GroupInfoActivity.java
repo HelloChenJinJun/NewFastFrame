@@ -27,6 +27,7 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.io.File;
@@ -237,16 +238,16 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
                     RxBusManager.getInstance().post(new GroupTableEvent(groupTableEntity.getGroupId()
                             ,GroupTableEvent.TYPE_GROUP_DESCRIPTION,str));
                     break;
-                case SystemUtil.REQUEST_CODE_ONE_PHOTO:
+                case ConstantUtil.REQUEST_CODE_ONE_PHOTO:
                     try {
                         showLoadDialog("正在上传头像，请稍候........");
-                        BmobFile bmobFile = new BmobFile(new File(new URI(data.getStringExtra(Constant.PATH))));
+                        BmobFile bmobFile = new BmobFile(new File(new URI(data.getStringExtra(ConstantUtil.PATH))));
                         bmobFile.uploadblock(new UploadFileListener() {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
                                     MsgManager.getInstance().updateGroupMessage(groupTableEntity.getGroupId(),Constant.GROUP_AVATAR,data
-                                    .getStringExtra(Constant.PATH),new UpdateListener() {
+                                    .getStringExtra(ConstantUtil.PATH),new UpdateListener() {
                                         @Override
                                         public void done(BmobException e) {
                                             dismissLoadDialog();

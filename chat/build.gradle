@@ -264,8 +264,8 @@ dependencies {
     //    implementation files('libs/org.apache.http.legacy.jar')
         implementation files('libs/rxandroid-1.2.0.jar')
         implementation files('libs/rxjava-1.1.6.jar')
-    implementation files('libs/BmobSDK_3.5.8_20171013.jar')
-    implementation files('libs/Bmob_Push_1.0.1_20170907.jar')
+    api files('libs/BmobSDK_3.5.8_20171013.jar')
+    api files('libs/Bmob_Push_1.0.1_20170907.jar')
 }
 
 

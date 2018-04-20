@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.chat.mvp.login.LoginActivity;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
@@ -127,9 +128,9 @@ public class GuideActivity extends BaseActivity implements ViewPager.OnPageChang
                     .getAppComponent()
                     .getSharedPreferences()
                     .edit().putBoolean(ConstantUtil.FIRST_STATUS,false).apply();
-//            Intent intent = new Intent(this, LoginActivity.class);
-//            intent.putExtra(ConstantUtil.FROM, ConstantUtil.FROM_LOGIN);
-//            startActivity(intent);
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra(ConstantUtil.FROM, ConstantUtil.FROM_LOGIN);
+            startActivity(intent);
             finish();
         } else {
             MainActivity.start(this);

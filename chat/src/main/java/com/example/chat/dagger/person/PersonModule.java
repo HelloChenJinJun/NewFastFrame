@@ -1,9 +1,10 @@
-package com.example.news.dagger.person;
+package com.example.chat.dagger.person;
 
-import com.example.news.MainRepositoryManager;
-import com.example.news.PersonFragment;
-import com.example.news.mvp.person.PersonModel;
-import com.example.news.mvp.person.PersonPresenter;
+
+import com.example.chat.MainRepositoryManager;
+import com.example.chat.mvp.person.PersonFragment;
+import com.example.chat.mvp.person.PersonModel;
+import com.example.chat.mvp.person.PersonPresenter;
 
 import dagger.Module;
 import dagger.Provides;

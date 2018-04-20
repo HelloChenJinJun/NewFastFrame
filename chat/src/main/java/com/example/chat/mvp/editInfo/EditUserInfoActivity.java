@@ -20,6 +20,7 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.io.File;
@@ -232,11 +233,11 @@ public class EditUserInfoActivity extends SlideBaseActivity implements View.OnCl
                 message = data.getStringExtra(Constant.DATA);
             }
             switch (requestCode) {
-                case SystemUtil.REQUEST_CODE_ONE_PHOTO:
+                case ConstantUtil.REQUEST_CODE_ONE_PHOTO:
                     CommonLogger.e("裁剪完成");
                     try {
                         showLoadDialog("正在上传头像，请稍候........");
-                        BmobFile bmobFile = new BmobFile(new File(new URI(data.getStringExtra(Constant.PATH))));
+                        BmobFile bmobFile = new BmobFile(new File(new URI(data.getStringExtra(ConstantUtil.PATH))));
                         bmobFile.uploadblock(new UploadFileListener() {
                             @Override
                             public void done(BmobException e) {

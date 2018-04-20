@@ -1,4 +1,4 @@
-package com.example.news.mvp.person;
+package com.example.chat.mvp.person;
 
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;

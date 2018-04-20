@@ -6,6 +6,7 @@ import android.content.Context;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.module.IModuleConfig;
+import com.example.live.dagger.DaggerMainComponent;
 import com.example.live.dagger.MainComponent;
 import com.example.live.dagger.MainModule;
 

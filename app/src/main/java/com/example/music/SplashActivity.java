@@ -1,5 +1,6 @@
 package com.example.music;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.chat.manager.UserManager;
+import com.example.chat.mvp.login.LoginActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.utils.ConstantUtil;
 
@@ -49,7 +52,13 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
                 .getBoolean(ConstantUtil.FIRST_STATUS,true)) {
             GuideActivity.start(this);
         }else {
-            MainActivity.start(this);
+            if (UserManager.getInstance().getCurrentUser() != null) {
+                MainActivity.start(this);
+            }else {
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.putExtra(ConstantUtil.FROM, ConstantUtil.FROM_LOGIN);
+                startActivity(intent);
+            }
         }
         finish();
     }

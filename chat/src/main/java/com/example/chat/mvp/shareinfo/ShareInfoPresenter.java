@@ -55,71 +55,71 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
         if (isRefresh) {
             iView.showLoading(null);
         }
-        MsgManager
+        addSubscription(MsgManager
                 .getInstance().getAllPostData(isPublic,isRefresh,uid,time, new FindListener<PublicPostBean>() {
-            @Override
-            public void done(List<PublicPostBean> list, BmobException e) {
-                if (e == null || e.getErrorCode() == 101) {
-                    if (list != null && list.size() > 0) {
-                        long time = 0L;
-                        for (PublicPostBean bean :
-                                list) {
-                            long updateTime = TimeUtil.getTime(bean.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss");
-                            if (updateTime > time) {
-                                time = updateTime;
+                    @Override
+                    public void done(List<PublicPostBean> list, BmobException e) {
+                        if (e == null || e.getErrorCode() == 101) {
+                            if (list != null && list.size() > 0) {
+                                long time = 0L;
+                                for (PublicPostBean bean :
+                                        list) {
+                                    long updateTime = TimeUtil.getTime(bean.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss");
+                                    if (updateTime > time) {
+                                        time = updateTime;
+                                    }
+                                }
+                                String strTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
+                                String key=Constant.UPDATE_TIME_SHARE+uid;
+                                if (isPublic) {
+                                    key+=Constant.PUBLIC;
+                                }
+                                BaseApplication.getAppComponent()
+                                        .getSharedPreferences().edit()
+                                        .putString(key, strTime)
+                                        .apply();
+                                UserDBManager.getInstance().addOrUpdatePost(list);
                             }
-                        }
-                        String strTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
-                        String key=Constant.UPDATE_TIME_SHARE+uid;
-                        if (isPublic) {
-                            key+=Constant.PUBLIC;
-                        }
-                        BaseApplication.getAppComponent()
-                                .getSharedPreferences().edit()
-                                .putString(key, strTime)
-                                .apply();
-                        UserDBManager.getInstance().addOrUpdatePost(list);
-                    }
-                    iView.updateData(list);
-                } else {
-                   QueryBuilder<PublicPostEntity> queryBuilder= UserDBManager.getInstance().getDaoSession()
-                           .getPublicPostEntityDao().queryBuilder();
-                   if (!isPublic){
-                       queryBuilder.where(PublicPostEntityDao.Properties
-                       .Uid.eq(uid));
-                   }
-                    long currentTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
-                    if (isRefresh) {
-                        String key=Constant.UPDATE_TIME_SHARE+uid;
-                        if (isPublic) {
-                            key+=Constant.PUBLIC;
-                        }
-                        String updateTime=BaseApplication
-                                .getAppComponent().getSharedPreferences()
-                                .getString(key,null);
-                        if (updateTime != null && !time.equals(Constant.REFRESH_TIME)) {
-                            long resultTime = TimeUtil.getTime(updateTime, "yyyy-MM-dd HH:mm:ss");
-                            queryBuilder.where(PublicPostEntityDao.Properties.UpdatedTime.gt(resultTime));
+                            iView.updateData(list);
                         } else {
-                            queryBuilder.where(PublicPostEntityDao.Properties.UpdatedTime.gt(currentTime));
+                            QueryBuilder<PublicPostEntity> queryBuilder= UserDBManager.getInstance().getDaoSession()
+                                    .getPublicPostEntityDao().queryBuilder();
+                            if (!isPublic){
+                                queryBuilder.where(PublicPostEntityDao.Properties
+                                        .Uid.eq(uid));
+                            }
+                            long currentTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
+                            if (isRefresh) {
+                                String key=Constant.UPDATE_TIME_SHARE+uid;
+                                if (isPublic) {
+                                    key+=Constant.PUBLIC;
+                                }
+                                String updateTime=BaseApplication
+                                        .getAppComponent().getSharedPreferences()
+                                        .getString(key,null);
+                                if (updateTime != null && !time.equals(Constant.REFRESH_TIME)) {
+                                    long resultTime = TimeUtil.getTime(updateTime, "yyyy-MM-dd HH:mm:ss");
+                                    queryBuilder.where(PublicPostEntityDao.Properties.UpdatedTime.gt(resultTime));
+                                } else {
+                                    queryBuilder.where(PublicPostEntityDao.Properties.UpdatedTime.gt(currentTime));
+                                }
+                                queryBuilder.where(PublicPostEntityDao.Properties.CreatedTime.gt(currentTime));
+                            }else {
+                                queryBuilder.where(PublicPostEntityDao.Properties.CreatedTime.lt(currentTime));
+                            }
+                            queryBuilder.orderDesc(PublicPostEntityDao.Properties.CreatedTime);
+                            queryBuilder.limit(10);
+                            List<PublicPostEntity> publicPostEntities = queryBuilder.build().list();
+                            List<PublicPostBean>  result=new ArrayList<>(publicPostEntities.size());
+                            for (PublicPostEntity item :
+                                    publicPostEntities) {
+                                result.add(MsgManager.getInstance().cover(item));
+                            }
+                            iView.updateData(result);
                         }
-                        queryBuilder.where(PublicPostEntityDao.Properties.CreatedTime.gt(currentTime));
-                    }else {
-                        queryBuilder.where(PublicPostEntityDao.Properties.CreatedTime.lt(currentTime));
+                        iView.hideLoading();
                     }
-                    queryBuilder.orderDesc(PublicPostEntityDao.Properties.CreatedTime);
-                    queryBuilder.limit(10);
-                    List<PublicPostEntity> publicPostEntities = queryBuilder.build().list();
-                    List<PublicPostBean>  result=new ArrayList<>(publicPostEntities.size());
-                    for (PublicPostEntity item :
-                            publicPostEntities) {
-                        result.add(MsgManager.getInstance().cover(item));
-                    }
-                    iView.updateData(result);
-                }
-                iView.hideLoading();
-            }
-        });
+                }));
 
     }
 
@@ -180,7 +180,7 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
         }
         PublicPostBean publicPostBean = new PublicPostBean();
         publicPostBean.setObjectId(data.getObjectId());
-        publicPostBean.delete(new UpdateListener() {
+        addSubscription(publicPostBean.delete(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -217,7 +217,7 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                         }
                     });
                     if (data.getMsgType() == Constant.EDIT_TYPE_VIDEO
-                             ||
+                            ||
                             data.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
                         PostDataBean postDataBean = BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
                         String[] temp=new String[postDataBean.getImageList().size()];
@@ -238,7 +238,7 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                 }
                 listener.done(e);
             }
-        });
+        }));
     }
 
     public void reSendPublicPostBean(PublicPostBean data, String objectId) {

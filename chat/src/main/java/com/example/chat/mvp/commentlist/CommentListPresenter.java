@@ -202,7 +202,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
         }
         PublicPostBean publicPostBean = new PublicPostBean();
         publicPostBean.setObjectId(data.getObjectId());
-        publicPostBean.delete(new UpdateListener() {
+        addSubscription(publicPostBean.delete(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -260,7 +260,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                 }
                 listener.done(e);
             }
-        });
+        }));
     }
 
 

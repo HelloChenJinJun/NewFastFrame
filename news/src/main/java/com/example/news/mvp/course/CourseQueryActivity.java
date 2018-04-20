@@ -2,6 +2,7 @@ package com.example.news.mvp.course;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.UserManager;
 import android.widget.GridView;
 
 import com.example.commonlibrary.BaseActivity;
@@ -19,6 +20,9 @@ import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.course.CourseQueryModule;
 import com.example.news.dagger.course.DaggerCourseQueryComponent;
 import com.example.news.util.ReLoginUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -74,6 +78,22 @@ public class CourseQueryActivity extends BaseActivity<CourseQueryBean, CourseQue
         display.setAdapter(courseQueryAdapter);
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("课表查询");
+        toolBarOption.setRightResId(R.drawable.ic_list_blue_grey_900_24dp);
+        toolBarOption.setRightListener(v -> {
+            List<String> list = new ArrayList<>();
+            list.add("大一第一学期");
+            list.add("大一第二学期");
+            list.add("大二第一学期");
+            list.add("大二第二学期");
+            list.add("大三第一学期");
+            list.add("大三第二学期");
+            list.add("大四第一学期");
+            list.add("大四第二学期");
+            showChooseDialog("搜索条件", list, (parent, view, position, id) -> {
+                dismissBaseDialog();
+                presenter.getQueryCourseData("2016", 3);
+            });
+        });
         setToolBar(toolBarOption);
         runOnUiThread(new Runnable() {
             @Override

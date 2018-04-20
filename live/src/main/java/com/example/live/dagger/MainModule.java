@@ -2,7 +2,7 @@ package com.example.live.dagger;
 
 import android.support.annotation.Nullable;
 
-import com.example.commonlibrary.bean.music.DaoSession;
+import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.live.MainRepositoryManager;
 import com.example.live.interceptor.LiveInterceptor;

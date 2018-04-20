@@ -1,5 +1,7 @@
 package com.example.chat.mvp.wallpaper;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,10 +12,12 @@ import com.example.chat.base.Constant;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.mvp.main.HomeActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.rxbus.RxBusManager;
 
 import java.util.List;
 
@@ -61,9 +65,9 @@ public class WallPaperActivity extends SlideBaseActivity {
 
     @Override
     public void initData() {
-        from = getIntent().getStringExtra("from");
+        from = getIntent().getStringExtra(Constant.FROM);
         showLoadDialog("1正在加载背景图片.........");
-        if (from.equals("title_wallpaper")) {
+        if (from.equals(Constant.TITLE_WALLPAPER)) {
             MsgManager.getInstance().getAllDefaultTitleWallPaperFromServer(new FindListener<String>() {
                 @Override
                 public void done(List<String> list, BmobException e) {
@@ -79,6 +83,7 @@ public class WallPaperActivity extends SlideBaseActivity {
             MsgManager.getInstance().getAllDefaultWallPaperFromServer(new FindListener<String>() {
                 @Override
                 public void done(List<String> list, BmobException e) {
+                    dismissLoadDialog();
                     if (e == null) {
                         initAdapter(list);
                     } else {
@@ -111,7 +116,6 @@ public class WallPaperActivity extends SlideBaseActivity {
                     if (prePosition != -1) {
                         ((BaseWrappedViewHolder) display.findViewHolderForAdapterPosition(prePosition)).setImageResource(R.id.iv_wallpaper_item_display, 0);
                     }
-
                 }
                 prePosition = position;
             }
@@ -126,42 +130,35 @@ public class WallPaperActivity extends SlideBaseActivity {
         toolBarOption.setTitle("选择背景图片");
         toolBarOption.setAvatar(UserManager.getInstance().getCurrentUser().getAvatar());
         toolBarOption.setNeedNavigation(true);
-        toolBarOption.setRightListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (from.equals("title_wallpaper")) {
-                    if (selectedImage != null && !selectedImage.equals(UserManager.getInstance().getCurrentUser()
-                            .getTitleWallPaper())) {
-                        UserManager.getInstance().updateUserInfo("titleWallPaper", selectedImage, new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if (e == null) {
-                                    UserManager.getInstance().getCurrentUser().setTitleWallPaper(selectedImage);
-                                    setResult(RESULT_OK);
-                                    finish();
-                                } else {
-                                    LogUtil.e("上传背景图片到服务器上失败" + e.toString());
-                                }
+        toolBarOption.setRightListener(v -> {
+            if (from.equals(Constant.TITLE_WALLPAPER)) {
+                if (selectedImage != null && !selectedImage.equals(UserManager.getInstance().getCurrentUser()
+                        .getTitleWallPaper())) {
+                    UserManager.getInstance().updateUserInfo(Constant.TITLE_WALLPAPER, selectedImage, new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                RxBusManager.getInstance().post(UserManager.getInstance().getCurrentUser());
+                            } else {
+                                LogUtil.e("上传背景图片到服务器上失败" + e.toString());
                             }
-                        });
-                    }
-                } else {
-                    if (selectedImage != null && !selectedImage.equals(UserManager.getInstance().getCurrentUser().getWallPaper())) {
-                        UserManager.getInstance().updateUserInfo(Constant.WALLPAPER, selectedImage, new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if (e == null) {
-                                    UserManager.getInstance().getCurrentUser().setWallPaper(selectedImage);
-                                    setResult(RESULT_OK);
-                                    finish();
-                                } else {
-                                    LogUtil.e("上传背景图片到服务器上失败" + e.toString());
-                                }
+                        }
+                    });
+                }
+            } else {
+                if (selectedImage != null && !selectedImage.equals(UserManager.getInstance().getCurrentUser().getWallPaper())) {
+                    UserManager.getInstance().updateUserInfo(Constant.WALLPAPER, selectedImage, new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                RxBusManager.getInstance().post(UserManager.getInstance().getCurrentUser());
+                            } else {
+                                LogUtil.e("上传背景图片到服务器上失败" + e.toString());
                             }
+                        }
 
 
-                        });
-                    }
+                    });
                 }
             }
         });
@@ -172,5 +169,11 @@ public class WallPaperActivity extends SlideBaseActivity {
     @Override
     public void updateData(Object o) {
 
+    }
+
+    public static void start(Activity activity, String from) {
+        Intent intent=new Intent(activity,WallPaperActivity.class);
+        intent.putExtra(Constant.FROM,from);
+        activity.startActivity(intent);
     }
 }

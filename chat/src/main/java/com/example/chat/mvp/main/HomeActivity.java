@@ -65,20 +65,15 @@ public class HomeActivity extends SlideBaseActivity {
                 SearchFriendActivity.start(this);
                 break;
             case "建群":
-                ToastUtils.showShortToast("点击了创建群");
-                Intent selectIntent = new Intent(this, SelectedFriendsActivity.class);
-                selectIntent.putExtra("from", "createGroup");
-                startActivity(selectIntent);
+                ToastUtils.showShortToast("创建群由于后台实时数据服务收费问题暂未开放");
                 break;
             case "背景":
                 ToastUtils.showShortToast("点击了背景");
-                Intent wallPaperIntent = new Intent(this, WallPaperActivity.class);
-                wallPaperIntent.putExtra("from", "wallpaper");
-                startActivityForResult(wallPaperIntent, Constant.REQUEST_CODE_SELECT_WALLPAPER);
+                WallPaperActivity.start(this,Constant.WALLPAPER);
                 break;
             case "设置":
                 ToastUtils.showShortToast("点击了设置");
-                SettingsActivity.start(this, Constant.REQUEST_CODE_EDIT_USER_INFO);
+                SettingsActivity.start(this);
                 break;
             default:
                 break;

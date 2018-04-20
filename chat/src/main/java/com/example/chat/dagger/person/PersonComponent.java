@@ -1,9 +1,8 @@
-package com.example.news.dagger.person;
+package com.example.chat.dagger.person;
 
+import com.example.chat.dagger.ChatMainComponent;
+import com.example.chat.mvp.person.PersonFragment;
 import com.example.commonlibrary.dagger.scope.PerFragment;
-import com.example.news.PersonFragment;
-import com.example.news.dagger.NewsComponent;
-
 import dagger.Component;
 
 /**
@@ -13,7 +12,7 @@ import dagger.Component;
  * QQ:         1981367757
  */
 @PerFragment
-@Component(dependencies = NewsComponent.class, modules = PersonModule.class)
+@Component(dependencies = ChatMainComponent.class, modules = PersonModule.class)
 public interface PersonComponent {
     public void inject(PersonFragment personFragment);
 }

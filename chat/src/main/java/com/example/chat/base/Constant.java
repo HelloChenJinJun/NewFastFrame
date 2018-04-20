@@ -179,7 +179,6 @@ public class Constant {
 
 
     public static final String DELTA_TIME = "delta_time";
-    public static final String PATH = "PATH";
     public static final String FROM = "FROM";
     public static final String POSITION = "POSITION";
     public static final String IS_SELECT = "IS_SELECT";

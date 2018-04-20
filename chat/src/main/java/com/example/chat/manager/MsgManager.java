@@ -944,7 +944,7 @@ public class MsgManager {
 
 
 
-    public void getAllPostData(boolean isPublic, boolean isRefresh, String uid, String time, FindListener<PublicPostBean> findCallback) {
+    public Subscription getAllPostData(boolean isPublic, boolean isRefresh, String uid, String time, FindListener<PublicPostBean> findCallback) {
         BmobQuery<PublicPostBean> query = new BmobQuery<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTime = 0;
@@ -988,7 +988,7 @@ public class MsgManager {
         query.include("author");
         query.setLimit(10);
         query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ONLY);
-        query.findObjects(findCallback);
+       return query.findObjects(findCallback);
     }
 
     public Subscription sendPublicPostMessage(int type, String content, String location, final ArrayList<ImageItem> imageList,

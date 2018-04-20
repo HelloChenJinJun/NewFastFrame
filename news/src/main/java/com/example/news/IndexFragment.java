@@ -113,11 +113,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 }
                 viewPagerAdapter.notifyDataSetChanged();
             }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception {
-                ToastUtils.showShortToast("1接受模块调整信息失败" + throwable.getMessage());
-            }
         }));
         addDisposable(RxBusManager.getInstance().registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
             @Override
@@ -151,11 +146,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                         .update(newsTypeBean);
                 event.setTypeId(newsTypeBean.getTypeId());
                 RxBusManager.getInstance().post(event);
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                ToastUtils.showShortToast("接受注册信息失败" + throwable.getMessage());
             }
         }));
     }

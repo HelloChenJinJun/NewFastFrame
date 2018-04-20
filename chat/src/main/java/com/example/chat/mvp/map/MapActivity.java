@@ -31,6 +31,7 @@ import com.example.chat.util.LogUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.ConstantUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -281,7 +282,7 @@ public class MapActivity extends SlideBaseActivity implements View.OnClickListen
                         intent.putExtra(Constant.LATITUDE, latitude + "");
                         intent.putExtra(Constant.LONGITUDE, longitude + "");
                         intent.putExtra(Constant.ADDRESS, address);
-                        intent.putExtra(Constant.PATH, localPath);
+                        intent.putExtra(ConstantUtil.PATH, localPath);
                         setResult(RESULT_OK, intent);
                 } else {
                         setResult(RESULT_CANCELED);

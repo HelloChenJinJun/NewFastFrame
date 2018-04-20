@@ -67,6 +67,7 @@ import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
@@ -661,9 +662,9 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case SystemUtil.REQUEST_CODE_ONE_PHOTO:
+                case ConstantUtil.REQUEST_CODE_ONE_PHOTO:
                     if (data != null) {
-                        String path=data.getStringExtra(Constant.PATH);
+                        String path=data.getStringExtra(ConstantUtil.PATH);
                         MessageContent messageContent=new MessageContent();
                         List<String>  urlList=new ArrayList<>();
                         urlList.add(path);
@@ -684,7 +685,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                         break;
                 case Constant.REQUEST_MAP:
                     if (data != null) {
-                        String localPath = data.getStringExtra(Constant.PATH);
+                        String localPath = data.getStringExtra(ConstantUtil.PATH);
                         String longitude = data.getStringExtra(Constant.LONGITUDE);
                         String latitude = data.getStringExtra(Constant.LATITUDE);
                         String address = data.getStringExtra(Constant.ADDRESS);

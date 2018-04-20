@@ -22,7 +22,6 @@ import java.util.List;
  * 创建时间:    2017/9/18      16:50
  * QQ:             1981367757
  */
-@Route(path = "library/index")
 public class LibraryInfoActivity extends BaseActivity{
     private ViewPagerAdapter viewPagerAdapter;
     private ViewPager display;

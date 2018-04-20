@@ -1,7 +1,8 @@
-package com.example.news.mvp.person;
+package com.example.chat.mvp.person;
 
+
+import com.example.chat.MainRepositoryManager;
 import com.example.commonlibrary.mvp.model.BaseModel;
-import com.example.news.MainRepositoryManager;
 
 /**
  * 项目名称:    NewFastFrame
@@ -10,7 +11,7 @@ import com.example.news.MainRepositoryManager;
  * QQ:         1981367757
  */
 
-public class PersonModel extends BaseModel<MainRepositoryManager>{
+public class PersonModel extends BaseModel<MainRepositoryManager> {
     public PersonModel(MainRepositoryManager repositoryManager) {
         super(repositoryManager);
     }
