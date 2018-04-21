@@ -18,7 +18,12 @@
 
 
         <activity android:name=".GuideActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity" android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="custom.activity.action.main"/>
+            </intent-filter>
+
+        </activity>
 
 
     </application>

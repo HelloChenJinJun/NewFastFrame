@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -24,14 +25,16 @@ import com.example.chat.mvp.notify.SystemNotifyActivity;
 import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
-import com.example.commonlibrary.router.Router;
-import com.example.commonlibrary.router.RouterRequest;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import io.reactivex.functions.Consumer;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 
 /**
@@ -104,7 +107,7 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
 
     private void updateUserInfo() {
         if (getContext() != null) {
-            Glide.with(getContext()).load(avatar).placeholder(R.mipmap.ic_launcher)
+            Glide.with(getContext()).load(user.getAvatar()).placeholder(R.mipmap.ic_launcher)
                     .error(R.mipmap.ic_launcher).into(this.avatar);
             signature.setText(user.getSignature());
             Glide.with(getContext()).load(user.getTitleWallPaper()).into(new SimpleTarget<GlideDrawable>() {
@@ -147,6 +150,53 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
                     String path=data.getStringExtra(ConstantUtil.PATH);
                     String from=data.getStringExtra(Constant.FROM);
 //                    todo  4.21
+                        try {
+                            showLoadDialog("正在上传图片中，请稍候........");
+                            BmobFile bmobFile = new BmobFile(new File(new URI(path)));
+                            bmobFile.uploadblock(new UploadFileListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        UserManager.getInstance().updateUserInfo(from, bmobFile.getFileUrl(), new UpdateListener() {
+                                            @Override
+                                            public void done(BmobException e) {
+                                                dismissLoadDialog();
+                                                if (e == null) {
+                                                    CommonLogger.e("更新用户信息成功");
+                                                    if (from.equals(Constant.TITLE_WALLPAPER)) {
+                                                        Glide.with(PersonFragment.this).load(bmobFile.getFileUrl()).into(new SimpleTarget<GlideDrawable>() {
+                                                            @Override
+                                                            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                                                                titleBg.setBackground(resource);
+                                                            }
+                                                        });
+                                                    }else {
+                                                        Glide.with(PersonFragment.this).load(bmobFile.getFileUrl())
+                                                                .into(avatar);
+                                                    }
+                                                } else {
+                                                    CommonLogger.e("更新用户信息失败" + e.toString());
+                                                }
+                                            }
+
+
+                                        });
+                                    } else {
+                                        dismissLoadDialog();
+                                        CommonLogger.e("加载失败");
+                                    }
+                                }
+
+                            });
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+
+
+
+
+
+
 
             }
 

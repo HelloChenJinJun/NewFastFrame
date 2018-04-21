@@ -1,7 +1,9 @@
 package com.example.music;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
@@ -9,6 +11,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.router.BaseAction;
+import com.example.commonlibrary.router.Router;
+import com.example.commonlibrary.router.RouterRequest;
+import com.example.commonlibrary.router.RouterResult;
+import com.example.commonlibrary.rxbus.event.UserInfoEvent;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
@@ -21,6 +28,7 @@ import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 //import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -121,6 +129,78 @@ public class App extends BaseApplication {
                 .getSharedPreferences()
                 .edit().putBoolean(ConstantUtil.IS_ALONE, false)
                 .apply();
+        initRouter();
+    }
+
+    private void initRouter() {
+        Router.getInstance().registerProvider("app:person"
+                , new BaseAction() {
+                    @Override
+                    public RouterResult invoke(RouterRequest routerRequest) {
+                        Map<String, Object> map = routerRequest.getParamMap();
+                        UserInfoEvent userInfoEvent = new UserInfoEvent();
+                        for (Map.Entry<String, Object> entry :
+                                map.entrySet()) {
+                            if (entry.getValue() instanceof String) {
+                                if (entry.getKey().equals(ConstantUtil.AVATAR)) {
+                                    userInfoEvent.setAvatar(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.ACCOUNT)) {
+                                    userInfoEvent.setAccount(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.PASSWORD)) {
+                                    userInfoEvent.setPassword(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.NICK)) {
+                                    userInfoEvent.setNick(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.NAME)) {
+                                    userInfoEvent.setName(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.FROM)) {
+                                    userInfoEvent.setFrom(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.BG_ALL)) {
+                                    userInfoEvent.setAllBg(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.BG_HALF)) {
+                                    userInfoEvent.setHalfBg(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.CLASS_NUMBER)) {
+                                    userInfoEvent.setClassNumber(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.SCHOOL)) {
+                                    userInfoEvent.setSchool(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.MAJOR)) {
+                                    userInfoEvent.setMajor(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.COLLEGE)) {
+                                    userInfoEvent.setCollege(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.YEAR)) {
+                                    userInfoEvent.setYear(((String) entry.getValue()));
+                                } else if (entry.getKey().equals(ConstantUtil.STUDENT_TYPE)) {
+                                    userInfoEvent.setStudentType(((String) entry.getValue()));
+                                }
+                            } else if (entry.getValue() instanceof Boolean) {
+                                if (entry.getKey().equals(ConstantUtil.SEX)) {
+                                    userInfoEvent.setSex(((Boolean) entry.getValue()));
+                                }
+                            }
+                        }
+                        BaseApplication.getAppComponent().getSharedPreferences()
+                                .edit().putBoolean(ConstantUtil.LOGIN_STATUS, true)
+                                .putString(ConstantUtil.ACCOUNT, userInfoEvent.getAccount())
+                                .putString(ConstantUtil.PASSWORD, userInfoEvent.getPassword())
+                                .putString(ConstantUtil.AVATAR, userInfoEvent.getAvatar())
+                                .putString(ConstantUtil.NAME, userInfoEvent.getName())
+                                .putBoolean(ConstantUtil.SEX, userInfoEvent.getSex())
+                                .putString(ConstantUtil.BG_HALF, userInfoEvent.getHalfBg())
+                                .putString(ConstantUtil.BG_ALL, userInfoEvent.getAllBg())
+                                .putString(ConstantUtil.SCHOOL, userInfoEvent.getSchool())
+                                .putString(ConstantUtil.COLLEGE, userInfoEvent.getCollege())
+                                .putString(ConstantUtil.CLASS_NUMBER, userInfoEvent.getClassNumber())
+                                .putString(ConstantUtil.MAJOR, userInfoEvent.getMajor())
+                                .putString(ConstantUtil.STUDENT_TYPE, userInfoEvent.getStudentType())
+                                .putString(ConstantUtil.YEAR, userInfoEvent.getYear())
+                                .putString(ConstantUtil.NICK, userInfoEvent.getNick()).apply();
+                        Activity activity = (Activity) routerRequest.getContext();
+                        MainActivity.start(activity);
+                        if (routerRequest.isFinish()) {
+                            activity.finish();
+                        }
+                        return null;
+                    }
+                });
     }
 
     @Override

@@ -105,7 +105,6 @@ public class Constant {
     public static final String NOTIFICATION_TAG_ADD = "notification_add";
     public static final String NOTIFICATION_TAG = "notification_tag";
     public static final String NOTIFICATION_TAG_GROUP_MESSAGE = "notification_group_message";
-    public static final String NEW_MESSAGE_ACTION = "new_message_action";
     public static final String NEW_MESSAGE = "new_message";
     public static final String GROUP_ID = "groupId";
     public static final String TYPE_CONVERSATION_PERSON = "person";

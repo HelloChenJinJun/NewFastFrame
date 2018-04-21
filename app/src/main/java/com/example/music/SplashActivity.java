@@ -55,9 +55,7 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
             if (UserManager.getInstance().getCurrentUser() != null) {
                 MainActivity.start(this);
             }else {
-                Intent intent = new Intent(this, LoginActivity.class);
-                intent.putExtra(ConstantUtil.FROM, ConstantUtil.FROM_LOGIN);
-                startActivity(intent);
+               LoginActivity.start(this,ConstantUtil.FROM_LOGIN);
             }
         }
         finish();

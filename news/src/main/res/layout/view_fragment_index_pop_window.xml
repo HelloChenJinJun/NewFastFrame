@@ -11,6 +11,7 @@
         android:id="@+id/srcv_view_fragment_index_pop_display"/>
 
     <Button
+        android:visibility="gone"
         android:text="调整"
         android:id="@+id/btn_view_fragment_index_pop_adjust"
         android:layout_width="wrap_content"

@@ -86,7 +86,7 @@ public class NewsApplication implements IModuleConfig, IAppLife {
     }
 
     private void initRouter() {
-        Router.getInstance().registerProvider("chat:pw_change", new BaseAction() {
+        Router.getInstance().registerProvider("news:pw_change", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
                 Map<String, Object> map = routerRequest.getParamMap();
@@ -96,92 +96,8 @@ public class NewsApplication implements IModuleConfig, IAppLife {
                 return null;
             }
         });
-        Router.getInstance().registerProvider("news:person"
-                , new BaseAction() {
-                    @Override
-                    public RouterResult invoke(RouterRequest routerRequest) {
-                        Map<String, Object> map = routerRequest.getParamMap();
-                        UserInfoEvent userInfoEvent = new UserInfoEvent();
-                        for (Map.Entry<String, Object> entry :
-                                map.entrySet()) {
-                            if (entry.getValue() instanceof String) {
-                                if (entry.getKey().equals(ConstantUtil.AVATAR)) {
-                                    userInfoEvent.setAvatar(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.ACCOUNT)) {
-                                    userInfoEvent.setAccount(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.PASSWORD)) {
-                                    userInfoEvent.setPassword(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.NICK)) {
-                                    userInfoEvent.setNick(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.NAME)) {
-                                    userInfoEvent.setName(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.FROM)) {
-                                    userInfoEvent.setFrom(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.BG_ALL)) {
-                                    userInfoEvent.setAllBg(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.BG_HALF)) {
-                                    userInfoEvent.setHalfBg(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.CLASS_NUMBER)) {
-                                    userInfoEvent.setClassNumber(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.SCHOOL)) {
-                                    userInfoEvent.setSchool(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.MAJOR)) {
-                                    userInfoEvent.setMajor(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.COLLEGE)) {
-                                    userInfoEvent.setCollege(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.YEAR)) {
-                                    userInfoEvent.setYear(((String) entry.getValue()));
-                                } else if (entry.getKey().equals(ConstantUtil.STUDENT_TYPE)) {
-                                    userInfoEvent.setStudentType(((String) entry.getValue()));
-                                }
-                            } else if (entry.getValue() instanceof Boolean) {
-                                if (entry.getKey().equals(ConstantUtil.SEX)) {
-                                    userInfoEvent.setSex(((Boolean) entry.getValue()));
-                                }
-                            }
-                        }
-                        BaseApplication.getAppComponent().getSharedPreferences()
-                                .edit().putBoolean(ConstantUtil.LOGIN_STATUS, true)
-                                .putString(ConstantUtil.ACCOUNT, userInfoEvent.getAccount())
-                                .putString(ConstantUtil.PASSWORD, userInfoEvent.getPassword())
-                                .putString(ConstantUtil.AVATAR, userInfoEvent.getAvatar())
-                                .putString(ConstantUtil.NAME, userInfoEvent.getName())
-                                .putBoolean(ConstantUtil.SEX, userInfoEvent.getSex())
-                                .putString(ConstantUtil.BG_HALF, userInfoEvent.getHalfBg())
-                                .putString(ConstantUtil.BG_ALL, userInfoEvent.getAllBg())
-                                .putString(ConstantUtil.SCHOOL, userInfoEvent.getSchool())
-                                .putString(ConstantUtil.COLLEGE, userInfoEvent.getCollege())
-                                .putString(ConstantUtil.CLASS_NUMBER, userInfoEvent.getClassNumber())
-                                .putString(ConstantUtil.MAJOR, userInfoEvent.getMajor())
-                                .putString(ConstantUtil.STUDENT_TYPE, userInfoEvent.getStudentType())
-                                .putString(ConstantUtil.YEAR, userInfoEvent.getYear())
-                                .putString(ConstantUtil.NICK, userInfoEvent.getNick()).apply();
-                        Activity activity = (Activity) routerRequest.getContext();
-                        if (userInfoEvent.getFrom().equals(ConstantUtil.FROM_LOGIN)) {
-                            Intent intent = new Intent(activity, MainActivity.class);
-                            activity.startActivity(intent);
-                            activity.finish();
-                        } else if (userInfoEvent.getFrom().equals(ConstantUtil.FROM_MAIN)) {
-                            RxBusManager.getInstance().post(userInfoEvent);
-                        }
-                        if (routerRequest.isFinish()) {
-                            activity.finish();
-                        }
-                        return null;
-                    }
-                });
-        Router.getInstance().registerProvider("news:main", new BaseAction() {
-            @Override
-            public RouterResult invoke(RouterRequest routerRequest) {
-                Activity activity = (Activity) routerRequest.getContext();
-                Intent intent = new Intent(activity, MainActivity.class);
-                activity.startActivity(intent);
-                if (routerRequest.isFinish()) {
-                    activity.finish();
-                }
-                return null;
-            }
-        });
+
+
         Router.getInstance().registerProvider("news:login", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
@@ -239,13 +155,14 @@ public class NewsApplication implements IModuleConfig, IAppLife {
             for (JsonElement item :
                     jsonElements) {
                 OtherNewsTypeBean bean = gson.fromJson(item, OtherNewsTypeBean.class);
-                if (bean.getName().equals("头条")
-                        || bean.getName().equals("福利")
-                        || bean.getName().equals("地大")) {
-                    bean.setHasSelected(true);
-                }else {
-                    bean.setHasSelected(false);
-                }
+//                if (bean.getName().equals("头条")
+//                        || bean.getName().equals("福利")
+//                        || bean.getName().equals("地大")) {
+//                    bean.setHasSelected(true);
+//                } else {
+//                    bean.setHasSelected(false);
+//                }
+                bean.setHasSelected(true);
                 result.add(bean);
             }
             newsComponent.getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()

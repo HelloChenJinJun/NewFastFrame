@@ -38,7 +38,6 @@ public class PasswordChangeActivity extends SlideBaseActivity<Object,PasswordCha
     @Override
     public void updateData(Object o) {
         if (o != null && o instanceof PwChangeEvent) {
-//            PwChangeEvent pwChangeEvent = ((PwChangeEvent) o);
             ToastUtils.showShortToast("最终密码修改成功");
             finish();
         }

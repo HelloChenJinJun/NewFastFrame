@@ -71,13 +71,13 @@ public abstract class MainBaseActivity<T, P extends BasePresenter> extends BaseA
 
     private void checkLogin() {
         if (UserManager.getInstance().getCurrentUser() == null) {
-            Intent intent = new Intent(this, LoginActivity.class);
             if (!BaseApplication
                     .getAppComponent().getSharedPreferences()
                     .getBoolean(ConstantUtil.IS_ALONE, true)) {
-                intent.putExtra(ConstantUtil.FROM, ConstantUtil.FROM_MAIN);
+                LoginActivity.start(this,ConstantUtil.FROM_LOGIN);
+            }else {
+                LoginActivity.start(this,null);
             }
-            startActivity(intent);
             finish();
         }
     }

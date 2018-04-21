@@ -21,6 +21,7 @@ import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ConstantUtil;
 
 import java.util.List;
 
@@ -169,7 +170,14 @@ public class ChatNotificationManager {
                         builder.setDefaults(Notification.DEFAULT_SOUND);
                 }
                 if (targetClass!=null) {
-                        Intent intent = new Intent(context, targetClass);
+                        Intent intent = null;
+                        if (BaseApplication.getAppComponent()
+                                .getSharedPreferences()
+                                .getBoolean(ConstantUtil.IS_ALONE,true)) {
+                                intent = new Intent(context, targetClass);
+                        }else {
+                                intent=new Intent("custom.activity.action.main");
+                        }
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra(Constant.NOTIFICATION_TAG, tag);
                         if (groupId != null) {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
@@ -21,6 +22,7 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.LoginEvent;
 import com.example.commonlibrary.rxbus.event.UserInfoEvent;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.adapter.PopWindowAdapter;
 import com.example.news.event.TypeNewsEvent;
@@ -88,66 +90,30 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         tabLayout.setupWithViewPager(display);
         display.setAdapter(viewPagerAdapter);
         ToolBarOption toolBarOption = new ToolBarOption();
-        toolBarOption.setTitle("12地大新闻");
+        toolBarOption.setTitle("地大新闻");
         toolBarOption.setNeedNavigation(false);
         setToolBar(toolBarOption);
-        addDisposable(RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, new Consumer<TypeNewsEvent>() {
-            @Override
-            public void accept(@NonNull TypeNewsEvent typeNewsEvent) throws Exception {
-                OtherNewsTypeBean newsTypeBean = NewsApplication.getNewsComponent()
-                        .getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
-                        .queryBuilder().where(OtherNewsTypeBeanDao.Properties.TypeId.eq(typeNewsEvent.getTypeId()))
-                        .build().list().get(0);
-                if (typeNewsEvent.getType() == TypeNewsEvent.ADD) {
-                    OtherNewsListFragment otherNewsListFragment = OtherNewsListFragment.newInstance(newsTypeBean);
-                    fragmentList.add(otherNewsListFragment);
-                    titleList.add(newsTypeBean.getName());
-                } else {
-                    int index = titleList.indexOf(newsTypeBean.getName());
-                    if (index < 0) {
-                        return;
-                    }
-                    fragmentList.remove(index);
-                    titleList.remove(newsTypeBean.getName());
-                    display.setCurrentItem(0);
-                }
-                viewPagerAdapter.notifyDataSetChanged();
-            }
-        }));
-        addDisposable(RxBusManager.getInstance().registerEvent(LoginEvent.class, new Consumer<LoginEvent>() {
-            @Override
-            public void accept(LoginEvent loginEvent) throws Exception {
-                UserInfoEvent userInfoEvent = loginEvent.getUserInfoEvent();
-                if (userInfoEvent == null) {
+        addDisposable(RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, typeNewsEvent -> {
+            OtherNewsTypeBean newsTypeBean = NewsApplication.getNewsComponent()
+                    .getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
+                    .queryBuilder().where(OtherNewsTypeBeanDao.Properties.TypeId.eq(typeNewsEvent.getTypeId()))
+                    .build().list().get(0);
+            if (typeNewsEvent.getType() == TypeNewsEvent.ADD) {
+                OtherNewsListFragment otherNewsListFragment = OtherNewsListFragment.newInstance(newsTypeBean);
+                fragmentList.add(otherNewsListFragment);
+                titleList.add(newsTypeBean.getName());
+            } else {
+                int index = titleList.indexOf(newsTypeBean.getName());
+                if (index < 0) {
                     return;
                 }
-                String type = NewsUtil.getTypeFromName(userInfoEvent.getCollege());
-                OtherNewsTypeBean newsTypeBean=null;
-                if (type != null) {
-                    newsTypeBean = NewsApplication.getNewsComponent()
-                            .getRepositoryManager().getDaoSession().getOtherNewsTypeBeanDao()
-                            .queryBuilder().where(OtherNewsTypeBeanDao.Properties.TypeId.eq(type))
-                            .build().list().get(0);
-                }
-                if (newsTypeBean == null) {
-                    return;
-                }
-                TypeNewsEvent event;
-                if (loginEvent.isSuccess()) {
-                    newsTypeBean.setHasSelected(true);
-                    event = new TypeNewsEvent(TypeNewsEvent.ADD);
-                } else {
-                    newsTypeBean.setHasSelected(false);
-                    event = new TypeNewsEvent(TypeNewsEvent.DELETE);
-                }
-                NewsApplication
-                        .getNewsComponent().getRepositoryManager()
-                        .getDaoSession().getOtherNewsTypeBeanDao()
-                        .update(newsTypeBean);
-                event.setTypeId(newsTypeBean.getTypeId());
-                RxBusManager.getInstance().post(event);
+                fragmentList.remove(index);
+                titleList.remove(newsTypeBean.getName());
+                display.setCurrentItem(0);
             }
+            viewPagerAdapter.notifyDataSetChanged();
         }));
+
     }
 
     private void initFragment() {
@@ -161,11 +127,15 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
                 .build().list();
         List<OtherNewsTypeBean> tempList=new ArrayList<>();
         List<OtherNewsTypeBean> otherList=new ArrayList<>();
+        String college= BaseApplication.getAppComponent().getSharedPreferences()
+                .getString(ConstantUtil.COLLEGE,null);
+        String type = NewsUtil.getTypeFromName(college);
         for (OtherNewsTypeBean bean :
                 list) {
             if (bean.getName().equals("地大")
                     ||bean.getName().equals("福利")
-                    ||bean.getName().equals("头条")) {
+                    ||bean.getName().equals("头条")
+                    ||bean.getTypeId().equals(type)) {
                 tempList.add(bean);
             }else {
                 otherList.add(bean);

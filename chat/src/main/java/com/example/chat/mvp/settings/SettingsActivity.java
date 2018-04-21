@@ -12,20 +12,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.chat.R;
-import com.example.chat.base.Constant;
 import com.example.chat.manager.UserManager;
-import com.example.chat.mvp.login.LoginActivity;
 import com.example.chat.mvp.account.AccountManageActivity;
 import com.example.chat.base.SlideBaseActivity;
-import com.example.chat.util.LogUtil;
-import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.rxbus.event.LoginEvent;
-import com.example.commonlibrary.rxbus.event.UserInfoEvent;
-import com.example.commonlibrary.utils.ConstantUtil;
-import java.util.List;
 
 /**
  * 项目名称:    TestChat
@@ -38,14 +29,8 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
 
 
         private RoundAngleImageView avatar;
-        private RelativeLayout headerLayout;
         private TextView account;
         private TextView nick;
-        private SwitchCompat notification;
-        private RelativeLayout clear,accountManage;
-        private TextView chatFlow;
-        private Button logout;
-        private String localImagePath;
 
 
         @Override
@@ -66,14 +51,14 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
 
         @Override
         public void initView() {
-                headerLayout = (RelativeLayout) findViewById(R.id.rl_setting_header);
+                RelativeLayout headerLayout = (RelativeLayout) findViewById(R.id.rl_setting_header);
                 account = (TextView) findViewById(R.id.tv_setting_account);
                 nick = (TextView) findViewById(R.id.tv_tv_setting_nick);
                 avatar = (RoundAngleImageView) findViewById(R.id.riv_setting_avatar);
-                notification = (SwitchCompat) findViewById(R.id.sc_activity_settings_notify);
-                clear = (RelativeLayout) findViewById(R.id.rl_activity_settings_clear);
-                accountManage= (RelativeLayout) findViewById(R.id.rl_activity_settings_account_manage);
-                logout = (Button) findViewById(R.id.btn_setting_logout);
+                SwitchCompat notification = (SwitchCompat) findViewById(R.id.sc_activity_settings_notify);
+                RelativeLayout clear = (RelativeLayout) findViewById(R.id.rl_activity_settings_clear);
+                RelativeLayout accountManage = (RelativeLayout) findViewById(R.id.rl_activity_settings_account_manage);
+                Button logout = (Button) findViewById(R.id.btn_setting_logout);
                 headerLayout.setOnClickListener(this);
                 clear.setOnClickListener(this);
                 accountManage.setOnClickListener(this);
@@ -106,25 +91,7 @@ public class SettingsActivity extends SlideBaseActivity implements View.OnClickL
                 if (i == R.id.rl_setting_header) {
                 } else if (i == R.id.rl_activity_settings_clear) {
                 } else if (i == R.id.btn_setting_logout) {
-                        Intent intent = new Intent(Constant.NEW_MESSAGE_ACTION);
-                        intent.putExtra("isLogout", true);
-                        intent.putExtra(ConstantUtil.FROM,ConstantUtil.FROM_MAIN);
-                        sendBroadcast(intent);
                         UserManager.getInstance().logout();
-                        if (!BaseApplication
-                                .getAppComponent().getSharedPreferences()
-                                .getBoolean(ConstantUtil.IS_ALONE, true)) {
-                                Intent loginIntent = new Intent(this, LoginActivity.class);
-                                startActivity(loginIntent);
-                                LoginEvent loginEvent=new LoginEvent();
-                                loginEvent.setErrorMessage("账号退出");
-                                UserInfoEvent userInfoEvent=new UserInfoEvent();
-                                userInfoEvent.setCollege(UserManager.getInstance().getCurrentUser().getCollege());
-                                loginEvent.setUserInfoEvent(userInfoEvent);
-                                loginEvent.setSuccess(false);
-                                RxBusManager.getInstance().post(loginEvent);
-                                loginIntent.putExtra(ConstantUtil.FROM,ConstantUtil.FROM_MAIN);
-                        }
                         finish();
                 } else if (i == R.id.rl_activity_settings_account_manage) {
                         AccountManageActivity.start(this);

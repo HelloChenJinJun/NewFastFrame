@@ -67,6 +67,7 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -107,7 +108,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         RecentFragment recentFragment = new RecentFragment();
         FriendsFragment contactsFragment =FriendsFragment.newInstance();
         InvitationFragment invitationFragment = new InvitationFragment();
-        ShareInfoFragment shareInfoFragment = ShareInfoFragment.instance(UserManager.getInstance().getCurrentUserObjectId(),true);
+        ShareInfoFragment shareInfoFragment = ShareInfoFragment.newInstance(UserManager.getInstance().getCurrentUserObjectId(),true);
         mFragments[0] = recentFragment;
         mFragments[1] = contactsFragment;
         mFragments[2] = invitationFragment;
@@ -170,7 +171,10 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         data.add("聊天");
         data.add("好友");
         data.add("邀请");
-        data.add("动态");
+        if (BaseApplication.getAppComponent().getSharedPreferences()
+                .getBoolean(ConstantUtil.IS_ALONE,true)) {
+            data.add("动态");
+        }
         menuAdapter = new MenuDisplayAdapter();
         menuAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override

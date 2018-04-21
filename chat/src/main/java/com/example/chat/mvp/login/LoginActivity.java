@@ -38,7 +38,6 @@ import com.example.commonlibrary.utils.ToastUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    HappyChat
@@ -52,7 +51,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
     private AutoEditText passWord;
     private ImageView bg;
     private String from;
-    private Button main;
+//    private Button main;
 
     @Override
     protected void onResume() {
@@ -83,8 +82,6 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
         Button login = (Button) findViewById(R.id.btn_login_confirm);
         TextView register = (TextView) findViewById(R.id.tv_login_register);
         TextView forget = (TextView) findViewById(R.id.tv_login_forget);
-       main= (Button) findViewById(R.id.btn_login_main);
-       main.setOnClickListener(this);
         login.setOnClickListener(this);
         register.setOnClickListener(this);
         forget.setOnClickListener(this);
@@ -99,9 +96,6 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
         addDisposable(RxBusManager.getInstance().registerEvent(User.class,user-> dealResultInfo(user,false), throwable -> {
         }));
         from=getIntent().getStringExtra(ConstantUtil.FROM);
-        if (from!=null&&from.equals(ConstantUtil.FROM_MAIN)) {
-            main.setVisibility(View.GONE);
-        }
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Animation animation = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.translate_anim);
             bg.startAnimation(animation);
@@ -125,12 +119,6 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
 
         } else if (i == R.id.tv_login_forget) {
             LogUtil.e("忘记密码");
-        } else if (i == R.id.btn_login_main) {
-            Router.getInstance().deal(new RouterRequest.Builder()
-                    .context(this).isFinish(true)
-                    .provideName("news")
-                    .actionName("main")
-                    .build());
         }
     }
 
@@ -243,4 +231,13 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
         User user = UserManager.getInstance().getCurrentUser();
         dealResultInfo(user,isFirstLogin);
     }
+
+
+
+    public static void start(Activity activity,String from){
+        Intent intent=new Intent(activity,LoginActivity.class);
+        intent.putExtra(ConstantUtil.FROM,from);
+        activity.startActivity(intent);
+    }
+
 }

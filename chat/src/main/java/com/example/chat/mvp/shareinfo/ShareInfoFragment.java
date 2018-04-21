@@ -477,7 +477,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         }
     }
 
-    public static ShareInfoFragment instance(String uid,boolean isPublic) {
+    public static ShareInfoFragment newInstance(String uid,boolean isPublic) {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.ID,uid);
         bundle.putBoolean(Constant.IS_PUBLIC,isPublic);

@@ -138,7 +138,7 @@ public class WallPaperActivity extends SlideBaseActivity {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                RxBusManager.getInstance().post(UserManager.getInstance().getCurrentUser());
+                                RxBusManager.getInstance().post(UserManager.getInstance().cover(UserManager.getInstance().getCurrentUser()));
                             } else {
                                 LogUtil.e("上传背景图片到服务器上失败" + e.toString());
                             }
@@ -151,7 +151,7 @@ public class WallPaperActivity extends SlideBaseActivity {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                RxBusManager.getInstance().post(UserManager.getInstance().getCurrentUser());
+                                RxBusManager.getInstance().post(UserManager.getInstance().cover(UserManager.getInstance().getCurrentUser()));
                             } else {
                                 LogUtil.e("上传背景图片到服务器上失败" + e.toString());
                             }

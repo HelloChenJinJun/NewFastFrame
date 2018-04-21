@@ -31,15 +31,12 @@ import io.reactivex.functions.Consumer;
 public class PasswordChangePresenter extends RxBasePresenter<IView<Object>, PasswordChangeModel> {
     public PasswordChangePresenter(final IView<Object> iView, PasswordChangeModel baseModel) {
         super(iView, baseModel);
-        registerEvent(PwChangeEvent.class, new Consumer<PwChangeEvent>() {
-            @Override
-            public void accept(PwChangeEvent pwChangeEvent) throws Exception {
-                if (pwChangeEvent.isSuccess()) {
-                    ToastUtils.showShortToast("修改密码一成功" + pwChangeEvent.toString());
-                    ChangePw(pwChangeEvent);
-                } else {
-                    iView.showError(pwChangeEvent.getErrorMsg(), null);
-                }
+        registerEvent(PwChangeEvent.class, pwChangeEvent -> {
+            if (pwChangeEvent.isSuccess()) {
+                ToastUtils.showShortToast("修改密码一成功" + pwChangeEvent.toString());
+                ChangePw(pwChangeEvent);
+            } else {
+                iView.showError(pwChangeEvent.getErrorMsg(), null);
             }
         });
     }
@@ -78,7 +75,7 @@ public class PasswordChangePresenter extends RxBasePresenter<IView<Object>, Pass
         Map<String, Object> map = new HashMap<>();
         map.put(ConstantUtil.PASSWORD_OLD, old);
         map.put(ConstantUtil.PASSWORD_NEW, news);
-        Router.getInstance().deal(new RouterRequest.Builder().provideName("chat")
+        Router.getInstance().deal(new RouterRequest.Builder().provideName("news")
                 .actionName("pw_change")
                 .paramMap(map).build());
     }

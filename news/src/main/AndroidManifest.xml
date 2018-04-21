@@ -15,7 +15,6 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true">
-        <activity android:name=".MainActivity" android:launchMode="singleTask"/>
         <activity android:name=".NewsContentActivity" />
         <activity android:name=".mvp.librarylogin.LibraryLoginActivity" />
         <activity android:name=".LibraryInfoActivity" />

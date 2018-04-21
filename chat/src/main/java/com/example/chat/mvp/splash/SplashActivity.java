@@ -109,8 +109,7 @@ public class SplashActivity extends BaseActivity {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(aLong -> {
                                         LogUtil.e("该用户无缓存数据，直接跳转到登录界面");
-                                        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                                        startActivity(intent);
+                                        LoginActivity.start(SplashActivity.this,null);
                                         finish();
                                 });
                 }

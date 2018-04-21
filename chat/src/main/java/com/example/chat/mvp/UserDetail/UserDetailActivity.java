@@ -100,13 +100,14 @@ public class UserDetailActivity extends SlideBaseActivity implements View.OnClic
         List<String> titleList=new ArrayList<>();
         titleList.add("公共说说");
         List<BaseFragment> fragments=new ArrayList<>();
-        fragments.add(ShareInfoFragment.instance(user.getUid(),false));
+        fragments.add(ShareInfoFragment.newInstance(user.getUid(),false));
         adapter.setTitleAndFragments(titleList,fragments);
         display.setAdapter(adapter);
         display.setCurrentItem(0);
         addDisposable(RxBusManager.getInstance().registerEvent(UserEntity.class, user -> {
             if (user.equals(UserDetailActivity.this.user)) {
-                user=UserDetailActivity.this.user;
+                UserDetailActivity.this.user=user;
+                updateUserInfo();
             }
         }));
     }
