@@ -16,6 +16,7 @@ import com.example.chat.dagger.friends.DaggerFriendsComponent;
 import com.example.chat.dagger.friends.FriendsModule;
 import com.example.chat.events.UserEvent;
 import com.example.chat.manager.UserDBManager;
+import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.NearByPeople.NearbyPeopleActivity;
 import com.example.chat.mvp.blackList.BlackListActivity;
 import com.example.chat.mvp.chat.ChatActivity;
@@ -138,6 +139,9 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
             }
         });
         presenter.registerEvent(UserEntity.class, user -> {
+            if (user.getUid().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                return;
+            }
             if (adapter != null) {
                 List<UserEntity> list = adapter.getData();
                 int size = list.size();

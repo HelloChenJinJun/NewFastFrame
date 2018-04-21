@@ -494,7 +494,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="学校"
+                android:text="级别"
                 android:textColor="@color/base_color_text_grey"
                 android:textSize="18sp"/>
             <ImageView

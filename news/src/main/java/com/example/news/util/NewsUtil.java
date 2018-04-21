@@ -160,10 +160,10 @@ public class NewsUtil {
     public static final String SL_TECH_URL = "http://slxy.cug.edu.cn/xygk1/jyjx.htm";
     public static final String SL_BASE_URL = "http://slxy.cug.edu.cn/";
     public static final String COLLEGE_TYPE_YM = "TYPE_YM";
-    public static final String YM_INDEX_URL = "http://sac.cug.edu.cn/channels/126.html";
+    public static final String YM_INDEX_URL = "http://sac.cug.edu.cn/index/xyxw.htm";
     public static final String YM_BASE_URL = "http://sac.cug.edu.cn/";
-    public static final String YM_NOTICE_URL = "http://sac.cug.edu.cn/channels/128.html";
-    public static final String YM_STUDENT_WORK_URL = "http://sac.cug.edu.cn/channels/127.html";
+    public static final String YM_NOTICE_URL = "http://sac.cug.edu.cn/index/xxgg.htm";
+    public static final String YM_STUDENT_WORK_URL = "http://sac.cug.edu.cn/index/xshd.htm";
     public static final String COLLEGE_TYPE_MY = "TYPE_MY";
     public static final String MY_INDEX_URL = "http://mkszyxy.cug.edu.cn/xyxw.htm";
     public static final String MY_NOTICE_URL = "http://mkszyxy.cug.edu.cn/tzgg.htm";
@@ -201,15 +201,7 @@ public class NewsUtil {
     public static final String PW_RESET_URL = "http://xyfw.cug.edu.cn/tp_up/sys/uacm/pwdreset/reset";
 
 
-    public static String getRealNewsUrl(String url, int totalPage, int currentNum) {
-        if (totalPage > 0) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(url.substring(0, url.lastIndexOf(".")))
-                    .append("/").append(totalPage - currentNum + 1).append(".htm");
-            return stringBuilder.toString();
-        }
-        return url;
-    }
+
 
 
     public static String getSearchLibraryUrl(String text, int page, int num) {
@@ -369,16 +361,13 @@ public class NewsUtil {
                 || url.startsWith(GG_BASE_URL)
                 || url.startsWith(HY_BASE_URL)
                 || url.startsWith(CUG_INDEX)
+                ||url.startsWith(YM_BASE_URL)
                 || url.startsWith(VOICE_BASE_URL)) {
             if (totalPage > 0) {
                 builder.append(url.substring(0, url.lastIndexOf(".")))
                         .append("/").append(totalPage - num + 1).append(".htm");
                 return builder.toString();
             }
-        } else if (url.startsWith(YM_BASE_URL)) {
-            builder.append(url.substring(0, url.lastIndexOf("."))).append("_").append(num)
-                    .append(".html");
-            return builder.toString();
         }
         return builder.toString();
     }

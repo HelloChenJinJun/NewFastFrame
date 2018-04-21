@@ -91,16 +91,32 @@ public class CourseQueryActivity extends BaseActivity<CourseQueryBean, CourseQue
             list.add("大四第二学期");
             showChooseDialog("搜索条件", list, (parent, view, position, id) -> {
                 dismissBaseDialog();
-                presenter.getQueryCourseData("2016", 3);
+                String str=BaseApplication.getAppComponent()
+                        .getSharedPreferences().getString(ConstantUtil.YEAR,null);
+                int year=Integer
+                        .parseInt(str);
+                if (position == 0) {
+                    presenter.getQueryCourseData(str, 3);
+                } else if (position == 1) {
+                    presenter.getQueryCourseData(str, 12);
+                } else if (position == 2) {
+                    presenter.getQueryCourseData(str, 3);
+                } else if (position == 3) {
+                    presenter.getQueryCourseData((year+1)+"", 12);
+                } else if (position == 4) {
+                    presenter.getQueryCourseData((year+2)+"", 3);
+                } else if (position == 5) {
+                    presenter.getQueryCourseData((year+2)+"", 12);
+                } else if (position == 6) {
+                    presenter.getQueryCourseData((year+3)+"", 3);
+                } else if (position == 7) {
+                    presenter.getQueryCourseData((year+3)+"", 12);
+                }
+
             });
         });
         setToolBar(toolBarOption);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                presenter.getQueryCourseData("2016", 3);
-            }
-        });
+        runOnUiThread(() -> presenter.getQueryCourseData("2016", 3));
     }
 
     public static void start(Activity activity) {

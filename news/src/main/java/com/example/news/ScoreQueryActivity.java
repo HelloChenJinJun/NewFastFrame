@@ -26,6 +26,9 @@ import com.example.news.event.ReLoginEvent;
 import com.example.news.mvp.score.ScoreQueryPresenter;
 import com.example.news.util.ReLoginUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.functions.Consumer;
@@ -44,6 +47,8 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
     ScoreQueryAdapter scoreQueryAdapter;
     private LoadMoreFooterView loadMoreFooterView;
     private ReLoginUtil reLoginUtil;
+    private String result;
+    private String str;
 
     @Override
     public void updateData(ScoreBean scoreBean) {
@@ -95,23 +100,53 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
         display.setOnLoadMoreListener(this);
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("分数查询");
-        setToolBar(toolBarOption);
-        presenter.registerEvent(ReLoginEvent.class, new Consumer<ReLoginEvent>() {
-            @Override
-            public void accept(ReLoginEvent reLoginEvent) throws Exception {
-                if (reLoginEvent.isSuccess() && reLoginEvent.getFrom().equals("score")) {
-                    refresh.setRefreshing(true);
-                    onRefresh();
+        toolBarOption.setTitle("课表查询");
+        toolBarOption.setRightResId(R.drawable.ic_list_blue_grey_900_24dp);
+        toolBarOption.setRightListener(v -> {
+            List<String> list = new ArrayList<>();
+            list.add("大一");
+            list.add("大二");
+            list.add("大三");
+            list.add("大四");
+            showChooseDialog("搜索条件", list, (parent, view, position, id) -> {
+                dismissBaseDialog();
+                int year=Integer
+                        .parseInt(str);
+                StringBuilder stringBuilder=new StringBuilder();
+                if (position == 0) {
+                    stringBuilder.append(year).append("-").append((year+1));
+                } else if (position == 1) {
+                    stringBuilder.append(year+1).append("-").append((year+2));
+                } else if (position == 2) {
+                    stringBuilder.append(year+2).append("-").append((year+3));
+                }else {
+                    stringBuilder.append(year+3).append("-").append((year+4));
                 }
-            }
+                result=stringBuilder.toString();
+                presenter.getScore(true, result, null);
+            });
         });
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        setToolBar(toolBarOption);
+        presenter.registerEvent(ReLoginEvent.class, reLoginEvent -> {
+            if (reLoginEvent.isSuccess() && reLoginEvent.getFrom().equals("score")) {
                 refresh.setRefreshing(true);
                 onRefresh();
             }
         });
+        str=BaseApplication.getAppComponent()
+                .getSharedPreferences().getString(ConstantUtil.YEAR,null);
+        int year=Integer
+                .parseInt(str);
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append(year).append("-").append((year+1));
+        result=stringBuilder.toString();
+        runOnUiThread(() -> presenter.getScore(true, result, null));
+    }
+
+
+    @Override
+    public void showLoading(String loadMessage) {
+        refresh.setRefreshing(true);
     }
 
     public static void start(Activity activity) {
@@ -121,7 +156,7 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
 
     @Override
     public void onRefresh() {
-        presenter.getScore(true, "2016-2017", null);
+        presenter.getScore(true, result, null);
     }
 
 

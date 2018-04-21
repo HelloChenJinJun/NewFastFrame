@@ -184,7 +184,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
             map.put(ConstantUtil.PASSWORD,user.getPw());
             map.put(ConstantUtil.FROM, from);
             Router.getInstance().deal(new RouterRequest.Builder()
-                    .paramMap(map).context(this).provideName("news")
+                    .paramMap(map).context(this).provideName("app")
                     .actionName("person").isFinish(true).build());
         }else {
             HomeActivity.start(this,isFirstLogin);

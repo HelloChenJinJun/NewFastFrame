@@ -37,7 +37,7 @@ import io.reactivex.functions.Consumer;
  * QQ:         1981367757
  */
 
-public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, ConsumeQueryPresenter> implements OnLoadMoreListener {
+public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, ConsumeQueryPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
     private SwipeRefreshLayout refresh;
     private SuperRecyclerView display;
     @Inject
@@ -78,6 +78,7 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
     protected void initView() {
         refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_activity_consume_query_refresh);
         display = (SuperRecyclerView) findViewById(R.id.srcv_activity_consume_query_display);
+        refresh.setOnRefreshListener(this);
 
     }
 
@@ -102,12 +103,7 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
                 }
             }
         });
-        display.post(new Runnable() {
-            @Override
-            public void run() {
-                presenter.getQueryData(true);
-            }
-        });
+        display.post(() -> presenter.getQueryData(true));
     }
 
 
@@ -179,5 +175,11 @@ public class ConsumeQueryActivity extends BaseActivity<ConsumeQueryBean, Consume
     public static void start(Activity activity) {
         Intent intent = new Intent(activity, ConsumeQueryActivity.class);
         activity.startActivity(intent);
+    }
+
+    @Override
+    public void onRefresh() {
+        presenter.getQueryData(true);
+
     }
 }

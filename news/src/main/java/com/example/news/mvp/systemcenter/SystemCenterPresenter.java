@@ -287,12 +287,7 @@ public class SystemCenterPresenter extends RxBasePresenter<IView<Object>, System
 
                     @Override
                     public void onError(Throwable e) {
-                        iView.showError("登录失败", new EmptyLayout.OnRetryListener() {
-                            @Override
-                            public void onRetry() {
-                                cardLogin(verifyCode);
-                            }
-                        });
+                        iView.showError("登录失败", () -> cardLogin(verifyCode));
                     }
 
                     @Override

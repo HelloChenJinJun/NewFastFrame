@@ -126,14 +126,11 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
                         public void onClick(View view) {
                             mBaseDialog.cancel();
                         }
-                    }).setRightButton("确定", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (TextUtils.isEmpty(input.getText().toString().trim())) {
-                                ToastUtils.showShortToast("验证码不能为空");
-                            } else {
-                                presenter.libraryLogin(input.getText().toString().trim());
-                            }
+                    }).setRightButton("确定", view12 -> {
+                        if (TextUtils.isEmpty(input.getText().toString().trim())) {
+                            ToastUtils.showShortToast("验证码不能为空");
+                        } else {
+                            presenter.libraryLogin(input.getText().toString().trim());
                         }
                     }).show();
                     if (BaseApplication.getAppComponent()
@@ -148,14 +145,11 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
                         public void onClick(View view) {
                             mBaseDialog.cancel();
                         }
-                    }).setRightButton("确定", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (TextUtils.isEmpty(input.getText().toString().trim())) {
-                                ToastUtils.showShortToast("验证码不能为空");
-                            } else {
-                                presenter.cardLogin(input.getText().toString().trim());
-                            }
+                    }).setRightButton("确定", view1 -> {
+                        if (TextUtils.isEmpty(input.getText().toString().trim())) {
+                            ToastUtils.showShortToast("验证码不能为空");
+                        } else {
+                            presenter.cardLogin(input.getText().toString().trim());
                         }
                     }).show();
                     if (BaseApplication.getAppComponent()

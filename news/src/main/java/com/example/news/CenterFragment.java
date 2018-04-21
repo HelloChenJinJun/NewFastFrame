@@ -75,17 +75,7 @@ public class CenterFragment extends BaseFragment {
                     ARouter.getInstance()
                             .build("/live/main").navigation();
                 } else if (position == 2) {
-                    if (BaseApplication.getAppComponent().getSharedPreferences()
-                            .getBoolean(ConstantUtil.LOGIN_STATUS, false)) {
-                        ToastUtils.showShortToast("");
                         SystemCenterActivity.start(getActivity());
-                    } else {
-                        ToastUtils.showShortToast("亲！请登录吧!");
-                        Map<String, Object> map = new HashMap<>();
-                        map.put(ConstantUtil.FROM, ConstantUtil.FROM_MAIN);
-                        Router.getInstance().deal(new RouterRequest.Builder().context(getActivity())
-                                .provideName("chat").actionName("login").paramMap(map).build());
-                    }
                 }
             }
         });

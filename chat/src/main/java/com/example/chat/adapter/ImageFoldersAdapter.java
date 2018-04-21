@@ -44,7 +44,8 @@ public class ImageFoldersAdapter extends BaseRecyclerAdapter<ImageFolder, BaseWr
                 }
                 holder.setText(R.id.tv_image_folder_name, data.getName())
                         .setImageUrl(R.id.iv_image_folder_cover, data.getDisplay().getPath())
-                        .setText(R.id.tv_image_folder_count, data.getAllImages().size() + "");
+                        .setText(R.id.tv_image_folder_count, data.getAllImages().size() + "")
+                .setOnItemClickListener();
 
         }
 }

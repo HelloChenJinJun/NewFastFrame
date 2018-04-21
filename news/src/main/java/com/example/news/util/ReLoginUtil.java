@@ -80,6 +80,8 @@ public class ReLoginUtil {
                     @Override
                     public void onNext(ResetPwResult resetPwResult) {
                         PwChangeEvent pwChangeEvent=new PwChangeEvent();
+                        pwChangeEvent.setOld(old);
+                        pwChangeEvent.setNews(news);
                         pwChangeEvent.setSuccess(resetPwResult.isSuccess());
                         pwChangeEvent.setErrorMsg(resetPwResult.isSuccess()?null:resetPwResult.getMessage());
                         RxBusManager.getInstance().post(pwChangeEvent);

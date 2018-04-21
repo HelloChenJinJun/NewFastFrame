@@ -2,8 +2,8 @@
 <resources>
     <!--#0398db-->
     <color name="colorPrimary">@color/white</color>
-    <color name="colorPrimaryDark">@color/white</color>
-    <color name="colorAccent">#ffffffff</color>
+    <color name="colorPrimaryDark">@color/transparent</color>
+    <color name="colorAccent">@color/white</color>
 
 
     <color name="font66">#666666</color>

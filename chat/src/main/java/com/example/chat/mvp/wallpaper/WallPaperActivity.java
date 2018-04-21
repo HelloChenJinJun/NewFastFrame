@@ -131,36 +131,21 @@ public class WallPaperActivity extends SlideBaseActivity {
         toolBarOption.setAvatar(UserManager.getInstance().getCurrentUser().getAvatar());
         toolBarOption.setNeedNavigation(true);
         toolBarOption.setRightListener(v -> {
-            if (from.equals(Constant.TITLE_WALLPAPER)) {
-                if (selectedImage != null && !selectedImage.equals(UserManager.getInstance().getCurrentUser()
-                        .getTitleWallPaper())) {
-                    UserManager.getInstance().updateUserInfo(Constant.TITLE_WALLPAPER, selectedImage, new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                RxBusManager.getInstance().post(UserManager.getInstance().cover(UserManager.getInstance().getCurrentUser()));
-                            } else {
-                                LogUtil.e("上传背景图片到服务器上失败" + e.toString());
-                            }
+            if (selectedImage != null && !selectedImage.equals(UserManager.getInstance().getCurrentUser()
+                    .getTitleWallPaper())) {
+                UserManager.getInstance().updateUserInfo(from, selectedImage, new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            RxBusManager.getInstance().post(UserManager.getInstance().cover(UserManager.getInstance().getCurrentUser()));
+                        } else {
+                            LogUtil.e("上传背景图片到服务器上失败" + e.toString());
                         }
-                    });
-                }
-            } else {
-                if (selectedImage != null && !selectedImage.equals(UserManager.getInstance().getCurrentUser().getWallPaper())) {
-                    UserManager.getInstance().updateUserInfo(Constant.WALLPAPER, selectedImage, new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                RxBusManager.getInstance().post(UserManager.getInstance().cover(UserManager.getInstance().getCurrentUser()));
-                            } else {
-                                LogUtil.e("上传背景图片到服务器上失败" + e.toString());
-                            }
-                        }
-
-
-                    });
-                }
+                        finish();
+                    }
+                });
             }
+
         });
         setToolBar(toolBarOption);
     }
@@ -172,8 +157,8 @@ public class WallPaperActivity extends SlideBaseActivity {
     }
 
     public static void start(Activity activity, String from) {
-        Intent intent=new Intent(activity,WallPaperActivity.class);
-        intent.putExtra(Constant.FROM,from);
+        Intent intent = new Intent(activity, WallPaperActivity.class);
+        intent.putExtra(Constant.FROM, from);
         activity.startActivity(intent);
     }
 }

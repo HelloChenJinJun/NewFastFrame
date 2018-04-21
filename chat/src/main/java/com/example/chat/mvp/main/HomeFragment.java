@@ -40,6 +40,7 @@ import com.example.chat.events.RecentEvent;
 import com.example.chat.events.RefreshMenuEvent;
 import com.example.chat.listener.OnDragDeltaChangeListener;
 import com.example.chat.manager.MsgManager;
+import com.example.chat.manager.NewLocationManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.main.friends.FriendsFragment;
@@ -288,10 +289,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         Glide.with(this).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL).into(icon_1);
         ToastUtils.showShortToast("保存个人信息成功");
         Glide.with(this).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL).into(avatar);
-    }
-
-
-    public void updateMenuBg() {
         Glide.with(this).load(UserManager.getInstance().getCurrentUser().getWallPaper()).into(new SimpleTarget<GlideDrawable>() {
             @Override
             public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
@@ -299,6 +296,8 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
             }
         });
     }
+
+
 
 
     private void bindPollService(int second) {
@@ -371,6 +370,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
 
     private void startSearchLiveWeather(String city) {
         if (city == null) {
+            NewLocationManager.getInstance().startLocation();
             return;
         }
         mWeatherInfoBean.setCity(city);
@@ -600,9 +600,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
                         weatherCity.setText(mWeatherInfoBean.getCity());
                         weatherTemperature.setText(mWeatherInfoBean.getTemperature());
                     }
-                    break;
-                case Constant.REQUEST_CODE_SELECT_WALLPAPER:
-                    updateMenuBg();
                     break;
             }
         }
