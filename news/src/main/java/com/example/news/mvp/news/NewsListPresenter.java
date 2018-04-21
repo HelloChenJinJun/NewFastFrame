@@ -637,7 +637,14 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             }
             newListBean.setNewsItemList(list);
         } else if (url.startsWith(NewsUtil.YM_BASE_URL)) {
-            Element page = document.getElementById("fanye206626");
+            Element page = null;
+            if (url.equals(NewsUtil.YM_INDEX_URL)) {
+                page = document.getElementById("fanye206626");
+            } else if (url.equals(NewsUtil.YM_NOTICE_URL)) {
+                page = document.getElementById("fanye206612");
+            }else {
+                page = document.getElementById("fanye206617");
+            }
             String text = page.text();
             if (text != null) {
                 String num = text.substring(text.lastIndexOf("/") + 1, text.length()).trim();
@@ -659,13 +666,20 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
                     NewListBean.NewsItem bean = new NewListBean.NewsItem();
                     if (img != null) {
                         bean.setThumb(NewsUtil.getRealUrl(img.attr("src"),NewsUtil.YM_BASE_URL));
-                        bean.setFrom("艺媒学院");
                     }
-                    Element body=item.select(".media-body").first();
-                    Element a=body.getElementsByTag("a").first();
-                    bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"),NewsUtil.YM_BASE_URL));
-                    bean.setTitle(a.text());
-                    bean.setTime(body.text().substring(0, body.text().indexOf(bean.getTitle())));
+                    bean.setFrom("艺媒学院");
+                    if (url.equals(NewsUtil.YM_INDEX_URL)||url.equals(NewsUtil.YM_NOTICE_URL)) {
+                        Element body=item.select(".media-body").first();
+                        Element a=body.getElementsByTag("a").first();
+                        bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"),NewsUtil.YM_BASE_URL));
+                        bean.setTitle(a.text());
+                        bean.setTime(body.text().substring(0, body.text().indexOf(bean.getTitle())));
+                    }else {
+                        Element a=item.getElementsByTag("a").first();
+                        bean.setContentUrl(NewsUtil.getRealUrl(a.attr("href"),NewsUtil.YM_BASE_URL));
+                        bean.setTitle(a.text());
+                    }
+
                     list.add(bean);
                 }
             }
