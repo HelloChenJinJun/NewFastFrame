@@ -100,7 +100,6 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
         display.setOnLoadMoreListener(this);
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("分数查询");
-        toolBarOption.setTitle("课表查询");
         toolBarOption.setRightResId(R.drawable.ic_list_blue_grey_900_24dp);
         toolBarOption.setRightListener(v -> {
             List<String> list = new ArrayList<>();
@@ -218,6 +217,7 @@ public class ScoreQueryActivity extends BaseActivity<ScoreBean, ScoreQueryPresen
 
     @Override
     public void loadMore() {
-        presenter.getScore(false, "2016-2017", null);
+        display.setLoadMoreStatus(LoadMoreFooterView.Status.THE_END);
+//        presenter.getScore(false, "2016-2017", null);
     }
 }

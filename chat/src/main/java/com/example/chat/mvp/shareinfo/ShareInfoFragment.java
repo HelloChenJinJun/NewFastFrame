@@ -131,7 +131,6 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         display.setOnLoadMoreListener(this);
         mMenu.attachToRecyclerView(display);
         display.setAdapter(shareInfoAdapter);
-
         display.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
             public void onChildViewAttachedToWindow(View view) {

@@ -1,18 +1,21 @@
 package com.example.music;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.login.LoginActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.utils.ConstantUtil;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 
 /**
@@ -23,7 +26,6 @@ import com.example.commonlibrary.utils.ConstantUtil;
  */
 
 public class SplashActivity extends AppCompatActivity implements Animation.AnimationListener {
-    private ImageView display;
     private TextView time;
     private TextView title;
 
@@ -32,7 +34,6 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_main);
-        display = (ImageView) findViewById(R.id.iv_activity_splash_main_display);
         time = (TextView) findViewById(R.id.tv_activity_splash_main_time);
         title = (TextView) findViewById(R.id.tv_activity_splash_main_title);
         Animation animation = AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_top_in);
@@ -42,23 +43,36 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
 
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Flowable.intervalRange(0, 3, 0, 1, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(aLong -> time.setText((3 - aLong)+""))
+                .doOnComplete(() -> {
+                    //倒计时完毕置为可点击状态
+                    if (BaseApplication.getAppComponent().getSharedPreferences()
+                            .getBoolean(ConstantUtil.FIRST_STATUS,true)) {
+                        GuideActivity.start(this);
+                    }else {
+                        if (UserManager.getInstance().getCurrentUser() != null) {
+                            MainActivity.start(this);
+                        }else {
+                            LoginActivity.start(this,ConstantUtil.FROM_LOGIN);
+                        }
+                    }
+                    finish();
+                })
+                .subscribe();
+    }
+
+    @Override
     public void onAnimationStart(Animation animation) {
 
     }
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        if (BaseApplication.getAppComponent().getSharedPreferences()
-                .getBoolean(ConstantUtil.FIRST_STATUS,true)) {
-            GuideActivity.start(this);
-        }else {
-            if (UserManager.getInstance().getCurrentUser() != null) {
-                MainActivity.start(this);
-            }else {
-               LoginActivity.start(this,ConstantUtil.FROM_LOGIN);
-            }
-        }
-        finish();
+
     }
 
     @Override

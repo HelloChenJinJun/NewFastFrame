@@ -38,7 +38,6 @@
                 android:id="@+id/tv_item_activity_chat_receive_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
                 android:text="姓名"
                 android:textSize="16sp"
                 />

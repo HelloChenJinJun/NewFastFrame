@@ -41,7 +41,6 @@ public class CourseQueryActivity extends BaseActivity<CourseQueryBean, CourseQue
     CourseQueryAdapter courseQueryAdapter;
     private ReLoginUtil reLoginUtil;
 
-
     @Override
     public void updateData(CourseQueryBean courseQueryBean) {
         if (courseQueryBean != null && courseQueryBean.getKbList() != null) {

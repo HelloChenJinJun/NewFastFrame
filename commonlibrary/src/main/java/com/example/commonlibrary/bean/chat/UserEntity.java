@@ -188,11 +188,11 @@ public class UserEntity {
         this.titlePaper = titlePaper;
     }
 
-    public boolean isSex() {
+    public Boolean isSex() {
         return isSex;
     }
 
-    public void setSex(boolean sex) {
+    public void setSex(Boolean sex) {
         isSex = sex;
     }
 

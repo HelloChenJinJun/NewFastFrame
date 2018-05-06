@@ -197,7 +197,7 @@ public class User extends BmobUser implements Comparable<User> {
         /**
          * 性别
          */
-        private boolean sex;
+        private Boolean sex;
 
         public String getBirthDay() {
                 return birthDay;

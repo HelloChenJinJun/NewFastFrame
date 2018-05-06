@@ -1,5 +1,6 @@
 package com.example.chat.adapter;
 
+import android.text.SpannableStringBuilder;
 import android.widget.TextView;
 
 import com.example.chat.R;
@@ -84,7 +85,7 @@ public class RecentListAdapter extends BaseSwipeRecyclerAdapter<RecentMessageEnt
         }
 
     private CharSequence getContent(boolean isFailed, CharSequence content) {
-            StringBuilder stringBuilder=new StringBuilder();
+            SpannableStringBuilder stringBuilder=new SpannableStringBuilder();
         if (isFailed) {
             stringBuilder.append("[失败]");
         }

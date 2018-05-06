@@ -27,7 +27,7 @@ public class ChatPresenter extends AppBasePresenter<IView<BaseMessage>,ChatModel
 
 
     public void  sendChatMessage(ChatMessage chatMessage){
-        MsgManager.getInstance().sendChatMessage(chatMessage, new OnCreateChatMessageListener() {
+        addSubscription(MsgManager.getInstance().sendChatMessage(chatMessage, new OnCreateChatMessageListener() {
             @Override
             public void onSuccess(BaseMessage baseMessage) {
                 baseMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
@@ -40,14 +40,14 @@ public class ChatPresenter extends AppBasePresenter<IView<BaseMessage>,ChatModel
 
             @Override
             public void onFailed(String errorMsg, BaseMessage baseMessage) {
-                    baseMessage.setSendStatus(Constant.SEND_STATUS_FAILED);
+                baseMessage.setSendStatus(Constant.SEND_STATUS_FAILED);
                 UserDBManager.getInstance()
                         .addOrUpdateChatMessage((ChatMessage) baseMessage);
                 UserDBManager.getInstance().addOrUpdateRecentMessage(baseMessage);
                 RxBusManager.getInstance().post(new RecentEvent(((ChatMessage) baseMessage).getToId(),RecentEvent.ACTION_ADD));
                 iView.updateData(baseMessage);
             }
-        });
+        }));
 
     }
 

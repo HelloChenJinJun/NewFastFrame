@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawablePadding="10dp"
-                android:drawableTop="@drawable/ic_video"
+                android:drawableTop="@drawable/ic_videocam_blue_grey_900_24dp"
                 android:gravity="center"
                 android:text="视频"/>
 

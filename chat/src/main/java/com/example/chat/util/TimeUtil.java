@@ -154,7 +154,7 @@ public class TimeUtil {
                     result = "昨天";
                 } else if (time == 2) {
                     result = "前天";
-                } else if (time>29){
+                } else if (time<29){
                     result = time + "天前";
                 }else {
                     time=(int) (currentDletaTime /ONE_M);

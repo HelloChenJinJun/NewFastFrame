@@ -46,7 +46,7 @@ public class BaseShareInfoViewHolder extends BaseWrappedViewHolder {
                 .setText(R.id.tv_item_fragment_share_info_main_text
                         , user.getName())
                 .setImageResource(R.id.iv_item_fragment_share_info_sex, user
-                        .isSex() ? R.drawable.ic_sex_female : R.drawable.ic_sex_male)
+                        .isSex() ? R.drawable.ic_sex_male : R.drawable.ic_sex_female)
                 .setText(R.id.tv_item_fragment_share_info_sub_text, getText(data))
                 .setText(R.id.tv_item_fragment_share_info_share, data
                         .getShareCount()==0? "转发" :data

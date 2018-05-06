@@ -108,7 +108,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     private ChatMessageAdapter mAdapter;
     private List<FaceText> emotionFaceList;
     private VoiceRecordManager mVoiceRecordManager;
-    private String uid=null;
+    private String uid = null;
     private int[] voiceImageId;
     private UserEntity userEntity;
     private String from;
@@ -220,43 +220,44 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
             public void onItemClick(int position, View view) {
 
             }
+
             public void onItemChildClick(int position, View view, int id) {
-                BaseMessage baseMessage=mAdapter.getData(position);
+                BaseMessage baseMessage = mAdapter.getData(position);
                 if (id == R.id.iv_item_activity_chat_send_retry
-                       ) {
+                        ) {
                     reSendMessage(baseMessage);
-                }else if (id==R.id.iv_item_activity_chat_send_avatar){
+                } else if (id == R.id.iv_item_activity_chat_send_avatar) {
                     UserInfoActivity.start(ChatActivity.this, UserManager.getInstance()
-                    .getCurrentUserObjectId());
+                            .getCurrentUserObjectId());
                 } else if (id == R.id.iv_item_activity_chat_receive_avatar) {
-                    UserInfoActivity.start(ChatActivity.this,baseMessage.getBelongId());
+                    UserInfoActivity.start(ChatActivity.this, baseMessage.getBelongId());
                 } else if (id == R.id.rl_chat_send_location_item_content
                         || id == R.id.rl_chat_receive_location_item_content) {
-                    MessageContent messageContent=gson.fromJson(baseMessage.getContent(),MessageContent.class);
-                    MapActivity.start(ChatActivity.this,true
-                            ,messageContent.getLongitude()
-                            ,messageContent.getLatitude()
-                            ,messageContent.getAddress(),Constant.REQUEST_MAP);
-                }else if (id==R.id.iv_item_activity_chat_send_image
-                        ||id==R.id.iv_item_activity_chat_receive_image){
-                    ArrayList<ImageItem>  list=new ArrayList<>();
-                    int temp=0;
-                    int currentPosition=0;
+                    MessageContent messageContent = gson.fromJson(baseMessage.getContent(), MessageContent.class);
+                    MapActivity.start(ChatActivity.this, true
+                            , messageContent.getLongitude()
+                            , messageContent.getLatitude()
+                            , messageContent.getAddress(), Constant.REQUEST_MAP);
+                } else if (id == R.id.iv_item_activity_chat_send_image
+                        || id == R.id.iv_item_activity_chat_receive_image) {
+                    ArrayList<ImageItem> list = new ArrayList<>();
+                    int temp = 0;
+                    int currentPosition = 0;
                     for (int i = 0; i < mAdapter.getData().size(); i++) {
-                        BaseMessage item=mAdapter.getData(i);
-                        if (item.getContentType().equals(Constant.TAG_MSG_TYPE_IMAGE)){
-                            MessageContent messageContent=gson.fromJson(item.getContent(),MessageContent
+                        BaseMessage item = mAdapter.getData(i);
+                        if (item.getContentType().equals(Constant.TAG_MSG_TYPE_IMAGE)) {
+                            MessageContent messageContent = gson.fromJson(item.getContent(), MessageContent
                                     .class);
-                            if (item.equals(baseMessage)){
-                                currentPosition=temp;
+                            if (item.equals(baseMessage)) {
+                                currentPosition = temp;
                             }
-                            ImageItem imageItem=new ImageItem();
+                            ImageItem imageItem = new ImageItem();
                             imageItem.setPath(messageContent.getUrlList().get(0));
                             list.add(imageItem);
                             temp++;
                         }
                     }
-                    PhotoPreViewActivity.start(ChatActivity.this,currentPosition,list,false);
+                    PhotoPreViewActivity.start(ChatActivity.this, currentPosition, list, false);
                 }
             }
         });
@@ -297,9 +298,9 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     private void reSendMessage(BaseMessage data) {
         data.setSendStatus(Constant.SEND_STATUS_SENDING);
         mAdapter.addData(data);
-        if (data instanceof ChatMessage){
+        if (data instanceof ChatMessage) {
             presenter.sendChatMessage(((ChatMessage) data));
-        }else {
+        } else {
             presenter.sendGroupChatMessage(((GroupChatMessage) data));
         }
     }
@@ -328,9 +329,9 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                 for (BaseMessage message :
                         mAdapter.getData()) {
                     if (message.getSendStatus().equals(Constant.SEND_STATUS_FAILED)
-                            &&message.getBelongId().equals(UserManager.getInstance()
-                    .getCurrentUserObjectId())) {
-                            reSendMessage(message);
+                            && message.getBelongId().equals(UserManager.getInstance()
+                            .getCurrentUserObjectId())) {
+                        reSendMessage(message);
                     }
                 }
             }
@@ -378,7 +379,6 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     }
 
 
-
     private void onProcessGroupChatMessage(GroupChatMessage message) {
         if (message.getGroupId().equals(groupId)) {
             UserDBManager.getInstance()
@@ -405,7 +405,15 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                     break;
                 case ChatMessage.MESSAGE_TYPE_READED:
 //                    更新状态
-                    mAdapter.addData(chatMessage);
+                    int size=mAdapter.getData().size();
+                    for (int i = 0; i < size; i++) {
+                        BaseMessage item=mAdapter.getData(i);
+                        if (chatMessage.equals(item)) {
+                            item.setReadStatus(Constant.READ_STATUS_READED);
+                            mAdapter.notifyItemChanged(mAdapter.getItemUpCount()+i);
+                            break;
+                        }
+                    }
                     break;
             }
         }
@@ -437,13 +445,13 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     private void refreshData() {
         if (from.equals(Constant.TYPE_PERSON)) {
             if (UserDBManager.getInstance().updateMessageReadStatusForUser(userEntity.getUid(), Constant.READ_STATUS_READED)) {
-                RxBusManager.getInstance().post(new RecentEvent(uid,RecentEvent.ACTION_ADD));
+                RxBusManager.getInstance().post(new RecentEvent(uid, RecentEvent.ACTION_ADD));
                 RxBusManager.getInstance().post(new RefreshMenuEvent(0));
             }
             mAdapter.refreshData(UserDBManager.getInstance().getAllChatMessageById(uid, 0L));
         } else {
             if (UserDBManager.getInstance().updateGroupChatReadStatus(groupId, Constant.READ_STATUS_READED)) {
-                RxBusManager.getInstance().post(new RecentEvent(groupId,RecentEvent.ACTION_ADD));
+                RxBusManager.getInstance().post(new RecentEvent(groupId, RecentEvent.ACTION_ADD));
                 RxBusManager.getInstance().post(new RefreshMenuEvent(0));
             }
             mAdapter.refreshData(UserDBManager.getInstance().getAllGroupChatMessageById(groupId, 0L));
@@ -477,14 +485,14 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     private View getGridView(int i) {
         View emotionView = LayoutInflater.from(this).inflate(R.layout.view_activity_chat_emotion, null);
         SuperRecyclerView superRecyclerView = emotionView.findViewById(R.id.srcv_view_activity_chat_emotion_display);
-        superRecyclerView.setLayoutManager(new WrappedGridLayoutManager(this,7));
+        superRecyclerView.setLayoutManager(new WrappedGridLayoutManager(this, 7));
         EmotionViewAdapter emotionViewAdapter = new EmotionViewAdapter();
         superRecyclerView.setAdapter(emotionViewAdapter);
         emotionViewAdapter.addData(i == 0 ? emotionFaceList.subList(0, 21) : emotionFaceList.subList(21, emotionFaceList.size()));
         emotionViewAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                FaceText faceText= emotionViewAdapter.getData(position);
+                FaceText faceText = emotionViewAdapter.getData(position);
                 String content = faceText.getText();
                 if (input != null) {
                     int startIndex = input.getSelectionStart();
@@ -521,12 +529,12 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
 //                                这里做一个机制，防止错误重复发多次语音
                     speak.setPressed(false);
                     speak.setClickable(false);
-                    MessageContent messageContent=new MessageContent();
-                    List<String> urlList=new ArrayList<>();
+                    MessageContent messageContent = new MessageContent();
+                    List<String> urlList = new ArrayList<>();
                     urlList.add(localVoicePath);
                     messageContent.setUrlList(urlList);
                     messageContent.setVoiceTime(time);
-                    sendMessage(messageContent,Constant.TAG_MSG_TYPE_VOICE);
+                    sendMessage(messageContent, Constant.TAG_MSG_TYPE_VOICE);
                     Flowable.timer(1, TimeUnit.SECONDS)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(aLong -> speak.setClickable(true));
@@ -534,7 +542,6 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
             }
         });
     }
-
 
 
     /**
@@ -645,15 +652,15 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                 input.setText("");
                 return;
             }
-            MessageContent messageContent=new MessageContent();
+            MessageContent messageContent = new MessageContent();
             messageContent.setContent(input.getText().toString().trim());
-            sendMessage(messageContent,Constant.TAG_MSG_TYPE_TEXT);
+            sendMessage(messageContent, Constant.TAG_MSG_TYPE_TEXT);
         } else if (i == R.id.tv_chat_bottom_picture) {
-            PhotoSelectActivity.start(this,null,true,false,null);
+            PhotoSelectActivity.start(this, null, true, false, null);
         } else if (i == R.id.tv_chat_bottom_location) {
-            MapActivity.start(this,false,null,null,null,Constant.REQUEST_MAP);
-        }else if (i==R.id.tv_chat_bottom_video){
-            videoPath=SystemUtil.recorderVideo(this,SystemUtil.REQUEST_CODE_VIDEO_RECORDER);
+            MapActivity.start(this, false, null, null, null, Constant.REQUEST_MAP);
+        } else if (i == R.id.tv_chat_bottom_video) {
+            videoPath = SystemUtil.recorderVideo(this, SystemUtil.REQUEST_CODE_VIDEO_RECORDER);
         }
     }
 
@@ -664,64 +671,64 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
             switch (requestCode) {
                 case ConstantUtil.REQUEST_CODE_ONE_PHOTO:
                     if (data != null) {
-                        String path=data.getStringExtra(ConstantUtil.PATH);
-                        MessageContent messageContent=new MessageContent();
-                        List<String>  urlList=new ArrayList<>();
+                        String path = data.getStringExtra(ConstantUtil.PATH);
+                        MessageContent messageContent = new MessageContent();
+                        List<String> urlList = new ArrayList<>();
                         urlList.add(path);
                         messageContent.setUrlList(urlList);
-                        sendMessage(messageContent,Constant.TAG_MSG_TYPE_IMAGE);
+                        sendMessage(messageContent, Constant.TAG_MSG_TYPE_IMAGE);
                     }
                     break;
-                    case SystemUtil.REQUEST_CODE_VIDEO_RECORDER:
-                        Bitmap bitmap = SystemUtil.getVideoThumbnail(videoPath, DensityUtil.getScreenWidth(this), DensityUtil.getScreenHeight(this)
-                                , MediaStore.Images.Thumbnails.MINI_KIND);
-                        String thumbImage = SystemUtil.bitmapToFile(bitmap);
-                        MessageContent messageContent=new MessageContent();
-                        List<String>  urlList=new ArrayList<>();
-                        urlList.add(thumbImage);
-                        urlList.add(videoPath);
-                        messageContent.setUrlList(urlList);
-                        sendMessage(messageContent,Constant.TAG_MSG_TYPE_VIDEO);
-                        break;
+                case SystemUtil.REQUEST_CODE_VIDEO_RECORDER:
+                    Bitmap bitmap = SystemUtil.getVideoThumbnail(videoPath, DensityUtil.getScreenWidth(this), DensityUtil.getScreenHeight(this)
+                            , MediaStore.Images.Thumbnails.MINI_KIND);
+                    String thumbImage = SystemUtil.bitmapToFile(bitmap);
+                    MessageContent messageContent = new MessageContent();
+                    List<String> urlList = new ArrayList<>();
+                    urlList.add(thumbImage);
+                    urlList.add(videoPath);
+                    messageContent.setUrlList(urlList);
+                    sendMessage(messageContent, Constant.TAG_MSG_TYPE_VIDEO);
+                    break;
                 case Constant.REQUEST_MAP:
                     if (data != null) {
                         String localPath = data.getStringExtra(ConstantUtil.PATH);
                         String longitude = data.getStringExtra(Constant.LONGITUDE);
                         String latitude = data.getStringExtra(Constant.LATITUDE);
                         String address = data.getStringExtra(Constant.ADDRESS);
-                        MessageContent messageContent1=new MessageContent();
-                        List<String>  urlList1=new ArrayList<>();
+                        MessageContent messageContent1 = new MessageContent();
+                        List<String> urlList1 = new ArrayList<>();
                         urlList1.add(localPath);
                         messageContent1.setUrlList(urlList1);
                         messageContent1.setLongitude(longitude);
                         messageContent1.setLatitude(latitude);
                         messageContent1.setAddress(address);
-                        sendMessage(messageContent1,Constant.TAG_MSG_TYPE_LOCATION);
+                        sendMessage(messageContent1, Constant.TAG_MSG_TYPE_LOCATION);
                     }
                     break;
             }
         }
     }
 
-    private Gson gson= BaseApplication.getAppComponent().getGson();
+    private Gson gson = BaseApplication.getAppComponent().getGson();
 
     private void sendMessage(MessageContent messageContent, Integer contentType) {
         BaseMessage baseMessage;
         if (from.equals(Constant.TYPE_PERSON)) {
-            baseMessage=MsgManager.getInstance()
-                    .createChatMessage(gson.toJson(messageContent),uid,contentType);
+            baseMessage = MsgManager.getInstance()
+                    .createChatMessage(gson.toJson(messageContent), uid, contentType);
             baseMessage.setSendStatus(Constant.SEND_STATUS_SENDING);
             mAdapter.addData(baseMessage);
             presenter.sendChatMessage(((ChatMessage) baseMessage));
-        }else {
-            baseMessage=MsgManager.getInstance()
-                    .createGroupChatMessage(gson.toJson(messageContent),groupId,contentType);
+        } else {
+            baseMessage = MsgManager.getInstance()
+                    .createGroupChatMessage(gson.toJson(messageContent), groupId, contentType);
             baseMessage.setSendStatus(Constant.SEND_STATUS_SENDING);
             mAdapter.addData(baseMessage);
             presenter.sendGroupChatMessage(((GroupChatMessage) baseMessage));
         }
         input.setText("");
-        CommonUtils.hideSoftInput(this,input);
+        CommonUtils.hideSoftInput(this, input);
     }
 
 
@@ -782,12 +789,12 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                 } else {
                     int recordTime = mVoiceRecordManager.stopRecord();
                     if (recordTime > 1) {
-                        MessageContent messageContent=new MessageContent();
-                        List<String> urlList=new ArrayList<>();
+                        MessageContent messageContent = new MessageContent();
+                        List<String> urlList = new ArrayList<>();
                         urlList.add(mVoiceRecordManager.getVoiceFilePath());
                         messageContent.setUrlList(urlList);
                         messageContent.setVoiceTime(recordTime);
-                        sendMessage(messageContent,Constant.TAG_MSG_TYPE_VOICE);
+                        sendMessage(messageContent, Constant.TAG_MSG_TYPE_VOICE);
                     } else {
                         ToastUtils.showShortToast("录制时间过短");
                     }
@@ -796,14 +803,6 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         }
         return false;
     }
-
-
-
-
-
-
-
-
 
 
     @Override

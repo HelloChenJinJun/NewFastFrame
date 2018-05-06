@@ -40,7 +40,7 @@
                 android:id="@+id/iv_activity_edit_share_info_video"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/ic_video" />
+                android:src="@drawable/ic_videocam_blue_grey_900_24dp" />
         </RelativeLayout>
     </LinearLayout>
 

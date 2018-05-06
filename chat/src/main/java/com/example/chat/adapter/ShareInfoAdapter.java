@@ -50,7 +50,6 @@ public class ShareInfoAdapter extends BaseMultipleRecyclerAdapter<PublicPostBean
         }
         return super.onCreateViewHolder(parent, viewType);
     }
-
     @Override
     protected void convert(BaseShareInfoViewHolder holder, PublicPostBean data) {
         holder.bindAdapter(this);
