@@ -121,7 +121,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/rl_fragment_person_notify"
+        android:id="@+id/rl_fragment_person_comment"
         android:layout_marginTop="10dp"
         android:background="@color/white"
         android:padding="10dp"
@@ -132,10 +132,53 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_news_settings"
             android:textSize="16sp"
+            android:text="留言通知"
+            android:textColor="@color/black"
+            android:drawablePadding="10dp"
+            android:gravity="center"/>
+
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/rl_fragment_person_notify"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_fragment_person_system_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_news_settings"
+            android:textSize="16sp"
             android:text="系统通知"
             android:textColor="@color/black"
             android:drawablePadding="10dp"
             android:gravity="center"/>
+
+
+        <TextView
+            android:id="@+id/tv_fragment_person_system_notify_count"
+            android:layout_toRightOf="@+id/tv_fragment_person_system_notify"
+            android:background="@drawable/custom_drawable_red_point"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:text="10"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            />
 
 
         <ImageView

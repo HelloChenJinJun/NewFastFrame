@@ -12,6 +12,8 @@ import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.dagger.notify.DaggerSystemNotifyComponent;
 import com.example.chat.dagger.notify.SystemNotifyModule;
 import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.events.UnReadSystemNotifyEvent;
+import com.example.chat.manager.UserDBManager;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
@@ -19,11 +21,14 @@ import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -87,6 +92,8 @@ public class SystemNotifyActivity extends SlideBaseActivity<List<SystemNotifyBea
                 +adapter.getData(position).getContentUrl());
             }
         });
+        UserDBManager.getInstance().updateSystemNotifyReadStatus();
+        RxBusManager.getInstance().post(new UnReadSystemNotifyEvent());
         runOnUiThread(() -> presenter.getAllSystemNotifyData(true, getRefreshTime(true)));
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("系统通知");

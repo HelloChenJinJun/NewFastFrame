@@ -5,6 +5,7 @@ import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
+import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
@@ -24,6 +25,8 @@ import com.example.commonlibrary.bean.chat.PostCommentEntityDao;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntityDao;
+import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
+import com.example.commonlibrary.bean.chat.SystemNotifyEntityDao;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
 import com.example.commonlibrary.bean.chat.DaoMaster;
@@ -31,6 +34,7 @@ import com.example.commonlibrary.bean.chat.DaoSession;
 import com.google.gson.Gson;
 
 import org.greenrobot.greendao.database.Database;
+import org.greenrobot.greendao.database.DatabaseOpenHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -657,5 +661,45 @@ public class UserDBManager {
             item.setReadStatus(Constant.READ_STATUS_READED);
         }
       daoSession.getCommentNotifyEntityDao().updateInTx(list);
+    }
+
+    public void addOrUpdateSystemNotify(SystemNotifyEntity systemNotifyBean) {
+        daoSession.getSystemNotifyEntityDao().insertInTx(systemNotifyBean);
+    }
+
+    public long getUnReadSystemNotifyCount() {
+        return daoSession.getSystemNotifyEntityDao().queryBuilder().where(SystemNotifyEntityDao.Properties
+        .ReadStatus.eq(Constant.READ_STATUS_UNREAD)).buildCount().count();
+    }
+
+    public void addOrUpdateSystemNotify(List<SystemNotifyBean> list) {
+        if (list!=null&&list.size()>0) {
+            List<SystemNotifyEntity>  list1=new ArrayList<>(list.size());
+            for (SystemNotifyBean item :
+                    list) {
+                SystemNotifyEntity entity = new SystemNotifyEntity();
+                entity.setId(item.getObjectId());
+                entity.setContentUrl(item.getContentUrl());
+                entity.setImageUrl(item.getImageUrl());
+                entity.setReadStatus(item.getReadStatus());
+                entity.setSubTitle(item.getSubTitle());
+                entity.setTitle(item.getTitle());
+                list1.add(entity);
+            }
+            daoSession.getSystemNotifyEntityDao().insertOrReplaceInTx(list1);
+        }
+    }
+
+    public void updateSystemNotifyReadStatus() {
+        List<SystemNotifyEntity>  list=daoSession.getSystemNotifyEntityDao().queryBuilder()
+                .where(SystemNotifyEntityDao.Properties.ReadStatus.eq(Constant.READ_STATUS_UNREAD))
+                .build().list();
+        if (list.size() > 0) {
+            for (SystemNotifyEntity item :
+                    list) {
+                item.setReadStatus(Constant.READ_STATUS_READED);
+            }
+            daoSession.getSystemNotifyEntityDao().updateInTx(list);
+        }
     }
 }

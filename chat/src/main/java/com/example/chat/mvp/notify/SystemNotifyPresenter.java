@@ -2,6 +2,7 @@ package com.example.chat.mvp.notify;
 
 import com.example.chat.base.AppBasePresenter;
 import com.example.chat.bean.SystemNotifyBean;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.view.IView;
@@ -34,20 +35,15 @@ public class SystemNotifyPresenter extends AppBasePresenter<IView<List<SystemNot
         BmobDate bmobDate=new BmobDate(new Date(TimeUtil.getTime(time,"yyyy-MM-dd HH:mm:ss")));
         bmobQuery.addWhereGreaterThan("createAt",bmobDate);
         bmobQuery.order("-createdAt");
-        bmobQuery.setLimit(10);
         addSubscription(bmobQuery.findObjects(new FindListener<SystemNotifyBean>() {
             @Override
             public void done(List<SystemNotifyBean> list, BmobException e) {
                 if (e == null) {
                     iView.updateData(list);
+                    UserDBManager.getInstance().addOrUpdateSystemNotify(list);
                     iView.hideLoading();
                 }else {
-                    iView.showError(e.toString(), new EmptyLayout.OnRetryListener() {
-                        @Override
-                        public void onRetry() {
-                            getAllSystemNotifyData(isRefresh, time);
-                        }
-                    });
+                    iView.showError(e.toString(), () -> getAllSystemNotifyData(isRefresh, time));
                 }
             }
         }));

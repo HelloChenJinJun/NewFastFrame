@@ -2,6 +2,7 @@ package com.example.commonlibrary.bean.chat;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * 项目名称:    NewFastFrame
@@ -15,20 +16,43 @@ public class SystemNotifyEntity {
     private String title;
     private String subTitle;
     private String contentUrl;
+    private int readStatus;
 
+    @Id
+    private String id;
 
-    @Generated(hash = 322112774)
+    @Generated(hash = 848788813)
     public SystemNotifyEntity(String imageUrl, String title, String subTitle,
-            String contentUrl) {
+            String contentUrl, int readStatus, String id) {
         this.imageUrl = imageUrl;
         this.title = title;
         this.subTitle = subTitle;
         this.contentUrl = contentUrl;
+        this.readStatus = readStatus;
+        this.id = id;
     }
 
     @Generated(hash = 1835862813)
     public SystemNotifyEntity() {
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getReadStatus() {
+        return readStatus;
+    }
+
+    public void setReadStatus(int readStatus) {
+        this.readStatus = readStatus;
+    }
+
+    
 
 
     public String getImageUrl() {

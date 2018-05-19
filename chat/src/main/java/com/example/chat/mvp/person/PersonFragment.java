@@ -18,8 +18,11 @@ import com.example.chat.base.Constant;
 import com.example.chat.bean.User;
 import com.example.chat.dagger.person.DaggerPersonComponent;
 import com.example.chat.dagger.person.PersonModule;
+import com.example.chat.events.UnReadSystemNotifyEvent;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
+import com.example.chat.mvp.commentnotify.CommentNotifyActivity;
 import com.example.chat.mvp.editInfo.EditUserInfoActivity;
 import com.example.chat.mvp.notify.SystemNotifyActivity;
 import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
@@ -36,6 +39,7 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -50,6 +54,7 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
     private RoundAngleImageView avatar;
     private RelativeLayout titleBg;
     private User user;
+    private TextView systemCount;
 
     @Override
     public void updateData(Object o) {
@@ -80,6 +85,8 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
         RelativeLayout edit = (RelativeLayout) findViewById(R.id.rl_fragment_person_edit);
         RelativeLayout index = (RelativeLayout) findViewById(R.id.rl_fragment_person_index);
         RelativeLayout notify = (RelativeLayout) findViewById(R.id.rl_fragment_person_notify);
+        systemCount= (TextView) findViewById(R.id.tv_fragment_person_system_notify_count);
+        findViewById(R.id.rl_fragment_person_comment).setOnClickListener(this);
         settings.setOnClickListener(this);
         edit.setOnClickListener(this);
         index.setOnClickListener(this);
@@ -99,6 +106,9 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
         DaggerPersonComponent.builder().chatMainComponent(getMainComponent())
                 .personModule(new PersonModule(this))
                 .build().inject(this);
+        presenter.registerEvent(UnReadSystemNotifyEvent.class, unReadSystemNotifyEvent -> {
+            updateSystemNotifyCount();
+        });
         presenter.registerEvent(User.class, user -> {
             PersonFragment.this.user=user;
             updateUserInfo();
@@ -123,6 +133,17 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
     @Override
     protected void updateView() {
         updateUserInfo();
+       updateSystemNotifyCount();
+    }
+
+    private void updateSystemNotifyCount() {
+        long count=UserDBManager.getInstance().getUnReadSystemNotifyCount();
+        if (count > 0) {
+            systemCount.setVisibility(View.VISIBLE);
+            systemCount.setText(count+"");
+        }else {
+            systemCount.setVisibility(View.GONE);
+        }
     }
 
     public static PersonFragment newInstance() {
@@ -140,6 +161,8 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
             UserDetailActivity.start(getActivity(),UserManager.getInstance().getCurrentUserObjectId());
         } else if (id == R.id.rl_fragment_person_notify) {
             SystemNotifyActivity.start(getActivity());
+        }else if (id==R.id.rl_fragment_person_comment){
+            CommentNotifyActivity.start(getActivity(),null);
         }
     }
 

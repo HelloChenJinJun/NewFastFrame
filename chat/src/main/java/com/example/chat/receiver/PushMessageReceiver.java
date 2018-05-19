@@ -16,16 +16,19 @@ import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.OffLineEvent;
 import com.example.chat.events.UnReadCommentEvent;
+import com.example.chat.events.UnReadSystemNotifyEvent;
 import com.example.chat.listener.OnReceiveListener;
 import com.example.chat.manager.ChatNotificationManager;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.commentnotify.CommentNotifyActivity;
+import com.example.chat.mvp.notify.SystemNotifyActivity;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.CommentNotifyEntity;
+import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 
@@ -38,6 +41,7 @@ import java.util.List;
 import cn.bmob.push.PushConstants;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * 项目名称:    TestChat
@@ -89,21 +93,29 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
 //                                系统消息
                 String systemInfo = JsonUtil.getString(jsonObject, Constant.PUSH_ALERT);
 
-                if (!jsonObject.has(Constant.TAG_POST_ID)) {
+                if (!jsonObject.has(Constant.TAG_COMMENT_ID)) {
 //                        系统通知的消息
-                    SystemNotifyBean systemNotifyBean= BaseApplication
+                    SystemNotifyEntity systemNotifyBean= BaseApplication
                             .getAppComponent().getGson()
-                            .fromJson(systemInfo,SystemNotifyBean.class);
+                            .fromJson(systemInfo,SystemNotifyEntity.class);
                     Toast.makeText(context, systemInfo, Toast.LENGTH_SHORT).show();
                     CommonLogger.e("系统信息");
-                    ChatNotificationManager.getInstance(context).showNotification(null, context, "系统", R.mipmap.ic_launcher, systemInfo, null);
+                    MsgManager.getInstance().updateSystemNotifyReadStatus(systemNotifyBean.getId(), new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                UserDBManager.getInstance().addOrUpdateSystemNotify(systemNotifyBean);
+                                RxBusManager.getInstance().post(new UnReadSystemNotifyEvent());
+                                ChatNotificationManager.getInstance(context).showNotification(null, context, "系统", R.mipmap.ic_launcher, systemInfo, SystemNotifyActivity.class);
+                            }
+                        }
+                    });
                     return;
                 }else {
                     CommentNotifyEntity commentNotifyEntity= BaseApplication
                             .getAppComponent().getGson()
                             .fromJson(systemInfo,CommentNotifyEntity.class);
                     //保存
-
                     if (!UserDBManager.getInstance().hasCommentBean(commentNotifyEntity.getCommentId())){
                         MsgManager.getInstance().getCommentBean(commentNotifyEntity.getCommentId()
                         , new FindListener<PublicCommentBean>() {

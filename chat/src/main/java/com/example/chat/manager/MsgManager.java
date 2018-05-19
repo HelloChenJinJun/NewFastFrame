@@ -9,6 +9,7 @@ import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.MessageContent;
+import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.User;
@@ -1809,6 +1810,15 @@ public class MsgManager {
                 }
             }
         });
+    }
+
+    public void updateSystemNotifyReadStatus(String id,UpdateListener listener) {
+        SystemNotifyBean systemNotifyBean=new SystemNotifyBean();
+        systemNotifyBean.setObjectId(id);
+        systemNotifyBean.setReadStatus(Constant.READ_STATUS_READED);
+        systemNotifyBean.update(listener);
+
+
     }
 }
 

@@ -102,6 +102,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         query.addWhereEqualTo("deviceType", "android");
                         bmobPushManager.setQuery(query);
                         SystemNotifyEntity systemNotifyEntity=new SystemNotifyEntity();
+                        systemNotifyEntity.setId(systemNotifyBean.getObjectId());
                         systemNotifyEntity.setContentUrl(link.getText().toString().trim());
                         systemNotifyEntity.setTitle(title.getText().toString().trim());
                         systemNotifyEntity.setSubTitle(subTitle.getText().toString().trim());

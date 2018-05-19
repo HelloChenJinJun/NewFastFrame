@@ -10,6 +10,7 @@ import com.example.chat.base.Constant;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.CommentNotifyBean;
+import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.listener.OnReceiveListener;
@@ -149,7 +150,7 @@ public class PollService extends Service {
                 BmobQuery<CommentNotifyBean>  bmobQuery=new BmobQuery<>();
                 bmobQuery.addWhereEqualTo("user",new BmobPointer(UserManager.getInstance().getCurrentUser()));
                 bmobQuery.addWhereEqualTo("readStatus",Constant.READ_STATUS_UNREAD);
-                query.include("publicCommentBean");
+                bmobQuery.include("publicCommentBean");
                 bmobQuery.findObjects(new FindListener<CommentNotifyBean>() {
                         @Override
                         public void done(List<CommentNotifyBean> list, BmobException e) {
@@ -171,6 +172,32 @@ public class PollService extends Service {
                                 }
                         }
                 });
+                BmobQuery<CommentNotifyBean>  query1=new BmobQuery<>();
+                query1.addWhereEqualTo("user",new BmobPointer(UserManager.getInstance().getCurrentUser()));
+                query1.addWhereEqualTo("readStatus",Constant.READ_STATUS_UNREAD);
+                query1.include("publicCommentBean");
+                query1.findObjects(new FindListener<CommentNotifyBean>() {
+                        @Override
+                        public void done(List<CommentNotifyBean> list, BmobException e) {
+                                if (e == null) {
+                                        if (list != null && list.size() > 0) {
+                                                List<PublicCommentBean>  result=new ArrayList<>(list.size());
+                                                for (CommentNotifyBean item:list
+                                                        ) {
+                                                        result.add(item.getPublicCommentBean());
+                                                }
+                                                UserDBManager
+                                                        .getInstance()
+                                                        .addOrUpdateComment(result);
+                                                ChatNotificationManager.getInstance(getBaseContext()).showNotification(null,getBaseContext(),"评论通知", R.mipmap.ic_launcher,"你有一条评论", CommentNotifyActivity.class);
+                                                MsgManager.getInstance().updateCommentReadStatus(list);
+                                        }
+                                }else {
+                                        CommonLogger.e("定时拉取评论通知失败"+e.toString());
+                                }
+                        }
+                });
+
 
 
         }
