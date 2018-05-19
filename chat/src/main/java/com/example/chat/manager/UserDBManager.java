@@ -13,6 +13,8 @@ import com.example.chat.bean.post.PublicPostBean;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
 import com.example.commonlibrary.bean.chat.ChatMessageEntityDao;
+import com.example.commonlibrary.bean.chat.CommentNotifyEntity;
+import com.example.commonlibrary.bean.chat.CommentNotifyEntityDao;
 import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupChatEntityDao;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
@@ -596,5 +598,64 @@ public class UserDBManager {
 
     public void addOrUpdateComment(PublicCommentBean newBean) {
         daoSession.getPostCommentEntityDao().insertOrReplace(MsgManager.getInstance().cover(newBean));
+    }
+
+    public boolean hasCommentBean(String commentId) {
+        return daoSession.getPostCommentEntityDao().queryBuilder().where(PostCommentEntityDao.Properties
+        .Cid.eq(commentId)).buildCount().count()>0;
+    }
+
+    public void addOrUpdateCommentNotify(CommentNotifyEntity commentNotifyEntity) {
+        daoSession.getCommentNotifyEntityDao().insertOrReplace(commentNotifyEntity);
+    }
+
+    public long getUnReadCommentCount() {
+        return daoSession.getCommentNotifyEntityDao().queryBuilder().where(CommentNotifyEntityDao
+        .Properties.ReadStatus.eq(Constant.READ_STATUS_UNREAD)).buildCount().count();
+    }
+
+
+    public ArrayList<String>  getUnReadCommentListId(){
+        List<CommentNotifyEntity>  list=daoSession.getCommentNotifyEntityDao().queryBuilder().where(CommentNotifyEntityDao
+                .Properties.ReadStatus.eq(Constant.READ_STATUS_UNREAD)).build().list();
+        ArrayList<String> arrayList=null;
+        if (list.size() > 0) {
+            arrayList=new ArrayList<>();
+            for (CommentNotifyEntity item :
+                    list) {
+                arrayList.add(item.getCommentId());
+            }
+
+        }
+        return arrayList;
+    }
+
+    public PublicCommentBean getFirstUnReadComment() {
+        List<CommentNotifyEntity> list=daoSession.getCommentNotifyEntityDao().queryBuilder().where(CommentNotifyEntityDao
+        .Properties.ReadStatus.eq(Constant.READ_STATUS_UNREAD)).build().list();
+        PublicCommentBean publicCommentBean=null;
+        if (list.size() > 0) {
+            List<PostCommentEntity>  postCommentEntityList=
+                    daoSession.getPostCommentEntityDao().queryBuilder().where(PostCommentEntityDao
+                    .Properties.Cid.eq(list.get(0).getCommentId()))
+                    .build().list();
+            if (postCommentEntityList.size() > 0) {
+                publicCommentBean=MsgManager.getInstance().cover(postCommentEntityList.get(0));
+            }
+
+        }
+        return publicCommentBean;
+    }
+
+    public void updateCommentReadStatus() {
+      List<CommentNotifyEntity>  list= daoSession.getCommentNotifyEntityDao().queryBuilder()
+                .where(CommentNotifyEntityDao.Properties.ReadStatus.eq(Constant
+                .READ_STATUS_UNREAD))
+                .build().list();
+        for (CommentNotifyEntity item :
+                list) {
+            item.setReadStatus(Constant.READ_STATUS_READED);
+        }
+      daoSession.getCommentNotifyEntityDao().updateInTx(list);
     }
 }

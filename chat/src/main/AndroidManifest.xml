@@ -90,8 +90,7 @@
         <activity android:name=".mvp.photoSelect.PhotoSelectActivity"/>
         <activity android:name=".mvp.preview.PhotoPreViewActivity"/>
         <activity android:name=".mvp.EditShare.EditShareInfoActivity"/>
-
-
+        <activity android:name=".mvp.commentnotify.CommentNotifyActivity" />
 
 
         <receiver android:name=".receiver.NetWorkChangedReceiver">

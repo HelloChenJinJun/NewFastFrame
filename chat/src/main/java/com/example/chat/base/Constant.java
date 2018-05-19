@@ -235,4 +235,5 @@ public class Constant {
     public static final String IS_PUBLIC = "is_public";
     public static final String PUBLIC = "public";
     public static final String REFRESH_TIME = "0000-00-00 01:00:00";
+    public static final String TAG_POST_ID = "postId";
 }

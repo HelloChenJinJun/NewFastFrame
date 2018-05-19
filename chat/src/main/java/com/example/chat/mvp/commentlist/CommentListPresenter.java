@@ -2,6 +2,7 @@ package com.example.chat.mvp.commentlist;
 
 import com.example.chat.base.AppBasePresenter;
 import com.example.chat.base.Constant;
+import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.post.PublicCommentBean;
@@ -181,6 +182,10 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                             RxBusManager.getInstance().post(new CommentEvent(newBean.getPost().getObjectId(), CommentEvent.TYPE_COMMENT, CommentEvent.ACTION_ADD));
                         }
                     }));
+                    MsgManager.getInstance().sendNotifyCommentInfo(newBean);
+
+
+
                 }else {
                     newBean.setSendStatus(Constant.SEND_STATUS_FAILED);
                     ToastUtils.showShortToast("评论失败"+e.toString());

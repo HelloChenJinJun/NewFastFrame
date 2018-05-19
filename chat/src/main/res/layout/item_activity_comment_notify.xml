@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/riv_item_activity_comment_notify_avatar"
+        android:src="@drawable/head"/>
+
+
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:text="姓名"
+            android:textColor="@color/blue_500"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_item_activity_comment_notify_name"/>
+
+
+        <TextView
+            android:text="acascascsac"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_item_activity_comment_notify_content"/>
+
+        <TextView
+            android:id="@+id/tv_item_activity_comment_notify_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="时间"
+            android:textSize="12sp"
+            android:textColor="@color/grey_500"/>
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_margin="5dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:id="@+id/iv_item_activity_comment_notify_image"/>
+        <TextView
+            android:id="@+id/tv_item_activity_comment_notify_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey_200"
+            />
+
+    </FrameLayout>
+
+
+</LinearLayout>
+

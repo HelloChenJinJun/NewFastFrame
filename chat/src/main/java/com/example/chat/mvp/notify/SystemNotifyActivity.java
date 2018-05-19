@@ -3,6 +3,7 @@ package com.example.chat.mvp.notify;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
 
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
@@ -15,8 +16,10 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;
 
@@ -77,12 +80,14 @@ public class SystemNotifyActivity extends SlideBaseActivity<List<SystemNotifyBea
         display.setLoadMoreFooterView(new LoadMoreFooterView(this));
         display.setOnLoadMoreListener(this);
         display.setAdapter(adapter);
-        runOnUiThread(new Runnable() {
+        adapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
-            public void run() {
-                presenter.getAllSystemNotifyData(true, getRefreshTime(true));
+            public void onItemClick(int position, View view) {
+                ToastUtils.showShortToast("浏览地址"
+                +adapter.getData(position).getContentUrl());
             }
         });
+        runOnUiThread(() -> presenter.getAllSystemNotifyData(true, getRefreshTime(true)));
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("系统通知");
         toolBarOption.setNeedNavigation(true);

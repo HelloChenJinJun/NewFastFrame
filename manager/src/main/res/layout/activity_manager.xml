@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <TextView
+        android:textColor="@color/blue_500"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="系统通知管理平台"
+        android:layout_gravity="center"
+        android:textSize="22dp"
+        android:layout_marginBottom="50dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标题"/>
+
+        <EditText
+            android:id="@+id/et_activity_manager_title"
+            android:layout_marginLeft="10dp"
+            android:hint="请输入标题"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="子标题"/>
+
+        <EditText
+            android:id="@+id/et_activity_manager_subtitle"
+            android:layout_marginLeft="10dp"
+            android:hint="请输入子标题"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="链接地址"/>
+
+        <EditText
+            android:id="@+id/et_activity_manager_link"
+            android:layout_marginLeft="10dp"
+            android:hint="请输入链接地址"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+    <Button
+
+        android:id="@+id/btn_activity_manager_image"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择封面图片"/>
+
+
+    <ImageView
+        android:id="@+id/iv_activity_manager_image"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_launcher_background"/>
+
+
+
+    <Button
+        android:id="@+id/btn_activity_manager_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发送"
+        android:layout_gravity="center"/>
+
+
+</LinearLayout>
+

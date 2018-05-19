@@ -3,6 +3,7 @@ package com.example.chat.manager;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
+import com.example.chat.bean.CommentNotifyBean;
 import com.example.chat.bean.CustomInstallation;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
@@ -27,6 +28,7 @@ import com.example.chat.util.SystemUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
+import com.example.commonlibrary.bean.chat.CommentNotifyEntity;
 import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.PostCommentEntity;
@@ -36,6 +38,7 @@ import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -614,7 +617,17 @@ public class MsgManager {
         query.addWhereEqualTo("installationId", installationId);
         mPushManager.setQuery(query);
         mPushManager.pushMessage(jsonObject, listener);
+}
+
+
+
+    public void sendJsonMessage(List<String> installationIdList,String json,PushListener pushListener){
+        BmobQuery<CustomInstallation> query=new BmobQuery<>();
+        query.addWhereContainedIn("installationId",installationIdList);
+        mPushManager.setQuery(query);
+        mPushManager.pushMessage(json, pushListener);
     }
+
 
     /**
      * 发送建群消息
@@ -1673,6 +1686,129 @@ public class MsgManager {
         newBean.setCreateTime(TimeUtil.getTime(TimeUtil.localToServerTime(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss"));
         newBean.setUpdatedAt(TimeUtil.getTime(TimeUtil.localToServerTime(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss"));
         return newBean;
+    }
+
+    public void sendNotifyCommentInfo(PublicCommentBean newBean) {
+        CommentDetailBean commentDetailBean=gson.fromJson(newBean.getContent()
+                ,CommentDetailBean.class);
+        List<String>  list=new ArrayList<>();
+        if (!newBean.getPost().getAuthor().getObjectId().equals(UserManager.getInstance()
+                .getCurrentUserObjectId())){
+            list.add(newBean.getPost().getAuthor().getObjectId());
+        }
+        if (commentDetailBean.getPublicId() != null) {
+//                        回复评论
+            String[] str=commentDetailBean.getPublicId().split("&");
+            String otherUid;
+            if (str[0].equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                otherUid=str[1];
+            }else {
+                otherUid=str[0];
+            }
+            list.add(otherUid);
+        }
+        BmobQuery<User>  bmobQuery=new BmobQuery<>();
+        bmobQuery.addWhereContainedIn("objectId",list);
+        bmobQuery.findObjects(new FindListener<User>() {
+            @Override
+            public void done(List<User> list, BmobException e) {
+                if (e==null&&list.size()>0) {
+                    List<String> install=new ArrayList<>();
+                    List<BmobObject> list1=new ArrayList<>();
+                    for (int i = 0; i < list.size(); i++) {
+                        install.add(list.get(i).getInstallId());
+                        CommentNotifyBean commentNotifyBean=new CommentNotifyBean();
+                        commentNotifyBean.setUser(list.get(i));
+                        PublicCommentBean publicCommentBean=new PublicCommentBean();
+                        publicCommentBean.setObjectId(newBean.getObjectId());
+                        commentNotifyBean.setPublicCommentBean(newBean);
+                        PublicPostBean publicPostBean=new PublicPostBean();
+                        publicPostBean.setObjectId(newBean.getPost().getObjectId());
+                        commentNotifyBean.setReadStatus(Constant.READ_STATUS_UNREAD);
+                        list1.add(commentNotifyBean);
+                    }
+                    new BmobBatch().insertBatch(list1).doBatch(new QueryListListener<BatchResult>() {
+                        @Override
+                        public void done(List<BatchResult> list, BmobException e) {
+                            if (e == null) {
+                                CommonLogger.e("批量添加评论通知成功");
+                                sendJsonMessage(install, createNotifyCommentInfo(newBean), new PushListener() {
+                                    @Override
+                                    public void done(BmobException e) {
+                                        if (e == null) {
+                                            CommonLogger.e("推送通知消息成功");
+                                        }else {
+                                            CommonLogger.e("推送消息失败"+e.toString());
+                                        }
+                                    }
+                                });
+                            }else {
+                                CommonLogger.e("批量添加评论通知失败"+e.toString());
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private String createNotifyCommentInfo(PublicCommentBean newBean) {
+        CommentNotifyEntity commentNotifyEntity=new CommentNotifyEntity();
+        commentNotifyEntity.setCommentId(newBean.getObjectId());
+        commentNotifyEntity.setReadStatus(Constant.READ_STATUS_UNREAD);
+        return gson.toJson(commentNotifyEntity);
+    }
+
+    public void getCommentBean(String commentId, FindListener<PublicCommentBean> findListener) {
+        BmobQuery<PublicCommentBean> bmobQuery=new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("objectId",commentId);
+        bmobQuery.findObjects(findListener);
+    }
+
+    public void updateCommentReadStatus(List<CommentNotifyBean> result) {
+        for (CommentNotifyBean bean :
+                result) {
+            bean.setReadStatus(Constant.READ_STATUS_READED);
+        }
+        List<BmobObject>  bmobObjectList=new ArrayList<>(result);
+        new BmobBatch().updateBatch(bmobObjectList).doBatch(new QueryListListener<BatchResult>() {
+            @Override
+            public void done(List<BatchResult> list, BmobException e) {
+                if (e == null) {
+                    CommonLogger.e("批量更新评论已读成功");
+                }    else {
+                    CommonLogger.e("批量更新评论已读失败"+e.toString());
+                }
+            }
+        });
+    }
+
+    public void updateCommentReadStatus(PublicCommentBean publicCommentBean) {
+        BmobQuery<CommentNotifyBean> bmobQuery=new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("publicCommentBean",new BmobPointer(publicCommentBean));
+        bmobQuery.addWhereEqualTo("user",UserManager.getInstance().getCurrentUser());
+        bmobQuery.addWhereEqualTo("readStatus",Constant.READ_STATUS_UNREAD);
+        bmobQuery.findObjects(new FindListener<CommentNotifyBean>() {
+            @Override
+            public void done(List<CommentNotifyBean> list, BmobException e) {
+                if (e == null) {
+                    if (list != null && list.size() > 0) {
+                        CommentNotifyBean commentNotifyBean=list.get(0);
+                        commentNotifyBean.setReadStatus(Constant.READ_STATUS_READED);
+                        commentNotifyBean.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    CommonLogger.e("在服务器上更新评论已读成功");
+                                }    else {
+                                    CommonLogger.e("在服务器上更新评论已读失败"+e.toString());
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 }
 

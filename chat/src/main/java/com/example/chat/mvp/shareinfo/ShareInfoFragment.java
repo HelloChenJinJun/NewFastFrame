@@ -4,26 +4,31 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.ShareInfoAdapter;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.ImageItem;
+import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.PublicPostBean;
-import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.dagger.shareinfo.DaggerShareInfoComponent;
 import com.example.chat.dagger.shareinfo.ShareInfoModule;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.events.NetStatusEvent;
+import com.example.chat.events.UnReadCommentEvent;
 import com.example.chat.events.UpdatePostEvent;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.EditShare.EditShareInfoActivity;
 import com.example.chat.mvp.commentlist.CommentListActivity;
+import com.example.chat.mvp.commentnotify.CommentNotifyActivity;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.chat.view.fab.FloatingActionButton;
@@ -38,7 +43,6 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.AppUtil;
@@ -57,6 +61,7 @@ import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -76,6 +81,11 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     private UserEntity userEntity;
     private Disposable disposable;
     private boolean isPublic;
+    private ImageView titleBg;
+    private LinearLayout unReadContainer;
+    private ImageView unReadAvatar;
+    private TextView unReadCount;
+    private ArrayList<String> unReadCommentListId;
 
     @Override
     protected boolean isNeedHeadLayout() {
@@ -126,8 +136,13 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             mMenu.setVisibility(View.GONE);
         }
         initTopBar();
+        presenter.registerEvent(UnReadCommentEvent.class, unReadCommentEvent -> {
+            unReadCommentListId=unReadCommentEvent.getUnReadCommentListId();
+            updateInfo();
+        });
         display.setLayoutManager(manager = new WrappedLinearLayoutManager(getContext()));
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
+        display.addHeaderView(getHeaderView());
         display.setOnLoadMoreListener(this);
         mMenu.attachToRecyclerView(display);
         display.setAdapter(shareInfoAdapter);
@@ -289,6 +304,17 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         });
     }
 
+    private View getHeaderView() {
+        View headerView=getLayoutInflater().inflate(R.layout.view_fragment_share_info_header,null);
+        titleBg=headerView.findViewById(R.id.iv_view_fragment_share_info_header_bg);
+        unReadContainer=headerView.findViewById(R.id.ll_view_fragment_share_info_header_unread);
+
+        unReadAvatar=headerView.findViewById(R.id.iv_view_fragment_share_info_header_avatar);
+        unReadCount=headerView.findViewById(R.id.tv_view_fragment_share_info_header_unread);
+        unReadContainer.setOnClickListener(this);
+        return headerView;
+    }
+
     private void refreshOfflineMessage() {
         int size = shareInfoAdapter.getData().size();
         for (int i = 0; i < size; i++) {
@@ -347,7 +373,30 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
     @Override
     protected void updateView() {
+        Glide.with(this).load(UserManager.getInstance().getCurrentUser()
+                .getTitleWallPaper()).into(titleBg);
+        unReadCommentListId=UserDBManager.getInstance().getUnReadCommentListId();
+        updateInfo();
         presenter.getAllPostData(isPublic,true, userEntity.getUid(), getRefreshTime(true));
+    }
+
+    private void updateInfo() {
+        int count=0;
+        if (unReadCommentListId!=null) {
+            count = unReadCommentListId.size();
+        }
+        if (count > 0) {
+            unReadContainer.setVisibility(View.VISIBLE);
+            unReadCount.setText("你有"+count+"条未读消息");
+            PublicCommentBean publicCommentBean=UserDBManager
+                    .getInstance().getFirstUnReadComment();
+            if (publicCommentBean != null) {
+                Glide.with(getContext()).load(publicCommentBean
+                .getUser().getAvatar()).into(unReadAvatar);
+            }
+        }else {
+            unReadContainer.setVisibility(View.GONE);
+        }
     }
 
 
@@ -471,7 +520,9 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             EditShareInfoActivity.start(getActivity(),Constant.EDIT_TYPE_VIDEO,null,false);
         } else if (id == R.id.fab_share_info_normal) {
             EditShareInfoActivity.start(getActivity(),Constant.EDIT_TYPE_TEXT,null,false);
-        }else  {
+        }else if (id==R.id.ll_view_fragment_share_info_header_unread){
+            CommentNotifyActivity.start(getActivity(),unReadCommentListId);
+        }else {
             EditShareInfoActivity.start(getActivity(),Constant.EDIT_TYPE_IMAGE,null,false);
         }
     }

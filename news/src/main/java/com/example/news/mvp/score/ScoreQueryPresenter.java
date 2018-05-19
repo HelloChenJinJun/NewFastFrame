@@ -29,9 +29,9 @@ public class ScoreQueryPresenter extends RxBasePresenter<IView<ScoreBean>,ScoreQ
 
 
     public void getScore(final boolean isRefresh, final String time, final String courseName){
-//        iView.showLoading(null);
         if (isRefresh) {
             page=0;
+            iView.showLoading(null);
         }
         page++;
         baseModel.getRepositoryManager()
@@ -52,12 +52,7 @@ public class ScoreQueryPresenter extends RxBasePresenter<IView<ScoreBean>,ScoreQ
 
                     @Override
                     public void onError(Throwable e) {
-                        iView.showError(null, new EmptyLayout.OnRetryListener() {
-                            @Override
-                            public void onRetry() {
-                                getScore(isRefresh, time, courseName);
-                            }
-                        });
+                        iView.showError(null, () -> getScore(isRefresh, time, courseName));
                     }
 
                     @Override

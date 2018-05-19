@@ -10,15 +10,22 @@ import com.example.chat.R;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
+import com.example.chat.bean.CommentNotifyBean;
+import com.example.chat.bean.SystemNotifyBean;
+import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.OffLineEvent;
+import com.example.chat.events.UnReadCommentEvent;
 import com.example.chat.listener.OnReceiveListener;
 import com.example.chat.manager.ChatNotificationManager;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
+import com.example.chat.mvp.commentnotify.CommentNotifyActivity;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.bean.chat.CommentNotifyEntity;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 
@@ -30,6 +37,7 @@ import java.util.List;
 
 import cn.bmob.push.PushConstants;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * 项目名称:    TestChat
@@ -41,6 +49,7 @@ import cn.bmob.v3.exception.BmobException;
 public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveListener {
     UserManager mUserManager;
     MsgManager mMsgManager;
+
     private Context context;
 
     @Override
@@ -79,11 +88,43 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
             if (!jsonObject.has(Constant.TAG_BELONG_ID)) {
 //                                系统消息
                 String systemInfo = JsonUtil.getString(jsonObject, Constant.PUSH_ALERT);
+
+                if (!jsonObject.has(Constant.TAG_POST_ID)) {
 //                        系统通知的消息
-                Toast.makeText(context, systemInfo, Toast.LENGTH_SHORT).show();
-                CommonLogger.e("系统信息");
-                ChatNotificationManager.getInstance(context).showNotification(null, context, "系统", R.drawable.head, systemInfo, null);
-                return;
+                    SystemNotifyBean systemNotifyBean= BaseApplication
+                            .getAppComponent().getGson()
+                            .fromJson(systemInfo,SystemNotifyBean.class);
+                    Toast.makeText(context, systemInfo, Toast.LENGTH_SHORT).show();
+                    CommonLogger.e("系统信息");
+                    ChatNotificationManager.getInstance(context).showNotification(null, context, "系统", R.mipmap.ic_launcher, systemInfo, null);
+                    return;
+                }else {
+                    CommentNotifyEntity commentNotifyEntity= BaseApplication
+                            .getAppComponent().getGson()
+                            .fromJson(systemInfo,CommentNotifyEntity.class);
+                    //保存
+
+                    if (!UserDBManager.getInstance().hasCommentBean(commentNotifyEntity.getCommentId())){
+                        MsgManager.getInstance().getCommentBean(commentNotifyEntity.getCommentId()
+                        , new FindListener<PublicCommentBean>() {
+                                    @Override
+                                    public void done(List<PublicCommentBean> list, BmobException e) {
+                                        if (e == null) {
+                                            if (list!=null&&list.size()>0) {
+                                                UserDBManager.getInstance()
+                                                        .addOrUpdateComment(list.get(0));
+                                                MsgManager.getInstance().updateCommentReadStatus(list.get(0));
+                                            }
+                                        }else {
+                                            CommonLogger.e("服务获取评论失败"+e.toString());
+                                        }
+                                        UserDBManager.getInstance().addOrUpdateCommentNotify(commentNotifyEntity);
+                                            RxBusManager.getInstance().post(new UnReadCommentEvent(UserDBManager.getInstance().getUnReadCommentListId()));
+                                        ChatNotificationManager.getInstance(context).showNotification(null,context,"评论通知",R.mipmap.ic_launcher,"你有一条评论", CommentNotifyActivity.class);
+                                    }
+                                });
+                    }
+                }
             }
             String fromId = JsonUtil.getString(jsonObject, Constant.TAG_BELONG_ID);
             String toId = JsonUtil.getString(jsonObject, Constant.TAG_TO_ID);

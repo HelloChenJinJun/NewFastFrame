@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:background="@color/chat_bg"
@@ -19,20 +20,34 @@
         android:textColor="@color/white"
         android:id="@+id/tv_item_activity_system_notify_time"
         android:layout_marginBottom="20dp"/>
-    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        app:cardCornerRadius="10dp"
+        app:cardUseCompatPadding="true"
         android:elevation="20dp">
 
 
         <LinearLayout
-            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
+
+
+            <ImageView
+                android:src="@drawable/wallpaper_bg"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/iv_item_activity_system_notify_image"
+                android:scaleType="centerCrop"/>
             <TextView
+                android:gravity="center"
+                android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_item_activity_system_notify_title"
@@ -41,17 +56,9 @@
                 android:text="标题"
                 android:maxLines="2"
                 android:ellipsize="end"/>
-
-
-            <ImageView
-                android:src="@drawable/wallpaper_bg"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:id="@+id/iv_item_activity_system_notify_image"
-                android:scaleType="centerCrop"/>
             <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
@@ -72,6 +79,9 @@
 
 
             <RelativeLayout
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView

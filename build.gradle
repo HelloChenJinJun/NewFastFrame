@@ -13,7 +13,7 @@ buildscript {
         classpath "com.tencent.bugly:tinker-support:1.1.0"
 
         
-//        classpath "com.tinkerpatch.sdk:tinkerpatch-gradle-plugin:1.1.8"
+        classpath "com.tinkerpatch.sdk:tinkerpatch-gradle-plugin:1.1.8"
 
 
     }
