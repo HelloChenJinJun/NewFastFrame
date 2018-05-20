@@ -31,6 +31,9 @@ import com.example.commonlibrary.bean.chat.CommentNotifyEntity;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,26 +95,31 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
             if (!jsonObject.has(Constant.TAG_BELONG_ID)) {
 //                                系统消息
                 String systemInfo = JsonUtil.getString(jsonObject, Constant.PUSH_ALERT);
-
-                if (!jsonObject.has(Constant.TAG_COMMENT_ID)) {
+                JsonElement jsonElement=new JsonParser().parse(systemInfo);
+                JsonObject jsonObject1=jsonElement.getAsJsonObject();
+                if (jsonObject1.has(Constant.TAG_CONTENT_URL)) {
 //                        系统通知的消息
                     SystemNotifyEntity systemNotifyBean= BaseApplication
                             .getAppComponent().getGson()
                             .fromJson(systemInfo,SystemNotifyEntity.class);
                     Toast.makeText(context, systemInfo, Toast.LENGTH_SHORT).show();
-                    CommonLogger.e("系统信息");
-                    MsgManager.getInstance().updateSystemNotifyReadStatus(systemNotifyBean.getId(), new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                UserDBManager.getInstance().addOrUpdateSystemNotify(systemNotifyBean);
-                                RxBusManager.getInstance().post(new UnReadSystemNotifyEvent());
-                                ChatNotificationManager.getInstance(context).showNotification(null, context, "系统", R.mipmap.ic_launcher, systemInfo, SystemNotifyActivity.class);
+                    if (!UserDBManager.getInstance().hasSystemNotify(systemNotifyBean.getId())) {
+                        MsgManager.getInstance().updateSystemNotifyReadStatus(systemNotifyBean.getId(), new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    CommonLogger.e("更新系统通知已读成功");
+                                    UserDBManager.getInstance().addOrUpdateSystemNotify(systemNotifyBean);
+                                    RxBusManager.getInstance().post(new UnReadSystemNotifyEvent());
+                                    ChatNotificationManager.getInstance(context).showNotification(null, context, "系统", R.mipmap.ic_launcher, "你有一条系统通知", SystemNotifyActivity.class);
+                                }else {
+                                    CommonLogger.e("更新系统通知已读失败"+e.toString());
+                                }
                             }
-                        }
-                    });
-                    return;
-                }else {
+                        });
+                    }
+
+                }else if (jsonObject1.has(Constant.TAG_COMMENT_ID)){
                     CommentNotifyEntity commentNotifyEntity= BaseApplication
                             .getAppComponent().getGson()
                             .fromJson(systemInfo,CommentNotifyEntity.class);
@@ -125,18 +133,31 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
                                             if (list!=null&&list.size()>0) {
                                                 UserDBManager.getInstance()
                                                         .addOrUpdateComment(list.get(0));
-                                                MsgManager.getInstance().updateCommentReadStatus(list.get(0));
+                                                MsgManager.getInstance().updateCommentReadStatus(list.get(0), new UpdateListener() {
+                                                    @Override
+                                                    public void done(BmobException e) {
+                                                        if (e == null) {
+                                                            CommonLogger.e("在服务器上更新评论已读成功");
+                                                            UserDBManager.getInstance().addOrUpdateCommentNotify(commentNotifyEntity);
+                                                            RxBusManager.getInstance().post(new UnReadCommentEvent(UserDBManager.getInstance().getUnReadCommentListId()));
+                                                            ChatNotificationManager.getInstance(context).showNotification(null,context,"评论通知",R.mipmap.ic_launcher,"你有一条评论", CommentNotifyActivity.class);
+                                                        }    else {
+                                                            CommonLogger.e("在服务器上更新评论已读失败"+e.toString());
+                                                        }
+                                                    }
+                                                });
                                             }
                                         }else {
                                             CommonLogger.e("服务获取评论失败"+e.toString());
                                         }
-                                        UserDBManager.getInstance().addOrUpdateCommentNotify(commentNotifyEntity);
-                                            RxBusManager.getInstance().post(new UnReadCommentEvent(UserDBManager.getInstance().getUnReadCommentListId()));
-                                        ChatNotificationManager.getInstance(context).showNotification(null,context,"评论通知",R.mipmap.ic_launcher,"你有一条评论", CommentNotifyActivity.class);
+
                                     }
                                 });
                     }
+                }else {
+                    ChatNotificationManager.getInstance(context).showNotification(null,context,"你有一条自定义系统通知",R.mipmap.ic_launcher,systemInfo, CommentNotifyActivity.class);
                 }
+                return;
             }
             String fromId = JsonUtil.getString(jsonObject, Constant.TAG_BELONG_ID);
             String toId = JsonUtil.getString(jsonObject, Constant.TAG_TO_ID);

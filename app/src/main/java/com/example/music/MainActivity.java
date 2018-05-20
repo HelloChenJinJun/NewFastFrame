@@ -124,7 +124,7 @@ public class MainActivity extends SlideBaseActivity {
         fragmentList.add(HomeFragment.newInstance());
         fragmentList.add(ShareInfoFragment.newInstance(UserManager
                 .getInstance().getCurrentUserObjectId(),true));
-        addOrReplaceFragment(fragmentList.get(0), R.id.fl_activity_main_container);
+        addOrReplaceFragment(fragmentList.get(3), R.id.fl_activity_main_container);
     }
 
     private long mExitTime = 0;

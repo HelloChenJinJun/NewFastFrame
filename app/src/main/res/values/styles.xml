@@ -9,6 +9,6 @@
     </style>
 
     <style name="CustomTheme.Day.Main">
-        <item name="android:windowBackground">@drawable/login_container_bg_02</item>
+        <!--<item name="android:windowBackground">@drawable/login_container_bg_02</item>-->
     </style>
 </resources>

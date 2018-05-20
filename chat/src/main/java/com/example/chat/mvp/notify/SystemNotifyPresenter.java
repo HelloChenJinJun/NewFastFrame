@@ -5,8 +5,10 @@ import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.mvp.view.IView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,14 +35,28 @@ public class SystemNotifyPresenter extends AppBasePresenter<IView<List<SystemNot
         }
         BmobQuery<SystemNotifyBean> bmobQuery=new BmobQuery<>();
         BmobDate bmobDate=new BmobDate(new Date(TimeUtil.getTime(time,"yyyy-MM-dd HH:mm:ss")));
-        bmobQuery.addWhereGreaterThan("createAt",bmobDate);
+        bmobQuery.addWhereGreaterThan("createdAt",bmobDate);
         bmobQuery.order("-createdAt");
         addSubscription(bmobQuery.findObjects(new FindListener<SystemNotifyBean>() {
             @Override
             public void done(List<SystemNotifyBean> list, BmobException e) {
                 if (e == null) {
                     iView.updateData(list);
-                    UserDBManager.getInstance().addOrUpdateSystemNotify(list);
+                    if (list!=null&&list.size()>0) {
+                        List<SystemNotifyEntity>  list1=new ArrayList<>(list.size());
+                        for (SystemNotifyBean item :
+                                list) {
+                            SystemNotifyEntity entity = new SystemNotifyEntity();
+                            entity.setId(item.getObjectId());
+                            entity.setContentUrl(item.getContentUrl());
+                            entity.setImageUrl(item.getImageUrl());
+                            entity.setReadStatus(item.getReadStatus());
+                            entity.setSubTitle(item.getSubTitle());
+                            entity.setTitle(item.getTitle());
+                            list1.add(entity);
+                        }
+                        UserDBManager.getInstance().addOrUpdateSystemNotify(list1);
+                    }
                     iView.hideLoading();
                 }else {
                     iView.showError(e.toString(), () -> getAllSystemNotifyData(isRefresh, time));

@@ -13,13 +13,16 @@ import com.example.chat.bean.CommentNotifyBean;
 import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.events.MessageInfoEvent;
+import com.example.chat.events.UnReadSystemNotifyEvent;
 import com.example.chat.listener.OnReceiveListener;
 import com.example.chat.manager.ChatNotificationManager;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.commentnotify.CommentNotifyActivity;
+import com.example.chat.mvp.notify.SystemNotifyActivity;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 
@@ -27,10 +30,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import cn.bmob.v3.BmobBatch;
+import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BatchResult;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListListener;
+import cn.bmob.v3.listener.UpdateListener;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -172,25 +180,42 @@ public class PollService extends Service {
                                 }
                         }
                 });
-                BmobQuery<CommentNotifyBean>  query1=new BmobQuery<>();
-                query1.addWhereEqualTo("user",new BmobPointer(UserManager.getInstance().getCurrentUser()));
+                BmobQuery<SystemNotifyBean>  query1=new BmobQuery<>();
                 query1.addWhereEqualTo("readStatus",Constant.READ_STATUS_UNREAD);
-                query1.include("publicCommentBean");
-                query1.findObjects(new FindListener<CommentNotifyBean>() {
+                query1.findObjects(new FindListener<SystemNotifyBean>() {
                         @Override
-                        public void done(List<CommentNotifyBean> list, BmobException e) {
+                        public void done(List<SystemNotifyBean> list, BmobException e) {
                                 if (e == null) {
                                         if (list != null && list.size() > 0) {
-                                                List<PublicCommentBean>  result=new ArrayList<>(list.size());
-                                                for (CommentNotifyBean item:list
+                                                List<SystemNotifyEntity>  result=new ArrayList<>(list.size());
+                                                for (SystemNotifyBean item:list
                                                         ) {
-                                                        result.add(item.getPublicCommentBean());
+                                                        SystemNotifyEntity systemNotifyEntity=new SystemNotifyEntity();
+                                                        systemNotifyEntity.setReadStatus(Constant.READ_STATUS_UNREAD);
+                                                        systemNotifyEntity.setTitle(item.getTitle());
+                                                        systemNotifyEntity.setSubTitle(item.getSubTitle());
+                                                        systemNotifyEntity.setImageUrl(item.getImageUrl());
+                                                        systemNotifyEntity.setContentUrl(item.getContentUrl());
+                                                        systemNotifyEntity.setId(item.getObjectId());
+                                                        item.setReadStatus(Constant.READ_STATUS_READED);
+                                                        result.add(systemNotifyEntity);
                                                 }
-                                                UserDBManager
-                                                        .getInstance()
-                                                        .addOrUpdateComment(result);
-                                                ChatNotificationManager.getInstance(getBaseContext()).showNotification(null,getBaseContext(),"评论通知", R.mipmap.ic_launcher,"你有一条评论", CommentNotifyActivity.class);
-                                                MsgManager.getInstance().updateCommentReadStatus(list);
+                                                List<BmobObject>  update=new ArrayList<>(list);
+                                                new BmobBatch().updateBatch(update).doBatch(new QueryListListener<BatchResult>() {
+                                                        @Override
+                                                        public void done(List<BatchResult> list, BmobException e) {
+                                                                if (e == null) {
+                                                                        CommonLogger.e("批量更新系统通知成功");
+                                                                        UserDBManager.getInstance().addOrUpdateSystemNotify(result);
+                                                                        RxBusManager.getInstance().post(new UnReadSystemNotifyEvent());
+                                                                        ChatNotificationManager.getInstance(getBaseContext()).showNotification(null, getBaseContext(), "系统", R.mipmap.ic_launcher, "你有一条系统通知", SystemNotifyActivity.class);
+                                                                }else {
+                                                                        CommonLogger.e("批量更新系统通知失败"+e.toString());
+                                                                }
+                                                        }
+                                                });
+
+
                                         }
                                 }else {
                                         CommonLogger.e("定时拉取评论通知失败"+e.toString());

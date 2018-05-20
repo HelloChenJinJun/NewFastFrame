@@ -183,9 +183,6 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                         }
                     }));
                     MsgManager.getInstance().sendNotifyCommentInfo(newBean);
-
-
-
                 }else {
                     newBean.setSendStatus(Constant.SEND_STATUS_FAILED);
                     ToastUtils.showShortToast("评论失败"+e.toString());
@@ -302,6 +299,9 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                             } else {
                                 ToastUtils.showShortToast("点赞失败" + e.toString());
                             }
+
+
+
                         }
                     }));
                 }

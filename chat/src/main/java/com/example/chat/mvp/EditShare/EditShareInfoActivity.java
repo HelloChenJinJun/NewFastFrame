@@ -91,12 +91,13 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
     //    视频封面路径
     private String thumbImage;
     private ImageView record;
+    private Gson gson = BaseApplication.getAppComponent().getGson();
 
 
     @Override
     public void updateData(PublicPostBean publicPostBean) {
-                RxBusManager.getInstance().post(publicPostBean);
-                finish();
+        RxBusManager.getInstance().post(publicPostBean);
+        finish();
     }
 
     @Override
@@ -121,7 +122,7 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
         shareCover = (ImageView) findViewById(R.id.iv_activity_edit_share_info_cover);
         input = (EditText) findViewById(R.id.et_activity_edit_share_info_edit);
         video = (JZVideoPlayerStandard) findViewById(R.id.js_activity_edit_share_info_video);
-        record= (ImageView) findViewById(R.id.iv_activity_edit_share_info_video);
+        record = (ImageView) findViewById(R.id.iv_activity_edit_share_info_video);
         RelativeLayout locationContainer = (RelativeLayout) findViewById(R.id.rl_activity_edit_share_info_location);
         RelativeLayout visibilityContainer = (RelativeLayout) findViewById(R.id.rl_activity_edit_share_info_visibility_container);
         location = (TextView) findViewById(R.id.tv_activity_edit_share_info_location);
@@ -309,6 +310,13 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
             }
         } else if (type == Constant.EDIT_TYPE_SHARE) {
 //            处理分享的信息，主要把分享的内容转化为要本地,再分享
+            if (isEdit) {
+                publicPostBean =
+                        MsgManager.getInstance()
+                                .cover(gson.fromJson(gson.fromJson(publicPostBean.getContent(), PostDataBean.class).getShareContent()
+                                        , PublicPostEntity.class));
+
+            }
             if (publicPostBean.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
                 Glide.with(this).load(postDataBean.getImageList().get(0))
                         .into(shareCover);
@@ -352,7 +360,7 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
 
     private void createOrUpdatePostInfo() {
         ArrayList<ImageItem> imageItemList = null;
-        if (type==Constant.EDIT_TYPE_IMAGE) {
+        if (type == Constant.EDIT_TYPE_IMAGE) {
             imageItemList = new ArrayList<>(editShareAdapter.getData());
             if (editShareAdapter.getData(editShareAdapter.getData().size() - 1).getItemViewType() == ImageItem.ITEM_CAMERA) {
                 imageItemList.remove(imageItemList.size() - 1);
@@ -458,7 +466,7 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
 
         } else if (id == R.id.iv_activity_edit_share_info_video) {
             videoPath = SystemUtil.recorderVideo(this, SystemUtil.REQUEST_CODE_VIDEO_RECORDER);
-        }else if (id==R.id.cv_activity_edit_share_info_share_container){
+        } else if (id == R.id.cv_activity_edit_share_info_share_container) {
             CommentListActivity.start(this, publicPostBean);
         }
     }
@@ -467,8 +475,8 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
     @Override
     protected void onResume() {
         super.onResume();
-        if (disposable!=null&&disposable.isDisposed()){
-            disposable=registerPreViewEvent();
+        if (disposable != null && disposable.isDisposed()) {
+            disposable = registerPreViewEvent();
         }
     }
 
@@ -485,7 +493,7 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-              if (requestCode == SystemUtil.REQUEST_CODE_VIDEO_RECORDER) {
+            if (requestCode == SystemUtil.REQUEST_CODE_VIDEO_RECORDER) {
                 video.setVisibility(View.VISIBLE);
                 record.setVisibility(View.GONE);
                 video.setUp(videoPath, JZVideoPlayer.SCREEN_WINDOW_NORMAL, "测试");
@@ -493,7 +501,7 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
                         , MediaStore.Images.Thumbnails.MINI_KIND);
                 thumbImage = SystemUtil.bitmapToFile(bitmap);
                 video.thumbImageView.setImageBitmap(bitmap);
-            }  else if (requestCode == Constant.REQUEST_CODE_LOCATION) {
+            } else if (requestCode == Constant.REQUEST_CODE_LOCATION) {
                 LocationEvent locationEvent = (LocationEvent) data.getSerializableExtra(Constant.LOCATION);
                 updateLocation(locationEvent);
             }

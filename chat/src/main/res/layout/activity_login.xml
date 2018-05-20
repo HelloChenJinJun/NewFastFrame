@@ -6,11 +6,12 @@
 
     <ImageView
         android:id="@+id/iv_login_bg"
-        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginLeft="-50dp"
         android:layout_marginRight="-300dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/de_bg"/>
+        android:background="@color/black"/>
 
     <TextView
         android:layout_width="wrap_content"

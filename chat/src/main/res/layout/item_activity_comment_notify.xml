@@ -7,6 +7,7 @@
 
     <com.example.commonlibrary.cusotomview.RoundAngleImageView
         android:layout_width="50dp"
+        android:scaleType="centerCrop"
         android:layout_height="50dp"
         android:id="@+id/riv_item_activity_comment_notify_avatar"
         android:src="@drawable/head"/>

@@ -20,7 +20,7 @@
         android:id="@+id/rg_activity_main_bottom_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checkedButton="@+id/rb_activity_main_bottom_index"
+        android:checkedButton="@+id/rb_activity_main_bottom_chat"
         android:gravity="center"
         android:orientation="horizontal">
 

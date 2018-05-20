@@ -1637,7 +1637,7 @@ public class MsgManager {
         return entity;
     }
 
-    public PublicCommentBean createPostCommentBean(PublicCommentBean publicCommentBean, String postId, String content) {
+    public PublicCommentBean createPostCommentBean(PublicCommentBean publicCommentBean, PublicPostBean data, String content) {
         final CommentDetailBean commentDetailBean = new CommentDetailBean();
         commentDetailBean.setContent(content);
         if (publicCommentBean != null) {
@@ -1681,9 +1681,7 @@ public class MsgManager {
         final PublicCommentBean newBean = new PublicCommentBean();
         newBean.setContent(gson.toJson(commentDetailBean));
         newBean.setUser(UserManager.getInstance().getCurrentUser());
-        PublicPostBean posterMessage = new PublicPostBean();
-        posterMessage.setObjectId(postId);
-        newBean.setPost(posterMessage);
+        newBean.setPost(data);
         newBean.setCreateTime(TimeUtil.getTime(TimeUtil.localToServerTime(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss"));
         newBean.setUpdatedAt(TimeUtil.getTime(TimeUtil.localToServerTime(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss"));
         return newBean;
@@ -1701,7 +1699,7 @@ public class MsgManager {
 //                        回复评论
             String[] str=commentDetailBean.getPublicId().split("&");
             String otherUid;
-            if (str[0].equals(UserManager.getInstance().getCurrentUserObjectId())) {
+            if (str[0].equals(newBean.getPost().getAuthor().getObjectId())) {
                 otherUid=str[1];
             }else {
                 otherUid=str[0];
@@ -1784,7 +1782,7 @@ public class MsgManager {
         });
     }
 
-    public void updateCommentReadStatus(PublicCommentBean publicCommentBean) {
+    public void updateCommentReadStatus(PublicCommentBean publicCommentBean,UpdateListener listener) {
         BmobQuery<CommentNotifyBean> bmobQuery=new BmobQuery<>();
         bmobQuery.addWhereEqualTo("publicCommentBean",new BmobPointer(publicCommentBean));
         bmobQuery.addWhereEqualTo("user",UserManager.getInstance().getCurrentUser());
@@ -1796,17 +1794,12 @@ public class MsgManager {
                     if (list != null && list.size() > 0) {
                         CommentNotifyBean commentNotifyBean=list.get(0);
                         commentNotifyBean.setReadStatus(Constant.READ_STATUS_READED);
-                        commentNotifyBean.update(new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if (e == null) {
-                                    CommonLogger.e("在服务器上更新评论已读成功");
-                                }    else {
-                                    CommonLogger.e("在服务器上更新评论已读失败"+e.toString());
-                                }
-                            }
-                        });
+                        commentNotifyBean.update(listener);
+                    }else {
+                        listener.done(new BmobException("数据为空"));
                     }
+                }else {
+                    listener.done(e);
                 }
             }
         });

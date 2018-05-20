@@ -14,7 +14,15 @@ public class SystemNotifyBean extends BmobObject{
     private String title;
     private String subTitle;
     private String contentUrl;
+    private Integer readStatus;
 
+    public Integer getReadStatus() {
+        return readStatus;
+    }
+
+    public void setReadStatus(Integer readStatus) {
+        this.readStatus = readStatus;
+    }
 
     @Override
     public boolean equals(Object obj) {

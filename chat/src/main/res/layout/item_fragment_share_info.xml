@@ -16,6 +16,7 @@ android:orientation="vertical">
         android:layout_height="50dp"
         app:roundHeight="25dp"
         app:roundWidth="25dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/head"
         android:id="@+id/riv_item_fragment_share_info_avatar"
         android:layout_centerVertical="true"/>

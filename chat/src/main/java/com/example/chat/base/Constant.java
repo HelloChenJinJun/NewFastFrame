@@ -236,4 +236,5 @@ public class Constant {
     public static final String PUBLIC = "public";
     public static final String REFRESH_TIME = "0000-00-00 01:00:00";
     public static final String TAG_COMMENT_ID = "commentId";
+    public static final String TAG_CONTENT_URL = "contentUrl";
 }

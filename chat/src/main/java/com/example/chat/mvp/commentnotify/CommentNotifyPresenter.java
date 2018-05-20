@@ -41,6 +41,7 @@ public class CommentNotifyPresenter extends AppBasePresenter<IView<List<PublicCo
             bmobQuery.setLimit(10);
             bmobQuery.order("-createdAt");
             bmobQuery.setSkip((page-1)*10);
+            bmobQuery.include("user,post,post.author");
             addSubscription(bmobQuery.findObjects(new FindListener<PublicCommentBean>() {
                 @Override
                 public void done(List<PublicCommentBean> list, BmobException e) {
@@ -59,6 +60,8 @@ public class CommentNotifyPresenter extends AppBasePresenter<IView<List<PublicCo
             bmobQuery.setLimit(10);
             bmobQuery.order("-createdAt");
             bmobQuery.setSkip((page-1)*10);
+            bmobQuery.include("publicCommentBean,user,publicCommentBean.post,publicCommentBean.user" +
+                    ",publicCommentBean.post.author");
             addSubscription(bmobQuery.findObjects(new FindListener<CommentNotifyBean>() {
                 @Override
                 public void done(List<CommentNotifyBean> list, BmobException e) {

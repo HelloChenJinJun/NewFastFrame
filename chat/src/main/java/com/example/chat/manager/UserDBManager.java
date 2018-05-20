@@ -664,7 +664,7 @@ public class UserDBManager {
     }
 
     public void addOrUpdateSystemNotify(SystemNotifyEntity systemNotifyBean) {
-        daoSession.getSystemNotifyEntityDao().insertInTx(systemNotifyBean);
+        daoSession.getSystemNotifyEntityDao().insert(systemNotifyBean);
     }
 
     public long getUnReadSystemNotifyCount() {
@@ -672,23 +672,7 @@ public class UserDBManager {
         .ReadStatus.eq(Constant.READ_STATUS_UNREAD)).buildCount().count();
     }
 
-    public void addOrUpdateSystemNotify(List<SystemNotifyBean> list) {
-        if (list!=null&&list.size()>0) {
-            List<SystemNotifyEntity>  list1=new ArrayList<>(list.size());
-            for (SystemNotifyBean item :
-                    list) {
-                SystemNotifyEntity entity = new SystemNotifyEntity();
-                entity.setId(item.getObjectId());
-                entity.setContentUrl(item.getContentUrl());
-                entity.setImageUrl(item.getImageUrl());
-                entity.setReadStatus(item.getReadStatus());
-                entity.setSubTitle(item.getSubTitle());
-                entity.setTitle(item.getTitle());
-                list1.add(entity);
-            }
-            daoSession.getSystemNotifyEntityDao().insertOrReplaceInTx(list1);
-        }
-    }
+
 
     public void updateSystemNotifyReadStatus() {
         List<SystemNotifyEntity>  list=daoSession.getSystemNotifyEntityDao().queryBuilder()
@@ -701,5 +685,14 @@ public class UserDBManager {
             }
             daoSession.getSystemNotifyEntityDao().updateInTx(list);
         }
+    }
+
+    public void addOrUpdateSystemNotify(List<SystemNotifyEntity> result) {
+        daoSession.getSystemNotifyEntityDao().insertOrReplaceInTx(result);
+    }
+
+    public boolean hasSystemNotify(String id) {
+       return daoSession.getSystemNotifyEntityDao().queryBuilder().where(SystemNotifyEntityDao.Properties
+        .Id.eq(id)).buildCount().count()>0;
     }
 }

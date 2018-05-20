@@ -40,4 +40,5 @@ public class ConstantUtil {
     public static final String PATH = "PATH";
     public static final int REQUEST_CODE_ONE_PHOTO = 5;
     public static final int REQUEST_CODE_CROP = 4;
+    public static final int READ_STATUS_UNREAD = 0;
 }

@@ -169,8 +169,9 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
             @Override
             public void onItemChildClick(int position, View view, int id) {
+
                 if (id == R.id.tv_item_fragment_share_info_share) {
-                    PublicPostBean data=shareInfoAdapter.getData(position);
+                    PublicPostBean data=shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount());
                     if (data.getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
                         ToastUtils.showShortToast("不能转发自己的说说");
                     }else {
@@ -189,14 +190,14 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                         }
                     }
                 } else if (id == R.id.tv_item_fragment_share_info_comment) {
-                    CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position));
+                    CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()));
                 } else if (id == R.id.tv_item_fragment_share_info_like) {
-                    dealLike(shareInfoAdapter.getData(position));
+                    dealLike(shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()));
                 } else if (id == R.id.riv_item_fragment_share_info_avatar) {
-                    UserDetailActivity.start(getActivity(), shareInfoAdapter.getData(position)
+                    UserDetailActivity.start(getActivity(), shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount())
                             .getAuthor().getObjectId());
                 } else if (id == R.id.iv_item_fragment_share_info_more) {
-                    if (shareInfoAdapter.getData(position).getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                    if (shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()).getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
                         List<String> list1 = new ArrayList<>();
                         list1.add("删除");
                         list1.add("修改");
@@ -204,14 +205,14 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                             hideBaseDialog();
                             if (i == 0) {
                                 showLoadDialog("删除中....");
-                                presenter.deleteShareInfo(shareInfoAdapter.getData(position), new UpdateListener() {
+                                presenter.deleteShareInfo(shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()), new UpdateListener() {
                                     @Override
                                     public void done(BmobException e) {
                                         dismissLoadDialog();
                                         if (e == null) {
                                             ToastUtils.showShortToast("删除成功");
                                             CommonLogger.e("删除成功");
-                                            shareInfoAdapter.removeData(position);
+                                            shareInfoAdapter.removeData(position-shareInfoAdapter.getItemUpCount());
                                         } else {
                                             ToastUtils.showShortToast("删除失败" + e.toString());
                                             CommonLogger.e("删除失败" + e.toString());
@@ -219,7 +220,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                                     }
                                 });
                             } else {
-                                PublicPostBean publicPostBean = shareInfoAdapter.getData(position);
+                                PublicPostBean publicPostBean = shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount());
                                 EditShareInfoActivity.start(getActivity(), publicPostBean.getMsgType(), publicPostBean, true);
                             }
                         });
@@ -229,13 +230,13 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
 
                 } else if (id == R.id.ll_item_fragment_share_info_share_image) {
-                    dealSharePostData(position);
+                    dealSharePostData(position-shareInfoAdapter.getItemUpCount());
                 } else if (id == R.id.ll_item_fragment_share_info_share_container) {
-                    dealSharePostData(position);
+                    dealSharePostData(position-shareInfoAdapter.getItemUpCount());
                 } else if (id==R.id.iv_item_fragment_share_info_retry){
-                    shareInfoAdapter.getData(position).setSendStatus(Constant.SEND_STATUS_SENDING);
-                    shareInfoAdapter.notifyItemChanged(position + shareInfoAdapter.getItemUpCount());
-                    presenter.reSendPublicPostBean(shareInfoAdapter.getData(position), shareInfoAdapter.getData(position).getObjectId());
+                    shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()).setSendStatus(Constant.SEND_STATUS_SENDING);
+                    shareInfoAdapter.notifyItemChanged(position);
+                    presenter.reSendPublicPostBean(shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()), shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()).getObjectId());
                 }else {
                     List<String> imageList = BaseApplication
                             .getAppComponent()
@@ -251,7 +252,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                         }
                         PhotoPreViewActivity.start(getActivity(), id, result, false);
                     } else {
-                        dealSharePostData(position);
+                        dealSharePostData(position-shareInfoAdapter.getItemUpCount());
                     }
                 }
 

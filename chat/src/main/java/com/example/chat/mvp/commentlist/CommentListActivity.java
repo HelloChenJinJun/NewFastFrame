@@ -487,11 +487,11 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
             });
             SuperRecyclerView display=shareView.findViewById(R.id.srcv_item_fragment_share_info_display);
             JZVideoPlayerStandard videoDisplay=shareView.findViewById(R.id.js_item_fragment_share_info_video_display);
+            shareView.findViewById(R.id.ll_item_fragment_share_info_share_container)
+                    .setOnClickListener(this);
             if (bean.getMsgType() ==Constant.EDIT_TYPE_IMAGE) {
                 display.setVisibility(View.VISIBLE);
                 videoDisplay.setVisibility(View.GONE);
-                shareView.findViewById(R.id.ll_item_fragment_share_info_share_image)
-                        .setOnClickListener(this);
                 int size = shareBean.getImageList().size();
                 if (size <= 4) {
                     display.setLayoutManager(new WrappedGridLayoutManager(this, 2));
@@ -653,12 +653,9 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
             dealBottomInput(true);
         } else if (id == R.id.tv_item_fragment_share_info_like) {
             dealLike(data);
-
         } else if (id == R.id.riv_item_fragment_share_info_avatar) {
             UserDetailActivity.start(this, data.getAuthor().getObjectId());
 
-        }else if (id==R.id.ll_item_fragment_share_info_share_image){
-            dealShareInfo();
         }else if (id==R.id.ll_item_fragment_share_info_share_container){
             dealShareInfo();
         }
@@ -685,7 +682,7 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
                            return;
                         }
                     }
-                    PublicCommentBean publicCommentBean=MsgManager.getInstance().createPostCommentBean(bean,postId,input.getText().toString().trim());
+                    PublicCommentBean publicCommentBean=MsgManager.getInstance().createPostCommentBean(bean,data,input.getText().toString().trim());
                     publicCommentBean.setSendStatus(Constant.SEND_STATUS_SENDING);
                     commentListAdapter.addData(0,publicCommentBean);
                     presenter.sendCommentData(publicCommentBean);

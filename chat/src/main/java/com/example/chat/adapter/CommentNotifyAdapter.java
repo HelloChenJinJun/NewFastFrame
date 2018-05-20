@@ -35,12 +35,11 @@ public class CommentNotifyAdapter extends BaseRecyclerAdapter<PublicCommentBean,
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         CommentDetailBean commentDetailBean =gson.fromJson(data.getContent(), CommentDetailBean.class);
         spannableStringBuilder.append(data.getUser().getNick());
-
         if (commentDetailBean.getReplyContent() != null) {
             spannableStringBuilder.append(" 回复 ");
             String[] uidList=commentDetailBean.getPublicId().split("&");
             String uid;
-            if (!uidList[0].equals(UserManager.getInstance().getCurrentUserObjectId())) {
+            if (!uidList[0].equals(data.getUser().getObjectId())) {
                 uid=uidList[0];
             }else {
                 uid=uidList[1];

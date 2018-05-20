@@ -109,4 +109,4 @@ dependencies {
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
 }
 
-//apply from: 'tinker-support.gradle'
+apply from: 'tinker-support.gradle'
