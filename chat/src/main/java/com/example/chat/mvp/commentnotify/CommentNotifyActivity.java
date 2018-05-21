@@ -9,10 +9,11 @@ import com.example.chat.R;
 import com.example.chat.adapter.CommentNotifyAdapter;
 import com.example.chat.base.Constant;
 import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.dagger.commentnotify.CommentNotifyModule;
 import com.example.chat.dagger.commentnotify.DaggerCommentNotifyComponent;
-import com.example.chat.events.UnReadCommentEvent;
+import com.example.chat.events.UnReadPostNotifyEvent;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
@@ -21,6 +22,7 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.bean.chat.PostNotifyInfo;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 
@@ -35,9 +37,10 @@ import javax.inject.Inject;
  * 创建时间:    2018/5/19     0:32
  */
 
-public class CommentNotifyActivity extends SlideBaseActivity<List<PublicCommentBean>, CommentNotifyPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class CommentNotifyActivity extends SlideBaseActivity<List<PostNotifyBean>, CommentNotifyPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
     private SuperRecyclerView display;
     private SwipeRefreshLayout refresh;
+    private ArrayList<PostNotifyInfo>  data;
 
 
     @Inject
@@ -45,7 +48,7 @@ public class CommentNotifyActivity extends SlideBaseActivity<List<PublicCommentB
 
 
     @Override
-    public void updateData(List<PublicCommentBean> publicCommentBeans) {
+    public void updateData(List<PostNotifyBean> publicCommentBeans) {
         if (refresh.isRefreshing()) {
             commentNotifyAdapter.refreshData(publicCommentBeans);
         } else {
@@ -81,6 +84,7 @@ public class CommentNotifyActivity extends SlideBaseActivity<List<PublicCommentB
                 .chatMainComponent(getChatMainComponent())
                 .commentNotifyModule(new CommentNotifyModule(this))
                 .build().inject(this);
+        data= (ArrayList<PostNotifyInfo>) getIntent().getSerializableExtra(Constant.DATA);
         display.setLayoutManager(new WrappedLinearLayoutManager(this));
         display.setAdapter(commentNotifyAdapter);
         display.setLoadMoreFooterView(new LoadMoreFooterView(this));
@@ -89,24 +93,24 @@ public class CommentNotifyActivity extends SlideBaseActivity<List<PublicCommentB
             @Override
             public void onItemClick(int position, View view) {
                 CommentListActivity.start(CommentNotifyActivity.this
-                        , commentNotifyAdapter.getData(position).getPost());
+                        , commentNotifyAdapter.getData(position).getPublicPostBean());
             }
         });
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("留言");
         toolBarOption.setNeedNavigation(true);
         setToolBar(toolBarOption);
-        if (getIntent().getSerializableExtra(Constant.DATA)!=null) {
+        if (data!=null) {
             UserDBManager.getInstance().updateCommentReadStatus();
-            RxBusManager.getInstance().post(new UnReadCommentEvent(null));
+            RxBusManager.getInstance().post(new UnReadPostNotifyEvent(null));
         }
-        runOnUiThread(() -> presenter.getNotifyCommentList(true, (ArrayList<String>) getIntent().getSerializableExtra(Constant.DATA)));
+        runOnUiThread(() -> presenter.getPostNotifyInfo(true, data));
     }
 
 
 
 
-    public static void start(Activity activity, ArrayList<String> commentIdList) {
+    public static void start(Activity activity, ArrayList<PostNotifyInfo> commentIdList) {
         Intent intent = new Intent(activity, CommentNotifyActivity.class);
         intent.putExtra(Constant.DATA, commentIdList);
         activity.startActivity(intent);
@@ -115,12 +119,12 @@ public class CommentNotifyActivity extends SlideBaseActivity<List<PublicCommentB
 
     @Override
     public void loadMore() {
-        presenter.getNotifyCommentList(false, (ArrayList<String>) getIntent().getSerializableExtra(Constant.DATA));
+        presenter.getPostNotifyInfo(false, data);
     }
 
     @Override
     public void onRefresh() {
-        presenter.getNotifyCommentList(true, (ArrayList<String>) getIntent().getSerializableExtra(Constant.DATA));
+        presenter.getPostNotifyInfo(true,data);
 
     }
 

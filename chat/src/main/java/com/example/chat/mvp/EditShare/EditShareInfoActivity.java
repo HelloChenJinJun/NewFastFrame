@@ -315,7 +315,7 @@ public class EditShareInfoActivity extends SlideBaseActivity<PublicPostBean, Edi
                         MsgManager.getInstance()
                                 .cover(gson.fromJson(gson.fromJson(publicPostBean.getContent(), PostDataBean.class).getShareContent()
                                         , PublicPostEntity.class));
-
+                postDataBean = BaseApplication.getAppComponent().getGson().fromJson(publicPostBean.getContent(), PostDataBean.class);
             }
             if (publicPostBean.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
                 Glide.with(this).load(postDataBean.getImageList().get(0))

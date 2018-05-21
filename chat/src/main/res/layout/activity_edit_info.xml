@@ -39,6 +39,7 @@
                 android:id="@+id/riv_edit_user_info_avatar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:scaleType="centerCrop"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/iv_edit_user_info_arrow"

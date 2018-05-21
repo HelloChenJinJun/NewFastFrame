@@ -1,9 +1,11 @@
 package com.example.chat.adapter;
 
 import android.text.SpannableStringBuilder;
+import android.widget.TextView;
 
 import com.example.chat.R;
 import com.example.chat.base.Constant;
+import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
@@ -22,7 +24,7 @@ import com.google.gson.Gson;
  * 创建时间:    2018/5/19     11:16
  */
 
-public class CommentNotifyAdapter extends BaseRecyclerAdapter<PublicCommentBean,BaseWrappedViewHolder>{
+public class CommentNotifyAdapter extends BaseRecyclerAdapter<PostNotifyBean,BaseWrappedViewHolder>{
     private Gson gson= BaseApplication.getAppComponent()
             .getGson();
     @Override
@@ -31,34 +33,40 @@ public class CommentNotifyAdapter extends BaseRecyclerAdapter<PublicCommentBean,
     }
 
     @Override
-    protected void convert(BaseWrappedViewHolder holder, PublicCommentBean data) {
+    protected void convert(BaseWrappedViewHolder holder, PostNotifyBean data) {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-        CommentDetailBean commentDetailBean =gson.fromJson(data.getContent(), CommentDetailBean.class);
-        spannableStringBuilder.append(data.getUser().getNick());
-        if (commentDetailBean.getReplyContent() != null) {
-            spannableStringBuilder.append(" 回复 ");
-            String[] uidList=commentDetailBean.getPublicId().split("&");
-            String uid;
-            if (!uidList[0].equals(data.getUser().getObjectId())) {
-                uid=uidList[0];
-            }else {
-                uid=uidList[1];
+        if (data.getType().equals(Constant.TYPE_COMMENT)) {
+            CommentDetailBean commentDetailBean =gson.fromJson(data.getPublicCommentBean().getContent(), CommentDetailBean.class);
+            if (commentDetailBean.getReplyContent() != null) {
+                spannableStringBuilder.append(" 回复 ");
+                String[] uidList=commentDetailBean.getPublicId().split("&");
+                String uid;
+                if (!uidList[0].equals(data.getPublicCommentBean().getUser().getObjectId())) {
+                    uid=uidList[0];
+                }else {
+                    uid=uidList[1];
+                }
+                UserEntity replyUser= UserDBManager.getInstance()
+                        .getUser(uid);
+                spannableStringBuilder.append(replyUser.getName());
             }
-            UserEntity replyUser= UserDBManager.getInstance()
-                    .getUser(uid);
-            spannableStringBuilder.append(replyUser.getName());
+            spannableStringBuilder.append("：");
+            spannableStringBuilder.append(FaceTextUtil.toSpannableString(holder.itemView.getContext(), commentDetailBean.getContent()));
+            holder.setText(R.id.tv_item_activity_comment_notify_content,spannableStringBuilder);
+        }else if (data.getType().equals(Constant.TYPE_LIKE)){
+            ((TextView)holder.getView(R.id.tv_item_activity_comment_notify_content)).setCompoundDrawablesWithIntrinsicBounds(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_favorite_border_deep_orange_a700_24dp), null, null, null);
+        }else {
+            spannableStringBuilder.append("转发了该条说说");
+            holder.setText(R.id.tv_item_activity_comment_notify_content,spannableStringBuilder);
         }
-        spannableStringBuilder.append("：");
-        spannableStringBuilder.append(FaceTextUtil.toSpannableString(holder.itemView.getContext(), commentDetailBean.getContent()));
         holder.setImageUrl(R.id.riv_item_activity_comment_notify_avatar
-                ,data.getUser().getAvatar())
+                ,data.getRelatedUser().getAvatar())
                 .setText(R.id.tv_item_activity_comment_notify_name,data
-                        .getUser().getNick())
-                .setText(R.id.tv_item_activity_comment_notify_content,spannableStringBuilder)
+                        .getRelatedUser().getNick())
                 .setText(R.id.tv_item_activity_comment_notify_time,data.getCreatedAt())
                 .setOnItemClickListener();
-        Integer mediaType=data.getPost().getMsgType();
-        PostDataBean bean=gson.fromJson(data.getPost().getContent(),PostDataBean.class);
+        Integer mediaType=data.getPublicPostBean().getMsgType();
+        PostDataBean bean=gson.fromJson(data.getPublicPostBean().getContent(),PostDataBean.class);
         if (mediaType.equals(Constant.EDIT_TYPE_IMAGE)||mediaType.equals(Constant.EDIT_TYPE_VIDEO)) {
             String url=null;
             if (mediaType.equals(Constant.EDIT_TYPE_IMAGE)) {

@@ -182,7 +182,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                             RxBusManager.getInstance().post(new CommentEvent(newBean.getPost().getObjectId(), CommentEvent.TYPE_COMMENT, CommentEvent.ACTION_ADD));
                         }
                     }));
-                    MsgManager.getInstance().sendNotifyCommentInfo(newBean);
+                    addSubscription(MsgManager.getInstance().sendNotifyCommentInfo(newBean));
                 }else {
                     newBean.setSendStatus(Constant.SEND_STATUS_FAILED);
                     ToastUtils.showShortToast("评论失败"+e.toString());
@@ -269,6 +269,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
     public void dealLike(final String objectId, final boolean isAdd) {
         BmobQuery<PublicPostBean> query = new BmobQuery<>();
         query.addWhereEqualTo("objectId", objectId);
+        query.include("author");
         addSubscription(query.findObjects(new FindListener<PublicPostBean>() {
             @Override
             public void done(List<PublicPostBean> list, BmobException e) {
@@ -291,11 +292,15 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                         public void done(BmobException e) {
                             iView.hideLoading();
                             if (e == null) {
-//                                不管下面操作是否成功
                                 UserDBManager.getInstance()
                                         .addOrUpdatePost(publicPostBean);
                                 RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE, isAdd ? CommentEvent.ACTION_ADD : CommentEvent
                                         .ACTION_DELETE));
+                                if (isAdd) {
+                                    addSubscription(MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_LIKE,objectId,UserManager.getInstance()
+                                            .getCurrentUserObjectId(),publicPostBean.getAuthor().getObjectId()));
+
+                                }
                             } else {
                                 ToastUtils.showShortToast("点赞失败" + e.toString());
                             }
@@ -304,6 +309,8 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
 
                         }
                     }));
+                }else {
+                    iView.hideLoading();
                 }
             }
         }));

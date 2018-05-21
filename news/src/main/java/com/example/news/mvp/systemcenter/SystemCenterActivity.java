@@ -164,12 +164,7 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
             }
         });
         initToolBar();
-        display.post(new Runnable() {
-            @Override
-            public void run() {
-                centerAdapter.addData(getDefaultData());
-            }
-        });
+        display.post(() -> centerAdapter.addData(getDefaultData()));
     }
 
     private void initToolBar() {

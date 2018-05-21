@@ -33,8 +33,9 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:             1981367757
  */
 
-public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean>>,OtherNewsListModel>{
-    private int num=0;
+public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean>>, OtherNewsListModel> {
+    private int num = 0;
+
     public OtherNewsListPresenter(IView<List<NewInfoBean>> iView, OtherNewsListModel baseModel) {
         super(iView, baseModel);
     }
@@ -44,35 +45,26 @@ public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean
             return;
         }
         if (isShowLoading) {
-                iView.showLoading(null);
+            iView.showLoading(null);
         }
         if (isRefresh) {
-            num=0;
+            num = 0;
         }
         num++;
         baseModel.getRepositoryManager().getApi(OtherNewsApi.class)
-                .getNewsList(typeId.equals("T1348647909107")?"headline":"list",typeId,(num-1)*20)
-                .compose(iView.<Map<String,List<NewInfoBean>>>bindLife())
+                .getNewsList(typeId.equals("T1348647909107") ? "headline" : "list", typeId, (num - 1) * 20)
+                .compose(iView.bindLife())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(new Function<Map<String, List<NewInfoBean>>, ObservableSource<NewInfoBean>>() {
-                    @Override
-                    public ObservableSource<NewInfoBean> apply(@NonNull Map<String, List<NewInfoBean>> stringListMap) throws Exception {
-                        return Observable.fromIterable(stringListMap.get(typeId));
-                    }
-                }).doAfterNext(new Consumer<NewInfoBean>() {
-            @Override
-            public void accept(NewInfoBean newInfoBean) throws Exception {
-                if (NewsUtil.PHOTO_SET.equals(newInfoBean.getSkipType())){
-                    if (newInfoBean.getImgextra()== null
-                            || newInfoBean.getImgextra().size()<3) {
-                        getExtraPhotoSet(newInfoBean);
-                    }
+                .flatMap(stringListMap -> Observable.fromIterable(stringListMap.get(typeId))).doAfterNext(newInfoBean -> {
+            if (NewsUtil.PHOTO_SET.equals(newInfoBean.getSkipType())) {
+                if (newInfoBean.getImgextra() == null
+                        || newInfoBean.getImgextra().size() < 3) {
+                    getExtraPhotoSet(newInfoBean);
                 }
-
-
-
             }
+
+
         }).toList().subscribe(new SingleObserver<List<NewInfoBean>>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
@@ -94,12 +86,12 @@ public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean
                 if (!isRefresh) {
                     num--;
                 }
-            iView.showError(null, new EmptyLayout.OnRetryListener() {
-                @Override
-                public void onRetry() {
-                    getOtherNewsListData(isShowLoading, isRefresh, typeId);
-                }
-            });
+                iView.showError(null, new EmptyLayout.OnRetryListener() {
+                    @Override
+                    public void onRetry() {
+                        getOtherNewsListData(isShowLoading, isRefresh, typeId);
+                    }
+                });
             }
         });
     }
@@ -111,40 +103,39 @@ public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean
 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<PhotoSetBean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(PhotoSetBean photoSetBean) {
-                if (photoSetBean.getPhotos() != null && photoSetBean.getPhotos().size() > 0) {
-                    List<NewInfoBean.ImgextraEntity> list=new ArrayList<>();
-                    for (PhotoSetBean.PhotosEntity entity :
-                            photoSetBean.getPhotos()) {
-                        NewInfoBean.ImgextraEntity item = new NewInfoBean.ImgextraEntity();
-                        item.setImgsrc(entity.getImgurl());
-                        list.add(item);
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDispose(d);
                     }
-                    newInfoBean.setImgextra(list);
-                    List<NewInfoBean> result=new ArrayList<>();
-                    result.add(newInfoBean);
-                    iView.updateData(result);
-                }
-            }
 
-            @Override
-            public void onError(Throwable e) {
-                CommonLogger.e(e);
-            }
+                    @Override
+                    public void onNext(PhotoSetBean photoSetBean) {
+                        if (photoSetBean.getPhotos() != null && photoSetBean.getPhotos().size() > 0) {
+                            List<NewInfoBean.ImgextraEntity> list = new ArrayList<>();
+                            for (PhotoSetBean.PhotosEntity entity :
+                                    photoSetBean.getPhotos()) {
+                                NewInfoBean.ImgextraEntity item = new NewInfoBean.ImgextraEntity();
+                                item.setImgsrc(entity.getImgurl());
+                                list.add(item);
+                            }
+                            newInfoBean.setImgextra(list);
+                            List<NewInfoBean> result = new ArrayList<>();
+                            result.add(newInfoBean);
+                            iView.updateData(result);
+                        }
+                    }
 
-            @Override
-            public void onComplete() {
+                    @Override
+                    public void onError(Throwable e) {
+                        CommonLogger.e(e);
+                    }
 
-            }
-        });
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
-
 
 
     /**
@@ -153,7 +144,7 @@ public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean
      * @param photoId
      * @return
      */
-    public  String clipPhotoSetId(String photoId) {
+    public String clipPhotoSetId(String photoId) {
         if (TextUtils.isEmpty(photoId)) {
             return photoId;
         }

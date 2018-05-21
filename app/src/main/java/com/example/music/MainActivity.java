@@ -143,4 +143,10 @@ public class MainActivity extends SlideBaseActivity {
         Intent intent=new Intent(activity,MainActivity.class);
         activity.startActivity(intent);
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

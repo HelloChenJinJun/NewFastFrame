@@ -12,6 +12,7 @@
             android:layout_height="60dp"
             app:roundHeight="30dp"
             app:roundWidth="30dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/head"
             android:layout_marginLeft="30dp"
             android:layout_centerVertical="true"
@@ -43,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_view_activity_user_detail_header_signature"
                 android:textSize="12sp"
-                android:textColor="@color/grey_100"
+                android:textColor="@color/blue_500"
                 android:text="签名"/>
 
             <LinearLayout

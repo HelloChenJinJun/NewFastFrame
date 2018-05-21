@@ -168,6 +168,7 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode){
                 case ConstantUtil.REQUEST_CODE_ONE_PHOTO:

@@ -10,9 +10,11 @@ import com.example.chat.base.Constant;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.CommentNotifyBean;
+import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.events.MessageInfoEvent;
+import com.example.chat.events.UnReadPostNotifyEvent;
 import com.example.chat.events.UnReadSystemNotifyEvent;
 import com.example.chat.listener.OnReceiveListener;
 import com.example.chat.manager.ChatNotificationManager;
@@ -22,6 +24,7 @@ import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.commentnotify.CommentNotifyActivity;
 import com.example.chat.mvp.notify.SystemNotifyActivity;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.bean.chat.PostNotifyInfo;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -53,187 +56,202 @@ import io.reactivex.disposables.Disposable;
 
 public class PollService extends Service {
 
-        private Disposable disposable;
+    private Disposable disposable;
 
-        @Nullable
-        @Override
-        public IBinder onBind(Intent intent) {
-                return null;
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        int time;
+        if (intent != null) {
+            time = intent.getIntExtra(Constant.TIME, 10);
+        } else {
+            time = 10;
+        }
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
         }
 
+        Observable.interval(time, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
 
-        @Override
-        public int onStartCommand(Intent intent, int flags, int startId) {
-                int time;
-                if (intent != null) {
-                        time = intent.getIntExtra(Constant.TIME, 10);
-                } else {
-                        time = 10;
-                }
-                if (disposable!=null&&!disposable.isDisposed()){
-                        disposable.dispose();
-                }
+                    @Override
+                    public void onNext(Long aLong) {
+                        dealWork();
+                    }
 
-                Observable.interval(time, TimeUnit.SECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Long>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
-                                        disposable=d;
-                                }
+                    @Override
+                    public void onError(Throwable e) {
+                        if (e != null) {
+                            CommonLogger.e("定时任务出错" + e.getMessage());
+                        }
+                    }
 
-                                @Override
-                                public void onNext(Long aLong) {
-                                        dealWork();
-                                }
+                    @Override
+                    public void onComplete() {
 
-                                @Override
-                                public void onError(Throwable e) {
-                                        if (e!=null) {
-                                                CommonLogger.e("定时任务出错"+e.getMessage());
-                                        }
-                                }
+                    }
+                });
+        return super.onStartCommand(intent, START_FLAG_RETRY, startId);
+    }
 
-                                @Override
-                                public void onComplete() {
-
-                                }
-                        });
-                return super.onStartCommand(intent, START_FLAG_RETRY, startId);
+    private void dealWork() {
+        LogUtil.e("拉取单聊消息");
+        BmobQuery<ChatMessage> query = new BmobQuery<>();
+        if (UserManager.getInstance().getCurrentUser() != null) {
+            query.addWhereEqualTo(Constant.TAG_TO_ID, UserManager.getInstance().getCurrentUserObjectId());
+        } else {
+            return;
         }
-
-        private void dealWork() {
-                LogUtil.e("拉取单聊消息");
-                BmobQuery<ChatMessage> query = new BmobQuery<>();
-                if (UserManager.getInstance().getCurrentUser() != null) {
-                        query.addWhereEqualTo(Constant.TAG_TO_ID, UserManager.getInstance().getCurrentUserObjectId());
-                } else {
-                        return;
-                }
-                query.addWhereEqualTo(Constant.TAG_MESSAGE_SEND_STATUS, Constant.SEND_STATUS_SUCCESS);
-                query.addWhereEqualTo(Constant.TAG_MESSAGE_READ_STATUS, Constant.READ_STATUS_UNREAD);
+        query.addWhereEqualTo(Constant.TAG_MESSAGE_SEND_STATUS, Constant.SEND_STATUS_SUCCESS);
+        query.addWhereEqualTo(Constant.TAG_MESSAGE_READ_STATUS, Constant.READ_STATUS_UNREAD);
 //                按升序进行排序
-                query.setLimit(50);
-                query.order("createdAt");
-                query.findObjects(new FindListener<ChatMessage>() {
-                        @Override
-                        public void done(List<ChatMessage> list, BmobException e) {
-                                if (e == null) {
-                                        LogUtil.e("1拉取单聊消息成功");
-                                        if (list != null && list.size() > 0) {
+        query.setLimit(50);
+        query.order("createdAt");
+        query.findObjects(new FindListener<ChatMessage>() {
+            @Override
+            public void done(List<ChatMessage> list, BmobException e) {
+                if (e == null) {
+                    LogUtil.e("1拉取单聊消息成功");
+                    if (list != null && list.size() > 0) {
 
-                                                for (ChatMessage item :
-                                                        list) {
-                                                        MsgManager.getInstance().dealReceiveChatMessage(item, new OnReceiveListener() {
-                                                                @Override
-                                                                public void onSuccess(BaseMessage baseMessage) {
-                                                                        if (baseMessage instanceof ChatMessage) {
-                                                                                ChatMessage chatMessage = (ChatMessage) baseMessage;
-                                                                                CommonLogger.e("接受成功");
-                                                                                LogUtil.e(chatMessage);
-                                                                                List<ChatMessage> list = new ArrayList<>(1);
-                                                                                list.add(chatMessage);
-                                                                                MessageInfoEvent messageInfoEvent = new MessageInfoEvent(MessageInfoEvent.TYPE_PERSON);
-                                                                                messageInfoEvent.setChatMessageList(list);
-                                                                                //                        聊天消息
-                                                                                RxBusManager.getInstance().post(messageInfoEvent);
-                                                                                ChatNotificationManager.getInstance(getBaseContext()).sendChatMessageNotification(chatMessage, getBaseContext());
-                                                                        }
-                                                                }
-
-                                                                @Override
-                                                                public void onFailed(BmobException e) {
-                                                                        LogUtil.e("接受消息失败!>>>>" + e.getMessage() + e.getErrorCode());
-                                                                }
-                                                        });
-                                                }
-                                        }
-                                }else {
-                                        LogUtil.e("拉取单聊消息失败");
-                                        LogUtil.e("在服务器上查询聊天消息失败：" +e.toString());
+                        for (ChatMessage item :
+                                list) {
+                            MsgManager.getInstance().dealReceiveChatMessage(item, new OnReceiveListener() {
+                                @Override
+                                public void onSuccess(BaseMessage baseMessage) {
+                                    if (baseMessage instanceof ChatMessage) {
+                                        ChatMessage chatMessage = (ChatMessage) baseMessage;
+                                        CommonLogger.e("接受成功");
+                                        LogUtil.e(chatMessage);
+                                        List<ChatMessage> list = new ArrayList<>(1);
+                                        list.add(chatMessage);
+                                        MessageInfoEvent messageInfoEvent = new MessageInfoEvent(MessageInfoEvent.TYPE_PERSON);
+                                        messageInfoEvent.setChatMessageList(list);
+                                        //                        聊天消息
+                                        RxBusManager.getInstance().post(messageInfoEvent);
+                                        ChatNotificationManager.getInstance(getBaseContext()).sendChatMessageNotification(chatMessage, getBaseContext());
+                                    }
                                 }
-                        }
-                });
 
-                BmobQuery<CommentNotifyBean>  bmobQuery=new BmobQuery<>();
-                bmobQuery.addWhereEqualTo("user",new BmobPointer(UserManager.getInstance().getCurrentUser()));
-                bmobQuery.addWhereEqualTo("readStatus",Constant.READ_STATUS_UNREAD);
-                bmobQuery.include("publicCommentBean");
-                bmobQuery.findObjects(new FindListener<CommentNotifyBean>() {
-                        @Override
-                        public void done(List<CommentNotifyBean> list, BmobException e) {
-                                if (e == null) {
-                                        if (list != null && list.size() > 0) {
-                                                List<PublicCommentBean>  result=new ArrayList<>(list.size());
-                                                for (CommentNotifyBean item:list
-                                                     ) {
-                                                        result.add(item.getPublicCommentBean());
-                                                }
-                                                UserDBManager
-                                                        .getInstance()
-                                                        .addOrUpdateComment(result);
-                                                ChatNotificationManager.getInstance(getBaseContext()).showNotification(null,getBaseContext(),"评论通知", R.mipmap.ic_launcher,"你有一条评论", CommentNotifyActivity.class);
-                                                MsgManager.getInstance().updateCommentReadStatus(list);
-                                        }
-                                }else {
-                                        CommonLogger.e("定时拉取评论通知失败"+e.toString());
+                                @Override
+                                public void onFailed(BmobException e) {
+                                    LogUtil.e("接受消息失败!>>>>" + e.getMessage() + e.getErrorCode());
                                 }
+                            });
                         }
-                });
-                BmobQuery<SystemNotifyBean>  query1=new BmobQuery<>();
-                query1.addWhereEqualTo("readStatus",Constant.READ_STATUS_UNREAD);
-                query1.findObjects(new FindListener<SystemNotifyBean>() {
-                        @Override
-                        public void done(List<SystemNotifyBean> list, BmobException e) {
-                                if (e == null) {
-                                        if (list != null && list.size() > 0) {
-                                                List<SystemNotifyEntity>  result=new ArrayList<>(list.size());
-                                                for (SystemNotifyBean item:list
-                                                        ) {
-                                                        SystemNotifyEntity systemNotifyEntity=new SystemNotifyEntity();
-                                                        systemNotifyEntity.setReadStatus(Constant.READ_STATUS_UNREAD);
-                                                        systemNotifyEntity.setTitle(item.getTitle());
-                                                        systemNotifyEntity.setSubTitle(item.getSubTitle());
-                                                        systemNotifyEntity.setImageUrl(item.getImageUrl());
-                                                        systemNotifyEntity.setContentUrl(item.getContentUrl());
-                                                        systemNotifyEntity.setId(item.getObjectId());
-                                                        item.setReadStatus(Constant.READ_STATUS_READED);
-                                                        result.add(systemNotifyEntity);
-                                                }
-                                                List<BmobObject>  update=new ArrayList<>(list);
-                                                new BmobBatch().updateBatch(update).doBatch(new QueryListListener<BatchResult>() {
-                                                        @Override
-                                                        public void done(List<BatchResult> list, BmobException e) {
-                                                                if (e == null) {
-                                                                        CommonLogger.e("批量更新系统通知成功");
-                                                                        UserDBManager.getInstance().addOrUpdateSystemNotify(result);
-                                                                        RxBusManager.getInstance().post(new UnReadSystemNotifyEvent());
-                                                                        ChatNotificationManager.getInstance(getBaseContext()).showNotification(null, getBaseContext(), "系统", R.mipmap.ic_launcher, "你有一条系统通知", SystemNotifyActivity.class);
-                                                                }else {
-                                                                        CommonLogger.e("批量更新系统通知失败"+e.toString());
-                                                                }
-                                                        }
-                                                });
-
-
-                                        }
-                                }else {
-                                        CommonLogger.e("定时拉取评论通知失败"+e.toString());
-                                }
-                        }
-                });
-
-
-
-        }
-
-
-        @Override
-        public void onDestroy() {
-                if (disposable != null) {
-                        disposable.dispose();
+                    }
+                } else {
+                    LogUtil.e("拉取单聊消息失败");
+                    LogUtil.e("在服务器上查询聊天消息失败：" + e.toString());
                 }
-                super.onDestroy();
+            }
+        });
 
+        BmobQuery<PostNotifyBean> bmobQuery = new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("toUser", new BmobPointer(UserManager.getInstance().getCurrentUser()));
+        bmobQuery.addWhereEqualTo("readStatus", Constant.READ_STATUS_UNREAD);
+        bmobQuery.include("relatedUser");
+        bmobQuery.findObjects(new FindListener<PostNotifyBean>() {
+            @Override
+            public void done(List<PostNotifyBean> list, BmobException e) {
+                if (e == null) {
+                    if (list != null && list.size() > 0) {
+                        List<PostNotifyInfo> result = new ArrayList<>(list.size());
+                        for (PostNotifyBean item :
+                                list) {
+                            PostNotifyInfo postNotifyInfo = new PostNotifyInfo();
+                            postNotifyInfo.setId(item.getObjectId());
+                            postNotifyInfo.setType(item.getType());
+                            postNotifyInfo.setReadStatus(Constant.READ_STATUS_UNREAD);
+                            result.add(postNotifyInfo);
+                            item.setReadStatus(Constant.READ_STATUS_READED);
+                        }
+                        List<BmobObject>  update=new ArrayList<>(list);
+                        new BmobBatch().updateBatch(update).doBatch(new QueryListListener<BatchResult>() {
+                            @Override
+                            public void done(List<BatchResult> results, BmobException e) {
+                                if (e == null) {
+                                    CommonLogger.e("批量更新帖子相关通知已读成功");
+                                    UserDBManager.getInstance().addOrUpdatePostNotify(result);
+                                    UserDBManager.getInstance().addOrUpdateUser(list.get(0).getRelatedUser());
+                                    RxBusManager.getInstance().post(new UnReadPostNotifyEvent(list.get(0)));
+                                    ChatNotificationManager.getInstance(getBaseContext()).showNotification(null, getBaseContext(), "你有一条帖子相关通知", R.mipmap.ic_launcher, "你有一条帖子相关通知", CommentNotifyActivity.class);
+                                }else {
+                                    CommonLogger.e("批量更新帖子相关通知已读失败"+e.toString());
+                                }
+                            }
+                        });
+                    } else {
+                        CommonLogger.e("定时拉去帖子相关通知数据为空");
+                    }
+                } else {
+                    CommonLogger.e("定时拉去帖子相关通知失败" + e.toString());
+                }
+            }
+        });
+        BmobQuery<SystemNotifyBean> query1 = new BmobQuery<>();
+        query1.addWhereEqualTo("readStatus", Constant.READ_STATUS_UNREAD);
+        query1.findObjects(new FindListener<SystemNotifyBean>() {
+            @Override
+            public void done(List<SystemNotifyBean> list, BmobException e) {
+                if (e == null) {
+                    if (list != null && list.size() > 0) {
+                        List<SystemNotifyEntity> result = new ArrayList<>(list.size());
+                        for (SystemNotifyBean item : list
+                                ) {
+                            SystemNotifyEntity systemNotifyEntity = new SystemNotifyEntity();
+                            systemNotifyEntity.setReadStatus(Constant.READ_STATUS_UNREAD);
+                            systemNotifyEntity.setTitle(item.getTitle());
+                            systemNotifyEntity.setSubTitle(item.getSubTitle());
+                            systemNotifyEntity.setImageUrl(item.getImageUrl());
+                            systemNotifyEntity.setContentUrl(item.getContentUrl());
+                            systemNotifyEntity.setId(item.getObjectId());
+                            item.setReadStatus(Constant.READ_STATUS_READED);
+                            result.add(systemNotifyEntity);
+                        }
+                        List<BmobObject> update = new ArrayList<>(list);
+                        new BmobBatch().updateBatch(update).doBatch(new QueryListListener<BatchResult>() {
+                            @Override
+                            public void done(List<BatchResult> list, BmobException e) {
+                                if (e == null) {
+                                    CommonLogger.e("批量更新系统通知成功");
+                                    UserDBManager.getInstance().addOrUpdateSystemNotify(result);
+                                    RxBusManager.getInstance().post(new UnReadSystemNotifyEvent());
+                                    ChatNotificationManager.getInstance(getBaseContext()).showNotification(null, getBaseContext(), "系统", R.mipmap.ic_launcher, "你有一条系统通知", SystemNotifyActivity.class);
+                                } else {
+                                    CommonLogger.e("批量更新系统通知失败" + e.toString());
+                                }
+                            }
+                        });
+
+                    }
+                } else {
+                    CommonLogger.e("定时拉取评论通知失败" + e.toString());
+                }
+            }
+        });
+
+
+    }
+
+
+    @Override
+    public void onDestroy() {
+        if (disposable != null) {
+            disposable.dispose();
         }
+        super.onDestroy();
+
+    }
 }

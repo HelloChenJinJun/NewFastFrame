@@ -14,14 +14,13 @@ import com.example.chat.R;
 import com.example.chat.adapter.ShareInfoAdapter;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.ImageItem;
-import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.dagger.shareinfo.DaggerShareInfoComponent;
 import com.example.chat.dagger.shareinfo.ShareInfoModule;
 import com.example.chat.events.CommentEvent;
 import com.example.chat.events.NetStatusEvent;
-import com.example.chat.events.UnReadCommentEvent;
+import com.example.chat.events.UnReadPostNotifyEvent;
 import com.example.chat.events.UpdatePostEvent;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
@@ -41,6 +40,7 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.bean.chat.PostNotifyInfo;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
@@ -61,7 +61,6 @@ import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayer;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -85,7 +84,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     private LinearLayout unReadContainer;
     private ImageView unReadAvatar;
     private TextView unReadCount;
-    private ArrayList<String> unReadCommentListId;
+    private ArrayList<PostNotifyInfo> unReadPostNotifyList;
 
     @Override
     protected boolean isNeedHeadLayout() {
@@ -136,9 +135,9 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             mMenu.setVisibility(View.GONE);
         }
         initTopBar();
-        presenter.registerEvent(UnReadCommentEvent.class, unReadCommentEvent -> {
-            unReadCommentListId=unReadCommentEvent.getUnReadCommentListId();
-            updateInfo();
+        presenter.registerEvent(UnReadPostNotifyEvent.class, unReadCommentEvent -> {
+            updateInfo(unReadCommentEvent!=null?unReadCommentEvent.getPostNotifyBean().getRelatedUser().getAvatar():null);
+
         });
         display.setLayoutManager(manager = new WrappedLinearLayoutManager(getContext()));
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
@@ -171,7 +170,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             public void onItemChildClick(int position, View view, int id) {
 
                 if (id == R.id.tv_item_fragment_share_info_share) {
-                    PublicPostBean data=shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount());
+                    PublicPostBean data=shareInfoAdapter.getData(position);
                     if (data.getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
                         ToastUtils.showShortToast("不能转发自己的说说");
                     }else {
@@ -190,14 +189,14 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                         }
                     }
                 } else if (id == R.id.tv_item_fragment_share_info_comment) {
-                    CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()));
+                    CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position));
                 } else if (id == R.id.tv_item_fragment_share_info_like) {
-                    dealLike(shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()));
+                    dealLike(shareInfoAdapter.getData(position));
                 } else if (id == R.id.riv_item_fragment_share_info_avatar) {
-                    UserDetailActivity.start(getActivity(), shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount())
+                    UserDetailActivity.start(getActivity(), shareInfoAdapter.getData(position)
                             .getAuthor().getObjectId());
                 } else if (id == R.id.iv_item_fragment_share_info_more) {
-                    if (shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()).getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                    if (shareInfoAdapter.getData(position).getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
                         List<String> list1 = new ArrayList<>();
                         list1.add("删除");
                         list1.add("修改");
@@ -205,14 +204,14 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                             hideBaseDialog();
                             if (i == 0) {
                                 showLoadDialog("删除中....");
-                                presenter.deleteShareInfo(shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()), new UpdateListener() {
+                                presenter.deleteShareInfo(shareInfoAdapter.getData(position), new UpdateListener() {
                                     @Override
                                     public void done(BmobException e) {
                                         dismissLoadDialog();
                                         if (e == null) {
                                             ToastUtils.showShortToast("删除成功");
                                             CommonLogger.e("删除成功");
-                                            shareInfoAdapter.removeData(position-shareInfoAdapter.getItemUpCount());
+                                            shareInfoAdapter.removeData(position);
                                         } else {
                                             ToastUtils.showShortToast("删除失败" + e.toString());
                                             CommonLogger.e("删除失败" + e.toString());
@@ -220,27 +219,25 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                                     }
                                 });
                             } else {
-                                PublicPostBean publicPostBean = shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount());
+                                PublicPostBean publicPostBean = shareInfoAdapter.getData(position);
                                 EditShareInfoActivity.start(getActivity(), publicPostBean.getMsgType(), publicPostBean, true);
                             }
                         });
                     } else {
                         ToastUtils.showShortToast("非帖子作者，不可编辑");
                     }
-
-
                 } else if (id == R.id.ll_item_fragment_share_info_share_image) {
-                    dealSharePostData(position-shareInfoAdapter.getItemUpCount());
+                    dealSharePostData(position);
                 } else if (id == R.id.ll_item_fragment_share_info_share_container) {
-                    dealSharePostData(position-shareInfoAdapter.getItemUpCount());
+                    dealSharePostData(position);
                 } else if (id==R.id.iv_item_fragment_share_info_retry){
-                    shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()).setSendStatus(Constant.SEND_STATUS_SENDING);
+                    shareInfoAdapter.getData(position).setSendStatus(Constant.SEND_STATUS_SENDING);
                     shareInfoAdapter.notifyItemChanged(position);
-                    presenter.reSendPublicPostBean(shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()), shareInfoAdapter.getData(position-shareInfoAdapter.getItemUpCount()).getObjectId());
+                    presenter.reSendPublicPostBean(shareInfoAdapter.getData(position), shareInfoAdapter.getData(position).getObjectId());
                 }else {
                     List<String> imageList = BaseApplication
                             .getAppComponent()
-                            .getGson().fromJson(shareInfoAdapter.getData(position - shareInfoAdapter.getItemUpCount())
+                            .getGson().fromJson(shareInfoAdapter.getData(position)
                                     .getContent(), PostDataBean.class).getImageList();
                     if (imageList != null && imageList.size() > 0) {
                         ArrayList<ImageItem> result = new ArrayList<>();
@@ -252,7 +249,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                         }
                         PhotoPreViewActivity.start(getActivity(), id, result, false);
                     } else {
-                        dealSharePostData(position-shareInfoAdapter.getItemUpCount());
+                        dealSharePostData(position);
                     }
                 }
 
@@ -376,24 +373,23 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     protected void updateView() {
         Glide.with(this).load(UserManager.getInstance().getCurrentUser()
                 .getTitleWallPaper()).into(titleBg);
-        unReadCommentListId=UserDBManager.getInstance().getUnReadCommentListId();
-        updateInfo();
+        updateInfo(null);
         presenter.getAllPostData(isPublic,true, userEntity.getUid(), getRefreshTime(true));
     }
 
-    private void updateInfo() {
+    private void updateInfo(String avatar) {
+        unReadPostNotifyList=UserDBManager.getInstance().getUnReadPostNotify();
         int count=0;
-        if (unReadCommentListId!=null) {
-            count = unReadCommentListId.size();
+        if (unReadPostNotifyList!=null) {
+            count = unReadPostNotifyList.size();
         }
         if (count > 0) {
             unReadContainer.setVisibility(View.VISIBLE);
             unReadCount.setText("你有"+count+"条未读消息");
-            PublicCommentBean publicCommentBean=UserDBManager
-                    .getInstance().getFirstUnReadComment();
-            if (publicCommentBean != null) {
-                Glide.with(getContext()).load(publicCommentBean
-                .getUser().getAvatar()).into(unReadAvatar);
+            if (avatar != null) {
+                Glide.with(getContext()).load(avatar).into(unReadAvatar);
+            }else {
+                presenter.getFirstPostNotifyBean();
             }
         }else {
             unReadContainer.setVisibility(View.GONE);
@@ -522,7 +518,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         } else if (id == R.id.fab_share_info_normal) {
             EditShareInfoActivity.start(getActivity(),Constant.EDIT_TYPE_TEXT,null,false);
         }else if (id==R.id.ll_view_fragment_share_info_header_unread){
-            CommentNotifyActivity.start(getActivity(),unReadCommentListId);
+            CommentNotifyActivity.start(getActivity(),unReadPostNotifyList);
         }else {
             EditShareInfoActivity.start(getActivity(),Constant.EDIT_TYPE_IMAGE,null,false);
         }

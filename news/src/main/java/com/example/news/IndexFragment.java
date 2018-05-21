@@ -186,11 +186,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-
-    }
 
 
     private View getContentView() {

@@ -107,7 +107,7 @@ public class ShareShareInfoHolder extends BaseShareInfoViewHolder {
                     public void onItemClick(int position, View view) {
                         view.setTag(adapter.getData(position));
                         getAdapter().getOnItemClickListener()
-                                .onItemChildClick(getAdapterPosition(), view, position);
+                                .onItemChildClick(getAdapterPosition()-getAdapter().getItemUpCount(), view, position);
                     }
                 });
                 adapter.addData(shareBean.getImageList());

@@ -2,6 +2,8 @@ package com.example.chat.base;
 
 import android.os.Environment;
 
+import com.example.chat.bean.post.PublicCommentBean;
+
 import java.io.File;
 
 /**
@@ -237,4 +239,8 @@ public class Constant {
     public static final String REFRESH_TIME = "0000-00-00 01:00:00";
     public static final String TAG_COMMENT_ID = "commentId";
     public static final String TAG_CONTENT_URL = "contentUrl";
+    public static final Integer TYPE_COMMENT = 0;
+    public static final Integer TYPE_LIKE = 1;
+    public static final Integer TYPE_SHARE = 2;
+    public static final String TAG_ID = "id";
 }

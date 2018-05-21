@@ -23,6 +23,7 @@ import com.example.chat.util.LogUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.UserEntity;
+import com.example.commonlibrary.bean.chat.UserEntityDao;
 import com.example.commonlibrary.utils.CommonLogger;
 
 import java.util.ArrayList;
@@ -652,7 +653,10 @@ public class UserManager {
 
 
     public UserEntity cover(User user) {
-        return cover(user, false);
+        return cover(user, UserDBManager.getInstance().getDaoSession().getUserEntityDao()
+                .queryBuilder()
+                .where(UserEntityDao.Properties.Uid.eq(user.getObjectId()),UserEntityDao
+                        .Properties.IsStranger.eq(Boolean.FALSE)).buildCount().count()<0);
     }
 
 

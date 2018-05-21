@@ -22,6 +22,8 @@ import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.GroupTableEntityDao;
 import com.example.commonlibrary.bean.chat.PostCommentEntity;
 import com.example.commonlibrary.bean.chat.PostCommentEntityDao;
+import com.example.commonlibrary.bean.chat.PostNotifyInfo;
+import com.example.commonlibrary.bean.chat.PostNotifyInfoDao;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntityDao;
@@ -619,19 +621,11 @@ public class UserDBManager {
     }
 
 
-    public ArrayList<String>  getUnReadCommentListId(){
-        List<CommentNotifyEntity>  list=daoSession.getCommentNotifyEntityDao().queryBuilder().where(CommentNotifyEntityDao
-                .Properties.ReadStatus.eq(Constant.READ_STATUS_UNREAD)).build().list();
-        ArrayList<String> arrayList=null;
-        if (list.size() > 0) {
-            arrayList=new ArrayList<>();
-            for (CommentNotifyEntity item :
-                    list) {
-                arrayList.add(item.getCommentId());
-            }
-
-        }
-        return arrayList;
+    public ArrayList<PostNotifyInfo>  getUnReadPostNotify(){
+        List<PostNotifyInfo>  list=daoSession.getPostNotifyInfoDao().queryBuilder().where(PostNotifyInfoDao
+                .Properties.ReadStatus.eq(Constant.READ_STATUS_UNREAD))
+                .orderDesc().build().list();
+        return new ArrayList<>(list);
     }
 
     public PublicCommentBean getFirstUnReadComment() {
@@ -694,5 +688,18 @@ public class UserDBManager {
     public boolean hasSystemNotify(String id) {
        return daoSession.getSystemNotifyEntityDao().queryBuilder().where(SystemNotifyEntityDao.Properties
         .Id.eq(id)).buildCount().count()>0;
+    }
+
+    public void addOrUpdatePostNotify(PostNotifyInfo postNotifyInfo) {
+        daoSession.getPostNotifyInfoDao().insertOrReplace(postNotifyInfo);
+    }
+
+    public boolean hasPostNotifyInfo(String id) {
+        return daoSession.getPostNotifyInfoDao().queryBuilder().where(PostNotifyInfoDao
+        .Properties.Id.eq(id)).buildCount().count()>0;
+    }
+
+    public void addOrUpdatePostNotify(List<PostNotifyInfo> result) {
+        daoSession.getPostNotifyInfoDao().insertOrReplaceInTx(result);
     }
 }

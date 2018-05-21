@@ -10,12 +10,10 @@ import com.example.chat.R;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
-import com.example.chat.bean.CommentNotifyBean;
-import com.example.chat.bean.SystemNotifyBean;
-import com.example.chat.bean.post.PublicCommentBean;
+import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.OffLineEvent;
-import com.example.chat.events.UnReadCommentEvent;
+import com.example.chat.events.UnReadPostNotifyEvent;
 import com.example.chat.events.UnReadSystemNotifyEvent;
 import com.example.chat.listener.OnReceiveListener;
 import com.example.chat.manager.ChatNotificationManager;
@@ -27,7 +25,7 @@ import com.example.chat.mvp.notify.SystemNotifyActivity;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.bean.chat.CommentNotifyEntity;
+import com.example.commonlibrary.bean.chat.PostNotifyInfo;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -119,40 +117,29 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
                         });
                     }
 
-                }else if (jsonObject1.has(Constant.TAG_COMMENT_ID)){
-                    CommentNotifyEntity commentNotifyEntity= BaseApplication
+                }else if (jsonObject1.has(Constant.TAG_ID)){
+                    PostNotifyInfo postNotifyInfo= BaseApplication
                             .getAppComponent().getGson()
-                            .fromJson(systemInfo,CommentNotifyEntity.class);
-                    //保存
-                    if (!UserDBManager.getInstance().hasCommentBean(commentNotifyEntity.getCommentId())){
-                        MsgManager.getInstance().getCommentBean(commentNotifyEntity.getCommentId()
-                        , new FindListener<PublicCommentBean>() {
-                                    @Override
-                                    public void done(List<PublicCommentBean> list, BmobException e) {
-                                        if (e == null) {
-                                            if (list!=null&&list.size()>0) {
-                                                UserDBManager.getInstance()
-                                                        .addOrUpdateComment(list.get(0));
-                                                MsgManager.getInstance().updateCommentReadStatus(list.get(0), new UpdateListener() {
-                                                    @Override
-                                                    public void done(BmobException e) {
-                                                        if (e == null) {
-                                                            CommonLogger.e("在服务器上更新评论已读成功");
-                                                            UserDBManager.getInstance().addOrUpdateCommentNotify(commentNotifyEntity);
-                                                            RxBusManager.getInstance().post(new UnReadCommentEvent(UserDBManager.getInstance().getUnReadCommentListId()));
-                                                            ChatNotificationManager.getInstance(context).showNotification(null,context,"评论通知",R.mipmap.ic_launcher,"你有一条评论", CommentNotifyActivity.class);
-                                                        }    else {
-                                                            CommonLogger.e("在服务器上更新评论已读失败"+e.toString());
-                                                        }
-                                                    }
-                                                });
-                                            }
+                            .fromJson(systemInfo,PostNotifyInfo.class);
+                    if (!UserDBManager.getInstance().hasPostNotifyInfo(postNotifyInfo.getId())) {
+                            MsgManager.getInstance().updatePostNotifyReadStatus(postNotifyInfo, new FindListener<PostNotifyBean>() {
+                                @Override
+                                public void done(List<PostNotifyBean> list, BmobException e) {
+                                    if (e == null) {
+                                        CommonLogger.e("更新帖子相关通知已读成功");
+                                        if (list != null && list.size() > 0) {
+                                            UserDBManager.getInstance()
+                                                    .addOrUpdatePostNotify(postNotifyInfo);
+                                            RxBusManager.getInstance().post(new UnReadPostNotifyEvent(list.get(0)));
+                                            ChatNotificationManager.getInstance(context).showNotification(null,context,"你有一条帖子相关通知",R.mipmap.ic_launcher,systemInfo, CommentNotifyActivity.class);
                                         }else {
-                                            CommonLogger.e("服务获取评论失败"+e.toString());
+                                            CommonLogger.e("暂时查不到服务器上的数据");
                                         }
-
+                                    }else {
+                                        CommonLogger.e("更新帖子相关通知已读出错"+e.toString());
                                     }
-                                });
+                                }
+                            });
                     }
                 }else {
                     ChatNotificationManager.getInstance(context).showNotification(null,context,"你有一条自定义系统通知",R.mipmap.ic_launcher,systemInfo, CommentNotifyActivity.class);

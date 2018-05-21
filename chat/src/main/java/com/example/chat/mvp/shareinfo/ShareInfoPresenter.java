@@ -2,8 +2,10 @@ package com.example.chat.mvp.shareinfo;
 
 import com.example.chat.base.AppBasePresenter;
 import com.example.chat.base.Constant;
+import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
+import com.example.chat.events.UnReadPostNotifyEvent;
 import com.example.chat.events.UpdatePostEvent;
 import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.chat.manager.UserDBManager;
@@ -15,6 +17,7 @@ import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.bean.chat.DaoSession;
+import com.example.commonlibrary.bean.chat.PostNotifyInfo;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.PublicPostEntityDao;
 import com.example.commonlibrary.mvp.view.IView;
@@ -131,6 +134,7 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
     public void dealLike(final String objectId, final boolean isAdd) {
         BmobQuery<PublicPostBean> query = new BmobQuery<>();
         query.addWhereEqualTo("objectId", objectId);
+        query.include("author");
         addSubscription(query.findObjects(new FindListener<PublicPostBean>() {
             @Override
             public void done(List<PublicPostBean> list, BmobException e) {
@@ -157,6 +161,11 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                                         .addOrUpdatePost(publicPostBean);
                                 RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE, isAdd?CommentEvent.ACTION_ADD:CommentEvent
                                 .ACTION_DELETE));
+                                if (isAdd) {
+                                    MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_LIKE,objectId,UserManager.getInstance().getCurrentUserObjectId()
+                                    ,publicPostBean.getAuthor().getObjectId());
+                                }
+
                             }else{
                                 ToastUtils.showShortToast("点赞失败"+e.toString());
                             }
@@ -277,6 +286,23 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                 publicPostBean.setSendStatus(Constant.SEND_STATUS_FAILED);
                 UserDBManager.getInstance().addOrUpdatePost(publicPostBean);
                 RxBusManager.getInstance().post(new UpdatePostEvent(publicPostBean));
+            }
+        }));
+    }
+
+    public void getFirstPostNotifyBean( ) {
+        BmobQuery<PostNotifyBean> bmobQuery=new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("toUser",new BmobPointer(UserManager.getInstance().getCurrentUser()));
+        bmobQuery.addWhereEqualTo("readStatus",Constant.READ_STATUS_READED);
+        bmobQuery.order("-createdAt");
+        bmobQuery.setLimit(1);
+        bmobQuery.include("relatedUser");
+        addSubscription(bmobQuery.findObjects(new FindListener<PostNotifyBean>() {
+            @Override
+            public void done(List<PostNotifyBean> list, BmobException e) {
+                if (e == null && list != null && list.size() > 0) {
+                    RxBusManager.getInstance().post(new UnReadPostNotifyEvent(list.get(0)));
+                }
             }
         }));
     }

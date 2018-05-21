@@ -9,6 +9,7 @@ import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.MessageContent;
+import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicPostBean;
@@ -29,17 +30,16 @@ import com.example.chat.util.SystemUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
-import com.example.commonlibrary.bean.chat.CommentNotifyEntity;
 import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.PostCommentEntity;
+import com.example.commonlibrary.bean.chat.PostNotifyInfo;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.PublicPostEntityDao;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -49,6 +49,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -628,6 +629,15 @@ public class MsgManager {
         mPushManager.setQuery(query);
         mPushManager.pushMessage(json, pushListener);
     }
+
+
+    public void sendJsonMessage(String installId,String json,PushListener pushListener){
+        BmobQuery<CustomInstallation> query=new BmobQuery<>();
+        query.addWhereEqualTo("installationId",installId);
+        mPushManager.setQuery(query);
+        mPushManager.pushMessage(json, pushListener);
+    }
+
 
 
     /**
@@ -1274,6 +1284,8 @@ public class MsgManager {
                                     bean.setShareContent(gson.toJson(publicPostEntity));
                                     data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
                                 }
+                                MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_SHARE,data.getObjectId(),UserManager.getInstance()
+                                .getCurrentUserObjectId(),getUidForShareContent(bean.getShareContent()));
                                 listener.onSuccess(data);
                             }
                         });
@@ -1284,6 +1296,15 @@ public class MsgManager {
             });
         }
         return null;
+    }
+
+    private void sendPostShareNotifyInfo(String postId, String userObjectId, String toId) {
+
+    }
+
+    private String getUidForShareContent(String shareContent) {
+        PublicPostBean publicPostBean = MsgManager.getInstance().cover(gson.fromJson(shareContent, PublicPostEntity.class));
+        return publicPostBean.getAuthor().getObjectId();
     }
 
     public Subscription updatePublicPostBean(PublicPostBean data, OnCreatePublicPostListener listener) {
@@ -1687,13 +1708,15 @@ public class MsgManager {
         return newBean;
     }
 
-    public void sendNotifyCommentInfo(PublicCommentBean newBean) {
+    public Subscription sendNotifyCommentInfo(PublicCommentBean newBean) {
         CommentDetailBean commentDetailBean=gson.fromJson(newBean.getContent()
                 ,CommentDetailBean.class);
-        List<String>  list=new ArrayList<>();
+
+        StringBuilder stringBuilder=new StringBuilder();
+
         if (!newBean.getPost().getAuthor().getObjectId().equals(UserManager.getInstance()
                 .getCurrentUserObjectId())){
-            list.add(newBean.getPost().getAuthor().getObjectId());
+            stringBuilder.append(newBean.getPost().getAuthor().getObjectId());
         }
         if (commentDetailBean.getPublicId() != null) {
 //                        回复评论
@@ -1704,59 +1727,24 @@ public class MsgManager {
             }else {
                 otherUid=str[0];
             }
-            list.add(otherUid);
+            stringBuilder.append("&");
+            stringBuilder.append(otherUid);
         }
-        BmobQuery<User>  bmobQuery=new BmobQuery<>();
-        bmobQuery.addWhereContainedIn("objectId",list);
-        bmobQuery.findObjects(new FindListener<User>() {
-            @Override
-            public void done(List<User> list, BmobException e) {
-                if (e==null&&list.size()>0) {
-                    List<String> install=new ArrayList<>();
-                    List<BmobObject> list1=new ArrayList<>();
-                    for (int i = 0; i < list.size(); i++) {
-                        install.add(list.get(i).getInstallId());
-                        CommentNotifyBean commentNotifyBean=new CommentNotifyBean();
-                        commentNotifyBean.setUser(list.get(i));
-                        PublicCommentBean publicCommentBean=new PublicCommentBean();
-                        publicCommentBean.setObjectId(newBean.getObjectId());
-                        commentNotifyBean.setPublicCommentBean(newBean);
-                        PublicPostBean publicPostBean=new PublicPostBean();
-                        publicPostBean.setObjectId(newBean.getPost().getObjectId());
-                        commentNotifyBean.setReadStatus(Constant.READ_STATUS_UNREAD);
-                        list1.add(commentNotifyBean);
-                    }
-                    new BmobBatch().insertBatch(list1).doBatch(new QueryListListener<BatchResult>() {
-                        @Override
-                        public void done(List<BatchResult> list, BmobException e) {
-                            if (e == null) {
-                                CommonLogger.e("批量添加评论通知成功");
-                                sendJsonMessage(install, createNotifyCommentInfo(newBean), new PushListener() {
-                                    @Override
-                                    public void done(BmobException e) {
-                                        if (e == null) {
-                                            CommonLogger.e("推送通知消息成功");
-                                        }else {
-                                            CommonLogger.e("推送消息失败"+e.toString());
-                                        }
-                                    }
-                                });
-                            }else {
-                                CommonLogger.e("批量添加评论通知失败"+e.toString());
-                            }
-                        }
-                    });
-                }
-            }
-        });
+        return MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_COMMENT,newBean.getObjectId(),UserManager.getInstance().getCurrentUserObjectId()
+                ,stringBuilder.toString());
     }
 
-    private String createNotifyCommentInfo(PublicCommentBean newBean) {
-        CommentNotifyEntity commentNotifyEntity=new CommentNotifyEntity();
-        commentNotifyEntity.setCommentId(newBean.getObjectId());
-        commentNotifyEntity.setReadStatus(Constant.READ_STATUS_UNREAD);
-        return gson.toJson(commentNotifyEntity);
+    private String createNotifyInfo(Integer type,String id) {
+        PostNotifyInfo postNotifyInfo=new PostNotifyInfo();
+        postNotifyInfo.setId(id);
+        postNotifyInfo.setType(type);
+        postNotifyInfo.setReadStatus(Constant.READ_STATUS_UNREAD);
+        return gson.toJson(postNotifyInfo);
     }
+
+
+
+
 
     public void getCommentBean(String commentId, FindListener<PublicCommentBean> findListener) {
         BmobQuery<PublicCommentBean> bmobQuery=new BmobQuery<>();
@@ -1783,26 +1771,7 @@ public class MsgManager {
     }
 
     public void updateCommentReadStatus(PublicCommentBean publicCommentBean,UpdateListener listener) {
-        BmobQuery<CommentNotifyBean> bmobQuery=new BmobQuery<>();
-        bmobQuery.addWhereEqualTo("publicCommentBean",new BmobPointer(publicCommentBean));
-        bmobQuery.addWhereEqualTo("user",UserManager.getInstance().getCurrentUser());
-        bmobQuery.addWhereEqualTo("readStatus",Constant.READ_STATUS_UNREAD);
-        bmobQuery.findObjects(new FindListener<CommentNotifyBean>() {
-            @Override
-            public void done(List<CommentNotifyBean> list, BmobException e) {
-                if (e == null) {
-                    if (list != null && list.size() > 0) {
-                        CommentNotifyBean commentNotifyBean=list.get(0);
-                        commentNotifyBean.setReadStatus(Constant.READ_STATUS_READED);
-                        commentNotifyBean.update(listener);
-                    }else {
-                        listener.done(new BmobException("数据为空"));
-                    }
-                }else {
-                    listener.done(e);
-                }
-            }
-        });
+
     }
 
     public void updateSystemNotifyReadStatus(String id,UpdateListener listener) {
@@ -1810,8 +1779,159 @@ public class MsgManager {
         systemNotifyBean.setObjectId(id);
         systemNotifyBean.setReadStatus(Constant.READ_STATUS_READED);
         systemNotifyBean.update(listener);
+    }
 
+    public Subscription sendPostNotifyInfo(Integer type,String id, String uid,String toId) {
+        if (type.equals(Constant.TYPE_LIKE)||type.equals(Constant.TYPE_SHARE)) {
+            PostNotifyBean postNotifyBean=new PostNotifyBean();
+            postNotifyBean.setType(type);
+            postNotifyBean.setReadStatus(Constant.READ_STATUS_UNREAD);
+            User user=new User();
+            user.setObjectId(toId);
+            postNotifyBean.setToUser(user);
+            User relatedUser=new User();
+            relatedUser.setObjectId(uid);
+            postNotifyBean.setRelatedUser(relatedUser);
+            PublicPostBean publicPostBean=new PublicPostBean();
+            publicPostBean.setObjectId(id);
+            postNotifyBean.setPublicPostBean(publicPostBean);
+            return postNotifyBean.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e == null) {
+                        BmobQuery<User> bmobQuery=new BmobQuery<>();
+                        bmobQuery.addWhereEqualTo("objectId",toId);
+                        bmobQuery.findObjects(new FindListener<User>() {
+                            @Override
+                            public void done(List<User> list, BmobException e) {
+                                if (e == null) {
+                                    if (list != null && list.size() > 0) {
+                                        sendJsonMessage(list.get(0).getInstallId(), createNotifyInfo(type, postNotifyBean.getObjectId()), new PushListener() {
+                                            @Override
+                                            public void done(BmobException e) {
+                                                if (e == null) {
+                                                    CommonLogger.e("推送帖子相关通知信息成功");
+                                                }else {
+                                                    CommonLogger.e("推送帖子相关通知信息失败"+e.toString());
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }else if (type.equals(Constant.TYPE_COMMENT)){
+            List<String> list=new ArrayList<>();
+            if (toId.contains("&")) {
+                list=Arrays.asList(toId.split("&"));
+            }else {
+                list.add(toId);
+            }
+            List<BmobObject> list1=new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                PublicCommentBean publicCommentBean=new PublicCommentBean();
+                publicCommentBean.setObjectId(id);
+                PostNotifyBean postNotifyBean=new PostNotifyBean();
+                postNotifyBean.setPublicCommentBean(publicCommentBean);
+                postNotifyBean.setReadStatus(Constant.READ_STATUS_UNREAD);
+                postNotifyBean.setType(type);
+                User toUser=new User();
+                toUser.setObjectId(list.get(0));
+                postNotifyBean.setToUser(toUser);
+                User relatedUser=new User();
+                relatedUser.setObjectId(uid);
+                postNotifyBean.setRelatedUser(relatedUser);
+                list1.add(postNotifyBean);
+            }
+            List<String> finalList = list;
+            new BmobBatch().insertBatch(list1).doBatch(new QueryListListener<BatchResult>() {
+                @Override
+                public void done(List<BatchResult> batchResults, BmobException e) {
+                    if (e == null) {
+                        CommonLogger.e("批量添加评论通知成功");
+                        BmobQuery<User>  userBmobQuery=new BmobQuery<>();
+                        userBmobQuery.addWhereContainedIn("objectId", finalList);
+                        userBmobQuery.findObjects(new FindListener<User>() {
+                            @Override
+                            public void done(List<User> list, BmobException e) {
+                                if (e == null) {
+                                    if (list!=null&&list.size()>0){
+                                        List<String>  installIdList=new ArrayList<>(list.size());
+                                        for (User item :
+                                                list) {
+                                            installIdList.add(item.getInstallId());
+                                        }
+                                        StringBuilder stringBuilder=new StringBuilder();
 
+                                        if (toId.contains("&")) {
+                                            stringBuilder.append(batchResults.get(0).getObjectId()).append("&").append(batchResults
+                                                    .get(1).getObjectId());
+                                        }else {
+                                            stringBuilder.append(batchResults.get(0).getObjectId());
+                                        }
+                                        sendJsonMessage(installIdList, createNotifyInfo(type, stringBuilder.toString()), new PushListener() {
+                                            @Override
+                                            public void done(BmobException e) {
+                                                if (e == null) {
+                                                    CommonLogger.e("推送帖子相关通知信息成功");
+                                                }else {
+                                                    CommonLogger.e("推送帖子相关通知信息失败"+e.toString());
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                }
+                            }
+                        });
+                    }else {
+                        CommonLogger.e("批量添加评论通知失败"+e.toString());
+                    }
+                }
+            });
+        }
+        return null;
+    }
+
+    public void updatePostNotifyReadStatus(PostNotifyInfo postNotifyInfo, FindListener<PostNotifyBean> listener) {
+        BmobQuery<PostNotifyBean> bmobQuery=new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("readStatus",Constant.READ_STATUS_UNREAD);
+        bmobQuery.addWhereEqualTo("toUser",UserManager.getInstance().getCurrentUser());
+        if (postNotifyInfo.getType().equals(Constant.TYPE_LIKE)||postNotifyInfo
+                .getType().equals(Constant.TYPE_SHARE)){
+            bmobQuery.addWhereEqualTo("objectId",postNotifyInfo.getId());
+        }else {
+            if (postNotifyInfo.getId().contains("&")) {
+                bmobQuery.addWhereContainedIn("objectId",Arrays.asList(postNotifyInfo.getId().split("&")));
+            }else {
+                bmobQuery.addWhereEqualTo("objectId",postNotifyInfo.getId());
+            }
+        }
+        bmobQuery.include("relatedUser");
+        bmobQuery.findObjects(new FindListener<PostNotifyBean>() {
+            @Override
+            public void done(List<PostNotifyBean> list, BmobException e) {
+                if (e == null) {
+                    if (list != null && list.size() > 0) {
+                        UserDBManager.getInstance().addOrUpdateUser(list.get(0).getRelatedUser());
+                        list.get(0).setReadStatus(Constant.READ_STATUS_READED);
+                        list.get(0).update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                listener.done(list,e);
+                            }
+                        });
+                    }else {
+                        listener.done(null,null);
+                    }
+                }else {
+                    listener.done(null,e);
+                }
+            }
+        });
     }
 }
 
