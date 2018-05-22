@@ -48,7 +48,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     protected View root;
     private EmptyLayout mEmptyLayout;
     private boolean hasInit = false;
-    private RelativeLayout headerLayout;
+    private View headerLayout;
     private ImageView icon;
     private TextView right;
     private TextView title;
@@ -80,34 +80,34 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         if (root == null) {
             if (isNeedHeadLayout()) {
-                LinearLayout linearLayout = new LinearLayout(getActivity());
+                LinearLayout linearLayout =new LinearLayout(getContext());
                 linearLayout.setOrientation(LinearLayout.VERTICAL);
-                headerLayout = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.header_layout, null);
+                headerLayout =  LayoutInflater.from(getActivity()).inflate(R.layout.header_layout, null);
                 linearLayout.addView(headerLayout);
-                linearLayout.addView(LayoutInflater.from(getActivity()).inflate(getContentLayout(), null));
                 if (isNeedEmptyLayout()) {
                     FrameLayout frameLayout = new FrameLayout(getActivity());
                     frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    frameLayout.addView(LayoutInflater.from(getActivity()).inflate(getContentLayout(),null));
                     mEmptyLayout = new EmptyLayout(getActivity());
                     mEmptyLayout.setVisibility(GONE);
-                    frameLayout.addView(linearLayout);
+                    mEmptyLayout.setContentView(frameLayout.getChildAt(0));
                     frameLayout.addView(mEmptyLayout);
-                    root = frameLayout;
+                    linearLayout.addView(frameLayout);
                 } else {
-                    root = linearLayout;
+                    linearLayout.addView(LayoutInflater.from(getActivity()).inflate(getContentLayout(), null));
                 }
+                root=linearLayout;
             } else {
+                FrameLayout frameLayout =new FrameLayout(getContext());
+                frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                frameLayout.addView(LayoutInflater.from(getActivity()).inflate(getContentLayout(), null));
                 if (isNeedEmptyLayout()) {
-                    FrameLayout frameLayout = new FrameLayout(getActivity());
-                    frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                     mEmptyLayout = new EmptyLayout(getActivity());
                     mEmptyLayout.setVisibility(GONE);
-                    frameLayout.addView(LayoutInflater.from(getActivity()).inflate(getContentLayout(), null));
+                    mEmptyLayout.setContentView(frameLayout.getChildAt(0));
                     frameLayout.addView(mEmptyLayout);
-                    root = frameLayout;
-                } else {
-                    root = inflater.inflate(getContentLayout(), container, false);
                 }
+                root = frameLayout;
             }
             if (root.getParent() != null) {
                 ((ViewGroup) root.getParent()).removeView(root);
@@ -127,14 +127,14 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
 
     private void initBaseView() {
         if (isNeedHeadLayout()) {
-            icon = (ImageView) headerLayout.findViewById(R.id.riv_header_layout_icon);
-            title = (TextView) headerLayout.findViewById(R.id.tv_header_layout_title);
-            right = (TextView) headerLayout.findViewById(R.id.tv_header_layout_right);
-            back = (ImageView) headerLayout.findViewById(R.id.iv_header_layout_back);
-            rightImage = (ImageView) headerLayout.findViewById(R.id.iv_header_layout_right);
+            icon = headerLayout.findViewById(R.id.riv_header_layout_icon);
+            title = headerLayout.findViewById(R.id.tv_header_layout_title);
+            right = headerLayout.findViewById(R.id.tv_header_layout_right);
+            back = headerLayout.findViewById(R.id.iv_header_layout_back);
+            rightImage = headerLayout.findViewById(R.id.iv_header_layout_right);
             rightImage.setVisibility(View.GONE);
             right.setVisibility(View.VISIBLE);
-            ((BaseActivity) getActivity()).setSupportActionBar((Toolbar) headerLayout.findViewById(R.id.toolbar));
+            ((BaseActivity) getActivity()).setSupportActionBar(headerLayout.findViewById(R.id.toolbar));
             ((BaseActivity) getActivity()).getSupportActionBar().setTitle("");
         }
         initView();
@@ -208,7 +208,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
             headerLayout.setBackgroundColor(option.getBgColor());
         }
         if (option.getCustomView() != null) {
-            ViewGroup container = ((ViewGroup) headerLayout.findViewById(R.id.toolbar));
+            ViewGroup container = headerLayout.findViewById(R.id.toolbar);
             container.removeAllViews();
             container.addView(option.getCustomView());
             return;
@@ -242,12 +242,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
         }
         if (option.isNeedNavigation()) {
             back.setVisibility(View.VISIBLE);
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getActivity().finish();
-                }
-            });
+            back.setOnClickListener(v -> getActivity().finish());
         } else {
             back.setVisibility(GONE);
         }

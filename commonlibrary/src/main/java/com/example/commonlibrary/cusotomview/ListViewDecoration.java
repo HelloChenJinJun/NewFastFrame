@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.example.commonlibrary.R;
+import com.example.commonlibrary.skin.SkinManager;
 
 
 /**
@@ -22,33 +23,38 @@ import com.example.commonlibrary.R;
  * recyclerview的分隔线
  */
 public class ListViewDecoration extends RecyclerView.ItemDecoration {
-        private Drawable divider;
+    private Drawable divider;
 
-        public ListViewDecoration(Context context) {
-                divider = context.getResources().getDrawable(R.drawable.recycler_divider);
-        }
+    public ListViewDecoration(Context context) {
+        divider = SkinManager.getInstance().getDrawable(R.drawable.recycler_divider);
+    }
 
-        @Override
-        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                int count = parent.getChildCount();
-                int left = parent.getPaddingLeft();
-                int right = parent.getWidth() - parent.getPaddingRight();
-                View child = null;
-                for (int i = 0; i < count; i++) {
-                        if (count == 1) {
-                                break;
-                        }
-                        child = parent.getChildAt(i);
-                        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-                        int top = child.getBottom() + params.bottomMargin;
-                        int bottom = top + divider.getIntrinsicHeight();
-                        divider.setBounds(left, top, right, bottom);
-                        divider.draw(c);
-                }
-        }
 
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                outRect.set(0, 0, 0, divider.getIntrinsicHeight());
+    public ListViewDecoration(){
+        divider = SkinManager.getInstance().getDrawable(R.drawable.recycler_divider);
+    }
+
+    @Override
+    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+        int count = parent.getChildCount();
+        int left = parent.getPaddingLeft();
+        int right = parent.getWidth() - parent.getPaddingRight();
+        View child = null;
+        for (int i = 0; i < count; i++) {
+            if (count == 1) {
+                break;
+            }
+            child = parent.getChildAt(i);
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+            int top = child.getBottom() + params.bottomMargin;
+            int bottom = top + divider.getIntrinsicHeight();
+            divider.setBounds(left, top, right, bottom);
+            divider.draw(c);
         }
+    }
+
+    @Override
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        outRect.set(0, 0, 0, divider.getIntrinsicHeight());
+    }
 }

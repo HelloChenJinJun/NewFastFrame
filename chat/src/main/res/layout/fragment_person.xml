@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ECF1F5"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/custom_color_app_bg"
     android:orientation="vertical">
 
 
@@ -36,19 +36,21 @@
 
 
     <RelativeLayout
+        android:tag="skin"
         android:id="@+id/rl_fragment_person_edit"
         android:layout_marginTop="20dp"
-        android:background="@color/white"
+        android:background="@color/custom_color_app_content_bg"
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:tag="skin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_news_settings"
             android:textSize="16sp"
             android:text="个人资料"
-            android:textColor="@color/black"
+            android:textColor="@color/custom_color_text_main"
             android:drawablePadding="10dp"
             android:gravity="center"/>
 
@@ -62,19 +64,21 @@
 
     </RelativeLayout>
     <RelativeLayout
+        android:background="@color/custom_color_app_content_bg"
+        android:tag="skin"
         android:id="@+id/rl_fragment_person_index"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:tag="skin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_news_settings"
             android:textSize="16sp"
             android:text="个人主页"
-            android:textColor="@color/black"
+            android:textColor="@color/custom_color_text_main"
             android:drawablePadding="10dp"
             android:gravity="center"/>
 
@@ -92,9 +96,10 @@
 
 
     <RelativeLayout
+        android:background="@color/custom_color_app_content_bg"
+        android:tag="skin"
         android:id="@+id/rl_fragment_person_settings"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -104,7 +109,8 @@
             android:drawableLeft="@drawable/ic_news_settings"
             android:textSize="16sp"
             android:text="设置"
-            android:textColor="@color/black"
+            android:tag="skin"
+            android:textColor="@color/custom_color_text_main"
             android:drawablePadding="10dp"
             android:gravity="center"/>
 
@@ -121,19 +127,21 @@
 
 
     <RelativeLayout
+        android:background="@color/custom_color_app_content_bg"
+        android:tag="skin"
         android:id="@+id/rl_fragment_person_comment"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:tag="skin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_news_settings"
             android:textSize="16sp"
             android:text="留言通知"
-            android:textColor="@color/black"
+            android:textColor="@color/custom_color_text_main"
             android:drawablePadding="10dp"
             android:gravity="center"/>
 
@@ -150,20 +158,22 @@
 
 
     <RelativeLayout
+        android:background="@color/custom_color_app_content_bg"
+        android:tag="skin"
         android:id="@+id/rl_fragment_person_notify"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:tag="skin"
             android:id="@+id/tv_fragment_person_system_notify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_news_settings"
             android:textSize="16sp"
             android:text="系统通知"
-            android:textColor="@color/black"
+            android:textColor="@color/custom_color_text_main"
             android:drawablePadding="10dp"
             android:gravity="center"/>
 

@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.refresh.RefreshHeaderLayout;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.SkinUpdateEvent;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +25,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by 陈锦军 on 16/3/12.
@@ -58,7 +62,17 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         if (getLayoutId()!=0) {
             this.layoutId = getLayoutId();
         }
+        if (isApplySkin()) {
+            RxBusManager.getInstance().registerEvent(SkinUpdateEvent.class, skinUpdateEvent -> notifyDataSetChanged());
+        }
     }
+
+    protected boolean isApplySkin(){
+        return false;
+    }
+
+
+
 
     protected abstract int getLayoutId();
 

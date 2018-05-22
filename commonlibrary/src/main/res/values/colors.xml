@@ -17,18 +17,20 @@
     <color name="divider_line_default_color">#d9d9d9</color>
 
 
-    <!--自定义颜色标签-->
-    <!-- app相关 -->
-    <color name="custom_color_app_bg_day">#ff343a49</color>      <!-- app背景色 -->
-    <color name="custom_color_app_bg_night">#FF171717</color>      <!-- app背景色 -->
-    <!--#ff2a2e3a-->
-    <color name="custom_color_app_title_bg_day">#FF818181</color>      <!-- app标题栏背景色 -->
-    <!--#FF1D1D1D-->
-    <color name="custom_color_app_title_bg_night">#FF818181</color>      <!-- app标题栏背景色 -->
-    <color name="custom_color_app_content_bg_day">#ff343a49</color>      <!-- app内容区背景色 -->
-    <color name="custom_color_app_content_bg_night">#FF1D1D1D</color>      <!-- app内容区背景色 -->
-    <color name="custom_color_app_content_div_day">@color/base_color_text_grey</color>      <!-- app内容区分割线颜色 -->
-    <color name="custom_color_app_content_div_night">#FF191919</color>      <!-- app内容区分割线颜色 -->
+    <color name="custom_color_app_bg">#FF171717</color>
+    <color name="custom_color_app_title_bg">#FF191919</color>
+    <color name="custom_color_app_content_bg">#ff343a49</color>
+    <color name="custom_color_text_main">#FF999999</color>
+    <color name="custom_color_text_sub">#FF666666</color>
+    <color name="custom_color_app_content_div">#FF191919</color>      <!-- app内容区分割线颜色 -->
+    <!-- 副文本（提示、描述）字体颜色 -->
+
+
+    <!--<color name="custom_color_app_bg">#FF171717</color>      &lt;!&ndash; app背景色 &ndash;&gt;-->
+    <!--&lt;!&ndash;#ff2a2e3a&ndash;&gt;-->
+    <!--<color name="custom_color_app_title_bg">#FF818181</color>      &lt;!&ndash; app标题栏背景色 &ndash;&gt;-->
+    <!--&lt;!&ndash;#FF1D1D1D&ndash;&gt;-->
+    <!--<color name="custom_color_app_content_bg">#ff343a49</color>      &lt;!&ndash; app内容区背景色 &ndash;&gt;-->
 
     <!-- 文本相关 -->
     <color name="custom_color_text_sub_day">#FF999999</color>      <!-- 副文本（提示、描述）字体颜色 -->

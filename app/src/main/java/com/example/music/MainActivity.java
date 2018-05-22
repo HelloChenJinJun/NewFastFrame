@@ -18,13 +18,27 @@ import com.example.chat.mvp.searchFriend.SearchFriendActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 import com.example.chat.mvp.wallpaper.WallPaperActivity;
+import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.net.download.DownloadListener;
+import com.example.commonlibrary.net.download.FileInfo;
+import com.example.commonlibrary.skin.SkinManager;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.CenterFragment;
 import com.example.news.IndexFragment;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
+import io.reactivex.Observable;
 
 public class MainActivity extends SlideBaseActivity {
 
@@ -34,7 +48,7 @@ public class MainActivity extends SlideBaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (getCurrentFragment() != null && getCurrentFragment() instanceof HomeFragment) {
-            ((HomeFragment)getCurrentFragment()).notifyNewIntentCome(intent);
+            ((HomeFragment) getCurrentFragment()).notifyNewIntentCome(intent);
         }
     }
 
@@ -62,12 +76,77 @@ public class MainActivity extends SlideBaseActivity {
                 break;
             case "背景":
                 ToastUtils.showShortToast("点击了背景");
-                WallPaperActivity.start(this,Constant.WALLPAPER);
+                WallPaperActivity.start(this, Constant.WALLPAPER);
                 break;
             case "设置":
                 ToastUtils.showShortToast("点击了设置");
                 SettingsActivity.start(this);
                 break;
+            case "换肤":
+                showLoading("正在换肤....");
+                BmobQuery bmobQuery = new BmobQuery("Skin");
+                bmobQuery.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+                bmobQuery.setLimit(1);
+                bmobQuery.findObjectsByTable(new QueryListener<JSONArray>() {
+                    @Override
+                    public void done(JSONArray jsonArray, BmobException e) {
+                        if (e == null) {
+                            if (jsonArray != null && jsonArray.length() > 0) {
+                                LogUtil.e(jsonArray.toString());
+                                try {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+                                    JSONObject jsonObjectJSONObject = jsonObject.getJSONObject("skin");
+                                    String url = jsonObjectJSONObject.getString("url");
+                                    SkinManager.getInstance().loadSkinResource(url, new DownloadListener() {
+                                        @Override
+                                        public void onStart(FileInfo fileInfo) {
+
+                                        }
+
+                                        @Override
+                                        public void onUpdate(FileInfo fileInfo) {
+
+                                        }
+
+                                        @Override
+                                        public void onStop(FileInfo fileInfo) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete(FileInfo fileInfo) {
+                                            ToastUtils.showShortToast("换肤成功"
+                                            +fileInfo.toString());
+                                            hideLoading();
+                                        }
+
+                                        @Override
+                                        public void onCancel(FileInfo fileInfo) {
+                                            hideLoading();
+                                        }
+
+                                        @Override
+                                        public void onError(FileInfo fileInfo, String errorMsg) {
+                                            CommonLogger.e("换肤失败"+errorMsg);
+                                            hideLoading();
+                                        }
+                                    });
+
+
+                                } catch (JSONException item) {
+                                    item.printStackTrace();
+                                }
+                            } else {
+                                CommonLogger.e("获取远程皮肤插件数据为空");
+                                hideLoading();
+                            }
+                        } else {
+                            CommonLogger.e("获取远程皮肤插件失败" + e.toString());
+                            hideLoading();
+                        }
+                    }
+
+                });
             default:
                 break;
         }
@@ -108,7 +187,7 @@ public class MainActivity extends SlideBaseActivity {
             } else if (checkedId == R.id.rb_activity_main_bottom_person) {
                 addOrReplaceFragment(fragmentList.get(2));
             } else if (checkedId == R.id.rb_activity_main_bottom_chat) {
-                    addOrReplaceFragment(fragmentList.get(3));
+                addOrReplaceFragment(fragmentList.get(3));
             } else if (checkedId == R.id.rb_activity_main_bottom_public) {
                 addOrReplaceFragment(fragmentList.get(4));
             }
@@ -123,7 +202,7 @@ public class MainActivity extends SlideBaseActivity {
         fragmentList.add(PersonFragment.newInstance());
         fragmentList.add(HomeFragment.newInstance());
         fragmentList.add(ShareInfoFragment.newInstance(UserManager
-                .getInstance().getCurrentUserObjectId(),true));
+                .getInstance().getCurrentUserObjectId(), true));
         addOrReplaceFragment(fragmentList.get(3), R.id.fl_activity_main_container);
     }
 
@@ -140,7 +219,7 @@ public class MainActivity extends SlideBaseActivity {
     }
 
     public static void start(Activity activity) {
-        Intent intent=new Intent(activity,MainActivity.class);
+        Intent intent = new Intent(activity, MainActivity.class);
         activity.startActivity(intent);
     }
 

@@ -114,28 +114,6 @@ public class LocalMusicActivity extends SlideMusicBaseActivity<List<MusicPlayBea
             @Override
             public boolean onItemLongClick(int position, View view) {
                 CommonLogger.e("长按");
-                if (SkinManager.getInstance().isLocal()) {
-                    SkinManager.getInstance().loadSkinResource(SkinUtil.getSkinFilePath("hello.skin"), new LoadSkinListener() {
-                        @Override
-                        public void onStart() {
-                            CommonLogger.e("onStart");
-                        }
-
-                        @Override
-                        public void onSuccess() {
-                            CommonLogger.e("onSuccess");
-                            SkinManager.getInstance().refreshSkin();
-                        }
-
-                        @Override
-                        public void onFailed() {
-                            CommonLogger.e("onFailed");
-                        }
-                    });
-                } else {
-                    SkinManager.getInstance().reset();
-                    SkinManager.getInstance().refreshSkin();
-                }
                 return true;
             }
 

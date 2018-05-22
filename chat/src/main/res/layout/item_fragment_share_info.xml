@@ -3,8 +3,8 @@
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
 xmlns:app="http://schemas.android.com/apk/res-auto"
-android:background="@color/white"
 android:layout_marginBottom="20dp"
+    android:background="@color/custom_color_app_content_bg"
 android:orientation="vertical">
 
 <RelativeLayout
@@ -38,6 +38,7 @@ android:orientation="vertical">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="5dp"
+                android:textColor="@color/custom_color_text_main"
                 android:text="无聊的->人类" />
 
             <ImageView
@@ -75,7 +76,7 @@ android:orientation="vertical">
             android:textSize="12sp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textColor="@color/grey_500"
+            android:textColor="@color/custom_color_text_sub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="无聊的->人类"/>
@@ -109,7 +110,7 @@ android:orientation="vertical">
     android:layout_marginTop="10dp"
     android:layout_width="match_parent"
     android:layout_height="1px"
-    android:background="@color/divider_line_default_color"/>
+    android:background="@color/custom_color_app_content_div"/>
 <RelativeLayout
     android:paddingStart="50dp"
     android:paddingEnd="50dp"
@@ -122,18 +123,18 @@ android:orientation="vertical">
         android:drawableLeft="@drawable/ic_share_public"
         android:layout_centerVertical="true"
         android:textSize="12sp"
-        android:textColor="@color/grey_500"
+        android:textColor="@color/custom_color_text_main"
         android:id="@+id/tv_item_fragment_share_info_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="转发"/>
     <TextView
+        android:textColor="@color/custom_color_text_main"
         android:drawablePadding="3dp"
         android:gravity="center"
         android:drawableLeft="@drawable/ic_comment_public"
         android:layout_centerInParent="true"
         android:textSize="12sp"
-        android:textColor="@color/grey_500"
         android:id="@+id/tv_item_fragment_share_info_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -145,7 +146,7 @@ android:orientation="vertical">
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:textSize="12sp"
-        android:textColor="@color/grey_500"
+        android:textColor="@color/custom_color_text_main"
         android:id="@+id/tv_item_fragment_share_info_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

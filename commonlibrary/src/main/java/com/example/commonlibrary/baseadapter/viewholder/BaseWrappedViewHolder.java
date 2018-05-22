@@ -1,6 +1,7 @@
 package com.example.commonlibrary.baseadapter.viewholder;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -205,6 +206,17 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
         ((TextView) getView(id)).setText(content);
         return this;
     }
+
+    public BaseWrappedViewHolder setTextColor(int id,int color){
+        ((TextView) getView(id)).setTextColor(color);
+        return this;
+    }
+
+    public BaseWrappedViewHolder setTextColor(int id, ColorStateList colorStateList){
+        ((TextView) getView(id)).setTextColor(colorStateList);
+        return this;
+    }
+
 
     public BaseWrappedViewHolder setImageUrl(int id, String url) {
         if (getView(id) instanceof ImageView) {

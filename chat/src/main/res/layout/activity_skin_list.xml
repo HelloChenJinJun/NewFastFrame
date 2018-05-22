@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_fragment_other_news_list_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:id="@+id/refresh_activity_skin_list_refresh">
         <com.example.commonlibrary.baseadapter.SuperRecyclerView
-            android:id="@+id/srcv_fragment_other_news_list_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:tag="skin"
-            android:background="@color/custom_color_app_content_bg"
-            />
+            android:id="@+id/srcv_activity_skin_list_display"/>
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

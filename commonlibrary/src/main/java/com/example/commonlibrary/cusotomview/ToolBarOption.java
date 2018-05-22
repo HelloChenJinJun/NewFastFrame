@@ -51,7 +51,7 @@ public class ToolBarOption {
         /**
          * 返回按钮图片资源
          */
-        private int navigateId = R.drawable.ic_arrow_back_white_900_24dp;
+        private int navigateId = R.drawable.ic_back;
         private boolean isNeedNavigation = true;
 
 

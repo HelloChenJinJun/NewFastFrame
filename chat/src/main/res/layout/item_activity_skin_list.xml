@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:id="@+id/iv_item_activity_skin_list_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"/>
+
+    <TextView
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:id="@+id/tv_item_activity_skin_list_title"
+        android:tag="skin"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        android:text="浪漫情人节"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/custom_color_text_sub"/>
+
+
+
+
+</LinearLayout>

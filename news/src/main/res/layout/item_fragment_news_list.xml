@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:tag="skin"
+    android:background="@color/custom_color_app_content_bg"
     android:padding="10dp"
     android:orientation="horizontal">
 
@@ -19,12 +21,13 @@
         android:layout_height="80dp"
         >
         <TextView
+            android:tag="skin"
             android:text="标题"
             android:id="@+id/tv_item_fragment_news_list_title"
             android:maxLines="2"
             android:ellipsize="end"
             android:textSize="16sp"
-            android:textColor="@color/base_color_text_black"
+            android:textColor="@color/custom_color_text_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -35,6 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
+                android:tag="skin"
+                android:textColor="@color/custom_color_text_sub"
                 android:id="@+id/tv_item_fragment_news_list_time_from"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -45,6 +50,8 @@
                 android:layout_height="wrap_content"
                 android:text="中国地质大学"/>
             <TextView
+                android:tag="skin"
+                android:textColor="@color/custom_color_text_sub"
                 android:id="@+id/tv_item_fragment_news_list_time"
                 android:textSize="12sp"
                 android:text="2017-09-16"

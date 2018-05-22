@@ -60,7 +60,9 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
     }
 
     private void updateTag(List<SpecialNewsBean> list) {
+
         if (list != null && list.size() > 0) {
+            if (list.size()==1)return;
             List<String>  list1=new ArrayList<>();
             for (SpecialNewsBean bean :
                     list) {

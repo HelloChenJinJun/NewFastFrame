@@ -9,12 +9,14 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.commonlibrary.skin.attr.BackgroundAttr;
+import com.example.commonlibrary.skin.attr.DrawableTopAttr;
 import com.example.commonlibrary.skin.attr.SkinAttr;
 import com.example.commonlibrary.skin.attr.SkinItem;
 import com.example.commonlibrary.skin.attr.SrcAttr;
 import com.example.commonlibrary.skin.attr.TextColorAttr;
 import com.example.commonlibrary.skin.attr.ThumbAttr;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.SkinUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +38,10 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
     private static List<String> supportAttrsName = new ArrayList<>();
     private Map<View, SkinItem> viewSkinItemMap = new HashMap<>();
 
+    private static final String DRAWABLE_TOP ="drawableTop";
+
     static {
+        supportAttrsName.add(DRAWABLE_TOP);
         supportAttrsName.add(TEXT_COLOR);
         supportAttrsName.add(BACKGROUND);
         supportAttrsName.add(SRC);
@@ -51,16 +56,14 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
 //        获取是否应用换肤操作
-
-
-//        String tag = attrs.getAttributeValue(SkinUtil.NAME_PLACE, "tag");
+        String tag = attrs.getAttributeValue(SkinUtil.NAME_PLACE, "tag");
         View view = appCompatActivity.getDelegate().createView(parent, name, context, attrs);
         if (view == null) {
             view = ViewProducer.createViewFromTag(context, name, attrs);
         }
-//        if (tag != null && tag.equals("skin")) {
-//            return applySkin(context, view, attrs);
-//        }
+        if (tag != null && tag.equals("skin")) {
+            return applySkin(context, view, attrs);
+        }
         return view;
     }
 
@@ -129,6 +132,9 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
                 break;
             case THUMB:
                 skinAttr = new ThumbAttr();
+                break;
+            case DRAWABLE_TOP:
+                skinAttr=new DrawableTopAttr();
             default:
                 break;
         }
@@ -147,4 +153,8 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
     }
 
 
+    public void clear() {
+        viewSkinItemMap.clear();
+        viewSkinItemMap=null;
+    }
 }

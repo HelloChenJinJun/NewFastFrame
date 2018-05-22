@@ -17,8 +17,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 
+import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.R;
+import com.example.commonlibrary.mvp.presenter.BasePresenter;
+import com.example.commonlibrary.net.NetManager;
+import com.example.commonlibrary.net.download.DownloadListener;
+import com.example.commonlibrary.net.download.FileInfo;
+import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.SkinUpdateEvent;
 import com.example.commonlibrary.skin.theme.ThemeUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.SkinUtil;
@@ -43,7 +50,6 @@ public class SkinManager {
     private Resources resources;
     private String packageName;
     private boolean isLocal = true;
-    private List<SkinUpdateListener> listeners;
 
     public static SkinManager getInstance() {
         if (instance == null) {
@@ -59,10 +65,8 @@ public class SkinManager {
 
     private void init() {
         factoryMap = new HashMap<>();
-        CommonLogger.e("开始加载");
-        listeners = new ArrayList<>();
 //        复制所有资源文件到缓存目录中
-        SkinUtil.setUpSkinFile();
+//        SkinUtil.setUpSkinFile();
         context = BaseApplication.getInstance();
         reset();
     }
@@ -75,70 +79,63 @@ public class SkinManager {
     }
 
 
-    public void loadSkinResource(String path, final LoadSkinListener listener) {
-        new AsyncTask<String, Void, Resources>() {
-
-
+    public void loadSkinResource(String path, final DownloadListener listener) {
+        NetManager.getInstance().downLoad(path, new DownloadListener() {
             @Override
-            protected void onPreExecute() {
-                if (listener != null) {
-                    listener.onStart();
-                }
+            public void onStart(FileInfo fileInfo) {
+                listener.onStart(fileInfo);
+
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
-            protected Resources doInBackground(String... params) {
-                File skinFile = new File(params[0]);
-                if (!skinFile.exists()) {
-                    return null;
-                }
+            public void onUpdate(FileInfo fileInfo) {
+                listener.onUpdate(fileInfo);
+            }
+
+            @Override
+            public void onStop(FileInfo fileInfo) {
+                    listener.onStart(fileInfo);
+            }
+
+            @Override
+            public void onComplete(FileInfo fileInfo) {
                 try {
-                    CommonLogger.e("path:" + params[0]);
-                    PackageInfo packageInfo = context.getPackageManager().getPackageArchiveInfo(params[0], PackageManager.GET_ACTIVITIES);
+                    String path=fileInfo.getPath()+fileInfo.getName();
+                    CommonLogger.e("path:" +path);
+                    PackageInfo packageInfo = context.getPackageManager().getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
                     packageName = packageInfo.packageName;
                     isLocal = false;
                     AssetManager assetManager = AssetManager.class.newInstance();
                     Method method = assetManager.getClass().getMethod("addAssetPath", String.class);
-                    method.invoke(assetManager, params[0]);
+                    method.invoke(assetManager, path);
                     Resources oldResource = context.getResources();
-                    return new Resources(assetManager, oldResource.getDisplayMetrics(), oldResource.getConfiguration());
-                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    SkinManager.this.resources=new Resources(assetManager, oldResource.getDisplayMetrics(), oldResource.getConfiguration());
+                    refreshSkin();
+                    listener.onComplete(fileInfo);
+                } catch (InstantiationException e) {
                     e.printStackTrace();
-                    String message = null;
-                    CommonLogger.e("加载皮肤资源出错啦啦啦11" + message);
-                    if (e.getStackTrace() != null) {
-                        for (StackTraceElement bean :
-                                e.getStackTrace()) {
-                            CommonLogger.e(bean.toString());
-                        }
-                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
                 }
-                return null;
             }
-
 
             @Override
-            protected void onPostExecute(Resources resources) {
-                if (resources != null) {
-                    SkinManager.this.resources = resources;
-                    if (listener != null) {
-                        listener.onSuccess();
-                    }
-                    CommonLogger.e("加载资源成功啦啦啦");
-                    notifySkinResourceUpdate();
-                } else {
-                    if (listener != null) {
-                        listener.onFailed();
-                    }
-                    reset();
-                }
+            public void onCancel(FileInfo fileInfo) {
+                listener.onCancel(fileInfo);
             }
-        }.execute(path);
+
+            @Override
+            public void onError(FileInfo fileInfo, String errorMsg) {
+                listener.onError(fileInfo, errorMsg);
+            }
+        });
     }
 
-    private void notifySkinResourceUpdate() {
-    }
+
 
 
     public int getColor(int resId) {
@@ -165,9 +162,8 @@ public class SkinManager {
                     factoryMap.values()) {
                 skin.applyAllViewSkin();
             }
-        } else {
-            CommonLogger.e("factor大小为空");
         }
+        RxBusManager.getInstance().post(new SkinUpdateEvent());
     }
 
 
@@ -209,19 +205,28 @@ public class SkinManager {
     private Map<Activity, SkinLayoutInflaterFactory> factoryMap;
 
     public void apply(AppCompatActivity activity) {
-        if (activity.getSharedPreferences(ThemeUtil.NAME, Context.MODE_PRIVATE).getBoolean(ThemeUtil.IS_NIGHT, false)) {
-            activity.setTheme(R.style.CustomTheme_Night);
-        } else {
-            activity.setTheme(R.style.CustomTheme_Day);
-        }
+//        if (activity.getSharedPreferences(ThemeUtil.NAME, Context.MODE_PRIVATE).getBoolean(ThemeUtil.IS_NIGHT, false)) {
+//            activity.setTheme(R.style.CustomTheme_Night);
+//        } else {
+//            activity.setTheme(R.style.CustomTheme_Day);
+//        }
         factoryMap.put(activity, new SkinLayoutInflaterFactory(activity));
         LayoutInflaterCompat.setFactory(activity.getLayoutInflater(), factoryMap.get(activity));
     }
 
 
-//    public void apply(String attrName, int attrResId, View view) {
-//        skinLayoutInflaterFactory.createSkinFromAttrName(attrName, attrResId, view).apply(view);
-//    }
+
+    public void clear(Activity activity){
+        if (factoryMap.containsKey(activity)) {
+           SkinLayoutInflaterFactory skinLayoutInflaterFactory= factoryMap.remove(activity);
+            skinLayoutInflaterFactory.clear();
+        }
+    }
+
+
+
+
+
 
     public boolean isLocal() {
         return isLocal;
@@ -229,5 +234,9 @@ public class SkinManager {
 
     public void setLocal(boolean local) {
         isLocal = local;
+    }
+
+    public  SkinLayoutInflaterFactory getSkinFactory(Activity activity) {
+        return factoryMap.get(activity);
     }
 }

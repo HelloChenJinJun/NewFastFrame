@@ -16,6 +16,7 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.news.NewsApplication;
 import com.example.news.NewsContentActivity;
@@ -175,6 +176,7 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
             display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
             display.setOnLoadMoreListener(this);
         }
+        display.addItemDecoration(new ListViewDecoration());
         display.setAdapter(newsListAdapter);
         newsListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override

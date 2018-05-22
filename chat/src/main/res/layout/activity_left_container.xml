@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_menu_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/rl_menu_head_layout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginTop="30dp"
         android:paddingLeft="30dp">
+
         <com.example.commonlibrary.cusotomview.RoundAngleImageView
             android:id="@+id/riv_menu_avatar"
             android:layout_width="50dp"
@@ -21,7 +22,8 @@
             android:scaleType="centerCrop"
             android:src="@drawable/head"
             app:roundHeight="25dp"
-            app:roundWidth="25dp"/>
+            app:roundWidth="25dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,14 +32,16 @@
             android:layout_toRightOf="@+id/riv_menu_avatar"
 
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tv_menu_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="昵称"
                 android:textColor="@color/base_color_text_blue"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/tv_menu_signature"
             android:layout_width="match_parent"
@@ -46,18 +50,23 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingLeft="20dp"
-            android:text="点击修改属于你的个性签名吧^_^"
-            android:textColor="@color/base_color_text_grey"/>
+            android:tag="skin"
+            android:textColor="@color/custom_color_text_sub" />
     </RelativeLayout>
-    <View android:layout_width="match_parent" android:layout_height="1px"
-          android:layout_marginBottom="10dp"
-          android:layout_marginTop="10dp"
-          android:background="@color/divider_line_default_color"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/custom_color_app_content_div"
+        android:tag="skin" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rev_menu_display"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
     <LinearLayout
         android:id="@+id/ll_menu_bottom_container"
         android:layout_width="match_parent"
@@ -66,14 +75,17 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="90dp">
+
         <TextView
             android:id="@+id/tv_menu_weather_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:tag="skin"
             android:text="城市"
-            android:textColor="@color/base_color_text_white"
-            android:textSize="24sp"/>
+            android:textColor="@color/custom_color_text_main"
+            android:textSize="24sp" />
+
         <TextView
             android:id="@+id/tv_menu_weather_temperature"
             android:layout_width="wrap_content"
@@ -82,6 +94,6 @@
             android:gravity="center"
             android:text="温度"
             android:textColor="@color/base_color_text_blue"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
     </LinearLayout>
 </LinearLayout>

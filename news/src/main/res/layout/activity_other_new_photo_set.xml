@@ -18,7 +18,7 @@
         android:scaleType="centerInside"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_back_white_900_24dp"/>
+        android:src="@drawable/ic_back"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

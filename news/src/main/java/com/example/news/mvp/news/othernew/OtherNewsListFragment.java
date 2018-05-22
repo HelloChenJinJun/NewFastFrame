@@ -84,7 +84,7 @@ public class OtherNewsListFragment extends BaseFragment<List<NewInfoBean>,OtherN
                 .build().inject(this);
         refresh.setOnRefreshListener(this);
         display.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
-        display.addItemDecoration(new ListViewDecoration(getContext()));
+        display.addItemDecoration(new ListViewDecoration());
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);
         display.setAdapter(otherNewsListAdapter);

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/chat_bg">
+    >
 
 
         <TextView
+            android:background="@color/custom_color_app_content_bg"
+            android:tag="skin"
+            android:textColor="@color/custom_color_text_main"
             android:id="@+id/tv_view_fragment_friends_header_black"
             android:padding="10dp"
-            android:background="@color/white"
             android:drawablePadding="20dp"
             android:drawableLeft="@drawable/ic_person_grey_900_36dp"
             android:layout_width="match_parent"
@@ -20,7 +23,10 @@
 
 
             <TextView
-                android:background="@color/white"
+                android:background="@color/custom_color_app_content_bg"
+                android:tag="skin"
+                android:textColor="@color/custom_color_text_main"
+
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:drawablePadding="20dp"
@@ -34,7 +40,9 @@
 
 
     <TextView
-        android:background="@color/white"
+        android:background="@color/custom_color_app_content_bg"
+        android:tag="skin"
+        android:textColor="@color/custom_color_text_main"
         android:layout_marginTop="10dp"
         android:padding="10dp"
         android:drawablePadding="20dp"

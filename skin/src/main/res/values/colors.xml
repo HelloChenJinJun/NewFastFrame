@@ -9,4 +9,14 @@
     <color name="list_item_bg_color">#ffffff</color>
     <color name="tab_item_bg_color">#ffffff</color>
 
+    <color name="custom_color_app_bg">#FF171717</color>
+    <color name="custom_color_app_title_bg">#FF191919</color>
+    <color name="custom_color_app_content_bg">#ff343a49</color>
+    <color name="custom_color_app_content_div">#101010</color>
+
+
+
+    <!-- app内容区分割线颜色 -->
+
+
 </resources>

@@ -3,9 +3,9 @@ package com.example.commonlibrary;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,7 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
+import com.example.commonlibrary.skin.SkinLayoutInflaterFactory;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleTransformer;
@@ -56,7 +57,7 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     private EmptyLayout mEmptyLayout;
     protected int fragmentContainerResId = 0;
     protected Fragment currentFragment;
-    private RelativeLayout headerLayout;
+    private View headerLayout;
     private ProgressDialog mProgressDialog;
     protected BaseDialog mBaseDialog;
     private RoundAngleImageView icon;
@@ -90,9 +91,8 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         SkinManager.getInstance().apply(this);
         super.onCreate(savedInstanceState);
         if (isNeedHeadLayout()) {
-            LinearLayout linearLayout = new LinearLayout(this);
-            linearLayout.setOrientation(LinearLayout.VERTICAL);
-            headerLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.header_layout, null);
+            LinearLayout linearLayout= (LinearLayout) LayoutInflater.from(this).inflate(R.layout.content_layout_ll,null);
+            headerLayout =LayoutInflater.from(this).inflate(R.layout.header_layout, null);
             linearLayout.addView(headerLayout);
             if (isNeedEmptyLayout()) {
                 FrameLayout frameLayout = new FrameLayout(this);
@@ -100,25 +100,25 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
                 mEmptyLayout = new EmptyLayout(this);
                 mEmptyLayout.setVisibility(GONE);
                 frameLayout.addView(LayoutInflater.from(this).inflate(getContentLayout(), null));
+                mEmptyLayout.setContentView(mEmptyLayout.getChildAt(0));
                 frameLayout.addView(mEmptyLayout);
                 linearLayout.addView(frameLayout);
-                setContentView(linearLayout);
             } else {
                 linearLayout.addView(LayoutInflater.from(this).inflate(getContentLayout(), null));
-                setContentView(linearLayout);
             }
+            setContentView(linearLayout);
         } else {
+            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.content_layout_fl,null);
+            frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            frameLayout.addView(LayoutInflater.from(this).inflate(getContentLayout(), null));
             if (isNeedEmptyLayout()) {
-                FrameLayout frameLayout = new FrameLayout(this);
-                frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 mEmptyLayout = new EmptyLayout(this);
                 mEmptyLayout.setVisibility(GONE);
-                frameLayout.addView(LayoutInflater.from(this).inflate(getContentLayout(), null));
+                mEmptyLayout.setContentView(frameLayout.getChildAt(0));
                 frameLayout.addView(mEmptyLayout);
-                setContentView(frameLayout);
-            } else {
-                setContentView(getContentLayout());
+
             }
+            setContentView(frameLayout);
         }
         initBaseView();
         initData();
@@ -155,14 +155,14 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
 
     protected void initBaseView() {
         if (isNeedHeadLayout()) {
-            icon = (RoundAngleImageView) headerLayout.findViewById(R.id.riv_header_layout_icon);
-            title = (TextView) headerLayout.findViewById(R.id.tv_header_layout_title);
-            right = (TextView) headerLayout.findViewById(R.id.tv_header_layout_right);
-            back = (ImageView) headerLayout.findViewById(R.id.iv_header_layout_back);
-            rightImage = (ImageView) headerLayout.findViewById(R.id.iv_header_layout_right);
+            icon =  headerLayout.findViewById(R.id.riv_header_layout_icon);
+            title =  headerLayout.findViewById(R.id.tv_header_layout_title);
+            right =  headerLayout.findViewById(R.id.tv_header_layout_right);
+            back =  headerLayout.findViewById(R.id.iv_header_layout_back);
+            rightImage =  headerLayout.findViewById(R.id.iv_header_layout_right);
             rightImage.setVisibility(View.GONE);
             right.setVisibility(View.VISIBLE);
-            setSupportActionBar((Toolbar) headerLayout.findViewById(R.id.toolbar));
+            setSupportActionBar( headerLayout.findViewById(R.id.toolbar));
             getSupportActionBar().setTitle("");
         }
         mProgressDialog = new ProgressDialog(this);
@@ -382,6 +382,7 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        SkinManager.getInstance().clear(this);
         if (presenter != null) {
             presenter.onDestroy();
         }

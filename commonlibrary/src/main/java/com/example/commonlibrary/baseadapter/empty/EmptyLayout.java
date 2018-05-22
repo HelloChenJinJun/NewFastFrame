@@ -29,6 +29,7 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
 //    private FrameLayout container;
 //    private TextView loadContent;
     private ImageView loadingImage;
+    private View contentView;
 
     public EmptyLayout(@NonNull Context context) {
         this(context, null);
@@ -103,24 +104,30 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
         } else {
             if (getVisibility() == VISIBLE) {
                 setVisibility(GONE);
+                if (contentView!=null) {
+                    contentView.setVisibility(VISIBLE);
+                }
             }
             return;
         }
         switch (currentStatus) {
             case STATUS_HIDE:
 //                container.setVisibility(GONE);
+                contentView.setVisibility(VISIBLE);
                 break;
             case STATUS_NO_DATA:
 //                container.setVisibility(VISIBLE);
                 errorLayout.setVisibility(GONE);
                 loadingLayout.setVisibility(GONE);
                 emptyLayout.setVisibility(VISIBLE);
+                contentView.setVisibility(GONE);
                 break;
             case STATUS_NO_NET:
 //                container.setVisibility(VISIBLE);
                 errorLayout.setVisibility(VISIBLE);
                 loadingLayout.setVisibility(GONE);
                 emptyLayout.setVisibility(GONE);
+                contentView.setVisibility(GONE);
                 break;
             case STATUS_LOADING:
 //                container.setVisibility(VISIBLE);
@@ -129,6 +136,7 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
                 errorLayout.setVisibility(GONE);
                 emptyLayout.setVisibility(GONE);
                 loadingLayout.setVisibility(VISIBLE);
+                contentView.setVisibility(GONE);
                 break;
             default:
                 break;
@@ -141,6 +149,10 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
         if (mOnRetryListener != null) {
             mOnRetryListener.onRetry();
         }
+    }
+
+    public void setContentView(View contentView) {
+        this.contentView=contentView;
     }
 
 
@@ -157,10 +169,5 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
     }
 
 
-    //        定义一个注解，限定传入的状态值
-//    @Retention(RetentionPolicy.SOURCE)
-//    @IntDef({STATUS_HIDE, STATUS_LOADING, STATUS_NO_DATA, STATUS_NO_NET})
-//    public @interface EmptyStatus {
-//
-//    }
+
 }

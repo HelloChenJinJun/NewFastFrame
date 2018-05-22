@@ -26,6 +26,8 @@
         app:lv_fill_triangle="true"/>
 
     <TextView
+        android:tag="skin"
+        android:textColor="@color/custom_color_text_main"
         android:layout_marginTop="15dp"
         android:id="@+id/tv_item_fragment_other_news_list_title"
         android:layout_toRightOf="@+id/iv_item_fragment_other_news_list_display"
@@ -35,14 +37,14 @@
         android:maxLines="2"
         android:ellipsize="end"
         android:textSize="16sp"
-        android:textColor="@color/base_color_text_black"
         android:layout_marginLeft="10dp"
         />
 
 
     <TextView
+        android:tag="skin"
+        android:textColor="@color/custom_color_text_sub"
         android:textSize="12sp"
-        android:textColor="@color/base_color_text_grey"
         android:id="@+id/tv_item_fragment_other_news_list_from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,8 +54,8 @@
     <TextView
         android:layout_marginRight="10dp"
         android:textSize="12sp"
-        android:textColor="@color/base_color_text_grey"
-        android:id="@+id/tv_item_fragment_other_news_list_time"
+        android:tag="skin"
+        android:textColor="@color/custom_color_text_sub"        android:id="@+id/tv_item_fragment_other_news_list_time"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

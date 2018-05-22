@@ -15,6 +15,8 @@
         android:layout_height="1px"
         android:background="@color/divider_line_default_color"/>
     <RadioGroup
+        android:tag="skin"
+        android:background="@color/custom_color_app_title_bg"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:id="@+id/rg_activity_main_bottom_container"
@@ -25,6 +27,7 @@
         android:orientation="horizontal">
 
         <RadioButton
+            android:tag="skin"
             android:id="@+id/rb_activity_main_bottom_index"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -37,6 +40,7 @@
             android:textColor="@color/tab_text_color" />
 
         <RadioButton
+            android:tag="skin"
             android:drawablePadding="3dp"
             android:id="@+id/rb_activity_main_bottom_public"
             android:layout_width="0dp"
@@ -49,6 +53,7 @@
             android:textColor="@color/tab_text_color" />
 
         <RadioButton
+            android:tag="skin"
             android:drawablePadding="3dp"
             android:id="@+id/rb_activity_main_bottom_center"
             android:layout_width="0dp"
@@ -61,6 +66,7 @@
             android:textColor="@color/tab_text_color" />
 
         <RadioButton
+            android:tag="skin"
             android:drawablePadding="3dp"
             android:id="@+id/rb_activity_main_bottom_person"
             android:layout_width="0dp"
@@ -73,6 +79,7 @@
             android:textColor="@color/tab_text_color" />
 
         <RadioButton
+            android:tag="skin"
             android:drawablePadding="3dp"
             android:id="@+id/rb_activity_main_bottom_chat"
             android:layout_width="0dp"

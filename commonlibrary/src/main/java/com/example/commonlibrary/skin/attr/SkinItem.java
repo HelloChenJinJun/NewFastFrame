@@ -43,7 +43,7 @@ public class SkinItem {
     public void apply() {
         if (view != null) {
             SharedPreferences sharedPreferences = view.getContext().getSharedPreferences(ThemeUtil.NAME, Context.MODE_PRIVATE);
-            boolean isTheme = sharedPreferences.getBoolean(ThemeUtil.IS_THEME, true);
+            boolean isTheme = sharedPreferences.getBoolean(ThemeUtil.IS_THEME, false);
             int value = sharedPreferences.getInt(ThemeUtil.THEME_COLOR, Color.parseColor("#FF2F3A4C"));
             for (SkinAttr skinAttr :
                     skinAttrs) {

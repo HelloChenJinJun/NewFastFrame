@@ -2,10 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
 
     <android.support.design.widget.TabLayout
+        app:tabSelectedTextColor="@color/red_500"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:id="@+id/tl_fragment_college_news_main_tab"/>
