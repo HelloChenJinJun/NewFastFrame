@@ -91,6 +91,8 @@
         <activity android:name=".mvp.preview.PhotoPreViewActivity"/>
         <activity android:name=".mvp.EditShare.EditShareInfoActivity"/>
         <activity android:name=".mvp.commentnotify.CommentNotifyActivity" />
+        <activity android:name=".mvp.skin.SkinListActivity" />
+        <activity android:name=".mvp.skin.skinDetail.SkinDetailActivity" />
 
 
         <receiver android:name=".receiver.NetWorkChangedReceiver">

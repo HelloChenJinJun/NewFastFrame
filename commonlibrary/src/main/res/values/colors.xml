@@ -17,12 +17,22 @@
     <color name="divider_line_default_color">#d9d9d9</color>
 
 
-    <color name="custom_color_app_bg">#FF171717</color>
-    <color name="custom_color_app_title_bg">#FF191919</color>
-    <color name="custom_color_app_content_bg">#ff343a49</color>
-    <color name="custom_color_text_main">#FF999999</color>
-    <color name="custom_color_text_sub">#FF666666</color>
-    <color name="custom_color_app_content_div">#FF191919</color>      <!-- app内容区分割线颜色 -->
+    <!--<color name="custom_color_app_bg">#FF171717</color>-->
+    <!--<color name="custom_color_app_title_bg">#FF191919</color>-->
+    <!--<color name="custom_color_app_content_bg">#ff343a49</color>-->
+    <!--<color name="custom_color_text_main">#FF999999</color>-->
+    <!--<color name="custom_color_text_sub">#FF666666</color>-->
+    <!--<color name="custom_color_app_content_div">#FF191919</color>    -->
+
+
+    <color name="custom_color_app_bg">#ECF1F5</color>
+    <color name="custom_color_app_title_bg">#ffffffff</color>
+    <color name="custom_color_app_content_bg">#ffffffff</color>
+    <color name="custom_color_text_main">@color/black</color>
+    <color name="custom_color_text_sub">@color/grey_500</color>
+    <color name="custom_color_app_content_div">@color/grey_500</color>
+
+    <!-- app内容区分割线颜色 -->
     <!-- 副文本（提示、描述）字体颜色 -->
 
 

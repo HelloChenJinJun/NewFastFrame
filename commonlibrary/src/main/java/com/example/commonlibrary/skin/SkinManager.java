@@ -28,6 +28,7 @@ import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.SkinUpdateEvent;
 import com.example.commonlibrary.skin.theme.ThemeUtil;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.FileUtil;
 import com.example.commonlibrary.utils.SkinUtil;
 
 import java.io.File;
@@ -68,74 +69,59 @@ public class SkinManager {
 //        复制所有资源文件到缓存目录中
 //        SkinUtil.setUpSkinFile();
         context = BaseApplication.getInstance();
-        reset();
+        update(null);
     }
 
 
-    public void reset() {
-        resources = context.getResources();
-        packageName = context.getPackageName();
-        isLocal = true;
+    public void update(String path) {
+        if (path==null) {
+            resources = context.getResources();
+            packageName = context.getPackageName();
+            isLocal = true;
+            refreshSkin();
+        }else {
+            updateSkin(path, exception -> {
+
+            });
+        }
     }
+
+
+
+
 
 
     public void loadSkinResource(String path, final DownloadListener listener) {
-        NetManager.getInstance().downLoad(path, new DownloadListener() {
-            @Override
-            public void onStart(FileInfo fileInfo) {
-                listener.onStart(fileInfo);
-
-            }
-
-            @Override
-            public void onUpdate(FileInfo fileInfo) {
-                listener.onUpdate(fileInfo);
-            }
-
-            @Override
-            public void onStop(FileInfo fileInfo) {
-                    listener.onStart(fileInfo);
-            }
-
-            @Override
-            public void onComplete(FileInfo fileInfo) {
-                try {
-                    String path=fileInfo.getPath()+fileInfo.getName();
-                    CommonLogger.e("path:" +path);
-                    PackageInfo packageInfo = context.getPackageManager().getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
-                    packageName = packageInfo.packageName;
-                    isLocal = false;
-                    AssetManager assetManager = AssetManager.class.newInstance();
-                    Method method = assetManager.getClass().getMethod("addAssetPath", String.class);
-                    method.invoke(assetManager, path);
-                    Resources oldResource = context.getResources();
-                    SkinManager.this.resources=new Resources(assetManager, oldResource.getDisplayMetrics(), oldResource.getConfiguration());
-                    refreshSkin();
-                    listener.onComplete(fileInfo);
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onCancel(FileInfo fileInfo) {
-                listener.onCancel(fileInfo);
-            }
-
-            @Override
-            public void onError(FileInfo fileInfo, String errorMsg) {
-                listener.onError(fileInfo, errorMsg);
-            }
-        });
+        NetManager.getInstance().downLoad(path,listener);
     }
 
-
+    public void updateSkin(String path,SkinUpdateListener skinUpdateListener) {
+        try {
+            CommonLogger.e("path:" +path);
+            PackageInfo packageInfo = context.getPackageManager().getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
+            packageName = packageInfo.packageName;
+            isLocal = false;
+            AssetManager assetManager = AssetManager.class.newInstance();
+            Method method = assetManager.getClass().getMethod("addAssetPath", String.class);
+            method.invoke(assetManager, path);
+            Resources oldResource = context.getResources();
+            SkinManager.this.resources=new Resources(assetManager, oldResource.getDisplayMetrics(), oldResource.getConfiguration());
+            refreshSkin();
+            skinUpdateListener.onUpdate(null);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            skinUpdateListener.onUpdate(e);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            skinUpdateListener.onUpdate(e);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            skinUpdateListener.onUpdate(e);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            skinUpdateListener.onUpdate(e);
+        }
+    }
 
 
     public int getColor(int resId) {

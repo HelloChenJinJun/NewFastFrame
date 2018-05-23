@@ -83,7 +83,7 @@
             android:gravity="center"
             android:tag="skin"
             android:text="城市"
-            android:textColor="@color/custom_color_text_main"
+            android:textColor="@color/custom_color_text_sub"
             android:textSize="24sp" />
 
         <TextView

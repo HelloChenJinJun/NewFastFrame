@@ -23,6 +23,7 @@
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
                 app:tabSelectedTextColor="@color/red_500"
+                app:tabTextColor="@color/custom_color_text_main"
                 app:tabMode="scrollable" />
 
             <!--<View-->

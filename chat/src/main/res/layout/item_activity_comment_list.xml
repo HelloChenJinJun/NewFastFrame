@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
     >
 
     <com.example.commonlibrary.cusotomview.RoundAngleImageView
@@ -33,10 +32,11 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
             <TextView
+                android:tag="skin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_item_activity_comment_list_name"
-                android:textColor="@color/black"/>
+                android:textColor="@color/custom_color_text_main"/>
 
 
             <ImageView
@@ -68,16 +68,18 @@
 
 
         <TextView
+            android:tag="skin"
             android:textSize="12sp"
-            android:textColor="@color/grey_500"
+            android:textColor="@color/custom_color_text_sub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_item_activity_comment_list_time"/>
 
 
         <TextView
+            android:tag="skin"
             android:layout_marginTop="20dp"
-            android:textColor="@color/black"
+            android:textColor="@color/custom_color_text_main"
             android:textSize="16sp"
             android:layout_width="match_parent"
             android:id="@+id/tv_item_activity_comment_list_content"

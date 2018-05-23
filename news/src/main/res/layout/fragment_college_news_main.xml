@@ -10,6 +10,7 @@
         app:tabSelectedTextColor="@color/red_500"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        app:tabTextColor="@color/custom_color_text_main"
         android:id="@+id/tl_fragment_college_news_main_tab"/>
 
     <com.example.news.widget.WrappedViewPager

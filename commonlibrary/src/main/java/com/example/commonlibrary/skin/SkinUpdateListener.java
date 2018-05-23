@@ -7,5 +7,5 @@ package com.example.commonlibrary.skin;
 public interface SkinUpdateListener {
 
 
-    public void onUpdate();
+    public void onUpdate(Exception exception);
 }

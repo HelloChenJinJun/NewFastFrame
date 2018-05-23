@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/ll_activity_skin_detail_container"
+    android:background="@color/chat_bg"
+    android:orientation="vertical">
+
+    <com.example.commonlibrary.cusotomview.WrappedViewPager
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/vp_activity_skin_detail_display"
+        />
+
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:background="@color/custom_color_app_content_bg"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:textSize="18sp"
+            android:textColor="@color/custom_color_text_main"
+            android:text="浪漫爱情"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_activity_skin_detail_title"/>
+
+
+
+        <Button
+            android:id="@+id/btn_activity_skin_detail_download"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:text="下载并使用"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_login_selector"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

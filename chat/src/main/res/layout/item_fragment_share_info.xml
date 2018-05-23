@@ -4,6 +4,7 @@ android:layout_width="match_parent"
 android:layout_height="wrap_content"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 android:layout_marginBottom="20dp"
+    android:tag="skin"
     android:background="@color/custom_color_app_content_bg"
 android:orientation="vertical">
 
@@ -97,7 +98,8 @@ android:orientation="vertical">
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:maxLines="5"
-    android:textColor="@color/black"
+    android:tag="skin"
+    android:textColor="@color/custom_color_text_main"
     android:textSize="16sp"
     android:ellipsize="end"
     android:id="@+id/tv_item_fragment_share_info_normal_text"/>
@@ -123,13 +125,13 @@ android:orientation="vertical">
         android:drawableLeft="@drawable/ic_share_public"
         android:layout_centerVertical="true"
         android:textSize="12sp"
-        android:textColor="@color/custom_color_text_main"
+        android:textColor="@color/custom_color_text_sub"
         android:id="@+id/tv_item_fragment_share_info_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="转发"/>
     <TextView
-        android:textColor="@color/custom_color_text_main"
+        android:textColor="@color/custom_color_text_sub"
         android:drawablePadding="3dp"
         android:gravity="center"
         android:drawableLeft="@drawable/ic_comment_public"
@@ -146,17 +148,15 @@ android:orientation="vertical">
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:textSize="12sp"
-        android:textColor="@color/custom_color_text_main"
+        android:textColor="@color/custom_color_text_sub"
         android:id="@+id/tv_item_fragment_share_info_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="32"/>
 
 </RelativeLayout>
-<View
-    android:layout_width="match_parent"
-    android:layout_height="1px"
-    android:background="@color/divider_line_default_color"/>
-
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/custom_color_app_content_div"/>
 </LinearLayout>

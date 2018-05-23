@@ -140,6 +140,11 @@ public class SystemCenterActivity extends BaseActivity<Object, SystemCenterPrese
                         presenter.getLibraryVerifyImage();
                     }
                 } else if (position == 3) {
+                    String pw=BaseApplication.getAppComponent().getSharedPreferences()
+                            .getString(ConstantUtil.ACCOUNT,null);
+                    if (pw ==null|| pw.length() == 6) {
+                        return;
+                    }
                     mBaseDialog.setDialogContentView(getEditView("card")).setTitle("输入验证码").setLeftButton("取消", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

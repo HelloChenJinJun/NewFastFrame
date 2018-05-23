@@ -27,6 +27,8 @@ import com.example.commonlibrary.bean.chat.PostNotifyInfoDao;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntityDao;
+import com.example.commonlibrary.bean.chat.SkinEntity;
+import com.example.commonlibrary.bean.chat.SkinEntityDao;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntityDao;
 import com.example.commonlibrary.bean.chat.UserEntity;
@@ -701,5 +703,19 @@ public class UserDBManager {
 
     public void addOrUpdatePostNotify(List<PostNotifyInfo> result) {
         daoSession.getPostNotifyInfoDao().insertOrReplaceInTx(result);
+    }
+
+    public List<SkinEntity> getSkinList() {
+        return daoSession.getSkinEntityDao().queryBuilder().build().list();
+    }
+
+    public SkinEntity getCurrentSkin() {
+        List<SkinEntity> list= daoSession.getSkinEntityDao().queryBuilder().where(SkinEntityDao.Properties
+        .HasSelected.eq(Boolean.TRUE)).limit(1).build().list();
+        if (list != null&&list.size()>0) {
+            return list.get(0);
+        }else {
+            return null;
+        }
     }
 }

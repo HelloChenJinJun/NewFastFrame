@@ -27,7 +27,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class SplashActivity extends AppCompatActivity implements Animation.AnimationListener {
     private TextView time;
-    private TextView title;
 
 
     @Override
@@ -35,7 +34,7 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_main);
         time = (TextView) findViewById(R.id.tv_activity_splash_main_time);
-        title = (TextView) findViewById(R.id.tv_activity_splash_main_title);
+        TextView title = (TextView) findViewById(R.id.tv_activity_splash_main_title);
         Animation animation = AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_top_in);
         animation.setAnimationListener(this);
         title.startAnimation(animation);
@@ -49,7 +48,7 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(aLong -> time.setText((3 - aLong)+""))
                 .doOnComplete(() -> {
-                    //倒计时完毕置为可点击状态
+//                    倒计时完毕置为可点击状态
 //                    if (BaseApplication.getAppComponent().getSharedPreferences()
 //                            .getBoolean(ConstantUtil.FIRST_STATUS,true)) {
 //                        GuideActivity.start(this);

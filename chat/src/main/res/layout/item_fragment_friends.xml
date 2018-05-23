@@ -15,8 +15,10 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/black_transparency_200"/>
+        android:background="@color/custom_color_app_content_div"/>
     <RelativeLayout
+        android:tag="skin"
+        android:background="@color/custom_color_app_content_bg"
         android:id="@+id/rl_item_fragment_friends"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,6 +34,8 @@
             android:layout_height="50dp"
             android:src="@drawable/head"/>
         <TextView
+            android:tag="skin"
+
             android:id="@+id/tv_item_fragment_friends_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,7 +44,7 @@
             android:layout_toEndOf="@id/iv_item_fragment_friends_avatar"
             android:gravity="center_vertical"
             android:text="姓名"
-            android:textColor="@color/black"
+            android:textColor="@color/custom_color_text_main"
             android:textSize="16sp"
             android:layout_toRightOf="@id/iv_item_fragment_friends_avatar"/>
 

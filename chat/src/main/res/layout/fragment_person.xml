@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/custom_color_app_bg"
+    android:tag="skin"
     android:orientation="vertical">
 
 

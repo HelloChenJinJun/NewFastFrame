@@ -10,6 +10,7 @@ import android.widget.RadioGroup;
 
 import com.example.chat.base.Constant;
 import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.main.HomeFragment;
 import com.example.chat.mvp.person.PersonFragment;
@@ -17,8 +18,10 @@ import com.example.chat.mvp.search.SearchActivity;
 import com.example.chat.mvp.searchFriend.SearchFriendActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoFragment;
+import com.example.chat.mvp.skin.SkinListActivity;
 import com.example.chat.mvp.wallpaper.WallPaperActivity;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.net.download.DownloadListener;
 import com.example.commonlibrary.net.download.FileInfo;
 import com.example.commonlibrary.skin.SkinManager;
@@ -82,71 +85,19 @@ public class MainActivity extends SlideBaseActivity {
                 ToastUtils.showShortToast("点击了设置");
                 SettingsActivity.start(this);
                 break;
-            case "换肤":
-                showLoading("正在换肤....");
-                BmobQuery bmobQuery = new BmobQuery("Skin");
-                bmobQuery.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
-                bmobQuery.setLimit(1);
-                bmobQuery.findObjectsByTable(new QueryListener<JSONArray>() {
-                    @Override
-                    public void done(JSONArray jsonArray, BmobException e) {
-                        if (e == null) {
-                            if (jsonArray != null && jsonArray.length() > 0) {
-                                LogUtil.e(jsonArray.toString());
-                                try {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-                                    JSONObject jsonObjectJSONObject = jsonObject.getJSONObject("skin");
-                                    String url = jsonObjectJSONObject.getString("url");
-                                    SkinManager.getInstance().loadSkinResource(url, new DownloadListener() {
-                                        @Override
-                                        public void onStart(FileInfo fileInfo) {
-
-                                        }
-
-                                        @Override
-                                        public void onUpdate(FileInfo fileInfo) {
-
-                                        }
-
-                                        @Override
-                                        public void onStop(FileInfo fileInfo) {
-
-                                        }
-
-                                        @Override
-                                        public void onComplete(FileInfo fileInfo) {
-                                            ToastUtils.showShortToast("换肤成功"
-                                            +fileInfo.toString());
-                                            hideLoading();
-                                        }
-
-                                        @Override
-                                        public void onCancel(FileInfo fileInfo) {
-                                            hideLoading();
-                                        }
-
-                                        @Override
-                                        public void onError(FileInfo fileInfo, String errorMsg) {
-                                            CommonLogger.e("换肤失败"+errorMsg);
-                                            hideLoading();
-                                        }
-                                    });
-
-
-                                } catch (JSONException item) {
-                                    item.printStackTrace();
-                                }
-                            } else {
-                                CommonLogger.e("获取远程皮肤插件数据为空");
-                                hideLoading();
-                            }
-                        } else {
-                            CommonLogger.e("获取远程皮肤插件失败" + e.toString());
-                            hideLoading();
-                        }
-                    }
-
-                });
+            case "重置皮肤":
+               SkinEntity currentSkinEntity=UserDBManager.getInstance()
+                       .getCurrentSkin();
+               if (currentSkinEntity!=null){
+                   currentSkinEntity.setHasSelected(false);
+                   UserDBManager.getInstance().getDaoSession()
+                           .getSkinEntityDao().update(currentSkinEntity);
+                SkinManager.getInstance().update(null);
+               }
+                break;
+            case "皮肤中心":
+                SkinListActivity.start(this);
+                break;
             default:
                 break;
         }

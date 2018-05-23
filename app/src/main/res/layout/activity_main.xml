@@ -13,7 +13,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/divider_line_default_color"/>
+        android:background="@color/custom_color_app_content_div"/>
     <RadioGroup
         android:tag="skin"
         android:background="@color/custom_color_app_title_bg"

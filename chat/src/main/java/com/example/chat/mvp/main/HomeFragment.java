@@ -63,10 +63,12 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -162,10 +164,19 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         initMenu();
         initActionBar();
         initRxBus();
+        initSkin();
         updateUserInfo(UserDBManager.getInstance().getUser(UserManager.getInstance().getCurrentUserObjectId()));
         startSearchLiveWeather(BaseApplication.getAppComponent()
         .getSharedPreferences().getString(Constant.CITY,null));
         bindPollService(10);
+    }
+
+    private void initSkin() {
+        SkinEntity currentSkinEntity=UserDBManager
+                .getInstance().getCurrentSkin();
+        if (currentSkinEntity != null) {
+            SkinManager.getInstance().update(currentSkinEntity.getPath());
+        }
     }
 
     private void initMenu() {
