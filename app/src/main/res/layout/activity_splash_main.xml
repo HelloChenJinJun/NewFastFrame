@@ -7,7 +7,7 @@
 
 
     <ImageView
-        android:background="@color/white"
+        android:src="@drawable/login_container_bg_03"
         android:id="@+id/iv_activity_splash_main_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

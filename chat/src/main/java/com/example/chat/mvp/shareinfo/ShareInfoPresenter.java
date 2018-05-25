@@ -162,8 +162,11 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                                 RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE, isAdd?CommentEvent.ACTION_ADD:CommentEvent
                                 .ACTION_DELETE));
                                 if (isAdd) {
-                                    MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_LIKE,objectId,UserManager.getInstance().getCurrentUserObjectId()
-                                    ,publicPostBean.getAuthor().getObjectId());
+                                    if (!publicPostBean.getAuthor().getObjectId().equals(UserManager
+                                    .getInstance().getCurrentUserObjectId())) {
+                                        MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_LIKE,objectId,UserManager.getInstance().getCurrentUserObjectId()
+                                        ,publicPostBean.getAuthor().getObjectId());
+                                    }
                                 }
 
                             }else{

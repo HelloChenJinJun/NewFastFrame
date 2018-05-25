@@ -72,12 +72,11 @@ public class CommentNotifyPresenter extends AppBasePresenter<IView<List<PostNoti
             }));
         } else {
             BmobQuery<PostNotifyBean> bmobQuery = new BmobQuery<>();
-            bmobQuery.addWhereEqualTo("user", new BmobPointer(UserManager.getInstance().getCurrentUser()));
+            bmobQuery.addWhereEqualTo("toUser", new BmobPointer(UserManager.getInstance().getCurrentUser()));
             bmobQuery.setLimit(10);
             bmobQuery.order("-createdAt");
             bmobQuery.setSkip((page - 1) * 10);
-            bmobQuery.include("publicCommentBean,user,publicCommentBean.post,publicCommentBean.user" +
-                    ",publicCommentBean.post.author");
+            bmobQuery.include("relatedUser,publicPostBean,publicCommentBean,publicPostBean.author,publicCommentBean.post,publicCommentBean.user,publicCommentBean.post.author");
             addSubscription(bmobQuery.findObjects(new FindListener<PostNotifyBean>() {
                 @Override
                 public void done(List<PostNotifyBean> postNotifyBeans, BmobException e) {

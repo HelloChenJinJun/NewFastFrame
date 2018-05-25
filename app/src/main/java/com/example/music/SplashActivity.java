@@ -49,21 +49,21 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
                 .doOnNext(aLong -> time.setText((3 - aLong)+""))
                 .doOnComplete(() -> {
 //                    倒计时完毕置为可点击状态
-//                    if (BaseApplication.getAppComponent().getSharedPreferences()
-//                            .getBoolean(ConstantUtil.FIRST_STATUS,true)) {
-//                        GuideActivity.start(this);
-//                    }else {
-//                        if (UserManager.getInstance().getCurrentUser() != null) {
-//                            MainActivity.start(this);
-//                        }else {
-//                            LoginActivity.start(this,ConstantUtil.FROM_LOGIN);
-//                        }
-//                    }
-                    if (UserManager.getInstance().getCurrentUser() != null) {
-                        MainActivity.start(this);
+                    if (BaseApplication.getAppComponent().getSharedPreferences()
+                            .getBoolean(ConstantUtil.FIRST_STATUS,true)) {
+                        GuideActivity.start(this);
                     }else {
-                        LoginActivity.start(this,ConstantUtil.FROM_LOGIN);
+                        if (UserManager.getInstance().getCurrentUser() != null) {
+                            MainActivity.start(this);
+                        }else {
+                            LoginActivity.start(this,ConstantUtil.FROM_LOGIN);
+                        }
                     }
+//                    if (UserManager.getInstance().getCurrentUser() != null) {
+//                        MainActivity.start(this);
+//                    }else {
+//                        LoginActivity.start(this,ConstantUtil.FROM_LOGIN);
+//                    }
                     finish();
                 })
                 .subscribe();

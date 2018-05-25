@@ -112,7 +112,7 @@ android:orientation="vertical">
     android:layout_marginTop="10dp"
     android:layout_width="match_parent"
     android:layout_height="1px"
-    android:background="@color/custom_color_app_content_div"/>
+    android:background="#808080"/>
 <RelativeLayout
     android:paddingStart="50dp"
     android:paddingEnd="50dp"
@@ -155,8 +155,5 @@ android:orientation="vertical">
         android:text="32"/>
 
 </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/custom_color_app_content_div"/>
+
 </LinearLayout>

@@ -32,6 +32,7 @@ import com.example.commonlibrary.utils.CommonLogger;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +57,7 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
     MsgManager mMsgManager;
 
     private Context context;
+    private String msg=null;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -80,6 +82,7 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
      * @param json json数据
      */
     private void parseMsg(String json) {
+
         try {
             JSONObject jsonObject = new JSONObject(json);
             String tag = JsonUtil.getString(jsonObject, Constant.MESSAGE_TAG);
@@ -93,9 +96,13 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
             if (!jsonObject.has(Constant.TAG_BELONG_ID)) {
 //                                系统消息
                 String systemInfo = JsonUtil.getString(jsonObject, Constant.PUSH_ALERT);
+                msg=systemInfo;
                 JsonElement jsonElement=new JsonParser().parse(systemInfo);
-                JsonObject jsonObject1=jsonElement.getAsJsonObject();
-                if (jsonObject1.has(Constant.TAG_CONTENT_URL)) {
+                JsonObject jsonObject1= null;
+                if (jsonElement!=null) {
+                    jsonObject1 = jsonElement.getAsJsonObject();
+                }
+                if (jsonObject1!=null&&jsonObject1.has(Constant.TAG_CONTENT_URL)) {
 //                        系统通知的消息
                     SystemNotifyEntity systemNotifyBean= BaseApplication
                             .getAppComponent().getGson()
@@ -116,8 +123,7 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
                             }
                         });
                     }
-
-                }else if (jsonObject1.has(Constant.TAG_ID)){
+                }else if (jsonObject1!=null&&jsonObject1.has(Constant.TAG_ID)){
                     PostNotifyInfo postNotifyInfo= BaseApplication
                             .getAppComponent().getGson()
                             .fromJson(systemInfo,PostNotifyInfo.class);
@@ -171,8 +177,9 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
             } else {
                 LogUtil.e("传输过程中用户ID丢失");
             }
-        } catch (JSONException e) {
+        } catch (JSONException |JsonSyntaxException|IllegalStateException e) {
             e.printStackTrace();
+            ChatNotificationManager.getInstance(context).showNotification(null,context,"你有一条自定义系统通知",R.mipmap.ic_launcher,msg, CommentNotifyActivity.class);
         }
     }
 

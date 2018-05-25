@@ -297,9 +297,13 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                                 RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE, isAdd ? CommentEvent.ACTION_ADD : CommentEvent
                                         .ACTION_DELETE));
                                 if (isAdd) {
-                                    addSubscription(MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_LIKE,objectId,UserManager.getInstance()
-                                            .getCurrentUserObjectId(),publicPostBean.getAuthor().getObjectId()));
-
+                                    if (!publicPostBean
+                                            .getAuthor()
+                                            .getObjectId().equals(UserManager.getInstance()
+                                            .getCurrentUserObjectId())) {
+                                        addSubscription(MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_LIKE,objectId,UserManager.getInstance()
+                                                .getCurrentUserObjectId(),publicPostBean.getAuthor().getObjectId()));
+                                    }
                                 }
                             } else {
                                 ToastUtils.showShortToast("点赞失败" + e.toString());
