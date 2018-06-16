@@ -138,28 +138,30 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
             return;
         }
         showLoadDialog("正在登录.........");
-        if (from!=null) {
-//            与新闻模块进行交互
-            presenter.registerEvent(LoginEvent.class, loginEvent -> {
-//                新闻模块登录后发送事件
-                if (loginEvent.isSuccess()) {
-                    presenter.login(userName.getText().toString().trim()
-                            , passWord.getText().toString().trim(), loginEvent.getUserInfoEvent());
-                } else {
-                    hideLoading();
-                    ToastUtils.showShortToast(loginEvent.getErrorMessage());
-                }
-            });
-//            传送登录参数到新闻模块
-            Map<String, Object> map = new HashMap<>();
-            map.put(ConstantUtil.ACCOUNT, userName.getText().toString().trim());
-            map.put(ConstantUtil.PASSWORD, passWord.getText().toString().trim());
-            Router.getInstance().deal(new RouterRequest.Builder()
-                    .provideName("news").actionName("login").paramMap(map).build());
-        }else {
-            presenter.login(userName.getText().toString().trim()
-                    , passWord.getText().toString().trim(),null);
-        }
+//        if (from!=null) {
+////            与新闻模块进行交互
+//            presenter.registerEvent(LoginEvent.class, loginEvent -> {
+////                新闻模块登录后发送事件
+//                if (loginEvent.isSuccess()) {
+//                    presenter.login(userName.getText().toString().trim()
+//                            , passWord.getText().toString().trim(), loginEvent.getUserInfoEvent());
+//                } else {
+//                    hideLoading();
+//                    ToastUtils.showShortToast(loginEvent.getErrorMessage());
+//                }
+//            });
+////            传送登录参数到新闻模块
+//            Map<String, Object> map = new HashMap<>();
+//            map.put(ConstantUtil.ACCOUNT, userName.getText().toString().trim());
+//            map.put(ConstantUtil.PASSWORD, passWord.getText().toString().trim());
+//            Router.getInstance().deal(new RouterRequest.Builder()
+//                    .provideName("news").actionName("login").paramMap(map).build());
+//        }else {
+//            presenter.login(userName.getText().toString().trim()
+//                    , passWord.getText().toString().trim(),null);
+//        }
+        presenter.login(userName.getText().toString().trim()
+                , passWord.getText().toString().trim(),null);
     }
 
 

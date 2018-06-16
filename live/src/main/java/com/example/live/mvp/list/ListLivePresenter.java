@@ -29,7 +29,8 @@ public class ListLivePresenter extends BasePresenter<IView<ListLiveBean>,ListLiv
             iView.showLoading(null);
         }
         baseModel.getRepositoryManager().getApi(LiveApi.class)
-                .getCategoryItemData(slug).subscribeOn(Schedulers.io())
+                .getCategoryItemData(slug)
+                .compose(iView.<ListLiveBean>bindLife()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ListLiveBean>() {
                     @Override

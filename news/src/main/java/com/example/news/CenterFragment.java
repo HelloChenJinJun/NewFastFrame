@@ -4,23 +4,17 @@ import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.router.Router;
-import com.example.commonlibrary.router.RouterRequest;
-import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.bean.CenterBean;
 import com.example.news.mvp.systemcenter.SystemCenterActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 项目名称:    NewFastFrame
@@ -75,7 +69,8 @@ public class CenterFragment extends BaseFragment {
                     ARouter.getInstance()
                             .build("/live/main").navigation();
                 } else if (position == 2) {
-                        SystemCenterActivity.start(getActivity());
+                    ToastUtils.showShortToast("暂时不开放");
+//                        SystemCenterActivity.start(getActivity());
                 }
             }
         });

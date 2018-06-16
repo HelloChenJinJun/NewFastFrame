@@ -129,11 +129,9 @@ public class GuideActivity extends BaseActivity implements ViewPager.OnPageChang
                     .getSharedPreferences()
                     .edit().putBoolean(ConstantUtil.FIRST_STATUS,false).apply();
            LoginActivity.start(this,ConstantUtil.FROM_LOGIN);
-            finish();
         } else {
             MainActivity.start(this);
-            finish();
         }
-
+        finish();
     }
 }

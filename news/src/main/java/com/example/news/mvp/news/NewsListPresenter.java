@@ -987,10 +987,13 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
              *
              * */
             Element tempElement = document.getElementById("picture1");
-            Elements element = tempElement.getElementsByTag("script");
+            Elements element = null;
+            if (tempElement!=null) {
+                element = tempElement.getElementsByTag("script");
+            }
             String content;
             List<NewListBean.BannerBean> bannerList = null;
-            if (element.size() > 0) {
+            if (element!=null&&element.size() > 0) {
                 content = element.first().html();
                 String end = "var";
                 content = content.substring(0, content.indexOf(end));

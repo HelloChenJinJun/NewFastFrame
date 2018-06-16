@@ -188,7 +188,7 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             headerLayout.setBackgroundColor(option.getBgColor());
         }
         if (option.getCustomView() != null) {
-            ViewGroup container= ((ViewGroup) headerLayout.findViewById(R.id.toolbar));
+            ViewGroup container= headerLayout.findViewById(R.id.toolbar);
             container.removeAllViews();
             container.addView(option.getCustomView());
             return;
