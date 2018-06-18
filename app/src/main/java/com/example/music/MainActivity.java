@@ -19,6 +19,7 @@ import com.example.chat.mvp.searchFriend.SearchFriendActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 import com.example.chat.mvp.skin.SkinListActivity;
+import com.example.chat.mvp.step.RecordStepActivity;
 import com.example.chat.mvp.wallpaper.WallPaperActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.bean.chat.SkinEntity;
@@ -98,6 +99,8 @@ public class MainActivity extends SlideBaseActivity {
             case "皮肤中心":
                 SkinListActivity.start(this);
                 break;
+            case "计步器":
+                RecordStepActivity.start(this);
             default:
                 break;
         }

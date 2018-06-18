@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,12 +48,7 @@ import com.example.chat.mvp.main.recent.RecentFragment;
 import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 import com.example.chat.service.PollService;
 import com.example.chat.mvp.chat.ChatActivity;
-import com.example.chat.mvp.search.SearchActivity;
-import com.example.chat.mvp.searchFriend.SearchFriendActivity;
-import com.example.chat.mvp.selectFriend.SelectedFriendsActivity;
-import com.example.chat.mvp.settings.SettingsActivity;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
-import com.example.chat.mvp.wallpaper.WallPaperActivity;
 import com.example.chat.mvp.weather.WeatherInfoActivity;
 import com.example.chat.util.LogUtil;
 import com.example.chat.view.MainDragLayout;
@@ -168,7 +162,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         updateUserInfo(UserDBManager.getInstance().getUser(UserManager.getInstance().getCurrentUserObjectId()));
         startSearchLiveWeather(BaseApplication.getAppComponent()
         .getSharedPreferences().getString(Constant.CITY,null));
-        bindPollService(10);
+        bindPollService(20);
     }
 
     private void initSkin() {

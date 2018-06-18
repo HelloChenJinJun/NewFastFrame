@@ -1,7 +1,15 @@
 package com.example.chat.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -9,11 +17,11 @@ import com.example.chat.R;
 import com.example.chat.base.Constant;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
-import com.example.chat.bean.CommentNotifyBean;
 import com.example.chat.bean.PostNotifyBean;
+import com.example.chat.bean.StepBean;
 import com.example.chat.bean.SystemNotifyBean;
-import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.events.MessageInfoEvent;
+import com.example.chat.events.StepEvent;
 import com.example.chat.events.UnReadPostNotifyEvent;
 import com.example.chat.events.UnReadSystemNotifyEvent;
 import com.example.chat.listener.OnReceiveListener;
@@ -23,8 +31,11 @@ import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.commentnotify.CommentNotifyActivity;
 import com.example.chat.mvp.notify.SystemNotifyActivity;
+import com.example.chat.mvp.step.StepDetector;
 import com.example.chat.util.LogUtil;
+import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.bean.chat.PostNotifyInfo;
+import com.example.commonlibrary.bean.chat.StepData;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -41,6 +52,7 @@ import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListListener;
+import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -54,9 +66,11 @@ import io.reactivex.disposables.Disposable;
  * QQ:             1981367757
  */
 
-public class PollService extends Service {
+public class PollService extends Service implements SensorEventListener{
 
     private Disposable disposable;
+    private StepDetector stepDetector;
+    private BroadcastReceiver receiver;
 
     @Nullable
     @Override
@@ -69,14 +83,35 @@ public class PollService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         int time;
         if (intent != null) {
-            time = intent.getIntExtra(Constant.TIME, 10);
+            time = intent.getIntExtra(Constant.TIME, 30);
         } else {
-            time = 10;
+            time = 30;
         }
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
 
+        if (UserDBManager.getInstance().getStepData(TimeUtil
+                .getTime(System.currentTimeMillis(),"yyyy-MM-dd"))==null){
+            BmobQuery<StepBean> bmobQuery=new BmobQuery<>();
+            bmobQuery.addWhereEqualTo("time",TimeUtil
+                    .getTime(System.currentTimeMillis(),"yyyy-MM-dd"));
+            bmobQuery.addWhereEqualTo("user",new BmobPointer(UserManager.getInstance().getCurrentUser()));
+            bmobQuery.include("user");
+            bmobQuery.findObjects(new FindListener<StepBean>() {
+                @Override
+                public void done(List<StepBean> list, BmobException e) {
+                    if (e == null) {
+                        if (list != null && list.size() > 0) {
+                            UserDBManager.getInstance().getDaoSession()
+                                    .getStepDataDao()
+                                    .insertOrReplace(MsgManager.getInstance().cover(list.get(0)));
+                        }
+                    }
+                }
+            });
+        }
+        dealStep();
         Observable.interval(time, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Long>() {
@@ -88,6 +123,7 @@ public class PollService extends Service {
                     @Override
                     public void onNext(Long aLong) {
                         dealWork();
+                        saveStepData();
                     }
 
                     @Override
@@ -102,7 +138,102 @@ public class PollService extends Service {
 
                     }
                 });
+
         return super.onStartCommand(intent, START_FLAG_RETRY, startId);
+    }
+
+
+
+
+
+    private void dealStep() {
+        dealReceiver();
+        SensorManager sensorManager= (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager==null)return;
+        Sensor sensor=null;
+        if (Build.VERSION.SDK_INT > 19) {
+             sensor=sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            if (sensor == null) {
+                sensor=sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+            }
+        }
+        if (sensor == null) {
+            sensor=sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        }
+        StepData stepData=UserDBManager.getInstance()
+                .getStepData(TimeUtil.getTime(System.currentTimeMillis(),"yyyy-MM-dd"));
+        int count=0;
+        if (stepData != null) {
+            count=stepData.getStepCount();
+        }
+        stepDetector=new StepDetector(count, stepCount -> {
+            CommonLogger.e("step:"+stepCount);
+            RxBusManager.getInstance().post(new StepEvent(stepCount));
+        });
+
+        sensorManager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    private void dealReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        intentFilter.addAction(Intent.ACTION_SHUTDOWN);
+        intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
+        registerReceiver(receiver=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction()==null)return;
+                    if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)){
+                        stepDetector.setStepCount(0);
+                    }else {
+                        saveStepData();
+                    }
+            }
+        },intentFilter);
+    }
+
+    private void saveStepData() {
+        String currentTime=TimeUtil.getTime(System.currentTimeMillis(),"yyyy-MM-dd");
+       StepData data=UserDBManager.getInstance().getStepData(currentTime);
+        if (data != null) {
+            StepBean stepBean=new StepBean();
+            stepBean.setStepCount(data.getStepCount());
+            stepBean.setTime(currentTime);
+            stepBean.setUser(UserManager.getInstance().getCurrentUser());
+            if (data.getId() != null) {
+                stepBean.setObjectId(data.getId());
+                stepBean.update(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        UserDBManager.getInstance().getDaoSession().update(MsgManager.getInstance()
+                                .cover(stepBean));
+                    }
+                });
+            }else {
+                stepBean.save(new SaveListener<String>() {
+                    @Override
+                    public void done(String s, BmobException e) {
+                        UserDBManager.getInstance().getDaoSession().update(MsgManager.getInstance()
+                                .cover(stepBean));
+                    }
+                });
+            }
+        }else if (stepDetector.getStepCount()!=0){
+            StepBean stepBean=new StepBean();
+            stepBean.setStepCount(stepDetector.getStepCount());
+            stepBean.setTime(currentTime);
+            stepBean.setUser(UserManager.getInstance().getCurrentUser());
+            stepBean.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    UserDBManager.getInstance().getDaoSession().insert(MsgManager.getInstance()
+                    .cover(stepBean));
+                }
+            });
+
+        }
     }
 
     private void dealWork() {
@@ -124,7 +255,6 @@ public class PollService extends Service {
                 if (e == null) {
                     LogUtil.e("1拉取单聊消息成功");
                     if (list != null && list.size() > 0) {
-
                         for (ChatMessage item :
                                 list) {
                             MsgManager.getInstance().dealReceiveChatMessage(item, new OnReceiveListener() {
@@ -251,7 +381,20 @@ public class PollService extends Service {
         if (disposable != null) {
             disposable.dispose();
         }
+        if (receiver!=null) {
+            unregisterReceiver(receiver);
+        }
         super.onDestroy();
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        stepDetector.dealSensorEvent(sensorEvent);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
 }

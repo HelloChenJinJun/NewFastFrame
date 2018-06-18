@@ -27,6 +27,12 @@
                 android:icon="@drawable/ic_news_photo"
                 android:title="背景" />
 
+
+            <item
+                android:id="@+id/main_sub_item_step"
+                android:icon="@drawable/ic_news_photo"
+                android:title="计步器" />
+
             <item
                 android:id="@+id/main_sub_item_skin"
                 android:icon="@drawable/ic_news_photo"

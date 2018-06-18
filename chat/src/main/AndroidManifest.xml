@@ -93,6 +93,7 @@
         <activity android:name=".mvp.commentnotify.CommentNotifyActivity" />
         <activity android:name=".mvp.skin.SkinListActivity" />
         <activity android:name=".mvp.skin.skinDetail.SkinDetailActivity" />
+        <activity android:name=".mvp.step.RecordStepActivity" />
 
 
         <receiver android:name=".receiver.NetWorkChangedReceiver">

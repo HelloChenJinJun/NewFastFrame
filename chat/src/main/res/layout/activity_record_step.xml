@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textColor="@color/blue_500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Record Step Count"/>
+
+    
+    <com.example.chat.view.StepArcView
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:id="@+id/sav_activity_record_view_display"
+        android:layout_width="250dp"
+        android:layout_height="250dp" />
+    
+
+</LinearLayout>

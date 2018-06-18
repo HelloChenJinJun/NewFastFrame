@@ -29,6 +29,8 @@ import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.RecentMessageEntityDao;
 import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.bean.chat.SkinEntityDao;
+import com.example.commonlibrary.bean.chat.StepData;
+import com.example.commonlibrary.bean.chat.StepDataDao;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntityDao;
 import com.example.commonlibrary.bean.chat.UserEntity;
@@ -648,15 +650,15 @@ public class UserDBManager {
     }
 
     public void updateCommentReadStatus() {
-      List<CommentNotifyEntity>  list= daoSession.getCommentNotifyEntityDao().queryBuilder()
-                .where(CommentNotifyEntityDao.Properties.ReadStatus.eq(Constant
+      List<PostNotifyInfo>  list= daoSession.getPostNotifyInfoDao().queryBuilder()
+                .where(PostNotifyInfoDao.Properties.ReadStatus.eq(Constant
                 .READ_STATUS_UNREAD))
                 .build().list();
-        for (CommentNotifyEntity item :
+        for (PostNotifyInfo item :
                 list) {
             item.setReadStatus(Constant.READ_STATUS_READED);
         }
-      daoSession.getCommentNotifyEntityDao().updateInTx(list);
+      daoSession.getPostNotifyInfoDao().updateInTx(list);
     }
 
     public void addOrUpdateSystemNotify(SystemNotifyEntity systemNotifyBean) {
@@ -717,5 +719,16 @@ public class UserDBManager {
         }else {
             return null;
         }
+    }
+
+    public StepData getStepData(String time) {
+        List<StepData> list=daoSession.getStepDataDao().queryBuilder()
+                .where(StepDataDao.Properties.Time
+                .eq(time))
+                .limit(1).build().list();
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
     }
 }

@@ -11,6 +11,7 @@ import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.MessageContent;
 import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.SkinBean;
+import com.example.chat.bean.StepBean;
 import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicPostBean;
@@ -40,6 +41,7 @@ import com.example.commonlibrary.bean.chat.PublicPostEntityDao;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.bean.chat.SkinEntityDao;
+import com.example.commonlibrary.bean.chat.StepData;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -1957,6 +1959,23 @@ public class MsgManager {
             UserDBManager.getInstance().getDaoSession().getSkinEntityDao()
                     .insert(skinEntity);
             return skinEntity;
+        }
+    }
+
+    public StepData cover(StepBean stepBean) {
+        StepData stepData=new StepData();
+        stepData.setUid(stepBean.getUser().getObjectId());
+        stepData.setTime(stepBean.getTime());
+        stepData.setId(stepBean.getObjectId());
+        stepData.setStepCount(stepBean.getStepCount());
+        return stepData;
+    }
+
+    public void saveCurrentStep(int stepNumber) {
+       StepData stepData=UserDBManager.getInstance().getStepData(TimeUtil.getCurrentTime());
+        if (stepData != null) {
+            stepData.setStepCount(stepNumber);
+            UserDBManager.getInstance().getDaoSession().update(stepData);
         }
     }
 }

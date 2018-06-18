@@ -226,4 +226,8 @@ public class TimeUtil {
                 .getLong(Constant.DELTA_TIME, 0L);
         return serverTime + deltaTime;
     }
+
+    public static String getCurrentTime() {
+        return getTime(System.currentTimeMillis(),"yyyy-MM-dd");
+    }
 }
