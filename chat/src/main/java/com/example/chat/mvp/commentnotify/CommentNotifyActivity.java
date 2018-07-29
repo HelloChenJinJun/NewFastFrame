@@ -11,6 +11,7 @@ import com.example.chat.base.Constant;
 import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.post.PublicCommentBean;
+import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.dagger.commentnotify.CommentNotifyModule;
 import com.example.chat.dagger.commentnotify.DaggerCommentNotifyComponent;
 import com.example.chat.events.UnReadPostNotifyEvent;
@@ -92,8 +93,14 @@ public class CommentNotifyActivity extends SlideBaseActivity<List<PostNotifyBean
         commentNotifyAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
+                PublicPostBean bean=commentNotifyAdapter.getData(position)
+                        .getPublicPostBean();
+                if (bean == null) {
+                    bean=commentNotifyAdapter.getData(position)
+                            .getPublicCommentBean().getPost();
+                }
                 CommentListActivity.start(CommentNotifyActivity.this
-                        , commentNotifyAdapter.getData(position).getPublicPostBean());
+                        , bean);
             }
         });
         ToolBarOption toolBarOption = new ToolBarOption();
