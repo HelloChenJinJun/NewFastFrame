@@ -3,7 +3,7 @@
 
 
 ## 简介
-该项目目前集成现在主流的开发框架和技术，包括okhttp3、rxjava2、retrofit2、glide、greendao3.0、dagger2、mvp、md风格、热修复tinker,bugly和组件化等。
+该项目目前集成现在主流的开发框架和技术，包括okhttp3、rxjava2、retrofit2、glide、greendao3.0、dagger2、mvp、md风格、皮肤插件、热修复tinker,bugly和组件化等。
 
 采用组件化开发框架，可以使模块单独编译调试，可以有效地减少编译的时间，更好地进行并发开发，从而极大的提高了并行开发效率。
 
@@ -13,11 +13,19 @@ https://juejin.im/entry/5a1cca70f265da432652923f
 
 http://www.jianshu.com/p/e6eb9c8d120f
 
+视频地址:
+
+第一部分：http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/7fe9d6f1407eb280806b55d1aab13453.mp4
+
+第二部分：http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/9c9c05d840aaf93380a7bea1b5268ba3.mp4
+
+第三部分：http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/fcd3dc20402c374180a0d3e572bec726.mp4
+
 apk下载地址：
 
-http://bmob-cdn-17771.b0.upaiyun.com/2018/06/16/b037f1cf40a6805a80b5de006210c679.apk
+http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/500896504036b3728040c51c2b11e53b.apk
 
-
+### 视频效果以及apkDemo中的效果可能有时候跟开发进度匹配不上，想看最新效果的，请从最新源码中编译运行观看。
 
 
 ## screenshots
