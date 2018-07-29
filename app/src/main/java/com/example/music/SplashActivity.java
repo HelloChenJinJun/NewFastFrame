@@ -51,7 +51,10 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
 //                    倒计时完毕置为可点击状态
                     if (BaseApplication.getAppComponent().getSharedPreferences()
                             .getBoolean(ConstantUtil.FIRST_STATUS,true)) {
-                        GuideActivity.start(this);
+                        BaseApplication.getAppComponent().getSharedPreferences()
+                                .edit().putBoolean(ConstantUtil.FIRST_STATUS,false)
+                                .apply();
+                        LoginActivity.start(this,ConstantUtil.FROM_LOGIN);
                     }else {
                         if (UserManager.getInstance().getCurrentUser() != null) {
                             MainActivity.start(this);

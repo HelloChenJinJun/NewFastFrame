@@ -2,6 +2,7 @@ package com.example.chat.util;
 
 import android.app.Activity;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -136,9 +137,22 @@ public class SystemUtil {
             file = FileUtil.newFile(dir.getAbsolutePath() + System.currentTimeMillis() + ".mp4");
         }
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        activity.startActivityForResult(intent, requestCode);
+        if(Build.VERSION.SDK_INT < 24){
+            intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+            activity.startActivityForResult(intent, requestCode);
+        }else {
+            //适配安卓7.0
+            ContentValues contentValues=new ContentValues(1);
+            contentValues.put(MediaStore.Images.Media.DATA,
+                    file.getAbsolutePath());
+            Uri uri= activity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+            activity.grantUriPermission(activity.getPackageName(),uri,Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT,uri);
+            activity.startActivityForResult(intent, requestCode);
+        }
         return file.getAbsolutePath();
     }
 

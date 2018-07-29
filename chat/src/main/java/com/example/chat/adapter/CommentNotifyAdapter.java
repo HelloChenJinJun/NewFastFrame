@@ -9,6 +9,7 @@ import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
+import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.FaceTextUtil;
@@ -65,8 +66,12 @@ public class CommentNotifyAdapter extends BaseRecyclerAdapter<PostNotifyBean,Bas
                         .getRelatedUser().getNick())
                 .setText(R.id.tv_item_activity_comment_notify_time,data.getCreatedAt())
                 .setOnItemClickListener();
-        Integer mediaType=data.getPublicPostBean().getMsgType();
-        PostDataBean bean=gson.fromJson(data.getPublicPostBean().getContent(),PostDataBean.class);
+        PublicPostBean temp=data.getPublicPostBean();
+        if (temp==null) {
+            temp=data.getPublicCommentBean().getPost();
+        }
+        Integer mediaType=temp.getMsgType();
+        PostDataBean bean=gson.fromJson(temp.getContent(),PostDataBean.class);
         if (mediaType.equals(Constant.EDIT_TYPE_IMAGE)||mediaType.equals(Constant.EDIT_TYPE_VIDEO)) {
             String url=null;
             if (mediaType.equals(Constant.EDIT_TYPE_IMAGE)) {
