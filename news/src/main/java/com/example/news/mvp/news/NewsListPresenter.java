@@ -1123,7 +1123,9 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsLis
             }
             String start = "{";
             String end = "u_u2_icn.changeimg(0)";
-            content = content.substring(content.indexOf(start) + start.length(), content.indexOf(end)).replace("amp;", "");
+            if (content.indexOf(end)>0) {
+                content = content.substring(content.indexOf(start) + start.length(), content.indexOf(end)).replace("amp;", "");
+            }
             String str = "\\);";
             String[] array = content.split(str);
             List<NewListBean.BannerBean> bannerList = new ArrayList<>();
