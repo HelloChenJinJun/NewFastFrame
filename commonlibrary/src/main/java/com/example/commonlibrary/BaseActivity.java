@@ -27,6 +27,7 @@ import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.skin.SkinLayoutInflaterFactory;
 import com.example.commonlibrary.skin.SkinManager;
+import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
@@ -165,10 +166,16 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             setSupportActionBar( headerLayout.findViewById(R.id.toolbar));
             getSupportActionBar().setTitle("");
         }
+
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
         mBaseDialog = new BaseDialog(this);
         initView();
+        updateStatusBar();
+    }
+
+    protected void updateStatusBar() {
+        StatusBarUtil.setColor(this,getResources().getColor(R.color.colorPrimary));
     }
 
 

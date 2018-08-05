@@ -92,11 +92,11 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
         index.setOnClickListener(this);
         notify.setOnClickListener(this);
         titleBg.setOnLongClickListener(v -> {
-            PhotoSelectActivity.start(getActivity(), Constant.TITLE_WALLPAPER,true,false,null);
+            PhotoSelectActivity.start(this, Constant.TITLE_WALLPAPER,true,false,null);
             return true;
         });
         avatar.setOnLongClickListener(v -> {
-            PhotoSelectActivity.start(getActivity(),Constant.AVATAR,true,false,null);
+            PhotoSelectActivity.start(this,Constant.AVATAR,true,false,null);
             return true;
         });
     }
@@ -174,9 +174,9 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
                 case ConstantUtil.REQUEST_CODE_ONE_PHOTO:
                     String path=data.getStringExtra(ConstantUtil.PATH);
                     String from=data.getStringExtra(Constant.FROM);
-//                    todo  4.21
                         try {
                             showLoadDialog("正在上传图片中，请稍候........");
+                            // todo path is not absolute
                             BmobFile bmobFile = new BmobFile(new File(new URI(path)));
                             bmobFile.uploadblock(new UploadFileListener() {
                                 @Override

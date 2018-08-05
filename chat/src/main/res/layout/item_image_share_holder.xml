@@ -3,5 +3,4 @@
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:scaleType="centerCrop"
-android:id="@+id/iv_item_image_share_holder_display"
-android:src="@drawable/head"/>
+android:id="@+id/iv_item_image_share_holder_display"/>

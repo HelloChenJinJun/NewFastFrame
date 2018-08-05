@@ -3,6 +3,7 @@ package com.example.chat.mvp.photoSelect;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -299,4 +300,18 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
             activity.startActivity(intent);
         }
     }
+
+    public static void start(Fragment fragment, String from, boolean isOne, boolean isCrop, ArrayList<ImageItem> selectedImageItemList) {
+        Intent intent = new Intent(fragment.getContext(), PhotoSelectActivity.class);
+        intent.putExtra(Constant.DATA, selectedImageItemList);
+        intent.putExtra(Constant.IS_ONE, isOne);
+        intent.putExtra(Constant.IS_CROP, isCrop);
+        intent.putExtra(Constant.FROM, from);
+        if (isOne) {
+            fragment.startActivityForResult(intent, ConstantUtil.REQUEST_CODE_ONE_PHOTO);
+        } else {
+            fragment.startActivity(intent);
+        }
+    }
+
 }

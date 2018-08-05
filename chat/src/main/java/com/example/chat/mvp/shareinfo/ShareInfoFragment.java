@@ -105,6 +105,14 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         return R.layout.fragment_share_info;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return true;
+    }
+
+
+
     @Override
     protected void initView() {
         display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_share_info_display);

@@ -47,7 +47,7 @@ android {
         }
 
         multiDexEnabled true
-        minSdkVersion 18
+        minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
@@ -137,24 +137,24 @@ dependencies {
     implementation project(':commonlibrary')
     //        implementation ('cn.bmob.android:bmob-sdk:3.5.8')
     //        implementation ('cn.bmob.android:bmob-push:1.0.1')
-    implementation ('com.android.support.constraint:constraint-layout:2.0.0-alpha1'){
-        exclude module: "support-v4"
-        exclude module: "support-compat"
-        exclude module: 'rxjava'
-        exclude module: 'retrofit'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-        exclude module: 'support-annotations'
-        exclude module: 'support-core-utils'
-        exclude module: 'support-media-compat'
-        exclude module: 'support-vector-drawable'
-        exclude module: 'support-fragment'
-        exclude module: 'multidex'
-        exclude module: 'rxandroid'
-        exclude module: 'gson'
-        exclude module: 'okio'
-        exclude module: 'recyclerview-v7'
-    }
+//    implementation ('com.android.support.constraint:constraint-layout:2.0.0-alpha1'){
+//        exclude module: "support-v4"
+//        exclude module: "support-compat"
+//        exclude module: 'rxjava'
+//        exclude module: 'retrofit'
+//        exclude module: 'appcompat-v7'
+//        exclude module: 'support-v4'
+//        exclude module: 'support-annotations'
+//        exclude module: 'support-core-utils'
+//        exclude module: 'support-media-compat'
+//        exclude module: 'support-vector-drawable'
+//        exclude module: 'support-fragment'
+//        exclude module: 'multidex'
+//        exclude module: 'rxandroid'
+//        exclude module: 'gson'
+//        exclude module: 'okio'
+//        exclude module: 'recyclerview-v7'
+//    }
     implementation('com.zhy:okhttputils:2.6.2') {
         exclude module: "support-v4"
         exclude module: "support-compat"

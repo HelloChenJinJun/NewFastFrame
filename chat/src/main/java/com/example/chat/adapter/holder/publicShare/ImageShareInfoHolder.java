@@ -1,10 +1,17 @@
 package com.example.chat.adapter.holder.publicShare;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.chat.R;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
@@ -24,6 +31,7 @@ import com.example.commonlibrary.utils.DensityUtil;
 
 public class ImageShareInfoHolder extends BaseShareInfoViewHolder {
     private SuperRecyclerView display;
+    private GridSpaceDecoration itemDecoration;
 
     public ImageShareInfoHolder(View itemView) {
         super(itemView);
@@ -36,29 +44,28 @@ public class ImageShareInfoHolder extends BaseShareInfoViewHolder {
     @Override
     protected void initData(PostDataBean data) {
         if (data != null) {
-            if (display.getAdapter() == null || ((BaseRecyclerAdapter) display.getAdapter()).getData().size() != data.getImageList()
-                    .size()) {
-                int size = data.getImageList().size();
-                if (size <= 4) {
-                    display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 2));
-                    display.addItemDecoration(new GridSpaceDecoration(2, DensityUtil.toDp(5), false));
-                } else {
-                    display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 3));
-                    display.addItemDecoration(new GridSpaceDecoration(3, DensityUtil.toDp(5), false));
-                }
-
-                final ImageShareAdapter adapter = new ImageShareAdapter();
-                display.setAdapter(adapter);
-                adapter.setOnItemClickListener(new OnSimpleItemClickListener() {
-                    @Override
-                    public void onItemClick(int position, View view) {
-                        view.setTag(adapter.getData(position));
-                        getAdapter().getOnItemClickListener()
-                                .onItemChildClick(getAdapterPosition()-getAdapter().getItemUpCount(), view, position);
-                    }
-                });
-                adapter.addData(data.getImageList());
+            int size = data.getImageList().size();
+            if (itemDecoration != null) {
+                display.removeItemDecoration(itemDecoration);
             }
+            if (size <= 4) {
+                display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 2));
+                display.addItemDecoration(itemDecoration=new GridSpaceDecoration(2, DensityUtil.toDp(5), false));
+            } else {
+                display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 3));
+                display.addItemDecoration(itemDecoration=new GridSpaceDecoration(3, DensityUtil.toDp(5), false));
+            }
+            final ImageShareAdapter adapter = new ImageShareAdapter();
+            display.setAdapter(adapter);
+            adapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+                @Override
+                public void onItemClick(int position, View view) {
+                    view.setTag(adapter.getData(position));
+                    getAdapter().getOnItemClickListener()
+                            .onItemChildClick(getAdapterPosition() - getAdapter().getItemUpCount(), view, position);
+                }
+            });
+            adapter.addData(data.getImageList());
         }
     }
 
@@ -89,6 +96,7 @@ public class ImageShareInfoHolder extends BaseShareInfoViewHolder {
         protected void convert(BaseWrappedViewHolder holder, String data) {
             holder.setImageUrl(R.id.iv_item_image_share_holder_display, data)
                     .setOnItemClickListener();
+
         }
     }
 
