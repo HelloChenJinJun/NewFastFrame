@@ -15,11 +15,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.example.commonlibrary.R;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.utils.CommonLogger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -219,16 +222,30 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
 
 
     public BaseWrappedViewHolder setImageUrl(int id, String url) {
-        if (getView(id) instanceof ImageView) {
-            Glide.with(itemView.getContext()).load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).into((ImageView) getView(id));
-        }
+        setImageUrl(id,url,0,0);
         return this;
     }
+
+    private Set<Integer> set=new HashSet<>();
 
 
     public BaseWrappedViewHolder setImageUrl(int id, String url, int errorId, int placeHolderId) {
         if (getView(id) instanceof ImageView) {
-            Glide.with(itemView.getContext()).load(url).error(errorId).placeholder(placeHolderId).into((ImageView) getView(id));
+            if (url.startsWith("http")) {
+                set.add(id);
+            }
+            getView(id).setTag(R.id.image_url_tag,url);
+            Glide.with(itemView.getContext()).load(url).placeholder(placeHolderId==0?R.drawable.custom_drawable_place_holder?placeHolderId)
+                    .error(errorId==0?R.drawable.ic_error_holder:errorId).diskCacheStrategy(DiskCacheStrategy.RESULT).into(new SimpleTarget<GlideDrawable>() {
+                @Override
+                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                    ImageView image= (ImageView) getView(id);
+                    String tag=image.getTag(R.id.image_url_tag);
+                    if (tag!=null&&tag.equals(url)){
+                        image.setImageDrawable(resource);
+                    }
+                }
+            });
         }
         return this;
     }
@@ -285,5 +302,12 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
             ((ImageView) view).setImageDrawable(drawable);
         }
         return this;
+    }
+
+    public void clear() {
+        for (Integer id :
+                set) {
+            Glide.clear(getView(id));
+        }
     }
 }
