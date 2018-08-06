@@ -106,9 +106,7 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
         DaggerPersonComponent.builder().chatMainComponent(getMainComponent())
                 .personModule(new PersonModule(this))
                 .build().inject(this);
-        presenter.registerEvent(UnReadSystemNotifyEvent.class, unReadSystemNotifyEvent -> {
-            updateSystemNotifyCount();
-        });
+        presenter.registerEvent(UnReadSystemNotifyEvent.class, unReadSystemNotifyEvent -> updateSystemNotifyCount());
         presenter.registerEvent(User.class, user -> {
             PersonFragment.this.user=user;
             updateUserInfo();
@@ -174,53 +172,44 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
                 case ConstantUtil.REQUEST_CODE_ONE_PHOTO:
                     String path=data.getStringExtra(ConstantUtil.PATH);
                     String from=data.getStringExtra(Constant.FROM);
-                        try {
-                            showLoadDialog("正在上传图片中，请稍候........");
-                            // todo path is not absolute
-                            BmobFile bmobFile = new BmobFile(new File(new URI(path)));
-                            bmobFile.uploadblock(new UploadFileListener() {
-                                @Override
-                                public void done(BmobException e) {
-                                    if (e == null) {
-                                        UserManager.getInstance().updateUserInfo(from, bmobFile.getFileUrl(), new UpdateListener() {
-                                            @Override
-                                            public void done(BmobException e) {
-                                                dismissLoadDialog();
-                                                if (e == null) {
-                                                    CommonLogger.e("更新用户信息成功");
-                                                    if (from.equals(Constant.TITLE_WALLPAPER)) {
-                                                        Glide.with(PersonFragment.this).load(bmobFile.getFileUrl()).into(new SimpleTarget<GlideDrawable>() {
-                                                            @Override
-                                                            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                                                                titleBg.setBackground(resource);
-                                                            }
-                                                        });
-                                                    }else {
-                                                        Glide.with(PersonFragment.this).load(bmobFile.getFileUrl())
-                                                                .into(avatar);
-                                                    }
-                                                } else {
-                                                    CommonLogger.e("更新用户信息失败" + e.toString());
-                                                }
-                                            }
-
-
-                                        });
-                                    } else {
+                    showLoadDialog("正在上传图片中，请稍候........");
+                    // todo path is not absolute
+                    BmobFile bmobFile = new BmobFile(new File(path));
+                    bmobFile.uploadblock(new UploadFileListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                UserManager.getInstance().updateUserInfo(from, bmobFile.getFileUrl(), new UpdateListener() {
+                                    @Override
+                                    public void done(BmobException e) {
                                         dismissLoadDialog();
-                                        CommonLogger.e("加载失败");
+                                        if (e == null) {
+                                            CommonLogger.e("更新用户信息成功");
+                                            if (from.equals(Constant.TITLE_WALLPAPER)) {
+                                                Glide.with(PersonFragment.this).load(bmobFile.getFileUrl()).into(new SimpleTarget<GlideDrawable>() {
+                                                    @Override
+                                                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                                                        titleBg.setBackground(resource);
+                                                    }
+                                                });
+                                            }else {
+                                                Glide.with(PersonFragment.this).load(bmobFile.getFileUrl())
+                                                        .into(avatar);
+                                            }
+                                        } else {
+                                            CommonLogger.e("更新用户信息失败" + e.toString());
+                                        }
                                     }
-                                }
 
-                            });
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
+
+                                });
+                            } else {
+                                dismissLoadDialog();
+                                CommonLogger.e("加载失败");
+                            }
                         }
 
-
-
-
-
+                    });
 
 
             }
