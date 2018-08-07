@@ -96,7 +96,7 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<User>,NearbyPeo
                 initActionBar();
 //                if (BaseApplication.getAppComponent().getSharedPreferences()
 //                        .getString(Constant.LONGITUDE,null)==null){
-//                        PermissionUtil.requestLocation(this,this);
+                        PermissionUtil.requestLocation(this,this);
 //                }else {
                         loadData(true);
 //                }

@@ -1,9 +1,12 @@
 package com.example.chat.mvp.chat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -69,8 +72,11 @@ import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.DensityUtil;
+import com.example.commonlibrary.utils.PermissionUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
+import com.tbruyelle.rxpermissions2.Permission;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -767,11 +773,26 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                     ToastUtils.showShortToast("需要SD卡支持!");
                     return false;
                 }
-                speak.setPressed(true);
-                record_container.setVisibility(View.VISIBLE);
-                record_tip.setText(R.string.chat_middle_voice_tip);
-                mVoiceRecordManager.startRecording(uid);
-                return true;
+                PermissionUtil.requestPermission(new PermissionUtil.RequestPermissionCallBack() {
+                    @Override
+                    public void onRequestPermissionSuccess() {
+                        speak.setPressed(true);
+                        record_container.setVisibility(View.VISIBLE);
+                        record_tip.setText(R.string.chat_middle_voice_tip);
+                        mVoiceRecordManager.startRecording(uid);
+                    }
+
+                    @Override
+                    public void onRequestPermissionFailure() {
+                        ToastUtils.showShortToast("需要授予录音权限才能录音");
+                    }
+                },new RxPermissions(this), Manifest.permission.RECORD_AUDIO);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    return !(checkSelfPermission(Manifest.permission.RECORD_AUDIO)== PackageManager.PERMISSION_DENIED);
+                }else {
+                    return true;
+                }
             case MotionEvent.ACTION_MOVE:
                 if (event.getY() < 0) {
                     record_tip.setText(R.string.chat_middle_voice_tip1);

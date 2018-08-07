@@ -1,6 +1,7 @@
 package com.example.cootek.newfastframe.adapter;
 
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import com.example.commonlibrary.baseadapter.adapter.BaseMultipleRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
@@ -23,8 +24,8 @@ public class LocalMusicAdapter extends BaseMultipleRecyclerAdapter<MusicPlayBean
     }
 
     @Override
-    protected SparseArray<Integer> getLayoutIdMap() {
-        SparseArray<Integer>  layoutMap=new SparseArray<>();
+    protected SparseIntArray getLayoutIdMap() {
+        SparseIntArray layoutMap=new SparseIntArray();
         layoutMap.put(MusicPlayBean.NORMAL,R.layout.item_activity_local_music);
         layoutMap.put(MusicPlayBean.DETAIL,R.layout.item_activity_local_music_detail);
         layoutMap.put(MusicPlayBean.ACTION,R.layout.item_activity_local_music_action);

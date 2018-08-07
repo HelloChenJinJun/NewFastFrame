@@ -3,6 +3,7 @@ package com.example.news.mvp.news.othernew;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import com.example.commonlibrary.baseadapter.adapter.BaseMultipleRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
@@ -20,8 +21,8 @@ import com.example.news.util.NewsUtil;
 public class OtherNewsListAdapter extends BaseMultipleRecyclerAdapter<NewInfoBean,BaseWrappedViewHolder> {
 
     @Override
-    protected SparseArray<Integer> getLayoutIdMap() {
-        SparseArray<Integer>  sparseArray=new SparseArray<>();
+    protected SparseIntArray getLayoutIdMap() {
+        SparseIntArray sparseArray=new SparseIntArray();
         sparseArray.put(NewInfoBean.TYPE_NORMAL, R.layout.item_fragment_other_news_list);
         sparseArray.put(NewInfoBean.TYPE_PHOTO,R.layout.item_fragment_other_news_list_photo);
         return sparseArray;

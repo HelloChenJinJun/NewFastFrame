@@ -1,6 +1,7 @@
 package com.example.chat.adapter;
 
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -24,8 +25,8 @@ import com.example.commonlibrary.baseadapter.adapter.BaseMultipleRecyclerAdapter
 
 public class ShareInfoAdapter extends BaseMultipleRecyclerAdapter<PublicPostBean, BaseShareInfoViewHolder> {
     @Override
-    protected SparseArray<Integer> getLayoutIdMap() {
-        SparseArray<Integer> sparseArray = new SparseArray<>();
+    protected SparseIntArray getLayoutIdMap() {
+        SparseIntArray sparseArray = new SparseIntArray();
         sparseArray.put(Constant.EDIT_TYPE_IMAGE, R.layout.item_fragment_share_info);
         sparseArray.put(Constant.EDIT_TYPE_SHARE, R.layout.item_fragment_share_info);
         sparseArray.put(Constant.EDIT_TYPE_TEXT, R.layout.item_fragment_share_info);

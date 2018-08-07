@@ -1,6 +1,7 @@
 package com.example.chat.adapter;
 
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -52,8 +53,8 @@ public class ChatMessageAdapter extends BaseMultipleRecyclerAdapter<BaseMessage,
 
 
         @Override
-        protected SparseArray<Integer> getLayoutIdMap() {
-                SparseArray<Integer> sparseArray = new SparseArray<>();
+        protected SparseIntArray getLayoutIdMap() {
+                SparseIntArray sparseArray = new SparseIntArray();
                 sparseArray.put(TYPE_SEND_TEXT, R.layout.item_activity_chat_send);
                 sparseArray.put(TYPE_SEND_IMAGE, R.layout.item_activity_chat_send);
                 sparseArray.put(TYPE_SEND_VOICE, R.layout.item_activity_chat_send);

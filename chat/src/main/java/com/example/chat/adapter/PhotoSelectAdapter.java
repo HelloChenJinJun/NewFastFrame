@@ -1,6 +1,7 @@
 package com.example.chat.adapter;
 
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -22,9 +23,9 @@ import com.example.commonlibrary.utils.ToastUtils;
 
 public class PhotoSelectAdapter extends BaseMultipleRecyclerAdapter<ImageItem, BaseWrappedViewHolder> {
     @Override
-    protected SparseArray<Integer> getLayoutIdMap() {
+    protected SparseIntArray getLayoutIdMap() {
 
-        SparseArray<Integer> sparseArray = new SparseArray<>();
+        SparseIntArray sparseArray = new SparseIntArray();
         sparseArray.put(ImageItem.ITEM_CAMERA, R.layout.item_activity_photo_select_camera);
         sparseArray.put(ImageItem.ITEM_NORMAL, R.layout.item_activity_photo_select_normal);
         return sparseArray;

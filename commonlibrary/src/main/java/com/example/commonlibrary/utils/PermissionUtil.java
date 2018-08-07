@@ -1,8 +1,10 @@
 package com.example.commonlibrary.utils;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
@@ -21,6 +23,10 @@ public class PermissionUtil {
 
 
     private PermissionUtil() {
+    }
+
+    public static void requestTakePhoto(Activity activity, RequestPermissionCallBack callBack) {
+        requestPermission(callBack,new RxPermissions(activity),Manifest.permission.CAMERA);
     }
 
     public interface RequestPermissionCallBack {
@@ -43,15 +49,12 @@ public class PermissionUtil {
         } else {//没有申请过,则开始申请
             rxPermissions
                     .request(needRequest.toArray(new String[needRequest.size()]))
-                    .subscribe(new Consumer<Boolean>() {
-                        @Override
-                        public void accept(@NonNull Boolean aBoolean) throws Exception {
-                            if (requestPermission != null) {
-                                if (aBoolean) {
-                                    requestPermission.onRequestPermissionSuccess();
-                                } else {
-                                    requestPermission.onRequestPermissionFailure();
-                                }
+                    .subscribe(aBoolean -> {
+                        if (requestPermission != null) {
+                            if (aBoolean) {
+                                requestPermission.onRequestPermissionSuccess();
+                            } else {
+                                requestPermission.onRequestPermissionFailure();
                             }
                         }
                     });

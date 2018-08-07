@@ -29,6 +29,7 @@ import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.PermissionUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -142,7 +143,17 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
                     list.remove(0);
                     PhotoPreViewActivity.start(PhotoSelectActivity.this, position - 1, list, true);
                 } else {
-                    takePhotoPath = SystemUtil.takePhoto(PhotoSelectActivity.this, SystemUtil.REQUEST_CODE_TAKE_PHOTO);
+                    PermissionUtil.requestTakePhoto(PhotoSelectActivity.this, new PermissionUtil.RequestPermissionCallBack() {
+                        @Override
+                        public void onRequestPermissionSuccess() {
+                            takePhotoPath = SystemUtil.takePhoto(PhotoSelectActivity.this, SystemUtil.REQUEST_CODE_TAKE_PHOTO);
+                        }
+
+                        @Override
+                        public void onRequestPermissionFailure() {
+                                ToastUtils.showShortToast("需要开启摄像头权限才能进行拍照");
+                        }
+                    });
                 }
             }
         });
