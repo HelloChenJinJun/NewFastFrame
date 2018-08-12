@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/theme_bg_color"
-                android:fitsSystemWindows="true">
+                android:background="@color/theme_bg_color">
     <ImageView
         android:id="@+id/iv_register_bg"
         android:layout_width="match_parent"

@@ -43,6 +43,10 @@ public class OtherNewPhotoSetActivity extends BaseActivity<PhotoSetBean, OtherNe
     @Inject
     OtherNewPhotoSetAdapter otherNewPhotoSetAdapter;
 
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
 
     @Override
     public void updateData(PhotoSetBean photoSetBean) {

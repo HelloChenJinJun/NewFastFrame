@@ -49,7 +49,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     protected View root;
     private EmptyLayout mEmptyLayout;
     private boolean hasInit = false;
-    private View headerLayout;
+    protected View headerLayout;
     private ImageView icon;
     private TextView right;
     private TextView title;
@@ -124,16 +124,22 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
             ((ViewGroup) root.getParent()).removeView(root);
         }
         if (needStatusPadding()) {
-                root.setPadding(root.getPaddingLeft(),root.getPaddingTop()+ StatusBarUtil.
-                        getStatusBarHeight(getContext()),root.getPaddingRight(),root
-                .getPaddingBottom());
-                root.requestLayout();
+                StatusBarUtil.setStatusPadding(getPaddingView());
         }
         return root;
     }
 
+
+
+    private View getPaddingView() {
+        if (needStatusPadding()) {
+            return headerLayout!=null?headerLayout:root;
+        }
+        return null;
+    }
+
     protected boolean needStatusPadding() {
-        return false;
+        return true;
     }
 
     private void initBaseView() {

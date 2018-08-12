@@ -59,8 +59,8 @@ public class MainActivity extends SlideBaseActivity {
 
 
     @Override
-    protected void updateStatusBar() {
-        StatusBarUtil.setTranslucentForImageViewInFragment(this,null);
+    protected boolean needStatusPadding() {
+        return false;
     }
 
     @Override

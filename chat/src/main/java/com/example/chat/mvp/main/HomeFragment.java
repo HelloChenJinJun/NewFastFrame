@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -65,6 +66,7 @@ import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -520,6 +522,11 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         return R.layout.activity_main_chat;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return true;
+    }
 
 
 

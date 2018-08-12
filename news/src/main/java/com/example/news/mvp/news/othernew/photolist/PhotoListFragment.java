@@ -58,6 +58,12 @@ public class PhotoListFragment extends BaseFragment<PictureBean,PhotoListPresent
         return true;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
+
     @Override
     protected int getContentLayout() {
         return R.layout.fragment_photo_list;

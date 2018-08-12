@@ -33,10 +33,7 @@ public class CenterFragment extends BaseFragment {
 
     }
 
-    @Override
-    protected boolean needStatusPadding() {
-        return true;
-    }
+
 
     @Override
     protected boolean isNeedHeadLayout() {

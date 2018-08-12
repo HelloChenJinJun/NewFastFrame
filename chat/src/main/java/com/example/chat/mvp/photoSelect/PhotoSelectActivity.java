@@ -18,6 +18,7 @@ import com.example.chat.bean.ImageItem;
 import com.example.chat.events.ImageFolderEvent;
 import com.example.chat.events.PhotoPreViewEvent;
 import com.example.chat.listener.OnImageLoadListener;
+import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.mvp.bottomFolder.CustomBottomFragment;
@@ -29,6 +30,7 @@ import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.PermissionPageUtils;
 import com.example.commonlibrary.utils.PermissionUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
@@ -152,7 +154,11 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
                         @Override
                         public void onRequestPermissionFailure() {
                                 ToastUtils.showShortToast("需要开启摄像头权限才能进行拍照");
-                        }
+                            showBaseDialog("权限界面操作", "是否需要打开权限界面", "取消", "确定"
+                                    , v12 -> cancelBaseDialog(), v1 -> {
+                                        dismissBaseDialog();
+                                        PermissionPageUtils.jumpPermissionPage(PhotoSelectActivity.this);
+                                    });                        }
                     });
                 }
             }

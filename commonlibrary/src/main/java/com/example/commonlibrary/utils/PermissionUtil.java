@@ -1,17 +1,13 @@
 package com.example.commonlibrary.utils;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 
-import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by COOTEK on 2017/8/4.

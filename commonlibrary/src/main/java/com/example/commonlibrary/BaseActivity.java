@@ -123,6 +123,7 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         }
         initBaseView();
         initData();
+        updateStatusBar();
     }
 
     protected RoundAngleImageView getIcon() {
@@ -171,11 +172,23 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         mProgressDialog.setCancelable(false);
         mBaseDialog = new BaseDialog(this);
         initView();
-        updateStatusBar();
     }
 
     protected void updateStatusBar() {
-        StatusBarUtil.setColor(this,getResources().getColor(R.color.colorPrimary));
+        StatusBarUtil.setTranslucentForImageViewInFragment(this,0, getPaddingView());
+    }
+
+    private View getPaddingView() {
+        if (needStatusPadding()) {
+            return headerLayout!=null?headerLayout: ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+        }
+        return null;
+    }
+
+
+
+    protected boolean needStatusPadding(){
+        return true;
     }
 
 

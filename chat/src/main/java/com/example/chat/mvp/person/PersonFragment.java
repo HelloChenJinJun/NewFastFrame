@@ -76,6 +76,12 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
         return R.layout.fragment_person;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
+
     @Override
     protected void initView() {
         signature = (TextView) findViewById(R.id.tv_fragment_person_signature);

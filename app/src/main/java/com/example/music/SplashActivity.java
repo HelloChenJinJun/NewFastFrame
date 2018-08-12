@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_main);
-        StatusBarUtil.setTransparent(this);
+        StatusBarUtil.setTranslucentForImageViewInFragment(this,0,null);
         time = (TextView) findViewById(R.id.tv_activity_splash_main_time);
         TextView title = (TextView) findViewById(R.id.tv_activity_splash_main_title);
         Animation animation = AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_top_in);
