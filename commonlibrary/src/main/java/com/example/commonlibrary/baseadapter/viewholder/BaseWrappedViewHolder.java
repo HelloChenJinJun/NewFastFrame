@@ -13,13 +13,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.example.commonlibrary.R;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.utils.CommonLogger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -87,7 +92,6 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-
     public BaseWrappedViewHolder setOnItemClickListener() {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,11 +103,6 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
         });
         return this;
     }
-
-
-
-
-
 
 
     public BaseWrappedViewHolder setOnItemChildClickListener(int id) {
@@ -121,8 +120,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-
-    public BaseWrappedViewHolder setOnItemChildClickListener(int id , final View.OnClickListener listener){
+    public BaseWrappedViewHolder setOnItemChildClickListener(int id, final View.OnClickListener listener) {
         if (getView(id) != null) {
             getView(id).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -138,11 +136,6 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
         }
         return this;
     }
-
-
-
-
-
 
 
     public BaseWrappedViewHolder setOnItemLongClickListener() {
@@ -195,7 +188,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
                 if (itemView.getId() == id) {
                     views.put(id, itemView);
                 }
-            }else {
+            } else {
                 views.put(id, view);
             }
         }
@@ -207,28 +200,47 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public BaseWrappedViewHolder setTextColor(int id,int color){
+    public BaseWrappedViewHolder setTextColor(int id, int color) {
         ((TextView) getView(id)).setTextColor(color);
         return this;
     }
 
-    public BaseWrappedViewHolder setTextColor(int id, ColorStateList colorStateList){
+    public BaseWrappedViewHolder setTextColor(int id, ColorStateList colorStateList) {
         ((TextView) getView(id)).setTextColor(colorStateList);
         return this;
     }
 
 
     public BaseWrappedViewHolder setImageUrl(int id, String url) {
-        if (getView(id) instanceof ImageView) {
-            Glide.with(itemView.getContext()).load(url).diskCacheStrategy(DiskCacheStrategy.RESULT).into((ImageView) getView(id));
-        }
+        setImageUrl(id, url, 0, 0);
         return this;
     }
 
+    private Set<Integer> set = new HashSet<>();
+
+    private String url;
+
 
     public BaseWrappedViewHolder setImageUrl(int id, String url, int errorId, int placeHolderId) {
-        if (getView(id) instanceof ImageView) {
-            Glide.with(itemView.getContext()).load(url).error(errorId).placeholder(placeHolderId).into((ImageView) getView(id));
+        View view=getView(id);
+        if (view instanceof ImageView){
+            view.setTag(R.id.image_url_tag,url);
+            Glide.with(itemView.getContext()).load(url).placeholder(placeHolderId == 0 ? R.drawable.custom_drawable_place_holder : placeHolderId)
+                        .diskCacheStrategy(DiskCacheStrategy.RESULT).into(new SimpleTarget<GlideDrawable>() {
+                @Override
+                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                    String tag= (String)view.getTag(R.id.image_url_tag);
+                    if (tag!=null&&tag.equals(url)) {
+                        ((ImageView)view).setImageDrawable(resource);
+                    }
+                }
+
+
+                @Override
+                public void onLoadStarted(Drawable placeholder) {
+                    ((ImageView) view).setImageDrawable(placeholder);
+                }
+            });
         }
         return this;
     }
@@ -280,10 +292,17 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
     }
 
     public BaseWrappedViewHolder setImageDrawable(int id, Drawable drawable) {
-        View view=getView(id);
-        if (view!=null&& view instanceof ImageView){
+        View view = getView(id);
+        if (view != null && view instanceof ImageView) {
             ((ImageView) view).setImageDrawable(drawable);
         }
         return this;
+    }
+
+    public void clear() {
+//        for (Integer id:
+//                set) {
+//            Glide.clear(getView(id));
+//        }
     }
 }

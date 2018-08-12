@@ -1,6 +1,7 @@
 package com.example.news.adapter;
 
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import com.example.commonlibrary.baseadapter.adapter.BaseMultipleRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
@@ -18,8 +19,8 @@ import com.example.news.bean.SpecialNewsBean;
 public class SpecialNewsAdapter extends BaseMultipleRecyclerAdapter<SpecialNewsBean, BaseWrappedViewHolder> {
 
     @Override
-    protected SparseArray<Integer> getLayoutIdMap() {
-        SparseArray<Integer> sparseArray = new SparseArray<>();
+    protected SparseIntArray getLayoutIdMap() {
+        SparseIntArray sparseArray = new SparseIntArray();
         sparseArray.put(SpecialNewsBean.TYPE_HEADER, R.layout.item_activity_special_news_header);
         sparseArray.put(SpecialNewsBean.TYPE_NORMAL, R.layout.item_activity_special_news_normal);
         sparseArray.put(SpecialNewsBean.TYPE_PHOTO_SET, R.layout.item_activity_special_news_photo);

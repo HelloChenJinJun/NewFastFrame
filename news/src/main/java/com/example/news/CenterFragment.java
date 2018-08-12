@@ -33,6 +33,8 @@ public class CenterFragment extends BaseFragment {
 
     }
 
+
+
     @Override
     protected boolean isNeedHeadLayout() {
         return true;

@@ -210,7 +210,7 @@ public class App extends BaseApplication {
         MultiDex.install(base);
 
 //         安装tinker
-        Beta.installTinker();
+//        Beta.installTinker();
     }
 
 

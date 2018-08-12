@@ -498,6 +498,12 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
 
+    @Override
+    public void onViewRecycled(K holder) {
+        super.onViewRecycled(holder);
+        holder.clear();
+    }
+
     public RecyclerView.LayoutManager getLayoutManager() {
         return layoutManager;
     }

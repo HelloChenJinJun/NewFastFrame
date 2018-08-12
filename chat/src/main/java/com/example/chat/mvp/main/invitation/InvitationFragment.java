@@ -57,6 +57,12 @@ public class InvitationFragment extends BaseFragment {
                 return false;
         }
 
+
+        @Override
+        protected boolean needStatusPadding() {
+                return false;
+        }
+
         @Override
         protected int getContentLayout() {
                 return R.layout.fragment_invitation;

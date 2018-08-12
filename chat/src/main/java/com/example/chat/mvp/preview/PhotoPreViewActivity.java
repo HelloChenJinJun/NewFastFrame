@@ -20,6 +20,7 @@ import com.example.chat.events.PhotoPreViewEvent;
 import com.example.chat.base.SlideBaseActivity;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,12 @@ public class PhotoPreViewActivity extends SlideBaseActivity implements CompoundB
     @Override
     protected boolean isNeedEmptyLayout() {
         return false;
+    }
+
+
+    @Override
+    protected void updateStatusBar() {
+        StatusBarUtil.setTransparent(this);
     }
 
     @Override

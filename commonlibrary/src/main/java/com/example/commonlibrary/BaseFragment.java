@@ -20,6 +20,7 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.support.RxFragment;
@@ -48,7 +49,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     protected View root;
     private EmptyLayout mEmptyLayout;
     private boolean hasInit = false;
-    private View headerLayout;
+    protected View headerLayout;
     private ImageView icon;
     private TextView right;
     private TextView title;
@@ -122,7 +123,23 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
         if (root.getParent() != null) {
             ((ViewGroup) root.getParent()).removeView(root);
         }
+        if (needStatusPadding()) {
+                StatusBarUtil.setStatusPadding(getPaddingView());
+        }
         return root;
+    }
+
+
+
+    private View getPaddingView() {
+        if (needStatusPadding()) {
+            return headerLayout!=null?headerLayout:root;
+        }
+        return null;
+    }
+
+    protected boolean needStatusPadding() {
+        return true;
     }
 
     private void initBaseView() {

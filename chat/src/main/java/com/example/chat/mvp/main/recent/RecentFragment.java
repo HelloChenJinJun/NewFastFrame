@@ -59,6 +59,12 @@ public class RecentFragment extends AppBaseFragment implements SwipeRefreshLayou
                 return false;
         }
 
+
+        @Override
+        protected boolean needStatusPadding() {
+                return false;
+        }
+
         @Override
         protected int getContentLayout() {
                 return R.layout.fragment_recent;

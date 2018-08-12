@@ -1,5 +1,6 @@
 package com.example.chat.mvp.main.friends;
 
+import android.Manifest;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.utils.AppUtil;
+import com.example.commonlibrary.utils.PermissionUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -78,6 +80,12 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
     }
     @Override
     protected boolean isNeedEmptyLayout() {
+        return false;
+    }
+
+
+    @Override
+    protected boolean needStatusPadding() {
         return false;
     }
 

@@ -53,11 +53,7 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
     private String from;
 //    private Button main;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-    }
 
     @Override
     protected boolean isNeedHeadLayout() {
@@ -72,6 +68,12 @@ public class LoginActivity extends BaseActivity<Object, LoginPresenter> implemen
     @Override
     protected int getContentLayout() {
         return R.layout.activity_login;
+    }
+
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
     }
 
     @Override

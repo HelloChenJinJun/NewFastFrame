@@ -96,12 +96,7 @@ public class VoiceRecordManager {
                         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 //                        设置音频编码录音比特率
                         mMediaRecorder.setAudioEncodingBitRate(RECORDING_BITRATE);
-                        mMediaRecorder.setOnErrorListener(new MediaRecorder.OnErrorListener() {
-                                @Override
-                                public void onError(MediaRecorder mr, int what, int extra) {
-                                        LogUtil.e("录制声音出错");
-                                }
-                        });
+                        mMediaRecorder.setOnErrorListener((mr, what, extra) -> LogUtil.e("录制声音出错"));
                 } else {
 //                        mMediaRecorder.stop();
 //                        mMediaRecorder.reset();

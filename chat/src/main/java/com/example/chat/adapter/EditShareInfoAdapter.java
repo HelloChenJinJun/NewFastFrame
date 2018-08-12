@@ -1,6 +1,7 @@
 package com.example.chat.adapter;
 
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import com.example.chat.R;
 import com.example.chat.bean.ImageItem;
@@ -16,8 +17,8 @@ import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 
 public class EditShareInfoAdapter extends BaseMultipleRecyclerAdapter<ImageItem, BaseWrappedViewHolder> {
     @Override
-    protected SparseArray<Integer> getLayoutIdMap() {
-        SparseArray<Integer> sparseArray = new SparseArray<>();
+    protected SparseIntArray getLayoutIdMap() {
+        SparseIntArray sparseArray = new SparseIntArray();
         sparseArray.put(ImageItem.ITEM_CAMERA, R.layout.item_activity_edit_share_info_camera);
         sparseArray.put(ImageItem.ITEM_NORMAL, R.layout.item_activity_edit_share_info_normal);
         return sparseArray;

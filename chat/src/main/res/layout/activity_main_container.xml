@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/custom_color_app_bg"
-    android:tag="skin"
-    android:fitsSystemWindows="true">
+    android:tag="skin">
 
     <include android:id="@+id/header_layout_id"
              layout="@layout/header_layout"/>

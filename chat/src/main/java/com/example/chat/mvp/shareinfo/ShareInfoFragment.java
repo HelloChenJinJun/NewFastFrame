@@ -1,6 +1,7 @@
 package com.example.chat.mvp.shareinfo;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -69,7 +70,7 @@ import io.reactivex.disposables.Disposable;
  * QQ:         1981367757
  */
 
-public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareInfoPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
+public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareInfoPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
 
     private SuperRecyclerView display;
     @Inject
@@ -105,6 +106,14 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         return R.layout.fragment_share_info;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return true;
+    }
+
+
+
     @Override
     protected void initView() {
         display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_share_info_display);
@@ -117,6 +126,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         video.setOnClickListener(this);
         image.setOnClickListener(this);
         refresh.setOnRefreshListener(this);
+
     }
 
     @Override
@@ -531,5 +541,10 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         ShareInfoFragment fragment = new ShareInfoFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                CommonLogger.e(verticalOffset+"");
     }
 }

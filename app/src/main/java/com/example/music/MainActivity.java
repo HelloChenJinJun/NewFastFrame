@@ -27,6 +27,7 @@ import com.example.commonlibrary.net.download.DownloadListener;
 import com.example.commonlibrary.net.download.FileInfo;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.CenterFragment;
 import com.example.news.IndexFragment;
@@ -56,6 +57,11 @@ public class MainActivity extends SlideBaseActivity {
         }
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
 
     @Override
     public void updateData(Object o) {

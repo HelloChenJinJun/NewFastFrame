@@ -11,6 +11,7 @@ import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.login.LoginActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.StatusBarUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +34,7 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_main);
+        StatusBarUtil.setTranslucentForImageViewInFragment(this,0,null);
         time = (TextView) findViewById(R.id.tv_activity_splash_main_time);
         TextView title = (TextView) findViewById(R.id.tv_activity_splash_main_title);
         Animation animation = AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_top_in);

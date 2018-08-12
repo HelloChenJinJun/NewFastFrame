@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-
-
-    <ImageView
-        android:src="@drawable/login_container_bg_03"
-        android:id="@+id/iv_activity_splash_main_display"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
-
+    android:layout_height="match_parent"
+    android:background="@drawable/login_container_bg_03">
 
     <TextView
         android:id="@+id/tv_activity_splash_main_title"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:textSize="26sp"
         android:textColor="@color/white"
         android:layout_width="wrap_content"
@@ -26,12 +16,13 @@
         />
 
     <TextView
+
         android:id="@+id/tv_activity_splash_main_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="20dp"
         android:text="3"
         android:textColor="@color/black"
         android:textSize="18sp" />

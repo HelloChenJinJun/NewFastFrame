@@ -74,6 +74,12 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         return R.layout.fragment_index;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return true;
+    }
+
     @Override
     protected void initView() {
         display = (ViewPager) findViewById(R.id.vp_fragment_index_display);

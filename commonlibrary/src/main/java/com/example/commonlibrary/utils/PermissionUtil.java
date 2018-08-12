@@ -8,8 +8,6 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by COOTEK on 2017/8/4.
@@ -21,6 +19,10 @@ public class PermissionUtil {
 
 
     private PermissionUtil() {
+    }
+
+    public static void requestTakePhoto(Activity activity, RequestPermissionCallBack callBack) {
+        requestPermission(callBack,new RxPermissions(activity),Manifest.permission.CAMERA);
     }
 
     public interface RequestPermissionCallBack {
@@ -43,15 +45,12 @@ public class PermissionUtil {
         } else {//没有申请过,则开始申请
             rxPermissions
                     .request(needRequest.toArray(new String[needRequest.size()]))
-                    .subscribe(new Consumer<Boolean>() {
-                        @Override
-                        public void accept(@NonNull Boolean aBoolean) throws Exception {
-                            if (requestPermission != null) {
-                                if (aBoolean) {
-                                    requestPermission.onRequestPermissionSuccess();
-                                } else {
-                                    requestPermission.onRequestPermissionFailure();
-                                }
+                    .subscribe(aBoolean -> {
+                        if (requestPermission != null) {
+                            if (aBoolean) {
+                                requestPermission.onRequestPermissionSuccess();
+                            } else {
+                                requestPermission.onRequestPermissionFailure();
                             }
                         }
                     });

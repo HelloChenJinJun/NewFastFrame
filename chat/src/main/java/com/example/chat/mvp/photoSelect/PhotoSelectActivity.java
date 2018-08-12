@@ -3,6 +3,7 @@ package com.example.chat.mvp.photoSelect;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,6 +18,7 @@ import com.example.chat.bean.ImageItem;
 import com.example.chat.events.ImageFolderEvent;
 import com.example.chat.events.PhotoPreViewEvent;
 import com.example.chat.listener.OnImageLoadListener;
+import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.mvp.bottomFolder.CustomBottomFragment;
@@ -28,6 +30,8 @@ import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.PermissionPageUtils;
+import com.example.commonlibrary.utils.PermissionUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -141,7 +145,21 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
                     list.remove(0);
                     PhotoPreViewActivity.start(PhotoSelectActivity.this, position - 1, list, true);
                 } else {
-                    takePhotoPath = SystemUtil.takePhoto(PhotoSelectActivity.this, SystemUtil.REQUEST_CODE_TAKE_PHOTO);
+                    PermissionUtil.requestTakePhoto(PhotoSelectActivity.this, new PermissionUtil.RequestPermissionCallBack() {
+                        @Override
+                        public void onRequestPermissionSuccess() {
+                            takePhotoPath = SystemUtil.takePhoto(PhotoSelectActivity.this, SystemUtil.REQUEST_CODE_TAKE_PHOTO);
+                        }
+
+                        @Override
+                        public void onRequestPermissionFailure() {
+                                ToastUtils.showShortToast("需要开启摄像头权限才能进行拍照");
+                            showBaseDialog("权限界面操作", "是否需要打开权限界面", "取消", "确定"
+                                    , v12 -> cancelBaseDialog(), v1 -> {
+                                        dismissBaseDialog();
+                                        PermissionPageUtils.jumpPermissionPage(PhotoSelectActivity.this);
+                                    });                        }
+                    });
                 }
             }
         });
@@ -299,4 +317,18 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
             activity.startActivity(intent);
         }
     }
+
+    public static void start(Fragment fragment, String from, boolean isOne, boolean isCrop, ArrayList<ImageItem> selectedImageItemList) {
+        Intent intent = new Intent(fragment.getContext(), PhotoSelectActivity.class);
+        intent.putExtra(Constant.DATA, selectedImageItemList);
+        intent.putExtra(Constant.IS_ONE, isOne);
+        intent.putExtra(Constant.IS_CROP, isCrop);
+        intent.putExtra(Constant.FROM, from);
+        if (isOne) {
+            fragment.startActivityForResult(intent, ConstantUtil.REQUEST_CODE_ONE_PHOTO);
+        } else {
+            fragment.startActivity(intent);
+        }
+    }
+
 }

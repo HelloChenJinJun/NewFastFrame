@@ -8,7 +8,7 @@
         android:id="@+id/iv_view_fragment_share_info_header_bg"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="center" />
     <LinearLayout
         android:id="@+id/ll_view_fragment_share_info_header_unread"
         android:layout_marginBottom="10dp"

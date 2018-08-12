@@ -1,6 +1,7 @@
 package com.example.chat.adapter;
 
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import com.example.chat.R;
 import com.example.chat.bean.post.ReplyDetailContent;
@@ -23,8 +24,8 @@ public class CommentDetailAdapter extends BaseMultipleRecyclerAdapter<ReplyDetai
 
 
     @Override
-    protected SparseArray<Integer> getLayoutIdMap() {
-        SparseArray<Integer> sparseArray=new SparseArray<>();
+    protected SparseIntArray getLayoutIdMap() {
+        SparseIntArray sparseArray=new SparseIntArray();
         sparseArray.put(ReplyDetailContent.TYPE_RIGHT, R.layout.item_activity_comment_list_detail_right);
         sparseArray.put(ReplyDetailContent.TYPE_LEFT,R.layout.item_activity_comment_list_detail_left);
         return sparseArray;

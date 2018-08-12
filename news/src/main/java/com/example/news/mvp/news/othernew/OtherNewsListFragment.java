@@ -65,6 +65,11 @@ public class OtherNewsListFragment extends BaseFragment<List<NewInfoBean>,OtherN
     }
 
     @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
+
+    @Override
     protected int getContentLayout() {
         return R.layout.fragment_other_news_list;
     }

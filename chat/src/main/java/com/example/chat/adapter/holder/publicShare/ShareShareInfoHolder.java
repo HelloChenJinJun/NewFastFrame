@@ -48,6 +48,7 @@ public class ShareShareInfoHolder extends BaseShareInfoViewHolder {
     private final View container;
     private SuperRecyclerView display;
     private JZVideoPlayerStandard videoDisplay;
+    private GridSpaceDecoration itemDecoration;
 
     public ShareShareInfoHolder(View itemView) {
         super(itemView);
@@ -93,12 +94,15 @@ public class ShareShareInfoHolder extends BaseShareInfoViewHolder {
                 videoDisplay.setVisibility(View.GONE);
                 setOnItemChildClickListener(R.id.ll_item_fragment_share_info_share_image);
                 int size = shareBean.getImageList().size();
+                if (itemDecoration != null) {
+                    display.removeItemDecoration(itemDecoration);
+                }
                 if (size <= 4) {
                     display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 2));
-                    display.addItemDecoration(new GridSpaceDecoration(2, DensityUtil.toDp(5), false));
+                    display.addItemDecoration(itemDecoration=new GridSpaceDecoration(2, DensityUtil.toDp(5), false));
                 } else {
                     display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 3));
-                    display.addItemDecoration(new GridSpaceDecoration(3, DensityUtil.toDp(5), false));
+                    display.addItemDecoration(itemDecoration=new GridSpaceDecoration(3, DensityUtil.toDp(5), false));
                 }
                 final ImageShareInfoHolder.ImageShareAdapter adapter = new ImageShareInfoHolder.ImageShareAdapter();
                 display.setAdapter(adapter);

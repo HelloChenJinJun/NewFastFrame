@@ -54,6 +54,9 @@ public class SystemUtil {
 
     public static String takePhoto(Activity activity, int requestCode) {
 
+
+
+
         File dir;
         if (FileUtil.isExistSDCard()) {
             dir = FileUtil.newDir(Constant.IMAGE_CACHE_DIR + "take_picture/");

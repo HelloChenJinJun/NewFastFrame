@@ -1,6 +1,7 @@
 package com.example.commonlibrary.baseadapter.adapter;
 
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -19,10 +20,10 @@ import java.util.List;
  */
 
 public abstract class BaseMultipleRecyclerAdapter<T extends MultipleItem, K extends BaseWrappedViewHolder> extends BaseRecyclerAdapter<T, K> {
-    protected SparseArray<Integer> layoutIds;
+    protected SparseIntArray layoutIds;
 
 
-    public SparseArray<Integer> getLayoutIds() {
+    public SparseIntArray getLayoutIds() {
         if (layoutIds == null) {
             layoutIds = getLayoutIdMap();
         }
@@ -59,7 +60,7 @@ public abstract class BaseMultipleRecyclerAdapter<T extends MultipleItem, K exte
     }
 
 
-    protected abstract SparseArray<Integer> getLayoutIdMap();
+    protected abstract SparseIntArray getLayoutIdMap();
 
 
     @Override
@@ -72,7 +73,7 @@ public abstract class BaseMultipleRecyclerAdapter<T extends MultipleItem, K exte
          * 会出现加载不到布局，所以在多布局的情况下，会首先加载新添加的新item布局。
          * 所以要确定新添加布局和默认布局不能同时为0
          * */
-        if (layoutIds.get(viewType) != null && layoutIds.get(viewType) != 0) {
+        if (layoutIds.get(viewType,-1) != -1 && layoutIds.get(viewType) != 0) {
             return createBaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutIds.get(viewType), parent, false));
         }
         return super.onCreateViewHolder(parent, viewType);
