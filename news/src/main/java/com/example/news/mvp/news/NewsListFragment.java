@@ -29,7 +29,6 @@ import com.example.news.util.NewsUtil;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
-import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoaderInterface;
 
 import java.util.ArrayList;
@@ -111,7 +110,7 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
 
     private View getHeaderView() {
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_news_list_header, null);
-        banner = (Banner) headerView.findViewById(R.id.bn_view_fragment_news_list_header_banner);
+        banner = headerView.findViewById(R.id.bn_view_fragment_news_list_header_banner);
         initBannerConfig();
         return headerView;
     }
@@ -134,15 +133,12 @@ public class NewsListFragment extends BaseFragment<NewListBean, NewsListPresente
         banner.setDelayTime(3000);
         banner.setIndicatorGravity(BannerConfig.CENTER);
         banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
-        banner.setOnBannerListener(new OnBannerListener() {
-            @Override
-            public void OnBannerClick(int position) {
-                if (bannerList != null && bannerList.size() > position) {
-                    Intent intent = new Intent(getContext(), NewsContentActivity.class);
-                    intent.putExtra(NewsUtil.URL, bannerList.get(position).getContentUrl());
-                    intent.putExtra(NewsUtil.TITLE, bannerList.get(position).getTitle());
-                    startActivity(intent);
-                }
+        banner.setOnBannerListener(position -> {
+            if (bannerList != null && bannerList.size() > position) {
+                Intent intent = new Intent(getContext(), NewsContentActivity.class);
+                intent.putExtra(NewsUtil.URL, bannerList.get(position).getContentUrl());
+                intent.putExtra(NewsUtil.TITLE, bannerList.get(position).getTitle());
+                startActivity(intent);
             }
         });
     }

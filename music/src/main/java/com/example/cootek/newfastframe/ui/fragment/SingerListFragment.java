@@ -42,6 +42,12 @@ public class SingerListFragment extends BaseFragment<Object, SingerListPresenter
         return false;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
+
     @Override
     protected int getContentLayout() {
         return R.layout.fragment_singer_list;

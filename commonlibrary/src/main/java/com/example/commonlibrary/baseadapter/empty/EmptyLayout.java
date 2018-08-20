@@ -6,7 +6,6 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -26,8 +25,6 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
 
 
     private RelativeLayout errorLayout,emptyLayout,loadingLayout;
-//    private FrameLayout container;
-//    private TextView loadContent;
     private ImageView loadingImage;
     private View contentView;
 
@@ -43,36 +40,20 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
         super(context, attrs, defStyleAttr);
         initView(context, attrs);
 
-        setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
     }
 
     private void initView(Context context, AttributeSet attributeSet) {
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.empty_layout);
-//        int bgColor = typedArray.getColor(R.styleable.empty_layout_empty_bg_color, Color.WHITE);
         View view = View.inflate(context, R.layout.empty_layout, this);
-        errorLayout = (RelativeLayout) view.findViewById(R.id.rl_empty_layout_error);
-        emptyLayout= (RelativeLayout) view.findViewById(R.id.rl_empty_layout_empty);
-
-//        loadContent = (TextView) view.findViewById(R.id.tv_empty_layout_loading_content);
-        loadingLayout = (RelativeLayout) view.findViewById(R.id.rl_empty_layout_loading);
-//        container = (FrameLayout) view.findViewById(R.id.fl_empty_layout_container);
-        loadingImage= (ImageView) view.findViewById(R.id.iv_empty_loading_image);
+        errorLayout = view.findViewById(R.id.rl_empty_layout_error);
+        emptyLayout= view.findViewById(R.id.rl_empty_layout_empty);
+        loadingLayout = view.findViewById(R.id.rl_empty_layout_loading);
+        loadingImage= view.findViewById(R.id.iv_empty_loading_image);
         view.findViewById(R.id.rl_empty_layout_error).setOnClickListener(this);
         view.findViewById(R.id.rl_empty_layout_empty).setOnClickListener(this);
-//        container.setBackgroundColor(bgColor);
         typedArray.recycle();
         updateViewVisible();
-        setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        setOnTouchListener((v, event) -> true);
     }
 
     public static final int STATUS_LOADING = 0;
@@ -87,9 +68,6 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
     }
 
 
-//    public void setLoadingContent(String message) {
-//        loadContent.setText(message);
-//    }
 
     public void setCurrentStatus(int currentStatus) {
         this.currentStatus = currentStatus;
@@ -112,25 +90,21 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
         }
         switch (currentStatus) {
             case STATUS_HIDE:
-//                container.setVisibility(GONE);
                 contentView.setVisibility(VISIBLE);
                 break;
             case STATUS_NO_DATA:
-//                container.setVisibility(VISIBLE);
                 errorLayout.setVisibility(GONE);
                 loadingLayout.setVisibility(GONE);
                 emptyLayout.setVisibility(VISIBLE);
                 contentView.setVisibility(GONE);
                 break;
             case STATUS_NO_NET:
-//                container.setVisibility(VISIBLE);
                 errorLayout.setVisibility(VISIBLE);
                 loadingLayout.setVisibility(GONE);
                 emptyLayout.setVisibility(GONE);
                 contentView.setVisibility(GONE);
                 break;
             case STATUS_LOADING:
-//                container.setVisibility(VISIBLE);
                 Glide.with(getContext()).load(R.drawable.loading_animation)
                         .into(loadingImage);
                 errorLayout.setVisibility(GONE);

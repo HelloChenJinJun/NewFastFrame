@@ -60,6 +60,11 @@ public class RankFragment extends BaseFragment<RankListBean, RankPresenter> impl
     }
 
     @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
+
+    @Override
     protected void initView() {
         display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_rank_display);
         refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_rank_refresh);

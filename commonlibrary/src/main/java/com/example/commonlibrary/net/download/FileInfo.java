@@ -6,13 +6,21 @@ import android.os.Parcelable;
 
 import com.example.commonlibrary.net.NetManager;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
+
 
 /**
  * 文件实体
  */
+@Entity
 public class FileInfo implements Parcelable {
 
+
+    @Id
     private String url;
+
     private String name;
     private int totalBytes;
     private int loadBytes;
@@ -20,36 +28,7 @@ public class FileInfo implements Parcelable {
     private int status;
     private String path;
 
-    public FileInfo(int status, String url, String name, int totalSize) {
-        this.status = status;
-        this.url = url;
-        this.name = name;
-        this.totalBytes = totalSize;
-        this.loadBytes = 0;
-        this.speed = 0;
-        this.path = NetManager.getInstance().getDownLoadCacheDir();
-    }
-
-    public FileInfo(String url, String name) {
-        this.url = url;
-        this.name = name;
-        this.status = DownloadStatus.NORMAL;
-        this.totalBytes = 0;
-        this.loadBytes = 0;
-        this.speed = 0;
-        this.path = NetManager.getInstance().getDownLoadCacheDir();
-    }
-
-
-    public FileInfo(String url, String name, int status, int totalBytes, int loadBytes, int speed, String path) {
-        this.url = url;
-        this.name = name;
-        this.status = status;
-        this.totalBytes = totalBytes;
-        this.loadBytes = loadBytes;
-        this.speed = speed;
-        this.path = path;
-    }
+    
 
     public String getUrl() {
         return url;
@@ -132,6 +111,47 @@ public class FileInfo implements Parcelable {
         this.status = in.readInt();
         this.path = in.readString();
     }
+
+    @Generated(hash = 1019480899)
+    public FileInfo(String url, String name, int totalBytes, int loadBytes,
+            int speed, int status, String path) {
+        this.url = url;
+        this.name = name;
+        this.totalBytes = totalBytes;
+        this.loadBytes = loadBytes;
+        this.speed = speed;
+        this.status = status;
+        this.path = path;
+    }
+
+    @Generated(hash = 1367591352)
+    public FileInfo() {
+    }
+
+
+
+    public FileInfo(int status, String url, String name, int totalSize) {
+        this.status = status;
+        this.url = url;
+        this.name = name;
+        this.totalBytes = totalSize;
+        this.loadBytes = 0;
+        this.speed = 0;
+        this.path = NetManager.getInstance().getDownLoadCacheDir();
+    }
+
+    public FileInfo(String url, String name) {
+        this.url = url;
+        this.name = name;
+        this.status = DownloadStatus.NORMAL;
+        this.totalBytes = 0;
+        this.loadBytes = 0;
+        this.speed = 0;
+        this.path = NetManager.getInstance().getDownLoadCacheDir();
+    }
+
+
+
 
     public static final Creator<FileInfo> CREATOR = new Creator<FileInfo>() {
         @Override

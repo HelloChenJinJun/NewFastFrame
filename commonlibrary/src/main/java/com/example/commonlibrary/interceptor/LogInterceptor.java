@@ -9,7 +9,6 @@ import com.example.commonlibrary.utils.IOUtils;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,7 +41,6 @@ public class LogInterceptor implements Interceptor {
 
     private OkHttpGlobalHandler handler;
     private Level printLevel;
-    private java.util.logging.Level colorLevel;
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
 
@@ -54,8 +52,6 @@ public class LogInterceptor implements Interceptor {
         } else {
             printLevel = Level.BODY;
         }
-        colorLevel = java.util.logging.Level.INFO;
-        logger=Logger.getLogger("JUN");
     }
 
 
@@ -67,7 +63,7 @@ public class LogInterceptor implements Interceptor {
         }
 
         //请求日志拦截
-        logForRequest(request, chain.connection());
+       logForRequest(request, chain.connection());
 
         //执行请求，计算请求时间
         long startNs = System.nanoTime();
@@ -79,15 +75,12 @@ public class LogInterceptor implements Interceptor {
             throw e;
         }
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
-        if (handler != null) {
-//            handler.onResultResponse()
-        }
         //响应日志拦截
         return logForResponse(response, tookMs, chain);
     }
 
 
-    private void logForRequest(Request request, Connection connection) throws IOException {
+    private String  logForRequest(Request request, Connection connection) throws IOException {
         boolean logBody = (printLevel == Level.BODY);
         boolean logHeaders = (printLevel == Level.BODY || printLevel == Level.HEADERS);
         RequestBody requestBody = request.body();
@@ -100,8 +93,6 @@ public class LogInterceptor implements Interceptor {
 
             if (logHeaders) {
                 if (hasRequestBody) {
-                    // Request body headers are only present when installed as a network interceptor. Force
-                    // them to be included (when available) so there values are known.
                     if (requestBody.contentType() != null) {
                         log("\tContent-Type: " + requestBody.contentType());
                     }
@@ -121,7 +112,7 @@ public class LogInterceptor implements Interceptor {
                 log(" ");
                 if (logBody && hasRequestBody) {
                     if (isPlaintext(requestBody.contentType())) {
-                        bodyToString(request);
+                       return bodyToString(request);
                     } else {
                         log("\tbody: maybe [binary body], omitted!");
                     }
@@ -132,9 +123,9 @@ public class LogInterceptor implements Interceptor {
         } finally {
             log("--> END " + request.method());
         }
+        return null;
     }
 
-    private Logger logger;
 
     private void log(String message) {
 //        logger.log(colorLevel, message);
@@ -209,17 +200,20 @@ public class LogInterceptor implements Interceptor {
         return false;
     }
 
-    private void bodyToString(Request request) {
+    private String bodyToString(Request request) {
         try {
             Request copy = request.newBuilder().build();
             RequestBody body = copy.body();
-            if (body == null) return;
+            if (body == null) return null;
             Buffer buffer = new Buffer();
             body.writeTo(buffer);
             Charset charset = getCharset(body.contentType());
-            log("\tbody:" + buffer.readString(charset));
+            String str=buffer.readString(charset);
+            log("\tbody:" + str);
+            return str;
         } catch (Exception e) {
             CommonLogger.printStackTrace(e);
+            return null;
         }
     }
 }

@@ -5,19 +5,18 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.commonlibrary.BaseApplication;
 
+import java.util.List;
+
 
 /**
  * 数据库访问实现类
  */
 public class FileDAOImpl implements FileDAO {
-
-    private static final String DB_NAME = "FileDownloader.db";
-    private DbHelper mDbHelper = null;
-
-
+    private FileInfoDao fileInfoDao;
     private FileDAOImpl() {
         // 创建数据库
-        mDbHelper = new DbHelper(BaseApplication.getInstance(), DB_NAME, null, 2);
+        fileInfoDao= BaseApplication.getAppComponent().getDaoSession()
+                .getFileInfoDao();
     }
 
     private static class HolderClass {
@@ -30,81 +29,34 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public void insert(FileInfo info) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        db.insert(DbHelper.TABLE_NAME, null, info.toValues());
+        fileInfoDao.insert(info);
     }
 
     @Override
     public void delete(String url) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        db.delete(DbHelper.TABLE_NAME, "url = ?", new String[]{url});
+        fileInfoDao.deleteByKey(url);
     }
 
     @Override
     public void update(FileInfo info) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        db.update(DbHelper.TABLE_NAME, info.toValues(), "url = ?", new String[]{info.getUrl()});
+        fileInfoDao.update(info);
     }
 
     @Override
     public FileInfo query(String fileUrl) {
-        FileInfo fileInfo = null;
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        Cursor cursor = db.query(DbHelper.TABLE_NAME, null, "url = ?", new String[]{fileUrl}, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            String url = cursor.getString(cursor.getColumnIndex("url"));
-            String name = cursor.getString(cursor.getColumnIndex("name"));
-            String path = cursor.getString(cursor.getColumnIndex("path"));
-            int loadBytes = cursor.getInt(cursor.getColumnIndex("loadBytes"));
-            int totalBytes = cursor.getInt(cursor.getColumnIndex("totalBytes"));
-            int status = cursor.getInt(cursor.getColumnIndex("status"));
-            fileInfo = new FileInfo(url, name);
-            fileInfo.setPath(path);
-            fileInfo.setLoadBytes(loadBytes);
-            fileInfo.setTotalBytes(totalBytes);
-            fileInfo.setStatus(status);
+        List<FileInfo>  result=fileInfoDao.queryBuilder().where(FileInfoDao.Properties.Url.eq(fileUrl)).build()
+                .list();
+        if (result.size() != 0) {
+            return result.get(0);
         }
-        if (cursor != null) {
-            cursor.close();
-        }
-        return fileInfo;
+        return null;
     }
 
-    public FileInfo queryPkg(String pkgName) {
-        FileInfo fileInfo = null;
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        Cursor cursor = db.query(DbHelper.TABLE_NAME, null, "name = ?", new String[]{pkgName}, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            String url = cursor.getString(cursor.getColumnIndex("url"));
-            String name = cursor.getString(cursor.getColumnIndex("name"));
-            String path = cursor.getString(cursor.getColumnIndex("path"));
-            int loadBytes = cursor.getInt(cursor.getColumnIndex("loadBytes"));
-            int totalBytes = cursor.getInt(cursor.getColumnIndex("totalBytes"));
-            int status = cursor.getInt(cursor.getColumnIndex("status"));
-            fileInfo = new FileInfo(url, name);
-            fileInfo.setPath(path);
-            fileInfo.setLoadBytes(loadBytes);
-            fileInfo.setTotalBytes(totalBytes);
-            fileInfo.setStatus(status);
-        }
-        if (cursor != null) {
-            cursor.close();
-        }
-        return fileInfo;
-    }
+
 
     @Override
     public boolean isExists(String url) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        Cursor cursor = db.query(DbHelper.TABLE_NAME, null, "url = ?", new String[]{url}, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            cursor.close();
-            return true;
-        } else {
-            if (cursor != null) {
-                cursor.close();
-            }
-            return false;
-        }
+      return fileInfoDao.queryBuilder().where(FileInfoDao.Properties.Url.eq(url))
+               .buildCount().count()>0;
     }
 }
