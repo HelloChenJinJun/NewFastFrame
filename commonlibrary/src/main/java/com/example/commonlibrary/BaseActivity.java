@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.commonlibrary.adaptScreen.IAdaptScreen;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.cusotomview.BaseDialog;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
@@ -50,7 +51,7 @@ import static android.view.View.GONE;
  * QQ:             1981367757
  */
 
-public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCompatActivity implements IView<T> {
+public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCompatActivity implements IView<T>, IAdaptScreen {
 
     //  这里的布局view可能为空，取决于子类布局中是否含有该空布局
 
@@ -75,8 +76,22 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     }
 
 
+    @Override
+    public boolean isBaseOnWidth() {
+        return true;
+    }
 
 
+    @Override
+    public int getScreenSize() {
+        return 360;
+    }
+
+
+    @Override
+    public boolean cancelAdapt() {
+        return false;
+    }
 
     @Nullable
     @Inject
