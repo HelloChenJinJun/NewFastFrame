@@ -20,13 +20,12 @@ import java.util.Map;
  * 创建时间:    2018/8/22     14:16
  */
 public class ScreenAdaptManager {
-    private static ScreenAdaptManager sInstance;
+//    private static ScreenAdaptManager sInstance;
 
     private Map<String,AdaptInfo>  adaptInfoMap;
 
 
 
-    //todo 通过构建build模式来对designedWidth和designedHeight进行赋值操作
 
     private int screenWidth;
     private int screenHeight;
@@ -36,16 +35,20 @@ public class ScreenAdaptManager {
 
 
 
-    public static ScreenAdaptManager getInstance() {
-        if (sInstance == null) {
-            synchronized (ScreenAdaptManager.class){
-                if (sInstance == null) {
-                    sInstance=new ScreenAdaptManager();
-                }
-            }
-        }
-        return sInstance;
-    }
+//    public static ScreenAdaptManager getInstance() {
+//        if (sInstance == null) {
+//            synchronized (ScreenAdaptManager.class){
+//                if (sInstance == null) {
+//                    sInstance=new ScreenAdaptManager();
+//                }
+//            }
+//        }
+//        return sInstance;
+//    }
+
+
+
+
 
 
 
@@ -56,6 +59,10 @@ public class ScreenAdaptManager {
         initData(BaseApplication.getInstance());
     }
 
+    private ScreenAdaptManager(Builder builder) {
+        designedWidth = builder.designedWidth;
+        designedHeight = builder.designedHeight;
+    }
 
 
     private String getKey(boolean isBaseOnWidth,int size){
@@ -75,7 +82,7 @@ public class ScreenAdaptManager {
         return null;
     }
 
-    private void initData(Application application) {
+    public void initData(Application application) {
         adaptInfoMap=new HashMap<>();
         DisplayMetrics displayMetrics= Resources.getSystem().getDisplayMetrics();
         screenHeight=displayMetrics.heightPixels;
@@ -125,7 +132,7 @@ public class ScreenAdaptManager {
             });
     }
 
-    private void adaptScreen(Activity activity,boolean isBaseOnWidth,int screenSize) {
+    public void adaptScreen(Activity activity,boolean isBaseOnWidth,int screenSize) {
         if (screenSize <= 0) {
             screenSize=designedWidth;
         }
@@ -184,4 +191,25 @@ public class ScreenAdaptManager {
     }
 
 
+    public static final class Builder {
+        private int designedWidth;
+        private int designedHeight;
+
+        public Builder() {
+        }
+
+        public Builder designedWidth(int val) {
+            designedWidth = val;
+            return this;
+        }
+
+        public Builder designedHeight(int val) {
+            designedHeight = val;
+            return this;
+        }
+
+        public ScreenAdaptManager build() {
+            return new ScreenAdaptManager(this);
+        }
+    }
 }

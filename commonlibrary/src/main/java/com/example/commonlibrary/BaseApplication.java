@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.example.commonlibrary.adaptScreen.ScreenAdaptManager;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.component.DaggerAppComponent;
 import com.example.commonlibrary.dagger.module.AppConfigModule;
@@ -61,28 +62,21 @@ public class BaseApplication extends Application {
         initDagger();
         instance = this;
         applicationDelegate.onCreate(this);
-
+       new ScreenAdaptManager.Builder().designedHeight(640)
+               .designedWidth(360).build().initData(this);
     }
 
 
     private void initDagger() {
         AppConfigModule.Builder builder = new AppConfigModule.Builder();
         builder.baseUrl(HttpUrl.parse(ConstantUtil.BASE_URL))
-                .gsonConfig(new GlobalConfigModule.GsonConfig() {
-                    @Override
-                    public void config(Application application, GsonBuilder gsonBuilder) {
-                        gsonBuilder.serializeNulls().enableComplexMapKeySerialization();
-                    }
-                }).okHttpConfig(new GlobalConfigModule.OkHttpConfig() {
+                .gsonConfig((application, gsonBuilder) -> gsonBuilder.serializeNulls().enableComplexMapKeySerialization()).okHttpConfig(new GlobalConfigModule.OkHttpConfig() {
             @Override
             public void config(Application application, OkHttpClient.Builder builder) {
                 builder.connectTimeout(10, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS);
             }
-        }).retrofitConfig(new GlobalConfigModule.RetrofitConfig() {
-            @Override
-            public void config(Application application, Retrofit.Builder builder) {
+        }).retrofitConfig((application, builder1) -> {
 //                这里的配置baseURL会覆盖之前的baseUrl
-            }
         }).okHttpGlobalHandler(new OkHttpGlobalHandler() {
             @Override
             public Response onResultResponse(String printResult, Interceptor.Chain chain, Response response) {
