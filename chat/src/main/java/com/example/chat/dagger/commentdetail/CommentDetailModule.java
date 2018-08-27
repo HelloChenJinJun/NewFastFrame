@@ -1,10 +1,10 @@
 package com.example.chat.dagger.commentdetail;
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.CommentDetailAdapter;
-import com.example.chat.mvp.commentdetail.CommentDetailModel;
 import com.example.chat.mvp.commentdetail.CommentDetailPresenter;
 import com.example.chat.mvp.commentdetail.CommentListDetailActivity;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.commonlibrary.repository.DefaultRepositoryManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -31,15 +31,15 @@ public class CommentDetailModule {
 
 
     @Provides
-    public CommentDetailPresenter providerPresenter(CommentDetailModel commentDetailModel){
-        return new CommentDetailPresenter(commentListDetailActivity,commentDetailModel);
+    public CommentDetailPresenter providerPresenter(DefaultModel defaultModel){
+        return new CommentDetailPresenter(commentListDetailActivity,defaultModel);
     }
 
 
 
     @Provides
-    public CommentDetailModel providerModel(MainRepositoryManager mainRepositoryManager){
-        return new CommentDetailModel(mainRepositoryManager);
+    public DefaultModel providerModel(DefaultRepositoryManager defaultRepositoryManager){
+        return new DefaultModel(defaultRepositoryManager);
     }
 
 

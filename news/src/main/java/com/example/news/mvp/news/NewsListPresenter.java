@@ -1,6 +1,7 @@
 package com.example.news.mvp.news;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -32,11 +33,11 @@ import okhttp3.ResponseBody;
  * QQ:             1981367757
  */
 
-public class NewsListPresenter extends BasePresenter<IView<NewListBean>, NewsListModel> {
+public class NewsListPresenter extends BasePresenter<IView<NewListBean>, DefaultModel> {
     private int num = 0;
     private Integer totalPage = -1;
 
-    public NewsListPresenter(IView<NewListBean> iView, NewsListModel baseModel) {
+    public NewsListPresenter(IView<NewListBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

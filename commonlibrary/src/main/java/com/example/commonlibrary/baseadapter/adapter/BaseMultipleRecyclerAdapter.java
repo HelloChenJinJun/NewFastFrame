@@ -1,6 +1,5 @@
 package com.example.commonlibrary.baseadapter.adapter;
 
-import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

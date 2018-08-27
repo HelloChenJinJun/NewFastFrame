@@ -6,6 +6,7 @@ import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.ReplyDetailContent;
 import com.example.chat.manager.UserManager;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.google.gson.Gson;
@@ -21,10 +22,10 @@ import cn.bmob.v3.listener.FindListener;
  * QQ:         1981367757
  */
 
-public class CommentDetailPresenter extends BasePresenter<IView<List<ReplyDetailContent>>,CommentDetailModel>{
+public class CommentDetailPresenter extends BasePresenter<IView<List<ReplyDetailContent>>,DefaultModel>{
     private Gson gson;
 
-    public CommentDetailPresenter(IView<List<ReplyDetailContent>> iView, CommentDetailModel baseModel) {
+    public CommentDetailPresenter(IView<List<ReplyDetailContent>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
         gson = BaseApplication.getAppComponent().getGson();
     }

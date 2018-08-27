@@ -8,7 +8,7 @@ import com.example.commonlibrary.mvp.model.BaseModel;
  * 创建人:      李晨
  * 创建时间:    2018/5/19     11:08
  */
-
+//todo 使用DefaultModel来替代
 public class CommentNotifyModel extends BaseModel<MainRepositoryManager>{
     public CommentNotifyModel(MainRepositoryManager repositoryManager) {
         super(repositoryManager);

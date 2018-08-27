@@ -17,7 +17,6 @@ import com.example.commonlibrary.net.upload.UpLoadRequestBody;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.FileUtil;
-import com.example.commonlibrary.utils.NetUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +83,7 @@ public class NetManager {
         newFileInfoMap.put(file.getAbsolutePath(), info);
         Retrofit retrofit = BaseApplication.getAppComponent().getRetrofit();
         UpLoadProgressObserver upLoadProgressObserver = new UpLoadProgressObserver(info, listener);
-        RequestBody requestBody = RequestBody.create(NetUtil.guessMimeType(file.getName()), file);
+        RequestBody requestBody = RequestBody.create(FileUtil.guessMimeType(file.getName()), file);
         UpLoadRequestBody upLoadRequestBody = new UpLoadRequestBody(upLoadProgressObserver, requestBody);
         MultipartBody.Part part = MultipartBody.Part.createFormData(key, file.getName(), upLoadRequestBody);
         retrofit.create(UpLoadApi.class).upLoad(url, part).subscribeOn(Schedulers.io())

@@ -44,7 +44,6 @@ public class LogInterceptor implements Interceptor {
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
 
-    @Inject
     public LogInterceptor(@Nullable OkHttpGlobalHandler okHttpGlobalHandler, @Nullable Level level) {
         handler = okHttpGlobalHandler;
         if (level != null) {
@@ -80,7 +79,7 @@ public class LogInterceptor implements Interceptor {
     }
 
 
-    private String  logForRequest(Request request, Connection connection) throws IOException {
+    private void logForRequest(Request request, Connection connection) throws IOException {
         boolean logBody = (printLevel == Level.BODY);
         boolean logHeaders = (printLevel == Level.BODY || printLevel == Level.HEADERS);
         RequestBody requestBody = request.body();
@@ -112,7 +111,7 @@ public class LogInterceptor implements Interceptor {
                 log(" ");
                 if (logBody && hasRequestBody) {
                     if (isPlaintext(requestBody.contentType())) {
-                       return bodyToString(request);
+                        bodyToString(request);
                     } else {
                         log("\tbody: maybe [binary body], omitted!");
                     }
@@ -123,7 +122,6 @@ public class LogInterceptor implements Interceptor {
         } finally {
             log("--> END " + request.method());
         }
-        return null;
     }
 
 

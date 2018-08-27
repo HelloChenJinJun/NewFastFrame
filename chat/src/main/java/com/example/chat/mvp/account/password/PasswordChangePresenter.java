@@ -4,6 +4,7 @@ import com.example.chat.base.Constant;
 import com.example.chat.bean.User;
 import com.example.chat.manager.UserManager;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
@@ -28,8 +29,8 @@ import io.reactivex.functions.Consumer;
  * QQ:         1981367757
  */
 
-public class PasswordChangePresenter extends RxBasePresenter<IView<Object>, PasswordChangeModel> {
-    public PasswordChangePresenter(final IView<Object> iView, PasswordChangeModel baseModel) {
+public class PasswordChangePresenter extends RxBasePresenter<IView<Object>, DefaultModel> {
+    public PasswordChangePresenter(final IView<Object> iView, DefaultModel baseModel) {
         super(iView, baseModel);
         registerEvent(PwChangeEvent.class, pwChangeEvent -> {
             if (pwChangeEvent.isSuccess()) {

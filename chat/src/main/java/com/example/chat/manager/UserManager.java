@@ -448,11 +448,11 @@ public class UserManager {
     /**
      * 检查本设备表中的uid   ，如果有，就发送下线通知，操作成功后，再把uid更新到本地的设备表中
      */
-    public void checkInstallation(final UpdateListener listener) {
+    public Subscription checkInstallation(final UpdateListener listener) {
         BmobQuery<CustomInstallation> query = new BmobQuery<>();
         CommonLogger.e("checkInstallation UID：" + getCurrentUserObjectId());
         query.addWhereEqualTo("uid", getCurrentUserObjectId());
-        query.findObjects(new FindListener<CustomInstallation>() {
+       return query.findObjects(new FindListener<CustomInstallation>() {
                               @Override
                               public void done(List<CustomInstallation> list, BmobException e) {
                                   if (e == null) {

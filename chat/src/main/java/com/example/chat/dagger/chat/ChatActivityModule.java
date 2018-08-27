@@ -1,10 +1,10 @@
 package com.example.chat.dagger.chat;
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.ChatMessageAdapter;
 import com.example.chat.mvp.chat.ChatActivity;
-import com.example.chat.mvp.chat.ChatModel;
 import com.example.chat.mvp.chat.ChatPresenter;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.commonlibrary.repository.DefaultRepositoryManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -30,12 +30,12 @@ public class ChatActivityModule {
     }
 
     @Provides
-    public ChatPresenter providerPresenter(ChatModel chatModel){
-        return new ChatPresenter(chatActivity,chatModel);
+    public ChatPresenter providerPresenter(DefaultModel defaultModel){
+        return new ChatPresenter(chatActivity,defaultModel);
     }
 
     @Provides
-    public ChatModel providerModel(MainRepositoryManager mainRepositoryManager){
-        return new ChatModel(mainRepositoryManager);
+    public DefaultModel providerModel(DefaultRepositoryManager defaultRepositoryManager){
+        return new DefaultModel(defaultRepositoryManager);
     }
 }

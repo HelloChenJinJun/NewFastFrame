@@ -10,10 +10,6 @@ import okio.ForwardingSource;
 import okio.Okio;
 import okio.Source;
 
-/**
- * 自定义精度的body
- * @author wzg
- */
 public class DownloadResponseBody extends ResponseBody {
 
     private ResponseBody responseBody;

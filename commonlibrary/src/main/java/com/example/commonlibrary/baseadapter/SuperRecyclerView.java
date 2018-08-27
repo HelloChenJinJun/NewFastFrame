@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 
 import com.example.commonlibrary.R;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
-import com.example.commonlibrary.baseadapter.animator.SimpleAnimatorListener;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreScrollListener;
@@ -790,4 +789,29 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
         this.mStatus = status;
 
     }
+
+
+    private static class SimpleAnimatorListener implements Animator.AnimatorListener {
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
+    }
+
+
 }

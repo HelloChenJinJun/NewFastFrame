@@ -32,6 +32,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.bean.music.MusicHistoryInfo;
 import com.example.commonlibrary.bean.music.MusicHistoryInfoDao;
@@ -39,7 +40,6 @@ import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.bean.music.MusicPlayBeanDao;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.FileUtil;
-import com.example.commonlibrary.utils.Httputil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.receiver.MediaButtonIntentReceiver;
 import com.example.cootek.newfastframe.ui.MainActivity;
@@ -58,6 +58,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.TreeSet;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 /**
@@ -1125,7 +1129,17 @@ public class MusicService extends Service {
         new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... params) {
-                return Httputil.getContent(params[0]);
+                try {
+                    Request request = new Request.Builder().url(params[0]).build();
+                    OkHttpClient okHttpClient = BaseApplication.getAppComponent().getOkHttpClient();
+                    Response response = okHttpClient.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        return response.body().string();
+                    }
+                } catch (IOException | IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
 
             @Override

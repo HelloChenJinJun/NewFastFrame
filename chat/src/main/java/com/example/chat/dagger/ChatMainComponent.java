@@ -4,6 +4,7 @@ import com.example.chat.MainRepositoryManager;
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.scope.PerApplication;
+import com.example.commonlibrary.repository.DefaultRepositoryManager;
 
 import dagger.Component;
 
@@ -16,7 +17,5 @@ import dagger.Component;
 @PerApplication
 @Component(dependencies = AppComponent.class,modules = {ChatMainModule.class})
 public interface ChatMainComponent {
-
-    public DaoSession getDaoSession();
-    public MainRepositoryManager getMainRepositoryManager();
+    public DefaultRepositoryManager getDefaultRepositoryManager();
 }

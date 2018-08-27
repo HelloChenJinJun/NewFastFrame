@@ -87,6 +87,21 @@ public class ScreenAdaptManager {
         DisplayMetrics displayMetrics= Resources.getSystem().getDisplayMetrics();
         screenHeight=displayMetrics.heightPixels;
         screenWidth=displayMetrics.widthPixels;
+        application.registerComponentCallbacks(new ComponentCallbacks() {
+            @Override
+            public void onConfigurationChanged(Configuration newConfig) {
+                if (newConfig != null && newConfig.fontScale > 0) {
+                    getSystemAdaptInfo().scaledDensity=Resources.getSystem().getDisplayMetrics().scaledDensity;
+                }
+            }
+
+            @Override
+            public void onLowMemory() {
+
+            }
+        });
+
+
         adaptInfoMap.put(SYSTEM_CONFIG,new AdaptInfo(displayMetrics.density,displayMetrics.densityDpi,displayMetrics.scaledDensity));
             application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
                 @Override

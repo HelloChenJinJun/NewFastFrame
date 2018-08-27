@@ -3,7 +3,6 @@ package com.example.cootek.newfastframe.ui.fragment;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
@@ -11,7 +10,6 @@ import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.baseadapter.animator.DefaultBaseAnimator;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.BaseFragment;
 import com.example.cootek.newfastframe.R;
@@ -32,7 +30,6 @@ public class TestFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private TestAdapter testAdapter;
     private int position = 0;
-    private DefaultBaseAnimator itemAnimator;
 
     @Override
     public void updateData(Object o) {
@@ -69,8 +66,6 @@ public class TestFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 start();
             }
         });
-        display.setItemAnimator(itemAnimator = new DefaultBaseAnimator());
-        itemAnimator.setInterpolator(new LinearInterpolator());
         display.getItemAnimator().setAddDuration(1000);
         display.getItemAnimator().setRemoveDuration(1000);
         data.addAll(getData());

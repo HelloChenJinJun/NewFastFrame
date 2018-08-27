@@ -33,6 +33,8 @@ public class GlideImageLoaderStrategy implements BaseImageLoaderStrategy<GlideIm
             case GlideImageLoaderConfig.CACHE_RESULT:
                 drawableRequestBuilder.diskCacheStrategy(DiskCacheStrategy.RESULT);
                 break;
+                default:
+                    break;
         }
         if (config.isCenterInside()) {
             drawableRequestBuilder.fitCenter();

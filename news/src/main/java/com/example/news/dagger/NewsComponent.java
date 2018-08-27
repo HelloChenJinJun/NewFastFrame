@@ -2,6 +2,7 @@ package com.example.news.dagger;
 
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.scope.PerApplication;
+import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.example.news.MainRepositoryManager;
 
 import dagger.Component;
@@ -16,6 +17,5 @@ import okhttp3.OkHttpClient;
 @PerApplication
 @Component(dependencies = AppComponent.class,modules =NewsModule.class)
 public interface NewsComponent {
-    public MainRepositoryManager getRepositoryManager();
-    public OkHttpClient getOkHttpClient();
+    public DefaultRepositoryManager getRepositoryManager();
 }

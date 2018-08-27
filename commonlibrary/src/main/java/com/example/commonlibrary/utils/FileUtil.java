@@ -14,7 +14,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.Locale;
+
+import okhttp3.MediaType;
 
 /**
  * Created by COOTEK on 2017/7/31.
@@ -24,9 +28,14 @@ public class FileUtil {
 
 
     public static File getDefaultCacheFile(Context context) {
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-        if (!file.exists()) {
-            file.mkdir();
+        File file;
+        if (isExistSDCard()) {
+            file = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+            if (!file.exists()) {
+                file.mkdir();
+            }
+        }else {
+            file=context.getCacheDir();
         }
         return file;
 
@@ -232,4 +241,18 @@ public class FileUtil {
         }
         return stringBuilder.toString();
     }
+
+    /**
+     * 根据文件名获取MIME类型
+     */
+    public static MediaType guessMimeType(String fileName) {
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        fileName = fileName.replace("#", "");   //解决文件名中含有#号异常的问题
+        String contentType = fileNameMap.getContentTypeFor(fileName);
+        if (contentType == null) {
+            return MediaType.parse("application/octet-stream");
+        }
+        return MediaType.parse(contentType);
+    }
+
 }

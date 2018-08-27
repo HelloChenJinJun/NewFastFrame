@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
-import com.example.commonlibrary.baseadapter.animator.DefaultBaseAnimator;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
@@ -111,7 +110,6 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
         specialId=getIntent().getStringExtra(NewsUtil.SPECIAL_ID);
         display.setLayoutManager(wrappedLinearLayoutManager=new WrappedLinearLayoutManager(this));
         display.addHeaderView(getHeaderView());
-        display.setItemAnimator(new DefaultBaseAnimator());
         display.setAdapter(specialNewsAdapter);
         specialNewsAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override

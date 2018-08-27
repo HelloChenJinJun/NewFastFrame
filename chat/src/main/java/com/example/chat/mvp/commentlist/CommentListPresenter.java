@@ -16,6 +16,7 @@ import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.PostCommentEntity;
 import com.example.commonlibrary.bean.chat.PostCommentEntityDao;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -48,11 +49,11 @@ import rx.Subscription;
  * QQ:         1981367757
  */
 
-public class CommentListPresenter extends AppBasePresenter<IView<List<PublicCommentBean>>, CommentListModel> {
+public class CommentListPresenter extends AppBasePresenter<IView<List<PublicCommentBean>>, DefaultModel> {
     private Gson gson;
 
 
-    public CommentListPresenter(IView<List<PublicCommentBean>> iView, CommentListModel baseModel) {
+    public CommentListPresenter(IView<List<PublicCommentBean>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
         gson = BaseApplication.getAppComponent().getGson();
     }

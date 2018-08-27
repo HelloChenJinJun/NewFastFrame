@@ -70,22 +70,7 @@ public class AppUtil {
     }
 
 
-    public static boolean isServiceRunning(Context context, String serviceName) {
-        if (context == null || TextUtils.isEmpty(serviceName)) {
-            return false;
-        }
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> runningServiceInfoList = activityManager.getRunningServices(Integer.MAX_VALUE);
-        if (runningServiceInfoList != null && runningServiceInfoList.size() > 0) {
-            for (ActivityManager.RunningServiceInfo info :
-                    runningServiceInfoList) {
-                if (info.service.getClassName().equals(serviceName)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+
 
 
 

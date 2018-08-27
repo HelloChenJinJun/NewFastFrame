@@ -3,9 +3,7 @@ package com.example.commonlibrary;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -26,7 +23,6 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
-import com.example.commonlibrary.skin.SkinLayoutInflaterFactory;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -40,7 +36,6 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-import static android.view.View.GONE;
 
 
 
@@ -67,11 +62,14 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     private TextView title;
     private ImageView rightImage;
     protected ImageView back;
-    private CompositeDisposable compositeDisposable=new CompositeDisposable();
+    private CompositeDisposable compositeDisposable;
 
 
 
     protected void addDisposable(Disposable disposable){
+        if (compositeDisposable == null) {
+            compositeDisposable=new CompositeDisposable();
+        }
         compositeDisposable.add(disposable);
     }
 
@@ -114,7 +112,7 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
                 FrameLayout frameLayout = new FrameLayout(this);
                 frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 mEmptyLayout = new EmptyLayout(this);
-                mEmptyLayout.setVisibility(GONE);
+                mEmptyLayout.setVisibility(View.GONE);
                 frameLayout.addView(LayoutInflater.from(this).inflate(getContentLayout(), null));
                 mEmptyLayout.setContentView(mEmptyLayout.getChildAt(0));
                 frameLayout.addView(mEmptyLayout);
@@ -129,7 +127,7 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             frameLayout.addView(LayoutInflater.from(this).inflate(getContentLayout(), null));
             if (isNeedEmptyLayout()) {
                 mEmptyLayout = new EmptyLayout(this);
-                mEmptyLayout.setVisibility(GONE);
+                mEmptyLayout.setVisibility(View.GONE);
                 mEmptyLayout.setContentView(frameLayout.getChildAt(0));
                 frameLayout.addView(mEmptyLayout);
 
@@ -141,24 +139,10 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         updateStatusBar();
     }
 
+
     protected RoundAngleImageView getIcon() {
         return icon;
     }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkLogin();
-    }
-
-    private void checkLogin() {
-    }
-
-    protected TextView getCustomTitle() {
-        return title;
-    }
-
     protected abstract boolean isNeedHeadLayout();
 
     protected abstract boolean isNeedEmptyLayout();
@@ -168,8 +152,6 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     protected abstract void initView();
 
     protected abstract void initData();
-
-
     protected void initBaseView() {
         if (isNeedHeadLayout()) {
             icon =  headerLayout.findViewById(R.id.riv_header_layout_icon);
@@ -182,10 +164,6 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             setSupportActionBar( headerLayout.findViewById(R.id.toolbar));
             getSupportActionBar().setTitle("");
         }
-
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(false);
-        mBaseDialog = new BaseDialog(this);
         initView();
     }
 
@@ -199,9 +177,6 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         }
         return null;
     }
-
-
-
     protected boolean needStatusPadding(){
         return true;
     }
@@ -233,33 +208,33 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             icon.setVisibility(View.VISIBLE);
             Glide.with(this).load(option.getAvatar()).into(icon);
         } else {
-            icon.setVisibility(GONE);
+            icon.setVisibility(View.GONE);
         }
         if (option.getRightResId() != 0) {
-            right.setVisibility(GONE);
+            right.setVisibility(View.GONE);
             rightImage.setVisibility(View.VISIBLE);
             rightImage.setImageResource(option.getRightResId());
             rightImage.setOnClickListener(option.getRightListener());
         } else if (option.getRightText() != null) {
             right.setVisibility(View.VISIBLE);
-            rightImage.setVisibility(GONE);
+            rightImage.setVisibility(View.GONE);
             right.setText(option.getRightText());
             right.setOnClickListener(option.getRightListener());
         } else {
-            right.setVisibility(GONE);
-            rightImage.setVisibility(GONE);
+            right.setVisibility(View.GONE);
+            rightImage.setVisibility(View.GONE);
         }
         if (option.getTitle() != null) {
             title.setVisibility(View.VISIBLE);
             title.setText(option.getTitle());
         } else {
-            title.setVisibility(GONE);
+            title.setVisibility(View.GONE);
         }
         if (option.isNeedNavigation()) {
             back.setVisibility(View.VISIBLE);
             back.setOnClickListener(v -> finish());
         } else {
-            back.setVisibility(GONE);
+            back.setVisibility(View.GONE);
         }
 
     }
@@ -274,6 +249,9 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
 
 
     public void showBaseDialog(String title, String message, String leftName, String rightName, View.OnClickListener leftListener, View.OnClickListener rightListener) {
+        if (mBaseDialog == null) {
+            mBaseDialog=new BaseDialog(this);
+        }
         mBaseDialog.setTitle(title).setMessage(message).setLeftButton(leftName, leftListener).setRightButton(rightName, rightListener).show();
     }
 
@@ -283,6 +261,9 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
 
 
     public void showCustomDialog(String title,View view,String leftName, String rightName, View.OnClickListener leftListener, View.OnClickListener rightListener){
+        if (mBaseDialog == null) {
+            mBaseDialog=new BaseDialog(this);
+        }
         mBaseDialog.setDialogContentView(view).setTitle(title)
                 .setLeftButton(leftName,leftListener)
                 .setRightButton(rightName,rightListener).show();
@@ -304,7 +285,11 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
 
 
     public void showLoadDialog(final String message) {
-        if (!isFinishing()&&!mProgressDialog.isShowing()) {
+        if (!isFinishing()&&mProgressDialog!=null&&!mProgressDialog.isShowing()) {
+            if (mProgressDialog == null) {
+                mProgressDialog = new ProgressDialog(this);
+                mProgressDialog.setCancelable(false);
+            }
             mProgressDialog.setMessage(message);
             mProgressDialog.show();
         }
@@ -331,6 +316,9 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         ListView view = (ListView) getLayoutInflater().inflate(R.layout.base_dialog_list, null);
         view.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list));
         view.setOnItemClickListener(listener);
+        if (mBaseDialog == null) {
+            mBaseDialog=new BaseDialog(this);
+        }
         mBaseDialog.setDialogContentView(view).setTitle(title).setBottomLayoutVisible(false).show();
     }
 
@@ -428,9 +416,5 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             compositeDisposable.clear();
             compositeDisposable=null;
         }
-    }
-
-    public Fragment getCurrentFragment() {
-        return currentFragment;
     }
 }

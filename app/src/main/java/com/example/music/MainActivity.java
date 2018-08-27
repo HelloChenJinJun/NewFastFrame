@@ -52,8 +52,8 @@ public class MainActivity extends SlideBaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (getCurrentFragment() != null && getCurrentFragment() instanceof HomeFragment) {
-            ((HomeFragment) getCurrentFragment()).notifyNewIntentCome(intent);
+        if (currentFragment != null && currentFragment instanceof HomeFragment) {
+            ((HomeFragment)currentFragment).notifyNewIntentCome(intent);
         }
     }
 

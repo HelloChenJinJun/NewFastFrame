@@ -3,7 +3,7 @@ package com.example.commonlibrary;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,7 +18,6 @@ import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
-import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.trello.rxlifecycle2.LifecycleTransformer;
@@ -59,14 +57,15 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     @Nullable
     @Inject
     protected P presenter;
-
-
-    private CompositeDisposable compositeDisposable=new CompositeDisposable();
+    private CompositeDisposable compositeDisposable;
 
 
 
 
     protected void addDisposable(Disposable disposable){
+        if (compositeDisposable == null) {
+            compositeDisposable=new CompositeDisposable();
+        }
         compositeDisposable.add(disposable);
     }
 
@@ -114,7 +113,6 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
                 ((ViewGroup) root.getParent()).removeView(root);
             }
             if (container != null) {
-                CommonLogger.e("添加父类");
                 container.addView(root);
             }
             initBaseView();
@@ -151,8 +149,8 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
             rightImage = headerLayout.findViewById(R.id.iv_header_layout_right);
             rightImage.setVisibility(View.GONE);
             right.setVisibility(View.VISIBLE);
-            ((BaseActivity) getActivity()).setSupportActionBar(headerLayout.findViewById(R.id.toolbar));
-            ((BaseActivity) getActivity()).getSupportActionBar().setTitle("");
+            ((AppCompatActivity) getActivity()).setSupportActionBar(headerLayout.findViewById(R.id.toolbar));
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
         }
         initView();
     }
@@ -166,7 +164,6 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
 
     public void showBaseDialog(String title,String message,String leftName,String rightName,View.OnClickListener leftListener, View.OnClickListener rightListener){
         ((BaseActivity) getActivity()).showBaseDialog(title, message, leftName, rightName, leftListener, rightListener);
-
     }
 
 

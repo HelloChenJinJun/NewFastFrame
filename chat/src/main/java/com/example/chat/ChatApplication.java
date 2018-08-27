@@ -15,7 +15,6 @@ import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.module.IAppLife;
-import com.example.commonlibrary.module.IModuleConfig;
 import com.example.commonlibrary.router.BaseAction;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
@@ -35,20 +34,12 @@ import cn.bmob.v3.Bmob;
  * QQ:             1981367757
  */
 
-public class ChatApplication implements IModuleConfig, IAppLife {
+public class ChatApplication implements IAppLife {
 
 
     private static ChatMainComponent chatMainComponent;
 
-    @Override
-    public void injectAppLifecycle(Context context, List<IAppLife> iAppLifes) {
-        iAppLifes.add(this);
-    }
 
-    @Override
-    public void injectActivityLifecycle(Context context, List<Application.ActivityLifecycleCallbacks> lifecycleCallbackses) {
-
-    }
 
     @Override
     public void attachBaseContext(Context base) {

@@ -53,7 +53,6 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
         view.findViewById(R.id.rl_empty_layout_empty).setOnClickListener(this);
         typedArray.recycle();
         updateViewVisible();
-        setOnTouchListener((v, event) -> true);
     }
 
     public static final int STATUS_LOADING = 0;

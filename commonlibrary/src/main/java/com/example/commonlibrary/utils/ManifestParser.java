@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
-import com.example.commonlibrary.module.IModuleConfig;
+import com.example.commonlibrary.module.IAppLife;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ public final class ManifestParser {
         this.context = context;
     }
 
-    public List<IModuleConfig> parse() {
-        List<IModuleConfig> modules = new ArrayList<>();
+    public List<IAppLife> parse() {
+        List<IAppLife> modules = new ArrayList<>();
         try {
             ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(
                     context.getPackageName(), PackageManager.GET_META_DATA);
@@ -37,7 +37,7 @@ public final class ManifestParser {
         return modules;
     }
 
-    private static IModuleConfig parseModule(String className) {
+    private static IAppLife parseModule(String className) {
         Class<?> clazz;
         try {
             clazz = Class.forName(className);
@@ -53,6 +53,6 @@ public final class ManifestParser {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        return (IModuleConfig) module;
+        return (IAppLife) module;
     }
 }

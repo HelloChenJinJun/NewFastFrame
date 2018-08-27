@@ -10,6 +10,7 @@ import com.example.chat.events.RecentEvent;
 import com.example.chat.listener.OnCreateChatMessageListener;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.RxBusManager;
 
@@ -20,8 +21,8 @@ import com.example.commonlibrary.rxbus.RxBusManager;
  * QQ:         1981367757
  */
 
-public class ChatPresenter extends AppBasePresenter<IView<BaseMessage>,ChatModel> {
-    public ChatPresenter(IView<BaseMessage> iView, ChatModel baseModel) {
+public class ChatPresenter extends AppBasePresenter<IView<BaseMessage>,DefaultModel> {
+    public ChatPresenter(IView<BaseMessage> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

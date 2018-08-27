@@ -13,7 +13,6 @@ public class BackgroundAttr extends SkinAttr {
     @Override
     public void apply(View view) {
         if (view instanceof SeekBar) {
-            CommonLogger.e("这里seekbar");
             return;
         }
         if (isColorType()) {

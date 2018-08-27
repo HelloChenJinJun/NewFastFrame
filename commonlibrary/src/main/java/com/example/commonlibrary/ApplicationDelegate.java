@@ -3,12 +3,9 @@ package com.example.commonlibrary;
 import android.app.Application;
 import android.content.Context;
 
-import com.example.commonlibrary.dagger.module.AppConfigModule;
-import com.example.commonlibrary.module.IModuleConfig;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.utils.ManifestParser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,64 +13,42 @@ import java.util.List;
  */
 
 public class ApplicationDelegate implements IAppLife {
-    private List<IModuleConfig> list;
-    private List<IAppLife> appLifes;
-    private List<Application.ActivityLifecycleCallbacks> liferecycleCallbacks;
+    private  List<IAppLife> list;
 
 
-    public ApplicationDelegate() {
-        appLifes = new ArrayList<>();
-        liferecycleCallbacks = new ArrayList<>();
+    public ApplicationDelegate(Context base) {
+       list=new ManifestParser(base).parse();
     }
 
     @Override
     public void attachBaseContext(Context base) {
-        ManifestParser manifestParser = new ManifestParser(base);
-        list = manifestParser.parse();
         if (list != null && list.size() > 0) {
-            for (IModuleConfig configModule :
-                    list) {
-                configModule.injectAppLifecycle(base, appLifes);
-                configModule.injectActivityLifecycle(base, liferecycleCallbacks);
-            }
-        }
-        if (appLifes != null && appLifes.size() > 0) {
             for (IAppLife life :
-                    appLifes) {
+                    list) {
                 life.attachBaseContext(base);
             }
         }
+
     }
 
     @Override
     public void onCreate(Application application) {
-        if (appLifes != null && appLifes.size() > 0) {
+        if (list != null && list.size() > 0) {
             for (IAppLife life :
-                    appLifes) {
+                    list) {
                 life.onCreate(application);
-            }
-        }
-        if (liferecycleCallbacks != null && liferecycleCallbacks.size() > 0) {
-            for (Application.ActivityLifecycleCallbacks life :
-                    liferecycleCallbacks) {
-                application.registerActivityLifecycleCallbacks(life);
             }
         }
     }
 
     @Override
     public void onTerminate(Application application) {
-        if (appLifes != null && appLifes.size() > 0) {
+        if (list != null && list.size() > 0) {
             for (IAppLife life :
-                    appLifes) {
+                    list) {
                 life.onTerminate(application);
             }
         }
-        if (liferecycleCallbacks != null && liferecycleCallbacks.size() > 0) {
-            for (Application.ActivityLifecycleCallbacks life :
-                    liferecycleCallbacks) {
-                application.unregisterActivityLifecycleCallbacks(life);
-            }
-        }
+        list=null;
     }
 }

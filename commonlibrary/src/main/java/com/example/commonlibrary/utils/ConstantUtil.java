@@ -9,6 +9,8 @@ public class ConstantUtil {
 
 //    http://www.quanmin.tv/  全民直播
 //    http://tingapi.ting.baidu.com/v1/restserver/ting/    百度音乐
+
+//    默认Base URL
     public static final String BASE_URL = " http://www.quanmin.tv/";
     public static final String LOGIN_STATUS = "login_status";
     public static final String ACCOUNT = "account";

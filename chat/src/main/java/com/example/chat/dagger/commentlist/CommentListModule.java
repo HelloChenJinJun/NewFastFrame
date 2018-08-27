@@ -1,10 +1,10 @@
 package com.example.chat.dagger.commentlist;
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.CommentListAdapter;
 import com.example.chat.mvp.commentlist.CommentListActivity;
-import com.example.chat.mvp.commentlist.CommentListModel;
 import com.example.chat.mvp.commentlist.CommentListPresenter;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.commonlibrary.repository.DefaultRepositoryManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -30,14 +30,14 @@ public class CommentListModule {
 
 
     @Provides
-    public CommentListPresenter providerPresenter(CommentListModel commentListModel) {
-        return new CommentListPresenter(commentListActivity, commentListModel);
+    public CommentListPresenter providerPresenter(DefaultModel defaultModel) {
+        return new CommentListPresenter(commentListActivity, defaultModel);
     }
 
 
     @Provides
-    public CommentListModel providerModel(MainRepositoryManager mainRepositoryManager) {
-        return new CommentListModel(mainRepositoryManager);
+    public DefaultModel providerModel(DefaultRepositoryManager defaultRepositoryManager) {
+        return new DefaultModel(defaultRepositoryManager);
     }
 
 

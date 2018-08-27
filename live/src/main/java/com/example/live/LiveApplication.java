@@ -5,12 +5,10 @@ import android.content.Context;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.module.IAppLife;
-import com.example.commonlibrary.module.IModuleConfig;
 import com.example.live.dagger.DaggerMainComponent;
 import com.example.live.dagger.MainComponent;
 import com.example.live.dagger.MainModule;
 
-import java.util.List;
 
 /**
  * 项目名称:    NewFastFrame
@@ -19,17 +17,9 @@ import java.util.List;
  * QQ:             1981367757
  */
 
-public class LiveApplication implements IModuleConfig,IAppLife {
+public class LiveApplication implements IAppLife {
     private static MainComponent mainComponent;
-    @Override
-    public void injectAppLifecycle(Context context, List<IAppLife> iAppLifes) {
-        iAppLifes.add(this);
-    }
 
-    @Override
-    public void injectActivityLifecycle(Context context, List<Application.ActivityLifecycleCallbacks> lifecycleCallbackses) {
-
-    }
 
     @Override
     public void attachBaseContext(Context base) {

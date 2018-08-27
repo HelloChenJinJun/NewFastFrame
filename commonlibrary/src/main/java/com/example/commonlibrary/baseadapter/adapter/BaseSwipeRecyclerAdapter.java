@@ -83,7 +83,6 @@ public abstract class BaseSwipeRecyclerAdapter<T, K extends BaseWrappedViewHolde
         View contentView = viewHolder.itemView;
 
         if (mSwipeMenuCreator != null && (viewType != HEADER && viewType != FOOTER && viewType != EMPTY)) {
-            CommonLogger.e("这里有没有执行mSwipeMenuCreator");
             SwipeMenuLayout swipeMenuLayout = (SwipeMenuLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.swipe_item_layout, parent, false);
             SwipeMenu swipeLeftMenu = new SwipeMenu(swipeMenuLayout, viewType);
             SwipeMenu swipeRightMenu = new SwipeMenu(swipeMenuLayout, viewType);
@@ -92,7 +91,7 @@ public abstract class BaseSwipeRecyclerAdapter<T, K extends BaseWrappedViewHolde
 
             int leftMenuCount = swipeLeftMenu.getMenuItems().size();
             if (leftMenuCount > 0) {
-                SwipeMenuView swipeLeftMenuView = (SwipeMenuView) swipeMenuLayout.findViewById(R.id.swipe_left);
+                SwipeMenuView swipeLeftMenuView = swipeMenuLayout.findViewById(R.id.swipe_left);
                 swipeLeftMenuView.setOrientation(swipeLeftMenu.getOrientation());
                 swipeLeftMenuView.bindMenu(swipeLeftMenu, SwipeMenuRecyclerView.LEFT_DIRECTION);
                 swipeLeftMenuView.bindMenuItemClickListener(mSwipeMenuItemClickListener, swipeMenuLayout);
@@ -100,7 +99,6 @@ public abstract class BaseSwipeRecyclerAdapter<T, K extends BaseWrappedViewHolde
 
             int rightMenuCount = swipeRightMenu.getMenuItems().size();
             if (rightMenuCount > 0) {
-                CommonLogger.e("rightMenuCount");
                 SwipeMenuView swipeRightMenuView = (SwipeMenuView) swipeMenuLayout.findViewById(R.id.swipe_right);
                 swipeRightMenuView.setOrientation(swipeRightMenu.getOrientation());
                 swipeRightMenuView.bindMenu(swipeRightMenu, SwipeMenuRecyclerView.RIGHT_DIRECTION);
@@ -108,10 +106,8 @@ public abstract class BaseSwipeRecyclerAdapter<T, K extends BaseWrappedViewHolde
             }
 
             if (leftMenuCount > 0 || rightMenuCount > 0) {
-                CommonLogger.e("大于0");
-                ViewGroup viewGroup = (ViewGroup) swipeMenuLayout.findViewById(R.id.swipe_content);
+                ViewGroup viewGroup = swipeMenuLayout.findViewById(R.id.swipe_content);
                 viewGroup.addView(contentView);
-//                                contentView = swipeMenuLayout;
                 return createBaseViewHolder(swipeMenuLayout);
             }
         }
