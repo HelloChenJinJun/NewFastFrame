@@ -1,9 +1,8 @@
 package com.example.news.dagger.news.othernews.photolist;
 
-import com.example.news.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.adapter.PhotoListAdapter;
 import com.example.news.mvp.news.othernew.photolist.PhotoListFragment;
-import com.example.news.mvp.news.othernew.photolist.PhotoListModel;
 import com.example.news.mvp.news.othernew.photolist.PhotoListPresenter;
 
 import dagger.Module;
@@ -32,13 +31,8 @@ public class PhotoListModule {
 
 
     @Provides
-    public PhotoListPresenter providePhotoListPresenter(PhotoListModel photoListModel){
+    public PhotoListPresenter providePhotoListPresenter(DefaultModel photoListModel){
         return new PhotoListPresenter(photoListFragment,photoListModel);
     }
 
-
-    @Provides
-    public PhotoListModel providePhotoListModel(MainRepositoryManager mainRepositoryManager){
-        return new PhotoListModel(mainRepositoryManager);
-    }
 }

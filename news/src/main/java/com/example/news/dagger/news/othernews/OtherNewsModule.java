@@ -1,9 +1,8 @@
 package com.example.news.dagger.news.othernews;
 
-import com.example.news.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.mvp.news.othernew.OtherNewsListAdapter;
 import com.example.news.mvp.news.othernew.OtherNewsListFragment;
-import com.example.news.mvp.news.othernew.OtherNewsListModel;
 import com.example.news.mvp.news.othernew.OtherNewsListPresenter;
 
 import dagger.Module;
@@ -32,12 +31,9 @@ public class OtherNewsModule {
 
 
     @Provides
-    public OtherNewsListPresenter provideOtherNewsListPresenter(OtherNewsListModel otherNewsListModel) {
+    public OtherNewsListPresenter provideOtherNewsListPresenter(DefaultModel otherNewsListModel) {
         return new OtherNewsListPresenter(otherNewsListFragment, otherNewsListModel);
     }
 
-    @Provides
-    public OtherNewsListModel provideOtherNewsListModel(MainRepositoryManager mainRepositoryManager) {
-        return new OtherNewsListModel(mainRepositoryManager);
-    }
+
 }

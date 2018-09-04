@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.mvp.center;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
@@ -10,8 +10,9 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.example.news.R;
+import com.example.news.adapter.CenterAdapter;
 import com.example.news.bean.CenterBean;
-import com.example.news.mvp.systemcenter.SystemCenterActivity;
 
 import java.util.ArrayList;
 import java.util.List;

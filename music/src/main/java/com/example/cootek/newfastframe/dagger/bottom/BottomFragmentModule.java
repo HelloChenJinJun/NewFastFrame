@@ -1,7 +1,6 @@
 package com.example.cootek.newfastframe.dagger.bottom;
 
-import com.example.cootek.newfastframe.MainRepositoryManager;
-import com.example.cootek.newfastframe.mvp.bottom.BottomModel;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.cootek.newfastframe.mvp.bottom.BottomPresenter;
 import com.example.cootek.newfastframe.mvp.bottom.IBottomView;
 
@@ -22,14 +21,11 @@ public class BottomFragmentModule {
 
 
     @Provides
-    public BottomPresenter provideBottomPresenter(BottomModel bottomModel) {
+    public BottomPresenter provideBottomPresenter(DefaultModel bottomModel) {
         return new BottomPresenter(iView, bottomModel);
     }
 
 
-    @Provides
-    public BottomModel provideBottomModel(MainRepositoryManager baseRepositoryManager) {
-        return new BottomModel(baseRepositoryManager);
-    }
+
 
 }

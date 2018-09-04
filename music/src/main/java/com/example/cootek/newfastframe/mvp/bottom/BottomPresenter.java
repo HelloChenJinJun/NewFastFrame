@@ -1,6 +1,7 @@
 package com.example.cootek.newfastframe.mvp.bottom;
 
 import com.example.commonlibrary.bean.music.MusicPlayBean;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.MusicManager;
 
@@ -10,10 +11,10 @@ import java.util.List;
  * Created by COOTEK on 2017/8/14.
  */
 
-public class BottomPresenter extends BaseBottomPresenter<IBottomView, BottomModel> {
+public class BottomPresenter extends BaseBottomPresenter<IBottomView, DefaultModel> {
 
 
-    public BottomPresenter(IBottomView iView, BottomModel baseModel) {
+    public BottomPresenter(IBottomView iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

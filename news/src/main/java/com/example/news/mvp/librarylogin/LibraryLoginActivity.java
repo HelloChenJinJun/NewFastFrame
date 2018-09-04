@@ -14,7 +14,6 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.utils.ToastUtils;
-import com.example.news.LibraryInfoActivity;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.dagger.librarylogin.DaggerLibraryLoginComponent;

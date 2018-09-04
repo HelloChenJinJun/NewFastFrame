@@ -1,9 +1,8 @@
 package com.example.news.dagger.librarylogin;
 
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.mvp.librarylogin.LibraryLoginActivity;
-import com.example.news.mvp.librarylogin.LibraryLoginModel;
 import com.example.news.mvp.librarylogin.LibraryLoginPresenter;
-import com.example.news.MainRepositoryManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -23,14 +22,11 @@ public class LibraryLoginModule {
     }
 
     @Provides
-    public LibraryLoginPresenter provideLibraryLoginPresenter(LibraryLoginModel libraryLoginModel) {
+    public LibraryLoginPresenter provideLibraryLoginPresenter(DefaultModel libraryLoginModel) {
         return new LibraryLoginPresenter(libraryLoginActivity, libraryLoginModel);
     }
 
 
-    @Provides
-    public LibraryLoginModel provideLibraryLoginModel(MainRepositoryManager mainRepositoryManager) {
-        return new LibraryLoginModel(mainRepositoryManager);
-    }
+
 
 }

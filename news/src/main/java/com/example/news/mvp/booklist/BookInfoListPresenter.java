@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -36,10 +37,10 @@ import okhttp3.ResponseBody;
  * QQ:             1981367757
  */
 
-public class BookInfoListPresenter extends RxBasePresenter<IView<Object>, BookInfoListModel> {
+public class BookInfoListPresenter extends RxBasePresenter<IView<Object>, DefaultModel> {
     private int num = 0;
 
-    public BookInfoListPresenter(IView<Object> iView, BookInfoListModel baseModel) {
+    public BookInfoListPresenter(IView<Object> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

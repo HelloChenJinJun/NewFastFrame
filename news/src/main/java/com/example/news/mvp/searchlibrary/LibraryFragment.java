@@ -21,7 +21,7 @@ import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.NewsApplication;
-import com.example.news.NewsContentActivity;
+import com.example.news.mvp.newsContent.NewsContentActivity;
 import com.example.news.R;
 import com.example.news.adapter.LibraryAdapter;
 import com.example.news.adapter.NavigationAdapter;

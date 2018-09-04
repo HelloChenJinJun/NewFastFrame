@@ -1,10 +1,11 @@
 package com.example.chat.dagger.person;
 
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.mvp.person.PersonFragment;
-import com.example.chat.mvp.person.PersonModel;
 import com.example.chat.mvp.person.PersonPresenter;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,14 +26,11 @@ public class PersonModule {
 
 
     @Provides
-    public PersonPresenter providerPresenter(PersonModel personModel) {
-        return new PersonPresenter(personFragment, personModel);
+    public PersonPresenter providerPresenter(DefaultModel defaultModel) {
+        return new PersonPresenter(personFragment,defaultModel);
     }
 
-    @Provides
-    public PersonModel providerModel(MainRepositoryManager mainRepositoryManager) {
-        return new PersonModel(mainRepositoryManager);
-    }
+
 
 
 }

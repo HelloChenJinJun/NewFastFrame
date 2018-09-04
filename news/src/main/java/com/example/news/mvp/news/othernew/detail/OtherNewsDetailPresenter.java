@@ -1,6 +1,7 @@
 package com.example.news.mvp.news.othernew.detail;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.news.api.OtherNewsApi;
@@ -23,8 +24,8 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:             1981367757
  */
 
-public class OtherNewsDetailPresenter extends BasePresenter<IView<OtherNewsDetailBean>,OtherNewsDetailModel> {
-    public OtherNewsDetailPresenter(IView<OtherNewsDetailBean> iView, OtherNewsDetailModel baseModel) {
+public class OtherNewsDetailPresenter extends BasePresenter<IView<OtherNewsDetailBean>,DefaultModel> {
+    public OtherNewsDetailPresenter(IView<OtherNewsDetailBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

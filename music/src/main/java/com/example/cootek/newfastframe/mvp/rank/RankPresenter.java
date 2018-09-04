@@ -1,6 +1,7 @@
 package com.example.cootek.newfastframe.mvp.rank;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -19,10 +20,10 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/8/16.
  */
 
-public class RankPresenter extends BasePresenter<IView<RankListBean>, RankModel> {
+public class RankPresenter extends BasePresenter<IView<RankListBean>, DefaultModel> {
 
 
-    public RankPresenter(IView<RankListBean> iView, RankModel baseModel) {
+    public RankPresenter(IView<RankListBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

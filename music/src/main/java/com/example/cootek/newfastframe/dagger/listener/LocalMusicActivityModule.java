@@ -1,9 +1,8 @@
 package com.example.cootek.newfastframe.dagger.listener;
 
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
-import com.example.cootek.newfastframe.MainRepositoryManager;
 import com.example.cootek.newfastframe.adapter.LocalMusicAdapter;
-import com.example.cootek.newfastframe.mvp.main.MainModel;
 import com.example.cootek.newfastframe.mvp.main.MainPresenter;
 
 import dagger.Module;
@@ -31,12 +30,9 @@ public class LocalMusicActivityModule {
 
 
     @Provides
-    MainPresenter provideMainPresenter(MainModel mainModel) {
+    MainPresenter provideMainPresenter(DefaultModel mainModel) {
         return new MainPresenter(iView, mainModel);
     }
 
-    @Provides
-    MainModel provideMainModel(MainRepositoryManager mainRepositoryManager) {
-        return new MainModel(mainRepositoryManager);
-    }
+
 }

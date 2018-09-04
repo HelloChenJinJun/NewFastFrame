@@ -1,9 +1,8 @@
 package com.example.news.dagger.cardinfo;
 
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.mvp.cardinfo.CardInfoActivity;
-import com.example.news.mvp.cardinfo.CardInfoModel;
 import com.example.news.mvp.cardinfo.CardInfoPresenter;
-import com.example.news.MainRepositoryManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -24,13 +23,10 @@ public class CardInfoModule {
 
 
     @Provides
-    public CardInfoPresenter provideCardInfoPresenter(CardInfoModel cardInfoModel){
-        return new CardInfoPresenter(cardInfoActivity,cardInfoModel);
+    public CardInfoPresenter provideCardInfoPresenter(DefaultModel defaultModel){
+        return new CardInfoPresenter(cardInfoActivity,defaultModel);
     }
 
 
-    @Provides
-    public CardInfoModel provideCardInfoModel(MainRepositoryManager mainRepositoryManager){
-        return new CardInfoModel(mainRepositoryManager);
-    }
+
 }

@@ -1,10 +1,9 @@
 package com.example.chat.dagger.skin;
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.SkinListAdapter;
 import com.example.chat.mvp.skin.SkinListActivity;
-import com.example.chat.mvp.skin.SkinListModel;
 import com.example.chat.mvp.skin.SkinListPresenter;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 
 import dagger.Module;
 import dagger.Provides;
@@ -28,14 +27,10 @@ public class SkinListModule {
     }
 
     @Provides
-    public SkinListPresenter providePresenter(SkinListModel skinListModel){
-        return new SkinListPresenter(skinListActivity,skinListModel);
+    public SkinListPresenter providePresenter(DefaultModel defaultModel){
+        return new SkinListPresenter(skinListActivity,defaultModel);
     }
 
-    @Provides
-    public SkinListModel provideModel(MainRepositoryManager mainRepositoryManager){
-        return new SkinListModel(mainRepositoryManager);
-    }
 
 
 }

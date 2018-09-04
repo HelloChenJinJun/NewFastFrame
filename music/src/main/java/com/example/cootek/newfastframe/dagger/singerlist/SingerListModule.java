@@ -1,8 +1,7 @@
 package com.example.cootek.newfastframe.dagger.singerlist;
 
-import com.example.cootek.newfastframe.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.cootek.newfastframe.adapter.SingerListAdapter;
-import com.example.cootek.newfastframe.mvp.singerlist.SingerListModel;
 import com.example.cootek.newfastframe.mvp.singerlist.SingerListPresenter;
 import com.example.cootek.newfastframe.ui.fragment.SingerListFragment;
 
@@ -28,12 +27,9 @@ public class SingerListModule {
     }
 
     @Provides
-    public SingerListPresenter provideSingerListPresenter(SingerListModel singerListModel) {
+    public SingerListPresenter provideSingerListPresenter(DefaultModel singerListModel) {
         return new SingerListPresenter(singerListFragment, singerListModel);
     }
 
-    @Provides
-    public SingerListModel provideSingerListModel(MainRepositoryManager mainRepositoryManager) {
-        return new SingerListModel(mainRepositoryManager);
-    }
+
 }

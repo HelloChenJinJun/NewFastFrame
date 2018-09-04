@@ -1,10 +1,9 @@
 package com.example.cootek.newfastframe.dagger.songlist;
 
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
-import com.example.cootek.newfastframe.MainRepositoryManager;
 import com.example.cootek.newfastframe.adapter.SongListAdapter;
 import com.example.cootek.newfastframe.mvp.songlist.SongListPresenter;
-import com.example.cootek.newfastframe.mvp.songlist.SongListModel;
 
 import dagger.Module;
 import dagger.Provides;
@@ -23,13 +22,9 @@ public class SongListModule {
     }
 
 
-    @Provides
-    public SongListModel provideRankDetailModel(MainRepositoryManager mainRepositoryManager) {
-        return new SongListModel(mainRepositoryManager);
-    }
 
     @Provides
-    public SongListPresenter provideRankDetailPresenter(SongListModel rankModel) {
+    public SongListPresenter provideRankDetailPresenter(DefaultModel rankModel) {
         return new SongListPresenter(iView, rankModel);
     }
 

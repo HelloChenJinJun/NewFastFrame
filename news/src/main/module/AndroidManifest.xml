@@ -24,17 +24,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NewsContentActivity" />
+        <activity android:name=".mvp.newsContent.NewsContentActivity" />
         <activity android:name=".mvp.librarylogin.LibraryLoginActivity" />
-        <activity android:name=".LibraryInfoActivity" />
+        <activity android:name=".mvp.librarylogin.LibraryInfoActivity" />
         <activity android:name=".mvp.cardinfo.CardInfoActivity" />
         <activity android:name=".mvp.cardlogin.CardLoginActivity" />
         <activity android:name=".mvp.news.othernew.special.SpecialNewsActivity" />
         <activity android:name=".mvp.news.othernew.detail.OtherNewsDetailActivity" />
         <activity android:name=".mvp.news.othernew.photo.OtherNewPhotoSetActivity" />
-        <activity android:name=".AdjustNewsTypeActivity" />
+        <activity android:name=".mvp.newsType.AdjustNewsTypeActivity" />
         <activity android:name=".mvp.systeminfo.SystemInfoLoginActivity" />
-        <activity android:name=".ScoreQueryActivity" />
+        <activity android:name=".mvp.score.ScoreQueryActivity" />
         <activity android:name=".mvp.systemcenter.SystemCenterActivity" />
         <activity android:name=".mvp.consume.ConsumeQueryActivity" />
         <activity android:name=".mvp.course.CourseQueryActivity"/>

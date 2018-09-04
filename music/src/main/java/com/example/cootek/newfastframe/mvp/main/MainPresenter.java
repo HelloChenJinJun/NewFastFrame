@@ -2,6 +2,7 @@ package com.example.cootek.newfastframe.mvp.main;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -19,11 +20,11 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/8/11.
  */
 
-public class MainPresenter extends RxBasePresenter<IView, MainModel> {
+public class MainPresenter extends RxBasePresenter<IView, DefaultModel> {
     private int num;
 
 
-    public MainPresenter(IView iView, MainModel baseModel) {
+    public MainPresenter(IView iView, DefaultModel baseModel) {
         super(iView, baseModel);
         num = 0;
     }

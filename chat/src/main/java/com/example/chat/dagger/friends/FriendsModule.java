@@ -1,11 +1,12 @@
 package com.example.chat.dagger.friends;
 
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.FriendsAdapter;
 import com.example.chat.mvp.main.friends.FriendsFragment;
-import com.example.chat.mvp.main.friends.FriendsModel;
 import com.example.chat.mvp.main.friends.FriendsPresenter;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -37,15 +38,11 @@ public class FriendsModule {
 
 
     @Provides
-    public FriendsPresenter providerPresenter(FriendsModel friendsModel) {
-        return new FriendsPresenter(friendsFragment, friendsModel);
+    public FriendsPresenter providerPresenter(DefaultModel defaultModel) {
+        return new FriendsPresenter(friendsFragment, defaultModel);
     }
 
 
-    @Provides
-    public FriendsModel providerModel(MainRepositoryManager mainRepositoryManager) {
-        return new FriendsModel(mainRepositoryManager);
-    }
 
 
 }

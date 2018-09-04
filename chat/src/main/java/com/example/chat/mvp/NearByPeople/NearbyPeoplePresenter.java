@@ -3,6 +3,7 @@ package com.example.chat.mvp.NearByPeople;
 import com.example.chat.base.AppBasePresenter;
 import com.example.chat.bean.User;
 import com.example.chat.manager.UserManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 
 import java.util.List;
@@ -17,11 +18,11 @@ import cn.bmob.v3.listener.FindListener;
  * QQ:         1981367757
  */
 
-public class NearbyPeoplePresenter extends AppBasePresenter<IView<List<User>>,NearbyPeopleModel>{
+public class NearbyPeoplePresenter extends AppBasePresenter<IView<List<User>>,DefaultModel>{
 
     private int page=0;
 
-    public NearbyPeoplePresenter(IView<List<User>> iView, NearbyPeopleModel baseModel) {
+    public NearbyPeoplePresenter(IView<List<User>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

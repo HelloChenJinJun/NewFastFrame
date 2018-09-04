@@ -2,6 +2,7 @@ package com.example.cootek.newfastframe.mvp.singerinfo;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.cootek.newfastframe.MusicInfoProvider;
@@ -18,8 +19,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/9/3.
  */
 
-public class SingerInfoPresenter extends BasePresenter<IView<List<MusicPlayBean>>, SingerInfoModel> {
-    public SingerInfoPresenter(IView<List<MusicPlayBean>> iView, SingerInfoModel baseModel) {
+public class SingerInfoPresenter extends BasePresenter<IView<List<MusicPlayBean>>, DefaultModel> {
+    public SingerInfoPresenter(IView<List<MusicPlayBean>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

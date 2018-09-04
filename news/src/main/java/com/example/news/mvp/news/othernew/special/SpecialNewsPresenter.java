@@ -3,6 +3,7 @@ package com.example.news.mvp.news.othernew.special;
 import android.text.TextUtils;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.news.api.OtherNewsApi;
@@ -33,8 +34,8 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:             1981367757
  */
 
-public class SpecialNewsPresenter extends BasePresenter<ISpecialNewsView<List<SpecialNewsBean>>,SpecialNewsModel>{
-    public SpecialNewsPresenter(ISpecialNewsView<List<SpecialNewsBean>> iView, SpecialNewsModel baseModel) {
+public class SpecialNewsPresenter extends BasePresenter<ISpecialNewsView<List<SpecialNewsBean>>,DefaultModel>{
+    public SpecialNewsPresenter(ISpecialNewsView<List<SpecialNewsBean>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

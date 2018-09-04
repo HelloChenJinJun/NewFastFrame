@@ -2,6 +2,7 @@ package com.example.news.mvp.course;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.news.api.SystemInfoApi;
@@ -22,12 +23,12 @@ import retrofit2.HttpException;
  * QQ:         1981367757
  */
 
-public class CourseQueryPresenter extends BasePresenter<IView<CourseQueryBean>, CourseQueryModel> {
+public class CourseQueryPresenter extends BasePresenter<IView<CourseQueryBean>, DefaultModel> {
     private String year;
     private int examNum;
 
 
-    public CourseQueryPresenter(IView<CourseQueryBean> iView, CourseQueryModel baseModel) {
+    public CourseQueryPresenter(IView<CourseQueryBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

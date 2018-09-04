@@ -1,6 +1,7 @@
 package com.example.news.mvp.score;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
@@ -20,10 +21,10 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:         1981367757
  */
 
-public class ScoreQueryPresenter extends RxBasePresenter<IView<ScoreBean>,ScoreQueryModel> {
+public class ScoreQueryPresenter extends RxBasePresenter<IView<ScoreBean>,DefaultModel> {
     private int page=0;
     private int pageNum=10;
-    public ScoreQueryPresenter(IView<ScoreBean> iView, ScoreQueryModel baseModel) {
+    public ScoreQueryPresenter(IView<ScoreBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

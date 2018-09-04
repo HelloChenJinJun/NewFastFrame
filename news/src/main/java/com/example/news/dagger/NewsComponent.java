@@ -3,10 +3,8 @@ package com.example.news.dagger;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.commonlibrary.repository.DefaultRepositoryManager;
-import com.example.news.MainRepositoryManager;
 
 import dagger.Component;
-import okhttp3.OkHttpClient;
 
 /**
  * 项目名称:    NewFastFrame

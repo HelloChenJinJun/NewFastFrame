@@ -2,6 +2,8 @@ package com.example.commonlibrary.mvp.model;
 
 import com.example.commonlibrary.repository.DefaultRepositoryManager;
 
+import javax.inject.Inject;
+
 /**
  * 项目名称:    NewFastFrame
  * 创建人:      李晨
@@ -9,6 +11,7 @@ import com.example.commonlibrary.repository.DefaultRepositoryManager;
  */
 
 public class DefaultModel extends BaseModel<DefaultRepositoryManager> {
+    @Inject
     public DefaultModel(DefaultRepositoryManager repositoryManager) {
         super(repositoryManager);
     }

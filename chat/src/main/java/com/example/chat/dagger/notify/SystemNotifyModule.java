@@ -1,10 +1,11 @@
 package com.example.chat.dagger.notify;
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.SystemNotifyAdapter;
 import com.example.chat.mvp.notify.SystemNotifyActivity;
-import com.example.chat.mvp.notify.SystemNotifyModel;
 import com.example.chat.mvp.notify.SystemNotifyPresenter;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -32,15 +33,12 @@ public class SystemNotifyModule {
 
 
     @Provides
-    public SystemNotifyPresenter providerPresenter(SystemNotifyModel systemNotifyModel){
-        return new SystemNotifyPresenter(systemNotifyActivity,systemNotifyModel);
+    public SystemNotifyPresenter providerPresenter(DefaultModel defaultModel){
+        return new SystemNotifyPresenter(systemNotifyActivity,defaultModel);
     }
 
 
-    @Provides
-    public SystemNotifyModel providerModel(MainRepositoryManager mainRepositoryManager){
-        return new SystemNotifyModel(mainRepositoryManager);
-    }
+
 
 
 

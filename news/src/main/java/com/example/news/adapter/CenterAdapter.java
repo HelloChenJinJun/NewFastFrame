@@ -1,8 +1,9 @@
-package com.example.news;
+package com.example.news.adapter;
 
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.skin.SkinManager;
+import com.example.news.R;
 import com.example.news.bean.CenterBean;
 
 /**

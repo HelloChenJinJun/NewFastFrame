@@ -6,6 +6,7 @@ import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.bean.chat.SkinEntity;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -23,11 +24,11 @@ import cn.bmob.v3.listener.FindListener;
  * 创建时间:    2018/5/22     23:48
  */
 
-public class SkinListPresenter extends AppBasePresenter<IView<List<SkinEntity>>,SkinListModel>{
+public class SkinListPresenter extends AppBasePresenter<IView<List<SkinEntity>>,DefaultModel>{
 
     private int page;
 
-    public SkinListPresenter(IView<List<SkinEntity>> iView, SkinListModel baseModel) {
+    public SkinListPresenter(IView<List<SkinEntity>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

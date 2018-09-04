@@ -3,7 +3,7 @@ package com.example.cootek.newfastframe.dagger.main;
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.scope.PerApplication;
-import com.example.cootek.newfastframe.MainRepositoryManager;
+import com.example.commonlibrary.repository.DefaultRepositoryManager;
 
 import dagger.Component;
 
@@ -16,5 +16,5 @@ public interface MainComponent {
 
     public DaoSession getDaoSession();
 
-    public MainRepositoryManager getRepositoryManager();
+    public DefaultRepositoryManager getRepositoryManager();
 }

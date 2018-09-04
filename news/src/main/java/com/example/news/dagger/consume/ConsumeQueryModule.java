@@ -1,9 +1,8 @@
 package com.example.news.dagger.consume;
 
-import com.example.news.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.adapter.ConsumeQueryAdapter;
 import com.example.news.mvp.consume.ConsumeQueryActivity;
-import com.example.news.mvp.consume.ConsumeQueryModel;
 import com.example.news.mvp.consume.ConsumeQueryPresenter;
 
 import dagger.Module;
@@ -31,14 +30,8 @@ public class ConsumeQueryModule {
 
 
     @Provides
-    public ConsumeQueryPresenter providePresenter(ConsumeQueryModel model){
+    public ConsumeQueryPresenter providePresenter(DefaultModel model){
         return new ConsumeQueryPresenter(consumeQueryActivity,model);
     }
 
-
-
-    @Provides
-    public ConsumeQueryModel provideModel(MainRepositoryManager mainRepositoryManager){
-        return new ConsumeQueryModel(mainRepositoryManager);
-    }
 }

@@ -2,6 +2,7 @@ package com.example.news.mvp.cardinfo;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -37,8 +38,8 @@ import okhttp3.ResponseBody;
  * QQ:             1981367757
  */
 
-public class CardInfoPresenter extends BasePresenter<IView<Object>, CardInfoModel> {
-    public CardInfoPresenter(IView<Object> iView, CardInfoModel baseModel) {
+public class CardInfoPresenter extends BasePresenter<IView<Object>, DefaultModel> {
+    public CardInfoPresenter(IView<Object> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

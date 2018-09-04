@@ -1,10 +1,11 @@
 package com.example.chat.dagger.EditShare;
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.EditShareInfoAdapter;
 import com.example.chat.mvp.EditShare.EditShareInfoActivity;
-import com.example.chat.mvp.EditShare.EditShareInfoModel;
 import com.example.chat.mvp.EditShare.EditShareInfoPresenter;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -24,14 +25,11 @@ private EditShareInfoActivity editShareInfoActivity;
     }
 
     @Provides
-    public EditShareInfoPresenter providerPresenter(EditShareInfoModel model){
+    public EditShareInfoPresenter providerPresenter(DefaultModel model){
         return new EditShareInfoPresenter(editShareInfoActivity,model);
     }
 
-    @Provides
-    public EditShareInfoModel providerModel(MainRepositoryManager mainRepositoryManager){
-        return new EditShareInfoModel( mainRepositoryManager);
-    }
+
 
 
     @Provides

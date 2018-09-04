@@ -3,6 +3,7 @@ package com.example.news.mvp.news.othernew;
 import android.text.TextUtils;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -33,10 +34,10 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:             1981367757
  */
 
-public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean>>, OtherNewsListModel> {
+public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean>>, DefaultModel> {
     private int num = 0;
 
-    public OtherNewsListPresenter(IView<List<NewInfoBean>> iView, OtherNewsListModel baseModel) {
+    public OtherNewsListPresenter(IView<List<NewInfoBean>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

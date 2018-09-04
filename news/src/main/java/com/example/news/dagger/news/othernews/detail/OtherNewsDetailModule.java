@@ -1,8 +1,7 @@
 package com.example.news.dagger.news.othernews.detail;
 
-import com.example.news.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.mvp.news.othernew.detail.OtherNewsDetailActivity;
-import com.example.news.mvp.news.othernew.detail.OtherNewsDetailModel;
 import com.example.news.mvp.news.othernew.detail.OtherNewsDetailPresenter;
 
 import dagger.Module;
@@ -24,13 +23,9 @@ public class OtherNewsDetailModule {
 
 
     @Provides
-    public OtherNewsDetailPresenter provideOtherNewsDetailPresenter(OtherNewsDetailModel otherNewsDetailModel){
+    public OtherNewsDetailPresenter provideOtherNewsDetailPresenter(DefaultModel otherNewsDetailModel){
         return new OtherNewsDetailPresenter(otherNewsDetailActivity,otherNewsDetailModel);
     }
 
 
-    @Provides
-    public OtherNewsDetailModel provideOtherNewsDetailModel(MainRepositoryManager mainRepositoryManager){
-        return new OtherNewsDetailModel(mainRepositoryManager);
-    }
 }

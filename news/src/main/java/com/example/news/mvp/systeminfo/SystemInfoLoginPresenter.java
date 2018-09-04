@@ -3,6 +3,7 @@ package com.example.news.mvp.systeminfo;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
@@ -33,9 +34,9 @@ import retrofit2.HttpException;
  * QQ:         1981367757
  */
 
-public class SystemInfoLoginPresenter extends RxBasePresenter<IView<Object>,SystemInfoModel> {
+public class SystemInfoLoginPresenter extends RxBasePresenter<IView<Object>,DefaultModel> {
     private String account;
-    public SystemInfoLoginPresenter(IView iView, SystemInfoModel baseModel) {
+    public SystemInfoLoginPresenter(IView iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

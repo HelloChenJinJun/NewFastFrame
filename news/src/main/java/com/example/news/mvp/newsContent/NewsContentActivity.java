@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.mvp.newsContent;
 
 import android.os.Build;
 import android.view.View;
@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.utils.AppUtil;
+import com.example.news.R;
 import com.example.news.util.NewsUtil;
 
 /**

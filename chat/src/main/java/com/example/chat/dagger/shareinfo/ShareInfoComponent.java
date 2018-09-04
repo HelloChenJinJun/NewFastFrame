@@ -13,8 +13,7 @@ import dagger.Component;
  * QQ:         1981367757
  */
 @PerFragment
-@Component(dependencies = ChatMainComponent.class
-        , modules = ShareInfoModule.class)
+@Component(dependencies = ChatMainComponent.class, modules = ShareInfoModule.class)
 public interface ShareInfoComponent {
     public void inject(ShareInfoFragment shareInfoFragment);
 }

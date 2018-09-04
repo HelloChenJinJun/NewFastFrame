@@ -1,11 +1,12 @@
 package com.example.chat.dagger.nearbyList;
 
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.NearbyListAdapter;
 import com.example.chat.mvp.nearbyList.NearbyListActivity;
-import com.example.chat.mvp.nearbyList.NearbyListModel;
 import com.example.chat.mvp.nearbyList.NearbyListPresenter;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -33,13 +34,10 @@ public class NearbyListModule {
 
 
     @Provides
-    public NearbyListPresenter providerPresenter(NearbyListModel nearbyListModel) {
-        return new NearbyListPresenter(nearbyListActivity, nearbyListModel);
+    public NearbyListPresenter providerPresenter(DefaultModel defaultModel) {
+        return new NearbyListPresenter(nearbyListActivity, defaultModel);
     }
 
-    @Provides
-    public NearbyListModel providerModel(MainRepositoryManager mainRepositoryManager) {
-        return new NearbyListModel(mainRepositoryManager);
-    }
+
 
 }

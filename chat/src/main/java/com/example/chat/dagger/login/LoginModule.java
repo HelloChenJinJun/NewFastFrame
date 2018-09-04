@@ -1,9 +1,10 @@
 package com.example.chat.dagger.login;
 
-import com.example.chat.MainRepositoryManager;
-import com.example.chat.mvp.login.LoginModel;
 import com.example.chat.mvp.login.LoginPresenter;
 import com.example.chat.mvp.login.LoginActivity;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,15 +26,12 @@ public class LoginModule {
 
 
     @Provides
-    public LoginPresenter providerPresenter(LoginModel loginModel) {
-        return new LoginPresenter(loginActivity, loginModel);
+    public LoginPresenter providerPresenter(DefaultModel defaultModel) {
+        return new LoginPresenter(loginActivity, defaultModel);
     }
 
 
-    @Provides
-    public LoginModel providerModel(MainRepositoryManager mainRepositoryManager) {
-        return new LoginModel(mainRepositoryManager);
-    }
+
 
 
 }

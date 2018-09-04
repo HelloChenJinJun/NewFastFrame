@@ -20,6 +20,7 @@ import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.bean.chat.PostNotifyInfo;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.PublicPostEntityDao;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -49,8 +50,8 @@ import cn.bmob.v3.listener.UpdateListener;
  * QQ:         1981367757
  */
 
-public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBean>>, ShareInfoModel> {
-    public ShareInfoPresenter(IView<List<PublicPostBean>> iView, ShareInfoModel baseModel) {
+public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBean>>, DefaultModel> {
+    public ShareInfoPresenter(IView<List<PublicPostBean>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

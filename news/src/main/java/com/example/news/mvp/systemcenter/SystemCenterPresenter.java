@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
@@ -37,12 +38,12 @@ import retrofit2.HttpException;
  * QQ:         1981367757
  */
 
-public class SystemCenterPresenter extends RxBasePresenter<IView<Object>, SystemCenterModel> {
+public class SystemCenterPresenter extends RxBasePresenter<IView<Object>, DefaultModel> {
     private String account;
     private String password;
     private String name;
 
-    public SystemCenterPresenter(IView<Object> iView, SystemCenterModel baseModel) {
+    public SystemCenterPresenter(IView<Object> iView, DefaultModel baseModel) {
         super(iView, baseModel);
         account = BaseApplication.getAppComponent().getSharedPreferences()
                 .getString(ConstantUtil.ACCOUNT, null);

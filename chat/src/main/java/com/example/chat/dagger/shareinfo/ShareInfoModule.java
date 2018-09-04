@@ -1,10 +1,11 @@
 package com.example.chat.dagger.shareinfo;
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.ShareInfoAdapter;
-import com.example.chat.mvp.shareinfo.ShareInfoModel;
 import com.example.chat.mvp.shareinfo.ShareInfoPresenter;
 import com.example.chat.mvp.shareinfo.ShareInfoFragment;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -32,15 +33,12 @@ public class ShareInfoModule {
 
 
     @Provides
-    public ShareInfoPresenter providePresenter(ShareInfoModel shareInfoModel) {
-        return new ShareInfoPresenter(shareInfoFragment, shareInfoModel);
+    public ShareInfoPresenter providePresenter(DefaultModel defaultModel) {
+        return new ShareInfoPresenter(shareInfoFragment, defaultModel);
     }
 
 
-    @Provides
-    public ShareInfoModel provideModel(MainRepositoryManager mainRepositoryManager) {
-        return new ShareInfoModel(mainRepositoryManager);
-    }
+
 
 
 }

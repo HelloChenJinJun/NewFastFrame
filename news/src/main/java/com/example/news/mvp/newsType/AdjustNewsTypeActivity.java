@@ -1,4 +1,4 @@
-package com.example.news;
+package com.example.news.mvp.newsType;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,11 +14,10 @@ import com.example.commonlibrary.bean.news.OtherNewsTypeBeanDao;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.example.news.NewsApplication;
+import com.example.news.R;
 import com.example.news.adapter.PopWindowAdapter;
 import com.example.news.event.TypeNewsEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 项目名称:    NewFastFrame

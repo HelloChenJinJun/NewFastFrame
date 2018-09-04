@@ -1,9 +1,8 @@
-package com.example.news;
+package com.example.news.mvp.score;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.widget.TextView;
 
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
@@ -13,25 +12,23 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.example.news.NewsApplication;
+import com.example.news.R;
 import com.example.news.adapter.ScoreQueryAdapter;
 import com.example.news.bean.ScoreBean;
 import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.score.DaggerScoreQueryComponent;
 import com.example.news.dagger.score.ScoreQueryScoreModule;
 import com.example.news.event.ReLoginEvent;
-import com.example.news.mvp.score.ScoreQueryPresenter;
 import com.example.news.util.ReLoginUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame

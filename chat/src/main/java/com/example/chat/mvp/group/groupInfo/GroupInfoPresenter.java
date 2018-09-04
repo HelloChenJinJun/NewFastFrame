@@ -7,6 +7,7 @@ import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -21,8 +22,8 @@ import cn.bmob.v3.listener.UpdateListener;
  * QQ:         1981367757
  */
 
-public class GroupInfoPresenter extends AppBasePresenter<IView<Object>,GroupInfoModel>{
-    public GroupInfoPresenter(IView<Object> iView, GroupInfoModel baseModel) {
+public class GroupInfoPresenter extends AppBasePresenter<IView<Object>,DefaultModel>{
+    public GroupInfoPresenter(IView<Object> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

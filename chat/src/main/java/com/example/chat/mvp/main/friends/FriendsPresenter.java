@@ -5,6 +5,7 @@ import com.example.chat.bean.User;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.commonlibrary.bean.chat.UserEntity;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.ToastUtils;
 
@@ -21,8 +22,8 @@ import cn.bmob.v3.listener.FindListener;
  * QQ:         1981367757
  */
 
-public class FriendsPresenter extends AppBasePresenter<IView<List<UserEntity>>,FriendsModel> {
-    public FriendsPresenter(IView<List<UserEntity>> iView, FriendsModel baseModel) {
+public class FriendsPresenter extends AppBasePresenter<IView<List<UserEntity>>,DefaultModel> {
+    public FriendsPresenter(IView<List<UserEntity>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

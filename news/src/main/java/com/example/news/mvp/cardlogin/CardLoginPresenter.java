@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -26,8 +27,8 @@ import okhttp3.ResponseBody;
  * QQ:             1981367757
  */
 
-public class CardLoginPresenter extends BasePresenter<IView<Object>, CardLoginModel> {
-    public CardLoginPresenter(IView<Object> iView, CardLoginModel baseModel) {
+public class CardLoginPresenter extends BasePresenter<IView<Object>, DefaultModel> {
+    public CardLoginPresenter(IView<Object> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

@@ -11,7 +11,9 @@ import com.example.commonlibrary.imageloader.base.BaseImageLoaderStrategy;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderStrategy;
 import com.example.commonlibrary.interceptor.LogInterceptor;
 import com.example.commonlibrary.manager.ActivityManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.net.OkHttpGlobalHandler;
+import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.FileUtil;
 import com.google.gson.Gson;
@@ -22,6 +24,7 @@ import org.greenrobot.greendao.database.Database;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -55,6 +58,18 @@ public class GlobalConfigModule {
         Database database = devOpenHelper.getWritableDb();
         DaoMaster master = new DaoMaster(database);
         return master.newSession();
+    }
+
+
+    @Provides
+    @Named("default")
+    public DefaultRepositoryManager provideRepositoryManager(Retrofit retrofit,DaoSession daoSession){
+        return new DefaultRepositoryManager(retrofit,daoSession);
+    }
+
+    @Provides
+    public DefaultModel provideDefaultModel(@Named("default")DefaultRepositoryManager defaultRepositoryManager){
+        return new DefaultModel(defaultRepositoryManager);
     }
 
 

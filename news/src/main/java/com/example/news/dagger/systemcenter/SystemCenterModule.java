@@ -1,8 +1,7 @@
 package com.example.news.dagger.systemcenter;
 
-import com.example.news.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.mvp.systemcenter.SystemCenterActivity;
-import com.example.news.mvp.systemcenter.SystemCenterModel;
 import com.example.news.mvp.systemcenter.SystemCenterPresenter;
 
 import dagger.Module;
@@ -24,15 +23,12 @@ public class SystemCenterModule {
 
 
     @Provides
-    public SystemCenterPresenter providerPresenter(SystemCenterModel systemCenterModel) {
+    public SystemCenterPresenter providerPresenter(DefaultModel systemCenterModel) {
         return new SystemCenterPresenter(systemCenterActivity, systemCenterModel);
     }
 
 
-    @Provides
-    public SystemCenterModel providerModel(MainRepositoryManager mainRepositoryManager) {
-        return new SystemCenterModel(mainRepositoryManager);
-    }
+
 
 
 }

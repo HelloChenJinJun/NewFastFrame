@@ -16,20 +16,18 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
-import com.example.news.CenterAdapter;
-import com.example.news.LibraryInfoActivity;
+import com.example.news.adapter.CenterAdapter;
+import com.example.news.mvp.librarylogin.LibraryInfoActivity;
 import com.example.news.NewsApplication;
 import com.example.news.R;
-import com.example.news.ScoreQueryActivity;
+import com.example.news.mvp.score.ScoreQueryActivity;
 import com.example.news.bean.CenterBean;
 import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.systemcenter.DaggerSystemCenterComponent;
 import com.example.news.dagger.systemcenter.SystemCenterModule;
-import com.example.news.event.ReLoginEvent;
 import com.example.news.mvp.cardinfo.CardInfoActivity;
 import com.example.news.mvp.consume.ConsumeQueryActivity;
 import com.example.news.mvp.course.CourseQueryActivity;
@@ -38,8 +36,6 @@ import com.example.news.util.ReLoginUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame

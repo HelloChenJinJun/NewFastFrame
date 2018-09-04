@@ -19,7 +19,7 @@ import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.news.NewsApplication;
-import com.example.news.NewsContentActivity;
+import com.example.news.mvp.newsContent.NewsContentActivity;
 import com.example.news.adapter.NewsListAdapter;
 import com.example.news.R;
 import com.example.news.bean.NewListBean;

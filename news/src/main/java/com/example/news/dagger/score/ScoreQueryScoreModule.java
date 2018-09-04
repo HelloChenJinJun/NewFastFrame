@@ -1,9 +1,8 @@
 package com.example.news.dagger.score;
 
-import com.example.news.MainRepositoryManager;
-import com.example.news.ScoreQueryActivity;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.news.mvp.score.ScoreQueryActivity;
 import com.example.news.adapter.ScoreQueryAdapter;
-import com.example.news.mvp.score.ScoreQueryModel;
 import com.example.news.mvp.score.ScoreQueryPresenter;
 
 import dagger.Module;
@@ -30,15 +29,12 @@ public class ScoreQueryScoreModule {
 
 
     @Provides
-    public ScoreQueryPresenter providePresenter(ScoreQueryModel scoreQueryModel){
+    public ScoreQueryPresenter providePresenter(DefaultModel scoreQueryModel){
         return new ScoreQueryPresenter(scoreQueryActivity,scoreQueryModel);
     }
 
 
 
-    @Provides
-    public ScoreQueryModel provideModel(MainRepositoryManager mainRepositoryManager){
-        return new ScoreQueryModel(mainRepositoryManager);
-    }
+
 
 }

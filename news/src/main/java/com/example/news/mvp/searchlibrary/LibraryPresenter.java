@@ -1,6 +1,7 @@
 package com.example.news.mvp.searchlibrary;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -32,12 +33,12 @@ import okhttp3.ResponseBody;
  * QQ:             1981367757
  */
 
-public class LibraryPresenter extends BasePresenter<IView<List<SearchLibraryBean>>, LibraryModel> {
+public class LibraryPresenter extends BasePresenter<IView<List<SearchLibraryBean>>, DefaultModel> {
     private int num;
     private int textTotalNum=-1;
     private int classTotalNum=-1;
 
-    public LibraryPresenter(IView<List<SearchLibraryBean>> iView, LibraryModel baseModel) {
+    public LibraryPresenter(IView<List<SearchLibraryBean>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

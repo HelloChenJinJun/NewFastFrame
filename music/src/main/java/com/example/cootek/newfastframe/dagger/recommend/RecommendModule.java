@@ -1,10 +1,9 @@
 package com.example.cootek.newfastframe.dagger.recommend;
 
-import com.example.cootek.newfastframe.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.cootek.newfastframe.adapter.RecommendAlbumAdapter;
 import com.example.cootek.newfastframe.adapter.RecommendRadioAdapter;
 import com.example.cootek.newfastframe.adapter.RecommendSongListAdapter;
-import com.example.cootek.newfastframe.mvp.recommend.RecommendModel;
 import com.example.cootek.newfastframe.mvp.recommend.RecommendPresenter;
 import com.example.cootek.newfastframe.ui.fragment.RecommendFragment;
 
@@ -28,14 +27,11 @@ public class RecommendModule {
     }
 
     @Provides
-    public RecommendPresenter provideRecommendProvider(RecommendModel recommendModel) {
+    public RecommendPresenter provideRecommendProvider(DefaultModel recommendModel) {
         return new RecommendPresenter(recommendFragment, recommendModel);
     }
 
-    @Provides
-    public RecommendModel provideRecommendModel(MainRepositoryManager mainRepositoryManager) {
-        return new RecommendModel(mainRepositoryManager);
-    }
+
 
 
     @Provides

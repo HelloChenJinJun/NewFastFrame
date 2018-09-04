@@ -8,6 +8,7 @@ import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.util.TimeUtil;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -25,8 +26,8 @@ import rx.Subscription;
  * QQ:         1981367757
  */
 
-public class EditShareInfoPresenter extends AppBasePresenter<IView<PublicPostBean>,EditShareInfoModel>{
-    public EditShareInfoPresenter(IView<PublicPostBean> iView, EditShareInfoModel baseModel) {
+public class EditShareInfoPresenter extends AppBasePresenter<IView<PublicPostBean>,DefaultModel>{
+    public EditShareInfoPresenter(IView<PublicPostBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

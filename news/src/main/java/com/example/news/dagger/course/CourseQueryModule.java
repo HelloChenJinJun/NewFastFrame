@@ -1,9 +1,8 @@
 package com.example.news.dagger.course;
 
-import com.example.news.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.adapter.CourseQueryAdapter;
 import com.example.news.mvp.course.CourseQueryActivity;
-import com.example.news.mvp.course.CourseQueryModel;
 import com.example.news.mvp.course.CourseQueryPresenter;
 
 import dagger.Module;
@@ -30,15 +29,11 @@ public class CourseQueryModule {
 
 
     @Provides
-    public CourseQueryPresenter providerPresenter(CourseQueryModel courseQueryModel) {
+    public CourseQueryPresenter providerPresenter(DefaultModel courseQueryModel) {
         return new CourseQueryPresenter(courseQueryActivity, courseQueryModel);
     }
 
 
-    @Provides
-    public CourseQueryModel providerModel(MainRepositoryManager mainRepositoryManager) {
-        return new CourseQueryModel(mainRepositoryManager);
-    }
 
 
 }

@@ -1,10 +1,11 @@
 package com.example.chat.dagger.nearbyPeople;
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.adapter.NearbyPeopleAdapter;
 import com.example.chat.mvp.NearByPeople.NearbyPeopleActivity;
-import com.example.chat.mvp.NearByPeople.NearbyPeopleModel;
 import com.example.chat.mvp.NearByPeople.NearbyPeoplePresenter;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -24,14 +25,11 @@ public class NearbyPeopleModule {
     }
 
     @Provides
-    public NearbyPeoplePresenter providerPresenter(NearbyPeopleModel model){
-        return new NearbyPeoplePresenter(nearbyPeopleActivity,model);
+    public NearbyPeoplePresenter providerPresenter(DefaultModel defaultModel){
+        return new NearbyPeoplePresenter(nearbyPeopleActivity,defaultModel);
     }
 
-    @Provides
-    public NearbyPeopleModel providerModel(MainRepositoryManager mainRepositoryManager){
-        return new NearbyPeopleModel(mainRepositoryManager);
-    }
+
 
 
 

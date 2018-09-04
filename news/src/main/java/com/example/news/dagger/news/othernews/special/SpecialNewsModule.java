@@ -1,10 +1,9 @@
 package com.example.news.dagger.news.othernews.special;
 
-import com.example.news.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.adapter.SpecialNewsAdapter;
 import com.example.news.bean.SpecialNewsBean;
 import com.example.news.mvp.news.othernew.special.ISpecialNewsView;
-import com.example.news.mvp.news.othernew.special.SpecialNewsModel;
 import com.example.news.mvp.news.othernew.special.SpecialNewsPresenter;
 
 import java.util.List;
@@ -34,14 +33,10 @@ public class SpecialNewsModule {
 
 
     @Provides
-    public SpecialNewsPresenter provideSpecialNewsPresenter(SpecialNewsModel specialNewsModel){
+    public SpecialNewsPresenter provideSpecialNewsPresenter(DefaultModel specialNewsModel){
         return new SpecialNewsPresenter(iSpecialNewsView,specialNewsModel);
     }
 
 
-    @Provides
-    public SpecialNewsModel  provideSpecialNewsModel(MainRepositoryManager mainRepositoryManager){
-        return new SpecialNewsModel(mainRepositoryManager);
-    }
 
 }

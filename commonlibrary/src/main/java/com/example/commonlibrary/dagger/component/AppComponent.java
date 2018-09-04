@@ -32,5 +32,6 @@ public interface AppComponent {
     public OkHttpClient.Builder getOkHttpClientBuilder();
     public Retrofit getRetrofit();
     public SharedPreferences getSharedPreferences();
+    public Retrofit.Builder getRetrofitBuilder();
 
 }

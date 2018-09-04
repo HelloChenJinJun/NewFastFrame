@@ -1,10 +1,9 @@
 package com.example.news.dagger.booklist;
 
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.adapter.BookInfoListAdapter;
 import com.example.news.mvp.booklist.BookInfoListFragment;
-import com.example.news.mvp.booklist.BookInfoListModel;
 import com.example.news.mvp.booklist.BookInfoListPresenter;
-import com.example.news.MainRepositoryManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -30,13 +29,10 @@ public class BookInfoListModule {
 
 
     @Provides
-    public BookInfoListPresenter provideBookInbfoListPresenter(BookInfoListModel bookInfoListModel) {
-        return new BookInfoListPresenter(bookInfoListFragment, bookInfoListModel);
+    public BookInfoListPresenter provideBookInbfoListPresenter(DefaultModel defaultModel) {
+        return new BookInfoListPresenter(bookInfoListFragment, defaultModel);
     }
 
 
-    @Provides
-    public BookInfoListModel provideBookInfoListModel(MainRepositoryManager mainRepositoryManager) {
-        return new BookInfoListModel(mainRepositoryManager);
-    }
+
 }

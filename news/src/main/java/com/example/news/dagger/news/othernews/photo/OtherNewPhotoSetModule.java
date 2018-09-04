@@ -1,9 +1,8 @@
 package com.example.news.dagger.news.othernews.photo;
 
-import com.example.news.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.adapter.OtherNewPhotoSetAdapter;
 import com.example.news.mvp.news.othernew.photo.OtherNewPhotoSetActivity;
-import com.example.news.mvp.news.othernew.photo.OtherNewPhotoSetModel;
 import com.example.news.mvp.news.othernew.photo.OtherNewPhotoSetPresenter;
 
 import dagger.Module;
@@ -31,13 +30,9 @@ public class OtherNewPhotoSetModule {
 
 
     @Provides
-    public OtherNewPhotoSetPresenter providePhotoSetPresenter(OtherNewPhotoSetModel otherNewPhotoSetModel){
+    public OtherNewPhotoSetPresenter providePhotoSetPresenter(DefaultModel otherNewPhotoSetModel){
         return new OtherNewPhotoSetPresenter(otherNewPhotoSetActivity,otherNewPhotoSetModel);
     }
 
 
-    @Provides
-    public OtherNewPhotoSetModel providePhotoSetModel(MainRepositoryManager mainRepositoryManager){
-        return new OtherNewPhotoSetModel(mainRepositoryManager);
-    }
 }

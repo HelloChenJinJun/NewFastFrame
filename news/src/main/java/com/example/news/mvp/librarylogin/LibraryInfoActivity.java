@@ -1,15 +1,15 @@
-package com.example.news;
+package com.example.news.mvp.librarylogin;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.news.R;
 import com.example.news.mvp.booklist.BookInfoListFragment;
 import com.example.news.mvp.searchlibrary.LibraryFragment;
 

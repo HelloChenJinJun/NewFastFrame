@@ -1,9 +1,8 @@
 package com.example.news.dagger.systeminfo;
 
-import com.example.news.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.mvp.systeminfo.SystemInfoLoginActivity;
 import com.example.news.mvp.systeminfo.SystemInfoLoginPresenter;
-import com.example.news.mvp.systeminfo.SystemInfoModel;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,12 +24,9 @@ public class SystemInfoModule {
 
 
     @Provides
-    public SystemInfoLoginPresenter provideSystemInfoPresenter(SystemInfoModel systemInfoModel){
+    public SystemInfoLoginPresenter provideSystemInfoPresenter(DefaultModel systemInfoModel){
         return new SystemInfoLoginPresenter(systemInfoLoginActivity,systemInfoModel);
     }
 
-    @Provides
-    public SystemInfoModel provideSystemModel(MainRepositoryManager mainRepositoryManager){
-        return new SystemInfoModel(mainRepositoryManager);
-    }
+
 }

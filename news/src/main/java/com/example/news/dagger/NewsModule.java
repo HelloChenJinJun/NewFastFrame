@@ -4,6 +4,7 @@ package com.example.news.dagger;
 
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.example.news.interceptor.CacheControlInterceptor;
 import com.example.news.interceptor.NewsInterceptor;
@@ -32,9 +33,14 @@ public class NewsModule {
 
 
     @Provides
-    @PerApplication
     public DefaultRepositoryManager provideRepositoryManager(@Named("news") Retrofit retrofit, DaoSession daoSession) {
         return new DefaultRepositoryManager(retrofit, daoSession);
+    }
+
+
+    @Provides
+    public DefaultModel provideModel(DefaultRepositoryManager defaultRepositoryManager){
+        return new DefaultModel(defaultRepositoryManager);
     }
 
     @Provides

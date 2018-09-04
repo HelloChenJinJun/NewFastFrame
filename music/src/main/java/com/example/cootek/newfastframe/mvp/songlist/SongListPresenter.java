@@ -3,6 +3,7 @@ package com.example.cootek.newfastframe.mvp.songlist;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.bean.music.SingerListBean;
 import com.example.commonlibrary.bean.music.SingerListBeanDao;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -25,10 +26,10 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/8/16.
  */
 
-public class SongListPresenter extends BasePresenter<IView<Object>, SongListModel> {
+public class SongListPresenter extends BasePresenter<IView<Object>, DefaultModel> {
     private int num = 0;
 
-    public SongListPresenter(IView<Object> iView, SongListModel baseModel) {
+    public SongListPresenter(IView<Object> iView, DefaultModel baseModel) {
         super(iView, baseModel);
         num = 0;
     }

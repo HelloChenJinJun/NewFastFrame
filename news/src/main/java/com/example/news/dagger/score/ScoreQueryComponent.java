@@ -1,7 +1,7 @@
 package com.example.news.dagger.score;
 
 import com.example.commonlibrary.dagger.scope.PerActivity;
-import com.example.news.ScoreQueryActivity;
+import com.example.news.mvp.score.ScoreQueryActivity;
 import com.example.news.dagger.NewsComponent;
 
 import dagger.Component;

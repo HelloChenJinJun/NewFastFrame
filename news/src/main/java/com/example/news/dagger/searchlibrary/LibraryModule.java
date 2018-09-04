@@ -1,10 +1,9 @@
 package com.example.news.dagger.searchlibrary;
 
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.adapter.LibraryAdapter;
 import com.example.news.mvp.searchlibrary.LibraryFragment;
-import com.example.news.mvp.searchlibrary.LibraryModel;
 import com.example.news.mvp.searchlibrary.LibraryPresenter;
-import com.example.news.MainRepositoryManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -29,12 +28,9 @@ public class LibraryModule {
     }
 
     @Provides
-    public LibraryPresenter provideLibraryPresenter(LibraryModel libraryModel) {
+    public LibraryPresenter provideLibraryPresenter(DefaultModel libraryModel) {
         return new LibraryPresenter(libraryFragment, libraryModel);
     }
 
-    @Provides
-    public LibraryModel provideLibraryModel(MainRepositoryManager mainRepositoryManager) {
-        return new LibraryModel(mainRepositoryManager);
-    }
+
 }

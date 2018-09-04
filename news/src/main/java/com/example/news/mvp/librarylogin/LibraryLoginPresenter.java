@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -32,8 +33,8 @@ import retrofit2.HttpException;
  * QQ:             1981367757
  */
 
-public class LibraryLoginPresenter extends BasePresenter<IView<Object>, LibraryLoginModel> {
-    public LibraryLoginPresenter(IView<Object> iView, LibraryLoginModel baseModel) {
+public class LibraryLoginPresenter extends BasePresenter<IView<Object>, DefaultModel> {
+    public LibraryLoginPresenter(IView<Object> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

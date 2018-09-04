@@ -13,6 +13,7 @@ import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.rxbus.event.UserInfoEvent;
@@ -39,11 +40,11 @@ import static com.amap.api.col.t.a.i;
  * QQ:         1981367757
  */
 
-public class LoginPresenter extends AppBasePresenter<IView<Object>, LoginModel> {
+public class LoginPresenter extends AppBasePresenter<IView<Object>, DefaultModel> {
     private UserInfoEvent userInfoEvent;
     private String account, password;
 
-    public LoginPresenter(IView<Object> iView, LoginModel baseModel) {
+    public LoginPresenter(IView<Object> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

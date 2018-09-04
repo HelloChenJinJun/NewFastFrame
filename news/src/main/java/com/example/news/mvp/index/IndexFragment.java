@@ -1,6 +1,5 @@
-package com.example.news;
+package com.example.news.mvp.index;
 
-import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -20,10 +19,10 @@ import com.example.commonlibrary.bean.news.OtherNewsTypeBeanDao;
 import com.example.commonlibrary.cusotomview.CustomPopWindow;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.rxbus.event.LoginEvent;
-import com.example.commonlibrary.rxbus.event.UserInfoEvent;
 import com.example.commonlibrary.utils.ConstantUtil;
-import com.example.commonlibrary.utils.ToastUtils;
+import com.example.news.mvp.newsType.AdjustNewsTypeActivity;
+import com.example.news.NewsApplication;
+import com.example.news.R;
 import com.example.news.adapter.PopWindowAdapter;
 import com.example.news.event.TypeNewsEvent;
 import com.example.news.mvp.news.college.CollegeNewsMainFragment;
@@ -33,9 +32,6 @@ import com.example.news.util.NewsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame

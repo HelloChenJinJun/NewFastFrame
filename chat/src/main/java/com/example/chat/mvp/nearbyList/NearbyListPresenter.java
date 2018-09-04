@@ -10,6 +10,7 @@ import com.example.chat.base.AppBasePresenter;
 import com.example.chat.bean.NearbyListBean;
 import com.example.chat.events.LocationEvent;
 import com.example.chat.manager.NewLocationManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
 
@@ -24,12 +25,12 @@ import java.util.List;
  * QQ:         1981367757
  */
 
-public class NearbyListPresenter extends AppBasePresenter<IView<List<NearbyListBean>>, NearbyListModel> {
+public class NearbyListPresenter extends AppBasePresenter<IView<List<NearbyListBean>>, DefaultModel> {
     private int page = 0;
     private PoiSearch.Query query;
 
 
-    public NearbyListPresenter(IView<List<NearbyListBean>> iView, NearbyListModel baseModel) {
+    public NearbyListPresenter(IView<List<NearbyListBean>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

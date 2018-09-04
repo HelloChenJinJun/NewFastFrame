@@ -21,29 +21,15 @@ import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 import com.example.chat.mvp.skin.SkinListActivity;
 import com.example.chat.mvp.step.RecordStepActivity;
 import com.example.chat.mvp.wallpaper.WallPaperActivity;
-import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.bean.chat.SkinEntity;
-import com.example.commonlibrary.net.download.DownloadListener;
-import com.example.commonlibrary.net.download.FileInfo;
 import com.example.commonlibrary.skin.SkinManager;
-import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.ToastUtils;
-import com.example.news.CenterFragment;
-import com.example.news.IndexFragment;
+import com.example.news.mvp.center.CenterFragment;
+import com.example.news.mvp.index.IndexFragment;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
-import io.reactivex.Observable;
 
 public class MainActivity extends SlideBaseActivity {
 

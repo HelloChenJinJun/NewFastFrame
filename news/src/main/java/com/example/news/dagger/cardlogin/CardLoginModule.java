@@ -1,9 +1,8 @@
 package com.example.news.dagger.cardlogin;
 
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.news.mvp.cardlogin.CardLoginActivity;
-import com.example.news.mvp.cardlogin.CardLoginModel;
 import com.example.news.mvp.cardlogin.CardLoginPresenter;
-import com.example.news.MainRepositoryManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -24,12 +23,8 @@ public class CardLoginModule {
 
 
     @Provides
-    public CardLoginPresenter provideCardLoginPresenter(CardLoginModel cardLoginModel) {
+    public CardLoginPresenter provideCardLoginPresenter(DefaultModel cardLoginModel) {
         return new CardLoginPresenter(cardLoginActivity, cardLoginModel);
     }
 
-    @Provides
-    public CardLoginModel provideCardLoginModel(MainRepositoryManager mainRepositoryManager) {
-        return new CardLoginModel(mainRepositoryManager);
-    }
 }

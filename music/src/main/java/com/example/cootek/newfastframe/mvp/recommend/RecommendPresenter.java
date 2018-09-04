@@ -1,6 +1,7 @@
 package com.example.cootek.newfastframe.mvp.recommend;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -17,10 +18,10 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/9/1.
  */
 
-public class RecommendPresenter extends BasePresenter<IView<RecommendSongBean>, RecommendModel> {
+public class RecommendPresenter extends BasePresenter<IView<RecommendSongBean>, DefaultModel> {
 
 
-    public RecommendPresenter(IView<RecommendSongBean> iView, RecommendModel baseModel) {
+    public RecommendPresenter(IView<RecommendSongBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

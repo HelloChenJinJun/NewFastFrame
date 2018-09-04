@@ -6,6 +6,8 @@ import com.example.chat.mvp.commentlist.CommentListPresenter;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.repository.DefaultRepositoryManager;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -33,12 +35,4 @@ public class CommentListModule {
     public CommentListPresenter providerPresenter(DefaultModel defaultModel) {
         return new CommentListPresenter(commentListActivity, defaultModel);
     }
-
-
-    @Provides
-    public DefaultModel providerModel(DefaultRepositoryManager defaultRepositoryManager) {
-        return new DefaultModel(defaultRepositoryManager);
-    }
-
-
 }

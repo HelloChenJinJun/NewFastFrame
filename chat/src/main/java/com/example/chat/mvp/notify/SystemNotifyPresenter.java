@@ -6,6 +6,7 @@ import com.example.chat.manager.UserDBManager;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ import cn.bmob.v3.listener.FindListener;
  * QQ:         1981367757
  */
 
-public class SystemNotifyPresenter extends AppBasePresenter<IView<List<SystemNotifyBean>>,SystemNotifyModel> {
-    public SystemNotifyPresenter(IView<List<SystemNotifyBean>> iView, SystemNotifyModel baseModel) {
+public class SystemNotifyPresenter extends AppBasePresenter<IView<List<SystemNotifyBean>>,DefaultModel> {
+    public SystemNotifyPresenter(IView<List<SystemNotifyBean>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

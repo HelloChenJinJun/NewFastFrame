@@ -2,6 +2,7 @@ package com.example.cootek.newfastframe.mvp.singerlist;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -25,8 +26,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by COOTEK on 2017/9/2.
  */
 
-public class SingerListPresenter extends BasePresenter<IView<Object>, SingerListModel> {
-    public SingerListPresenter(IView<Object> iView, SingerListModel baseModel) {
+public class SingerListPresenter extends BasePresenter<IView<Object>, DefaultModel> {
+    public SingerListPresenter(IView<Object> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

@@ -3,17 +3,15 @@ package com.example.news.util;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.model.BaseModel;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.PwChangeEvent;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.ConstantUtil;
-import com.example.news.MainRepositoryManager;
 import com.example.news.NewsApplication;
 import com.example.news.api.SystemInfoApi;
 import com.example.news.bean.ResetPwResult;
 import com.example.news.bean.SystemUserBean;
-import com.example.news.event.ReLoginEvent;
-import com.example.news.mvp.systeminfo.SystemInfoModel;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,7 +36,7 @@ import retrofit2.HttpException;
 
 public class ReLoginUtil {
     private String account;
-    private BaseModel<MainRepositoryManager> baseModel;
+    private BaseModel<DefaultRepositoryManager> baseModel;
     private CompositeDisposable compositeDisposable;
     private String pw;
     private CallBack callBack;
@@ -53,7 +51,7 @@ public class ReLoginUtil {
 
 
     public ReLoginUtil() {
-        this.baseModel = new SystemInfoModel(NewsApplication
+        this.baseModel = new DefaultModel(NewsApplication
                 .getNewsComponent().getRepositoryManager());
         this.compositeDisposable = new CompositeDisposable();
     }
