@@ -1,4 +1,4 @@
-package com.example.live.ui.fragment;
+package com.example.live.mvp.recommend;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 
@@ -12,7 +12,6 @@ import com.example.live.adapter.RecommendLiveAdapter;
 import com.example.live.bean.RecommendLiveBean;
 import com.example.live.dagger.recommend.DaggerRecommendLiveComponent;
 import com.example.live.dagger.recommend.RecommendLiveModule;
-import com.example.live.mvp.recommend.RecommendLivePresenter;
 
 import javax.inject.Inject;
 

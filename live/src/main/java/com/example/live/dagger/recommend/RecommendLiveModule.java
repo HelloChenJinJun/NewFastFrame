@@ -1,9 +1,8 @@
 package com.example.live.dagger.recommend;
 
-import com.example.live.MainRepositoryManager;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.live.adapter.RecommendLiveAdapter;
-import com.example.live.ui.fragment.RecommendLiveFragment;
-import com.example.live.mvp.recommend.RecommendLiveModel;
+import com.example.live.mvp.recommend.RecommendLiveFragment;
 import com.example.live.mvp.recommend.RecommendLivePresenter;
 
 import dagger.Module;
@@ -30,13 +29,9 @@ public class RecommendLiveModule {
     }
 
 
-    @Provides
-    public RecommendLiveModel provideRecommendLiveModel(MainRepositoryManager mainRepositoryManager){
-        return new RecommendLiveModel(mainRepositoryManager);
-    }
 
     @Provides
-    public RecommendLivePresenter provideRecommendLivePresenter(RecommendLiveModel recommendLiveModel){
+    public RecommendLivePresenter provideRecommendLivePresenter(DefaultModel recommendLiveModel){
         return new RecommendLivePresenter(recommendLiveFragment,recommendLiveModel);
     }
 

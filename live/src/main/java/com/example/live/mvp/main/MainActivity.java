@@ -1,4 +1,4 @@
-package com.example.live.ui;
+package com.example.live.mvp.main;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -25,9 +25,9 @@ import com.example.live.adapter.PopWindowAdapter;
 import com.example.live.bean.CategoryLiveBean;
 import com.example.live.dagger.main.DaggerMainActivityComponent;
 import com.example.live.dagger.main.MainActivityModules;
-import com.example.live.mvp.main.MainPresenter;
-import com.example.live.ui.fragment.ListLiveFragment;
-import com.example.live.ui.fragment.RecommendLiveFragment;
+import com.example.live.mvp.list.ListLiveFragment;
+import com.example.live.mvp.search.SearchLiveActivity;
+import com.example.live.mvp.recommend.RecommendLiveFragment;
 import com.example.live.util.LiveUtil;
 
 import java.util.ArrayList;

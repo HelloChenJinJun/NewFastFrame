@@ -26,10 +26,6 @@ import io.reactivex.functions.Consumer;
 public class MainActivity extends MusicBaseActivity implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener, OnDragDeltaChangeListener {
 
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     protected boolean isNeedHeadLayout() {
@@ -39,6 +35,12 @@ public class MainActivity extends MusicBaseActivity implements OnLoadMoreListene
     @Override
     protected boolean isNeedEmptyLayout() {
         return true;
+    }
+
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
     }
 
     @Override
@@ -61,11 +63,6 @@ public class MainActivity extends MusicBaseActivity implements OnLoadMoreListene
                 getSharedPreferences("theme", Context.MODE_PRIVATE).edit().putBoolean("isNight", themeEvent.isNight()).apply();
                 CommonLogger.e("isTheme" + getSharedPreferences("theme", Context.MODE_PRIVATE).getBoolean("isTheme", false));
                 SkinManager.getInstance().refreshSkin();
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception {
-                CommonLogger.e("传递主题出错");
             }
         });
     }

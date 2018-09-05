@@ -404,7 +404,10 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, Default
 //            page id fanye193184
 //            本科生和研究生   page id fanye193939
             Element page = document.getElementById(NewsUtil.getZYPage(url));
-            String text = page.text();
+            String text = null;
+            if (null != page) {
+                text = page.text();
+            }
             if (text != null) {
                 String num = text.substring(text.lastIndexOf("/") + 1, text.length()).trim();
                 totalPage = Integer.valueOf(num);
@@ -1135,9 +1138,16 @@ public class NewsListPresenter extends BasePresenter<IView<NewListBean>, Default
                     array) {
                 if (string.contains("\"")) {
                     String[] temp = string.split("\"");
-                    list.add(temp[1]);
-                    list.add(temp[3]);
-                    list.add((temp[5]));
+                    if (temp.length>1) {
+                        list.add(temp[1]);
+                    }
+                    if (temp.length>3) {
+                        list.add(temp[3]);
+
+                    }
+                    if (temp.length > 5) {
+                        list.add((temp[5]));
+                    }
                 }
             }
             int size = list.size();

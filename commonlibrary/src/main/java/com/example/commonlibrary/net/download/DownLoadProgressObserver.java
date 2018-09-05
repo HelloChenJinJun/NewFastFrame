@@ -38,7 +38,7 @@ import io.reactivex.functions.Consumer;
 
     @Override
     public void onNext(@NonNull FileInfo fileInfo) {
-        fileDAO.insert(fileInfo);
+        fileDAO.update(fileInfo);
     }
 
     @Override

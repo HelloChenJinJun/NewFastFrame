@@ -29,7 +29,7 @@ public class FileDAOImpl implements FileDAO {
 
     @Override
     public void insert(FileInfo info) {
-        fileInfoDao.insert(info);
+        fileInfoDao.insertOrReplace(info);
     }
 
     @Override

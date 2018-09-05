@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
@@ -149,7 +150,9 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         rightImage_1 = (ImageView) findViewById(R.id.iv_header_layout_right);
         back_1 = (ImageView) findViewById(R.id.iv_header_layout_back);
         Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
-        ((BaseActivity) getActivity()).setSupportActionBar(toolBar);
+        findViewById(R.id.header_layout_id).setPadding(0,StatusBarUtil.getStatusBarHeight(getContext()),0,0);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolBar);
+
     }
 
 
@@ -158,13 +161,21 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         addOrReplaceFragment(mFragments[0], R.id.fl_content_container);
         currentPosition = 0;
         initMenu();
-        initActionBar();
         initRxBus();
         initSkin();
         updateUserInfo(UserDBManager.getInstance().getUser(UserManager.getInstance().getCurrentUserObjectId()));
+        initToolBarData();
         startSearchLiveWeather(BaseApplication.getAppComponent()
         .getSharedPreferences().getString(Constant.CITY,null));
         bindPollService(20);
+    }
+
+    private void initToolBarData() {
+        ToolBarOption toolBarOption=new ToolBarOption();
+        toolBarOption.setTitle("");
+        toolBarOption.setAvatar(user.getAvatar());
+        toolBarOption.setNeedNavigation(false);
+        setToolBar(toolBarOption);
     }
 
     private void initSkin() {
@@ -317,16 +328,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
 
 
 
-    public void initActionBar() {
-        ToolBarOption toolBarOption = new ToolBarOption();
-        toolBarOption.setTitle("");
-        toolBarOption.setAvatar("");
-        toolBarOption.setNeedNavigation(false);
-        if (user != null) {
-            toolBarOption.setAvatar(user.getAvatar());
-        }
-        setToolBar(toolBarOption);
-    }
 
 
     public void updateTitle(String title){
@@ -525,7 +526,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
 
     @Override
     protected boolean needStatusPadding() {
-        return true;
+        return false;
     }
 
 

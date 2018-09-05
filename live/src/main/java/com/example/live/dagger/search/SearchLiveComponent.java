@@ -1,7 +1,7 @@
 package com.example.live.dagger.search;
 
 import com.example.commonlibrary.dagger.scope.PerActivity;
-import com.example.live.ui.SearchLiveActivity;
+import com.example.live.mvp.search.SearchLiveActivity;
 import com.example.live.dagger.MainComponent;
 
 import dagger.Component;

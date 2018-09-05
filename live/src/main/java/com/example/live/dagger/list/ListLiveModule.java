@@ -1,10 +1,9 @@
 package com.example.live.dagger.list;
 
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.live.adapter.ListLiveAdapter;
-import com.example.live.ui.fragment.ListLiveFragment;
-import com.example.live.mvp.list.ListLiveModel;
+import com.example.live.mvp.list.ListLiveFragment;
 import com.example.live.mvp.list.ListLivePresenter;
-import com.example.live.MainRepositoryManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -31,12 +30,9 @@ public class ListLiveModule {
     }
 
     @Provides
-    public ListLivePresenter provideListLivePresenter(ListLiveModel listLiveModel) {
+    public ListLivePresenter provideListLivePresenter(DefaultModel listLiveModel) {
         return new ListLivePresenter(listLiveFragment, listLiveModel);
     }
 
-    @Provides
-    public ListLiveModel provideListLiveModel(MainRepositoryManager mainRepositoryManager) {
-        return new ListLiveModel(mainRepositoryManager);
-    }
+
 }

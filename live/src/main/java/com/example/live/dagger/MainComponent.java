@@ -3,6 +3,7 @@ package com.example.live.dagger;
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.scope.PerApplication;
+import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.example.live.MainRepositoryManager;
 
 import dagger.Component;
@@ -18,5 +19,5 @@ import dagger.Component;
 public interface MainComponent {
     public DaoSession getDaoSession();
 
-    public MainRepositoryManager getMainRepositoryManager();
+    public DefaultRepositoryManager getMainRepositoryManager();
 }

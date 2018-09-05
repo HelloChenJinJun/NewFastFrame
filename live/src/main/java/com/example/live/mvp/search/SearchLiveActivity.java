@@ -1,4 +1,4 @@
-package com.example.live.ui;
+package com.example.live.mvp.search;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,7 +24,7 @@ import com.example.live.adapter.SearchLiveAdapter;
 import com.example.live.bean.SearchLiveBean;
 import com.example.live.dagger.search.DaggerSearchLiveComponent;
 import com.example.live.dagger.search.SearchLiveModule;
-import com.example.live.mvp.search.SearchLivePresenter;
+import com.example.live.mvp.video.VideoActivity;
 import com.example.live.util.LiveUtil;
 
 import java.util.List;
@@ -101,7 +101,7 @@ public class SearchLiveActivity extends BaseActivity<List<SearchLiveBean.DataBea
         searchLiveAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                Intent intent=new Intent(view.getContext(),VideoActivity.class);
+                Intent intent=new Intent(view.getContext(), VideoActivity.class);
                 SearchLiveBean.DataBean.LiveInfo dataEntity=searchLiveAdapter.getData(position);
                 intent.putExtra(LiveUtil.UID,dataEntity.getUid());
                 intent.putExtra(LiveUtil.THUMB,dataEntity.getThumb());

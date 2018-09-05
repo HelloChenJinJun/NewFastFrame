@@ -1,4 +1,4 @@
-package com.example.live.ui;
+package com.example.live.mvp.video;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -17,7 +17,6 @@ import com.example.live.R;
 import com.example.live.bean.LiveRoomBean;
 import com.example.live.dagger.video.DaggerVideoComponent;
 import com.example.live.dagger.video.VideoModule;
-import com.example.live.mvp.video.VideoPresenter;
 import com.example.live.util.LiveUtil;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;

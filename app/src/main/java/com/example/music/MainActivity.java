@@ -38,7 +38,7 @@ public class MainActivity extends SlideBaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (currentFragment != null && currentFragment instanceof HomeFragment) {
+        if (currentFragment instanceof HomeFragment) {
             ((HomeFragment)currentFragment).notifyNewIntentCome(intent);
         }
     }
@@ -169,9 +169,4 @@ public class MainActivity extends SlideBaseActivity {
         activity.startActivity(intent);
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 }

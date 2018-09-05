@@ -1,9 +1,8 @@
 package com.example.live.dagger.search;
 
-import com.example.live.MainRepositoryManager;
-import com.example.live.ui.SearchLiveActivity;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.live.mvp.search.SearchLiveActivity;
 import com.example.live.adapter.SearchLiveAdapter;
-import com.example.live.mvp.search.SearchLiveModel;
 import com.example.live.mvp.search.SearchLivePresenter;
 
 import dagger.Module;
@@ -28,14 +27,10 @@ public class SearchLiveModule {
         return new SearchLiveAdapter();
     }
 
-    @Provides
-    public SearchLiveModel provideSearchLiveModel(MainRepositoryManager mainRepositoryManager){
-        return new SearchLiveModel(mainRepositoryManager);
-    }
 
 
     @Provides
-    public SearchLivePresenter provideSearchPresenter(SearchLiveModel searchLiveModel){
+    public SearchLivePresenter provideSearchPresenter(DefaultModel searchLiveModel){
         return new SearchLivePresenter(searchLiveActivity,searchLiveModel);
     }
 }

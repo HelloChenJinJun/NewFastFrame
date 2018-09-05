@@ -1,4 +1,4 @@
-package com.example.live.ui.fragment;
+package com.example.live.mvp.list;
 
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,8 +15,7 @@ import com.example.live.adapter.ListLiveAdapter;
 import com.example.live.bean.ListLiveBean;
 import com.example.live.dagger.list.DaggerListLiveComponent;
 import com.example.live.dagger.list.ListLiveModule;
-import com.example.live.mvp.list.ListLivePresenter;
-import com.example.live.ui.VideoActivity;
+import com.example.live.mvp.video.VideoActivity;
 import com.example.live.util.LiveUtil;
 
 import javax.inject.Inject;

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
+import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.ui.fragment.BottomFragment;
@@ -77,6 +78,7 @@ public abstract class MusicBaseActivity<T, P extends BasePresenter> extends Base
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         contentView = LayoutInflater.from(this).inflate(layoutResID, null);
+        contentView.setPadding(0, StatusBarUtil.getStatusBarHeight(this),0,0);
         if (slidingPanelLayout != null) {
             super.setContentView(layoutResID);
         }

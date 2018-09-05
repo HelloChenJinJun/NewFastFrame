@@ -1,6 +1,7 @@
 package com.example.live.mvp.recommend;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.live.api.LiveApi;
@@ -19,9 +20,9 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:             1981367757
  */
 
-public class RecommendLivePresenter extends BasePresenter<IView<RecommendLiveBean>,RecommendLiveModel>{
+public class RecommendLivePresenter extends BasePresenter<IView<RecommendLiveBean>,DefaultModel>{
 
-    public RecommendLivePresenter(IView<RecommendLiveBean> iView, RecommendLiveModel baseModel) {
+    public RecommendLivePresenter(IView<RecommendLiveBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 
@@ -30,7 +31,7 @@ public class RecommendLivePresenter extends BasePresenter<IView<RecommendLiveBea
             iView.showLoading(null);
         }
         baseModel.getRepositoryManager().getApi(LiveApi.class)
-                .getRecommendLiveData().subscribeOn(Schedulers.io())
+                .getRecommendLiveData().compose(iView.<RecommendLiveBean>bindLife()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<RecommendLiveBean>() {
                     @Override

@@ -7,7 +7,7 @@ import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.live.util.LiveUtil;
 import com.example.live.R;
 import com.example.live.adapter.holder.RecommendLiveViewHolder;
-import com.example.live.ui.VideoActivity;
+import com.example.live.mvp.video.VideoActivity;
 import com.example.live.bean.RecommendLiveBean;
 
 /**

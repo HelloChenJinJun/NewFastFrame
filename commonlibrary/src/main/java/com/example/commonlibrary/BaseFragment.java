@@ -98,16 +98,18 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
                 }
                 root=linearLayout;
             } else {
-                FrameLayout frameLayout =new FrameLayout(getContext());
-                frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                frameLayout.addView(LayoutInflater.from(getActivity()).inflate(getContentLayout(), null));
                 if (isNeedEmptyLayout()) {
+                    FrameLayout frameLayout =new FrameLayout(getContext());
+                    frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    frameLayout.addView(LayoutInflater.from(getActivity()).inflate(getContentLayout(), null));
                     mEmptyLayout = new EmptyLayout(getActivity());
                     mEmptyLayout.setVisibility(GONE);
                     mEmptyLayout.setContentView(frameLayout.getChildAt(0));
                     frameLayout.addView(mEmptyLayout);
+                    root = frameLayout;
+                }else {
+                    root=LayoutInflater.from(getActivity()).inflate(getContentLayout(), null);
                 }
-                root = frameLayout;
             }
             if (root.getParent() != null) {
                 ((ViewGroup) root.getParent()).removeView(root);

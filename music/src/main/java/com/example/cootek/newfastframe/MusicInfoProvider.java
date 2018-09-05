@@ -89,6 +89,9 @@ public class MusicInfoProvider {
                         list.add(music);
                     } while (cursor.moveToNext());
                 }
+                if (cursor!=null&&!cursor.isClosed()){
+                    cursor.close();
+                }
                 e.onNext(list);
                 e.onComplete();
             }

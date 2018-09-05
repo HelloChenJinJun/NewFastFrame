@@ -37,11 +37,11 @@ public class ContentView extends RelativeLayout {
 
         @Override
         public boolean onInterceptTouchEvent(MotionEvent ev) {
-                if (ev.getRawX() >= range && getLeft() >= range) {
-                        LogUtil.e("中断");
-                } else {
-                        LogUtil.e("不中断");
-                }
+//                if (ev.getRawX() >= range && getLeft() >= range) {
+//                        LogUtil.e("中断");
+//                } else {
+//                        LogUtil.e("不中断");
+//                }
                 return ev.getRawX() >= range && getLeft() >= range;
         }
 }

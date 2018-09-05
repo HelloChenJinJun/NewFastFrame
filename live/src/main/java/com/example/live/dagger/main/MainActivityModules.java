@@ -1,9 +1,8 @@
 package com.example.live.dagger.main;
 
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
-import com.example.live.ui.MainActivity;
-import com.example.live.MainRepositoryManager;
-import com.example.live.mvp.main.MainModel;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.live.mvp.main.MainActivity;
 import com.example.live.mvp.main.MainPresenter;
 
 import dagger.Module;
@@ -30,14 +29,11 @@ public class MainActivityModules {
 
 
     @Provides
-    public MainPresenter provideMainPresenter(MainModel mainModel) {
+    public MainPresenter provideMainPresenter(DefaultModel mainModel) {
         return new MainPresenter(mainActivity, mainModel);
     }
 
-    @Provides
-    public MainModel provideMainModel(MainRepositoryManager mainRepositoryManager) {
-        return new MainModel(mainRepositoryManager);
-    }
+
 
 
 }

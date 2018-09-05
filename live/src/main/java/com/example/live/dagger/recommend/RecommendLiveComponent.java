@@ -1,7 +1,7 @@
 package com.example.live.dagger.recommend;
 
 import com.example.commonlibrary.dagger.scope.PerFragment;
-import com.example.live.ui.fragment.RecommendLiveFragment;
+import com.example.live.mvp.recommend.RecommendLiveFragment;
 import com.example.live.dagger.MainComponent;
 
 import dagger.Component;

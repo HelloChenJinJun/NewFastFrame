@@ -1,8 +1,7 @@
 package com.example.live.dagger.video;
 
-import com.example.live.MainRepositoryManager;
-import com.example.live.ui.VideoActivity;
-import com.example.live.mvp.video.VideoModel;
+import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.live.mvp.video.VideoActivity;
 import com.example.live.mvp.video.VideoPresenter;
 
 import dagger.Module;
@@ -24,13 +23,10 @@ public class VideoModule {
 
 
     @Provides
-    public VideoPresenter provideVideoPresenter(VideoModel videoModel){
+    public VideoPresenter provideVideoPresenter(DefaultModel videoModel){
         return new VideoPresenter(videoActivity,videoModel);
     }
 
 
-    @Provides
-    public VideoModel provideVidoModel(MainRepositoryManager mainRepositoryManager){
-        return new VideoModel(mainRepositoryManager);
-    }
+
 }

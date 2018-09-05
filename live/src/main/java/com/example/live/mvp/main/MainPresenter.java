@@ -1,6 +1,7 @@
 package com.example.live.mvp.main;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.live.api.LiveApi;
@@ -21,10 +22,10 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:             1981367757
  */
 
-public class MainPresenter extends BasePresenter<IView<List<CategoryLiveBean>>,MainModel> {
+public class MainPresenter extends BasePresenter<IView<List<CategoryLiveBean>>, DefaultModel> {
 
 
-    public MainPresenter(IView<List<CategoryLiveBean>> iView, MainModel baseModel) {
+    public MainPresenter(IView<List<CategoryLiveBean>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 

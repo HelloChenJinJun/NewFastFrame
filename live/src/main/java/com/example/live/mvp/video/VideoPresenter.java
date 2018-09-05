@@ -1,6 +1,7 @@
 package com.example.live.mvp.video;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -20,14 +21,14 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:             1981367757
  */
 
-public class VideoPresenter extends BasePresenter<IView<LiveRoomBean>, VideoModel> {
-    public VideoPresenter(IView<LiveRoomBean> iView, VideoModel baseModel) {
+public class VideoPresenter extends BasePresenter<IView<LiveRoomBean>, DefaultModel> {
+    public VideoPresenter(IView<LiveRoomBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 
     public void enterRoom(final String uid) {
         baseModel.getRepositoryManager().getApi(LiveApi.class)
-                .enterRoom(uid).subscribeOn(Schedulers.io())
+                .enterRoom(uid).compose(iView.<LiveRoomBean>bindLife()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<LiveRoomBean>() {
                     @Override

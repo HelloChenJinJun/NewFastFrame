@@ -10,6 +10,7 @@ import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.ViewPagerIndicator;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
+import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.ui.MainActivity;
 import com.nineoldandroids.view.ViewHelper;
@@ -43,6 +44,12 @@ public class HolderFragment extends BaseFragment implements View.OnClickListener
         return false;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return true;
+    }
+
     @Override
     protected int getContentLayout() {
         return R.layout.fragment_holder;
@@ -53,13 +60,15 @@ public class HolderFragment extends BaseFragment implements View.OnClickListener
         display = (WrappedViewPager) findViewById(R.id.vp_fragment_holder_display);
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setCustomView(getToolBarView());
+        toolBarOption.setBgColor(getResources().getColor(R.color.light_blue_600));
         setToolBar(toolBarOption);
-        ((BaseActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_bg));
     }
 
     private View getToolBarView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_holder_header_view, null, false);
-        viewPagerIndicator = (ViewPagerIndicator) view.findViewById(R.id.vpi_view_fragment_holder_header_view_indicator);
+//        view.setPadding(view.getPaddingLeft(),view.getPaddingTop()+ StatusBarUtil
+//        .getStatusBarHeight(getContext()),view.getPaddingRight(),view.getPaddingBottom());
+        viewPagerIndicator = view.findViewById(R.id.vpi_view_fragment_holder_header_view_indicator);
         expend = view.findViewById(R.id.iv_view_Fragment_holder_header_view_expend);
         expend.setOnClickListener(this);
         view.findViewById(R.id.iv_view_Fragment_holder_header_view_search).setOnClickListener(this);

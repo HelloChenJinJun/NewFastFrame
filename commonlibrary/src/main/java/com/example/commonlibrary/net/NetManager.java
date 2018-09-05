@@ -142,17 +142,13 @@ public class NetManager {
                     .client(builder.build()).baseUrl(AppUtil.getBasUrl(url)).build();
             stringRetrofitMap.put(url, retrofit);
         }
-        retrofit.create(DownLoadApi.class).downLoad("bytes=" + info.getLoadBytes() + "-", url).subscribeOn(Schedulers.io()).map(new Function<ResponseBody, FileInfo>() {
-            @Override
-            public FileInfo apply(@NonNull ResponseBody responseBody) throws Exception {
-                return writeCaches(responseBody, url);
-            }
-        }).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).retryWhen(new RetryWhenNetworkException()).doOnSubscribe(new Consumer<Disposable>() {
-            @Override
-            public void accept(@NonNull Disposable disposable) throws Exception {
-                addSubscription(disposable, url);
-            }
-        }).subscribe(downLoadProgressObserver);
+        retrofit.create(DownLoadApi.class)
+                .downLoad("bytes=" + info.getLoadBytes() + "-", url)
+                .subscribeOn(Schedulers.io()).map(responseBody -> writeCaches(responseBody, url))
+                .unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(new RetryWhenNetworkException())
+                .doOnSubscribe(disposable -> addSubscription(disposable, url))
+                .subscribe(downLoadProgressObserver);
     }
 
     private void addSubscription(Disposable disposable, String url) {

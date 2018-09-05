@@ -158,12 +158,14 @@ public class SkinDetailActivity extends SlideBaseActivity implements View.OnClic
                 downLoad.setEnabled(false);
                 downLoad.setText("使用中");
                 skinEntity.setHasSelected(true);
-               SkinEntity skinEntity= UserDBManager.getInstance().getCurrentSkin();
-                if (skinEntity != null) {
-                    skinEntity.setHasSelected(false);
+               SkinEntity currentSkin= UserDBManager.getInstance().getCurrentSkin();
+                if (currentSkin != null) {
+                    currentSkin.setHasSelected(false);
                     UserDBManager.getInstance().getDaoSession().getSkinEntityDao()
-                            .update(skinEntity);
+                            .update(currentSkin);
                 }
+                UserDBManager.getInstance().getDaoSession().getSkinEntityDao()
+                        .update(skinEntity);
                 setResult(Activity.RESULT_OK);
 
             }else {
