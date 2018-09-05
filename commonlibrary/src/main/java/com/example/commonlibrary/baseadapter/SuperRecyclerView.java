@@ -26,7 +26,6 @@ import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreScrollListener;
-import com.example.commonlibrary.baseadapter.foot.RecyclerFooterViewClickListener;
 import com.example.commonlibrary.baseadapter.refresh.OnRefreshListener;
 import com.example.commonlibrary.baseadapter.refresh.RefreshHeaderLayout;
 import com.example.commonlibrary.baseadapter.refresh.RefreshTrigger;
@@ -229,23 +228,17 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
     }
 
     private void addOnRetryListener(LoadMoreFooterView loadMoreFooterView) {
-        loadMoreFooterView.setOnRetryListener(new LoadMoreFooterView.OnRetryListener() {
-            @Override
-            public void onRetry(LoadMoreFooterView view) {
-                if (mOnLoadMoreListener != null) {
-                    mOnLoadMoreListener.loadMore();
-                }
+        loadMoreFooterView.setOnRetryListener(view -> {
+            if (mOnLoadMoreListener != null) {
+                mOnLoadMoreListener.loadMore();
             }
         });
     }
 
     private void addBottomListener(final LoadMoreFooterView loadMoreFooterView) {
-        loadMoreFooterView.setBottomViewClickListener(new RecyclerFooterViewClickListener() {
-            @Override
-            public void onBottomViewClickListener(View view) {
-                loadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
-                scrollToPosition(0);
-            }
+        loadMoreFooterView.setBottomViewClickListener(view -> {
+            loadMoreFooterView.setStatus(LoadMoreFooterView.Status.GONE);
+            scrollToPosition(0);
         });
     }
 

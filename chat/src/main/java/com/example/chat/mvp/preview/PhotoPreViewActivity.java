@@ -59,8 +59,8 @@ public class PhotoPreViewActivity extends SlideBaseActivity implements CompoundB
 
 
     @Override
-    protected void updateStatusBar() {
-        StatusBarUtil.setTransparent(this);
+    protected boolean needStatusPadding() {
+        return false;
     }
 
     @Override
@@ -72,6 +72,7 @@ public class PhotoPreViewActivity extends SlideBaseActivity implements CompoundB
     protected void initView() {
         display = (WrappedViewPager) findViewById(R.id.vp_activity_photo_preview_display);
         topContainer = (RelativeLayout) findViewById(R.id.rl_activity_photo_preview_top_container);
+        StatusBarUtil.setStatusPadding(topContainer);
         number = (TextView) findViewById(R.id.tv_activity_photo_preview_number);
         checkBox = (CheckBox) findViewById(R.id.cb_activity_photo_preview_check);
         checkBox.setOnCheckedChangeListener(this);

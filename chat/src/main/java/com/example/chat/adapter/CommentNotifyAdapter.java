@@ -52,7 +52,9 @@ public class CommentNotifyAdapter extends BaseRecyclerAdapter<PostNotifyBean,Bas
                 spannableStringBuilder.append(replyUser.getName());
             }
             spannableStringBuilder.append("：");
-            spannableStringBuilder.append(FaceTextUtil.toSpannableString(holder.itemView.getContext(), commentDetailBean.getContent()));
+            if (commentDetailBean!=null) {
+                spannableStringBuilder.append(FaceTextUtil.toSpannableString(holder.itemView.getContext(), commentDetailBean.getContent()));
+            }
             holder.setText(R.id.tv_item_activity_comment_notify_content,spannableStringBuilder);
         }else if (data.getType().equals(Constant.TYPE_LIKE)){
             ((TextView)holder.getView(R.id.tv_item_activity_comment_notify_content)).setCompoundDrawablesWithIntrinsicBounds(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_favorite_border_deep_orange_a700_24dp), null, null, null);

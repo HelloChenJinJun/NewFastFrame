@@ -107,10 +107,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     }
 
 
-    @Override
-    protected boolean needStatusPadding() {
-        return true;
-    }
+
 
 
 
@@ -340,6 +337,10 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     }
 
     private void dealLike(PublicPostBean bean) {
+        if (!AppUtil.isNetworkAvailable()) {
+            ToastUtils.showShortToast("网络不可用，请检查网络配置");
+            return;
+        }
         if (bean.getLikeList() != null && bean.getLikeList().contains(UserManager.getInstance().getCurrentUserObjectId())) {
             ToastUtils.showShortToast("已点赞，取消点赞");
             showLoadDialog("取消赞中...");

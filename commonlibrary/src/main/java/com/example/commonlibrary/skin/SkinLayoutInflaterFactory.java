@@ -56,12 +56,12 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
 //        获取是否应用换肤操作
-        String tag = attrs.getAttributeValue(SkinUtil.NAME_PLACE, "tag");
+        boolean hasApplySkin = attrs.getAttributeBooleanValue(SkinUtil.NAME_PLACE, "applySkin",false);
         View view = appCompatActivity.getDelegate().createView(parent, name, context, attrs);
         if (view == null) {
             view = ViewProducer.createViewFromTag(context, name, attrs);
         }
-        if (tag != null && tag.equals("skin")) {
+        if (hasApplySkin) {
             return applySkin(context, view, attrs);
         }
         return view;
