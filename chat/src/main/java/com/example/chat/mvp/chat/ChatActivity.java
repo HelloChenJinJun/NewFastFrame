@@ -7,7 +7,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -58,6 +60,7 @@ import com.example.chat.util.CommonUtils;
 import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.FileUtil;
 import com.example.chat.util.LogUtil;
+import com.example.chat.util.SoftHideBoardUtil;
 import com.example.chat.util.SystemUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
@@ -131,6 +134,16 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         initBottomView();
     }
 
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SoftHideBoardUtil.assistActivity(this, isHide -> {
+            if (!isHide) {
+                scrollToBottom();
+            }
+        });
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

@@ -43,7 +43,8 @@ public class CommentDetailAdapter extends BaseMultipleRecyclerAdapter<ReplyDetai
         }else {
             holder.setImageUrl(R.id.riv_comment_detail_right_avatar,userEntity.getAvatar())
                     .setText(R.id.tv_comment_detail_right_name,userEntity.getName())
-                    .setText(R.id.tv_comment_detail_right_content,data.getContent())
+                    .setText(R.id.tv_comment_detail_right_content,FaceTextUtil
+                            .toSpannableString(holder.getContext(),data.getContent()))
                     .setOnItemChildClickListener(R.id.riv_comment_detail_right_avatar);
             if (isNeedShowTime(holder.getAdapterPosition()-getItemUpCount(),data)) {
                 holder.setVisible(R.id.tv_comment_detail_right_time,true)

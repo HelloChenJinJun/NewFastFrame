@@ -88,7 +88,6 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
                     }
                 } else if (supportAttrsName.contains(attrName)) {
                     //                只有引用类型才可以换肤
-                    CommonLogger.e("value：" + attrValue + " attrName：" + attrName);
                     if (attrValue.startsWith("?") || attrValue.startsWith("@")) {
                         int id = Integer.parseInt(attrValue.substring(1));
                         if (id != 0) {
@@ -98,7 +97,6 @@ public class SkinLayoutInflaterFactory implements LayoutInflaterFactory {
                 }
             } catch (Resources.NotFoundException | NumberFormatException e) {
                 e.printStackTrace();
-                CommonLogger.e("哈哈" + e.getMessage() + e.getCause().toString());
             }
             if (viewSkinItemMap.get(view) != null) {
                 viewSkinItemMap.get(view).apply();

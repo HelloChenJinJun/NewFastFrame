@@ -1,5 +1,6 @@
 package com.example.commonlibrary.baseadapter.empty;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.AttrRes;
@@ -43,6 +44,7 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
     }
 
     private void initView(Context context, AttributeSet attributeSet) {
+        @SuppressLint("CustomViewStyleable")
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.empty_layout);
         View view = View.inflate(context, R.layout.empty_layout, this);
         errorLayout = view.findViewById(R.id.rl_empty_layout_error);

@@ -62,7 +62,6 @@
         <activity android:name=".mvp.login.LoginActivity"
             android:exported="true"/>
         <activity android:name=".mvp.main.HomeActivity" android:launchMode="singleTask"/>
-
         <activity android:name=".mvp.register.RegisterActivity"/>
         <activity android:name=".mvp.searchFriend.SearchFriendActivity"/>
         <activity android:name=".mvp.chat.ChatActivity" android:launchMode="singleTask"/>
@@ -80,7 +79,8 @@
         <activity android:name=".mvp.account.AccountManageActivity"/>
         <activity android:name=".mvp.account.password.PasswordChangeActivity"/>
         <activity android:name=".mvp.notify.SystemNotifyActivity"/>
-        <activity android:name=".mvp.commentlist.CommentListActivity" />
+        <activity android:name=".mvp.commentlist.CommentListActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".mvp.commentdetail.CommentListDetailActivity" />
         <activity android:name=".mvp.nearbyList.NearbyListActivity"/>
         <activity android:name=".mvp.adressList.AddressListActivity"/>

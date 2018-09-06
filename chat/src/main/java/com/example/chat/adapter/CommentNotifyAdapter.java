@@ -71,8 +71,10 @@ public class CommentNotifyAdapter extends BaseRecyclerAdapter<PostNotifyBean,Bas
         PublicPostBean temp=data.getPublicPostBean();
         if (temp==null) {
             temp=data.getPublicCommentBean().getPost();
+            if (temp==null)return;
         }
         Integer mediaType=temp.getMsgType();
+        if (mediaType==null)return;
         PostDataBean bean=gson.fromJson(temp.getContent(),PostDataBean.class);
         if (mediaType.equals(Constant.EDIT_TYPE_IMAGE)||mediaType.equals(Constant.EDIT_TYPE_VIDEO)) {
             String url=null;

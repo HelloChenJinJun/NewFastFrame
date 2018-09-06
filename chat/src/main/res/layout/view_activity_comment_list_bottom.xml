@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/base_comment_emo_bar"
     android:gravity="center_horizontal"
-    android:layout_alignParentBottom="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -23,7 +22,8 @@
             android:layout_height="30dp"
             android:layout_marginLeft="6dp"
             android:background="@drawable/btn_chat_bottom_emotion_selector"
-            android:gravity="center"/>
+            android:gravity="center" />
+
         <Button
             android:id="@+id/btn_comment_bottom_keyboard"
             android:layout_width="30dp"
@@ -31,7 +31,7 @@
             android:layout_marginRight="6dp"
             android:background="@drawable/btn_chat_bottom_keyboard_selector"
             android:gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/et_comment_bottom_input"
@@ -42,7 +42,7 @@
             android:layout_weight="1"
             android:background="@drawable/base_edit_input"
             android:minHeight="@dimen/base_chat_bottom_input_height"
-            android:padding="5dp"/>
+            android:padding="5dp" />
 
 
         <Button
@@ -52,18 +52,18 @@
             android:layout_marginRight="6dp"
             android:background="@drawable/btn_chat_bottom_send_selector"
             android:gravity="center"
-            android:visibility="visible"/>
+            android:visibility="visible" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/chat_bottom_divider"
-        android:focusable="false"/>
-            <com.example.commonlibrary.cusotomview.WrappedViewPager
-                android:visibility="gone"
-                android:id="@+id/vp_comment_bottom_emotion"
-                android:layout_width="match_parent"
-                android:layout_height="120dp">
-            </com.example.commonlibrary.cusotomview.WrappedViewPager>
+        android:focusable="false" />
+
+    <com.example.commonlibrary.cusotomview.WrappedViewPager
+        android:id="@+id/vp_comment_bottom_emotion"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:visibility="gone"></com.example.commonlibrary.cusotomview.WrappedViewPager>
 </LinearLayout>

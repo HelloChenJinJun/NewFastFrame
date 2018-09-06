@@ -1,6 +1,7 @@
 package com.example.commonlibrary.utils;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -32,6 +33,7 @@ public class PermissionUtil {
     }
 
 
+    @SuppressLint("CheckResult")
     public static void requestPermission(final RequestPermissionCallBack requestPermission, RxPermissions rxPermissions, String... permissions) {
         if (permissions == null || permissions.length == 0) return;
         List<String> needRequest = new ArrayList<>();

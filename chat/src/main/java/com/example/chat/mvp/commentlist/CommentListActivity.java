@@ -3,6 +3,8 @@ package com.example.chat.mvp.commentlist;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Selection;
@@ -18,6 +20,7 @@ import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -51,6 +54,7 @@ import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.FaceTextUtil;
+import com.example.chat.util.SoftHideBoardUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.chat.view.CustomMoveMethod;
 import com.example.commonlibrary.BaseApplication;
@@ -70,6 +74,7 @@ import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.CommonUtil;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
@@ -138,6 +143,13 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
     @Override
     protected int getContentLayout() {
         return R.layout.activity_comment_list;
+    }
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SoftHideBoardUtil.assistActivity(this);
     }
 
     @Override
@@ -216,6 +228,8 @@ public class CommentListActivity extends SlideBaseActivity<List<PublicCommentBea
                 if (newState != RecyclerView.SCROLL_STATE_IDLE) {
                     currentPosition = -1;
                     input.setHint("");
+                        CommonUtils.hideSoftInput(
+                                CommentListActivity.this, input);
                 }
             }
         });
