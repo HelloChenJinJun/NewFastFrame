@@ -6,7 +6,8 @@ import android.view.View;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 
 
-public abstract class OnLoadMoreScrollListener extends RecyclerView.OnScrollListener {
+public abstract class
+OnLoadMoreScrollListener extends RecyclerView.OnScrollListener {
 
     @Override
     public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {

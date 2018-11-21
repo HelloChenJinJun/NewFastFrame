@@ -12,7 +12,7 @@
 
     <style name="splashTheme"
            parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/de_bg</item>
+        <item name="android:windowBackground">@mipmap/de_bg</item>
     </style>
 
 

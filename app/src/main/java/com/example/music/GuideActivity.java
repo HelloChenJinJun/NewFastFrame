@@ -56,8 +56,8 @@ public class GuideActivity extends BaseActivity implements ViewPager.OnPageChang
         two = findViewById(R.id.view_activity_guide_two);
         three = findViewById(R.id.view_activity_guide_three);
         four = findViewById(R.id.view_activity_guide_four);
-        int[] imageResId = new int[]{R.drawable.login_container_bg_01, R.drawable.login_container_bg_02
-                , R.drawable.login_container_bg_03, R.drawable.login_container_bg_04};
+        int[] imageResId = new int[]{R.mipmap.login_container_bg_01, R.mipmap.login_container_bg_02
+                , R.mipmap.login_container_bg_03, R.mipmap.login_container_bg_04};
         List<View> viewList = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             View view = getLayoutInflater().inflate(R.layout.view_activity_guide, null);

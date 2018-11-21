@@ -11,7 +11,7 @@
         android:layout_marginLeft="-50dp"
         android:layout_marginRight="-300dp"
         android:scaleType="centerCrop"
-        android:background="@color/white"/>
+        android:background="@mipmap/de_bg"/>
 
     <TextView
         android:layout_width="wrap_content"

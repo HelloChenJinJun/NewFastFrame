@@ -24,7 +24,7 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:             1981367757
  */
 
-public class OtherNewsDetailPresenter extends BasePresenter<IView<OtherNewsDetailBean>,DefaultModel> {
+public class OtherNewsDetailPresenter extends BasePresenter<IView<OtherNewsDetailBean>, DefaultModel> {
     public OtherNewsDetailPresenter(IView<OtherNewsDetailBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
@@ -35,7 +35,7 @@ public class OtherNewsDetailPresenter extends BasePresenter<IView<OtherNewsDetai
                 .getNewsDetail(postId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<Map<String,OtherNewsDetailBean>, OtherNewsDetailBean>() {
+                .map(new Function<Map<String, OtherNewsDetailBean>, OtherNewsDetailBean>() {
                     @Override
                     public OtherNewsDetailBean apply(@NonNull Map<String, OtherNewsDetailBean> stringOtherNewsDetailBeanMap) throws Exception {
                         return stringOtherNewsDetailBeanMap.get(postId);
@@ -44,8 +44,8 @@ public class OtherNewsDetailPresenter extends BasePresenter<IView<OtherNewsDetai
                 .doOnNext(new Consumer<OtherNewsDetailBean>() {
                     @Override
                     public void accept(@NonNull OtherNewsDetailBean otherNewsDetailBean) throws Exception {
-                        if (otherNewsDetailBean.getImg()!=null&&otherNewsDetailBean
-                                .getImg().size()>0) {
+                        if (otherNewsDetailBean.getImg() != null && otherNewsDetailBean
+                                .getImg().size() > 0) {
                             String body = otherNewsDetailBean.getBody();
                             for (OtherNewsDetailBean.ImgEntity imgEntity : otherNewsDetailBean.getImg()) {
                                 String ref = imgEntity.getRef();
@@ -64,22 +64,22 @@ public class OtherNewsDetailPresenter extends BasePresenter<IView<OtherNewsDetai
 
             @Override
             public void onNext(@NonNull OtherNewsDetailBean otherNewsDetailBean) {
-                    iView.updateData(otherNewsDetailBean);
+                iView.updateData(otherNewsDetailBean);
             }
 
             @Override
             public void onError(@NonNull Throwable e) {
-                        iView.showError(null, new EmptyLayout.OnRetryListener() {
-                            @Override
-                            public void onRetry() {
-                                getOtherNewsDetailData(postId);
-                            }
-                        });
+                iView.showError(null, new EmptyLayout.OnRetryListener() {
+                    @Override
+                    public void onRetry() {
+                        getOtherNewsDetailData(postId);
+                    }
+                });
             }
 
             @Override
             public void onComplete() {
-                    iView.hideLoading();
+                iView.hideLoading();
             }
         });
 

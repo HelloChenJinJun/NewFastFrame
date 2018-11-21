@@ -155,7 +155,6 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         } else if (from.equals(Constant.TYPE_GROUP)) {
             groupId = getIntent().getStringExtra(Constant.ID);
             groupTableEntity = UserDBManager.getInstance().getGroupTableEntity(groupId);
-
         }
         initActionBar();
         refreshData();

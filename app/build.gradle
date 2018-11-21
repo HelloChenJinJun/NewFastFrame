@@ -29,10 +29,10 @@ android {
         exclude 'META-INF/maven/com.google.code.gson/gson/pom.xml'
         exclude 'META-INF/maven/com.google.code.gson/gson/pom.properties'
     }
-    aaptOptions {
-        cruncherEnabled = false
-//        useNewCruncher = false
-    }
+//    aaptOptions {
+//        cruncherEnabled = false
+////        useNewCruncher = false
+//    }
     signingConfigs {
         config {
             keyAlias 'chen'
@@ -109,4 +109,4 @@ dependencies {
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
 }
 
-//apply from: 'tinker-support.gradle'
+apply from: 'tinker-support.gradle'
