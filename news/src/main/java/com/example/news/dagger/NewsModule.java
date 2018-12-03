@@ -1,7 +1,6 @@
 package com.example.news.dagger;
 
 
-
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.commonlibrary.mvp.model.DefaultModel;
@@ -30,8 +29,6 @@ import retrofit2.Retrofit;
 public class NewsModule {
 
 
-
-
     @Provides
     public DefaultRepositoryManager provideRepositoryManager(@Named("news") Retrofit retrofit, DaoSession daoSession) {
         return new DefaultRepositoryManager(retrofit, daoSession);
@@ -39,14 +36,14 @@ public class NewsModule {
 
 
     @Provides
-    public DefaultModel provideModel(DefaultRepositoryManager defaultRepositoryManager){
+    public DefaultModel provideModel(DefaultRepositoryManager defaultRepositoryManager) {
         return new DefaultModel(defaultRepositoryManager);
     }
 
     @Provides
     @Named("news")
     @PerApplication
-    public Retrofit provideRetrofit(@Named("news") OkHttpClient okHttpClient,Retrofit.Builder builder){
+    public Retrofit provideRetrofit(@Named("news") OkHttpClient okHttpClient, Retrofit.Builder builder) {
         return builder.baseUrl(NewsUtil.BASE_URL).client(okHttpClient).build();
     }
 
@@ -54,13 +51,13 @@ public class NewsModule {
     @Provides
     @Named("news")
     @PerApplication
-    public OkHttpClient provideOkHttpClient(OkHttpClient.Builder builder,File cacheFile,@Named("news")NewsInterceptor interceptor){
-        CacheControlInterceptor cacheControlInterceptor=new CacheControlInterceptor();
+    public OkHttpClient provideOkHttpClient(OkHttpClient.Builder builder, File cacheFile, @Named("news") NewsInterceptor interceptor) {
+        CacheControlInterceptor cacheControlInterceptor = new CacheControlInterceptor();
         builder.addInterceptor(interceptor)
-        .addInterceptor(cacheControlInterceptor)
+                .addInterceptor(cacheControlInterceptor)
                 .addNetworkInterceptor(cacheControlInterceptor)
-        .cache(new Cache(new File(cacheFile.getAbsolutePath(),"news"),
-                1024*1024*100));
+                .cache(new Cache(new File(cacheFile.getAbsolutePath(), "news"),
+                        1024 * 1024 * 100));
         builder.followRedirects(true);
         return builder.build();
     }
@@ -69,7 +66,7 @@ public class NewsModule {
     @Provides
     @Named("news")
     @PerApplication
-    public NewsInterceptor provideNewsInterceptor(){
+    public NewsInterceptor provideNewsInterceptor() {
         return new NewsInterceptor();
     }
 }

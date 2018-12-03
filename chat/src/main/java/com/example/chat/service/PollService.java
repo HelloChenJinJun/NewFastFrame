@@ -66,7 +66,7 @@ import io.reactivex.disposables.Disposable;
  * QQ:             1981367757
  */
 
-public class PollService extends Service implements SensorEventListener{
+public class PollService extends Service implements SensorEventListener {
 
     private Disposable disposable;
     private StepDetector stepDetector;
@@ -92,11 +92,11 @@ public class PollService extends Service implements SensorEventListener{
         }
 
         if (UserDBManager.getInstance().getStepData(TimeUtil
-                .getTime(System.currentTimeMillis(),"yyyy-MM-dd"))==null){
-            BmobQuery<StepBean> bmobQuery=new BmobQuery<>();
-            bmobQuery.addWhereEqualTo("time",TimeUtil
-                    .getTime(System.currentTimeMillis(),"yyyy-MM-dd"));
-            bmobQuery.addWhereEqualTo("user",new BmobPointer(UserManager.getInstance().getCurrentUser()));
+                .getTime(System.currentTimeMillis(), "yyyy-MM-dd")) == null) {
+            BmobQuery<StepBean> bmobQuery = new BmobQuery<>();
+            bmobQuery.addWhereEqualTo("time", TimeUtil
+                    .getTime(System.currentTimeMillis(), "yyyy-MM-dd"));
+            bmobQuery.addWhereEqualTo("user", new BmobPointer(UserManager.getInstance().getCurrentUser()));
             bmobQuery.include("user");
             bmobQuery.findObjects(new FindListener<StepBean>() {
                 @Override
@@ -143,35 +143,33 @@ public class PollService extends Service implements SensorEventListener{
     }
 
 
-
-
-
     private void dealStep() {
         dealReceiver();
-        SensorManager sensorManager= (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager==null)return;
-        Sensor sensor=null;
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager == null)
+            return;
+        Sensor sensor = null;
         if (Build.VERSION.SDK_INT > 19) {
-             sensor=sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             if (sensor == null) {
-                sensor=sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+                sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
             }
         }
         if (sensor == null) {
-            sensor=sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         }
-        StepData stepData=UserDBManager.getInstance()
-                .getStepData(TimeUtil.getTime(System.currentTimeMillis(),"yyyy-MM-dd"));
-        int count=0;
+        StepData stepData = UserDBManager.getInstance()
+                .getStepData(TimeUtil.getTime(System.currentTimeMillis(), "yyyy-MM-dd"));
+        int count = 0;
         if (stepData != null) {
-            count=stepData.getStepCount();
+            count = stepData.getStepCount();
         }
-        stepDetector=new StepDetector(count, stepCount -> {
-            CommonLogger.e("step:"+stepCount);
+        stepDetector = new StepDetector(count, stepCount -> {
+            CommonLogger.e("step:" + stepCount);
             RxBusManager.getInstance().post(new StepEvent(stepCount));
         });
 
-        sensorManager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private void dealReceiver() {
@@ -181,24 +179,25 @@ public class PollService extends Service implements SensorEventListener{
         intentFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         intentFilter.addAction(Intent.ACTION_SHUTDOWN);
         intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
-        registerReceiver(receiver=new BroadcastReceiver() {
+        registerReceiver(receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction()==null)return;
-                    if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)){
-                        stepDetector.setStepCount(0);
-                    }else {
-                        saveStepData();
-                    }
+                if (intent.getAction() == null)
+                    return;
+                if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)) {
+                    stepDetector.setStepCount(0);
+                } else {
+                    saveStepData();
+                }
             }
-        },intentFilter);
+        }, intentFilter);
     }
 
     private void saveStepData() {
-        String currentTime=TimeUtil.getTime(System.currentTimeMillis(),"yyyy-MM-dd");
-       StepData data=UserDBManager.getInstance().getStepData(currentTime);
+        String currentTime = TimeUtil.getTime(System.currentTimeMillis(), "yyyy-MM-dd");
+        StepData data = UserDBManager.getInstance().getStepData(currentTime);
         if (data != null) {
-            StepBean stepBean=new StepBean();
+            StepBean stepBean = new StepBean();
             stepBean.setStepCount(data.getStepCount());
             stepBean.setTime(currentTime);
             stepBean.setUser(UserManager.getInstance().getCurrentUser());
@@ -211,7 +210,7 @@ public class PollService extends Service implements SensorEventListener{
                                 .cover(stepBean));
                     }
                 });
-            }else {
+            } else {
                 stepBean.save(new SaveListener<String>() {
                     @Override
                     public void done(String s, BmobException e) {
@@ -220,8 +219,8 @@ public class PollService extends Service implements SensorEventListener{
                     }
                 });
             }
-        }else if (stepDetector.getStepCount()!=0){
-            StepBean stepBean=new StepBean();
+        } else if (stepDetector.getStepCount() != 0) {
+            StepBean stepBean = new StepBean();
             stepBean.setStepCount(stepDetector.getStepCount());
             stepBean.setTime(currentTime);
             stepBean.setUser(UserManager.getInstance().getCurrentUser());
@@ -229,7 +228,7 @@ public class PollService extends Service implements SensorEventListener{
                 @Override
                 public void done(String s, BmobException e) {
                     UserDBManager.getInstance().getDaoSession().insert(MsgManager.getInstance()
-                    .cover(stepBean));
+                            .cover(stepBean));
                 }
             });
 
@@ -246,7 +245,7 @@ public class PollService extends Service implements SensorEventListener{
         }
         query.addWhereEqualTo(Constant.TAG_MESSAGE_SEND_STATUS, Constant.SEND_STATUS_SUCCESS);
         query.addWhereEqualTo(Constant.TAG_MESSAGE_READ_STATUS, Constant.READ_STATUS_UNREAD);
-//                按升序进行排序
+        //                按升序进行排序
         query.setLimit(50);
         query.order("createdAt");
         query.findObjects(new FindListener<ChatMessage>() {
@@ -307,7 +306,7 @@ public class PollService extends Service implements SensorEventListener{
                             result.add(postNotifyInfo);
                             item.setReadStatus(Constant.READ_STATUS_READED);
                         }
-                        List<BmobObject>  update=new ArrayList<>(list);
+                        List<BmobObject> update = new ArrayList<>(list);
                         new BmobBatch().updateBatch(update).doBatch(new QueryListListener<BatchResult>() {
                             @Override
                             public void done(List<BatchResult> results, BmobException e) {
@@ -317,8 +316,8 @@ public class PollService extends Service implements SensorEventListener{
                                     UserDBManager.getInstance().addOrUpdateUser(list.get(0).getRelatedUser());
                                     RxBusManager.getInstance().post(new UnReadPostNotifyEvent(list.get(0)));
                                     ChatNotificationManager.getInstance(getBaseContext()).showNotification(null, getBaseContext(), "你有一条帖子相关通知", R.mipmap.ic_launcher, "你有一条帖子相关通知", CommentNotifyActivity.class);
-                                }else {
-                                    CommonLogger.e("批量更新帖子相关通知已读失败"+e.toString());
+                                } else {
+                                    CommonLogger.e("批量更新帖子相关通知已读失败" + e.toString());
                                 }
                             }
                         });
@@ -381,7 +380,7 @@ public class PollService extends Service implements SensorEventListener{
         if (disposable != null) {
             disposable.dispose();
         }
-        if (receiver!=null) {
+        if (receiver != null) {
             unregisterReceiver(receiver);
         }
         super.onDestroy();

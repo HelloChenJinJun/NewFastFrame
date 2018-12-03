@@ -41,6 +41,7 @@ public class SingerInfoPresenter extends BasePresenter<IView<List<MusicPlayBean>
                     @Override
                     public void onError(@NonNull Throwable e) {
                         iView.showError(null, new EmptyLayout.OnRetryListener() {
+
                             @Override
                             public void onRetry() {
                                 getLocalSingerMusic(tingId);

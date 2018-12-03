@@ -46,17 +46,12 @@ public class CardLoginPresenter extends BasePresenter<IView<Object>, DefaultMode
                     @Override
                     public void onNext(@NonNull ResponseBody responseBody) {
                         iView.updateData(BaseApplication.getAppComponent().getSharedPreferences()
-                        .getString(NewsUtil.CARD_LOGIN_COOKIE,""));
+                                .getString(NewsUtil.CARD_LOGIN_COOKIE, ""));
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        iView.showError(null, new EmptyLayout.OnRetryListener() {
-                            @Override
-                            public void onRetry() {
-                                getCookie();
-                            }
-                        });
+                        iView.showError(null, () -> getCookie());
                     }
 
                     @Override
@@ -112,7 +107,7 @@ public class CardLoginPresenter extends BasePresenter<IView<Object>, DefaultMode
             return;
         }
         baseModel.getRepositoryManager().getApi(CugCardApi.class)
-                .login(NewsUtil.CARD_POST_LOGIN_URL,NewsUtil.getLoginRequestBody(account, pw, verifyCode))
+                .login(NewsUtil.CARD_POST_LOGIN_URL, NewsUtil.getLoginRequestBody(account, pw, verifyCode))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<CardLoginBean>() {
@@ -142,8 +137,6 @@ public class CardLoginPresenter extends BasePresenter<IView<Object>, DefaultMode
                     }
                 });
     }
-
-
 
 
 }

@@ -3,11 +3,8 @@ package com.example.music;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.commonlibrary.BaseApplication;
@@ -21,12 +18,6 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.interfaces.BetaPatchListener;
 import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
-//import com.tencent.bugly.Bugly;
-//import com.tencent.bugly.BuglyStrategy;
-//import com.tencent.bugly.beta.Beta;
-//import com.tencent.bugly.beta.interfaces.BetaPatchListener;
-//import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
-
 import java.util.Locale;
 import java.util.Map;
 

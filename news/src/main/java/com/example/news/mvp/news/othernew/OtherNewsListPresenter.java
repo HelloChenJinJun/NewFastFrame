@@ -12,6 +12,7 @@ import com.example.news.bean.NewInfoBean;
 import com.example.news.bean.PhotoSetBean;
 import com.example.news.util.NewsUtil;
 
+import java.security.KeyPairGenerator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -146,6 +147,7 @@ public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean
      * @return
      */
     public String clipPhotoSetId(String photoId) {
+        KeyPairGenerator keyPairGenerator=KeyPairGenerator.getInstance()
         if (TextUtils.isEmpty(photoId)) {
             return photoId;
         }

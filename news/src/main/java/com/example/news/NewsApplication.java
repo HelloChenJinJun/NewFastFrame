@@ -2,6 +2,7 @@ package com.example.news;
 
 import android.app.Application;
 import android.content.Context;
+
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.module.IAppLife;
@@ -37,7 +38,7 @@ import java.util.Map;
  * QQ:             1981367757
  */
 
-public class NewsApplication implements  IAppLife {
+public class NewsApplication implements IAppLife {
     private static NewsComponent newsComponent;
 
     @Override
@@ -123,13 +124,6 @@ public class NewsApplication implements  IAppLife {
             for (JsonElement item :
                     jsonElements) {
                 OtherNewsTypeBean bean = gson.fromJson(item, OtherNewsTypeBean.class);
-//                if (bean.getName().equals("头条")
-//                        || bean.getName().equals("福利")
-//                        || bean.getName().equals("地大")) {
-//                    bean.setHasSelected(true);
-//                } else {
-//                    bean.setHasSelected(false);
-//                }
                 bean.setHasSelected(true);
                 result.add(bean);
             }

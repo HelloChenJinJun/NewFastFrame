@@ -32,6 +32,7 @@ public class SingerListFragment extends BaseFragment<Object, SingerListPresenter
     SingerListAdapter singerListAdapter;
 
 
+
     @Override
     protected boolean isNeedHeadLayout() {
         return false;

@@ -46,9 +46,6 @@ public interface OtherNewsApi {
             ,NewsUtil.CACHE_CONTROL})
     @GET("photo/api/set/{photoId}.json")
     Observable<PhotoSetBean> getPhotoSetData(@Path("photoId") String photoId);
-
-
-
     @GET
     Observable<PictureBean> getPhotoListData(@Url String url);
 

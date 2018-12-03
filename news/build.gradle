@@ -84,13 +84,11 @@ android {
         implementation ('com.github.chrisbanes.photoview:library:1.2.4'){
             exclude module:"appcompat-v7"
             exclude module:"support-v4"
-
         }
 
         implementation ('com.zzhoujay.richtext:richtext:2.0.9'){
             exclude module:"appcompat-v7"
             exclude module:"support-v4"
-
         }
         annotationProcessor rootProject.ext.dependencies.dagger2_compiler
         implementation (rootProject.ext.dependencies.cardview){
