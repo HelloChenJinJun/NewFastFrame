@@ -147,7 +147,7 @@ public class OtherNewsListPresenter extends BasePresenter<IView<List<NewInfoBean
      * @return
      */
     public String clipPhotoSetId(String photoId) {
-        KeyPairGenerator keyPairGenerator=KeyPairGenerator.getInstance()
+//        KeyPairGenerator keyPairGenerator=KeyPairGenerator.getInstance(ph);
         if (TextUtils.isEmpty(photoId)) {
             return photoId;
         }
