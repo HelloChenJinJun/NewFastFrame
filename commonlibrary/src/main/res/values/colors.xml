@@ -24,8 +24,8 @@
     <!--<color name="custom_color_text_sub">#FF666666</color>-->
     <!--<color name="custom_color_app_content_div">#FF191919</color>    -->
 
-
-    <color name="custom_color_app_bg">#ECF1F5</color>
+    <!--#FFF6F8FA     公共的#ECF1F5  -->
+    <color name="custom_color_app_bg">#FFF6F8FA</color>
     <color name="custom_color_app_title_bg">#ffffffff</color>
     <color name="custom_color_app_content_bg">#ffffffff</color>
     <color name="custom_color_text_main">@color/black</color>

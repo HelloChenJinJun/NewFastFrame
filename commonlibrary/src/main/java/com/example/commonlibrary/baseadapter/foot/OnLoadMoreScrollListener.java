@@ -1,13 +1,13 @@
 package com.example.commonlibrary.baseadapter.foot;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 
+import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class
-OnLoadMoreScrollListener extends RecyclerView.OnScrollListener {
+
+public abstract class OnLoadMoreScrollListener extends RecyclerView.OnScrollListener {
 
     @Override
     public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
@@ -16,15 +16,16 @@ OnLoadMoreScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-        int result=1;
+        int result = 1;
         if (recyclerView instanceof SuperRecyclerView) {
-            SuperRecyclerView superRecyclerView= (SuperRecyclerView) recyclerView;
-            result+=superRecyclerView.getHeaderContainer().getChildCount();
+            SuperRecyclerView superRecyclerView = (SuperRecyclerView) recyclerView;
+            result += superRecyclerView.getHeaderContainer().getChildCount();
         }
         int visibleItemCount = layoutManager.getChildCount();
+        boolean flag = recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange();
         boolean triggerCondition = visibleItemCount > result
                 && newState == RecyclerView.SCROLL_STATE_IDLE
-                && canTriggerLoadMore(recyclerView);
+                && canTriggerLoadMore(recyclerView) && flag;
         if (triggerCondition) {
             onLoadMore(recyclerView);
         }

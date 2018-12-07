@@ -52,7 +52,7 @@ public class SkinItem {
                         ((TextView) view).setTextColor(value);
                     } else if (skinAttr.getAttrName().equals("background")) {
                         if (view instanceof SeekBar) {
-//                            不设置seekbar的背景
+                            // 不设置seekbar的背景
                             continue;
                         }
                         view.setBackgroundColor(value);

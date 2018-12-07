@@ -2,7 +2,7 @@ package com.example.chat.util;
 
 import android.util.Log;
 
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
@@ -18,27 +18,27 @@ public class LogUtil {
         private static final String TAG = "TestChat";
 
         public static void v(String tag, String msg) {
-                if (Constant.DEBUG) {
+                if (ConstantUtil.DEBUG) {
                         Log.v(tag, msg);
                 }
         }
 
 
         public static void i(String msg) {
-                if (Constant.DEBUG) {
+                if (ConstantUtil.DEBUG) {
                         Log.i(TAG, msg);
                 }
         }
 
         public static void e(String msg) {
-                if (Constant.DEBUG) {
+                if (ConstantUtil.DEBUG) {
                         Log.e(TAG, msg);
                 }
         }
 
 
         public static void e(GroupTableMessage message) {
-                if (Constant.DEBUG) {
+                if (ConstantUtil.DEBUG) {
                         LogUtil.e("群结构消息格式如下:\n");
                         LogUtil.e("groupId:" + message.getGroupId() + "\n"
                                 + "toId" + message.getToId() + "\n"
@@ -59,19 +59,19 @@ public class LogUtil {
         }
 
         public static void e(String tag, String msg) {
-                if (Constant.DEBUG) {
+                if (ConstantUtil.DEBUG) {
                         Log.e(tag, msg);
                 }
         }
 
         public static void e(GroupChatMessage groupChatMessage) {
-                if (Constant.DEBUG) {
+                if (ConstantUtil.DEBUG) {
                         LogUtil.e(groupChatMessage.toString());
                 }
         }
 
         public static void e(ChatMessage chatMessage) {
-                if (Constant.DEBUG) {
+                if (ConstantUtil.DEBUG) {
                         LogUtil.e(chatMessage.toString());
                 }
         }
@@ -80,7 +80,7 @@ public class LogUtil {
 
 
         public static void e(User user) {
-                if (Constant.DEBUG) {
+                if (ConstantUtil.DEBUG) {
                         LogUtil.e("用户信息如下");
                         LogUtil.e("avatar" + user.getAvatar() + "\n"
                                 + "name" + user.getUsername() + "\n"

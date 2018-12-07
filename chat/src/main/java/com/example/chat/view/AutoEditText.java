@@ -13,6 +13,8 @@ import android.view.animation.TranslateAnimation;
 import com.example.chat.R;
 import com.example.chat.util.LogUtil;
 
+import androidx.appcompat.widget.AppCompatEditText;
+
 
 /**
  * 项目名称:    TestChat
@@ -21,7 +23,7 @@ import com.example.chat.util.LogUtil;
  * QQ:             1981367757
  */
 
-public class AutoEditText extends android.support.v7.widget.AppCompatEditText implements TextWatcher, View.OnFocusChangeListener {
+public class AutoEditText extends AppCompatEditText implements TextWatcher, View.OnFocusChangeListener {
         private Drawable deleteIcon;
 
         public AutoEditText(Context context) {

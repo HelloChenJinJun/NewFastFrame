@@ -1,7 +1,7 @@
 package com.example.commonlibrary.imageloader.glide;
 
 import android.graphics.Bitmap;
-import android.widget.ImageView;
+import android.view.View;
 
 import com.bumptech.glide.load.Transformation;
 import com.example.commonlibrary.imageloader.base.BaseImageLoaderConfig;
@@ -11,28 +11,37 @@ import com.example.commonlibrary.imageloader.base.BaseImageLoaderConfig;
  */
 
 public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
-    public static final int CACHE_ALL=0;
-    public static final int CACHE_NONE=1;
-    public static final int CACHE_SOURCE=2;
-    public static final int CACHE_RESULT=3;
+    public static final int CACHE_ALL = 0;
+    public static final int CACHE_NONE = 1;
+    public static final int CACHE_SOURCE = 2;
+    public static final int CACHE_RESULT = 3;
 
 
     private Transformation<Bitmap> bitmapTransformation;
     private int cacheStrategy;
     private boolean isClearMemoryCache;
     private boolean isClearDiskCache;
-    private boolean isCenterInside=false;
+    private boolean isCenterInside;
+    private boolean asGif;
 
     private GlideImageLoaderConfig(Builder builder) {
-        setImageView(builder.imageView);
+        setView(builder.imageView);
+        setHeight(builder.height);
+        setWidth(builder.width);
+        asGif = builder.asGif;
         setUrl(builder.url);
         setErrorResId(builder.errorResId);
         bitmapTransformation = builder.bitmapTransformation;
-        isCenterInside=builder.isCenterInside;
+        isCenterInside = builder.isCenterInside;
         setPlaceHolderResId(builder.placeHolderResId);
         cacheStrategy = builder.cacheStrategy;
         isClearMemoryCache = builder.isClearMemeryCache;
         isClearDiskCache = builder.isClearDiskCache;
+    }
+
+
+    public boolean asGif() {
+        return asGif;
     }
 
 
@@ -48,7 +57,7 @@ public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
         return isClearDiskCache;
     }
 
-    public boolean isCenterInside(){
+    public boolean isCenterInside() {
         return isCenterInside;
     }
 
@@ -57,8 +66,12 @@ public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
         return isClearMemoryCache;
     }
 
+    public static Builder newBuild() {
+        return new Builder();
+    }
+
     public static final class Builder {
-        private ImageView imageView;
+        private View imageView;
         private String url;
         private int errorResId;
         private Transformation<Bitmap> bitmapTransformation;
@@ -66,20 +79,36 @@ public class GlideImageLoaderConfig extends BaseImageLoaderConfig {
         private int cacheStrategy;
         private boolean isClearMemeryCache;
         private boolean isClearDiskCache;
-        private boolean isCenterInside=false;
+        private boolean isCenterInside = false;
+        private boolean asGif = false;
+        private int width = 0;
+        private int height = 0;
+
 
         public Builder() {
         }
 
-        public Builder imageView(ImageView val) {
+        public Builder asGif() {
+            asGif = true;
+            return this;
+        }
+
+
+        public Builder override(int width, int height) {
+            this.width = width;
+            this.height = height;
+            return this;
+        }
+
+
+        public Builder imageView(View val) {
             imageView = val;
             return this;
         }
 
 
-
-        public Builder centerInside(){
-            isCenterInside=true;
+        public Builder centerInside() {
+            isCenterInside = true;
             return this;
         }
 

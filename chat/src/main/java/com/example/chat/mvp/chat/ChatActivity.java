@@ -9,10 +9,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.Spannable;
@@ -27,19 +23,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.chat.R;
 import com.example.chat.adapter.ChatMessageAdapter;
 import com.example.chat.adapter.EmotionViewAdapter;
-import com.example.chat.base.Constant;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ConstantUtil;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.FaceText;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
-import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.MessageContent;
 import com.example.chat.dagger.chat.ChatActivityModule;
 import com.example.chat.dagger.chat.DaggerChatActivityComponent;
@@ -61,7 +55,6 @@ import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.FileUtil;
 import com.example.chat.util.LogUtil;
 import com.example.chat.util.SoftHideBoardUtil;
-import com.example.chat.util.SystemUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.CommonPagerAdapter;
@@ -70,29 +63,29 @@ import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.cusotomview.BaseDialog;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
+import com.example.commonlibrary.cusotomview.WrappedViewPager;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.PermissionPageUtils;
 import com.example.commonlibrary.utils.PermissionUtil;
+import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
-import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUtils;
 import cn.jzvd.JZVideoPlayer;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    HappyChat
@@ -100,15 +93,15 @@ import io.reactivex.functions.Consumer;
  * 创建时间:    2016/9/13      21:53
  * QQ:             1981367757
  */
-public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> implements View.OnClickListener, TextWatcher, View.OnLongClickListener, View.OnTouchListener {
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> implements View.OnClickListener, TextWatcher, View.OnLongClickListener, View.OnTouchListener {
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private SuperRecyclerView display;
     private EditText input;
     private Button speak;
     private Button voice;
     private Button send;
     private Button keyboard;
-    private ViewPager mViewPager;
+    private WrappedViewPager mViewPager;
     private LinearLayout l1_more;
     private RelativeLayout r1_emotion;
     private LinearLayout l1_add;
@@ -148,12 +141,12 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        from = getIntent().getStringExtra(Constant.FROM);
-        if (from.equals(Constant.TYPE_PERSON)) {
-            uid = getIntent().getStringExtra(Constant.ID);
+        from = getIntent().getStringExtra(ConstantUtil.FROM);
+        if (from.equals(ConstantUtil.TYPE_PERSON)) {
+            uid = getIntent().getStringExtra(ConstantUtil.ID);
             userEntity = UserDBManager.getInstance().getUser(uid);
-        } else if (from.equals(Constant.TYPE_GROUP)) {
-            groupId = getIntent().getStringExtra(Constant.ID);
+        } else if (from.equals(ConstantUtil.TYPE_GROUP)) {
+            groupId = getIntent().getStringExtra(ConstantUtil.ID);
             groupTableEntity = UserDBManager.getInstance().getGroupTableEntity(groupId);
         }
         initActionBar();
@@ -162,29 +155,29 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     }
 
     private void initMiddleView() {
-        record_container = (RelativeLayout) findViewById(R.id.r1_chat_middle_voice_container);
-        record_display = (ImageView) findViewById(R.id.iv_chat_middle_voice_display);
-        record_tip = (TextView) findViewById(R.id.tv_chat_middle_voice_tip);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swl_chat_refresh);
-        display = (SuperRecyclerView) findViewById(R.id.srcv_chat_display);
+        record_container = findViewById(R.id.r1_chat_middle_voice_container);
+        record_display = findViewById(R.id.iv_chat_middle_voice_display);
+        record_tip = findViewById(R.id.tv_chat_middle_voice_tip);
+        mSwipeRefreshLayout = findViewById(R.id.swl_chat_refresh);
+        display = findViewById(R.id.srcv_chat_display);
     }
 
 
     private void initBottomView() {
-        Button add = (Button) findViewById(R.id.btn_chat_bottom_add);
-        Button emotion = (Button) findViewById(R.id.btn_chat_bottom_emotion);
-        input = (EditText) findViewById(R.id.et_chat_bottom_input);
-        speak = (Button) findViewById(R.id.btn_chat_bottom_speak);
-        send = (Button) findViewById(R.id.btn_chat_bottom_send);
-        voice = (Button) findViewById(R.id.btn_chat_bottom_voice);
-        keyboard = (Button) findViewById(R.id.btn_chat_bottom_keyboard);
-        l1_more = (LinearLayout) findViewById(R.id.l1_chat_bottom_more);
-        mViewPager = (ViewPager) findViewById(R.id.vp_chat_bottom_emotion);
-        r1_emotion = (RelativeLayout) findViewById(R.id.r1_chat_bottom_emotion);
-        l1_add = (LinearLayout) findViewById(R.id.l1_chat_bottom_add);
-        TextView picture = (TextView) findViewById(R.id.tv_chat_bottom_picture);
-        TextView video = (TextView) findViewById(R.id.tv_chat_bottom_video);
-        TextView location = (TextView) findViewById(R.id.tv_chat_bottom_location);
+        Button add = findViewById(R.id.btn_chat_bottom_add);
+        Button emotion = findViewById(R.id.btn_chat_bottom_emotion);
+        input = findViewById(R.id.et_chat_bottom_input);
+        speak = findViewById(R.id.btn_chat_bottom_speak);
+        send = findViewById(R.id.btn_chat_bottom_send);
+        voice = findViewById(R.id.btn_chat_bottom_voice);
+        keyboard = findViewById(R.id.btn_chat_bottom_keyboard);
+        l1_more = findViewById(R.id.l1_chat_bottom_more);
+        mViewPager = findViewById(R.id.vp_chat_bottom_emotion);
+        r1_emotion = findViewById(R.id.r1_chat_bottom_emotion);
+        l1_add = findViewById(R.id.l1_chat_bottom_add);
+        TextView picture = findViewById(R.id.tv_chat_bottom_picture);
+        TextView video = findViewById(R.id.tv_chat_bottom_video);
+        TextView location = findViewById(R.id.tv_chat_bottom_location);
         add.setOnClickListener(this);
         emotion.setOnClickListener(this);
         input.addTextChangedListener(this);
@@ -217,17 +210,17 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                 .chatActivityModule(new ChatActivityModule(this))
                 .chatMainComponent(getChatMainComponent())
                 .build().inject(this);
-        from = getIntent().getStringExtra(Constant.FROM);
-        if (from.equals(Constant.TYPE_PERSON)) {
-            uid = getIntent().getStringExtra(Constant.ID);
+        from = getIntent().getStringExtra(ConstantUtil.FROM);
+        if (from.equals(ConstantUtil.TYPE_PERSON)) {
+            uid = getIntent().getStringExtra(ConstantUtil.ID);
             userEntity = UserDBManager.getInstance().getUser(uid);
-        } else if (from.equals(Constant.TYPE_GROUP)) {
-            groupId = getIntent().getStringExtra(Constant.ID);
+        } else if (from.equals(ConstantUtil.TYPE_GROUP)) {
+            groupId = getIntent().getStringExtra(ConstantUtil.ID);
             groupTableEntity = UserDBManager.getInstance().getGroupTableEntity(groupId);
 
         }
         initActionBar();
-//                 声音音量变化图片资源
+        //                 声音音量变化图片资源
         voiceImageId = new int[]{R.mipmap.chat_icon_voice1, R.mipmap.chat_icon_voice2, R.mipmap.chat_icon_voice3, R.mipmap.chat_icon_voice4,
                 R.mipmap.chat_icon_voice5, R.mipmap.chat_icon_voice6};
         initRecordManager();
@@ -257,21 +250,21 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                     MapActivity.start(ChatActivity.this, true
                             , messageContent.getLongitude()
                             , messageContent.getLatitude()
-                            , messageContent.getAddress(), Constant.REQUEST_MAP);
+                            , messageContent.getAddress(), ConstantUtil.REQUEST_MAP);
                 } else if (id == R.id.iv_item_activity_chat_send_image
                         || id == R.id.iv_item_activity_chat_receive_image) {
-                    ArrayList<ImageItem> list = new ArrayList<>();
+                    ArrayList<SystemUtil.ImageItem> list = new ArrayList<>();
                     int temp = 0;
                     int currentPosition = 0;
                     for (int i = 0; i < mAdapter.getData().size(); i++) {
                         BaseMessage item = mAdapter.getData(i);
-                        if (item.getContentType().equals(Constant.TAG_MSG_TYPE_IMAGE)) {
+                        if (item.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_IMAGE)) {
                             MessageContent messageContent = gson.fromJson(item.getContent(), MessageContent
                                     .class);
                             if (item.equals(baseMessage)) {
                                 currentPosition = temp;
                             }
-                            ImageItem imageItem = new ImageItem();
+                            SystemUtil.ImageItem imageItem = new SystemUtil.ImageItem();
                             imageItem.setPath(messageContent.getUrlList().get(0));
                             list.add(imageItem);
                             temp++;
@@ -316,7 +309,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     }
 
     private void reSendMessage(BaseMessage data) {
-        data.setSendStatus(Constant.SEND_STATUS_SENDING);
+        data.setSendStatus(ConstantUtil.SEND_STATUS_SENDING);
         mAdapter.addData(data);
         if (data instanceof ChatMessage) {
             presenter.sendChatMessage(((ChatMessage) data));
@@ -338,17 +331,16 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
             } else if (messageInfoEvent.getMessageType() == MessageInfoEvent.TYPE_GROUP_TABLE) {
                 for (GroupTableMessage message : messageInfoEvent.getGroupTableMessageList()
                         ) {
-//                    onProcessGroupTableMessage(message);
+                    //                    onProcessGroupTableMessage(message);
                 }
             }
         }));
-
         presenter.registerEvent(NetStatusEvent.class, netStatusEvent -> {
             if (netStatusEvent.isConnected()) {
                 ToastUtils.showShortToast("断线重连.......");
                 for (BaseMessage message :
                         mAdapter.getData()) {
-                    if (message.getSendStatus().equals(Constant.SEND_STATUS_FAILED)
+                    if (message.getSendStatus().equals(ConstantUtil.SEND_STATUS_FAILED)
                             && message.getBelongId().equals(UserManager.getInstance()
                             .getCurrentUserObjectId())) {
                         reSendMessage(message);
@@ -356,46 +348,6 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                 }
             }
         });
-
-
-        if (from.equals(Constant.TYPE_GROUP)) {
-//            addDisposable(RxBusManager.getInstance().registerEvent(GroupInfoEvent.class, groupInfoEvent -> {
-//                //                                刷新过来的，更新下群结构消息
-//                groupTableEntity = UserDBManager.getInstance().getGroupTableEntity(groupId);
-//                int type = groupInfoEvent.getType();
-//                String content = groupInfoEvent.getContent();
-//                switch (type) {
-//                    case GroupInfoEvent.TYPE_GROUP_NAME:
-//                        String title = groupTableEntity.getGroupName() + "(" + groupTableEntity.getGroupNumber().size() + ")";
-//                        updateTitle(title);
-//                        break;
-//                    case GroupInfoEvent.TYPE_GROUP_NOTIFICATION:
-//                        LogUtil.e("这里要做群通知的界面展示" + content);
-//                        break;
-//                    case GroupInfoEvent.TYPE_GROUP_DESCRIPTION:
-//                        LogUtil.e("这里要做群描述的界面展示" + content);
-//                        break;
-//                    case GroupInfoEvent.TYPE_GROUP_AVATAR:
-//                        LogUtil.e("这里要做群头像的界面展示" + content);
-//                        BaseApplication
-//                                .getAppComponent()
-//                                .getImageLoader().loadImage(ChatActivity.this,new GlideImageLoaderConfig
-//                                .Builder().url(content).imageView(getIcon()).build());
-//                        break;
-//                    case GroupInfoEvent.TYPE_GROUP_NUMBER:
-//                        if (groupId != null) {
-//                            LogUtil.e("这里通知成员的变化" + content);
-//                            if (content.equals(groupId)) {
-//                                Toast.makeText(ChatActivity.this, "你已经被提出该群", Toast.LENGTH_SHORT).show();
-//                                finish();
-//                            }
-//                        }
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }));
-        }
     }
 
 
@@ -403,7 +355,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         if (message.getGroupId().equals(groupId)) {
             UserDBManager.getInstance()
                     .updateGroupChatReadStatus(groupId, message.getBelongId()
-                            , message.getCreateTime(), Constant.READ_STATUS_READED);
+                            , message.getCreateTime(), ConstantUtil.READ_STATUS_READED);
             mAdapter.addData(message);
             scrollToBottom();
         }
@@ -412,25 +364,26 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     private void onProcessNewMessages(List<ChatMessage> chatMessageList) {
         for (ChatMessage chatMessage :
                 chatMessageList) {
-            if (!uid.equals(chatMessage.getBelongId())) continue;
+            if (!uid.equals(chatMessage.getBelongId()))
+                continue;
             int messageType = chatMessage.getMessageType();
             switch (messageType) {
                 case ChatMessage.MESSAGE_TYPE_NORMAL:
                     //                在聊天界面接收到消息直接更新为已读状态
                     UserDBManager.getInstance().updateMessageReadStatus(chatMessage
                                     .getConversationId(), chatMessage.getCreateTime()
-                            , Constant.READ_STATUS_READED);
+                            , ConstantUtil.READ_STATUS_READED);
                     mAdapter.addData(chatMessage);
                     scrollToBottom();
                     break;
                 case ChatMessage.MESSAGE_TYPE_READED:
-//                    更新状态
-                    int size=mAdapter.getData().size();
+                    //                    更新状态
+                    int size = mAdapter.getData().size();
                     for (int i = 0; i < size; i++) {
-                        BaseMessage item=mAdapter.getData(i);
+                        BaseMessage item = mAdapter.getData(i);
                         if (chatMessage.equals(item)) {
-                            item.setReadStatus(Constant.READ_STATUS_READED);
-                            mAdapter.notifyItemChanged(mAdapter.getItemUpCount()+i);
+                            item.setReadStatus(ConstantUtil.READ_STATUS_READED);
+                            mAdapter.notifyItemChanged(mAdapter.getItemUpCount() + i);
                             break;
                         }
                     }
@@ -442,7 +395,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
     private void initActionBar() {
         String title;
         String avatar;
-        if (from.equals(Constant.TYPE_PERSON)) {
+        if (from.equals(ConstantUtil.TYPE_PERSON)) {
             title = userEntity.getName();
             avatar = null;
         } else {
@@ -453,7 +406,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         toolBarOption.setNeedNavigation(true);
         toolBarOption.setAvatar(avatar);
         toolBarOption.setTitle(title);
-        if (from.equals(Constant.TYPE_GROUP)) {
+        if (from.equals(ConstantUtil.TYPE_GROUP)) {
             toolBarOption.setRightText("信息");
             toolBarOption.setRightListener(v ->
                     GroupInfoActivity.start(ChatActivity.this, groupId));
@@ -463,14 +416,14 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
 
 
     private void refreshData() {
-        if (from.equals(Constant.TYPE_PERSON)) {
-            if (UserDBManager.getInstance().updateMessageReadStatusForUser(userEntity.getUid(), Constant.READ_STATUS_READED)) {
+        if (from.equals(ConstantUtil.TYPE_PERSON)) {
+            if (UserDBManager.getInstance().updateMessageReadStatusForUser(userEntity.getUid(), ConstantUtil.READ_STATUS_READED)) {
                 RxBusManager.getInstance().post(new RecentEvent(uid, RecentEvent.ACTION_ADD));
                 RxBusManager.getInstance().post(new RefreshMenuEvent(0));
             }
             mAdapter.refreshData(UserDBManager.getInstance().getAllChatMessageById(uid, 0L));
         } else {
-            if (UserDBManager.getInstance().updateGroupChatReadStatus(groupId, Constant.READ_STATUS_READED)) {
+            if (UserDBManager.getInstance().updateGroupChatReadStatus(groupId, ConstantUtil.READ_STATUS_READED)) {
                 RxBusManager.getInstance().post(new RecentEvent(groupId, RecentEvent.ACTION_ADD));
                 RxBusManager.getInstance().post(new RefreshMenuEvent(0));
             }
@@ -487,8 +440,8 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
 
     public static void start(Activity activity, String from, String id) {
         Intent intent = new Intent(activity, ChatActivity.class);
-        intent.putExtra(Constant.FROM, from);
-        intent.putExtra(Constant.ID, id);
+        intent.putExtra(ConstantUtil.FROM, from);
+        intent.putExtra(ConstantUtil.ID, id);
         activity.startActivity(intent);
     }
 
@@ -518,7 +471,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                     int startIndex = input.getSelectionStart();
                     CharSequence content1 = input.getText().insert(startIndex, content);
                     input.setText(FaceTextUtil.toSpannableString(ChatActivity.this.getApplicationContext(), content1.toString()));
-//                                        重新定位光标位置
+                    //                                        重新定位光标位置
                     CharSequence info = input.getText();
                     if (info != null) {
                         Spannable spannable = (Spannable) info;
@@ -546,7 +499,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
             public void onRecordTimeChange(int time, String localVoicePath) {
                 if (time > VoiceRecordManager.MAX_RECORD_TIME) {
                     time = VoiceRecordManager.MAX_RECORD_TIME;
-//                                这里做一个机制，防止错误重复发多次语音
+                    //                                这里做一个机制，防止错误重复发多次语音
                     speak.setPressed(false);
                     speak.setClickable(false);
                     MessageContent messageContent = new MessageContent();
@@ -554,7 +507,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                     urlList.add(localVoicePath);
                     messageContent.setUrlList(urlList);
                     messageContent.setVoiceTime(time);
-                    sendMessage(messageContent, Constant.TAG_MSG_TYPE_VOICE);
+                    sendMessage(messageContent, ConstantUtil.TAG_MSG_TYPE_VOICE);
                     Flowable.timer(1, TimeUnit.SECONDS)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(aLong -> speak.setClickable(true));
@@ -571,7 +524,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
      */
     private void LoadMessage(BaseMessage message) {
         List<BaseMessage> list = new ArrayList<>();
-        if (from.equals(Constant.TYPE_PERSON)) {
+        if (from.equals(ConstantUtil.TYPE_PERSON)) {
             if (message != null) {
                 list.addAll(UserDBManager.getInstance().getAllChatMessageById(uid, message.getCreateTime()));
             } else {
@@ -674,11 +627,11 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
             }
             MessageContent messageContent = new MessageContent();
             messageContent.setContent(input.getText().toString().trim());
-            sendMessage(messageContent, Constant.TAG_MSG_TYPE_TEXT);
+            sendMessage(messageContent, ConstantUtil.TAG_MSG_TYPE_TEXT);
         } else if (i == R.id.tv_chat_bottom_picture) {
             PhotoSelectActivity.start(this, null, true, false, null);
         } else if (i == R.id.tv_chat_bottom_location) {
-            MapActivity.start(this, false, null, null, null, Constant.REQUEST_MAP);
+            MapActivity.start(this, false, null, null, null, ConstantUtil.REQUEST_MAP);
         } else if (i == R.id.tv_chat_bottom_video) {
             videoPath = SystemUtil.recorderVideo(this, SystemUtil.REQUEST_CODE_VIDEO_RECORDER);
         }
@@ -689,14 +642,14 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case ConstantUtil.REQUEST_CODE_ONE_PHOTO:
+                case SystemUtil.REQUEST_CODE_ONE_PHOTO:
                     if (data != null) {
                         String path = data.getStringExtra(ConstantUtil.PATH);
                         MessageContent messageContent = new MessageContent();
                         List<String> urlList = new ArrayList<>();
                         urlList.add(path);
                         messageContent.setUrlList(urlList);
-                        sendMessage(messageContent, Constant.TAG_MSG_TYPE_IMAGE);
+                        sendMessage(messageContent, ConstantUtil.TAG_MSG_TYPE_IMAGE);
                     }
                     break;
                 case SystemUtil.REQUEST_CODE_VIDEO_RECORDER:
@@ -708,14 +661,14 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                     urlList.add(thumbImage);
                     urlList.add(videoPath);
                     messageContent.setUrlList(urlList);
-                    sendMessage(messageContent, Constant.TAG_MSG_TYPE_VIDEO);
+                    sendMessage(messageContent, ConstantUtil.TAG_MSG_TYPE_VIDEO);
                     break;
-                case Constant.REQUEST_MAP:
+                case ConstantUtil.REQUEST_MAP:
                     if (data != null) {
                         String localPath = data.getStringExtra(ConstantUtil.PATH);
-                        String longitude = data.getStringExtra(Constant.LONGITUDE);
-                        String latitude = data.getStringExtra(Constant.LATITUDE);
-                        String address = data.getStringExtra(Constant.ADDRESS);
+                        String longitude = data.getStringExtra(ConstantUtil.LONGITUDE);
+                        String latitude = data.getStringExtra(ConstantUtil.LATITUDE);
+                        String address = data.getStringExtra(ConstantUtil.ADDRESS);
                         MessageContent messageContent1 = new MessageContent();
                         List<String> urlList1 = new ArrayList<>();
                         urlList1.add(localPath);
@@ -723,7 +676,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                         messageContent1.setLongitude(longitude);
                         messageContent1.setLatitude(latitude);
                         messageContent1.setAddress(address);
-                        sendMessage(messageContent1, Constant.TAG_MSG_TYPE_LOCATION);
+                        sendMessage(messageContent1, ConstantUtil.TAG_MSG_TYPE_LOCATION);
                     }
                     break;
             }
@@ -734,16 +687,16 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
 
     private void sendMessage(MessageContent messageContent, Integer contentType) {
         BaseMessage baseMessage;
-        if (from.equals(Constant.TYPE_PERSON)) {
+        if (from.equals(ConstantUtil.TYPE_PERSON)) {
             baseMessage = MsgManager.getInstance()
                     .createChatMessage(gson.toJson(messageContent), uid, contentType);
-            baseMessage.setSendStatus(Constant.SEND_STATUS_SENDING);
+            baseMessage.setSendStatus(ConstantUtil.SEND_STATUS_SENDING);
             mAdapter.addData(baseMessage);
             presenter.sendChatMessage(((ChatMessage) baseMessage));
         } else {
             baseMessage = MsgManager.getInstance()
                     .createGroupChatMessage(gson.toJson(messageContent), groupId, contentType);
-            baseMessage.setSendStatus(Constant.SEND_STATUS_SENDING);
+            baseMessage.setSendStatus(ConstantUtil.SEND_STATUS_SENDING);
             mAdapter.addData(baseMessage);
             presenter.sendGroupChatMessage(((GroupChatMessage) baseMessage));
         }
@@ -801,17 +754,17 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                         ToastUtils.showShortToast("需要授予录音权限才能录音");
 
                         showBaseDialog("权限界面操作", "是否需要打开权限界面", "取消", "确定"
-                                , v12 -> cancelBaseDialog(), v1 -> {
-                                    dismissBaseDialog();
-                                   PermissionPageUtils.jumpPermissionPage(ChatActivity.this);
+                                , v12 -> {
+                                }, v1 -> {
+                                    PermissionPageUtils.jumpPermissionPage(ChatActivity.this);
                                 });
                     }
-                },new RxPermissions(this), Manifest.permission.RECORD_AUDIO,Manifest.permission
-                .WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE);
+                }, new RxPermissions(this), Manifest.permission.RECORD_AUDIO, Manifest.permission
+                        .WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    return !(checkSelfPermission(Manifest.permission.RECORD_AUDIO)== PackageManager.PERMISSION_DENIED);
-                }else {
+                    return !(checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED);
+                } else {
                     return true;
                 }
             case MotionEvent.ACTION_MOVE:
@@ -836,7 +789,7 @@ public class ChatActivity extends SlideBaseActivity<BaseMessage, ChatPresenter> 
                         urlList.add(mVoiceRecordManager.getVoiceFilePath());
                         messageContent.setUrlList(urlList);
                         messageContent.setVoiceTime(recordTime);
-                        sendMessage(messageContent, Constant.TAG_MSG_TYPE_VOICE);
+                        sendMessage(messageContent, ConstantUtil.TAG_MSG_TYPE_VOICE);
                     } else {
                         ToastUtils.showShortToast("录制时间过短");
                     }

@@ -23,7 +23,7 @@ public class SystemNotifyEntity {
 
     @Generated(hash = 848788813)
     public SystemNotifyEntity(String imageUrl, String title, String subTitle,
-            String contentUrl, int readStatus, String id) {
+                              String contentUrl, int readStatus, String id) {
         this.imageUrl = imageUrl;
         this.title = title;
         this.subTitle = subTitle;

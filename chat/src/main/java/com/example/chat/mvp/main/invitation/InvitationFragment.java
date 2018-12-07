@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.example.chat.R;
 import com.example.chat.adapter.NewFriendAdapter;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.User;
 import com.example.chat.events.AddEvent;
@@ -34,7 +34,6 @@ import com.example.commonlibrary.rxbus.RxBusManager;
 import java.util.List;
 
 import cn.bmob.v3.exception.BmobException;
-import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    TestChat
@@ -73,7 +72,7 @@ public class InvitationFragment extends BaseFragment {
                 display = (SwipeMenuRecyclerView) findViewById(R.id.swrc_new_friend_display);
                 display.setLayoutManager(new WrappedLinearLayoutManager(getActivity()));
                 display.setHasFixedSize(true);
-                display.addItemDecoration(new ListViewDecoration(getActivity()));
+                display.addItemDecoration(new ListViewDecoration());
                 display.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
                         int width = (int) getResources().getDimension(R.dimen.recent_top_height);
                         int height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -113,7 +112,7 @@ public class InvitationFragment extends BaseFragment {
                                                                                        hideLoading();
                                                                                        LogUtil.e("发送同意消息成功");
                                                                                        LogUtil.e("最终添加好友成功添加好友成功");
-                                                                                       chatMessageEntity.setReadStatus(Constant.READ_STATUS_READED);
+                                                                                       chatMessageEntity.setReadStatus(ConstantUtil.READ_STATUS_READED);
                                                                                        UserDBManager
                                                                                                .getInstance()
                                                                                                .getDaoSession()

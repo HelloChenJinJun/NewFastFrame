@@ -24,39 +24,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".MusicService"
-            android:process=":main" />
-        <receiver android:name=".receiver.MediaButtonIntentReceiver">
+        <service android:name=".MusicService">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="com.example.music.PRE" />
+                <action android:name="com.example.music.PLAY" />
+                <action android:name="com.example.music.NEXT" />
             </intent-filter>
-        </receiver>
+        </service>
 
-        <activity android:name=".ui.SongListActivity" />
-        <activity android:name=".ui.DownLoadActivity" />
+
         <activity
             android:name=".ui.MainActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".ui.MusicRepositoryActivity" />
-        <activity android:name=".ui.LocalMusicActivity"/>
 
-        <receiver android:name=".receiver.MusicInfoReceiver">
-            <intent-filter>
-                <action android:name="refresh_data"/>
-                <action android:name="meta_changed" />
-                <action android:name="play_state_changed" />
-                <action android:name="butter_update_changed" />
-            </intent-filter>
-        </receiver>
-
-        <activity android:name=".ui.LocalMusicListActivity" />
-        <activity android:name=".ui.SingerInfoActivity" />
-        <activity android:name=".ui.SettingActivity" />
 
         <meta-data
-            android:name="com.example.cootek.newfastframe.VideoApplication"
+            android:name="com.example.cootek.newfastframe.MusicApplication"
             android:value="IModuleConfig" />
     </application>
 

@@ -2,11 +2,14 @@ package com.example.cootek.newfastframe.ui.fragment;
 
 import android.animation.FloatEvaluator;
 import android.animation.IntEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
-import android.view.LayoutInflater;
+import android.os.Build;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -14,46 +17,43 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.BaseFragment;
-import com.example.commonlibrary.baseadapter.SuperRecyclerView;
-import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
-import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.bean.music.MusicPlayBeanDao;
-import com.example.commonlibrary.cusotomview.CustomPopWindow;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
+import com.example.commonlibrary.manager.music.MusicPlayerManager;
+import com.example.commonlibrary.manager.music.PlayData;
+import com.example.commonlibrary.rxbus.event.PlayStateEvent;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
+import com.example.commonlibrary.utils.FileUtil;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.MusicManager;
-import com.example.cootek.newfastframe.MusicService;
 import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.VideoApplication;
-import com.example.cootek.newfastframe.adapter.PopupWindowAdapter;
-import com.example.cootek.newfastframe.bean.DownLoadMusicBean;
+import com.example.cootek.newfastframe.base.MusicBaseFragment;
 import com.example.cootek.newfastframe.dagger.bottom.BottomFragmentModule;
 import com.example.cootek.newfastframe.dagger.bottom.DaggerBottomFragmentComponent;
-import com.example.cootek.newfastframe.event.MusicStatusEvent;
+import com.example.cootek.newfastframe.event.ServiceStateEvent;
 import com.example.cootek.newfastframe.mvp.bottom.BottomPresenter;
-import com.example.cootek.newfastframe.mvp.bottom.IBottomView;
 import com.example.cootek.newfastframe.util.MusicUtil;
 import com.example.cootek.newfastframe.view.lrc.LrcRow;
 import com.example.cootek.newfastframe.view.lrc.LrcView;
 import com.example.cootek.newfastframe.view.slide.SlidingPanelLayout;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import io.reactivex.annotations.NonNull;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 /**
  * Created by COOTEK on 2017/8/13.
  */
 
-public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresenter> implements SlidingPanelLayout.PanelSlideListener, IBottomView<DownLoadMusicBean>, LrcView.OnSeekToListener, View.OnClickListener {
+public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> implements SlidingPanelLayout.PanelSlideListener, LrcView.OnSeekToListener, View.OnClickListener {
 
 
     private RoundAngleImageView album;
@@ -81,9 +81,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     private int endPlay;
     private FloatEvaluator floatEvaluator;
     private int screenHeight;
-    private Runnable progressRun;
     private SlidingPanelLayout slidingUpPanelLayout;
-    private CustomPopWindow customPopWindow;
     private int mode = 0;
     private boolean isShow = true;
     private SharedPreferences sharedPreferences;
@@ -91,11 +89,9 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     private int screenWidth;
     private int playMaxSize = 60;
     private int playMinSize = 40;
-
-    @Override
-    public void updateData(DownLoadMusicBean o) {
-
-    }
+    private Disposable disposable;
+    private MusicPlayBean musicPlayBean;
+    private ObjectAnimator mRotateAnimator;
 
 
     @Override
@@ -121,26 +117,26 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
 
     @Override
     protected void initView() {
-        lrcContainer = (RelativeLayout) findViewById(R.id.rl_fragment_bottom_lrc_container);
-        comment = (TextView) findViewById(R.id.tv_fragment_bottom_comment);
-        back = (ImageView) findViewById(R.id.iv_fragment_bottom_back);
-        bottomLrc = (LrcView) findViewById(R.id.lv_fragment_bottom_lrc_bottom);
-        endTime = (TextView) findViewById(R.id.tv_fragment_bottom_end_time);
-        startTime = (TextView) findViewById(R.id.tv_fragment_bottom_start_time);
-        seekContainer = (LinearLayout) findViewById(R.id.ll_fragment_bottom_seek_container);
-        bg = (ImageView) findViewById(R.id.iv_fragment_bottom_bg);
-        lrcView = (LrcView) findViewById(R.id.lv_fragment_bottom_lrc);
-        seekBar = (SeekBar) findViewById(R.id.sb_fragment_bottom_seek);
-        iconContainer = (RelativeLayout) findViewById(R.id.rl_fragment_bottom_icon_container);
-        list = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_list);
-        playMode = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_mode);
-        playOrPause = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_play);
-        previous = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_previous);
-        next = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_next);
-        artistName = (TextView) findViewById(R.id.tv_fragment_bottom_artist_name);
-        album = (RoundAngleImageView) findViewById(R.id.riv_fragment_bottom_album);
-        songName = (TextView) findViewById(R.id.tv_fragment_bottom_song_name);
-        nameContainer = (LinearLayout) findViewById(R.id.ll_fragment_bottom_name_container);
+        lrcContainer = findViewById(R.id.rl_fragment_bottom_lrc_container);
+        comment = findViewById(R.id.tv_fragment_bottom_comment);
+        back = findViewById(R.id.iv_fragment_bottom_back);
+        bottomLrc = findViewById(R.id.lv_fragment_bottom_lrc_bottom);
+        endTime = findViewById(R.id.tv_fragment_bottom_end_time);
+        startTime = findViewById(R.id.tv_fragment_bottom_start_time);
+        seekContainer = findViewById(R.id.ll_fragment_bottom_seek_container);
+        bg = findViewById(R.id.iv_fragment_bottom_bg);
+        lrcView = findViewById(R.id.lv_fragment_bottom_lrc);
+        seekBar = findViewById(R.id.sb_fragment_bottom_seek);
+        iconContainer = findViewById(R.id.rl_fragment_bottom_icon_container);
+        list = findViewById(R.id.riv_fragment_bottom_list);
+        playMode = findViewById(R.id.riv_fragment_bottom_mode);
+        playOrPause = findViewById(R.id.riv_fragment_bottom_play);
+        previous = findViewById(R.id.riv_fragment_bottom_previous);
+        next = findViewById(R.id.riv_fragment_bottom_next);
+        artistName = findViewById(R.id.tv_fragment_bottom_artist_name);
+        album = findViewById(R.id.riv_fragment_bottom_album);
+        songName = findViewById(R.id.tv_fragment_bottom_song_name);
+        nameContainer = findViewById(R.id.ll_fragment_bottom_name_container);
         next.setOnClickListener(this);
         back.setOnClickListener(this);
         previous.setOnClickListener(this);
@@ -151,20 +147,8 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         slidingUpPanelLayout = (SlidingPanelLayout) root.getParent().getParent();
         slidingUpPanelLayout.addPanelSlideListener(this);
         lrcView.setOnSeekToListener(this);
-        lrcContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CommonLogger.e("点击容器");
-                updateLrcView();
-            }
-        });
-        lrcView.setOnLrcClickListener(new LrcView.OnLrcClickListener() {
-            @Override
-            public void onClick() {
-                CommonLogger.e("点击容器");
-                updateLrcView();
-            }
-        });
+        lrcContainer.setOnClickListener(v -> updateLrcView());
+        lrcView.setOnLrcClickListener(() -> updateLrcView());
     }
 
     private void updateLrcView() {
@@ -178,105 +162,137 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         }
     }
 
+
+    private void startTimer() {
+        CommonLogger.e("startTimer");
+        if (disposable == null || disposable.isDisposed()) {
+            disposable = Observable.interval(1, TimeUnit.SECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aLong -> updateProgress());
+        }
+    }
+
+
+    private void cancelTimer() {
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
+        }
+    }
+
     @Override
     protected void initData() {
+        DaggerBottomFragmentComponent.builder().bottomFragmentModule(new BottomFragmentModule(this))
+                .mainComponent(getMainComponent()).build().inject(this);
+        MusicManager.getInstance().bindService(getContext());
+        updatePlayMode(getAppComponent().getSharedPreferences()
+                .getInt(MusicUtil.PLAY_MODE, PlayData.PLAY_MODE_ORDER));
         sharedPreferences = getActivity().getSharedPreferences(MusicUtil.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        DaggerBottomFragmentComponent.builder().mainComponent(VideoApplication.getMainComponent())
-                .bottomFragmentModule(new BottomFragmentModule(this)).build().inject(this);
-        progressRun = new Runnable() {
-            @Override
-            public void run() {
-                int progress = (int) MusicManager.getInstance().getCurrentProgress();
-                seekBar.setProgress(progress);
-                startTime.setText(MusicUtil.makeLrcTime(progress));
-                if (MusicManager.getInstance().isPlaying()) {
-                    seekBar.postDelayed(this, 50);
-                } else {
-                    seekBar.removeCallbacks(this);
+        presenter.registerEvent(PlayStateEvent.class, playStateEvent -> {
+            CommonLogger.e("playState:" + playStateEvent.getPlayState());
+            if (playStateEvent.getPlayState() == MusicPlayerManager.PLAY_STATE_PLAYING) {
+                playOrPause.setImageResource(R.drawable.ic_pause_black_24dp);
+                updateMaxProgress(MusicPlayerManager.getInstance().getDuration());
+                startAnimation();
+                startTimer();
+            } else if (playStateEvent.getPlayState() == MusicPlayerManager.PLAY_STATE_PREPARING) {
+                updateContent();
+            } else if (playStateEvent.getPlayState() == MusicPlayerManager.PLAY_STATE_ERROR || playStateEvent
+                    .getPlayState() == MusicPlayerManager.PLAY_STATE_FINISH ||
+                    playStateEvent.getPlayState() == MusicPlayerManager.PLAY_STATE_PAUSE) {
+                playOrPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                cancelTimer();
+            } else if (playStateEvent.getPlayState() == MusicPlayerManager.PLAY_STATE_PREPARED) {
+                if (musicPlayBean.getDuration() == 0) {
+                    musicPlayBean.setDuration(MusicPlayerManager.getInstance().getDuration());
+                    getAppComponent().getDaoSession().getMusicPlayBeanDao()
+                            .update(musicPlayBean);
                 }
             }
-        };
-        presenter.registerEvent(MusicStatusEvent.class, new Consumer<MusicStatusEvent>() {
+        });
+        presenter.registerEvent(ServiceStateEvent.class, new Consumer<ServiceStateEvent>() {
             @Override
-            public void accept(@NonNull MusicStatusEvent musicStatusEvent) throws Exception {
-                if (musicStatusEvent != null && musicStatusEvent.getCurrentStatus() != null) {
-                    switch (musicStatusEvent.getCurrentStatus()) {
-                        case MusicStatusEvent.META_CHANGED:
-                        case MusicStatusEvent.REFRESH_DATA:
-                            updateContent(musicStatusEvent.getMusicContent());
-                            break;
-                        case MusicStatusEvent.PLAYSTATE_CHANGED:
-                            CommonLogger.e("这里playStatus改变");
-                            if (musicStatusEvent.getMusicContent().isPlaying()) {
-                                playOrPause.setImageResource(R.drawable.ic_pause_black_24dp);
-                            } else {
-                                playOrPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-                            }
-                            updateProgress();
-                            break;
-                        case MusicStatusEvent.REFRESH_CHANGED:
-                            CommonLogger.e("接收到刷新消息啦啦");
-                            reLoadMusic();
-                            break;
-                        case MusicStatusEvent.BUFFER_UPDATE_CHANGED:
-                            seekBar.setSecondaryProgress(musicStatusEvent.getMusicContent().getSecondProgress());
-                            break;
-                    }
+            public void accept(ServiceStateEvent serviceStateEvent) throws Exception {
+                if (serviceStateEvent.isConnected()) {
+                    presenter.loadData();
                 }
             }
         });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (isShow) {
-                    lrcView.seekTo(progress, true, fromUser);
-                } else {
-                    bottomLrc.seekTo(progress, true, fromUser);
+                if (!fromUser) {
+                    if (isShow) {
+                        lrcView.seekTo(progress, true, fromUser);
+                    } else {
+                        bottomLrc.seekTo(progress, true, fromUser);
+                    }
                 }
                 startTime.setText(MusicUtil.makeLrcTime(progress));
-                if (fromUser) {
-                    seekBar.removeCallbacks(progressRun);
-                }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                seekBar.setThumb(seekBar.getResources().getDrawable(R.drawable.thumb_pressed));
-                if (MusicManager.getInstance().isPlaying()) {
-                    MusicManager.getInstance().playOrPause();
-                }
+                cancelTimer();
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-//                    释放手时调用
-                seekBar.setThumb(seekBar.getResources().getDrawable(R.drawable.thumb_normal));
+                //                    释放手时调用
                 MusicManager.getInstance().seekTo(seekBar.getProgress());
-                if (!MusicManager.getInstance().isPlaying()) {
-                    MusicManager.getInstance().playOrPause();
-                }
-                seekBar.postDelayed(progressRun, 5);
+                startTimer();
             }
         });
-        seekBar.setPadding(0, 0, 0, 0);
     }
 
-    private void updateContent(MusicStatusEvent.MusicContent content) {
-        updatePlayStatus(content.isPlaying());
-        if (content.getSongName() != null) {
-            updateSongName(content.getSongName());
+    private void startAnimation() {
+        mRotateAnimator = ObjectAnimator.ofFloat(album, "rotation", 0f, 360f);
+        mRotateAnimator.setDuration(7200);
+        mRotateAnimator.setInterpolator(new LinearInterpolator());
+        mRotateAnimator.setRepeatMode(ValueAnimator.RESTART);
+        mRotateAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mRotateAnimator.start();
+    }
+
+
+    private void cancelAnimation() {
+        if (mRotateAnimator != null) {
+            mRotateAnimator.cancel();
         }
-        if (content.getArtistName() != null) {
-            updateArtistName(content.getArtistName());
+    }
+
+
+    private void pauseAnimation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (mRotateAnimator != null && !mRotateAnimator.isPaused()) {
+                mRotateAnimator.pause();
+            }
         }
-        if (content.getAlbumUrl() != null) {
-            updateAlbum(content.getAlbumUrl());
+    }
+
+
+    private void resumeAnimation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (mRotateAnimator != null && mRotateAnimator.isPaused()) {
+                mRotateAnimator.resume();
+            }
         }
-        updatePlayMode(content.getMode());
-        updateMusicContent(new File(MusicUtil.getLyricPath(content.getId())));
-        CommonLogger.e("更新最大进度" + content.getMaxProgress());
-        updateMaxProgress((int) content.getMaxProgress());
-        updateProgress();
+    }
+
+    private void updateContent() {
+        musicPlayBean = getAppComponent().getDaoSession().getMusicPlayBeanDao()
+                .queryBuilder().where(MusicPlayBeanDao.Properties.SongUrl.eq(MusicPlayerManager.getInstance().getUrl())).build().unique();
+        if (musicPlayBean != null) {
+            updateSongName(musicPlayBean.getSongName());
+            updateArtistName(musicPlayBean.getArtistName());
+            updateAlbum(musicPlayBean.getAlbumUrl());
+            if (!musicPlayBean.getIsLocal()) {
+                if (FileUtil.isFileExist(MusicUtil.getLyricPath(musicPlayBean.getSongId()))) {
+                    updateMusicContent(new File(MusicUtil.getLyricPath(musicPlayBean.getSongId())));
+                } else {
+                    presenter.getLrcContent(musicPlayBean.getSongId(), musicPlayBean.getLrcUrl());
+                }
+            }
+        }
     }
 
     @Override
@@ -288,79 +304,33 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         screenHeight = DensityUtil.getScreenHeight(getContext());
         int margin = ((RelativeLayout.LayoutParams) playOrPause.getLayoutParams()).rightMargin;
         endPlay = screenWidth / 2 - (sameWidth * 2 + margin) + sameWidth / 2;
-        reLoadMusic();
     }
 
-    private void reLoadMusic() {
-        presenter.refresh();
-    }
 
     public static BottomFragment newInstance() {
         return new BottomFragment();
     }
 
 
-    private CustomPopWindow playModeWindow;
-
-
-    private List<String> getData() {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            list.add("测试" + i);
-        }
-        return list;
-    }
-
-
-    private TextView playNum;
-    private PopupWindowAdapter popupWindowAdapter;
-    private long[] lastIdList;
-
-    private void updatePopData() {
-        long[] idList = MusicManager.getInstance().getQueue();
-
-        if (idList != null && idList.length > 0) {
-            if (Arrays.equals(idList, lastIdList)) {
-                return;
-//                数据一样不更新
-            }
-            playNum.setText("播放队列   " + idList.length);
-            popupWindowAdapter.clearAllData();
-            List<MusicPlayBean> list = new ArrayList<>();
-            MusicPlayBeanDao musicPlayBeanDao = VideoApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao();
-            for (long anIdList : idList) {
-                list.addAll(musicPlayBeanDao.queryBuilder().where(MusicPlayBeanDao.Properties.SongId.eq(anIdList))
-                        .build().list());
-            }
-            popupWindowAdapter.addData(list);
-        } else {
-            popupWindowAdapter.clearAllData();
-            popupWindowAdapter.notifyDataSetChanged();
-        }
-        lastIdList = idList;
-    }
-
-
     @Override
     public void onPanelSlide(View panel, float slideOffset) {
-//        int result = intEvaluator.evaluate(slideOffset, DensityUtil.dip2px(getContext(), 50), DensityUtil.getScreenWidth(getContext()));
-//        album.getLayoutParams().width = result;
-//        album.getLayoutParams().height = result;
-//        album.requestLayout();
-        int playResult = intEvaluator.evaluate(slideOffset, DensityUtil.dip2px(getContext(), playMinSize), DensityUtil.dip2px(getContext(), playMaxSize));
+        int playResult = intEvaluator.evaluate(slideOffset, DensityUtil.toDp(playMinSize), DensityUtil.toDp(playMaxSize));
         playOrPause.getLayoutParams().width = playResult;
         playOrPause.getLayoutParams().height = playResult;
         playOrPause.requestLayout();
-
         songName.setTranslationX(intEvaluator.evaluate(slideOffset, 0, endSongName));
         artistName.setTranslationX(intEvaluator.evaluate(slideOffset, 0, endArtistName));
-        next.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay - DensityUtil.dip2px(getContext(), 15)));
-        playMode.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay + DensityUtil.dip2px(getContext(), 30)));
-        previous.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay + DensityUtil.dip2px(getContext(), 15)));
-        list.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay - DensityUtil.dip2px(getContext(), 30)));
+        next.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay - DensityUtil.toDp(15)));
+        playMode.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay + DensityUtil.toDp(30)));
+        previous.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay + DensityUtil.toDp(15)));
+        list.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay - DensityUtil.toDp(30)));
         playOrPause.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay));
         float value = floatEvaluator.evaluate(slideOffset, 0, 1);
-        album.setAlpha(1-value);
+        album.setAlpha(1 - value);
+        int albumSize = intEvaluator.evaluate(slideOffset, DensityUtil.toDp(50), DensityUtil.toDp(200));
+        album.getLayoutParams().width = albumSize;
+        album.getLayoutParams().height = albumSize;
+        album.requestLayout();
         playMode.setAlpha(value);
         list.setAlpha(value);
         bg.setAlpha(value);
@@ -369,9 +339,9 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         lrcView.setAlpha(value);
         bottomLrc.setAlpha(value);
         back.setAlpha(value);
-        comment.setAlpha(value);
+        //        comment.setAlpha(value);
         iconContainer.setTranslationY(intEvaluator.evaluate(slideOffset, 0, screenHeight - (2 * iconContainer.getHeight())));
-        comment.setTranslationY(intEvaluator.evaluate(slideOffset, 0, screenHeight - (3 * iconContainer.getHeight())));
+        //        comment.setTranslationY(intEvaluator.evaluate(slideOffset, 0, screenHeight - (3 * iconContainer.getHeight())));
         bottomLrc.setTranslationY(intEvaluator.evaluate(slideOffset, 0, (screenHeight - (4 * iconContainer.getHeight()))));
         seekContainer.setTranslationY(intEvaluator.evaluate(slideOffset, 0, (int) (screenHeight - (2.5 * iconContainer.getHeight()))));
     }
@@ -392,16 +362,15 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                 bottomLrc.setVisibility(View.VISIBLE);
                 lrcView.setVisibility(View.INVISIBLE);
             }
-            comment.setVisibility(View.VISIBLE);
+            //            comment.setVisibility(View.VISIBLE);
             bg.setVisibility(View.VISIBLE);
             startTime.setVisibility(View.VISIBLE);
             endTime.setVisibility(View.VISIBLE);
-            seekBar.setPadding(10, 0, 10, 0);
             seekContainer.setPadding(10, 0, 10, 0);
         } else if (previousState == SlidingPanelLayout.PanelState.DRAGGING && newState == SlidingPanelLayout.PanelState.COLLAPSED) {
             playMode.setVisibility(View.INVISIBLE);
             back.setVisibility(View.INVISIBLE);
-            comment.setVisibility(View.INVISIBLE);
+            //            comment.setVisibility(View.INVISIBLE);
             lrcContainer.setVisibility(View.INVISIBLE);
             if (!isShow) {
                 bottomLrc.setVisibility(View.INVISIBLE);
@@ -416,7 +385,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             if (endTime.getVisibility() == View.VISIBLE) {
                 endTime.setVisibility(View.GONE);
             }
-            seekBar.setPadding(0, 0, 0, 0);
             seekContainer.setPadding(0, 0, 0, 0);
             bg.setVisibility(View.INVISIBLE);
             slidingUpPanelLayout.setTouchEnabled(true);
@@ -425,7 +393,6 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
             nameContainer.requestLayout();
             startTime.setVisibility(View.GONE);
             endTime.setVisibility(View.GONE);
-            seekBar.setPadding(0, 0, 0, 0);
             seekContainer.setPadding(0, 0, 0, 0);
         } else if (previousState == SlidingPanelLayout.PanelState.DRAGGING && newState == SlidingPanelLayout.PanelState.EXPANDED) {
             slidingUpPanelLayout.setTouchEnabled(false);
@@ -433,7 +400,7 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     }
 
 
-    public void updateMusicContent(File file) {
+    private void updateMusicContent(File file) {
         if (file.exists()) {
             List<LrcRow> result = MusicUtil.parseLrcContent(file);
             if (result != null && result.size() > 0) {
@@ -449,6 +416,12 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
                 CommonLogger.e("获取得到了歌词啦啦");
             } else {
                 CommonLogger.e("歌词为空");
+                ToastUtils.showShortToast("暂时没有找到歌词");
+                file.delete();
+                lrcView.reset();
+                bottomLrc.reset();
+                lrcView.setVisibility(View.INVISIBLE);
+                bottomLrc.setVisibility(View.INVISIBLE);
             }
         } else {
             CommonLogger.e("文件不存在？");
@@ -459,55 +432,41 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
         }
     }
 
-    @Override
-    public void updateMaxProgress(int max) {
+    private void updateMaxProgress(int max) {
         if (seekBar.getMax() != 0 && seekBar.getMax() != max) {
-            seekBar.setSecondaryProgress(max);
             seekBar.setMax(max);
             endTime.setText(MusicUtil.makeLrcTime(max));
         }
     }
 
-    @Override
-    public void updatePlayStatus(boolean isPlaying) {
-        if (isPlaying) {
-            playOrPause.setImageResource(R.drawable.ic_pause_black_24dp);
-            seekBar.post(progressRun);
-        } else {
-            playOrPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-            seekBar.removeCallbacks(progressRun);
-        }
-    }
 
-    @Override
-    public void updateAlbum(String uri) {
-        if (uri != null && uri.startsWith("http")) {
-            uri = MusicUtil.getRealUrl(uri, getContext());
-        }
+    private void updateAlbum(String uri) {
+        //        if (uri != null && uri.startsWith("http")) {
+        //            uri = MusicUtil.getRealUrl(uri, getContext());
+        //        }
         if (getContext() != null) {
-            BaseApplication.getAppComponent().getImageLoader().loadImage(getContext(), new GlideImageLoaderConfig.Builder().imageView(bg)
-                    .errorResId(R.drawable.icon_album_default).placeHolderResId(R.drawable.icon_album_default)
-                    .url(uri).build());
+            //            BaseApplication.getAppComponent().getImageLoader().loadImage(getContext(), new GlideImageLoaderConfig.Builder().imageView(bg)
+            //                    .url(uri).build());
             BaseApplication.getAppComponent().getImageLoader().loadImage(getContext(), new GlideImageLoaderConfig.Builder()
-                    .imageView(album).errorResId(R.drawable.icon_album_default).placeHolderResId(R.drawable.icon_album_default).url(uri).build());
+                    .imageView(album).url(uri).build());
         }
     }
 
-    @Override
-    public void updateProgress() {
-        seekBar.postDelayed(progressRun, 10);
+    private void updateProgress() {
+        int progress = (int) MusicManager.getInstance().getCurrentProgress();
+        seekBar.setProgress(progress);
+        seekBar.setSecondaryProgress((int) (MusicPlayerManager.getInstance().getBufferedPercentage() * 1.0f / 100 * musicPlayBean.getDuration()));
+        startTime.setText(MusicUtil.makeLrcTime(progress));
     }
 
-    @Override
-    public void updateSongName(String name) {
+    private void updateSongName(String name) {
         songName.setText(name);
         Rect bound = new Rect();
         songName.getPaint().getTextBounds(songName.getText().toString(), 0, songName.getText().length(), bound);
         endSongName = (DensityUtil.getScreenWidth(getContext()) - bound.width()) / 2 - DensityUtil.dip2px(getContext(), 80);
     }
 
-    @Override
-    public void updateArtistName(String name) {
+    private void updateArtistName(String name) {
         artistName.setText(name);
         Rect bound = new Rect();
         artistName.getPaint().getTextBounds(artistName.getText().toString(), 0, artistName.getText().length(), bound);
@@ -526,66 +485,29 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     }
 
 
+    private int modeIndex = 1;
+
+    private int[] playModeResId = new int[]{R.drawable.ic_repeat_one_white_24dp
+            , R.drawable.ic_compare_arrows_white_24dp, R.drawable.ic_shuffle_white_24dp};
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.ll_view_fragment_bottom_pop_window_mode_repeat) {
-            playModeWindow.dismiss();
-            updatePlayMode(MusicService.MODE_LOOP);
-            playMode.setImageResource(R.drawable.ic_repeat_one_white_24dp);
-        } else if (id == R.id.ll_view_fragment_bottom_pop_window_mode_normal) {
-            playModeWindow.dismiss();
-            updatePlayMode(MusicService.MODE_NORMAL);
-            playMode.setImageResource(R.drawable.ic_compare_arrows_white_24dp);
-        } else if (id == R.id.ll_view_fragment_bottom_pop_window_mode_shuffle) {
-            playModeWindow.dismiss();
-            updatePlayMode(MusicService.MODE_SHUFFLE);
-            playMode.setImageResource(R.drawable.ic_shuffle_white_24dp);
-        } else if (id == R.id.tv_fragment_bottom_comment) {
+        if (id == R.id.tv_fragment_bottom_comment) {
         } else if (id == R.id.iv_fragment_bottom_back) {
             slidingUpPanelLayout.setPanelState(SlidingPanelLayout.PanelState.COLLAPSED);
         } else if (id == R.id.riv_fragment_bottom_list) {
-            if (customPopWindow == null) {
-                View contentView = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_bottom_pop_window, null);
-                playNum = (TextView) contentView.findViewById(R.id.tv_view_fragment_bottom_pop_window_num);
-                SuperRecyclerView popDisplay = (SuperRecyclerView) contentView.findViewById(R.id.srcv_view_fragment_bottom_pop_window_display);
-                popDisplay.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
-                popupWindowAdapter = new PopupWindowAdapter();
-                popupWindowAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
-                    @Override
-                    public void onItemClick(int position, View view) {
-                        customPopWindow.dismiss();
-                        MusicManager.getInstance().play(popupWindowAdapter.getData(), position, mode);
-                    }
 
-                    @Override
-                    public void onItemChildClick(int position, View view, int id) {
-                        popupWindowAdapter.removeData(position);
-                        presenter.remove(position);
-                    }
-                });
-                updatePopData();
-                popDisplay.setAdapter(popupWindowAdapter);
-                customPopWindow = new CustomPopWindow.Builder().parentView(v).contentView(contentView).build();
-                customPopWindow.show(20, 20);
-            } else {
-                updatePopData();
-                customPopWindow.show(20, 20);
-            }
         } else if (id == R.id.riv_fragment_bottom_mode) {
-            if (playModeWindow == null) {
-                View contentView = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_bottom_pop_window_mode, null);
-                LinearLayout normal = (LinearLayout) contentView.findViewById(R.id.ll_view_fragment_bottom_pop_window_mode_normal);
-                LinearLayout shuffle = (LinearLayout) contentView.findViewById(R.id.ll_view_fragment_bottom_pop_window_mode_shuffle);
-                LinearLayout repeat = (LinearLayout) contentView.findViewById(R.id.ll_view_fragment_bottom_pop_window_mode_repeat);
-                normal.setOnClickListener(this);
-                shuffle.setOnClickListener(this);
-                repeat.setOnClickListener(this);
-                playModeWindow = new CustomPopWindow.Builder().contentView(contentView).parentView(v).build();
-                int[] result = DensityUtil.getViewWidthAndHeight(contentView);
-                playModeWindow.show(DensityUtil.getScreenWidth(contentView.getContext()) - result[0], 20);
+            modeIndex++;
+            modeIndex %= 3;
+            playMode.setImageResource(playModeResId[modeIndex]);
+            if (modeIndex == 0) {
+                updatePlayMode(PlayData.PLAY_MODE_RECYCLER);
+            } else if (modeIndex == 1) {
+                updatePlayMode(PlayData.PLAY_MODE_ORDER);
             } else {
-                playModeWindow.show(DensityUtil.getScreenWidth(getContext()) - DensityUtil.getViewWidthAndHeight(playModeWindow.getContentView())[0], 20);
+                updatePlayMode(PlayData.PLAY_MODE_RANDOM);
             }
         } else if (id == R.id.riv_fragment_bottom_play) {
             presenter.playOrPause();
@@ -597,10 +519,26 @@ public class BottomFragment extends BaseFragment<DownLoadMusicBean, BottomPresen
     }
 
     private void updatePlayMode(int currentMode) {
-        if (currentMode != mode) {
-            mode = currentMode;
-            sharedPreferences.edit().putInt(MusicUtil.PLAY_MODE, currentMode).apply();
-            presenter.setMode(mode);
+        getAppComponent().getSharedPreferences()
+                .edit().putInt(MusicUtil.PLAY_MODE, currentMode).apply();
+        presenter.setMode(currentMode);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MusicManager.getInstance().unBindService(getContext());
+    }
+
+
+    @Override
+    public void updateData(Object o) {
+        if (o instanceof Long) {
+            Long songId = (Long) o;
+            if (musicPlayBean != null && songId.equals(musicPlayBean.getSongId())) {
+                updateMusicContent(new File(MusicUtil.getLyricPath(songId)));
+            }
         }
     }
 }

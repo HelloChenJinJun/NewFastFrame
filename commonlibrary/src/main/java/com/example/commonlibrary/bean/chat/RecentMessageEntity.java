@@ -1,8 +1,8 @@
 package com.example.commonlibrary.bean.chat;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * 项目名称:    NewFastFrame
@@ -31,7 +31,7 @@ public class RecentMessageEntity {
 
     @Generated(hash = 1457310003)
     public RecentMessageEntity(String id, String content, long createdTime,
-            int contentType, int type, int sendStatus) {
+                               int contentType, int type, int sendStatus) {
         this.id = id;
         this.content = content;
         this.createdTime = createdTime;

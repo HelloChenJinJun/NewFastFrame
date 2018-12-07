@@ -1,10 +1,6 @@
 package com.example.commonlibrary.baseadapter.adapter;
 
 import android.animation.Animator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +22,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.functions.Consumer;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 /**
  * Created by 陈锦军 on 16/3/12.
@@ -54,24 +53,23 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     private int layoutId;
     private int lastLayoutPosition = -1;
+    protected RecyclerView display;
 
     public BaseRecyclerAdapter(List<T> data, int layoutId) {
         this.data = data == null ? new ArrayList<T>() : data;
-        if (layoutId != 0)
-            this.layoutId = layoutId;
-        if (getLayoutId()!=0) {
+        if (getLayoutId() != 0) {
             this.layoutId = getLayoutId();
         }
+        if (layoutId != 0)
+            this.layoutId = layoutId;
         if (isApplySkin()) {
             RxBusManager.getInstance().registerEvent(SkinUpdateEvent.class, skinUpdateEvent -> notifyDataSetChanged());
         }
     }
 
-    protected boolean isApplySkin(){
+    protected boolean isApplySkin() {
         return false;
     }
-
-
 
 
     protected abstract int getLayoutId();
@@ -113,6 +111,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     @Override
     public void onAttachedToRecyclerView(final RecyclerView recyclerView) {
+        this.display = recyclerView;
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
             final GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
@@ -147,9 +146,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
 
-
-
-    private int marginSize=0;
+    private int marginSize = 0;
 
 
     public int getMarginSize() {
@@ -216,7 +213,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     @Override
     public int getItemViewType(int position) {
         position = getRealPosition(position);
-        int size=data.size();
+        int size = data.size();
         if (position == 0) {
             return REFRESH_HEADER;
         } else if (position == 1) {
@@ -226,12 +223,12 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         } else if (position == size + 2) {
             if (hasFootView()) {
                 return FOOTER;
-            }else{
+            } else {
                 return LOAD_MORE_FOOTER;
             }
         } else if (position == size + 3) {
             return LOAD_MORE_FOOTER;
-        }else {
+        } else {
             return -1;
         }
     }
@@ -245,9 +242,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     public void onBindViewHolder(K holder, int position) {
         int realPosition = getRealPosition(position);
         if (1 < realPosition && realPosition < data.size() + 2) {
-            Animator[] itemAnimator=getItemAnimator(holder);
-            if (itemAnimator!=null) {
-                for (Animator anim :itemAnimator) {
+            Animator[] itemAnimator = getItemAnimator(holder);
+            if (itemAnimator != null) {
+                for (Animator anim : itemAnimator) {
                     anim.setInterpolator(interpolator);
                     anim.setDuration(duration).start();
                 }
@@ -257,16 +254,15 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     }
 
 
-
-
-
-    protected Animator[] getItemAnimator(BaseWrappedViewHolder holder){
+    protected Animator[] getItemAnimator(BaseWrappedViewHolder holder) {
         return null;
-    };
+    }
+
+    ;
 
 
-    private int duration=300;
-    private LinearInterpolator interpolator=new LinearInterpolator();
+    private int duration = 300;
+    private LinearInterpolator interpolator = new LinearInterpolator();
 
 
     private int getRealPosition(int position) {
@@ -326,13 +322,13 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     private K createGenericKInstance(Class aClass, View view) {
         try {
-//                构造函数
+            //                构造函数
             Constructor constructor;
-//                获取修饰符
+            //                获取修饰符
             String modifier = Modifier.toString(aClass.getModifiers());
             String name = aClass.getName();
 
-//                内部类并且不是静态类
+            //                内部类并且不是静态类
             if (name.contains("$") && !modifier.contains("static")) {
                 constructor = aClass.getDeclaredConstructor(getClass(), View.class);
                 return (K) constructor.newInstance(this, view);
@@ -400,7 +396,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             notifyItemRangeInserted(position + getItemUpCount(), newData.size());
             notifyLoadMoreChanged();
             if (layoutManager != null) {
-                layoutManager.scrollToPosition(position+getItemUpCount());
+                layoutManager.scrollToPosition(position + getItemUpCount());
             }
         }
     }
@@ -408,7 +404,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
 
     private void notifyLoadMoreChanged() {
         if (data.size() == 0) {
-//            数据为空的时候不要显示脚步布局
+            //            数据为空的时候不要显示脚步布局
             return;
         }
         if (hasMoreLoadView()) {
@@ -416,13 +412,13 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             if (layoutManager instanceof LinearLayoutManager) {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
                 lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition();
-            } else{
+            } else {
                 StaggeredGridLayoutManager gridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
                 lastVisiblePosition = gridLayoutManager.findLastVisibleItemPositions(null)[0];
             }
             int position;
             position = getItemUpCount() + getData().size();
-            if (lastVisiblePosition!=-1&&lastVisiblePosition == position) {
+            if (lastVisiblePosition != -1 && lastVisiblePosition == position) {
                 if (mLoadMoreFooterContainer.getChildAt(0) instanceof LoadMoreFooterView) {
                     ((LoadMoreFooterView) mLoadMoreFooterContainer.getChildAt(0)).setStatus(LoadMoreFooterView.Status.THE_END);
                 }
@@ -446,7 +442,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
                 data.set(index, newData);
                 notifyItemChanged(index + getItemUpCount());
             }
-        }else {
+        } else {
             notifyLoadMoreChanged();
         }
     }
@@ -463,7 +459,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         data.clear();
     }
 
-    public void clear(){
+    public void clear() {
         data.clear();
         notifyDataSetChanged();
     }
@@ -479,7 +475,7 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     public T removeData(int position) {
         if (position >= 0 && position < data.size()) {
             T t = data.remove(position);
-            notifyItemRemoved(position);
+            notifyItemRemoved(position + getItemUpCount());
             return t;
         }
         return null;
@@ -512,29 +508,29 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
         clearAllData();
         notifyDataSetChanged();
         addData(list);
-        if (layoutManager!=null) {
+        if (layoutManager != null) {
             layoutManager.scrollToPosition(0);
         }
     }
 
     public void removeEndData(int size) {
-        if (data.size() >=size) {
-            int allSize=data.size();
-            for (int i = 1; i<=size; i++) {
-                data.remove(allSize-i);
+        if (data.size() >= size) {
+            int allSize = data.size();
+            for (int i = 1; i <= size; i++) {
+                data.remove(allSize - i);
             }
-            notifyItemRangeRemoved(allSize-size,size);
+            notifyItemRangeRemoved(allSize - size, size);
         }
     }
 
     public interface OnItemClickListener {
-         void onItemClick(int position, View view);
+        void onItemClick(int position, View view);
 
-         boolean onItemLongClick(int position, View view);
+        boolean onItemLongClick(int position, View view);
 
-         boolean onItemChildLongClick(int position, View view, int id);
+        boolean onItemChildLongClick(int position, View view, int id);
 
-         void onItemChildClick(int position, View view, int id);
+        void onItemChildClick(int position, View view, int id);
     }
 
 

@@ -2,30 +2,29 @@ package com.example.commonlibrary.baseadapter.viewholder;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.commonlibrary.R;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.utils.CommonLogger;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
@@ -36,9 +35,6 @@ import java.util.Set;
  */
 
 public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
-    private Set<Integer> mClickableItemIds;
-    private Set<Integer> mNestIds;
-    private Set<Integer> mLongClickableItemIds;
     private SparseArray<View> views;
     public View itemView;
     private BaseRecyclerAdapter adapter;
@@ -46,9 +42,6 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
     public BaseWrappedViewHolder(View itemView) {
         super(itemView);
         this.itemView = itemView;
-        mClickableItemIds = new HashSet<>();
-        mNestIds = new HashSet<>();
-        mLongClickableItemIds = new HashSet<>();
         views = new SparseArray<>();
     }
 
@@ -58,34 +51,25 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public Set<Integer> getClickableItemIds() {
-        return mClickableItemIds;
-    }
-
-    public Set<Integer> getNestIds() {
-        return mNestIds;
-    }
-
-    public Set<Integer> getLongClickableItemIds() {
-        return mLongClickableItemIds;
-    }
-
     public BaseWrappedViewHolder setVisible(int layoutId, boolean isVisible) {
         getView(layoutId).setVisibility(isVisible ? View.VISIBLE : View.GONE);
         return this;
     }
 
 
+    public BaseWrappedViewHolder setVisible(int layoutId, int visible) {
+        getView(layoutId).setVisibility(visible);
+        return this;
+    }
+
+
     public BaseWrappedViewHolder setOnItemClickListener(final View.OnClickListener listener) {
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onClick(v);
-                }
-                if (adapter.getOnItemClickListener() != null) {
-                    adapter.getOnItemClickListener().onItemClick(getAdapterPosition() - adapter.getItemUpCount(), v);
-                }
+        itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(v);
+            }
+            if (adapter.getOnItemClickListener() != null) {
+                adapter.getOnItemClickListener().onItemClick(getAdapterPosition() - adapter.getItemUpCount(), v);
             }
         });
         return this;
@@ -93,12 +77,9 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
 
 
     public BaseWrappedViewHolder setOnItemClickListener() {
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (adapter.getOnItemClickListener() != null) {
-                    adapter.getOnItemClickListener().onItemClick(getAdapterPosition() - adapter.getItemUpCount(), v);
-                }
+        itemView.setOnClickListener(v -> {
+            if (adapter.getOnItemClickListener() != null) {
+                adapter.getOnItemClickListener().onItemClick(getAdapterPosition() - adapter.getItemUpCount(), v);
             }
         });
         return this;
@@ -107,12 +88,9 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
 
     public BaseWrappedViewHolder setOnItemChildClickListener(int id) {
         if (getView(id) != null) {
-            getView(id).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (adapter.getOnItemClickListener() != null) {
-                        adapter.getOnItemClickListener().onItemChildClick(getAdapterPosition() - adapter.getItemUpCount(), v, v.getId());
-                    }
+            getView(id).setOnClickListener(v -> {
+                if (adapter.getOnItemClickListener() != null) {
+                    adapter.getOnItemClickListener().onItemChildClick(getAdapterPosition() - adapter.getItemUpCount(), v, v.getId());
                 }
             });
         }
@@ -122,15 +100,12 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
 
     public BaseWrappedViewHolder setOnItemChildClickListener(int id, final View.OnClickListener listener) {
         if (getView(id) != null) {
-            getView(id).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onClick(v);
-                    }
-                    if (adapter.getOnItemClickListener() != null) {
-                        adapter.getOnItemClickListener().onItemChildClick(getAdapterPosition() - adapter.getItemUpCount(), v, v.getId());
-                    }
+            getView(id).setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onClick(v);
+                }
+                if (adapter.getOnItemClickListener() != null) {
+                    adapter.getOnItemClickListener().onItemChildClick(getAdapterPosition() - adapter.getItemUpCount(), v, v.getId());
                 }
             });
         }
@@ -139,14 +114,11 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
 
 
     public BaseWrappedViewHolder setOnItemLongClickListener() {
-        itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (adapter.getOnItemClickListener() != null) {
-                    return adapter.getOnItemClickListener().onItemLongClick(getAdapterPosition() - adapter.getItemUpCount(), v);
-                }
-                return false;
+        itemView.setOnLongClickListener(v -> {
+            if (adapter.getOnItemClickListener() != null) {
+                return adapter.getOnItemClickListener().onItemLongClick(getAdapterPosition() - adapter.getItemUpCount(), v);
             }
+            return false;
         });
         return this;
     }
@@ -216,31 +188,20 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    private Set<Integer> set = new HashSet<>();
-
-    private String url;
-
-
     public BaseWrappedViewHolder setImageUrl(int id, String url, int errorId, int placeHolderId) {
-        View view=getView(id);
-        if (view instanceof ImageView){
-            view.setTag(R.id.image_url_tag,url);
-            Glide.with(itemView.getContext()).load(url).placeholder(placeHolderId == 0 ? R.drawable.custom_drawable_place_holder : placeHolderId)
-                        .diskCacheStrategy(DiskCacheStrategy.RESULT).into(new SimpleTarget<GlideDrawable>() {
-                @Override
-                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                    String tag= (String)view.getTag(R.id.image_url_tag);
-                    if (tag!=null&&tag.equals(url)) {
-                        ((ImageView)view).setImageDrawable(resource);
-                    }
-                }
+        return setImageUrl(id, url, errorId, placeHolderId, 0.5f);
+    }
 
 
-                @Override
-                public void onLoadStarted(Drawable placeholder) {
-                    ((ImageView) view).setImageDrawable(placeholder);
-                }
-            });
+    public BaseWrappedViewHolder setImageUrl(int id, String url, int errorId, int placeHolderId, float thumbSize) {
+        View view = getView(id);
+        if (view instanceof ImageView) {
+            view.setTag(R.id.image_url_tag, url);
+            RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(placeHolderId == 0 ? R.drawable.custom_drawable_place_holder : placeHolderId)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA);
+            Glide.with(itemView.getContext()).load(url).thumbnail(thumbSize).apply(options).into((ImageView) view);
         }
         return this;
     }
@@ -262,22 +223,32 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
     }
 
     public BaseWrappedViewHolder setImageResource(int id, int resId) {
-        if (getView(id) instanceof ImageView) {
-            ((ImageView) getView(id)).setImageResource(resId);
+        if (getView(id) != null) {
+            if (getView(id) instanceof ImageView) {
+                ((ImageView) getView(id)).setImageResource(resId);
+            } else {
+                getView(id).setBackgroundResource(resId);
+            }
         }
         return this;
     }
 
     public BaseWrappedViewHolder setImageBg(final int id, String url) {
         if (getView(id) instanceof ImageView) {
-            Glide.with(itemView.getContext()).load(url).into(new SimpleTarget<GlideDrawable>() {
+            Glide.with(itemView.getContext()).load(url).into(new SimpleTarget<Drawable>() {
                 @Override
-                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                     CommonLogger.e("设置背景");
                     getView(id).setBackground(resource);
                 }
             });
         }
+        return this;
+    }
+
+
+    public BaseWrappedViewHolder setImageBg(final int id, int resId) {
+        getView(id).setBackgroundResource(resId);
         return this;
     }
 
@@ -300,9 +271,55 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void clear() {
-//        for (Integer id:
-//                set) {
-//            Glide.clear(getView(id));
-//        }
+        //        for (Integer id:
+        //                set) {
+        //            Glide.clear(getView(id));
+        //        }
+    }
+
+    public BaseWrappedViewHolder setCheck(int id, boolean check) {
+        View view = getView(id);
+        if (view instanceof CheckBox) {
+            CheckBox checkBox = (CheckBox) view;
+            checkBox.setChecked(check);
+        }
+        return this;
+    }
+
+    public BaseWrappedViewHolder setBgColor(int id, int color) {
+        View view = getView(id);
+        if (view != null) {
+            view.setBackgroundColor(color);
+        }
+        return this;
+    }
+
+    public BaseWrappedViewHolder setEnable(int id, boolean enable) {
+        if (getView(id) != null) {
+            getView(id).setEnabled(enable);
+        }
+        return this;
+    }
+
+    public BaseWrappedViewHolder setTextSize(int id, int size) {
+        if (getView(id) != null && getView(id) instanceof TextView) {
+            ((TextView) getView(id)).setTextSize(size);
+        }
+        return this;
+    }
+
+    public BaseWrappedViewHolder setPadding(int id, int left, int top, int right, int bottom) {
+        if (getView(id) != null) {
+            getView(id).setPadding(left, top, right, bottom);
+        }
+        return this;
+    }
+
+    public BaseWrappedViewHolder setBold(int id) {
+        View view = getView(id);
+        if (view != null && view instanceof TextView) {
+            ((TextView) view).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        }
+        return this;
     }
 }

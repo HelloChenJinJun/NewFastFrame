@@ -1,11 +1,10 @@
 package com.example.chat.manager;
 
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
-import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
@@ -16,6 +15,8 @@ import com.example.commonlibrary.bean.chat.ChatMessageEntity;
 import com.example.commonlibrary.bean.chat.ChatMessageEntityDao;
 import com.example.commonlibrary.bean.chat.CommentNotifyEntity;
 import com.example.commonlibrary.bean.chat.CommentNotifyEntityDao;
+import com.example.commonlibrary.bean.chat.DaoMaster;
+import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupChatEntityDao;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
@@ -35,12 +36,10 @@ import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntityDao;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
-import com.example.commonlibrary.bean.chat.DaoMaster;
-import com.example.commonlibrary.bean.chat.DaoSession;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.google.gson.Gson;
 
 import org.greenrobot.greendao.database.Database;
-import org.greenrobot.greendao.database.DatabaseOpenHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,8 +62,6 @@ public class UserDBManager {
     public static UserDBManager getInstance() {
         return getInstance(UserManager.getInstance().getCurrentUserObjectId());
     }
-
-
 
 
     public static UserDBManager getInstance(String uid) {
@@ -92,12 +89,13 @@ public class UserDBManager {
         Database database = devOpenHelper.getWritableDb();
         DaoMaster master = new DaoMaster(database);
         daoSession = master.newSession();
-        gson=BaseApplication.getAppComponent().getGson();
+        gson = BaseApplication.getAppComponent().getGson();
     }
 
 
     public void addOrUpdateContacts(List<User> friend) {
-        if (friend == null) return;
+        if (friend == null)
+            return;
         List<UserEntity> userEntityList = new ArrayList<>();
         for (User user :
                 friend) {
@@ -109,7 +107,8 @@ public class UserDBManager {
 
 
     public void addOrUpdateBlack(List<User> list, int blackType) {
-        if (list == null) return;
+        if (list == null)
+            return;
         List<UserEntity> userEntityList = new ArrayList<>();
         for (User user :
                 list) {
@@ -120,7 +119,8 @@ public class UserDBManager {
     }
 
     public void addOrUpdateGroupTable(List<GroupTableMessage> list) {
-        if (list == null) return;
+        if (list == null)
+            return;
         List<GroupTableEntity> groupTableEntities = new ArrayList<>();
         for (GroupTableMessage groupTableMessage :
                 list) {
@@ -139,16 +139,15 @@ public class UserDBManager {
         return daoSession.getChatMessageEntityDao().queryBuilder()
                 .where(ChatMessageEntityDao.Properties.ConversationId.eq(conversationId)
                         , ChatMessageEntityDao.Properties.CreatedTime.eq(time)
-                ,ChatMessageEntityDao.Properties.MessageType.notEq(ChatMessage.MESSAGE_TYPE_READED)).build().list().size() > 0;
+                        , ChatMessageEntityDao.Properties.MessageType.notEq(ChatMessage.MESSAGE_TYPE_READED)).build().list().size() > 0;
     }
 
 
-
-    public boolean hasReadMessage(String conversationId,Long time){
+    public boolean hasReadMessage(String conversationId, Long time) {
         return daoSession.getChatMessageEntityDao().queryBuilder()
                 .where(ChatMessageEntityDao.Properties.ConversationId.eq(conversationId)
                         , ChatMessageEntityDao.Properties.CreatedTime.eq(time)
-                        ,ChatMessageEntityDao.Properties.MessageType.eq(ChatMessage.MESSAGE_TYPE_READED)
+                        , ChatMessageEntityDao.Properties.MessageType.eq(ChatMessage.MESSAGE_TYPE_READED)
                 ).build().list().size() > 0;
     }
 
@@ -163,10 +162,9 @@ public class UserDBManager {
     }
 
 
-    public void addOrUpdateUser(UserEntity userEntity){
+    public void addOrUpdateUser(UserEntity userEntity) {
         daoSession.getUserEntityDao().insertOrReplace(userEntity);
     }
-
 
 
     public void addOrUpdateRecentMessage(BaseMessage message) {
@@ -194,24 +192,24 @@ public class UserDBManager {
 
     public long getUnReadChatMessageSize() {
         return daoSession.getChatMessageEntityDao()
-                .queryBuilder().where(ChatMessageEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD)
-                ,ChatMessageEntityDao.Properties.MessageType.in(ChatMessage.MESSAGE_TYPE_AGREE,ChatMessage.MESSAGE_TYPE_NORMAL))
+                .queryBuilder().where(ChatMessageEntityDao.Properties.ReadStatus.eq(ConstantUtil.RECEIVE_UNREAD)
+                        , ChatMessageEntityDao.Properties.MessageType.in(ChatMessage.MESSAGE_TYPE_AGREE, ChatMessage.MESSAGE_TYPE_NORMAL))
                 .count();
     }
 
 
     public long getUnReadChatMessageSize(String id) {
         return daoSession.getChatMessageEntityDao()
-                .queryBuilder().where(ChatMessageEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD)
+                .queryBuilder().where(ChatMessageEntityDao.Properties.ReadStatus.eq(ConstantUtil.RECEIVE_UNREAD)
                         , ChatMessageEntityDao.Properties.BelongId.eq(id)
-                ,ChatMessageEntityDao.Properties.MessageType
-                .in(ChatMessage.MESSAGE_TYPE_NORMAL,ChatMessage.MESSAGE_TYPE_AGREE))
+                        , ChatMessageEntityDao.Properties.MessageType
+                                .in(ChatMessage.MESSAGE_TYPE_NORMAL, ChatMessage.MESSAGE_TYPE_AGREE))
                 .count();
     }
 
     public long getUnReadGroupChatMessageSize(String id) {
         return daoSession.getGroupChatEntityDao()
-                .queryBuilder().where(GroupChatEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD)
+                .queryBuilder().where(GroupChatEntityDao.Properties.ReadStatus.eq(ConstantUtil.RECEIVE_UNREAD)
                         , GroupChatEntityDao.Properties.GroupId.eq(id))
                 .count();
     }
@@ -219,16 +217,16 @@ public class UserDBManager {
 
     public long getUnReadGroupChatMessageSize() {
         return daoSession.getGroupChatEntityDao()
-                .queryBuilder().where(GroupChatEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD))
+                .queryBuilder().where(GroupChatEntityDao.Properties.ReadStatus.eq(ConstantUtil.RECEIVE_UNREAD))
                 .count();
     }
 
     public long getAddInvitationMessageSize() {
         return daoSession.getChatMessageEntityDao().queryBuilder().where(ChatMessageEntityDao
-                .Properties.MessageType.eq(ChatMessage.MESSAGE_TYPE_ADD)
-        ,ChatMessageEntityDao.Properties.ToId.eq(UserManager
-                .getInstance().getCurrentUserObjectId())
-                ,ChatMessageEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD)).count();
+                        .Properties.MessageType.eq(ChatMessage.MESSAGE_TYPE_ADD)
+                , ChatMessageEntityDao.Properties.ToId.eq(UserManager
+                        .getInstance().getCurrentUserObjectId())
+                , ChatMessageEntityDao.Properties.ReadStatus.eq(ConstantUtil.RECEIVE_UNREAD)).count();
     }
 
     public RecentMessageEntity getRecentMessage(String id) {
@@ -238,28 +236,27 @@ public class UserDBManager {
     }
 
     public void addOrUpdateGroupChatMessage(GroupChatMessage groupChatMessage) {
-        GroupChatEntity groupChatMessage1=getGroupChatMessage(groupChatMessage);
-        if (groupChatMessage1!=null){
+        GroupChatEntity groupChatMessage1 = getGroupChatMessage(groupChatMessage);
+        if (groupChatMessage1 != null) {
             daoSession.getGroupChatEntityDao().update(groupChatMessage1);
-        }else {
+        } else {
             daoSession.getGroupChatEntityDao().insert(MsgManager.getInstance().cover(groupChatMessage));
         }
 
     }
 
 
-
-    public GroupChatEntity getGroupChatMessage(GroupChatMessage groupChatMessage){
-        List<GroupChatEntity>  list=daoSession.getGroupChatEntityDao().queryBuilder()
+    public GroupChatEntity getGroupChatMessage(GroupChatMessage groupChatMessage) {
+        List<GroupChatEntity> list = daoSession.getGroupChatEntityDao().queryBuilder()
                 .where(GroupChatEntityDao.Properties.GroupId.eq(groupChatMessage
-                                .getGroupId()),GroupChatEntityDao
+                                .getGroupId()), GroupChatEntityDao
                                 .Properties.BelongId.eq(groupChatMessage)
-                        ,GroupChatEntityDao.Properties.CreatedTime.eq(groupChatMessage.getCreateTime())).list();
-       return list.size()==0?null:list.get(0);
+                        , GroupChatEntityDao.Properties.CreatedTime.eq(groupChatMessage.getCreateTime())).list();
+        return list.size() == 0 ? null : list.get(0);
     }
 
     public UserEntity getUser(String id) {
-        if (id.equals(UserManager.getInstance().getCurrentUserObjectId())){
+        if (id.equals(UserManager.getInstance().getCurrentUserObjectId())) {
             return UserManager.getInstance().cover(UserManager.getInstance().getCurrentUser());
         }
         List<UserEntity> list = daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
@@ -344,27 +341,26 @@ public class UserDBManager {
     }
 
     public void addOrUpdateChatMessage(ChatMessage chatMessage) {
-        ChatMessageEntity chatMessageEntity=getChatMessage(chatMessage);
+        ChatMessageEntity chatMessageEntity = getChatMessage(chatMessage);
         if (chatMessageEntity != null) {
-           ChatMessageEntity entity= MsgManager.getInstance().cover(chatMessage);
+            ChatMessageEntity entity = MsgManager.getInstance().cover(chatMessage);
             entity.setId(chatMessageEntity.getId());
             daoSession.getChatMessageEntityDao()
                     .update(entity);
-        }else {
+        } else {
             daoSession.getChatMessageEntityDao()
                     .insert(MsgManager.getInstance().cover(chatMessage));
         }
     }
 
 
-
-    public ChatMessageEntity getChatMessage(ChatMessage chatMessage){
-        List<ChatMessageEntity>  list=daoSession.getChatMessageEntityDao().queryBuilder()
+    public ChatMessageEntity getChatMessage(ChatMessage chatMessage) {
+        List<ChatMessageEntity> list = daoSession.getChatMessageEntityDao().queryBuilder()
                 .where(ChatMessageEntityDao
                                 .Properties.ConversationId.eq(chatMessage.getConversationId())
-                        ,ChatMessageEntityDao.Properties.CreatedTime.eq(chatMessage.getCreateTime())
-                ,ChatMessageEntityDao.Properties.MessageType.eq(chatMessage.getMessageType())).list();
-        return list.size()==0?null:list.get(0);
+                        , ChatMessageEntityDao.Properties.CreatedTime.eq(chatMessage.getCreateTime())
+                        , ChatMessageEntityDao.Properties.MessageType.eq(chatMessage.getMessageType())).list();
+        return list.size() == 0 ? null : list.get(0);
     }
 
     public List<ChatMessageEntity> getAllChatMessage(int messageTypeAdd) {
@@ -410,30 +406,30 @@ public class UserDBManager {
                 .getChatMessageEntityDao().queryBuilder()
                 .where(ChatMessageEntityDao.Properties.BelongId.eq(uid)
                         , ChatMessageEntityDao.Properties.MessageType.in(ChatMessage.MESSAGE_TYPE_NORMAL
-                        ,ChatMessage.MESSAGE_TYPE_AGREE)
-                ,ChatMessageEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD))
+                                , ChatMessage.MESSAGE_TYPE_AGREE)
+                        , ChatMessageEntityDao.Properties.ReadStatus.eq(ConstantUtil.RECEIVE_UNREAD))
                 .build().list();
-        if (list.size()>0) {
+        if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 list.get(i).setReadStatus(readStatus);
             }
         }
         daoSession.getChatMessageEntityDao().updateInTx(list);
-        return list.size()>0;
+        return list.size() > 0;
     }
 
-    public List<BaseMessage> getAllChatMessageById(String uid,long time) {
-        String currentUserId=UserManager.getInstance().getCurrentUserObjectId();
-        List<ChatMessageEntity>  chatMessageEntityList=
+    public List<BaseMessage> getAllChatMessageById(String uid, long time) {
+        String currentUserId = UserManager.getInstance().getCurrentUserObjectId();
+        List<ChatMessageEntity> chatMessageEntityList =
                 daoSession.getChatMessageEntityDao().queryBuilder()
-                .where(ChatMessageEntityDao.Properties.ConversationId.in(uid+"&"+
-                                currentUserId,currentUserId+"&"+uid)
-                ,ChatMessageEntityDao.Properties.MessageType.in(ChatMessage.MESSAGE_TYPE_NORMAL,ChatMessage.MESSAGE_TYPE_AGREE)
-                ,ChatMessageEntityDao.Properties.CreatedTime.gt(time))
+                        .where(ChatMessageEntityDao.Properties.ConversationId.in(uid + "&" +
+                                        currentUserId, currentUserId + "&" + uid)
+                                , ChatMessageEntityDao.Properties.MessageType.in(ChatMessage.MESSAGE_TYPE_NORMAL, ChatMessage.MESSAGE_TYPE_AGREE)
+                                , ChatMessageEntityDao.Properties.CreatedTime.gt(time))
                         .orderAsc(ChatMessageEntityDao.Properties.CreatedTime)
                         .limit(10)
-                .build().list();
-        List<BaseMessage> result=new ArrayList<>(chatMessageEntityList.size());
+                        .build().list();
+        List<BaseMessage> result = new ArrayList<>(chatMessageEntityList.size());
         for (ChatMessageEntity item :
                 chatMessageEntityList) {
             result.add(MsgManager.getInstance().cover(item));
@@ -445,27 +441,27 @@ public class UserDBManager {
         List<GroupChatEntity> list = daoSession
                 .getGroupChatEntityDao().queryBuilder()
                 .where(GroupChatEntityDao.Properties.GroupId.eq(groupId)
-                        ,GroupChatEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD))
+                        , GroupChatEntityDao.Properties.ReadStatus.eq(ConstantUtil.RECEIVE_UNREAD))
                 .build().list();
-        if (list.size()>0) {
+        if (list.size() > 0) {
             for (GroupChatEntity item :
                     list) {
                 item.setSendStatus(readStatus);
             }
             daoSession.getGroupChatEntityDao().updateInTx(list);
         }
-        return list.size()>0;
+        return list.size() > 0;
     }
 
     public List<BaseMessage> getAllGroupChatMessageById(String groupId, long time) {
-        List<GroupChatEntity>  groupChatEntities=
+        List<GroupChatEntity> groupChatEntities =
                 daoSession.getGroupChatEntityDao().queryBuilder()
                         .where(GroupChatEntityDao.Properties.GroupId.eq(groupId)
-                                ,GroupChatEntityDao.Properties.CreatedTime.gt(time))
+                                , GroupChatEntityDao.Properties.CreatedTime.gt(time))
                         .orderAsc(GroupChatEntityDao.Properties.CreatedTime)
                         .limit(10)
                         .build().list();
-        List<BaseMessage> result=new ArrayList<>(groupChatEntities.size());
+        List<BaseMessage> result = new ArrayList<>(groupChatEntities.size());
         for (GroupChatEntity item :
                 groupChatEntities) {
             result.add(MsgManager.getInstance().cover(item));
@@ -476,20 +472,20 @@ public class UserDBManager {
     public void deleteChatMessage(String conversationId, int messageType) {
         daoSession.getChatMessageEntityDao()
                 .queryBuilder().where(ChatMessageEntityDao.Properties.ConversationId
-        .eq(conversationId),ChatMessageEntityDao.Properties
-        .MessageType.eq(messageType)).buildDelete().executeDeleteWithoutDetachingEntities();
+                .eq(conversationId), ChatMessageEntityDao.Properties
+                .MessageType.eq(messageType)).buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
     public void updateGroupChatReadStatus(String groupId, String belongId, Long createTime, Integer readStatus) {
         List<GroupChatEntity> list = daoSession
                 .getGroupChatEntityDao().queryBuilder()
                 .where(GroupChatEntityDao.Properties.GroupId.eq(groupId)
-                        ,GroupChatEntityDao.Properties.BelongId
-                        .eq(belongId),GroupChatEntityDao
-                        .Properties.CreatedTime.eq(createTime)
-                        ,GroupChatEntityDao.Properties.ReadStatus.eq(Constant.RECEIVE_UNREAD))
+                        , GroupChatEntityDao.Properties.BelongId
+                                .eq(belongId), GroupChatEntityDao
+                                .Properties.CreatedTime.eq(createTime)
+                        , GroupChatEntityDao.Properties.ReadStatus.eq(ConstantUtil.RECEIVE_UNREAD))
                 .build().list();
-        if (list.size()>0) {
+        if (list.size() > 0) {
             for (GroupChatEntity item :
                     list) {
                 item.setSendStatus(readStatus);
@@ -502,12 +498,12 @@ public class UserDBManager {
     public List<UserEntity> getAllAddBlack() {
         return daoSession.getUserEntityDao().queryBuilder()
                 .where(UserEntityDao.Properties.IsBlack.eq(Boolean.TRUE)
-                ,UserEntityDao.Properties.BlackType.eq(UserEntity.BLACK_TYPE_ADD))
+                        , UserEntityDao.Properties.BlackType.eq(UserEntity.BLACK_TYPE_ADD))
                 .build().list();
     }
 
     public List<GroupTableEntity> getAllGroupTableMessage() {
-        List<GroupTableEntity >  list=daoSession
+        List<GroupTableEntity> list = daoSession
                 .getGroupTableEntityDao().queryBuilder()
                 .build().list();
         return list;
@@ -521,16 +517,16 @@ public class UserDBManager {
 
     public boolean isFriend(String uid) {
         return daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
-                        .Uid.eq(uid),UserEntityDao.Properties.IsStranger.eq(Boolean.FALSE)
-                ,UserEntityDao.Properties.IsBlack.eq(Boolean.FALSE)).build().list().size()>0;
+                        .Uid.eq(uid), UserEntityDao.Properties.IsStranger.eq(Boolean.FALSE)
+                , UserEntityDao.Properties.IsBlack.eq(Boolean.FALSE)).build().list().size() > 0;
     }
 
 
     public boolean isAddBlack(String uid) {
         return daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
-                        .Uid.eq(uid),UserEntityDao.Properties.IsStranger.eq(Boolean.FALSE)
-                ,UserEntityDao.Properties.IsBlack.eq(Boolean.FALSE)
-                ,UserEntityDao.Properties.BlackType.eq(UserEntity.BLACK_TYPE_ADD)).build().list().size()>0;
+                        .Uid.eq(uid), UserEntityDao.Properties.IsStranger.eq(Boolean.FALSE)
+                , UserEntityDao.Properties.IsBlack.eq(Boolean.FALSE)
+                , UserEntityDao.Properties.BlackType.eq(UserEntity.BLACK_TYPE_ADD)).build().list().size() > 0;
     }
 
     public void addOrUpdatePost(PublicPostBean publicPostBean) {
@@ -545,28 +541,31 @@ public class UserDBManager {
     public void deleteCommentFromPost(String pid) {
         daoSession.getPostCommentEntityDao()
                 .queryBuilder().where(PostCommentEntityDao.Properties
-        .Pid.eq(pid)).buildDelete().executeDeleteWithoutDetachingEntities();
+                .Pid.eq(pid)).buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
     public void addOrUpdatePost(List<PublicPostBean> list) {
         if (list != null && list.size() > 0) {
-            List<PublicPostEntity>  entityList=new ArrayList<>(list.size());
-            List<UserEntity>  userEntityList=new ArrayList<>(list.size());
+            List<PublicPostEntity> entityList = new ArrayList<>(list.size());
+            List<UserEntity> userEntityList = new ArrayList<>(list.size());
             for (PublicPostBean item :
                     list) {
                 entityList.add(MsgManager.getInstance().cover(item));
-                UserEntity userEntity=getUser(item.getAuthor().getObjectId());
+                UserEntity userEntity = getUser(item.getAuthor().getObjectId());
                 if (userEntity == null) {
-                    userEntityList.add(UserManager.getInstance().cover(item.getAuthor(),true));
-                }else {
-                    userEntityList.add(UserManager.getInstance().cover(item.getAuthor(),userEntity.isStranger()
-                            ,userEntity.isBlack(),userEntity.getBlackType()));
+                    userEntityList.add(UserManager.getInstance().cover(item.getAuthor(), true));
+                } else {
+                    userEntityList.add(UserManager.getInstance().cover(item.getAuthor(), userEntity.isStranger()
+                            , userEntity.isBlack(), userEntity.getBlackType()));
                 }
 
-                if (item.getMsgType() == Constant.EDIT_TYPE_SHARE) {
-                    String shareUid=gson.fromJson(gson.fromJson(item.getContent(), PostDataBean.class).getShareContent()
-                    ,PublicPostEntity.class).getUid();
-                    UserManager.getInstance().findUserById(shareUid,null);
+                if (item.getMsgType() == ConstantUtil.EDIT_TYPE_SHARE) {
+                    PublicPostBean publicPostBean = gson.fromJson(gson.fromJson(item.getContent(), PostDataBean.class).getShareContent()
+                            , PublicPostBean.class);
+                    if (publicPostBean != null) {
+                        CommonLogger.e(publicPostBean.getContent());
+                    }
+                    //                    UserManager.getInstance().findUserById(shareUid,null);
                 }
 
 
@@ -578,25 +577,25 @@ public class UserDBManager {
 
     public void addOrUpdateComment(List<PublicCommentBean> list) {
         if (list != null && list.size() > 0) {
-            List<PostCommentEntity>  entityList=new ArrayList<>(list.size());
-            List<UserEntity>  userEntityList=new ArrayList<>(list.size());
+            List<PostCommentEntity> entityList = new ArrayList<>(list.size());
+            List<UserEntity> userEntityList = new ArrayList<>(list.size());
             for (PublicCommentBean item :
                     list) {
                 entityList.add(MsgManager.getInstance().cover(item));
-                UserEntity userEntity=getUser(item.getUser().getObjectId());
+                UserEntity userEntity = getUser(item.getUser().getObjectId());
                 if (userEntity == null) {
-                    userEntityList.add(UserManager.getInstance().cover(item.getUser(),true));
-                }else {
-                    userEntityList.add(UserManager.getInstance().cover(item.getUser(),userEntity.isStranger()
-                            ,userEntity.isBlack(),userEntity.getBlackType()));
+                    userEntityList.add(UserManager.getInstance().cover(item.getUser(), true));
+                } else {
+                    userEntityList.add(UserManager.getInstance().cover(item.getUser(), userEntity.isStranger()
+                            , userEntity.isBlack(), userEntity.getBlackType()));
                 }
-                CommentDetailBean bean=gson.fromJson(item.getContent(),CommentDetailBean.class);
+                CommentDetailBean bean = gson.fromJson(item.getContent(), CommentDetailBean.class);
                 if (bean.getPublicId() != null) {
-                    String[] str=bean.getPublicId().split("&");
+                    String[] str = bean.getPublicId().split("&");
                     for (String uid :
                             str) {
                         if (!uid.equals(item.getUser().getObjectId())) {
-                             UserManager.getInstance().findUserById(uid,null);
+                            UserManager.getInstance().findUserById(uid, null);
                         }
                     }
                 }
@@ -612,7 +611,7 @@ public class UserDBManager {
 
     public boolean hasCommentBean(String commentId) {
         return daoSession.getPostCommentEntityDao().queryBuilder().where(PostCommentEntityDao.Properties
-        .Cid.eq(commentId)).buildCount().count()>0;
+                .Cid.eq(commentId)).buildCount().count() > 0;
     }
 
     public void addOrUpdateCommentNotify(CommentNotifyEntity commentNotifyEntity) {
@@ -621,28 +620,28 @@ public class UserDBManager {
 
     public long getUnReadCommentCount() {
         return daoSession.getCommentNotifyEntityDao().queryBuilder().where(CommentNotifyEntityDao
-        .Properties.ReadStatus.eq(Constant.READ_STATUS_UNREAD)).buildCount().count();
+                .Properties.ReadStatus.eq(ConstantUtil.READ_STATUS_UNREAD)).buildCount().count();
     }
 
 
-    public ArrayList<PostNotifyInfo>  getUnReadPostNotify(){
-        List<PostNotifyInfo>  list=daoSession.getPostNotifyInfoDao().queryBuilder().where(PostNotifyInfoDao
-                .Properties.ReadStatus.eq(Constant.READ_STATUS_UNREAD))
+    public ArrayList<PostNotifyInfo> getUnReadPostNotify() {
+        List<PostNotifyInfo> list = daoSession.getPostNotifyInfoDao().queryBuilder().where(PostNotifyInfoDao
+                .Properties.ReadStatus.eq(ConstantUtil.READ_STATUS_UNREAD))
                 .orderDesc().build().list();
         return new ArrayList<>(list);
     }
 
     public PublicCommentBean getFirstUnReadComment() {
-        List<CommentNotifyEntity> list=daoSession.getCommentNotifyEntityDao().queryBuilder().where(CommentNotifyEntityDao
-        .Properties.ReadStatus.eq(Constant.READ_STATUS_UNREAD)).build().list();
-        PublicCommentBean publicCommentBean=null;
+        List<CommentNotifyEntity> list = daoSession.getCommentNotifyEntityDao().queryBuilder().where(CommentNotifyEntityDao
+                .Properties.ReadStatus.eq(ConstantUtil.READ_STATUS_UNREAD)).build().list();
+        PublicCommentBean publicCommentBean = null;
         if (list.size() > 0) {
-            List<PostCommentEntity>  postCommentEntityList=
+            List<PostCommentEntity> postCommentEntityList =
                     daoSession.getPostCommentEntityDao().queryBuilder().where(PostCommentEntityDao
-                    .Properties.Cid.eq(list.get(0).getCommentId()))
-                    .build().list();
+                            .Properties.Cid.eq(list.get(0).getCommentId()))
+                            .build().list();
             if (postCommentEntityList.size() > 0) {
-                publicCommentBean=MsgManager.getInstance().cover(postCommentEntityList.get(0));
+                publicCommentBean = MsgManager.getInstance().cover(postCommentEntityList.get(0));
             }
 
         }
@@ -650,15 +649,15 @@ public class UserDBManager {
     }
 
     public void updateCommentReadStatus() {
-      List<PostNotifyInfo>  list= daoSession.getPostNotifyInfoDao().queryBuilder()
-                .where(PostNotifyInfoDao.Properties.ReadStatus.eq(Constant
-                .READ_STATUS_UNREAD))
+        List<PostNotifyInfo> list = daoSession.getPostNotifyInfoDao().queryBuilder()
+                .where(PostNotifyInfoDao.Properties.ReadStatus.eq(ConstantUtil
+                        .READ_STATUS_UNREAD))
                 .build().list();
         for (PostNotifyInfo item :
                 list) {
-            item.setReadStatus(Constant.READ_STATUS_READED);
+            item.setReadStatus(ConstantUtil.READ_STATUS_READED);
         }
-      daoSession.getPostNotifyInfoDao().updateInTx(list);
+        daoSession.getPostNotifyInfoDao().updateInTx(list);
     }
 
     public void addOrUpdateSystemNotify(SystemNotifyEntity systemNotifyBean) {
@@ -667,19 +666,18 @@ public class UserDBManager {
 
     public long getUnReadSystemNotifyCount() {
         return daoSession.getSystemNotifyEntityDao().queryBuilder().where(SystemNotifyEntityDao.Properties
-        .ReadStatus.eq(Constant.READ_STATUS_UNREAD)).buildCount().count();
+                .ReadStatus.eq(ConstantUtil.READ_STATUS_UNREAD)).buildCount().count();
     }
 
 
-
     public void updateSystemNotifyReadStatus() {
-        List<SystemNotifyEntity>  list=daoSession.getSystemNotifyEntityDao().queryBuilder()
-                .where(SystemNotifyEntityDao.Properties.ReadStatus.eq(Constant.READ_STATUS_UNREAD))
+        List<SystemNotifyEntity> list = daoSession.getSystemNotifyEntityDao().queryBuilder()
+                .where(SystemNotifyEntityDao.Properties.ReadStatus.eq(ConstantUtil.READ_STATUS_UNREAD))
                 .build().list();
         if (list.size() > 0) {
             for (SystemNotifyEntity item :
                     list) {
-                item.setReadStatus(Constant.READ_STATUS_READED);
+                item.setReadStatus(ConstantUtil.READ_STATUS_READED);
             }
             daoSession.getSystemNotifyEntityDao().updateInTx(list);
         }
@@ -690,8 +688,8 @@ public class UserDBManager {
     }
 
     public boolean hasSystemNotify(String id) {
-       return daoSession.getSystemNotifyEntityDao().queryBuilder().where(SystemNotifyEntityDao.Properties
-        .Id.eq(id)).buildCount().count()>0;
+        return daoSession.getSystemNotifyEntityDao().queryBuilder().where(SystemNotifyEntityDao.Properties
+                .Id.eq(id)).buildCount().count() > 0;
     }
 
     public void addOrUpdatePostNotify(PostNotifyInfo postNotifyInfo) {
@@ -700,7 +698,7 @@ public class UserDBManager {
 
     public boolean hasPostNotifyInfo(String id) {
         return daoSession.getPostNotifyInfoDao().queryBuilder().where(PostNotifyInfoDao
-        .Properties.Id.eq(id)).buildCount().count()>0;
+                .Properties.Id.eq(id)).buildCount().count() > 0;
     }
 
     public void addOrUpdatePostNotify(List<PostNotifyInfo> result) {
@@ -712,19 +710,19 @@ public class UserDBManager {
     }
 
     public SkinEntity getCurrentSkin() {
-        List<SkinEntity> list= daoSession.getSkinEntityDao().queryBuilder().where(SkinEntityDao.Properties
-        .HasSelected.eq(Boolean.TRUE)).limit(1).build().list();
-        if (list != null&&list.size()>0) {
+        List<SkinEntity> list = daoSession.getSkinEntityDao().queryBuilder().where(SkinEntityDao.Properties
+                .HasSelected.eq(Boolean.TRUE)).limit(1).build().list();
+        if (list != null && list.size() > 0) {
             return list.get(0);
-        }else {
+        } else {
             return null;
         }
     }
 
     public StepData getStepData(String time) {
-        List<StepData> list=daoSession.getStepDataDao().queryBuilder()
+        List<StepData> list = daoSession.getStepDataDao().queryBuilder()
                 .where(StepDataDao.Properties.Time
-                .eq(time))
+                        .eq(time))
                 .limit(1).build().list();
         if (list.size() > 0) {
             return list.get(0);

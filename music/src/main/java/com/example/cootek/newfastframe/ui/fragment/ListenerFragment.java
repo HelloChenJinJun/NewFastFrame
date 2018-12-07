@@ -2,10 +2,8 @@ package com.example.cootek.newfastframe.ui.fragment;
 
 import android.view.View;
 
-import com.example.commonlibrary.BaseFragment;
 import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.ui.LocalMusicActivity;
-import com.example.cootek.newfastframe.ui.MusicRepositoryActivity;
+import com.example.cootek.newfastframe.base.MusicBaseFragment;
 
 /**
  * 项目名称:    NewFastFrame
@@ -14,7 +12,7 @@ import com.example.cootek.newfastframe.ui.MusicRepositoryActivity;
  * QQ:             1981367757
  */
 
-public class ListenerFragment extends BaseFragment implements View.OnClickListener {
+public class ListenerFragment extends MusicBaseFragment implements View.OnClickListener {
     @Override
     public void updateData(Object o) {
 
@@ -53,11 +51,12 @@ public class ListenerFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        int id=v.getId();
+        int id = v.getId();
         if (id == R.id.ll_fragment_listener_local_music) {
-            LocalMusicActivity.start(getActivity(),6);
+            //            LocalMusicActivity.start(getActivity(), 6);
+            //            addBackStackFragment(RankFragment.newInstance());
         } else if (id == R.id.tv_fragment_music_repository) {
-            MusicRepositoryActivity.start(getActivity());
+
         }
     }
 

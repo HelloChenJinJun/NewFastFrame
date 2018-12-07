@@ -1,18 +1,17 @@
 package com.example.commonlibrary.interceptor;
 
-import android.support.annotation.Nullable;
-
 import com.example.commonlibrary.net.OkHttpGlobalHandler;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.IOUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import androidx.annotation.Nullable;
 import okhttp3.Connection;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -149,7 +148,7 @@ public class LogInterceptor implements Interceptor {
                     if (responseBody == null) return response;
 
                     if (isPlaintext(responseBody.contentType())) {
-                        byte[] bytes = IOUtils.toByteArray(responseBody.byteStream());
+                        byte[] bytes =toByteArray(responseBody.byteStream());
                         MediaType contentType = responseBody.contentType();
                         String body = new String(bytes, getCharset(contentType));
                         log("\tbody:" + body);
@@ -176,6 +175,15 @@ public class LogInterceptor implements Interceptor {
         return response;
     }
 
+    private byte[] toByteArray(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        int len;
+        byte[] buffer = new byte[4096];
+        while ((len = inputStream.read(buffer)) != -1) output.write(buffer, 0, len);
+        output.close();
+        return output.toByteArray();
+    }
+
 
     private static Charset getCharset(MediaType contentType) {
         Charset charset = contentType != null ? contentType.charset() : UTF8;
@@ -192,8 +200,7 @@ public class LogInterceptor implements Interceptor {
         String subtype = mediaType.subtype();
         if (subtype != null) {
             subtype = subtype.toLowerCase();
-            if (subtype.contains("x-www-form-urlencoded") || subtype.contains("json") || subtype.contains("xml") || subtype.contains("html")) //
-                return true;
+            return subtype.contains("x-www-form-urlencoded") || subtype.contains("json") || subtype.contains("xml") || subtype.contains("html");
         }
         return false;
     }

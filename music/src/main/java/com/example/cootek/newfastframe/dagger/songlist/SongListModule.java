@@ -1,31 +1,24 @@
 package com.example.cootek.newfastframe.dagger.songlist;
 
 import com.example.commonlibrary.mvp.model.DefaultModel;
-import com.example.commonlibrary.mvp.view.IView;
 import com.example.cootek.newfastframe.adapter.SongListAdapter;
+import com.example.cootek.newfastframe.mvp.songlist.SongListFragment;
 import com.example.cootek.newfastframe.mvp.songlist.SongListPresenter;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by COOTEK on 2017/8/16.
+ * 项目名称:    NewFastFrame
+ * 创建人:      陈锦军
+ * 创建时间:    2018/12/7     11:15
  */
-
 @Module
 public class SongListModule {
-    private IView<Object> iView;
+    private SongListFragment mSongListFragment;
 
-
-    public SongListModule(IView<Object> iView) {
-        this.iView = iView;
-    }
-
-
-
-    @Provides
-    public SongListPresenter provideRankDetailPresenter(DefaultModel rankModel) {
-        return new SongListPresenter(iView, rankModel);
+    public SongListModule(SongListFragment songListFragment) {
+        mSongListFragment = songListFragment;
     }
 
 
@@ -33,4 +26,10 @@ public class SongListModule {
     public SongListAdapter provideAdapter() {
         return new SongListAdapter();
     }
+
+    @Provides
+    public SongListPresenter providePresenter(DefaultModel defaultModel) {
+        return new SongListPresenter(mSongListFragment, defaultModel);
+    }
+
 }

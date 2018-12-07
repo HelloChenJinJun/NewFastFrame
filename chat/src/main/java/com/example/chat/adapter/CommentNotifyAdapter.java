@@ -4,14 +4,12 @@ import android.text.SpannableStringBuilder;
 import android.widget.TextView;
 
 import com.example.chat.R;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
-import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.manager.UserDBManager;
-import com.example.chat.manager.UserManager;
 import com.example.chat.util.FaceTextUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
@@ -36,7 +34,7 @@ public class CommentNotifyAdapter extends BaseRecyclerAdapter<PostNotifyBean,Bas
     @Override
     protected void convert(BaseWrappedViewHolder holder, PostNotifyBean data) {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-        if (data.getType().equals(Constant.TYPE_COMMENT)) {
+        if (data.getType().equals(ConstantUtil.TYPE_COMMENT)) {
             CommentDetailBean commentDetailBean =gson.fromJson(data.getPublicCommentBean().getContent(), CommentDetailBean.class);
             if (commentDetailBean!=null&&commentDetailBean.getReplyContent() != null) {
                 spannableStringBuilder.append(" 回复 ");
@@ -56,7 +54,7 @@ public class CommentNotifyAdapter extends BaseRecyclerAdapter<PostNotifyBean,Bas
                 spannableStringBuilder.append(FaceTextUtil.toSpannableString(holder.itemView.getContext(), commentDetailBean.getContent()));
             }
             holder.setText(R.id.tv_item_activity_comment_notify_content,spannableStringBuilder);
-        }else if (data.getType().equals(Constant.TYPE_LIKE)){
+        }else if (data.getType().equals(ConstantUtil.TYPE_LIKE)){
             ((TextView)holder.getView(R.id.tv_item_activity_comment_notify_content)).setCompoundDrawablesWithIntrinsicBounds(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_favorite_border_deep_orange_a700_24dp), null, null, null);
         }else {
             spannableStringBuilder.append("转发了该条说说");
@@ -76,9 +74,9 @@ public class CommentNotifyAdapter extends BaseRecyclerAdapter<PostNotifyBean,Bas
         Integer mediaType=temp.getMsgType();
         if (mediaType==null)return;
         PostDataBean bean=gson.fromJson(temp.getContent(),PostDataBean.class);
-        if (mediaType.equals(Constant.EDIT_TYPE_IMAGE)||mediaType.equals(Constant.EDIT_TYPE_VIDEO)) {
+        if (mediaType.equals(ConstantUtil.EDIT_TYPE_IMAGE)||mediaType.equals(ConstantUtil.EDIT_TYPE_VIDEO)) {
             String url=null;
-            if (mediaType.equals(Constant.EDIT_TYPE_IMAGE)) {
+            if (mediaType.equals(ConstantUtil.EDIT_TYPE_IMAGE)) {
                 url=bean.getImageList().get(0);
             }else {
                 for (String str :

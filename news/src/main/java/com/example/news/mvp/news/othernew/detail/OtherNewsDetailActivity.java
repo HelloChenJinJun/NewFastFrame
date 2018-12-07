@@ -12,7 +12,7 @@ import com.example.news.bean.OtherNewsDetailBean;
 import com.example.news.dagger.news.othernews.detail.DaggerOtherNewsDetailComponent;
 import com.example.news.dagger.news.othernews.detail.OtherNewsDetailModule;
 import com.example.news.util.NewsUtil;
-import com.zzhoujay.richtext.RichText;
+import com.example.news.widget.rich.RichText;
 
 /**
  * 项目名称:    NewFastFrame
@@ -21,18 +21,16 @@ import com.zzhoujay.richtext.RichText;
  * QQ:             1981367757
  */
 
-public class OtherNewsDetailActivity extends BaseActivity<OtherNewsDetailBean,OtherNewsDetailPresenter>{
+public class OtherNewsDetailActivity extends BaseActivity<OtherNewsDetailBean, OtherNewsDetailPresenter> {
     private TextView title;
-    private TextView content;
-
+    private RichText content;
 
 
     @Override
     public void updateData(OtherNewsDetailBean otherNewsDetailBean) {
         if (otherNewsDetailBean != null) {
             title.setText(otherNewsDetailBean.getTitle());
-            RichText.from(otherNewsDetailBean.getBody())
-                    .into(content);
+            content.setRichText(otherNewsDetailBean.getBody());
         }
     }
 
@@ -53,8 +51,8 @@ public class OtherNewsDetailActivity extends BaseActivity<OtherNewsDetailBean,Ot
 
     @Override
     protected void initView() {
-        title= (TextView) findViewById(R.id.tv_activity_other_news_detail_title);
-        content= (TextView) findViewById(R.id.tv_activity_other_news_detail_content);
+        title = findViewById(R.id.tv_activity_other_news_detail_title);
+        content = findViewById(R.id.tv_activity_other_news_detail_content);
     }
 
     @Override
@@ -69,15 +67,15 @@ public class OtherNewsDetailActivity extends BaseActivity<OtherNewsDetailBean,Ot
                 presenter.getOtherNewsDetailData(getIntent().getStringExtra(NewsUtil.POST_ID));
             }
         });
-        ToolBarOption toolBarOption=new ToolBarOption();
+        ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("详情");
         toolBarOption.setNeedNavigation(true);
         setToolBar(toolBarOption);
     }
 
     public static void start(Context context, String postid) {
-        Intent intent=new Intent(context,OtherNewsDetailActivity.class);
-        intent.putExtra(NewsUtil.POST_ID,postid);
+        Intent intent = new Intent(context, OtherNewsDetailActivity.class);
+        intent.putExtra(NewsUtil.POST_ID, postid);
         context.startActivity(intent);
     }
 }

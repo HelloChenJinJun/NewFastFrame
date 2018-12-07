@@ -10,6 +10,7 @@ import com.example.cootek.newfastframe.bean.SearchMusicBean;
 import com.example.cootek.newfastframe.bean.SongMenuBean;
 
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
@@ -93,6 +94,10 @@ public interface MusicApi {
 
     @GET("/v1/restserver/ting?from=android&version=5.6.5.6&format=json&method=baidu.ting.album.getAlbumInfo")
     public Observable<AlbumBean> getAlbumData(@Query("album_id") String albumId);
+
+
+    @GET
+    public Observable<ResponseBody> getLrcContent(@Url String url);
 
 
 }

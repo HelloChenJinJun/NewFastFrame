@@ -2,17 +2,10 @@ package com.example.chat.adapter.holder.chat;
 
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.example.chat.R;
-import com.example.chat.adapter.ChatMessageAdapter;
-import com.example.chat.adapter.holder.chat.BaseChatHolder;
-import com.example.chat.base.Constant;
 import com.example.chat.bean.BaseMessage;
-import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.MessageContent;
-import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.UserEntity;
 

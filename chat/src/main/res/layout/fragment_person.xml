@@ -9,9 +9,15 @@
 
 
     <RelativeLayout
-        android:id="@+id/rl_fragment_person_title_bg"
         android:layout_width="match_parent"
         android:layout_height="200dp">
+
+
+        <ImageView
+            android:id="@+id/iv_fragment_person_title_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
 
         <com.example.commonlibrary.cusotomview.RoundAngleImageView
             android:scaleType="centerCrop"
@@ -48,7 +54,7 @@
             android:tag="skin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_news_settings"
+            android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
             android:textSize="16sp"
             android:text="个人资料"
             android:textColor="@color/custom_color_text_main"
@@ -76,7 +82,7 @@
             android:tag="skin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_news_settings"
+            android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
             android:textSize="16sp"
             android:text="个人主页"
             android:textColor="@color/custom_color_text_main"
@@ -107,7 +113,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_news_settings"
+            android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
             android:textSize="16sp"
             android:text="设置"
             android:tag="skin"
@@ -139,7 +145,7 @@
             android:tag="skin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_news_settings"
+            android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
             android:textSize="16sp"
             android:text="留言通知"
             android:textColor="@color/custom_color_text_main"
@@ -171,7 +177,7 @@
             android:id="@+id/tv_fragment_person_system_notify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_news_settings"
+            android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
             android:textSize="16sp"
             android:text="系统通知"
             android:textColor="@color/custom_color_text_main"

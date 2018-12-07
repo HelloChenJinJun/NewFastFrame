@@ -9,8 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.chat.R;
-import com.example.chat.base.Constant;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ChatBaseActivity;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.events.GroupTableEvent;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
@@ -18,7 +18,6 @@ import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.editInfo.EditUserInfoDetailActivity;
 import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
 import com.example.chat.mvp.selectFriend.SelectedFriendsActivity;
-import com.example.chat.util.SystemUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
@@ -27,14 +26,12 @@ import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.ConstantUtil;
-import com.example.commonlibrary.utils.ToastUtils;
+import com.example.commonlibrary.utils.SystemUtil;
 
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
 
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
@@ -49,7 +46,7 @@ import cn.bmob.v3.listener.UploadFileListener;
  * QQ:             1981367757
  */
 
-public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresenter> implements View.OnClickListener {
+public class GroupInfoActivity extends ChatBaseActivity<Object, GroupInfoPresenter> implements View.OnClickListener {
 
     private TextView notification;
     private TextView number;
@@ -112,7 +109,7 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
         descriptionContainer.setOnClickListener(this);
         remind.setOnCheckedChangeListener((buttonView, isChecked) -> {
 //            MsgManager.getInstance().updateGroupMessage(groupTableEntity
-//                    .getGroupId(), Constant.GROUP_REMIND, isChecked ? "true" : "false", new UpdateListener() {
+//                    .getGroupId(), ConstantUtil.GROUP_REMIND, isChecked ? "true" : "false", new UpdateListener() {
 //                @Override
 //                public void done(BmobException e) {
 //                    if (e != null) {
@@ -129,7 +126,7 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
 
     @Override
     protected void initData() {
-        groupTableEntity = UserDBManager.getInstance().getGroupTableEntity(getIntent().getStringExtra(Constant.GROUP_ID));
+        groupTableEntity = UserDBManager.getInstance().getGroupTableEntity(getIntent().getStringExtra(ConstantUtil.GROUP_ID));
         if (!groupTableEntity.getCreatorId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
             delete.setVisibility(View.GONE);
             groupNameContainer.setClickable(false);
@@ -178,14 +175,14 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
         if (id==R.id.rl_activity_group_info_header){
             PhotoSelectActivity.start(this,null,true,true,null);
         } else if (id == R.id.rl_activity_group_info_group_name) {
-            EditUserInfoDetailActivity.start(this,groupTableEntity.getGroupId(),Constant.GROUP_NAME,groupTableEntity.getGroupName()
-            ,Constant.REQUEST_CODE_GROUP_NAME);
+            EditUserInfoDetailActivity.start(this,groupTableEntity.getGroupId(),ConstantUtil.GROUP_NAME,groupTableEntity.getGroupName()
+            ,ConstantUtil.REQUEST_CODE_GROUP_NAME);
         }else if (id==R.id.rl_activity_group_info_description){
-            EditUserInfoDetailActivity.start(this,groupTableEntity.getGroupId(),Constant.GROUP_DESCRIPTION,groupTableEntity.getGroupName()
-                    ,Constant.REQUEST_CODE_GROUP_DESCRIPTION);
+            EditUserInfoDetailActivity.start(this,groupTableEntity.getGroupId(),ConstantUtil.GROUP_DESCRIPTION,groupTableEntity.getGroupName()
+                    ,ConstantUtil.REQUEST_CODE_GROUP_DESCRIPTION);
         } else if (id == R.id.rl_activity_group_info_notification) {
-            EditUserInfoDetailActivity.start(this,groupTableEntity.getGroupId(),Constant.GROUP_NOTIFICATION,groupTableEntity.getGroupName()
-                    ,Constant.REQUEST_CODE_GROUP_NOTIFICATION);
+            EditUserInfoDetailActivity.start(this,groupTableEntity.getGroupId(),ConstantUtil.GROUP_NOTIFICATION,groupTableEntity.getGroupName()
+                    ,ConstantUtil.REQUEST_CODE_GROUP_NOTIFICATION);
         } else if (id == R.id.btn_activity_group_info_exit) {
             presenter.exitGroup(groupTableEntity.getGroupId(),UserManager.getInstance()
             .getCurrentUserObjectId());
@@ -201,7 +198,7 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
                     list.remove(item);
                 }
             }
-            SelectedFriendsActivity.start(this,Constant.FROM_GROUP_INFO,list,Constant.REQUEST_CODE_ADD_GROUP_NUMBER);
+            SelectedFriendsActivity.start(this,ConstantUtil.FROM_GROUP_INFO,list,ConstantUtil.REQUEST_CODE_ADD_GROUP_NUMBER);
         } else if (id == R.id.riv_activity_group_info_delete) {
             ArrayList<UserEntity>  list=new ArrayList<>();
             for (int i = 0; i < groupTableEntity.getGroupNumber().size(); i++) {
@@ -209,7 +206,7 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
                     list.add(UserDBManager.getInstance().getUser(groupTableEntity.getGroupNumber().get(i)));
                 }
             }
-            SelectedFriendsActivity.start(this,Constant.FROM_GROUP_INFO,list,Constant.REQUEST_CODE_DELETE_GROUP_NUMBER);
+            SelectedFriendsActivity.start(this,ConstantUtil.FROM_GROUP_INFO,list,ConstantUtil.REQUEST_CODE_DELETE_GROUP_NUMBER);
         }
     }
 
@@ -219,26 +216,26 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode== Activity.RESULT_OK){
             switch (requestCode){
-                case Constant.REQUEST_CODE_ADD_GROUP_NUMBER:
-                    ArrayList<String>  list= (ArrayList<String>) data.getSerializableExtra(Constant.DATA);
+                case ConstantUtil.REQUEST_CODE_ADD_GROUP_NUMBER:
+                    ArrayList<String>  list= (ArrayList<String>) data.getSerializableExtra(ConstantUtil.DATA);
                     break;
-                case Constant.REQUEST_CODE_DELETE_GROUP_NUMBER:
+                case ConstantUtil.REQUEST_CODE_DELETE_GROUP_NUMBER:
                     break;
-                case Constant.REQUEST_CODE_GROUP_NOTIFICATION:
-                    String content=data.getStringExtra(Constant.DATA);
+                case ConstantUtil.REQUEST_CODE_GROUP_NOTIFICATION:
+                    String content=data.getStringExtra(ConstantUtil.DATA);
                     notification.setText(content);
                     groupTableEntity.setNotification(content);
                     RxBusManager.getInstance().post(new GroupTableEvent(groupTableEntity.getGroupId()
                     ,GroupTableEvent.TYPE_GROUP_NOTIFICATION,content));
               break;
-                case Constant.REQUEST_CODE_GROUP_DESCRIPTION:
-                    String str=data.getStringExtra(Constant.DATA);
+                case ConstantUtil.REQUEST_CODE_GROUP_DESCRIPTION:
+                    String str=data.getStringExtra(ConstantUtil.DATA);
                     description.setText(str);
                     groupTableEntity.setGroupDescription(str);
                     RxBusManager.getInstance().post(new GroupTableEvent(groupTableEntity.getGroupId()
                             ,GroupTableEvent.TYPE_GROUP_DESCRIPTION,str));
                     break;
-                case ConstantUtil.REQUEST_CODE_ONE_PHOTO:
+                case SystemUtil.REQUEST_CODE_ONE_PHOTO:
                     try {
                         showLoadDialog("正在上传头像，请稍候........");
                         BmobFile bmobFile = new BmobFile(new File(new URI(data.getStringExtra(ConstantUtil.PATH))));
@@ -246,7 +243,7 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
-                                    MsgManager.getInstance().updateGroupMessage(groupTableEntity.getGroupId(),Constant.GROUP_AVATAR,data
+                                    MsgManager.getInstance().updateGroupMessage(groupTableEntity.getGroupId(),ConstantUtil.GROUP_AVATAR,data
                                     .getStringExtra(ConstantUtil.PATH),new UpdateListener() {
                                         @Override
                                         public void done(BmobException e) {
@@ -284,7 +281,7 @@ public class GroupInfoActivity extends SlideBaseActivity<Object, GroupInfoPresen
 
     public static void start(Activity activity, String groupId) {
         Intent intent=new Intent(activity,GroupInfoActivity.class);
-        intent.putExtra(Constant.GROUP_ID,groupId);
+        intent.putExtra(ConstantUtil.GROUP_ID,groupId);
         activity.startActivity(intent);
     }
 }

@@ -2,7 +2,7 @@ package com.example.chat.bean;
 
 
 import com.example.chat.adapter.ChatMessageAdapter;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.manager.UserManager;
 import com.example.commonlibrary.baseadapter.baseitem.MultipleItem;
 
@@ -106,25 +106,25 @@ public class BaseMessage extends BmobObject implements MultipleItem {
         @Override
         public int getItemViewType() {
                 if (getBelongId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
-                        if (getContentType().equals(Constant.TAG_MSG_TYPE_TEXT)) {
+                        if (getContentType().equals(ConstantUtil.TAG_MSG_TYPE_TEXT)) {
                                 return ChatMessageAdapter.TYPE_SEND_TEXT;
-                        } else if (getContentType().equals(Constant.TAG_MSG_TYPE_IMAGE)) {
+                        } else if (getContentType().equals(ConstantUtil.TAG_MSG_TYPE_IMAGE)) {
                                 return ChatMessageAdapter.TYPE_SEND_IMAGE;
-                        } else if (getContentType().equals(Constant.TAG_MSG_TYPE_LOCATION)) {
+                        } else if (getContentType().equals(ConstantUtil.TAG_MSG_TYPE_LOCATION)) {
                                 return ChatMessageAdapter.TYPE_SEND_LOCATION;
-                        } else if (getContentType().equals(Constant.TAG_MSG_TYPE_VOICE)){
+                        } else if (getContentType().equals(ConstantUtil.TAG_MSG_TYPE_VOICE)){
                                 return ChatMessageAdapter.TYPE_SEND_VOICE;
                         }else {
                                 return ChatMessageAdapter.TYPE_SEND_VIDEO;
                         }
                 } else {
-                        if (getContentType().equals(Constant.TAG_MSG_TYPE_TEXT)) {
+                        if (getContentType().equals(ConstantUtil.TAG_MSG_TYPE_TEXT)) {
                                 return ChatMessageAdapter.TYPE_RECEIVER_TEXT;
-                        } else if (getContentType().equals(Constant.TAG_MSG_TYPE_VOICE)) {
+                        } else if (getContentType().equals(ConstantUtil.TAG_MSG_TYPE_VOICE)) {
                                 return ChatMessageAdapter.TYPE_RECEIVER_VOICE;
-                        } else if (getContentType().equals(Constant.TAG_MSG_TYPE_LOCATION)) {
+                        } else if (getContentType().equals(ConstantUtil.TAG_MSG_TYPE_LOCATION)) {
                                 return ChatMessageAdapter.TYPE_RECEIVER_LOCATION;
-                        } else if (getContentType().equals(Constant.TAG_MSG_TYPE_IMAGE)){
+                        } else if (getContentType().equals(ConstantUtil.TAG_MSG_TYPE_IMAGE)){
                                 return ChatMessageAdapter.TYPE_RECEIVER_IMAGE;
                         }else {
                                 return ChatMessageAdapter.TYPE_RECEIVER_VIDEO;

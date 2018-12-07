@@ -1,7 +1,5 @@
 package com.example.chat.events;
 
-import com.example.chat.base.Constant;
-
 /**
  * 项目名称:    NewFastFrame
  * 创建人:      陈锦军

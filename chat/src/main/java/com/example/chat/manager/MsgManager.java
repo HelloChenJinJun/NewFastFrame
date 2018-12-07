@@ -1,23 +1,22 @@
 package com.example.chat.manager;
 
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.CommentNotifyBean;
 import com.example.chat.bean.CustomInstallation;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
-import com.example.chat.bean.ImageItem;
 import com.example.chat.bean.MessageContent;
 import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.SkinBean;
 import com.example.chat.bean.StepBean;
 import com.example.chat.bean.SystemNotifyBean;
-import com.example.chat.bean.post.CommentDetailBean;
-import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.User;
+import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
+import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.post.ReplyCommentListBean;
 import com.example.chat.bean.post.ReplyDetailContent;
 import com.example.chat.listener.AddFriendCallBackListener;
@@ -28,10 +27,10 @@ import com.example.chat.listener.OnReceiveListener;
 import com.example.chat.listener.OnSendTagMessageListener;
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
-import com.example.chat.util.SystemUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
+import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.PostCommentEntity;
@@ -43,8 +42,8 @@ import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.bean.chat.SkinEntityDao;
 import com.example.commonlibrary.bean.chat.StepData;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
-import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -133,8 +132,8 @@ public class MsgManager {
             chatMessage.setBelongId(msg.getToId());
             chatMessage.setCreateTime(msg.getCreateTime());
             chatMessage.setSendStatus(msg.getSendStatus());
-            chatMessage.setReadStatus(Constant.RECEIVE_UNREAD);
-            chatMessage.setContentType(Constant.TAG_MSG_TYPE_TEXT);
+            chatMessage.setReadStatus(ConstantUtil.RECEIVE_UNREAD);
+            chatMessage.setContentType(ConstantUtil.TAG_MSG_TYPE_TEXT);
             chatMessage.setContent(msg.getContent());
             UserDBManager.getInstance()
                     .addOrUpdateChatMessage(chatMessage);
@@ -229,15 +228,15 @@ public class MsgManager {
     private JSONObject createJsonMessage(ChatMessage message) {
         try {
             JSONObject result = new JSONObject();
-            result.put(Constant.TAG_MESSAGE_READ_STATUS, message.getReadStatus());
-            result.put(Constant.TAG_MESSAGE_SEND_STATUS, message.getSendStatus());
-            result.put(Constant.TAG_CONTENT, message.getContent());
-            result.put(Constant.TAG_CONVERSATION, message.getConversationId());
-            result.put(Constant.TAG_CONTENT_TYPE,message.getContentType());
-            result.put(Constant.TAG_MESSAGE_TYPE, message.getMessageType());
-            result.put(Constant.TAG_CREATE_TIME, message.getCreateTime());
-            result.put(Constant.TAG_BELONG_ID, message.getBelongId());
-            result.put(Constant.TAG_TO_ID, message.getToId());
+            result.put(ConstantUtil.TAG_MESSAGE_READ_STATUS, message.getReadStatus());
+            result.put(ConstantUtil.TAG_MESSAGE_SEND_STATUS, message.getSendStatus());
+            result.put(ConstantUtil.TAG_CONTENT, message.getContent());
+            result.put(ConstantUtil.TAG_CONVERSATION, message.getConversationId());
+            result.put(ConstantUtil.TAG_CONTENT_TYPE,message.getContentType());
+            result.put(ConstantUtil.TAG_MESSAGE_TYPE, message.getMessageType());
+            result.put(ConstantUtil.TAG_CREATE_TIME, message.getCreateTime());
+            result.put(ConstantUtil.TAG_BELONG_ID, message.getBelongId());
+            result.put(ConstantUtil.TAG_TO_ID, message.getToId());
             CommonLogger.e("组装后的json:" + result.toString());
             return result;
         } catch (Exception e) {
@@ -265,9 +264,9 @@ public class MsgManager {
         chatMessage.setConversationId(conversationId);
         chatMessage.setBelongId(user.getObjectId());
         chatMessage.setCreateTime(time);
-        chatMessage.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-        chatMessage.setReadStatus(Constant.READ_STATUS_UNREAD);
-        chatMessage.setContentType(Constant.TAG_MSG_TYPE_TEXT);
+        chatMessage.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
+        chatMessage.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
+        chatMessage.setContentType(ConstantUtil.TAG_MSG_TYPE_TEXT);
         if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
             MessageContent messageContent=new MessageContent();
             messageContent.setContent("你们已经成为好友可以聊天啦啦啦");
@@ -300,15 +299,15 @@ public class MsgManager {
         try {
             JSONObject jsonObject = new JSONObject(json);
             final ChatMessage message = new ChatMessage();
-            message.setContentType(JsonUtil.getInt(jsonObject, Constant.TAG_CONTENT_TYPE));
-            message.setToId(JsonUtil.getString(jsonObject, Constant.TAG_TO_ID));
-            message.setBelongId(JsonUtil.getString(jsonObject, Constant.TAG_BELONG_ID));
-            message.setCreateTime(JsonUtil.getLong(jsonObject, Constant.TAG_CREATE_TIME));
-            message.setMessageType(JsonUtil.getInt(jsonObject, Constant.TAG_MESSAGE_TYPE));
-            message.setConversationId(JsonUtil.getString(jsonObject, Constant.TAG_CONVERSATION));
-            message.setReadStatus(Constant.RECEIVE_UNREAD);
-            message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-            message.setContent(JsonUtil.getString(jsonObject, Constant.TAG_CONTENT));
+            message.setContentType(JsonUtil.getInt(jsonObject, ConstantUtil.TAG_CONTENT_TYPE));
+            message.setToId(JsonUtil.getString(jsonObject, ConstantUtil.TAG_TO_ID));
+            message.setBelongId(JsonUtil.getString(jsonObject, ConstantUtil.TAG_BELONG_ID));
+            message.setCreateTime(JsonUtil.getLong(jsonObject, ConstantUtil.TAG_CREATE_TIME));
+            message.setMessageType(JsonUtil.getInt(jsonObject, ConstantUtil.TAG_MESSAGE_TYPE));
+            message.setConversationId(JsonUtil.getString(jsonObject, ConstantUtil.TAG_CONVERSATION));
+            message.setReadStatus(ConstantUtil.RECEIVE_UNREAD);
+            message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
+            message.setContent(JsonUtil.getString(jsonObject, ConstantUtil.TAG_CONTENT));
             dealReceiveChatMessage(message,listener);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -330,8 +329,8 @@ public class MsgManager {
     }
 
     public void dealReceiveChatMessage(ChatMessage message,final OnReceiveListener listener) {
-        message.setReadStatus(Constant.RECEIVE_UNREAD);
-        message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+        message.setReadStatus(ConstantUtil.RECEIVE_UNREAD);
+        message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
         switch (message.getMessageType()) {
             case ChatMessage.MESSAGE_TYPE_AGREE:
                 LogUtil.e("接收到同意消息");
@@ -369,7 +368,7 @@ public class MsgManager {
                 if (!UserDBManager.getInstance().hasReadMessage(message.getConversationId(),message.getCreateTime())) {
                     UserDBManager.getInstance().addChatMessage(message);
                     updateMsgReaded(true, message.getConversationId(), message.getCreateTime());
-                    UserDBManager.getInstance().updateMessageReadStatus(message.getConversationId(),message.getCreateTime(),Constant.READ_STATUS_READED);
+                    UserDBManager.getInstance().updateMessageReadStatus(message.getConversationId(),message.getCreateTime(),ConstantUtil.READ_STATUS_READED);
                     listener.onSuccess(message);
                 }
                 break;
@@ -391,14 +390,14 @@ public class MsgManager {
 
     public GroupChatMessage createReceiveGroupChatMsg(JSONObject jsonObject) {
         GroupChatMessage message = new GroupChatMessage();
-        message.setGroupId(JsonUtil.getString(jsonObject, Constant.GROUP_ID));
-        message.setContent(JsonUtil.getString(jsonObject, Constant.TAG_CONTENT));
-        message.setReadStatus(Constant.RECEIVE_UNREAD);
-        message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-        message.setCreateTime(JsonUtil.getLong(jsonObject, Constant.TAG_CREATE_TIME));
-        message.setBelongId(JsonUtil.getString(jsonObject, Constant.TAG_BELONG_ID));
-        message.setContentType(JsonUtil.getInt(jsonObject, Constant.TAG_CONTENT_TYPE));
-        message.setObjectId(JsonUtil.getString(jsonObject, Constant.ID));
+        message.setGroupId(JsonUtil.getString(jsonObject, ConstantUtil.GROUP_ID));
+        message.setContent(JsonUtil.getString(jsonObject, ConstantUtil.TAG_CONTENT));
+        message.setReadStatus(ConstantUtil.RECEIVE_UNREAD);
+        message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
+        message.setCreateTime(JsonUtil.getLong(jsonObject, ConstantUtil.TAG_CREATE_TIME));
+        message.setBelongId(JsonUtil.getString(jsonObject, ConstantUtil.TAG_BELONG_ID));
+        message.setContentType(JsonUtil.getInt(jsonObject, ConstantUtil.TAG_CONTENT_TYPE));
+        message.setObjectId(JsonUtil.getString(jsonObject, ConstantUtil.ID));
         return message;
     }
 
@@ -448,7 +447,7 @@ public class MsgManager {
                         if (e == null) {
                             if (list != null && list.size() > 0) {
                                 final ChatMessage chatMessage = list.get(0);
-                                chatMessage.setReadStatus(Constant.READ_STATUS_READED);
+                                chatMessage.setReadStatus(ConstantUtil.READ_STATUS_READED);
                                 chatMessage.update(new UpdateListener() {
                                                        @Override
                                                        public void done(BmobException e) {
@@ -576,8 +575,8 @@ public class MsgManager {
         message.setToId(uid);
         message.setConversationId(currentUser.getObjectId() + "&" + uid);
 //                 默认设置消息发送成功
-        message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-        message.setReadStatus(Constant.READ_STATUS_UNREAD);
+        message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
+        message.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
         message.setContent(content);
         message.setCreateTime(System.currentTimeMillis());
         message.setContentType(contentType);
@@ -604,8 +603,8 @@ public class MsgManager {
     private JSONObject createOfflineJsonObject() {
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Constant.MESSAGE_TAG, Constant.TAG_OFFLINE);
-            jsonObject.put(Constant.TAG_BELONG_ID, UserManager.getInstance().getCurrentUserObjectId());
+            jsonObject.put(ConstantUtil.MESSAGE_TAG, ConstantUtil.TAG_OFFLINE);
+            jsonObject.put(ConstantUtil.TAG_BELONG_ID, UserManager.getInstance().getCurrentUserObjectId());
             return jsonObject;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -663,7 +662,7 @@ public class MsgManager {
 //                这里要把群主消息加进来
         contacts.add(0, UserManager.getInstance().getCurrentUser().getObjectId());
         GroupTableMessage message = createGroupTableMessage(groupName, groupDescription, contacts);
-        message.setReadStatus(Constant.READ_STATUS_READED);
+        message.setReadStatus(ConstantUtil.READ_STATUS_READED);
         message.save(new SaveListener<String>() {
                          @Override
                          public void done(String s, BmobException e) {
@@ -686,7 +685,7 @@ public class MsgManager {
                                                          MessageContent messageContent=new MessageContent();
                                                          messageContent.setContent("大家好");
                                                          sendGroupChatMessage(createGroupChatMessage(gson.toJson(messageContent)
-                                                                 , message.getGroupId(), Constant.TAG_MSG_TYPE_TEXT), new OnCreateChatMessageListener() {
+                                                                 , message.getGroupId(), ConstantUtil.TAG_MSG_TYPE_TEXT), new OnCreateChatMessageListener() {
                                                              @Override
                                                              public void onSuccess(BaseMessage baseMessage) {
                                                                  UserDBManager.getInstance().addOrUpdateGroupChatMessage((GroupChatMessage) baseMessage);
@@ -740,8 +739,8 @@ public class MsgManager {
         List<BmobObject> groupTableMessageList = new ArrayList<>();
         for (int i = 0; i < copy.size(); i++) {
             message = new GroupTableMessage();
-            message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
-            message.setReadStatus(Constant.READ_STATUS_UNREAD);
+            message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
+            message.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
             message.setGroupDescription(groupTableMessage.getGroupDescription());
             message.setGroupId(groupTableMessage.getGroupId());
             message.setCreatedTime(groupTableMessage.getCreatedTime());
@@ -766,8 +765,8 @@ public class MsgManager {
         message.setCreatorId(UserManager.getInstance().getCurrentUserObjectId());
         message.setGroupNumber(contacts);
         message.setCreatedTime(System.currentTimeMillis());
-        message.setReadStatus(Constant.READ_STATUS_UNREAD);
-        message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+        message.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
+        message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
         message.setToId(UserManager.getInstance().getCurrentUserObjectId());
         message.setNotification("");
         message.setRemind(Boolean.TRUE);
@@ -778,7 +777,7 @@ public class MsgManager {
 
     public void queryGroupTableMessage(String uid, FindListener<GroupTableMessage> findListener) {
         BmobQuery<GroupTableMessage> query = new BmobQuery<>();
-        query.addWhereEqualTo(Constant.TAG_TO_ID, uid);
+        query.addWhereEqualTo(ConstantUtil.TAG_TO_ID, uid);
         query.findObjects(findListener);
     }
 
@@ -786,10 +785,10 @@ public class MsgManager {
         GroupChatMessage message = new GroupChatMessage();
         message.setGroupId(groupId);
         message.setContent(content);
-        message.setReadStatus(Constant.READ_STATUS_UNREAD);
+        message.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
         message.setContentType(contentType);
         message.setBelongId(UserManager.getInstance().getCurrentUserObjectId());
-        message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+        message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
         message.setCreateTime(System.currentTimeMillis());
         return message;
     }
@@ -872,19 +871,19 @@ public class MsgManager {
         GroupTableMessage groupTableMessage=new GroupTableMessage();
         groupTableMessage.setObjectId(groupId);
         switch (name){
-            case Constant.GROUP_AVATAR:
+            case ConstantUtil.GROUP_AVATAR:
             groupTableMessage.setGroupAvatar(content);
             break;
-            case Constant.GROUP_NOTIFICATION:
+            case ConstantUtil.GROUP_NOTIFICATION:
                 groupTableMessage.setNotification(content);
                 break;
-            case Constant.GROUP_DESCRIPTION:
+            case ConstantUtil.GROUP_DESCRIPTION:
                 groupTableMessage.setGroupDescription(content);
                 break;
-            case Constant.GROUP_NAME:
+            case ConstantUtil.GROUP_NAME:
                 groupTableMessage.setGroupName(content);
                 break;
-            case Constant.GROUP_REMIND:
+            case ConstantUtil.GROUP_REMIND:
                 groupTableMessage.setRemind(Boolean.parseBoolean(content));
                 break;
                 default:
@@ -986,9 +985,9 @@ public class MsgManager {
         BmobDate bmobDate;
         if (isRefresh) {
             bmobDate = new BmobDate(new Date(currentTime));
-            String key=Constant.UPDATE_TIME_SHARE+uid;
+            String key=ConstantUtil.UPDATE_TIME_SHARE+uid;
             if (isPublic) {
-                key+=Constant.PUBLIC;
+                key+=ConstantUtil.PUBLIC;
             }
             String updateTime=BaseApplication
                     .getAppComponent()
@@ -1020,31 +1019,31 @@ public class MsgManager {
        return query.findObjects(findCallback);
     }
 
-    public Subscription sendPublicPostMessage(int type, String content, String location, final ArrayList<ImageItem> imageList,
+    public Subscription sendPublicPostMessage(int type, String content, String location, final ArrayList<SystemUtil.ImageItem> imageList,
                                               String videoPath, String shotScreen, final PublicPostBean postBean, final OnCreatePublicPostListener listener) {
         final PublicPostBean publicPostBean = new PublicPostBean();
         publicPostBean.setMsgType(type);
-        publicPostBean.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+        publicPostBean.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
         final PostDataBean postDataBean = new PostDataBean();
         postDataBean.setContent(content);
         publicPostBean.setLocation(location);
         publicPostBean.setAuthor(UserManager.getInstance().getCurrentUser());
         final Gson gson = BaseApplication
                 .getAppComponent().getGson();
-        if (type==Constant.EDIT_TYPE_SHARE) {
+        if (type==ConstantUtil.EDIT_TYPE_SHARE) {
             postDataBean.setShareContent(gson.toJson(MsgManager.getInstance().cover(postBean)));
-        }else if (type==Constant.EDIT_TYPE_IMAGE) {
+        }else if (type==ConstantUtil.EDIT_TYPE_IMAGE) {
             List<String> photoUrls = new ArrayList<>();
             if (imageList != null && imageList.size() > 0) {
                 CommonLogger.e("发送的全部path为:");
-                for (ImageItem imageItem :
+                for (SystemUtil.ImageItem imageItem :
                         imageList) {
                     photoUrls.add(SystemUtil.sizeCompress(imageItem.getPath(), 1080, 1920));
                     CommonLogger.e(imageItem.getPath());
                 }
                 postDataBean.setImageList(photoUrls);
             }
-        }else if (type==Constant.EDIT_TYPE_VIDEO){
+        }else if (type==ConstantUtil.EDIT_TYPE_VIDEO){
             List<String> photoUrls = new ArrayList<>();
             photoUrls.add(shotScreen);
             photoUrls.add(videoPath);
@@ -1059,11 +1058,11 @@ public class MsgManager {
         PublicPostBean publicPostBean = new PublicPostBean();
         publicPostBean.setObjectId(postId);
         BmobQuery<PublicCommentBean> query = new BmobQuery<>();
-        query.addWhereEqualTo(Constant.POST, publicPostBean);
+        query.addWhereEqualTo(ConstantUtil.POST, publicPostBean);
         long currentTime=TimeUtil.getTime(time);
         BmobDate bmobDate=new BmobDate(new Date(currentTime));
         if (isPullRefresh) {
-            String key = Constant.UPDATE_TIME_COMMENT + postId;
+            String key = ConstantUtil.UPDATE_TIME_COMMENT + postId;
             String updateTime = BaseApplication
                     .getAppComponent().getSharedPreferences()
                     .getString(key, null);
@@ -1162,7 +1161,7 @@ public class MsgManager {
 
     public Subscription reSendPublicPostBean(PublicPostBean data, OnCreatePublicPostListener listener) {
         PostDataBean bean =BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
-        if (data.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
+        if (data.getMsgType() == ConstantUtil.EDIT_TYPE_IMAGE) {
             List<String> imageList = bean.getImageList();
             if (imageList != null && imageList.size() > 0) {
 
@@ -1173,7 +1172,7 @@ public class MsgManager {
                             CommonLogger.e("11全部上传图片成功");
                             bean.setImageList(list1);
                             data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
-                            data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                            data.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
                             data.save(new SaveListener<String>() {
                                 @Override
                                 public void done(String s, BmobException e) {
@@ -1210,7 +1209,7 @@ public class MsgManager {
                 });
                 return null;
             }
-        } else if (data.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
+        } else if (data.getMsgType() == ConstantUtil.EDIT_TYPE_VIDEO) {
             List<String> stringList = new ArrayList<>(bean.getImageList());
             BmobFile.uploadBatch(bean.getImageList().toArray(new String[]{}), new UploadBatchListener() {
                 @Override
@@ -1219,7 +1218,7 @@ public class MsgManager {
                         CommonLogger.e("全部上传视频成功");
                         bean.setImageList(list1);
                         data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
-                        data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                        data.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
                         data.save(new SaveListener<String>() {
                             @Override
                             public void done(String s, BmobException e) {
@@ -1256,9 +1255,9 @@ public class MsgManager {
             });
             return null;
 
-        } else if (data.getMsgType() == Constant.EDIT_TYPE_TEXT
+        } else if (data.getMsgType() == ConstantUtil.EDIT_TYPE_TEXT
                 ) {
-            data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+            data.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
             return data.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
@@ -1269,8 +1268,8 @@ public class MsgManager {
                     }
                 }
             });
-        } else if (data.getMsgType() == Constant.EDIT_TYPE_SHARE) {
-            data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+        } else if (data.getMsgType() == ConstantUtil.EDIT_TYPE_SHARE) {
+            data.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
             return data.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
@@ -1289,7 +1288,7 @@ public class MsgManager {
                                     bean.setShareContent(gson.toJson(publicPostEntity));
                                     data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
                                 }
-                                MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_SHARE,data.getObjectId(),UserManager.getInstance()
+                                MsgManager.getInstance().sendPostNotifyInfo(ConstantUtil.TYPE_SHARE,data.getObjectId(),UserManager.getInstance()
                                 .getCurrentUserObjectId(),getUidForShareContent(bean.getShareContent()));
                                 listener.onSuccess(data);
                             }
@@ -1314,14 +1313,14 @@ public class MsgManager {
 
     public Subscription updatePublicPostBean(PublicPostBean data, OnCreatePublicPostListener listener) {
         PostDataBean bean = BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
-        if (data.getMsgType() == Constant.EDIT_TYPE_IMAGE
+        if (data.getMsgType() == ConstantUtil.EDIT_TYPE_IMAGE
                 ) {
             int size = bean.getImageList().size();
             List<String> upLoad = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 String item = bean.getImageList().get(i);
                 if (item.startsWith("http")
-                        || item.startsWith(Constant.IMAGE_COMPRESS_DIR)) {
+                        || item.startsWith(ConstantUtil.IMAGE_COMPRESS_DIR)) {
 //                    没有改变
                 } else {
                     upLoad.add(bean.getImageList().get(i));
@@ -1343,8 +1342,8 @@ public class MsgManager {
                                     }
                                 }
                             }
-                            if (!data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
-                                data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                            if (!data.getSendStatus().equals(ConstantUtil.SEND_STATUS_SUCCESS)) {
+                                data.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
                             }
                             data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
                             data.update(new UpdateListener() {
@@ -1376,8 +1375,8 @@ public class MsgManager {
                 return null;
             } else {
                 data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
-                if (!data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
-                    data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                if (!data.getSendStatus().equals(ConstantUtil.SEND_STATUS_SUCCESS)) {
+                    data.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
                 }
                 return data.update(new UpdateListener() {
                     @Override
@@ -1390,13 +1389,13 @@ public class MsgManager {
                     }
                 });
             }
-        } else if (data.getMsgType() == Constant.EDIT_TYPE_TEXT
-                || data.getMsgType() == Constant.EDIT_TYPE_SHARE
-                || data.getMsgType() == Constant.EDIT_TYPE_VIDEO) {
+        } else if (data.getMsgType() == ConstantUtil.EDIT_TYPE_TEXT
+                || data.getMsgType() == ConstantUtil.EDIT_TYPE_SHARE
+                || data.getMsgType() == ConstantUtil.EDIT_TYPE_VIDEO) {
             data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean)
             );
-            if (!data.getSendStatus().equals( Constant.SEND_STATUS_SUCCESS)) {
-                data.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+            if (!data.getSendStatus().equals( ConstantUtil.SEND_STATUS_SUCCESS)) {
+                data.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
             }
             return data.update(new UpdateListener() {
                 @Override
@@ -1511,14 +1510,14 @@ public class MsgManager {
     public Subscription sendChatMessage(ChatMessage message, OnCreateChatMessageListener listener) {
         MessageContent messageContent=gson.fromJson(message.getContent(),MessageContent.class);
         int contentType=message.getContentType();
-        if (contentType!=Constant.TAG_MSG_TYPE_TEXT){
+        if (contentType!=ConstantUtil.TAG_MSG_TYPE_TEXT){
             List<String>  urlList=messageContent.getUrlList();
             BmobFile.uploadBatch(urlList.toArray(new String[]{}), new UploadBatchListener() {
                 @Override
                 public void onSuccess(List<BmobFile> list, List<String> list1) {
                     if (urlList.size()==list1.size()){
                         messageContent.setUrlList(list1);
-                        message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                        message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
                         message.setContent(gson.toJson(messageContent));
                         message.save(new SaveListener<String>() {
                             @Override
@@ -1557,7 +1556,7 @@ public class MsgManager {
             });
             return null;
         }else {
-            message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+            message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
             return message.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
@@ -1583,14 +1582,14 @@ public class MsgManager {
     public Subscription sendGroupChatMessage(GroupChatMessage message, OnCreateChatMessageListener listener) {
         MessageContent messageContent=gson.fromJson(message.getContent(),MessageContent.class);
         int contentType=message.getContentType();
-        if (contentType!=Constant.TAG_MSG_TYPE_TEXT){
+        if (contentType!=ConstantUtil.TAG_MSG_TYPE_TEXT){
             List<String>  urlList=messageContent.getUrlList();
             BmobFile.uploadBatch(urlList.toArray(new String[]{}), new UploadBatchListener() {
                 @Override
                 public void onSuccess(List<BmobFile> list, List<String> list1) {
                     if (urlList.size()==list1.size()){
                         messageContent.setUrlList(list1);
-                        message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                        message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
                         message.setContent(gson.toJson(messageContent));
                         message.setTableName("g"+message.getGroupId());
                         message.save(new SaveListener<String>() {
@@ -1621,7 +1620,7 @@ public class MsgManager {
             return null;
         }else {
             message.setTableName("g"+message.getGroupId());
-            message.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+            message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
             return message.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
@@ -1735,7 +1734,7 @@ public class MsgManager {
             stringBuilder.append("&");
             stringBuilder.append(otherUid);
         }
-        return MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_COMMENT,newBean.getObjectId(),UserManager.getInstance().getCurrentUserObjectId()
+        return MsgManager.getInstance().sendPostNotifyInfo(ConstantUtil.TYPE_COMMENT,newBean.getObjectId(),UserManager.getInstance().getCurrentUserObjectId()
                 ,stringBuilder.toString());
     }
 
@@ -1743,7 +1742,7 @@ public class MsgManager {
         PostNotifyInfo postNotifyInfo=new PostNotifyInfo();
         postNotifyInfo.setId(id);
         postNotifyInfo.setType(type);
-        postNotifyInfo.setReadStatus(Constant.READ_STATUS_UNREAD);
+        postNotifyInfo.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
         return gson.toJson(postNotifyInfo);
     }
 
@@ -1760,7 +1759,7 @@ public class MsgManager {
     public void updateCommentReadStatus(List<CommentNotifyBean> result) {
         for (CommentNotifyBean bean :
                 result) {
-            bean.setReadStatus(Constant.READ_STATUS_READED);
+            bean.setReadStatus(ConstantUtil.READ_STATUS_READED);
         }
         List<BmobObject>  bmobObjectList=new ArrayList<>(result);
         new BmobBatch().updateBatch(bmobObjectList).doBatch(new QueryListListener<BatchResult>() {
@@ -1782,15 +1781,15 @@ public class MsgManager {
     public void updateSystemNotifyReadStatus(String id,UpdateListener listener) {
         SystemNotifyBean systemNotifyBean=new SystemNotifyBean();
         systemNotifyBean.setObjectId(id);
-        systemNotifyBean.setReadStatus(Constant.READ_STATUS_READED);
+        systemNotifyBean.setReadStatus(ConstantUtil.READ_STATUS_READED);
         systemNotifyBean.update(listener);
     }
 
     public Subscription sendPostNotifyInfo(Integer type,String id, String uid,String toId) {
-        if (type.equals(Constant.TYPE_LIKE)||type.equals(Constant.TYPE_SHARE)) {
+        if (type.equals(ConstantUtil.TYPE_LIKE)||type.equals(ConstantUtil.TYPE_SHARE)) {
             PostNotifyBean postNotifyBean=new PostNotifyBean();
             postNotifyBean.setType(type);
-            postNotifyBean.setReadStatus(Constant.READ_STATUS_UNREAD);
+            postNotifyBean.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
             User user=new User();
             user.setObjectId(toId);
             postNotifyBean.setToUser(user);
@@ -1828,7 +1827,7 @@ public class MsgManager {
                     }
                 }
             });
-        }else if (type.equals(Constant.TYPE_COMMENT)){
+        }else if (type.equals(ConstantUtil.TYPE_COMMENT)){
             List<String> list=new ArrayList<>();
             if (toId.contains("&")) {
                 list=Arrays.asList(toId.split("&"));
@@ -1841,7 +1840,7 @@ public class MsgManager {
                 publicCommentBean.setObjectId(id);
                 PostNotifyBean postNotifyBean=new PostNotifyBean();
                 postNotifyBean.setPublicCommentBean(publicCommentBean);
-                postNotifyBean.setReadStatus(Constant.READ_STATUS_UNREAD);
+                postNotifyBean.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
                 postNotifyBean.setType(type);
                 User toUser=new User();
                 toUser.setObjectId(list.get(0));
@@ -1903,10 +1902,10 @@ public class MsgManager {
 
     public void updatePostNotifyReadStatus(PostNotifyInfo postNotifyInfo, FindListener<PostNotifyBean> listener) {
         BmobQuery<PostNotifyBean> bmobQuery=new BmobQuery<>();
-        bmobQuery.addWhereEqualTo("readStatus",Constant.READ_STATUS_UNREAD);
+        bmobQuery.addWhereEqualTo("readStatus",ConstantUtil.READ_STATUS_UNREAD);
         bmobQuery.addWhereEqualTo("toUser",UserManager.getInstance().getCurrentUser());
-        if (postNotifyInfo.getType().equals(Constant.TYPE_LIKE)||postNotifyInfo
-                .getType().equals(Constant.TYPE_SHARE)){
+        if (postNotifyInfo.getType().equals(ConstantUtil.TYPE_LIKE)||postNotifyInfo
+                .getType().equals(ConstantUtil.TYPE_SHARE)){
             bmobQuery.addWhereEqualTo("objectId",postNotifyInfo.getId());
         }else {
             if (postNotifyInfo.getId().contains("&")) {
@@ -1922,7 +1921,7 @@ public class MsgManager {
                 if (e == null) {
                     if (list != null && list.size() > 0) {
                         UserDBManager.getInstance().addOrUpdateUser(list.get(0).getRelatedUser());
-                        list.get(0).setReadStatus(Constant.READ_STATUS_READED);
+                        list.get(0).setReadStatus(ConstantUtil.READ_STATUS_READED);
                         list.get(0).update(new UpdateListener() {
                             @Override
                             public void done(BmobException e) {

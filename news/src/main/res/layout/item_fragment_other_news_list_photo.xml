@@ -35,7 +35,7 @@
         android:gravity="center_vertical"
         android:id="@+id/ll_item_fragment_other_news_list_photo_container">
     <ImageView
-        android:id="@+id/iv_item_fragment_other_news_list_display"
+        android:id="@+id/iv_item_fragment_other_news_list_photo_one"
         android:scaleType="centerCrop"
         android:layout_width="0dp"
         android:layout_height="75dp"

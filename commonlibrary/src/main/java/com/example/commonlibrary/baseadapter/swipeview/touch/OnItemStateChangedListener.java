@@ -15,12 +15,13 @@
  */
 package com.example.commonlibrary.baseadapter.swipeview.touch;
 
-import android.support.annotation.IntDef;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 public interface OnItemStateChangedListener {
 

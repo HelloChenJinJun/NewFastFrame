@@ -1,9 +1,7 @@
 package com.example.news;
 
-import android.content.Intent;
-import android.view.View;
-
 import com.example.commonlibrary.BaseActivity;
+import com.example.news.mvp.index.IndexFragment;
 
 /**
  * 项目名称:    NewFastFrame
@@ -12,7 +10,7 @@ import com.example.commonlibrary.BaseActivity;
  * QQ:             1981367757
  */
 
-public class NewsActivity extends BaseActivity{
+public class NewsActivity extends BaseActivity {
     @Override
     public void updateData(Object o) {
 
@@ -40,12 +38,6 @@ public class NewsActivity extends BaseActivity{
 
     @Override
     protected void initData() {
-
-    }
-
-
-    public void jump(View view){
-        Intent intent=new Intent(this, MainActivity.class);
-        startActivity(intent);
+        addOrReplaceFragment(IndexFragment.newInstance(), R.id.fl_activity_news_container);
     }
 }

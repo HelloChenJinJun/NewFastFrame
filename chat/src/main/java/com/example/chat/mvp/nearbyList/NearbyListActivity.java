@@ -2,19 +2,17 @@ package com.example.chat.mvp.nearbyList;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
-
 
 import com.example.chat.R;
 import com.example.chat.adapter.NearbyListAdapter;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.bean.NearbyListBean;
 import com.example.chat.dagger.nearbyList.DaggerNearbyListComponent;
 import com.example.chat.dagger.nearbyList.NearbyListModule;
 import com.example.chat.events.LocationEvent;
 import com.example.chat.manager.NewLocationManager;
-import com.example.chat.base.SlideBaseActivity;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
@@ -23,6 +21,7 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +36,10 @@ import javax.inject.Inject;
  * QQ:         1981367757
  */
 
-public class NearbyListActivity extends SlideBaseActivity<List<NearbyListBean>, NearbyListPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class NearbyListActivity extends ChatBaseActivity<List<NearbyListBean>, NearbyListPresenter> implements OnLoadMoreListener, CustomSwipeRefreshLayout.OnRefreshListener {
 
     private SuperRecyclerView display;
-    private SwipeRefreshLayout refresh;
+    private CustomSwipeRefreshLayout refresh;
     @Inject
     NearbyListAdapter nearbyListAdapter;
     private LocationEvent locationEvent;
@@ -74,7 +73,7 @@ public class NearbyListActivity extends SlideBaseActivity<List<NearbyListBean>, 
     @Override
     protected void initView() {
         display = (SuperRecyclerView) findViewById(R.id.srcv_activity_nearby_list_display);
-        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_activity_nearby_list_refresh);
+        refresh = (CustomSwipeRefreshLayout) findViewById(R.id.refresh_activity_nearby_list_refresh);
     }
 
     @Override
@@ -82,7 +81,7 @@ public class NearbyListActivity extends SlideBaseActivity<List<NearbyListBean>, 
         DaggerNearbyListComponent.builder().chatMainComponent(getChatMainComponent())
                 .nearbyListModule(new NearbyListModule(this)).build().inject(this);
         display.setLayoutManager(new WrappedLinearLayoutManager(this));
-        display.addItemDecoration(new ListViewDecoration(this));
+        display.addItemDecoration(new ListViewDecoration());
         display.setAdapter(nearbyListAdapter);
         display.setLoadMoreFooterView(new LoadMoreFooterView(this));
         display.setOnLoadMoreListener(this);
@@ -92,12 +91,12 @@ public class NearbyListActivity extends SlideBaseActivity<List<NearbyListBean>, 
             public void onItemClick(int position, View view) {
                 NearbyListBean nearbyListBean = nearbyListAdapter.getData(position);
                 Intent intent = new Intent();
-                intent.putExtra(Constant.LOCATION, nearbyListBean.getLocationEvent());
+                intent.putExtra(ConstantUtil.LOCATION, nearbyListBean.getLocationEvent());
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });
-        locationEvent = (LocationEvent) getIntent().getSerializableExtra(Constant.LOCATION);
+        locationEvent = (LocationEvent) getIntent().getSerializableExtra(ConstantUtil.LOCATION);
         if (locationEvent == null) {
             presenter.registerEvent(LocationEvent.class, locationEvent1 -> {
 //                获取位置后取消订阅
@@ -155,7 +154,7 @@ public class NearbyListActivity extends SlideBaseActivity<List<NearbyListBean>, 
 
     public static void start(Activity activity, LocationEvent locationEvent, int requestCode) {
         Intent intent = new Intent(activity, NearbyListActivity.class);
-        intent.putExtra(Constant.LOCATION, locationEvent);
+        intent.putExtra(ConstantUtil.LOCATION, locationEvent);
         activity.startActivityForResult(intent, requestCode);
     }
 

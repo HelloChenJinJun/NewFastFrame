@@ -6,21 +6,10 @@ import android.content.Context;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.module.IAppLife;
-import com.example.commonlibrary.router.BaseAction;
-import com.example.commonlibrary.router.Router;
-import com.example.commonlibrary.router.RouterRequest;
-import com.example.commonlibrary.router.RouterResult;
-import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.rxbus.event.LoginEvent;
-import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.FileUtil;
-import com.example.news.bean.SystemUserBean;
 import com.example.news.dagger.DaggerNewsComponent;
 import com.example.news.dagger.NewsComponent;
 import com.example.news.dagger.NewsModule;
-import com.example.commonlibrary.rxbus.event.UserInfoEvent;
-import com.example.news.util.ReLoginUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -28,7 +17,6 @@ import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -55,61 +43,6 @@ public class NewsApplication implements IAppLife {
     }
 
     private void initRouter() {
-        Router.getInstance().registerProvider("news:pw_change", new BaseAction() {
-            @Override
-            public RouterResult invoke(RouterRequest routerRequest) {
-                Map<String, Object> map = routerRequest.getParamMap();
-                String old = (String) map.get(ConstantUtil.PASSWORD_OLD);
-                String news = (String) map.get(ConstantUtil.PASSWORD_NEW);
-                new ReLoginUtil().resetPw(old, news);
-                return null;
-            }
-        });
-
-
-        Router.getInstance().registerProvider("news:login", new BaseAction() {
-            @Override
-            public RouterResult invoke(RouterRequest routerRequest) {
-                Map<String, Object> map = routerRequest.getParamMap();
-                final String account = (String) map.get(ConstantUtil.ACCOUNT);
-                final String password = (String) map.get(ConstantUtil.PASSWORD);
-                ReLoginUtil reLoginUtil = new ReLoginUtil();
-                reLoginUtil.login(account
-                        , password, new ReLoginUtil.CallBack() {
-                            @Override
-                            public void onSuccess(SystemUserBean bean) {
-                                if (bean != null) {
-                                    LoginEvent loginEvent = new LoginEvent();
-                                    loginEvent.setSuccess(true);
-                                    UserInfoEvent userInfoEvent = new UserInfoEvent();
-                                    userInfoEvent.setMajor(bean.getADMISSIONS_PIC());
-                                    userInfoEvent.setClassNumber(bean.getGRADUATION_PIC());
-                                    userInfoEvent.setAccount(account);
-                                    userInfoEvent.setPassword(password);
-                                    userInfoEvent.setAvatar(bean.getSCHOOL_PIC());
-                                    userInfoEvent.setNick(bean.getUSER_NAME());
-                                    userInfoEvent.setName(bean.getUSER_NAME());
-                                    userInfoEvent.setSex(bean.getUSER_SEX().equals("男") ? Boolean.TRUE : Boolean.FALSE);
-                                    userInfoEvent.setStudentType(bean.getID_TYPE());
-                                    userInfoEvent.setCollege(bean.getUNIT_NAME());
-                                    userInfoEvent.setFrom("news");
-                                    loginEvent.setUserInfoEvent(userInfoEvent);
-                                    RxBusManager.getInstance().post(loginEvent);
-                                }
-                            }
-
-                            @Override
-                            public void onFailed(String errorMessage) {
-                                CommonLogger.e("出错消息" + errorMessage);
-                                LoginEvent loginEvent = new LoginEvent();
-                                loginEvent.setErrorMessage(errorMessage);
-                                loginEvent.setSuccess(false);
-                                RxBusManager.getInstance().post(loginEvent);
-                            }
-                        });
-                return null;
-            }
-        });
     }
 
     private void initDB(Application application) {

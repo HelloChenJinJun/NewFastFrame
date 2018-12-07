@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.chat.R;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.PostDataBean;
@@ -74,10 +74,10 @@ public class BaseShareInfoViewHolder extends BaseWrappedViewHolder {
                     , postDataBean.getContent());
         }
 
-        if (data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
+        if (data.getSendStatus().equals(ConstantUtil.SEND_STATUS_SUCCESS)) {
             setVisible(R.id.iv_item_fragment_share_info_retry, false)
                     .setVisible(R.id.pb_item_fragment_share_info_retry_loading, false);
-        } else if (data.getSendStatus().equals(Constant.SEND_STATUS_SENDING)) {
+        } else if (data.getSendStatus().equals(ConstantUtil.SEND_STATUS_SENDING)) {
             setVisible(R.id.pb_item_fragment_share_info_retry_loading, true)
                     .setVisible(R.id.iv_item_fragment_share_info_retry, false);
         } else {

@@ -34,8 +34,8 @@ public class FileUtil {
             if (!file.exists()) {
                 file.mkdir();
             }
-        }else {
-            file=context.getCacheDir();
+        } else {
+            file = context.getCacheDir();
         }
         return file;
 
@@ -67,7 +67,7 @@ public class FileUtil {
             String expendName = path.substring(index + 1);
             if (expendName.contains("?")) {
                 return expendName.substring(0, expendName.indexOf("?"));
-            }else {
+            } else {
                 return expendName;
             }
         }
@@ -75,10 +75,9 @@ public class FileUtil {
     }
 
 
-
-
     /**
      * 读取 assets 文件
+     *
      * @param context
      * @param fileName
      * @return
@@ -93,7 +92,7 @@ public class FileUtil {
             inStream.close();
             data = new String(bytes, "utf-8");        //将bytes转为utf-8字符串
         } catch (IOException e) {
-//            Logger.e(e.toString());
+            //            Logger.e(e.toString());
             e.printStackTrace();
         }
         return data;
@@ -112,10 +111,7 @@ public class FileUtil {
     public static void writeToFile(String path, String content) {
         try {
             CommonLogger.e("文件地址" + path);
-            File file = new File(path);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
+            File file = FileUtil.newFile(path);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             fileOutputStream.write(content.getBytes());
             CommonLogger.e("写入成功");
@@ -140,10 +136,11 @@ public class FileUtil {
 
     /**
      * 获取随机存取文件
-     * @param path  文件路径
-     * @param loadBytes 文件已下载大小
-     * @param totalBytes    文件总大小
-     * @return  文件
+     *
+     * @param path       文件路径
+     * @param loadBytes  文件已下载大小
+     * @param totalBytes 文件总大小
+     * @return 文件
      * @throws IOException
      */
     public static RandomAccessFile getRandomAccessFile(String path, int loadBytes, int totalBytes) throws IOException {
@@ -193,9 +190,10 @@ public class FileUtil {
 
     /**
      * 格式化字符串
-     * @param msg   格式数据
-     * @param args  参数
-     * @return  格式化字符串
+     *
+     * @param msg  格式数据
+     * @param args 参数
+     * @return 格式化字符串
      */
     public static String formatString(final String msg, Object... args) {
         return String.format(Locale.ENGLISH, msg, args);
@@ -203,8 +201,9 @@ public class FileUtil {
 
     /**
      * 获取空闲的空间大小
-     * @param path  文件路径
-     * @return  空间大小
+     *
+     * @param path 文件路径
+     * @return 空间大小
      */
     public static long getFreeSpaceBytes(final String path) {
         long freeSpaceBytes;
@@ -235,8 +234,7 @@ public class FileUtil {
             while ((line = bf.readLine()) != null) {
                 stringBuilder.append(line);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return stringBuilder.toString();
@@ -255,4 +253,22 @@ public class FileUtil {
         return MediaType.parse(contentType);
     }
 
+    /**
+     * 新建目录文件
+     *
+     * @param imageCacheDir 路径
+     * @return 目录文件
+     */
+    public static File newDir(String imageCacheDir) {
+        try {
+            File dir = new File(imageCacheDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            return dir;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

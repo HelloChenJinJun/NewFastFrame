@@ -204,11 +204,11 @@ public class UserEntity {
 
     @Generated(hash = 1815163669)
     public UserEntity(String uid, String nick, String avatar, boolean isSex,
-            String titlePaper, String address, String birthDay, String name,
-            String school, String college, String major, String education,
-            String year, String classNumber, String signature, boolean isBlack,
-            int blackType, boolean isStranger, String userName, String phone,
-            String email, String createdTime, String updatedTime) {
+                      String titlePaper, String address, String birthDay, String name,
+                      String school, String college, String major, String education,
+                      String year, String classNumber, String signature, boolean isBlack,
+                      int blackType, boolean isStranger, String userName, String phone,
+                      String email, String createdTime, String updatedTime) {
         this.uid = uid;
         this.nick = nick;
         this.avatar = avatar;

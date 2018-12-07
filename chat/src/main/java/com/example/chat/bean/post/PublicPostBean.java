@@ -1,6 +1,6 @@
 package com.example.chat.bean.post;
 
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.User;
 import com.example.commonlibrary.baseadapter.baseitem.MultipleItem;
 
@@ -32,7 +32,7 @@ public class PublicPostBean extends BmobObject implements MultipleItem {
 
     public Integer getSendStatus() {
         if (sendStatus == null) {
-            return Constant.SEND_STATUS_SUCCESS;
+            return ConstantUtil.SEND_STATUS_SUCCESS;
         }
         return sendStatus;
     }

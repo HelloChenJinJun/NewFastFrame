@@ -9,4 +9,5 @@ public interface IAdaptScreen {
      public boolean isBaseOnWidth();
     public int getScreenSize();
     public boolean cancelAdapt();
+    public boolean needResetAdapt();
 }

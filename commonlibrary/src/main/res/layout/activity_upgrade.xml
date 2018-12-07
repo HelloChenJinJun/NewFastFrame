@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_activity_upgrade_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="8dp"
+        android:tag="beta_upgrade_info"
+        android:text="最新版本V2.0已经上线，等待更新"
+        android:textColor="#ff333333"
+        android:textSize="9sp" />
+
+    <TextView
+        android:id="@+id/tv_activity_upgrade_feature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:tag="beta_upgrade_feature"
+        android:text="最新版本V2.0已经上线，等待更新"
+        android:textColor="@color/black"
+        android:textSize="9sp" />
+</LinearLayout>
+
+

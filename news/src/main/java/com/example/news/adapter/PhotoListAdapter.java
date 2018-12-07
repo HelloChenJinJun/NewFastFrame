@@ -12,7 +12,7 @@ import com.example.news.bean.PictureBean;
  * QQ:             1981367757
  */
 
-public class PhotoListAdapter extends BaseRecyclerAdapter<PictureBean.PictureEntity,BaseWrappedViewHolder>{
+public class PhotoListAdapter extends BaseRecyclerAdapter<PictureBean.PictureEntity, BaseWrappedViewHolder> {
     @Override
     protected int getLayoutId() {
         return R.layout.item_fragment_photo_list;

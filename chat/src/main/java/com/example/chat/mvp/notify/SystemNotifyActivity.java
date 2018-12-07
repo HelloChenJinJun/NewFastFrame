@@ -2,16 +2,15 @@ package com.example.chat.mvp.notify;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.SystemNotifyAdapter;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.bean.SystemNotifyBean;
 import com.example.chat.dagger.notify.DaggerSystemNotifyComponent;
 import com.example.chat.dagger.notify.SystemNotifyModule;
-import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.events.UnReadSystemNotifyEvent;
 import com.example.chat.manager.UserDBManager;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
@@ -21,14 +20,14 @@ import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.mvp.base.WebActivity;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -37,8 +36,8 @@ import io.reactivex.functions.Consumer;
  * QQ:         1981367757
  */
 
-public class SystemNotifyActivity extends SlideBaseActivity<List<SystemNotifyBean>, SystemNotifyPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
-    private SwipeRefreshLayout refresh;
+public class SystemNotifyActivity extends ChatBaseActivity<List<SystemNotifyBean>, SystemNotifyPresenter> implements CustomSwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
+    private CustomSwipeRefreshLayout refresh;
     private SuperRecyclerView display;
 
 
@@ -71,8 +70,8 @@ public class SystemNotifyActivity extends SlideBaseActivity<List<SystemNotifyBea
 
     @Override
     protected void initView() {
-        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_activity_system_notify_refresh);
-        display = (SuperRecyclerView) findViewById(R.id.srcv_activity_system_notify_display);
+        refresh = findViewById(R.id.refresh_activity_system_notify_refresh);
+        display = findViewById(R.id.srcv_activity_system_notify_display);
         refresh.setOnRefreshListener(this);
     }
 
@@ -89,7 +88,9 @@ public class SystemNotifyActivity extends SlideBaseActivity<List<SystemNotifyBea
             @Override
             public void onItemClick(int position, View view) {
                 ToastUtils.showShortToast("浏览地址"
-                +adapter.getData(position).getContentUrl());
+                        + adapter.getData(position).getContentUrl());
+                WebActivity.start(SystemNotifyActivity.this, adapter.getData(position).getContentUrl()
+                        , adapter.getData(position).getTitle());
             }
         });
         UserDBManager.getInstance().updateSystemNotifyReadStatus();
@@ -141,12 +142,12 @@ public class SystemNotifyActivity extends SlideBaseActivity<List<SystemNotifyBea
 
     @Override
     public void loadMore() {
-        presenter.getAllSystemNotifyData(false,getRefreshTime(false));
+        presenter.getAllSystemNotifyData(false, getRefreshTime(false));
     }
 
 
-    public static void start(Activity activity){
-        Intent intent=new Intent(activity,SystemNotifyActivity.class);
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, SystemNotifyActivity.class);
         activity.startActivity(intent);
     }
 

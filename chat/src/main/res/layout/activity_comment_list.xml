@@ -5,7 +5,7 @@
     android:background="@color/chat_bg"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
         android:id="@+id/refresh_activity_comment_list_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -15,7 +15,7 @@
             android:id="@+id/srcv_activity_comment_list_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
 
     <include layout="@layout/view_activity_comment_list_bottom" />
 </LinearLayout>

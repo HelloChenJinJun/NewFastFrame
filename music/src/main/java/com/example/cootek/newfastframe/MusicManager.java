@@ -6,14 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.os.RemoteException;
 
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
+import com.example.commonlibrary.manager.music.MusicPlayerManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.cootek.newfastframe.event.MusicStatusEvent;
+import com.example.cootek.newfastframe.event.ServiceStateEvent;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -23,7 +24,7 @@ import java.util.WeakHashMap;
 
 public class MusicManager {
     private static MusicManager instance;
-    private IMusicService service;
+    private MusicService.MusicBinder service;
     private WeakHashMap<Context, BindConnection> connectionWeakHashMap;
 
     public static MusicManager getInstance() {
@@ -68,168 +69,71 @@ public class MusicManager {
     }
 
     public void playOrPause() {
-        try {
-            if (service != null) {
-                if (service.isPlaying()) {
-                    service.pause();
-                } else {
-                    service.play();
-                }
+        if (service != null) {
+            if (service.getCurrentState() == MusicPlayerManager.PLAY_STATE_PLAYING) {
+                service.pause();
+            } else {
+                service.play();
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CommonLogger.e("远程服务失败" + e.getMessage());
         }
     }
 
-    public void previous(boolean force) {
-        try {
-            if (service != null) {
-                service.prev();
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CommonLogger.e("远程服务失败" + e.getMessage());
+    public void previous() {
+        if (service != null) {
+            service.pre();
         }
     }
 
 
     public void next() {
-        try {
-            if (service != null) {
-                service.next();
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CommonLogger.e("远程服务失败" + e.getMessage());
-        }
-    }
-
-
-    /**
-     * @param musicPlayBeanList
-     * @param position          为-1的时候表示第一次播放该列表的歌曲
-     * @param mode
-     */
-    public void play(List<MusicPlayBean> musicPlayBeanList, int position, int mode) {
-        if (musicPlayBeanList == null || musicPlayBeanList.size() == 0 || service == null) {
-            return;
-        }
-        try {
-            service.setPlayMode(mode);
-//            这里判断是否是同一首歌
-            long currentId = 0;
-            int currentPosition = service.getQueuePosition();
-            long[] currentList = getQueue();
-            long[] list = new long[musicPlayBeanList.size()];
-            for (int i = 0; i < musicPlayBeanList.size(); i++) {
-                list[i] = musicPlayBeanList.get(i).getSongId();
-            }
-            if (position != -1 && currentId == musicPlayBeanList.get(position).getSongId() && currentPosition == position && Arrays.equals(list, currentList)) {
-                service.play();
-                return;
-            }
-            position = position < 0 ? 0 : position;
-//            准备资源
-            CommonLogger.e("大小" + musicPlayBeanList.size());
-            service.open(musicPlayBeanList, position);
-            service.play();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CommonLogger.e("异常" + e.getMessage());
+        if (service != null) {
+            service.next();
         }
     }
 
 
     public boolean isPlaying() {
-        try {
-            if (service != null) {
-                return service.isPlaying();
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CommonLogger.e("远程服务失败" + e.getMessage());
+        if (service != null) {
+            return service.getCurrentState() == MusicPlayerManager.PLAY_STATE_PLAYING;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public long getCurrentProgress() {
-        try {
-            if (service != null) {
-                return service.position();
-            }
-        } catch (RemoteException | IllegalStateException e) {
-            e.printStackTrace();
-            CommonLogger.e("获取进度异常" + e.getMessage());
+        if (service != null) {
+            return service.getPosition();
+        } else {
+            return 0;
         }
-        return 0;
     }
 
     public void seekTo(int progress) {
-        try {
-            if (service != null) {
-                service.seek(progress);
-            }
-        } catch (RemoteException | IllegalStateException e) {
-            e.printStackTrace();
-            CommonLogger.e("异常" + e.getMessage());
-        }
-    }
-
-    public void refresh() {
-        try {
-            if (service != null) {
-                service.refresh();
-            } else {
-                CommonLogger.e("service为空?");
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CommonLogger.e("刷新出错" + e.getMessage());
-        }
-    }
-
-    public long[] getQueue() {
-        try {
-            if (service != null) {
-                return service.getQueue();
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void remove(int position) {
-        try {
-            if (service != null) {
-                service.remove(position);
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setMode(int mode) {
-        try {
-            if (service != null) {
-                service.setPlayMode(mode);
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public int getAudioSessionId(){
         if (service != null) {
-            try {
-                return service.getAudioSessionId();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            service.seekTo(progress);
         }
-        return 0;
+
+    }
+
+
+    public void setPlayMode(int mode) {
+        if (service != null) {
+            service.setPlayMode(mode);
+        }
+
+    }
+
+    public void play(List<MusicPlayBean> list, int position) {
+        if (service != null && list != null && list.size() > 0) {
+            BaseApplication.getAppComponent().getDaoSession()
+                    .getMusicPlayBeanDao().insertOrReplaceInTx(list);
+            List<String> list1 = new ArrayList<>();
+            for (MusicPlayBean bean : list
+                    ) {
+                list1.add(bean.getSongUrl());
+            }
+            service.play(list1, position);
+        }
     }
 
 
@@ -237,15 +141,16 @@ public class MusicManager {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             CommonLogger.e("连接远程服务成功");
-            MusicManager.this.service = IMusicService.Stub.asInterface(service);
-            CommonLogger.e("发送刷新消息啦啦");
-            RxBusManager.getInstance().post(new MusicStatusEvent(MusicStatusEvent.REFRESH_CHANGED));
+            MusicManager.this.service = (MusicService.MusicBinder) service;
+            RxBusManager.getInstance().post(new ServiceStateEvent(true));
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             CommonLogger.e("断开远程服务成功");
+            RxBusManager.getInstance().post(new ServiceStateEvent(false));
             MusicManager.this.service = null;
+
 
         }
     }

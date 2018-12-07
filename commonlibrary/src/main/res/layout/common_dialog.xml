@@ -1,35 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/base_color_text_white"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="19dp"
+    android:layout_marginRight="19dp"
+    android:background="@color/base_color_text_white"
+    android:orientation="vertical">
+
     <LinearLayout
         android:id="@+id/ll_base_dialog_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="15dp"
+        android:paddingBottom="8dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="15dp"
+        android:paddingTop="8dp"
         android:visibility="visible">
 
         <TextView
-
             android:id="@+id/tv_base_dialog_title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:padding="5dp"
             android:text="标题"
-            android:textColor="@color/base_color_text_blue"
-            android:textSize="20sp"/>
+            android:textColor="#ff333333"
+            android:textSize="12sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/base_color_text_blue"/>
+        android:layout_height="1dp"
+        android:background="@color/base_color_text_blue" />
+
     <LinearLayout
         android:id="@+id/ll_base_dialog_middle"
         android:layout_width="match_parent"
@@ -41,36 +46,57 @@
         <TextView
             android:id="@+id/tv_base_dialog_message"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="消息主题"
-            android:textColor="@color/base_color_text_grey"
-        />
+            android:textColor="#ff333333"
+            android:textSize="9sp" />
 
     </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#FFE8E8E8" />
 
     <LinearLayout
         android:id="@+id/ll_base_dialog_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:weightSum="2">
 
-        <Button
-            android:id="@+id/btn_base_dialog_left"
-            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        <TextView
+            android:id="@+id/tv_base_dialog_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
             android:text="取消"
-        />
-        <Button
-            android:id="@+id/btn_base_dialog_right"
-            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:textColor="#FF3C6FFF"
+            android:textSize="12dp" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#FFE8E8E8" />
+
+        <TextView
+            android:id="@+id/tv_base_dialog_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
             android:text="确定"
-        />
+            android:textColor="#FF3C6FFF"
+            android:textSize="12dp" />
+
 
     </LinearLayout>
 

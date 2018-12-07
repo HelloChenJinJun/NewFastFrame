@@ -12,24 +12,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.chat.R;
 import com.example.chat.adapter.FriendsAdapter;
-import com.example.chat.base.Constant;
-import com.example.chat.base.SlideBaseActivity;
-import com.example.chat.events.RecentEvent;
-import com.example.chat.manager.MsgManager;
-import com.example.chat.manager.UserManager;
+import com.example.chat.base.ConstantUtil;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.view.IndexView;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 
 /**
@@ -38,7 +32,7 @@ import java.util.List;
  * 创建时间:    2016/11/27      20:36
  * QQ:             1981367757
  */
-public class SelectedFriendsActivity extends SlideBaseActivity implements IndexView.MyLetterChangeListener {
+public class SelectedFriendsActivity extends ChatBaseActivity implements IndexView.MyLetterChangeListener {
     SuperRecyclerView display;
     IndexView indexView;
     private TextView index;
@@ -63,8 +57,8 @@ public class SelectedFriendsActivity extends SlideBaseActivity implements IndexV
         adapter.setHasSelected(true);
         display.setLayoutManager(mLinearLayoutManager = new WrappedLinearLayoutManager(this));
         display.setAdapter(adapter);
-        ArrayList<UserEntity> list = (ArrayList<UserEntity>) getIntent().getSerializableExtra(Constant.DATA);
-        from = getIntent().getStringExtra(Constant.FROM);
+        ArrayList<UserEntity> list = (ArrayList<UserEntity>) getIntent().getSerializableExtra(ConstantUtil.DATA);
+        from = getIntent().getStringExtra(ConstantUtil.FROM);
         adapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
             @Override
             public void onItemChildClick(int position, View view, int id) {
@@ -98,37 +92,10 @@ public class SelectedFriendsActivity extends SlideBaseActivity implements IndexV
                 ToastUtils.showShortToast("选择好友不能为空");
                 return;
             }
-
-            if (from.equals(Constant.FROM_CREATE_GROUP)) {
-                List<String> list = new ArrayList<>();
-                list.add("群名");
-                list.add("群介绍");
-                showEditDialog("建群", list, data -> {
-                    List<String> list1 = new ArrayList<>();
-                    list1.addAll(selectedContacts);
-                    list1.add(0, UserManager
-                            .getInstance().getCurrentUserObjectId());
-                    showLoadDialog("正在建群中..........");
-                    MsgManager.getInstance().sendCreateGroupMessage(data
-                            .get(0), data.get(1), list1, (groupTableMessage, e) -> {
-                                dismissLoadDialog();
-                                if (e == null) {
-                                    RxBusManager
-                                            .getInstance()
-                                            .post(new RecentEvent(groupTableMessage.getGroupId()
-                                                    , RecentEvent.ACTION_ADD));
-                                    finish();
-                                } else {
-                                    ToastUtils.showShortToast(e.toString());
-                                }
-                            });
-                });
-            } else {
                 Intent intent = new Intent();
-                intent.putExtra(Constant.DATA, selectedContacts);
+                intent.putExtra(ConstantUtil.DATA, selectedContacts);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
-            }
 
 
         });
@@ -191,8 +158,8 @@ public class SelectedFriendsActivity extends SlideBaseActivity implements IndexV
 
     public static void start(Activity activity, String from, ArrayList<UserEntity> list, int requestCode) {
         Intent intent = new Intent(activity, SelectedFriendsActivity.class);
-        intent.putExtra(Constant.DATA, list);
-        intent.putExtra(Constant.FROM, from);
+        intent.putExtra(ConstantUtil.DATA, list);
+        intent.putExtra(ConstantUtil.FROM, from);
         activity.startActivityForResult(intent, requestCode);
     }
 

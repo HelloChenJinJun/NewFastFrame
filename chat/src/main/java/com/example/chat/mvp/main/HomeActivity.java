@@ -7,15 +7,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.chat.R;
-import com.example.chat.base.Constant;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ChatBaseActivity;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.editInfo.EditUserInfoActivity;
-import com.example.chat.mvp.settings.SettingsActivity;
-import com.example.chat.mvp.wallpaper.WallPaperActivity;
 import com.example.chat.mvp.search.SearchActivity;
 import com.example.chat.mvp.searchFriend.SearchFriendActivity;
-import com.example.chat.mvp.selectFriend.SelectedFriendsActivity;
+import com.example.chat.mvp.settings.SettingsActivity;
+import com.example.chat.mvp.wallpaper.WallPaperActivity;
+import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.utils.ToastUtils;
 
 
@@ -26,10 +26,7 @@ import com.example.commonlibrary.utils.ToastUtils;
  * QQ:         1981367757
  */
 
-public class HomeActivity extends SlideBaseActivity {
-
-
-
+public class HomeActivity extends ChatBaseActivity {
 
 
     @Override
@@ -69,7 +66,7 @@ public class HomeActivity extends SlideBaseActivity {
                 break;
             case "背景":
                 ToastUtils.showShortToast("点击了背景");
-                WallPaperActivity.start(this,Constant.WALLPAPER);
+                WallPaperActivity.start(this, ConstantUtil.WALLPAPER);
                 break;
             case "设置":
                 ToastUtils.showShortToast("点击了设置");
@@ -104,9 +101,9 @@ public class HomeActivity extends SlideBaseActivity {
     @Override
     protected void initData() {
         addOrReplaceFragment(HomeFragment.newInstance(), R.id.fl_activity_home_container);
-        if (getIntent().getBooleanExtra(Constant.FIRST_LOGIN, false)) {
+        if (getIntent().getBooleanExtra(ConstantUtil.FIRST_LOGIN, false)) {
             EditUserInfoActivity.start(this, UserManager.getInstance()
-            .getCurrentUserObjectId());
+                    .getCurrentUserObjectId());
         }
     }
 
@@ -115,17 +112,19 @@ public class HomeActivity extends SlideBaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (System.currentTimeMillis() - mExitTime > 2000) {
-            ToastUtils.showShortToast("再按一次退出程序");
-            mExitTime = System.currentTimeMillis();
-        } else {
-            super.onBackPressed();
+        if (!ListVideoManager.getInstance().onBackPressed()) {
+            if (System.currentTimeMillis() - mExitTime > 2000) {
+                ToastUtils.showShortToast("再按一次退出程序");
+                mExitTime = System.currentTimeMillis();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
     public static void start(Activity activity, boolean isFirstLogin) {
         Intent intent = new Intent(activity, HomeActivity.class);
-        intent.putExtra(Constant.FIRST_LOGIN,isFirstLogin);
+        intent.putExtra(ConstantUtil.FIRST_LOGIN, isFirstLogin);
         activity.startActivity(intent);
     }
 }

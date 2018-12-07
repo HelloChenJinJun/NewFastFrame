@@ -2,7 +2,7 @@ package com.example.cootek.newfastframe.dagger.bottom;
 
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.cootek.newfastframe.mvp.bottom.BottomPresenter;
-import com.example.cootek.newfastframe.mvp.bottom.IBottomView;
+import com.example.cootek.newfastframe.ui.fragment.BottomFragment;
 
 import dagger.Module;
 import dagger.Provides;
@@ -12,10 +12,10 @@ import dagger.Provides;
  */
 @Module
 public class BottomFragmentModule {
-    private IBottomView iView;
+    private BottomFragment iView;
 
 
-    public BottomFragmentModule(IBottomView iView) {
+    public BottomFragmentModule(BottomFragment iView) {
         this.iView = iView;
     }
 
@@ -24,8 +24,6 @@ public class BottomFragmentModule {
     public BottomPresenter provideBottomPresenter(DefaultModel bottomModel) {
         return new BottomPresenter(iView, bottomModel);
     }
-
-
 
 
 }

@@ -1,14 +1,16 @@
 package com.example.news.mvp.center;
 
-import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.router.Router;
+import com.example.commonlibrary.router.RouterConfig;
+import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.R;
 import com.example.news.adapter.CenterAdapter;
@@ -35,7 +37,6 @@ public class CenterFragment extends BaseFragment {
     }
 
 
-
     @Override
     protected boolean isNeedHeadLayout() {
         return true;
@@ -58,7 +59,7 @@ public class CenterFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-        display.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 3));
         centerAdapter = new CenterAdapter();
         display.addItemDecoration(new GridSpaceDecoration(3, getResources().getDimensionPixelSize(R.dimen.padding_middle), true));
         display.setAdapter(centerAdapter);
@@ -66,14 +67,13 @@ public class CenterFragment extends BaseFragment {
             @Override
             public void onItemClick(int position, View view) {
                 if (position == 0) {
-                    ARouter.getInstance()
-                            .build("/music/main").navigation();
+                    Router.getInstance().deal(RouterRequest.newBuild().provideName(RouterConfig.MUSIC_PROVIDE_NAME)
+                            .actionName("enter")
+                            .context(getContext()).build());
                 } else if (position == 1) {
-                    ARouter.getInstance()
-                            .build("/live/main").navigation();
+
                 } else if (position == 2) {
                     ToastUtils.showShortToast("暂时不开放");
-//                        SystemCenterActivity.start(getActivity());
                 }
             }
         });

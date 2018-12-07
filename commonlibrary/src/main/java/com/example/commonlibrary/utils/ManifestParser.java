@@ -33,7 +33,7 @@ public final class ManifestParser {
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException("解析Application失败", e);
         }
-
+        CommonLogger.e("module:" + modules.size());
         return modules;
     }
 

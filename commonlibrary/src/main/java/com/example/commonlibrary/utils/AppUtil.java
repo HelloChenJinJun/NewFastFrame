@@ -1,7 +1,8 @@
 package com.example.commonlibrary.utils;
 
-import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
@@ -13,7 +14,6 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,8 +44,20 @@ public class AppUtil {
         }
         return false;
     }
-    public static boolean isNetworkAvailable(){
+
+    public static boolean isNetworkAvailable() {
         return isNetworkAvailable(BaseApplication.getInstance());
+    }
+
+
+    public static boolean checkPackInfo(Context context, String packageName) {
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return packageInfo != null;
     }
 
 
@@ -70,10 +82,6 @@ public class AppUtil {
     }
 
 
-
-
-
-
     public static String getSortedKey(String name) {
         if (name == null) {
             return "";
@@ -91,16 +99,31 @@ public class AppUtil {
         return builder.toString().substring(0, 1).toUpperCase();
     }
 
+    public static String getPinYin(String name) {
+        StringBuilder builder = new StringBuilder();
+        String singleItem;
+        for (int i = 0; i < name.length(); i++) {
+            singleItem = getSinglePinYing(name.charAt(i));
+            if (singleItem == null) {
+                builder.append(name.charAt(i));
+            } else {
+                builder.append(singleItem);
+            }
+        }
+        return builder.toString().toUpperCase();
+    }
+
+
     private static String getSinglePinYing(char c) {
         HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
         format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
         try {
             String[] results = PinyinHelper.toHanyuPinyinStringArray(c, format);
             if (results == null) {
-//                                不是汉字返回空
+                //                                不是汉字返回空
                 return null;
             } else {
-//                                因为有可能是多音字
+                //                                因为有可能是多音字
                 return results[0];
             }
         } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
@@ -108,6 +131,11 @@ public class AppUtil {
             return null;
         }
     }
+
+
+
+
+
 
     /**
      * 邮箱格式是否正确
@@ -124,6 +152,25 @@ public class AppUtil {
         Matcher matcher = pattern.matcher(email);
 
         return matcher.matches();
+    }
 
+
+    public static boolean isPhone(String mobiles) {
+        String telRegex = "[1][3456789]\\d{9}";//"[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
+        if (TextUtils.isEmpty(mobiles))
+            return false;
+        else
+            return mobiles.matches(telRegex);
+    }
+
+    public static PackageInfo getPackageInfo() {
+        try {
+            return BaseApplication.getInstance().getPackageManager()
+                    .getPackageInfo(BaseApplication.getInstance().getPackageName(), 0);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

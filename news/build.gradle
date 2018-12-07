@@ -20,14 +20,7 @@ android {
 //            // 设置支持的SO库架构
 //            abiFilters 'armeabi', 'armeabi-v7a'//, 'x86', 'x86_64', 'arm64-v8a'
 //        }
-        if (!rootProject.ext.isAlone) {
-            javaCompileOptions {
-                annotationProcessorOptions {
-                    arguments = [moduleName: project.getName()]
-                }
-            }
 
-        }
         buildTypes {
             release {
                 minifyEnabled false
@@ -85,22 +78,9 @@ android {
             exclude module:"appcompat-v7"
             exclude module:"support-v4"
         }
-
-        implementation ('com.zzhoujay.richtext:richtext:2.0.9'){
-            exclude module:"appcompat-v7"
-            exclude module:"support-v4"
-        }
         annotationProcessor rootProject.ext.dependencies.dagger2_compiler
-        implementation (rootProject.ext.dependencies.cardview){
-            exclude module:"appcompat-v7"
-            exclude module:"support-v4"
-        }
-        if (!rootProject.ext.isAlone) {
-            annotationProcessor rootProject.ext.dependencies.arouter_compiler
-    }
         testImplementation 'junit:junit:4.12'
-//        implementation files('libs/pldroid-player-1.5.0.jar')
     }
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '28.0.3'
 }
 

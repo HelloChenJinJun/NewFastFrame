@@ -6,11 +6,11 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
 //        classpath 'com.jakewharton:butterknife-gradle-plugin:8.8.0'
 //        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath "com.tencent.bugly:tinker-support:1.1.0"
+        classpath "com.tencent.bugly:tinker-support:1.1.1"
 
         
         classpath "com.tinkerpatch.sdk:tinkerpatch-gradle-plugin:1.1.8"

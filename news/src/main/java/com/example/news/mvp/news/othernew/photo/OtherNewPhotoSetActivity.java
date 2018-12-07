@@ -2,13 +2,13 @@ package com.example.news.mvp.news.othernew.photo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.adapter.OtherNewPhotoSetAdapter;
@@ -16,12 +16,13 @@ import com.example.news.bean.PhotoSetBean;
 import com.example.news.dagger.news.othernews.photo.DaggerOtherNewPhotoSetComponent;
 import com.example.news.dagger.news.othernews.photo.OtherNewPhotoSetModule;
 import com.example.news.util.NewsUtil;
-import com.example.news.widget.WrappedViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * 项目名称:    NewFastFrame

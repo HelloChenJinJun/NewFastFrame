@@ -1,7 +1,6 @@
 package com.example.news.mvp.news.othernew;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import com.example.commonlibrary.BaseFragment;
@@ -13,7 +12,7 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
-import com.example.commonlibrary.utils.ToastUtils;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.bean.NewInfoBean;
@@ -35,21 +34,20 @@ import javax.inject.Inject;
  * QQ:             1981367757
  */
 
-public class OtherNewsListFragment extends BaseFragment<List<NewInfoBean>,OtherNewsListPresenter> implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class OtherNewsListFragment extends BaseFragment<List<NewInfoBean>, OtherNewsListPresenter> implements OnLoadMoreListener, CustomSwipeRefreshLayout.OnRefreshListener {
 
     @Inject
     OtherNewsListAdapter otherNewsListAdapter;
-    private SwipeRefreshLayout refresh;
+    private CustomSwipeRefreshLayout refresh;
     private SuperRecyclerView display;
     private OtherNewsTypeBean otherNewsTypeBean;
-
 
 
     @Override
     public void updateData(List<NewInfoBean> newInfoBeen) {
         if (refresh.isRefreshing()) {
             otherNewsListAdapter.refreshData(newInfoBeen);
-        }else {
+        } else {
             otherNewsListAdapter.addData(newInfoBeen);
         }
     }
@@ -76,13 +74,13 @@ public class OtherNewsListFragment extends BaseFragment<List<NewInfoBean>,OtherN
 
     @Override
     protected void initView() {
-        refresh= (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_other_news_list_refresh);
-        display= (SuperRecyclerView) findViewById(R.id.srcv_fragment_other_news_list_display);
+        refresh = findViewById(R.id.refresh_fragment_other_news_list_refresh);
+        display = findViewById(R.id.srcv_fragment_other_news_list_display);
     }
 
     @Override
     protected void initData() {
-        otherNewsTypeBean=getArguments().getParcelable("item");
+        otherNewsTypeBean = getArguments().getParcelable("item");
         DaggerOtherNewsComponent.builder()
                 .otherNewsModule(new OtherNewsModule(this))
                 .newsComponent(NewsApplication.getNewsComponent())
@@ -96,14 +94,13 @@ public class OtherNewsListFragment extends BaseFragment<List<NewInfoBean>,OtherN
         otherNewsListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                NewInfoBean newInfoBean=otherNewsListAdapter.getData(position);
+                NewInfoBean newInfoBean = otherNewsListAdapter.getData(position);
                 if (NewsUtil.SPECIAL_TITLE.equals(newInfoBean.getSkipType())) {
-                    SpecialNewsActivity.start(getContext(),newInfoBean.getSpecialID(),newInfoBean.getTitle());
-                }else if (NewsUtil.PHOTO_SET.equals(newInfoBean.getSkipType())){
-                    OtherNewPhotoSetActivity.start(getContext(),newInfoBean.getPhotosetID());
-                }else {
-                    ToastUtils.showShortToast("其他");
-                    OtherNewsDetailActivity.start(getContext(),newInfoBean.getPostid());
+                    SpecialNewsActivity.start(getContext(), newInfoBean.getSpecialID(), newInfoBean.getTitle());
+                } else if (NewsUtil.PHOTO_SET.equals(newInfoBean.getSkipType())) {
+                    OtherNewPhotoSetActivity.start(getContext(), newInfoBean.getPhotosetID());
+                } else {
+                    OtherNewsDetailActivity.start(getContext(), newInfoBean.getPostid());
                 }
             }
         });
@@ -112,27 +109,26 @@ public class OtherNewsListFragment extends BaseFragment<List<NewInfoBean>,OtherN
     @Override
     protected void updateView() {
         refresh.setRefreshing(true);
-        presenter.getOtherNewsListData(true,true,otherNewsTypeBean.getTypeId());
+        presenter.getOtherNewsListData(true, true, otherNewsTypeBean.getTypeId());
     }
 
 
-
-    public static OtherNewsListFragment newInstance(OtherNewsTypeBean otherNewsTypeBean){
-        Bundle bundle=new Bundle();
-        bundle.putParcelable("item",otherNewsTypeBean);
-        OtherNewsListFragment otherNewsListFragment=new OtherNewsListFragment();
+    public static OtherNewsListFragment newInstance(OtherNewsTypeBean otherNewsTypeBean) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("item", otherNewsTypeBean);
+        OtherNewsListFragment otherNewsListFragment = new OtherNewsListFragment();
         otherNewsListFragment.setArguments(bundle);
         return otherNewsListFragment;
     }
 
     @Override
     public void loadMore() {
-        presenter.getOtherNewsListData(false,false,otherNewsTypeBean.getTypeId());
+        presenter.getOtherNewsListData(false, false, otherNewsTypeBean.getTypeId());
     }
 
     @Override
     public void onRefresh() {
-        presenter.getOtherNewsListData(false,true,otherNewsTypeBean.getTypeId());
+        presenter.getOtherNewsListData(false, true, otherNewsTypeBean.getTypeId());
     }
 
 
@@ -154,7 +150,7 @@ public class OtherNewsListFragment extends BaseFragment<List<NewInfoBean>,OtherN
         if (refresh.isRefreshing()) {
             super.showError(errorMsg, listener);
             refresh.setRefreshing(false);
-        }else {
+        } else {
             ((LoadMoreFooterView) display.getLoadMoreFooterView()).setStatus(LoadMoreFooterView.Status.ERROR);
         }
     }

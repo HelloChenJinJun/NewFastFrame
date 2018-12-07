@@ -1,6 +1,5 @@
 package com.example.news.mvp.news.othernew.detail;
 
-import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
@@ -69,12 +68,7 @@ public class OtherNewsDetailPresenter extends BasePresenter<IView<OtherNewsDetai
 
             @Override
             public void onError(@NonNull Throwable e) {
-                iView.showError(null, new EmptyLayout.OnRetryListener() {
-                    @Override
-                    public void onRetry() {
-                        getOtherNewsDetailData(postId);
-                    }
-                });
+                iView.showError(null, () -> getOtherNewsDetailData(postId));
             }
 
             @Override

@@ -1,7 +1,5 @@
 package com.example.chat.manager;
 
-import android.os.Environment;
-
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
@@ -12,14 +10,8 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.net.NetManager;
 import com.example.commonlibrary.net.download.DownloadListener;
 import com.example.commonlibrary.net.download.FileInfo;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.FileCallBack;
-
-import java.io.File;
 
 import cn.bmob.v3.exception.BmobException;
-import okhttp3.Call;
-import okhttp3.Request;
 
 /**
  * 项目名称:    TestChat
@@ -118,29 +110,5 @@ public class DownLoadManager {
 //                });
         }
 
-        public void download(String videoUrl, String id, final OnDownLoadFileListener listener) {
-                OkHttpUtils.get().url(videoUrl).build().execute(new FileCallBack(Environment.getExternalStorageDirectory().getAbsolutePath(), id + System.currentTimeMillis() + ".mp4") {
-                        @Override
-                        public void onBefore(Request request, int id) {
-                                listener.onStart();
-                        }
 
-                        @Override
-                        public void inProgress(float progress, long total, int id) {
-                                listener.onProgress((int) progress);
-                        }
-
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                                LogUtil.e("接受视频消息失败");
-                                listener.onFailed(new BmobException(e));
-                        }
-
-                        @Override
-                        public void onResponse(File response, int id) {
-                                listener.onSuccess(response.getAbsolutePath());
-                                LogUtil.e("接受到文件啦啦啦，文件路径为：" + response.getAbsolutePath());
-                        }
-                });
-        }
 }

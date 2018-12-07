@@ -1,8 +1,8 @@
 package com.example.commonlibrary.bean.chat;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 
 /**
@@ -33,7 +33,7 @@ public class PostCommentEntity {
 
     @Generated(hash = 549348361)
     public PostCommentEntity(String cid, String pid, String uid, String content,
-            long createdTime, long updatedTime, int sendStatus) {
+                             long createdTime, long updatedTime, int sendStatus) {
         this.cid = cid;
         this.pid = pid;
         this.uid = uid;

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     >
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
         android:id="@+id/refresh_fragment_other_news_list_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,6 +17,6 @@
             android:tag="skin"
             android:background="@color/custom_color_app_content_bg"
             />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
 
 </LinearLayout>

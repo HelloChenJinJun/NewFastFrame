@@ -105,11 +105,11 @@
             android:layout_height="120dp"
             android:visibility="gone">
 
-            <android.support.v4.view.ViewPager
+            <com.example.commonlibrary.cusotomview.WrappedViewPager
                 android:id="@+id/vp_chat_bottom_emotion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </android.support.v4.view.ViewPager>
+            </com.example.commonlibrary.cusotomview.WrappedViewPager>
         </RelativeLayout>
 
         <LinearLayout

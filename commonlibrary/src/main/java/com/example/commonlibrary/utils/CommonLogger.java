@@ -1,14 +1,15 @@
 package com.example.commonlibrary.utils;
 
-import android.os.Build;
 import android.util.Log;
+
+import com.example.commonlibrary.BuildConfig;
 
 /**
  * Created by COOTEK on 2017/7/31.
  */
 
 public class CommonLogger {
-    private static boolean isLogEnable = true;
+    private static boolean isLogEnable = BuildConfig.DEBUG;
 
     private static String tag = "CHEN";
 
@@ -26,7 +27,8 @@ public class CommonLogger {
     }
 
     public static void v(String tag, String msg) {
-        if (isLogEnable) Log.v(tag, msg);
+        if (isLogEnable)
+            Log.v(tag, msg);
     }
 
     public static void d(String msg) {
@@ -34,7 +36,8 @@ public class CommonLogger {
     }
 
     public static void d(String tag, String msg) {
-        if (isLogEnable) Log.d(tag, msg);
+        if (isLogEnable)
+            Log.d(tag, msg);
     }
 
     public static void i(String msg) {
@@ -42,7 +45,8 @@ public class CommonLogger {
     }
 
     public static void i(String tag, String msg) {
-        if (isLogEnable) Log.i(tag, msg);
+        if (isLogEnable)
+            Log.i(tag, msg);
     }
 
     public static void w(String msg) {
@@ -50,7 +54,8 @@ public class CommonLogger {
     }
 
     public static void w(String tag, String msg) {
-        if (isLogEnable) Log.w(tag, msg);
+        if (isLogEnable)
+            Log.w(tag, msg);
     }
 
     public static void e(String msg) {
@@ -58,11 +63,15 @@ public class CommonLogger {
     }
 
     public static void e(String tag, String msg) {
-        if (isLogEnable) Log.e(tag, msg);
+        if (isLogEnable)
+            if (msg != null) {
+                Log.e(tag, msg);
+            }
     }
 
     public static void printStackTrace(Throwable t) {
-        if (isLogEnable && t != null) t.printStackTrace();
+        if (isLogEnable && t != null)
+            t.printStackTrace();
     }
 
 

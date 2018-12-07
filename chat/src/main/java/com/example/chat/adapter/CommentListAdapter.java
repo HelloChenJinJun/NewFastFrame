@@ -11,11 +11,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.chat.R;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.User;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicCommentBean;
-import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.chat.util.FaceTextUtil;
@@ -24,7 +23,6 @@ import com.example.chat.view.CustomMoveMethod;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
-import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
 
@@ -64,13 +62,13 @@ public class CommentListAdapter extends BaseRecyclerAdapter<PublicCommentBean, B
                         .isSex() ? R.drawable.ic_sex_female : R.drawable.ic_sex_male)
                 .setOnItemClickListener();
 
-        if (data.getSendStatus().equals(Constant.SEND_STATUS_FAILED)) {
+        if (data.getSendStatus().equals(ConstantUtil.SEND_STATUS_FAILED)) {
             holder.setVisible(R.id.iv_item_activity_comment_list_retry, true)
                     .setVisible(R.id.pb_item_activity_comment_list_loading, false);
-        } else if (data.getSendStatus().equals(Constant.SEND_STATUS_SENDING)) {
+        } else if (data.getSendStatus().equals(ConstantUtil.SEND_STATUS_SENDING)) {
             holder.setVisible(R.id.iv_item_activity_comment_list_retry, false)
                     .setVisible(R.id.pb_item_activity_comment_list_loading, true);
-        } else if (data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
+        } else if (data.getSendStatus().equals(ConstantUtil.SEND_STATUS_SUCCESS)) {
             holder.setVisible(R.id.iv_item_activity_comment_list_retry, false)
                     .setVisible(R.id.pb_item_activity_comment_list_loading, false);
         }

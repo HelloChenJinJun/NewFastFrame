@@ -2,11 +2,9 @@ package com.example.chat.adapter;
 
 
 import com.example.chat.R;
-import com.example.chat.bean.ImageFolder;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
-
-import java.util.List;
+import com.example.commonlibrary.utils.SystemUtil;
 
 /**
  * 项目名称:    TestChat
@@ -15,7 +13,7 @@ import java.util.List;
  * QQ:             1981367757
  */
 
-public class ImageFoldersAdapter extends BaseRecyclerAdapter<ImageFolder, BaseWrappedViewHolder> {
+public class ImageFoldersAdapter extends BaseRecyclerAdapter<SystemUtil.ImageFolder, BaseWrappedViewHolder> {
 
         private int currentSelectedPosition;
 
@@ -36,7 +34,7 @@ public class ImageFoldersAdapter extends BaseRecyclerAdapter<ImageFolder, BaseWr
         }
 
         @Override
-        protected void convert(BaseWrappedViewHolder holder, ImageFolder data) {
+        protected void convert(BaseWrappedViewHolder holder, SystemUtil.ImageFolder data) {
                 if (getCurrentSelectedPosition() == holder.getAdapterPosition()) {
                         holder.setVisible(R.id.iv_image_folder_select, true);
                 } else {

@@ -1,11 +1,19 @@
 package com.example.commonlibrary.imageloader.glide;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
 
-import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.commonlibrary.imageloader.base.BaseImageLoaderStrategy;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by COOTEK on 2017/7/31.
@@ -17,39 +25,57 @@ public class GlideImageLoaderStrategy implements BaseImageLoaderStrategy<GlideIm
         if (config == null || context == null) {
             return;
         }
-        DrawableRequestBuilder drawableRequestBuilder;
-        drawableRequestBuilder = Glide.with(context).load(config.getUrl())
-                .crossFade().centerCrop();
+        RequestBuilder drawableRequestBuilder;
+        if (config.asGif()) {
+            drawableRequestBuilder = Glide.with(context).asGif().load(config.getUrl());
+        } else {
+            drawableRequestBuilder = Glide.with(context).load(config.getUrl());
+        }
+        RequestOptions options = new RequestOptions();
         switch (config.getCacheStrategy()) {
             case GlideImageLoaderConfig.CACHE_ALL:
-                drawableRequestBuilder.diskCacheStrategy(DiskCacheStrategy.ALL);
+                options.diskCacheStrategy(DiskCacheStrategy.ALL);
                 break;
             case GlideImageLoaderConfig.CACHE_NONE:
-                drawableRequestBuilder.diskCacheStrategy(DiskCacheStrategy.NONE);
+                options.diskCacheStrategy(DiskCacheStrategy.NONE);
                 break;
             case GlideImageLoaderConfig.CACHE_SOURCE:
-                drawableRequestBuilder.diskCacheStrategy(DiskCacheStrategy.SOURCE);
+                options.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
                 break;
             case GlideImageLoaderConfig.CACHE_RESULT:
-                drawableRequestBuilder.diskCacheStrategy(DiskCacheStrategy.RESULT);
+                options.diskCacheStrategy(DiskCacheStrategy.DATA);
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
         if (config.isCenterInside()) {
-            drawableRequestBuilder.fitCenter();
-        }else {
-            drawableRequestBuilder.centerCrop();
+            options = options.fitCenter();
+        } else {
+            options = options.centerCrop();
         }
         if (config.getBitmapTransformation() != null) {
-            drawableRequestBuilder.bitmapTransform(config.getBitmapTransformation());
+            options = options.transforms(config.getBitmapTransformation());
         }
         if (config.getErrorResId() != 0) {
-            drawableRequestBuilder.error(config.getErrorResId());
+            options = options.error(config.getErrorResId());
         }
         if (config.getPlaceHolderResId() != 0) {
-            drawableRequestBuilder.placeholder(config.getPlaceHolderResId());
+            options = options.placeholder(config.getPlaceHolderResId());
         }
-        drawableRequestBuilder.into(config.getImageView());
+        if (config.getWidth() != 0 && config.getHeight() != 0) {
+            options = options.override(config.getWidth(), config.getHeight());
+        }
+
+
+        if (config.getView() instanceof ImageView) {
+            drawableRequestBuilder.apply(options).into((ImageView) config.getView());
+        } else {
+            drawableRequestBuilder.apply(options).into(new SimpleTarget<Drawable>() {
+                @Override
+                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                    config.getView().setBackground(resource);
+                }
+            });
+        }
     }
 }

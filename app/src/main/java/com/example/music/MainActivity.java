@@ -2,14 +2,12 @@ package com.example.music;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
 
-import com.example.chat.base.Constant;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.main.HomeFragment;
@@ -21,15 +19,18 @@ import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 import com.example.chat.mvp.skin.SkinListActivity;
 import com.example.chat.mvp.step.RecordStepActivity;
 import com.example.chat.mvp.wallpaper.WallPaperActivity;
+import com.example.commonlibrary.SlideBaseActivity;
 import com.example.commonlibrary.bean.chat.SkinEntity;
+import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.news.mvp.center.CenterFragment;
 import com.example.news.mvp.index.IndexFragment;
 
-
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.fragment.app.Fragment;
 
 public class MainActivity extends SlideBaseActivity {
 
@@ -39,7 +40,7 @@ public class MainActivity extends SlideBaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (currentFragment instanceof HomeFragment) {
-            ((HomeFragment)currentFragment).notifyNewIntentCome(intent);
+            ((HomeFragment) currentFragment).notifyNewIntentCome(intent);
         }
     }
 
@@ -72,21 +73,21 @@ public class MainActivity extends SlideBaseActivity {
                 break;
             case "背景":
                 ToastUtils.showShortToast("点击了背景");
-                WallPaperActivity.start(this, Constant.WALLPAPER);
+                WallPaperActivity.start(this, ConstantUtil.WALLPAPER);
                 break;
             case "设置":
                 ToastUtils.showShortToast("点击了设置");
                 SettingsActivity.start(this);
                 break;
             case "重置皮肤":
-               SkinEntity currentSkinEntity=UserDBManager.getInstance()
-                       .getCurrentSkin();
-               if (currentSkinEntity!=null){
-                   currentSkinEntity.setHasSelected(false);
-                   UserDBManager.getInstance().getDaoSession()
-                           .getSkinEntityDao().update(currentSkinEntity);
-                SkinManager.getInstance().update(null);
-               }
+                SkinEntity currentSkinEntity = UserDBManager.getInstance()
+                        .getCurrentSkin();
+                if (currentSkinEntity != null) {
+                    currentSkinEntity.setHasSelected(false);
+                    UserDBManager.getInstance().getDaoSession()
+                            .getSkinEntityDao().update(currentSkinEntity);
+                    SkinManager.getInstance().update(null);
+                }
                 break;
             case "皮肤中心":
                 SkinListActivity.start(this);
@@ -124,7 +125,7 @@ public class MainActivity extends SlideBaseActivity {
 
     @Override
     protected void initView() {
-        RadioGroup bottomContainer = (RadioGroup) findViewById(R.id.rg_activity_main_bottom_container);
+        RadioGroup bottomContainer = findViewById(R.id.rg_activity_main_bottom_container);
         bottomContainer.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rb_activity_main_bottom_index) {
                 addOrReplaceFragment(fragmentList.get(0));
@@ -156,11 +157,13 @@ public class MainActivity extends SlideBaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (System.currentTimeMillis() - mExitTime > 2000) {
-            ToastUtils.showShortToast("再按一次退出程序");
-            mExitTime = System.currentTimeMillis();
-        } else {
-            super.onBackPressed();
+        if (!ListVideoManager.getInstance().onBackPressed()) {
+            if (System.currentTimeMillis() - mExitTime > 2000) {
+                ToastUtils.showShortToast("再按一次退出程序");
+                mExitTime = System.currentTimeMillis();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 

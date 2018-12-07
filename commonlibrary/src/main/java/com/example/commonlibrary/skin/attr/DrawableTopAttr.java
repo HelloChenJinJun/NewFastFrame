@@ -1,12 +1,12 @@
 package com.example.commonlibrary.skin.attr;
 
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
 import com.example.commonlibrary.skin.SkinManager;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * 项目名称:    NewFastFrame

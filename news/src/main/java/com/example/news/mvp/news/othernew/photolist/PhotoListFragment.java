@@ -1,6 +1,5 @@
 package com.example.news.mvp.news.othernew.photolist;
 
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import com.example.commonlibrary.BaseFragment;
@@ -10,9 +9,12 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
+import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
-import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.Constant;
+import com.example.commonlibrary.utils.DensityUtil;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.adapter.PhotoListAdapter;
@@ -34,16 +36,17 @@ import javax.inject.Inject;
  * QQ:             1981367757
  */
 
-public class PhotoListFragment extends BaseFragment<PictureBean,PhotoListPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
+public class PhotoListFragment extends BaseFragment<PictureBean, PhotoListPresenter> implements CustomSwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
     @Inject
     PhotoListAdapter photoListAdapter;
-    private SwipeRefreshLayout refresh;
+    private CustomSwipeRefreshLayout refresh;
     private SuperRecyclerView display;
+
     @Override
     public void updateData(PictureBean pictureBean) {
         if (refresh.isRefreshing()) {
             photoListAdapter.refreshData(pictureBean.getResults());
-        }else {
+        } else {
             photoListAdapter.addData(pictureBean.getResults());
         }
     }
@@ -71,8 +74,8 @@ public class PhotoListFragment extends BaseFragment<PictureBean,PhotoListPresent
 
     @Override
     protected void initView() {
-        display= (SuperRecyclerView) findViewById(R.id.srcv_fragment_photo_list_display);
-        refresh= (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_photo_list_refresh);
+        display = findViewById(R.id.srcv_fragment_photo_list_display);
+        refresh = findViewById(R.id.refresh_fragment_photo_list_refresh);
     }
 
     @Override
@@ -80,22 +83,23 @@ public class PhotoListFragment extends BaseFragment<PictureBean,PhotoListPresent
         DaggerPhotoListComponent.builder().photoListModule(new PhotoListModule(this))
                 .newsComponent(NewsApplication.getNewsComponent())
                 .build().inject(this);
-        display.setLayoutManager(new WrappedGridLayoutManager(getContext(),2));
+        display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 2));
+        display.addItemDecoration(new GridSpaceDecoration(2, DensityUtil.toDp(10), true));
         refresh.setOnRefreshListener(this);
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);
         photoListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                List<PictureBean.PictureEntity> imageList=photoListAdapter.getData();
+                List<PictureBean.PictureEntity> imageList = photoListAdapter.getData();
                 if (imageList != null && imageList.size() > 0) {
-                    List<String> result=new ArrayList<>();
+                    List<String> result = new ArrayList<>();
                     for (PictureBean.PictureEntity item :
                             imageList) {
                         result.add(item.getUrl());
                     }
-                    Map<String,Object> map=new HashMap<>();
-                    map.put(ConstantUtil.POSITION,position);
+                    Map<String, Object> map = new HashMap<>();
+                    map.put(Constant.POSITION, position);
                     Router.getInstance().deal(new RouterRequest.Builder()
                             .provideName("chat").actionName("preview")
                             .context(view.getContext())
@@ -109,17 +113,17 @@ public class PhotoListFragment extends BaseFragment<PictureBean,PhotoListPresent
 
     @Override
     protected void updateView() {
-        presenter.getPhotoListData(true,true);
+        presenter.getPhotoListData(true, true);
     }
 
     @Override
     public void onRefresh() {
-        presenter.getPhotoListData(false,true);
+        presenter.getPhotoListData(false, true);
     }
 
     @Override
     public void loadMore() {
-        presenter.getPhotoListData(false,false);
+        presenter.getPhotoListData(false, false);
     }
 
 
@@ -135,7 +139,7 @@ public class PhotoListFragment extends BaseFragment<PictureBean,PhotoListPresent
         if (refresh.isRefreshing()) {
             super.showError(errorMsg, listener);
             refresh.setRefreshing(false);
-        }else {
+        } else {
             ((LoadMoreFooterView) display.getLoadMoreFooterView()).setStatus(LoadMoreFooterView.Status.ERROR);
         }
     }

@@ -1,6 +1,5 @@
 package com.example.cootek.newfastframe.util;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.net.Uri;
@@ -8,7 +7,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.FileUtil;
 import com.example.cootek.newfastframe.view.lrc.LrcRow;
@@ -53,22 +51,20 @@ public class MusicUtil {
     public static final String SEEK = "seek";
     public static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting/";
     public static final String SONG_COUNT = "count";
+    public static final String TYPE = "type";
 
     public static Uri getAlbumArtUri(long paramInt) {
         return ContentUris.withAppendedId(Uri.parse("content://media/exjava.lang.Stringternal/audio/albumart"), paramInt);
     }
 
 
-    public static String musicLyricDir = FileUtil.getDefaultCacheFile(BaseApplication.getInstance()).getAbsolutePath() + "/music/lyric/";
-
     public static String getLyricPath(long longId) {
-        return getMusicLrcCacheDir() + longId;
-//        return musicLyricDir + longId + "";
+        return FileUtil.getDefaultCacheFile(BaseApplication.getInstance()).getAbsolutePath() + "/music/lrc" + longId;
     }
 
 
     public static String getMusicLrcCacheDir() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/music/lrc";
+        return FileUtil.getDefaultCacheFile(BaseApplication.getInstance()).getAbsolutePath() + "/music/lrc";
     }
 
 
@@ -157,7 +153,6 @@ public class MusicUtil {
             uri = uri.substring(0, index);
             uri = uri + "@s_1,w_" + screenWidth + ",h_" + screenHeight;
         }
-        CommonLogger.e("url:::::" + uri);
         return uri;
     }
 }

@@ -18,10 +18,6 @@
 package com.example.cootek.newfastframe.view.slide;
 
 import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.VelocityTrackerCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.ScrollerCompat;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -30,6 +26,11 @@ import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 
 import java.util.Arrays;
+
+import androidx.core.view.MotionEventCompat;
+import androidx.core.view.VelocityTrackerCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.widget.ScrollerCompat;
 
 /**
  * ViewDragHelper is a utility class for writing custom ViewGroups. It offers a number

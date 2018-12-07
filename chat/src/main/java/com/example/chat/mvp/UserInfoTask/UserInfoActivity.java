@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.chat.R;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.User;
 import com.example.chat.listener.AddBlackCallBackListener;
@@ -20,7 +20,7 @@ import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.chat.ChatActivity;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
@@ -37,7 +37,7 @@ import cn.bmob.v3.listener.FindListener;
  * 创建时间:    2016/9/25      13:17
  * QQ:             1981367757
  */
-public class UserInfoActivity extends SlideBaseActivity implements View.OnClickListener {
+public class UserInfoActivity extends ChatBaseActivity implements View.OnClickListener {
         private UserEntity userEntity;
         private Button black;
         private boolean isBlack;
@@ -88,7 +88,7 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
         @Override
         public void initData() {
                 initActionBar();
-                uid = getIntent().getStringExtra(Constant.ID);
+                uid = getIntent().getStringExtra(ConstantUtil.ID);
                 if (uid.equals(UserManager.getInstance().getCurrentUserObjectId())){
                         userEntity=UserManager.getInstance().cover(UserManager
                         .getInstance().getCurrentUser());
@@ -186,7 +186,7 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
         public void onClick(View v) {
                 int i = v.getId();
                 if (i == R.id.btn_user_info_chat) {
-                        ChatActivity.start(this,Constant.TYPE_PERSON,uid);
+                        ChatActivity.start(this,ConstantUtil.TYPE_PERSON,uid);
 
                 } else if (i == R.id.btn_user_info_add_friend) {
                         sendAddFriendMsg();
@@ -218,7 +218,6 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
                                 @Override
                                 public void onFailed(BmobException e) {
                                         LogUtil.e("取消黑名单操作失败");
-                                        cancelLoadDialog();
                                 }
                         });
                 });
@@ -247,7 +246,6 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
                                 public void onFailed(BmobException e) {
                                         ToastUtils.showShortToast("添加黑名单失败");
                                         LogUtil.e("添加黑名单失败" + e.getMessage() + e.getErrorCode());
-                                        cancelLoadDialog();
                                 }
                         });
                 });
@@ -292,7 +290,7 @@ public class UserInfoActivity extends SlideBaseActivity implements View.OnClickL
 
         public static void  start(Activity activity, String uid){
                 Intent intent=new Intent(activity,UserInfoActivity.class);
-                intent.putExtra(Constant.ID,uid);
+                intent.putExtra(ConstantUtil.ID,uid);
                 activity.startActivity(intent);
         }
 }

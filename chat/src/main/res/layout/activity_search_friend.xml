@@ -37,8 +37,8 @@
             android:text="查询"
             android:textColor="@color/base_color_bg_gray"/>
     </RelativeLayout>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/swrc_search_friend_display"
+    <com.example.commonlibrary.baseadapter.SuperRecyclerView
+        android:id="@+id/srcv_search_friend_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

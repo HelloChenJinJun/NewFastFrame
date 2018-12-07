@@ -2,7 +2,7 @@ package com.example.chat.dagger;
 
 
 import com.example.chat.ChatInterceptor;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.commonlibrary.mvp.model.DefaultModel;
@@ -42,7 +42,7 @@ public class ChatMainModule {
     @Named("chat")
     @PerApplication
     public Retrofit provideRetrofit(@Named("chat") OkHttpClient okHttpClient,Retrofit.Builder builder){
-        builder.baseUrl(Constant.BASE_URL).client(okHttpClient);
+        builder.baseUrl(ConstantUtil.BASE_URL).client(okHttpClient);
         return builder.build();
     }
 

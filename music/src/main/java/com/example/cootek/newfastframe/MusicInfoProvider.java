@@ -2,6 +2,9 @@ package com.example.cootek.newfastframe;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
@@ -54,7 +57,7 @@ public class MusicInfoProvider {
     }
 
     private static Observable<List<MusicPlayBean>> getDownLoadMusic() {
-        List<MusicPlayBean> result = VideoApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao().queryBuilder().where(MusicPlayBeanDao.Properties.IsLocal.eq(Boolean.FALSE)).list();
+        List<MusicPlayBean> result = MusicApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao().queryBuilder().where(MusicPlayBeanDao.Properties.IsLocal.eq(Boolean.FALSE)).list();
         return Observable.just(result);
     }
 
@@ -74,7 +77,7 @@ public class MusicInfoProvider {
             public void subscribe(@NonNull ObservableEmitter<List<MusicPlayBean>> e) throws Exception {
                 List<MusicPlayBean> list = new ArrayList<>();
                 if (cursor != null && cursor.moveToFirst()) {
-                        do {
+                    do {
                         MusicPlayBean music = new MusicPlayBean();
                         CommonLogger.e("data", cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATA)));
                         music.setSongId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID)));
@@ -85,11 +88,11 @@ public class MusicInfoProvider {
                         music.setAlbumName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM)));
                         music.setAlbumUrl(MusicUtil.getAlbumArtUri(music.getAlbumId()).toString());
                         music.setDuration(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DURATION)));
-                        music.setLocal(true);
+                        music.setIsLocal(true);
                         list.add(music);
                     } while (cursor.moveToNext());
                 }
-                if (cursor!=null&&!cursor.isClosed()){
+                if (cursor != null && !cursor.isClosed()) {
                     cursor.close();
                 }
                 e.onNext(list);
@@ -106,7 +109,6 @@ public class MusicInfoProvider {
         if (!TextUtils.isEmpty(selection)) {
             select.append(" and ").append(selection);
         }
-        CommonLogger.e("这1");
         return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, new String[]{
                 MediaStore.Audio.AudioColumns._ID, MediaStore.Audio.AudioColumns.TITLE
                 , MediaStore.Audio.AudioColumns.ARTIST, MediaStore.Audio.AudioColumns.ARTIST_ID,
@@ -118,7 +120,33 @@ public class MusicInfoProvider {
 
 
     public static Observable<List<MusicPlayBean>> getMusicForSinger(String tingId) {
-        return Observable.just(VideoApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao().queryBuilder()
+        return Observable.just(MusicApplication.getMainComponent().getDaoSession().getMusicPlayBeanDao().queryBuilder()
                 .where(MusicPlayBeanDao.Properties.TingId.eq(tingId)).list());
+    }
+
+
+    /**
+     * 根据专辑ID获取专辑封面图
+     *
+     * @param album_id 专辑ID
+     * @return
+     */
+    public static Bitmap getAlbumsBitmap(long album_id) {
+        String mUriAlbums = "content://media/external/audio/albums";
+        String[] projection = new String[]{"album_art"};
+        Cursor cur = BaseApplication.getInstance().getContentResolver().query(Uri.parse(mUriAlbums + "/" + album_id), projection, null, null, null);
+        String album_art = null;
+        if (cur.getCount() > 0 && cur.getColumnCount() > 0) {
+            cur.moveToNext();
+            album_art = cur.getString(0);
+        }
+        cur.close();
+        Bitmap bm = null;
+        if (album_art != null) {
+            bm = BitmapFactory.decodeFile(album_art);
+        } else {
+            bm = BitmapFactory.decodeResource(BaseApplication.getInstance().getResources(), R.mipmap.ic_launcher);
+        }
+        return bm;
     }
 }

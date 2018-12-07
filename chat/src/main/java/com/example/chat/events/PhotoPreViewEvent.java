@@ -1,7 +1,7 @@
 package com.example.chat.events;
 
 
-import com.example.chat.bean.ImageItem;
+import com.example.commonlibrary.utils.SystemUtil;
 
 /**
  * 项目名称:    PostDemo
@@ -18,17 +18,17 @@ public class PhotoPreViewEvent {
     private int type;
 
 
-    private ImageItem imageItem;
+    private SystemUtil.ImageItem imageItem;
 
-    public ImageItem getImageItem() {
+    public SystemUtil.ImageItem getImageItem() {
         return imageItem;
     }
 
-    public void setImageItem(ImageItem imageItem) {
+    public void setImageItem(SystemUtil.ImageItem imageItem) {
         this.imageItem = imageItem;
     }
 
-    public PhotoPreViewEvent(int position, int type, ImageItem imageItem) {
+    public PhotoPreViewEvent(int position, int type, SystemUtil.ImageItem imageItem) {
         this.position = position;
         this.type = type;
         this.imageItem = imageItem;

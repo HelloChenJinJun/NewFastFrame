@@ -9,9 +9,8 @@ package com.example.chat.manager;
 
 
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.CustomInstallation;
 import com.example.chat.bean.User;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
@@ -39,7 +39,6 @@ import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.PushListener;
-import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import rx.Subscription;
 
@@ -88,8 +87,8 @@ public class UserManager {
     public Subscription queryAndSaveCurrentContactsList(final FindListener<User> callback) {
         BmobQuery<User> query = new BmobQuery<>();
         query.order("-updatedAt");
-        query.setLimit(Constant.LIMIT_CONTACTS);
-        query.addWhereRelatedTo(Constant.COLUMN_NAME_CONTACTS, new BmobPointer(getCurrentUser()));
+        query.setLimit(ConstantUtil.LIMIT_CONTACTS);
+        query.addWhereRelatedTo(ConstantUtil.COLUMN_NAME_CONTACTS, new BmobPointer(getCurrentUser()));
        return query.findObjects(new FindListener<User>() {
                               @Override
                               public void done(final List<User> friend, BmobException e) {
@@ -134,7 +133,7 @@ public class UserManager {
         BmobQuery<User> query = new BmobQuery<>();
         User user = new User();
         user.setObjectId(UserManager.getInstance().getCurrentUserObjectId());
-        query.addWhereRelatedTo(Constant.COLUMN_NAME_OTHER_BLACKLIST, new BmobPointer(user));
+        query.addWhereRelatedTo(ConstantUtil.COLUMN_NAME_OTHER_BLACKLIST, new BmobPointer(user));
         query.findObjects(listener);
     }
 
@@ -147,7 +146,7 @@ public class UserManager {
     private void queryAddBlackList(final FindListener<User> callback) {
         BmobQuery<User> query = new BmobQuery<>();
         query.order("updateAt");
-        query.addWhereRelatedTo(Constant.COLUMN_NAME_ADD_BLACKLIST, new BmobPointer(getCurrentUser()));
+        query.addWhereRelatedTo(ConstantUtil.COLUMN_NAME_ADD_BLACKLIST, new BmobPointer(getCurrentUser()));
         query.findObjects(callback);
     }
 
@@ -191,9 +190,9 @@ public class UserManager {
                 .edit();
         for (String item :
                 list) {
-            edit.putString(Constant.UPDATE_TIME_SHARE+item,null);
+            edit.putString(ConstantUtil.UPDATE_TIME_SHARE+item,null);
         }
-        edit.putBoolean(Constant.LOGIN_STATUS,false);
+        edit.putBoolean(ConstantUtil.LOGIN_STATUS,false);
         edit.apply();
         uid=null;
         User.logOut();
@@ -427,7 +426,6 @@ public class UserManager {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
-                                    User user=getCurrentUser();
                                     LogUtil.e("绑定设备表中UID成功");
                                 } else {
                                     LogUtil.e("绑定设备表中UID设备失败");
@@ -495,43 +493,43 @@ public class UserManager {
         User user = new User();
         user.setObjectId(UserManager.getInstance().getCurrentUserObjectId());
         switch (name) {
-            case Constant.PHONE:
+            case ConstantUtil.PHONE:
                 user.setMobilePhoneNumber(content);
                 break;
-            case Constant.EMAIL:
+            case ConstantUtil.EMAIL:
                 user.setEmail(content);
                 break;
-            case Constant.NICK:
+            case ConstantUtil.NICK:
                 user.setNick(content);
                 break;
-            case Constant.AVATAR:
+            case ConstantUtil.AVATAR:
                 user.setAvatar(content);
                 break;
-            case Constant.GENDER:
+            case ConstantUtil.GENDER:
                 if (content.equals("男")) {
                     user.setSex(true);
                 } else {
                     user.setSex(false);
                 }
                 break;
-            case Constant.SIGNATURE:
+            case ConstantUtil.SIGNATURE:
                 user.setSignature(content);
                 break;
-            case Constant.BIRTHDAY:
+            case ConstantUtil.BIRTHDAY:
                 user.setBirthDay(content);
                 break;
-            case Constant.ADDRESS:
+            case ConstantUtil.ADDRESS:
                 user.setAddress(content);
                 break;
-            case Constant.LOCATION:
+            case ConstantUtil.LOCATION:
                 LogUtil.e("定位location" + content);
                 String result[] = content.split("&");
                 user.setLocation(new BmobGeoPoint(Double.parseDouble(result[0]), Double.parseDouble(result[1])));
                 break;
-            case Constant.TITLE_WALLPAPER:
+            case ConstantUtil.TITLE_WALLPAPER:
                 user.setTitleWallPaper(content);
                 break;
-            case Constant.WALLPAPER:
+            case ConstantUtil.WALLPAPER:
                 user.setWallPaper(content);
                 break;
         }
@@ -566,13 +564,13 @@ public class UserManager {
         }else {
             SharedPreferences sharedPreferences=BaseApplication.getAppComponent()
                     .getSharedPreferences();
-            if (sharedPreferences.getString(Constant.LONGITUDE, null) == null) {
+            if (sharedPreferences.getString(ConstantUtil.LONGITUDE, null) == null) {
                 findListener.done(null,new BmobException("定位信息为空!!!!"));
                 return;
             }
-            longitude=Double.parseDouble(sharedPreferences.getString(Constant.LONGITUDE,null));
-            latitude=Double.parseDouble(sharedPreferences.getString(Constant.LATITUDE,null));
-            updateUserInfo(Constant.LOCATION, longitude + "&" + latitude,null);
+            longitude=Double.parseDouble(sharedPreferences.getString(ConstantUtil.LONGITUDE,null));
+            latitude=Double.parseDouble(sharedPreferences.getString(ConstantUtil.LATITUDE,null));
+            updateUserInfo(ConstantUtil.LOCATION, longitude + "&" + latitude,null);
         }
         query.addWhereNear("location", new BmobGeoPoint(longitude,latitude));
         query.addWhereNotEqualTo("objectId",currentUser.getObjectId());

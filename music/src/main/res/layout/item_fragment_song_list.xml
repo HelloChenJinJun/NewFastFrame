@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="30dp"
     android:orientation="vertical">
 
 
@@ -14,7 +13,7 @@
         android:layout_marginLeft="20dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/base_color_text_grey"/>
+        android:textColor="@color/base_color_text_grey" />
 
 
 </LinearLayout>

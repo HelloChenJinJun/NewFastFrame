@@ -1,13 +1,15 @@
 ext {
+
+
     isAlone = false;//false:作为Lib组件存在， true:作为application存在
 
     android = [
 
-            compileSdkVersion: 26,
-            buildToolsVersion: "25.0.2",
+            compileSdkVersion: 28,
+            buildToolsVersion: "28.0.3",
             minSdkVersion    : 16,
             targetSdkVersion : 22,
-            versionCode      : 1,
+            versionCode      : 2,
             versionName      : '1.0.0',
     ]
 
@@ -16,18 +18,16 @@ ext {
     libsVersion = [
             // App dependencies version
             supportLibraryVersion = "25.0.0",
-
             retrofitVersion = "2.1.0",
-            glideVersion = "3.7.0",
+            glideVersion = "4.8.0",
             loggerVersion = "1.15",
-//            eventbusVersion = "3.0.0",
             gsonVersion = "2.8.0",
             butterknife = "8.8.0",
             retrofit = "2.3.0",
             rxjava = "2.1.1",
             rxjava_android = "2.0.1",
-            rxlifecycle = "2.1.0",
-            rxlifecycle_components = "2.1.0",
+            rxlifecycle = "3.0.0",
+            rxlifecycle_components = "3.0.0",
             dagger_compiler = "2.11",
             dagger = "2.11",
             greenDao = "3.2.2",
@@ -48,7 +48,7 @@ ext {
 
 
     dependencies = [
-            appcompatV7               : "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion",
+            appcompatV7               : "androidX:appcompat-v7:$rootProject.supportLibraryVersion",
             design                    : "com.android.support:design:$rootProject.supportLibraryVersion",
             cardview                  : "com.android.support:cardview-v7:$rootProject.supportLibraryVersion",
             palette                   : "com.android.support:palette-v7:$rootProject.supportLibraryVersion",
@@ -71,8 +71,8 @@ ext {
             rxpermission              : "com.tbruyelle.rxpermissions2:rxpermissions:$rootProject.rxpermission@aar",
             rxjava2                   : "io.reactivex.rxjava2:rxjava:$rootProject.rxjava",
             rxjava2_android           : "io.reactivex.rxjava2:rxandroid:$rootProject.rxjava_android",
-            rxlifecycle2              : "com.trello.rxlifecycle2:rxlifecycle:$rootProject.rxlifecycle",
-            rxlifecycle2_components   : "com.trello.rxlifecycle2:rxlifecycle-components:$rootProject.rxlifecycle_components",
+            rxlifecycle2              : "com.trello.rxlifecycle3:rxlifecycle:$rootProject.rxlifecycle",
+            rxlifecycle2_components   : "com.trello.rxlifecycle3:rxlifecycle-components:$rootProject.rxlifecycle_components",
             dagger2_compiler          : "com.google.dagger:dagger-compiler:$rootProject.dagger_compiler",
             dagger2                   : "com.google.dagger:dagger:$rootProject.dagger",
             greenDao                  : "org.greenrobot:greendao:$rootProject.greenDao",

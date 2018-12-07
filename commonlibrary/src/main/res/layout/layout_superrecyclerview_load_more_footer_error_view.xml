@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="53dp"
     android:layout_gravity="center"
-    android:background="@color/grey_100"
     android:gravity="center"
-    android:padding="15dp"
-    android:text="加载失败,点击重新加载"
+    android:textSize="9sp"
+    android:text="宝宝没网啦~"
     android:id="@+id/tv_error_view_content"
-    android:textColor="@color/base_color_text_blue" />
+    android:textColor="#FF666666" />

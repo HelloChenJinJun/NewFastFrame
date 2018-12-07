@@ -1,30 +1,33 @@
 package com.example.cootek.newfastframe.ui;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
+import com.example.commonlibrary.SlideBaseActivity;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
-import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.skin.SkinManager;
-import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.cootek.newfastframe.R;
+import com.example.cootek.newfastframe.ui.fragment.BottomFragment;
 import com.example.cootek.newfastframe.ui.fragment.HolderFragment;
+import com.example.cootek.newfastframe.view.DragLayout;
 import com.example.cootek.newfastframe.view.OnDragDeltaChangeListener;
-
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
+import com.example.cootek.newfastframe.view.slide.SlidingPanelLayout;
 
 
 /**
  * Created by COOTEK on 2017/8/7.
  */
-@Route(path = "/music/main")
-public class MainActivity extends MusicBaseActivity implements OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener, OnDragDeltaChangeListener {
+public class MainActivity extends SlideBaseActivity implements OnLoadMoreListener, CustomSwipeRefreshLayout.OnRefreshListener, OnDragDeltaChangeListener {
 
+    private SlidingPanelLayout mSlidingPanelLayout;
+    private DragLayout dragLayout;
+    private HolderFragment mHolderFragment;
+
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, MainActivity.class);
+        activity.startActivity(intent);
+    }
 
 
     @Override
@@ -50,54 +53,27 @@ public class MainActivity extends MusicBaseActivity implements OnLoadMoreListene
 
     @Override
     protected void initView() {
-        addOrReplaceFragment(HolderFragment.newInstance(), R.id.fl_activity_main_container);
+        mSlidingPanelLayout = findViewById(R.id.sl_activity_main_container);
+        mHolderFragment = HolderFragment.newInstance();
+        addBackStackFragment(mHolderFragment, R.id.fl_activity_main_content, false);
+        addOrReplaceFragment(BottomFragment.newInstance(), R.id.fl_activity_main_bottom);
+        dragLayout = findViewById(R.id.dl_activity_main_drag);
         dragLayout.setListener(this);
     }
 
     @Override
     protected void initData() {
-        RxBusManager.getInstance().registerEvent(ThemeEvent.class, new Consumer<ThemeEvent>() {
-            @Override
-            public void accept(@NonNull ThemeEvent themeEvent) throws Exception {
-                setTheme(themeEvent.isNight() ? R.style.CustomTheme_Night : R.style.CustomTheme_Day);
-                getSharedPreferences("theme", Context.MODE_PRIVATE).edit().putBoolean("isNight", themeEvent.isNight()).apply();
-                CommonLogger.e("isTheme" + getSharedPreferences("theme", Context.MODE_PRIVATE).getBoolean("isTheme", false));
-                SkinManager.getInstance().refreshSkin();
-            }
-        });
     }
 
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater menuInflater = getMenuInflater();
-//        menuInflater.inflate(R.menu.main_menu_layout, menu);
-//        return true;
-//    }
-//
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int i = item.getItemId();
-//        if (i == R.id.main_sub_item_equalizer) {
-//            try {
-//                final Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-//                effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, MusicManager.getInstance().getAudioSessionId());
-//                startActivityForResult(effects, 666);
-//            } catch (final ActivityNotFoundException notFound) {
-//                Toast.makeText(this, "Equalizer not found", Toast.LENGTH_SHORT).show();
-//            }
-//
-//        } else if (i == R.id.main_sub_item_setting) {
-//            SettingActivity.start(this);
-//
-//        }
-//        return true;
-//    }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onBackPressed() {
+        if (mSlidingPanelLayout.getPanelState() == SlidingPanelLayout.PanelState.EXPANDED) {
+            mSlidingPanelLayout.setPanelState(SlidingPanelLayout.PanelState.COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -127,7 +103,10 @@ public class MainActivity extends MusicBaseActivity implements OnLoadMoreListene
 
     @Override
     public void onDrag(View view, float delta) {
-        ((HolderFragment) currentFragment).onDrag(delta);
+        //        ((HolderFragment) currentFragment).onDrag(delta);
+        if (mHolderFragment != null) {
+            mHolderFragment.onDrag(delta);
+        }
     }
 
     @Override
@@ -139,4 +118,6 @@ public class MainActivity extends MusicBaseActivity implements OnLoadMoreListene
     public void onOpenMenu() {
 
     }
+
+
 }

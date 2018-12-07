@@ -41,9 +41,9 @@ public class Router {
         if (routerRequest != null) {
             BaseProvider baseProvider = providerMap.get(routerRequest.getProvideName());
             BaseAction baseAction;
-            if (baseProvider!=null) {
+            if (baseProvider != null) {
                 baseAction = baseProvider.getAction(routerRequest.getActionName());
-                if (baseAction!=null) {
+                if (baseAction != null) {
                     return baseAction.invoke(routerRequest);
                 }
             }
@@ -52,20 +52,15 @@ public class Router {
     }
 
 
-    public void registerProvider(String name, BaseAction baseAction) {
-        if (name.contains(":")) {
-            String providerName = name.split(":")[0];
-            String actionName = name.split(":")[1];
-            BaseProvider baseProvider = providerMap.get(providerName);
-            if (baseProvider != null) {
-                baseProvider.putAction(actionName, baseAction);
-            } else {
-                baseProvider = new BaseProvider(providerName);
-                providerMap.put(providerName, baseProvider);
-            }
+    public void registerProvider(String providerName, String actionName, BaseAction baseAction) {
+        BaseProvider baseProvider = providerMap.get(providerName);
+        if (baseProvider != null) {
             baseProvider.putAction(actionName, baseAction);
+        } else {
+            baseProvider = new BaseProvider(providerName);
+            providerMap.put(providerName, baseProvider);
         }
-
+        baseProvider.putAction(actionName, baseAction);
 
     }
 

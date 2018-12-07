@@ -1,8 +1,7 @@
 package com.example.chat.mvp.EditShare;
 
 import com.example.chat.base.AppBasePresenter;
-import com.example.chat.base.Constant;
-import com.example.chat.bean.ImageItem;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.listener.OnCreatePublicPostListener;
 import com.example.chat.manager.MsgManager;
@@ -12,6 +11,7 @@ import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class EditShareInfoPresenter extends AppBasePresenter<IView<PublicPostBea
         iView.updateData(publicPostBean);
     }
 
-    public void sendPublicPostBean(int type, String content, ArrayList<ImageItem> imageList, String videoPath, String thumbImage, PublicPostBean bean, String location) {
+    public void sendPublicPostBean(int type, String content, ArrayList<SystemUtil.ImageItem> imageList, String videoPath, String thumbImage, PublicPostBean bean, String location) {
         Subscription subscription = MsgManager.getInstance().sendPublicPostMessage(type, content, location, imageList, videoPath, thumbImage, bean,
                  new OnCreatePublicPostListener() {
 
@@ -63,7 +63,7 @@ public class EditShareInfoPresenter extends AppBasePresenter<IView<PublicPostBea
             CommonLogger.e("无网情况下出错,离线发布");
             ToastUtils.showLongToast("离线发布");
         }
-        bean.setSendStatus(Constant.SEND_STATUS_FAILED);
+        bean.setSendStatus(ConstantUtil.SEND_STATUS_FAILED);
         bean.setObjectId(UUID.randomUUID().toString());
         bean.setCreateTime(TimeUtil.getTime(TimeUtil.localToServerTime(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss"));
         bean.setUpdatedAt(TimeUtil.getTime(TimeUtil.localToServerTime(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss"));

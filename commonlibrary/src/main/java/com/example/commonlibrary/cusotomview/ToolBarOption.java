@@ -28,9 +28,21 @@ public class ToolBarOption {
 
         private String avatar;
         private int rightResId = 0;
-        private int bgColor;
+        private int bgColor=-1;
         private View customView;
 
+
+
+        private int titleColor=-10;
+        private int mBackResId;
+
+        public void setTitleColor(int titleColor) {
+                this.titleColor = titleColor;
+        }
+
+        public int getTitleColor() {
+                return titleColor;
+        }
 
         public int getRightResId() {
                 return rightResId;
@@ -129,5 +141,14 @@ public class ToolBarOption {
 
         public View getCustomView() {
                 return customView;
+        }
+
+
+        public int getBackResId() {
+                return mBackResId;
+        }
+
+        public void setBackResId(int backResId) {
+                mBackResId = backResId;
         }
 }

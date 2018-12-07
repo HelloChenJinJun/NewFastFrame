@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/chat_bg"
-    android:paddingTop="20dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="20dp">
+
     <TextView
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:textSize="12sp"
-        android:text="01-12 15:12"
-        android:background="@drawable/custom_drawable_notify_time_bg"
+        android:id="@+id/tv_item_activity_system_notify_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/custom_drawable_notify_time_bg"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:text="01-12 15:12"
         android:textColor="@color/white"
-        android:id="@+id/tv_item_activity_system_notify_time"
-        android:layout_marginBottom="20dp"/>
-    <android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:textSize="12sp" />
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:elevation="20dp"
         app:cardCornerRadius="10dp"
-        app:cardUseCompatPadding="true"
-        android:elevation="20dp">
+        app:cardUseCompatPadding="true">
 
 
         <LinearLayout
@@ -36,79 +37,72 @@
             android:orientation="vertical">
 
 
-
-
             <ImageView
-                android:src="@drawable/wallpaper_bg"
-                android:layout_marginBottom="10dp"
+                android:id="@+id/iv_item_activity_system_notify_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:id="@+id/iv_item_activity_system_notify_image"
-                android:scaleType="centerCrop"/>
+                android:layout_marginBottom="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/wallpaper_bg" />
+
             <TextView
-                android:gravity="center"
-                android:layout_marginLeft="10dp"
+                android:id="@+id/tv_item_activity_system_notify_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_item_activity_system_notify_title"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:text="标题"
+                android:layout_marginLeft="10dp"
+                android:ellipsize="end"
+                android:gravity="center"
                 android:maxLines="2"
-                android:ellipsize="end"/>
+                android:text="标题"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
             <TextView
+                android:id="@+id/tv_item_activity_system_notify_sub_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
                 android:ellipsize="end"
-                android:textColor="@color/grey_500"
-                android:textSize="10sp"
-                android:id="@+id/tv_item_activity_system_notify_sub_title"
+                android:maxLines="2"
                 android:text="子标题"
-                />
+                android:textColor="@color/grey_500"
+                android:textSize="10sp" />
 
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/divider_line_default_color"/>
+                android:background="@color/divider_line_default_color" />
 
 
             <RelativeLayout
-                android:paddingBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:paddingBottom="5dp">
+
                 <TextView
-                    android:textColor="@color/black"
-                    android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="阅读全文"/>
+                    android:layout_centerVertical="true"
+                    android:text="阅读全文"
+                    android:textColor="@color/black" />
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp" />
             </RelativeLayout>
-
-
 
 
         </LinearLayout>
 
 
-
-
-
-
-
-
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 
 </LinearLayout>

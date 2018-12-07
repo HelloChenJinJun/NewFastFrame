@@ -2,19 +2,18 @@ package com.example.chat.mvp.wallpaper;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.example.chat.R;
 import com.example.chat.adapter.WallPaperAdapter;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ChatBaseActivity;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserManager;
-import com.example.chat.base.SlideBaseActivity;
-import com.example.chat.mvp.main.HomeActivity;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -32,8 +31,8 @@ import cn.bmob.v3.listener.UpdateListener;
  * QQ:             1981367757
  */
 
-public class WallPaperActivity extends SlideBaseActivity {
-    private RecyclerView display;
+public class WallPaperActivity extends ChatBaseActivity {
+    private SuperRecyclerView display;
     private WallPaperAdapter adapter;
     private String selectedImage;
     private String from;
@@ -59,15 +58,15 @@ public class WallPaperActivity extends SlideBaseActivity {
 
     @Override
     public void initView() {
-        display = (RecyclerView) findViewById(R.id.rcv_wall_paper_display);
+        display = (SuperRecyclerView) findViewById(R.id.srcv_wall_paper_display);
     }
 
 
     @Override
     public void initData() {
-        from = getIntent().getStringExtra(Constant.FROM);
+        from = getIntent().getStringExtra(ConstantUtil.FROM);
         showLoadDialog("1正在加载背景图片.........");
-        if (from.equals(Constant.TITLE_WALLPAPER)) {
+        if (from.equals(ConstantUtil.TITLE_WALLPAPER)) {
             MsgManager.getInstance().getAllDefaultTitleWallPaperFromServer(new FindListener<String>() {
                 @Override
                 public void done(List<String> list, BmobException e) {
@@ -96,7 +95,7 @@ public class WallPaperActivity extends SlideBaseActivity {
     }
 
     private void initAdapter(List<String> list) {
-        display.setLayoutManager(new GridLayoutManager(this, 3));
+        display.setLayoutManager(new WrappedGridLayoutManager(this, 3));
         adapter = new WallPaperAdapter();
         int i = 0;
         for (String url :
@@ -158,7 +157,7 @@ public class WallPaperActivity extends SlideBaseActivity {
 
     public static void start(Activity activity, String from) {
         Intent intent = new Intent(activity, WallPaperActivity.class);
-        intent.putExtra(Constant.FROM, from);
+        intent.putExtra(ConstantUtil.FROM, from);
         activity.startActivity(intent);
     }
 }

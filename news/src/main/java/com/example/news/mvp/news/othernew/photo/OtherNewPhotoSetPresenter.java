@@ -70,7 +70,7 @@ public class OtherNewPhotoSetPresenter extends BasePresenter<IView<PhotoSetBean>
      */
     public  String clipPhotoSetId(String photoId) {
         if (TextUtils.isEmpty(photoId)) {
-            return photoId;
+            return "";
         }
         int i = photoId.indexOf("|");
         if (i >= 4) {

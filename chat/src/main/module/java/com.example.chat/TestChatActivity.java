@@ -2,11 +2,12 @@ package com.example.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.chat.mvp.splash.SplashActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 /**
@@ -16,7 +17,7 @@ import com.example.chat.mvp.splash.SplashActivity;
  * QQ:             1981367757
  */
 
-public class TestChatActivity extends AppCompatActivity{
+public class TestChatActivity extends AppCompatActivity {
 
 
     @Override

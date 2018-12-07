@@ -13,6 +13,13 @@
     
     <declare-styleable name="ViewPagerIndicator">
         <attr name="visibleTabCount" format="integer"/>
+        <attr name="tabSelectedColor" format="color"/>
+        <attr name="tabNormalColor" format="color"/>
+        <attr name="tabTextSize" format="dimension"/>
+        <attr name="lineHeight" format="dimension"/>
+        <attr name="spaceHeight" format="dimension"/>
+        <attr name="lineColor" format="color"/>
+        <attr name="margin" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="SwipeMenuLayout">

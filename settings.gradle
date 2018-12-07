@@ -1,1 +1,1 @@
-include ':music', ':commonlibrary', ':app', ':skin', ':live', ':news', ':chat', ':manager'
+include ':music', ':app', ':skin', ':live', ':news', ':chat', ':manager', ':commonlibrary'

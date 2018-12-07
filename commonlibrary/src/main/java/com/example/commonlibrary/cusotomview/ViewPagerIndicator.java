@@ -3,27 +3,25 @@ package com.example.commonlibrary.cusotomview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v4.view.ViewPager;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.commonlibrary.R;
-import com.example.commonlibrary.utils.DensityUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * 项目名称:    NewFastFrame
@@ -33,30 +31,19 @@ import java.util.List;
  */
 
 public class ViewPagerIndicator extends LinearLayout {
+    private int spaceHeight;
     private Paint mPaint;
     private Path mPath;
     private int mLineWidth;
-    private static final float RADIO_LINE_WIDTH = 1F;
-    private int mInitTranslationX;
-    private int mTranslationX=0;
+    private float mTranslationX = 0;
     private int mVisibleTabCount;
-    private static final int COUNT_DEFAULT_TAB = 4;
-    private static final int COLOR_TEXT_NORMAL = 0x77FFFFFF;
-    private static final int COLOR_TEXT_HIGHLIGHT = 0xFFFFFFFF;
+    private int tabSelectedColor;
+    private int tabNormalColor;
+    private int tabTextSize;
     private ViewPager mViewPager;
-    private HorizontalScrollView mScrollView;
-    private boolean isClicked = false; //判断是否是由点击产生的滑动
-    private int scrollLocation; //Tab滚动的位置
-    private int lineHeight =3;
+    private int lineHeight = 2;
+    private int margin;
 
-
-    public int getLineHeight() {
-        return lineHeight;
-    }
-
-    public void setLineHeight(int lineHeight) {
-        this.lineHeight = lineHeight;
-    }
 
     public ViewPagerIndicator(Context context) {
         this(context, null);
@@ -66,38 +53,33 @@ public class ViewPagerIndicator extends LinearLayout {
         super(context, attrs);
         //获取可见的tab数量
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ViewPagerIndicator);
-        mVisibleTabCount = a.getInt(R.styleable.ViewPagerIndicator_visibleTabCount, COUNT_DEFAULT_TAB);
+        mVisibleTabCount = a.getInt(R.styleable.ViewPagerIndicator_visibleTabCount, 3);
+        tabSelectedColor = a.getColor(R.styleable.ViewPagerIndicator_tabSelectedColor, getResources().getColor(R.color.orange_red_300));
+        spaceHeight = (int) a.getDimension(R.styleable.ViewPagerIndicator_spaceHeight, 2);
+        tabNormalColor = a.getColor(R.styleable.ViewPagerIndicator_tabNormalColor, getResources().getColor(R.color.black_transparency_500));
+        lineHeight = (int) a.getDimension(R.styleable.ViewPagerIndicator_lineHeight, 2);
+        tabTextSize = (int) a.getDimension(R.styleable.ViewPagerIndicator_tabTextSize, 9);
+        margin = (int) a.getDimension(R.styleable.ViewPagerIndicator_margin, 0);
+        int lineColor = a.getColor(R.styleable.ViewPagerIndicator_lineColor, getResources().getColor(R.color.orange_500));
         if (mVisibleTabCount < 0) {
-            mVisibleTabCount = COUNT_DEFAULT_TAB;
+            mVisibleTabCount = 3;
         }
         a.recycle();
+        mPath = new Path();
         //初始化画笔
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.parseColor("#ffffff"));
+        mPaint.setColor(lineColor);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setPathEffect(new CornerPathEffect(3));
         setOrientation(HORIZONTAL);
     }
 
-    public interface OnPageChangeListener {
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
-
-        public void onPageSelected(int position);
-
-        public void onPageScrollStateChanged(int state);
-    }
-
-    public OnPageChangeListener mListener;
-
-    public void setOnPageChangedListener(OnPageChangeListener listener) {
-        mListener = listener;
-    }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         canvas.save();
-        canvas.translate(mInitTranslationX + mTranslationX, getHeight()-lineHeight);
+        canvas.translate(mTranslationX, getHeight() - lineHeight + spaceHeight);
         canvas.drawPath(mPath, mPaint);
         canvas.restore();
         super.dispatchDraw(canvas);
@@ -131,19 +113,10 @@ public class ViewPagerIndicator extends LinearLayout {
     }
 
 
-    private void iniLine() {
-        int w = getMeasuredWidth();  //屏幕宽度
-        mInitTranslationX = w / mVisibleTabCount / 2 - mLineWidth / 2;
-
-    }
-
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (mPath!=null) {
-            iniLine();
-        }
+
     }
 
 
@@ -155,88 +128,87 @@ public class ViewPagerIndicator extends LinearLayout {
 
     /**
      * 指示器跟随手指进行滚动
-     *
-     * @param position
-     * @param offset
      */
     public void scroll(int position, float offset) {
-        int tabWidth = getChildAt(0).getMeasuredWidth();
-        mTranslationX = (int) (tabWidth * (position + offset));
+        if (getChildAt(position + 1) != null) {
+            TextView end = (TextView) getChildAt(position + 1);
+            Rect bound = new Rect();
+            end.getPaint().getTextBounds(end.getText().toString(), 0, end.getText().length(), bound);
+            int endLength = bound.width() + 20;
+            int endTranslationX = (end.getMeasuredWidth() - endLength) / 2 + end.getLeft();
+            TextView start = (TextView) getChildAt(position);
+            start.getPaint().getTextBounds(start.getText().toString(), 0, start.getText().length(), bound);
+            int startLength = bound.width() + 20;
+            int startTranslationX = (start.getMeasuredWidth() - startLength) / 2 + start.getLeft();
+            mTranslationX = startTranslationX + (endTranslationX - startTranslationX) * offset;
+            float value = (endLength - startLength) * offset;
+            mPath.reset();
+            mPath.moveTo(0, 0);
+            mPath.lineTo(value + startLength, 0);
+            mPath.lineTo(value + startLength, lineHeight);
+            mPath.lineTo(0, value + startLength);
+            mPath.close();
+        }
         invalidate();
-
-        int triangleLocation = mTranslationX + mInitTranslationX;
-        int screenWidth = DensityUtil.getScreenWidth(getContext());
-        if ((triangleLocation - scrollLocation) > (screenWidth - mInitTranslationX)
-                && offset > 0.5 && !isClicked) {
-            if (mVisibleTabCount == 1) {
-                mScrollView.scrollTo(mTranslationX, 0);
-                scrollLocation = mTranslationX;
-            } else {
-                mScrollView.scrollTo((position - 2) * tabWidth, 0);
-                scrollLocation = (position - 2) * tabWidth;
-            }
-        } else if ((triangleLocation - scrollLocation) < mInitTranslationX && offset > 0
-                && offset < 0.5 && !isClicked) {
-            if (mVisibleTabCount == 1) {
-                mScrollView.scrollTo(mTranslationX, 0);
-                scrollLocation = mTranslationX;
-            } else {
-                mScrollView.scrollTo(position * tabWidth, 0);
-                scrollLocation = position * tabWidth;
-            }
-        }
-        //滑动完成时,将标记位恢复
-        if (offset == 0) {
-            isClicked = false;
-        }
     }
 
-    public void setTabItemTitles(List<String> titles) {
+    private void setTabItemTitles(List<String> titles) {
         if (titles != null && titles.size() > 0) {
             removeAllViews();
             requestLayout();
-            for (String title : titles) {
-                addView(generateTextView(title));
+            for (int i = 0; i < titles.size(); i++) {
+                addView(generateTextView(titles.get(i), i, titles.size()));
             }
         }
         setItemClickEvent();
     }
 
+
     /**
      * 根据title创建tab
-     *
-     * @param title
-     * @return
      */
-    private View generateTextView(String title) {
+    private View generateTextView(String title, int index, int size) {
         TextView tv = new TextView(getContext());
-        LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        lp.width = 0;
-        lp.weight = 1;
         tv.setText(title);
         tv.setGravity(Gravity.CENTER);
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-        tv.setTextColor(COLOR_TEXT_NORMAL);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, tabTextSize);
+        LayoutParams lp;
+        if (margin == 0) {
+            lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            lp.width = 0;
+            lp.weight = 1;
+        } else {
+            lp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            if (index != size) {
+                lp.setMargins(0, 0, margin, 0);
+            }
+        }
         tv.setLayoutParams(lp);
-        if (mLineWidth ==0) {
-            Rect bound=new Rect();
+        if (mLineWidth == 0) {
+            Rect bound = new Rect();
             tv.getPaint().getTextBounds(tv.getText().toString(), 0, tv.getText().length(), bound);
-            mLineWidth=bound.width();
-            mLineWidth+=20;
+            mLineWidth = bound.width();
+            mLineWidth += 20;
             mPath = new Path();
             mPath.moveTo(0, 0);
             mPath.lineTo(mLineWidth, 0);
             mPath.lineTo(mLineWidth, lineHeight);
-            mPath.lineTo(0, mLineWidth);
+            mPath.lineTo(0, lineHeight);
             mPath.close();
         }
         return tv;
     }
 
+
+    private boolean needAllBold = false;
+
+
+    public void setNeedAllBold(boolean needAllBold) {
+        this.needAllBold = needAllBold;
+    }
+
     /**
      * 设置可见Tab数量
-     *
-     * @param count
      */
     public void setVisibleTabCount(int count) {
         mVisibleTabCount = count;
@@ -244,76 +216,55 @@ public class ViewPagerIndicator extends LinearLayout {
 
     /**
      * 设置关联的ViewPager
-     *
-     * @param viewPager
-     * @param position
      */
     public void setViewPager(ViewPager viewPager, int position) {
         mViewPager = viewPager;
+        if (mViewPager.getAdapter() != null) {
+            List<String> titleList = new ArrayList<>(mViewPager.getAdapter().getCount());
+            for (int i = 0; i < mViewPager.getAdapter().getCount(); i++) {
+                titleList.add((String) mViewPager.getAdapter().getPageTitle(i));
+            }
+            setTabItemTitles(titleList);
+        }
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 scroll(position, positionOffset);
-                if (mListener != null) {
-                    mListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                }
+
             }
 
             @Override
             public void onPageSelected(int position) {
-                if (mListener != null) {
-                    mListener.onPageSelected(position);
-                }
-
                 highLightTextView(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if (mListener != null) {
-                    mListener.onPageScrollStateChanged(state);
-                }
             }
         });
 
         highLightTextView(position);
     }
 
-    /**
-     * 设置外层HorizontalScrollView
-     *
-     * @param scrollView
-     */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void setScrollView(HorizontalScrollView scrollView) {
-        mScrollView = scrollView;
-        mScrollView.setOnScrollChangeListener(new OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                scrollLocation = i2;
-            }
-        });
-    }
 
     /**
      * 高亮显示选中tab文本
-     *
-     * @param position
      */
     public void highLightTextView(int position) {
-        View view;
+        TextView view;
         for (int i = 0; i < getChildCount(); i++) {
-            view = getChildAt(i);
-            if (view instanceof TextView) {
-                ((TextView) view).setBackground(null);
-                ((TextView) view).setTextColor(COLOR_TEXT_NORMAL);
+            if (i != position) {
+                view = (TextView) getChildAt(i);
+                view.setTextColor(tabNormalColor);
+                //设置不为加粗
+                if (!needAllBold) {
+                    view.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                }
             }
         }
-        view = getChildAt(position);
-        if (view instanceof TextView) {
-            ((TextView) view).setBackgroundResource(R.drawable.custom_drawable_tv_indicator_bg);
-            ((TextView) view).setTextColor(COLOR_TEXT_HIGHLIGHT);
-        }
+        view = (TextView) getChildAt(position);
+        view.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        view.setTextColor(tabSelectedColor);
     }
 
     /**
@@ -324,13 +275,7 @@ public class ViewPagerIndicator extends LinearLayout {
         for (int i = 0; i < cCount; i++) {
             final int j = i;
             View view = getChildAt(i);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    isClicked = true;
-                    mViewPager.setCurrentItem(j);
-                }
-            });
+            view.setOnClickListener(view1 -> mViewPager.setCurrentItem(j));
         }
     }
 }

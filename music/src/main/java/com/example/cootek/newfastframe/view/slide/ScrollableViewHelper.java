@@ -1,9 +1,10 @@
 package com.example.cootek.newfastframe.view.slide;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ScrollView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Helper class for determining the current scroll positions for scrollable views. Currently works

@@ -36,7 +36,7 @@ public class DensityUtil {
 
 
 
-    public static int toDp(int i) {
+    public static int toDp(float i) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,i, BaseApplication.getInstance().getResources().getDisplayMetrics());
     }
 

@@ -1,16 +1,14 @@
 package com.example.chat.adapter;
 
-import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import com.example.chat.R;
-import com.example.chat.bean.ImageItem;
-import com.example.chat.util.SystemUtil;
 import com.example.commonlibrary.baseadapter.adapter.BaseMultipleRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
+import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 
@@ -21,13 +19,13 @@ import com.example.commonlibrary.utils.ToastUtils;
  * QQ:         1981367757
  */
 
-public class PhotoSelectAdapter extends BaseMultipleRecyclerAdapter<ImageItem, BaseWrappedViewHolder> {
+public class PhotoSelectAdapter extends BaseMultipleRecyclerAdapter<SystemUtil.ImageItem, BaseWrappedViewHolder> {
     @Override
     protected SparseIntArray getLayoutIdMap() {
 
         SparseIntArray sparseArray = new SparseIntArray();
-        sparseArray.put(ImageItem.ITEM_CAMERA, R.layout.item_activity_photo_select_camera);
-        sparseArray.put(ImageItem.ITEM_NORMAL, R.layout.item_activity_photo_select_normal);
+        sparseArray.put(SystemUtil.ImageItem.ITEM_CAMERA, R.layout.item_activity_photo_select_camera);
+        sparseArray.put(SystemUtil.ImageItem.ITEM_NORMAL, R.layout.item_activity_photo_select_normal);
         return sparseArray;
     }
 
@@ -39,10 +37,9 @@ public class PhotoSelectAdapter extends BaseMultipleRecyclerAdapter<ImageItem, B
         baseWrappedViewHolder.itemView.setLayoutParams(params);
         return baseWrappedViewHolder;
     }
-    
-    
-    
-    private int selectedSize=0;
+
+
+    private int selectedSize = 0;
 
 
     public int getSelectedSize() {
@@ -50,10 +47,10 @@ public class PhotoSelectAdapter extends BaseMultipleRecyclerAdapter<ImageItem, B
     }
 
 
-
     private boolean isOne;
-    public void setOne(boolean isOne){
-        this.isOne=isOne;
+
+    public void setOne(boolean isOne) {
+        this.isOne = isOne;
     }
 
     public boolean isOne() {
@@ -65,10 +62,11 @@ public class PhotoSelectAdapter extends BaseMultipleRecyclerAdapter<ImageItem, B
     }
 
     @Override
-    protected void convert(BaseWrappedViewHolder holder, ImageItem data) {
-        if (data.getItemViewType() == ImageItem.ITEM_NORMAL) {
+    protected void convert(BaseWrappedViewHolder holder, SystemUtil.ImageItem data) {
+        if (data.getItemViewType() == SystemUtil.ImageItem.ITEM_NORMAL) {
             holder.setImageUrl(R.id.iv_item_activity_photo_select_normal_image, data.getPath())
                     .setOnItemClickListener();
+
 
             CheckBox checkBox = ((CheckBox) holder.getView(R.id.cb_item_activity_photo_select_normal_check));
             if (isOne) {
@@ -82,7 +80,7 @@ public class PhotoSelectAdapter extends BaseMultipleRecyclerAdapter<ImageItem, B
             }
             checkBox.setChecked(data.isCheck());
             checkBox.setOnClickListener(view -> {
-              
+
                 CheckBox checkBox1 = (CheckBox) view;
                 if (checkBox1.isChecked()) {
                     if (getSelectedSize() == 8) {
@@ -102,5 +100,11 @@ public class PhotoSelectAdapter extends BaseMultipleRecyclerAdapter<ImageItem, B
         } else {
             holder.setOnItemClickListener();
         }
+    }
+
+
+    @Override
+    public void onViewRecycled(BaseWrappedViewHolder holder) {
+        super.onViewRecycled(holder);
     }
 }

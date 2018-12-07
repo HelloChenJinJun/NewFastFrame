@@ -1,7 +1,7 @@
 package com.example.chat.events;
 
 
-import com.example.chat.bean.ImageItem;
+import com.example.commonlibrary.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class ImageFolderEvent {
 
-    private List<ImageItem> imageItems = new ArrayList<>();
+    private List<SystemUtil.ImageItem> imageItems = new ArrayList<>();
     private int imageFolderPosition=0;
     private String imageFolderName;
 
@@ -53,17 +53,17 @@ public class ImageFolderEvent {
         this.from = from;
     }
 
-    public ImageFolderEvent(String from, List<ImageItem> imageItems, int imageFolderPosition) {
+    public ImageFolderEvent(String from, List<SystemUtil.ImageItem> imageItems, int imageFolderPosition) {
         this.imageItems.addAll(imageItems);
         this.from=from;
         this.imageFolderPosition=imageFolderPosition;
     }
 
-    public List<ImageItem> getImageItems() {
+    public List<SystemUtil.ImageItem> getImageItems() {
         return imageItems;
     }
 
-    public void setImageItems(List<ImageItem> imageItems) {
+    public void setImageItems(List<SystemUtil.ImageItem> imageItems) {
         this.imageItems = imageItems;
     }
 }

@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.chat.R;
-import com.example.chat.base.Constant;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ConstantUtil;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.manager.UserDBManager;
 import com.example.commonlibrary.baseadapter.adapter.CommonPagerAdapter;
 import com.example.commonlibrary.bean.chat.SkinEntity;
@@ -35,7 +35,7 @@ import java.util.List;
  * 创建时间:    2018/5/23     11:03
  */
 
-public class SkinDetailActivity extends SlideBaseActivity implements View.OnClickListener {
+public class SkinDetailActivity extends ChatBaseActivity implements View.OnClickListener {
     private WrappedViewPager display;
     private Button downLoad;
     private SkinEntity skinEntity;
@@ -71,7 +71,7 @@ public class SkinDetailActivity extends SlideBaseActivity implements View.OnClic
 
     @Override
     protected void initData() {
-        skinEntity =getIntent().getParcelableExtra(Constant.DATA);
+        skinEntity =getIntent().getParcelableExtra(ConstantUtil.DATA);
         title.setText(skinEntity.getTitle());
         if (skinEntity.isHasSelected()) {
             downLoad.setText("使用中");
@@ -178,7 +178,7 @@ public class SkinDetailActivity extends SlideBaseActivity implements View.OnClic
 
     public static void start(Activity activity,SkinEntity skinEntity){
         Intent intent=new Intent(activity,SkinDetailActivity.class);
-        intent.putExtra(Constant.DATA,skinEntity);
+        intent.putExtra(ConstantUtil.DATA,skinEntity);
         activity.startActivityForResult(intent,10);
     }
 }

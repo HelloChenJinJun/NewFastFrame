@@ -11,10 +11,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
 import com.example.chat.R;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.PostNotifyBean;
@@ -44,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.Nullable;
 import cn.bmob.v3.BmobBatch;
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
@@ -83,7 +83,7 @@ public class PollService extends Service implements SensorEventListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         int time;
         if (intent != null) {
-            time = intent.getIntExtra(Constant.TIME, 30);
+            time = intent.getIntExtra(ConstantUtil.TIME, 30);
         } else {
             time = 30;
         }
@@ -179,18 +179,18 @@ public class PollService extends Service implements SensorEventListener {
         intentFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         intentFilter.addAction(Intent.ACTION_SHUTDOWN);
         intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
-        registerReceiver(receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction() == null)
-                    return;
-                if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)) {
-                    stepDetector.setStepCount(0);
-                } else {
-                    saveStepData();
-                }
-            }
-        }, intentFilter);
+//        registerReceiver(receiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                if (intent.getAction() == null)
+//                    return;
+//                if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)) {
+//                    stepDetector.setStepCount(0);
+//                } else {
+//                    saveStepData();
+//                }
+//            }
+//        }, intentFilter);
     }
 
     private void saveStepData() {
@@ -239,12 +239,12 @@ public class PollService extends Service implements SensorEventListener {
         LogUtil.e("拉取单聊消息");
         BmobQuery<ChatMessage> query = new BmobQuery<>();
         if (UserManager.getInstance().getCurrentUser() != null) {
-            query.addWhereEqualTo(Constant.TAG_TO_ID, UserManager.getInstance().getCurrentUserObjectId());
+            query.addWhereEqualTo(ConstantUtil.TAG_TO_ID, UserManager.getInstance().getCurrentUserObjectId());
         } else {
             return;
         }
-        query.addWhereEqualTo(Constant.TAG_MESSAGE_SEND_STATUS, Constant.SEND_STATUS_SUCCESS);
-        query.addWhereEqualTo(Constant.TAG_MESSAGE_READ_STATUS, Constant.READ_STATUS_UNREAD);
+        query.addWhereEqualTo(ConstantUtil.TAG_MESSAGE_SEND_STATUS, ConstantUtil.SEND_STATUS_SUCCESS);
+        query.addWhereEqualTo(ConstantUtil.TAG_MESSAGE_READ_STATUS, ConstantUtil.READ_STATUS_UNREAD);
         //                按升序进行排序
         query.setLimit(50);
         query.order("createdAt");
@@ -289,7 +289,7 @@ public class PollService extends Service implements SensorEventListener {
 
         BmobQuery<PostNotifyBean> bmobQuery = new BmobQuery<>();
         bmobQuery.addWhereEqualTo("toUser", new BmobPointer(UserManager.getInstance().getCurrentUser()));
-        bmobQuery.addWhereEqualTo("readStatus", Constant.READ_STATUS_UNREAD);
+        bmobQuery.addWhereEqualTo("readStatus", ConstantUtil.READ_STATUS_UNREAD);
         bmobQuery.include("relatedUser");
         bmobQuery.findObjects(new FindListener<PostNotifyBean>() {
             @Override
@@ -302,9 +302,9 @@ public class PollService extends Service implements SensorEventListener {
                             PostNotifyInfo postNotifyInfo = new PostNotifyInfo();
                             postNotifyInfo.setId(item.getObjectId());
                             postNotifyInfo.setType(item.getType());
-                            postNotifyInfo.setReadStatus(Constant.READ_STATUS_UNREAD);
+                            postNotifyInfo.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
                             result.add(postNotifyInfo);
-                            item.setReadStatus(Constant.READ_STATUS_READED);
+                            item.setReadStatus(ConstantUtil.READ_STATUS_READED);
                         }
                         List<BmobObject> update = new ArrayList<>(list);
                         new BmobBatch().updateBatch(update).doBatch(new QueryListListener<BatchResult>() {
@@ -330,7 +330,7 @@ public class PollService extends Service implements SensorEventListener {
             }
         });
         BmobQuery<SystemNotifyBean> query1 = new BmobQuery<>();
-        query1.addWhereEqualTo("readStatus", Constant.READ_STATUS_UNREAD);
+        query1.addWhereEqualTo("readStatus", ConstantUtil.READ_STATUS_UNREAD);
         query1.findObjects(new FindListener<SystemNotifyBean>() {
             @Override
             public void done(List<SystemNotifyBean> list, BmobException e) {
@@ -340,13 +340,13 @@ public class PollService extends Service implements SensorEventListener {
                         for (SystemNotifyBean item : list
                                 ) {
                             SystemNotifyEntity systemNotifyEntity = new SystemNotifyEntity();
-                            systemNotifyEntity.setReadStatus(Constant.READ_STATUS_UNREAD);
+                            systemNotifyEntity.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
                             systemNotifyEntity.setTitle(item.getTitle());
                             systemNotifyEntity.setSubTitle(item.getSubTitle());
                             systemNotifyEntity.setImageUrl(item.getImageUrl());
                             systemNotifyEntity.setContentUrl(item.getContentUrl());
                             systemNotifyEntity.setId(item.getObjectId());
-                            item.setReadStatus(Constant.READ_STATUS_READED);
+                            item.setReadStatus(ConstantUtil.READ_STATUS_READED);
                             result.add(systemNotifyEntity);
                         }
                         List<BmobObject> update = new ArrayList<>(list);

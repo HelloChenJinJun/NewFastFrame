@@ -11,17 +11,19 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
 import com.example.commonlibrary.R;
 
+import androidx.appcompat.widget.AppCompatImageView;
+
 
 public class RoundAngleImageView extends AppCompatImageView {
     private Paint paint;
-    private int roundWidth = 5;
+    private int roundWidth = 0;
     private int roundHeight = 5;
     private Paint paint2;
+    private boolean needCircle = false;
 
     public RoundAngleImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -42,22 +44,20 @@ public class RoundAngleImageView extends AppCompatImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        roundWidth = getMeasuredWidth() / 2;
-        roundHeight = getMeasuredHeight() / 2;
+        if (needCircle) {
+            roundWidth = getMeasuredWidth() / 2;
+            roundHeight = getMeasuredHeight() / 2;
+        }
     }
 
     private void init(Context context, AttributeSet attrs) {
-
-        if (attrs != null) {
-            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RoundAngleImageView);
-            roundWidth = a.getDimensionPixelSize(R.styleable.RoundAngleImageView_roundWidth, roundWidth);
-            roundHeight = a.getDimensionPixelSize(R.styleable.RoundAngleImageView_roundHeight, roundHeight);
-        } else {
-            float density = context.getResources().getDisplayMetrics().density;
-            roundWidth = (int) (roundWidth * density);
-            roundHeight = (int) (roundHeight * density);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RoundAngleImageView);
+        roundWidth = a.getDimensionPixelSize(R.styleable.RoundAngleImageView_roundWidth, 0);
+        roundHeight = a.getDimensionPixelSize(R.styleable.RoundAngleImageView_roundHeight, 0);
+        if (roundWidth == 0&&roundHeight == 0) {
+            needCircle = true;
         }
-
+        a.recycle();
         paint = new Paint();
         paint.setColor(Color.WHITE);
         paint.setAntiAlias(true);

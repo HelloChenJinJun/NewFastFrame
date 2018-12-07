@@ -17,8 +17,10 @@ public class SongListAdapter extends BaseRecyclerAdapter<DownLoadMusicBean, Base
 
     @Override
     protected void convert(BaseWrappedViewHolder holder, DownLoadMusicBean data) {
-        holder.setText(R.id.tv_item_fragment_song_list_name, data.getSonginfo().getTitle())
-                .setOnItemClickListener();
+        if (data.getSonginfo() != null) {
+            holder.setText(R.id.tv_item_fragment_song_list_name, data.getSonginfo().getTitle());
+        }
+        holder.setOnItemClickListener();
 
     }
 }

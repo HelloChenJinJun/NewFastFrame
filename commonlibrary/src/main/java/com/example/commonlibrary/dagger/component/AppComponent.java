@@ -6,6 +6,7 @@ import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.module.GlobalConfigModule;
 import com.example.commonlibrary.imageloader.ImageLoader;
 import com.example.commonlibrary.manager.ActivityManager;
+import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -21,17 +22,25 @@ import retrofit2.Retrofit;
  */
 
 @Singleton
-@Component(modules =GlobalConfigModule.class)
+@Component(modules = GlobalConfigModule.class)
 public interface AppComponent {
     public ImageLoader getImageLoader();
-    public Gson getGson();
-    public File getCacheFile();
-    public OkHttpClient getOkHttpClient();
-    public ActivityManager getActivityManager();
-    public DaoSession getDaoSession();
-    public OkHttpClient.Builder getOkHttpClientBuilder();
-    public Retrofit getRetrofit();
-    public SharedPreferences getSharedPreferences();
-    public Retrofit.Builder getRetrofitBuilder();
 
+    public Gson getGson();
+
+    public File getCacheFile();
+
+    public OkHttpClient getOkHttpClient();
+
+    public ActivityManager getActivityManager();
+
+    public DaoSession getDaoSession();
+
+    public OkHttpClient.Builder getOkHttpClientBuilder();
+
+    public Retrofit getRetrofit();
+
+    public SharedPreferences getSharedPreferences();
+
+    public Retrofit.Builder getRetrofitBuilder();
 }

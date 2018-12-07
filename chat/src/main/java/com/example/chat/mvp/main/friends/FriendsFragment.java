@@ -1,18 +1,15 @@
 package com.example.chat.mvp.main.friends;
 
-import android.Manifest;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-
 import com.example.chat.R;
 import com.example.chat.adapter.FriendsAdapter;
 import com.example.chat.base.AppBaseFragment;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.dagger.friends.DaggerFriendsComponent;
 import com.example.chat.dagger.friends.FriendsModule;
 import com.example.chat.events.UserEvent;
@@ -30,8 +27,8 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.utils.AppUtil;
-import com.example.commonlibrary.utils.PermissionUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -49,9 +46,9 @@ import javax.inject.Inject;
  * QQ:         1981367757
  */
 
-public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPresenter> implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IndexView.MyLetterChangeListener {
+public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPresenter> implements View.OnClickListener, CustomSwipeRefreshLayout.OnRefreshListener, IndexView.MyLetterChangeListener {
 
-    private SwipeRefreshLayout refresh;
+    private CustomSwipeRefreshLayout refresh;
     private SuperRecyclerView display;
     private IndexView indexView;
     private TextView index;
@@ -97,11 +94,11 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
 
     @Override
     protected void initView() {
-        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_friends_refresh);
-        display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_friends_display);
-        indexView = (IndexView) findViewById(R.id.index_fragment_friends_index);
-        index = (TextView) findViewById(R.id.tv_fragment_friends_index);
-        search = (SearchView) findViewById(R.id.sv_fragment_friends_search);
+        refresh = findViewById(R.id.refresh_fragment_friends_refresh);
+        display = findViewById(R.id.srcv_fragment_friends_display);
+        indexView = findViewById(R.id.index_fragment_friends_index);
+        index = findViewById(R.id.tv_fragment_friends_index);
+        search = findViewById(R.id.sv_fragment_friends_search);
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -136,13 +133,13 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
                 .friendsModule(new FriendsModule(this))
                 .build().inject(this);
         display.setLayoutManager(manager = new WrappedLinearLayoutManager(getContext()));
-        display.addItemDecoration(new ListViewDecoration(getContext()));
+        display.addItemDecoration(new ListViewDecoration());
         display.addHeaderView(getHeaderView());
         display.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                ChatActivity.start(getActivity(), Constant.TYPE_PERSON,adapter
+                ChatActivity.start(getActivity(), ConstantUtil.TYPE_PERSON,adapter
                 .getData(position).getUid());
             }
         });

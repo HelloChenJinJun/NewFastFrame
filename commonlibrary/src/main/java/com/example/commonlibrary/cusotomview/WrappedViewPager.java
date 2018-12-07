@@ -1,11 +1,12 @@
 package com.example.commonlibrary.cusotomview;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import com.example.commonlibrary.utils.CommonLogger;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * 项目名称:    NewFastFrame
@@ -25,11 +26,19 @@ public class WrappedViewPager extends ViewPager {
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         try {
-            return super.onTouchEvent(ev);
+            return needScroll && super.onTouchEvent(ev);
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
         }
         return false;
+    }
+
+
+    private boolean needScroll=true;
+
+
+    public void setNeedScroll(boolean needScroll) {
+        this.needScroll = needScroll;
     }
 
     @Override
@@ -38,7 +47,7 @@ public class WrappedViewPager extends ViewPager {
             if (ev.getAction() == MotionEvent.ACTION_MOVE) {
                 CommonLogger.e("move");
             }
-            return super.onInterceptTouchEvent(ev);
+            return needScroll && super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
         }

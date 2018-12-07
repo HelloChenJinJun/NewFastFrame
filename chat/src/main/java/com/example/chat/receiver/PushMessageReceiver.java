@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.example.chat.R;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.PostNotifyBean;
@@ -85,24 +85,24 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
 
         try {
             JSONObject jsonObject = new JSONObject(json);
-            String tag = JsonUtil.getString(jsonObject, Constant.MESSAGE_TAG);
-            if (tag != null && tag.equals(Constant.TAG_OFFLINE)) {
+            String tag = JsonUtil.getString(jsonObject, ConstantUtil.MESSAGE_TAG);
+            if (tag != null && tag.equals(ConstantUtil.TAG_OFFLINE)) {
 //                                下线通知
 //                                帐号在其他手机上登录，强迫该手机帐号下线
                 RxBusManager.getInstance().post(new OffLineEvent());
                 UserManager.getInstance().logout();
                 return;
             }
-            if (!jsonObject.has(Constant.TAG_BELONG_ID)) {
+            if (!jsonObject.has(ConstantUtil.TAG_BELONG_ID)) {
 //                                系统消息
-                String systemInfo = JsonUtil.getString(jsonObject, Constant.PUSH_ALERT);
+                String systemInfo = JsonUtil.getString(jsonObject, ConstantUtil.PUSH_ALERT);
                 msg=systemInfo;
                 JsonElement jsonElement=new JsonParser().parse(systemInfo);
                 JsonObject jsonObject1= null;
                 if (jsonElement!=null) {
                     jsonObject1 = jsonElement.getAsJsonObject();
                 }
-                if (jsonObject1!=null&&jsonObject1.has(Constant.TAG_CONTENT_URL)) {
+                if (jsonObject1!=null&&jsonObject1.has(ConstantUtil.TAG_CONTENT_URL)) {
 //                        系统通知的消息
                     SystemNotifyEntity systemNotifyBean= BaseApplication
                             .getAppComponent().getGson()
@@ -123,7 +123,7 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
                             }
                         });
                     }
-                }else if (jsonObject1!=null&&jsonObject1.has(Constant.TAG_ID)){
+                }else if (jsonObject1!=null&&jsonObject1.has(ConstantUtil.TAG_ID)){
                     PostNotifyInfo postNotifyInfo= BaseApplication
                             .getAppComponent().getGson()
                             .fromJson(systemInfo,PostNotifyInfo.class);
@@ -152,8 +152,8 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
                 }
                 return;
             }
-            String fromId = JsonUtil.getString(jsonObject, Constant.TAG_BELONG_ID);
-            String toId = JsonUtil.getString(jsonObject, Constant.TAG_TO_ID);
+            String fromId = JsonUtil.getString(jsonObject, ConstantUtil.TAG_BELONG_ID);
+            String toId = JsonUtil.getString(jsonObject, ConstantUtil.TAG_TO_ID);
             if (!TextUtils.isEmpty(toId) && !TextUtils.isEmpty(fromId)) {
                 if (mUserManager.getCurrentUser() != null && mUserManager.getCurrentUser().getObjectId().equals(toId)) {
                     if (UserDBManager.getInstance().isFriend(fromId)) {
@@ -166,7 +166,7 @@ public class PushMessageReceiver extends BroadcastReceiver implements OnReceiveL
                     } else if (UserDBManager.getInstance().isAddBlack(fromId)) {
                         CommonLogger.e("黑名单用户");
                         //      黑名单的情况,直接在服务器上面更新为已读状态,防止从定时服务那里又可以获取到
-                        mMsgManager.updateMsgReaded(false, JsonUtil.getString(jsonObject, Constant.TAG_CONVERSATION), JsonUtil.getLong(jsonObject, Constant.TAG_CREATE_TIME));
+                        mMsgManager.updateMsgReaded(false, JsonUtil.getString(jsonObject, ConstantUtil.TAG_CONVERSATION), JsonUtil.getLong(jsonObject, ConstantUtil.TAG_CREATE_TIME));
                     } else {
 //                                                被添加的黑名单
                         mMsgManager.createReceiveMsg(json, this);

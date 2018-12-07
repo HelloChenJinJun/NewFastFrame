@@ -1,11 +1,12 @@
 package com.example.commonlibrary.baseadapter.adapter;
 
-import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.viewpager.widget.PagerAdapter;
 
 /**
  * 项目名称:    NewFastFrame
@@ -17,7 +18,7 @@ import java.util.List;
 public class CommonPagerAdapter extends PagerAdapter {
 
     private List<View> viewList;
-
+    private boolean isBannerStyle=false;
 
 
     public CommonPagerAdapter(List<View> viewList){
@@ -33,14 +34,27 @@ public class CommonPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return viewList.size();
+        if (!isBannerStyle) {
+            return viewList.size();
+        }else {
+            return Integer.MAX_VALUE;
+        }
     }
 
 
+
+    public void setIsBannerStyle(boolean isBannerStyle){
+        this.isBannerStyle=isBannerStyle;
+    }
+
+    public boolean isBannerStyle() {
+        return isBannerStyle;
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        container.addView(viewList.get(position));
-        return viewList.get(position);
+        container.addView(viewList.get(isBannerStyle?position%viewList.size():position));
+        return viewList.get(isBannerStyle?position%viewList.size():position);
     }
 
     @Override

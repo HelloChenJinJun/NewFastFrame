@@ -1,8 +1,8 @@
 package com.example.commonlibrary.bean.chat;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * 项目名称:    NewFastFrame
@@ -38,8 +38,8 @@ public class ChatMessageEntity {
 
     @Generated(hash = 1958620565)
     public ChatMessageEntity(Long id, String belongId, String toId,
-            long createdTime, int sendStatus, int readStatus, String content,
-            int contentType, int messageType, String conversationId) {
+                             long createdTime, int sendStatus, int readStatus, String content,
+                             int contentType, int messageType, String conversationId) {
         this.id = id;
         this.belongId = belongId;
         this.toId = toId;

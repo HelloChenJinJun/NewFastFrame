@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.example.chat.R;
-import com.example.chat.base.MainBaseActivity;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.events.StepEvent;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
@@ -22,7 +22,7 @@ import com.example.commonlibrary.rxbus.RxBusManager;
  * QQ:1981367757
  */
 
-public class RecordStepActivity extends MainBaseActivity {
+public class RecordStepActivity extends ChatBaseActivity {
 
 
     private StepArcView stepArcView;

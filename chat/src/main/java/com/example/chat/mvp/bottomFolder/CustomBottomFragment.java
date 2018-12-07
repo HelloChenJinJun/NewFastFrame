@@ -1,25 +1,26 @@
 package com.example.chat.mvp.bottomFolder;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.chat.R;
 import com.example.chat.adapter.ImageFoldersAdapter;
-import com.example.chat.base.Constant;
-import com.example.chat.bean.ImageFolder;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.events.ImageFolderEvent;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.SystemUtil;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 
 /**
@@ -41,7 +42,7 @@ public class CustomBottomFragment extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.fragment_custom_bottom, container);
         display = view.findViewById(R.id.srcv_fragment_custom_bottom);
         display.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
-        display.addItemDecoration(new ListViewDecoration(getContext()));
+        display.addItemDecoration(new ListViewDecoration());
         imageFolderAdapter = new ImageFoldersAdapter();
         display.setAdapter(imageFolderAdapter);
         imageFolderAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
@@ -53,19 +54,19 @@ public class CustomBottomFragment extends BottomSheetDialogFragment {
                 dismiss();
             }
         });
-        List<ImageFolder> list = (List<ImageFolder>) getArguments().getSerializable(Constant.DATA);
-        int position=getArguments().getInt(Constant.POSITION,0);
+        List<SystemUtil.ImageFolder> list = (List<SystemUtil.ImageFolder>) getArguments().getSerializable(ConstantUtil.DATA);
+        int position=getArguments().getInt(ConstantUtil.POSITION,0);
         imageFolderAdapter.setCurrentSelectedPosition(position);
         imageFolderAdapter.refreshData(list);
         return view;
     }
 
 
-    public static CustomBottomFragment newInstance(ArrayList<ImageFolder> data, int position) {
+    public static CustomBottomFragment newInstance(ArrayList<SystemUtil.ImageFolder> data, int position) {
         CustomBottomFragment customBottomFragment = new CustomBottomFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constant.DATA, data);
-        bundle.putInt(Constant.POSITION,position);
+        bundle.putSerializable(ConstantUtil.DATA, data);
+        bundle.putInt(ConstantUtil.POSITION,position);
         customBottomFragment.setArguments(bundle);
         return customBottomFragment;
     }

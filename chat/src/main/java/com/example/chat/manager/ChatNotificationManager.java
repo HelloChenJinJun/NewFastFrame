@@ -6,13 +6,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.NotificationCompat;
 
 import com.example.chat.R;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
-import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.MessageContent;
 import com.example.chat.bean.User;
 import com.example.chat.mvp.main.HomeActivity;
@@ -21,10 +19,10 @@ import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.ConstantUtil;
 
 import java.util.List;
 
+import androidx.core.app.NotificationCompat;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -73,22 +71,22 @@ public class ChatNotificationManager {
                         public void done(List<User> list, BmobException e) {
                                 if (list != null && list.size() > 0) {
                                         if (messageType==ChatMessage.MESSAGE_TYPE_NORMAL) {
-                                                if (chatMessage.getContentType().equals(Constant.TAG_MSG_TYPE_IMAGE)) {
-                                                        showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[图片]", HomeActivity.class);
-                                                } else if (chatMessage.getContentType().equals(Constant.TAG_MSG_TYPE_LOCATION)) {
-                                                        showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[位置]", HomeActivity.class);
-                                                } else if (chatMessage.getContentType().equals(Constant.TAG_MSG_TYPE_VOICE)) {
-                                                        showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[语音]", HomeActivity.class);
-                                                } else if (chatMessage.getContentType().equals(Constant.TAG_MSG_TYPE_VIDEO)){
-                                                        showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[视频]", HomeActivity.class);
+                                                if (chatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_IMAGE)) {
+                                                        showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[图片]", HomeActivity.class);
+                                                } else if (chatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_LOCATION)) {
+                                                        showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[位置]", HomeActivity.class);
+                                                } else if (chatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_VOICE)) {
+                                                        showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[语音]", HomeActivity.class);
+                                                } else if (chatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_VIDEO)){
+                                                        showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[视频]", HomeActivity.class);
                                                 }else {
                                                         String content=BaseApplication.getAppComponent().getGson().fromJson(chatMessage.getContent(),MessageContent.class).getContent();
-                                                        showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, FaceTextUtil.toSpannableString(context, content), HomeActivity.class);
+                                                        showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, FaceTextUtil.toSpannableString(context, content), HomeActivity.class);
                                                 }
                                         } else if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
-                                                showNotification(Constant.NOTIFICATION_TAG_AGREE, context,list.get(0).getNick(), R.mipmap.ic_launcher, list.get(0).getName() + "已同意添加你为好友", HomeActivity.class);
+                                                showNotification(ConstantUtil.NOTIFICATION_TAG_AGREE, context,list.get(0).getNick(), R.mipmap.ic_launcher, list.get(0).getName() + "已同意添加你为好友", HomeActivity.class);
                                         } else if (messageType==ChatMessage.MESSAGE_TYPE_ADD) {
-                                                showNotification(Constant.NOTIFICATION_TAG_ADD, context, list.get(0).getNick(), R.mipmap.ic_launcher, list.get(0).getName() + "请求添加你为好友", HomeActivity.class);
+                                                showNotification(ConstantUtil.NOTIFICATION_TAG_ADD, context, list.get(0).getNick(), R.mipmap.ic_launcher, list.get(0).getName() + "请求添加你为好友", HomeActivity.class);
                                         }
                                 }
                         }
@@ -108,14 +106,14 @@ public class ChatNotificationManager {
                        @Override
                        public void done(List<User> list, BmobException e) {
                                if (list != null && list.size() > 0) {
-                                       if (groupChatMessage.getContentType().equals(Constant.TAG_MSG_TYPE_IMAGE)) {
-                                               showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, name, R.mipmap.ic_launcher, list.get(0).getName() + "：[图片]", HomeActivity.class);
-                                       } else if (groupChatMessage.getContentType().equals(Constant.TAG_MSG_TYPE_LOCATION)) {
-                                               showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, name, R.mipmap.ic_launcher, list.get(0).getName() + "：[位置]", HomeActivity.class);
-                                       } else if (groupChatMessage.getContentType().equals(Constant.TAG_MSG_TYPE_VOICE)) {
-                                               showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, name, R.mipmap.ic_launcher, list.get(0).getName() + "：[语音]", HomeActivity.class);
+                                       if (groupChatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_IMAGE)) {
+                                               showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, name, R.mipmap.ic_launcher, list.get(0).getName() + "：[图片]", HomeActivity.class);
+                                       } else if (groupChatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_LOCATION)) {
+                                               showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, name, R.mipmap.ic_launcher, list.get(0).getName() + "：[位置]", HomeActivity.class);
+                                       } else if (groupChatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_VOICE)) {
+                                               showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, name, R.mipmap.ic_launcher, list.get(0).getName() + "：[语音]", HomeActivity.class);
                                        } else {
-                                               showNotification(Constant.NOTIFICATION_TAG_MESSAGE, context, name, R.mipmap.ic_launcher, list.get(0).getName() + "：" + FaceTextUtil.toSpannableString(context, groupChatMessage.getContent()), HomeActivity.class);
+                                               showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, name, R.mipmap.ic_launcher, list.get(0).getName() + "：" + FaceTextUtil.toSpannableString(context, groupChatMessage.getContent()), HomeActivity.class);
                                        }
                                }
                        }
@@ -134,10 +132,10 @@ public class ChatNotificationManager {
          */
         public void showNotification(String notificationTagAdd, Context context, String userName, int icon, CharSequence content, Class<? extends Activity> targetClass) {
                 boolean isAllowPushNotify = BaseApplication.getAppComponent()
-                        .getSharedPreferences().getBoolean(Constant.PUSH_NOTIFY,true);
+                        .getSharedPreferences().getBoolean(ConstantUtil.PUSH_NOTIFY,true);
                 boolean isAllowVoice = BaseApplication.getAppComponent()
-                        .getSharedPreferences().getBoolean(Constant.VOICE_STATUS,true);
-                boolean isAllowVibrate = BaseApplication.getAppComponent().getSharedPreferences().getBoolean(Constant.VIBRATE_STATUS,true);
+                        .getSharedPreferences().getBoolean(ConstantUtil.VOICE_STATUS,true);
+                boolean isAllowVibrate = BaseApplication.getAppComponent().getSharedPreferences().getBoolean(ConstantUtil.VIBRATE_STATUS,true);
                 if (isAllowPushNotify) {
                         ChatNotificationManager.getInstance(context).notify(notificationTagAdd, null, isAllowVibrate, isAllowVoice, context, userName, icon, content, targetClass);
                         CommonLogger.e("发送通知到通知栏啦啦啦");
@@ -179,13 +177,13 @@ public class ChatNotificationManager {
                                 intent=new Intent("custom.activity.action.main");
                         }
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.putExtra(Constant.NOTIFICATION_TAG, tag);
+                        intent.putExtra(ConstantUtil.NOTIFICATION_TAG, tag);
                         if (groupId != null) {
-                                intent.putExtra(Constant.GROUP_ID, groupId);
+                                intent.putExtra(ConstantUtil.GROUP_ID, groupId);
                         }
                         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         builder.setContentIntent(pendingIntent);
                 }
-                sNotificationManager.notify(Constant.NOTIFY_ID, builder.build());
+                sNotificationManager.notify(ConstantUtil.NOTIFY_ID, builder.build());
         }
 }

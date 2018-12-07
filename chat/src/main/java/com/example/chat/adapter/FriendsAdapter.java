@@ -6,7 +6,6 @@ import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.utils.AppUtil;
-import com.example.commonlibrary.utils.CommonUtil;
 
 /**
  * 项目名称:    PostDemo

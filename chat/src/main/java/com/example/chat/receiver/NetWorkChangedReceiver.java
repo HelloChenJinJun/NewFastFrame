@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.events.NetStatusEvent;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
@@ -25,12 +25,12 @@ public class NetWorkChangedReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(Constant.NETWORK_CONNECTION_CHANGE)) {
+                if (intent.getAction().equals(ConstantUtil.NETWORK_CONNECTION_CHANGE)) {
                         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
                         if (networkInfo != null) {
                                 if (networkInfo.isConnected() && BaseApplication
-                                        .getAppComponent().getSharedPreferences().getLong(Constant.DELTA_TIME, 0L) == 0L) {
+                                        .getAppComponent().getSharedPreferences().getLong(ConstantUtil.DELTA_TIME, 0L) == 0L) {
                                         TimeUtil.getServerTime();
                                 }
                                 RxBusManager.getInstance().post(new NetStatusEvent(networkInfo.isConnected(), networkInfo.getType()));

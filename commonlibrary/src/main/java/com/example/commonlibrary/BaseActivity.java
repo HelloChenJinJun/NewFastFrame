@@ -1,42 +1,52 @@
 package com.example.commonlibrary;
 
-import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.commonlibrary.adaptScreen.IAdaptScreen;
+import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.adapter.ListItemAdapter;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.cusotomview.BaseDialog;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.cusotomview.CommonDialog;
+import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.skin.SkinManager;
+import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.Constant;
+import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.ToastUtils;
-import com.trello.rxlifecycle2.LifecycleTransformer;
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
+import com.trello.rxlifecycle3.LifecycleTransformer;
+import com.trello.rxlifecycle3.components.support.RxAppCompatActivity;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.analytics.game.UMGameAgent;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-
-
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 /**
@@ -46,7 +56,7 @@ import io.reactivex.disposables.Disposable;
  * QQ:             1981367757
  */
 
-public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCompatActivity implements IView<T>, IAdaptScreen {
+public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCompatActivity implements IView<T>, IAdaptScreen {
 
     //  这里的布局view可能为空，取决于子类布局中是否含有该空布局
 
@@ -55,22 +65,32 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     protected int fragmentContainerResId = 0;
     protected Fragment currentFragment;
     private View headerLayout;
-    private ProgressDialog mProgressDialog;
-    protected BaseDialog mBaseDialog;
     private RoundAngleImageView icon;
     protected TextView right;
-    private TextView title;
-    private ImageView rightImage;
+    protected TextView title;
+    protected ImageView rightImage;
     protected ImageView back;
     private CompositeDisposable compositeDisposable;
+    protected ViewGroup bg;
 
 
+    //    字体初始化
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
-    protected void addDisposable(Disposable disposable){
+
+    protected void addDisposable(Disposable disposable) {
         if (compositeDisposable == null) {
-            compositeDisposable=new CompositeDisposable();
+            compositeDisposable = new CompositeDisposable();
         }
         compositeDisposable.add(disposable);
+    }
+
+
+    public AppComponent getAppComponent() {
+        return BaseApplication.getAppComponent();
     }
 
 
@@ -82,13 +102,20 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
 
     @Override
     public int getScreenSize() {
-        return 360;
+        return 250;
     }
 
 
     @Override
     public boolean cancelAdapt() {
-        return false;
+        return true;
+    }
+
+
+    @Override
+    public boolean needResetAdapt() {
+        return getScreenSize() != (isBaseOnWidth() ? BaseApplication.getAppComponent().getSharedPreferences().getInt(Constant.DESIGNED_WIDTH, 0) :
+                BaseApplication.getAppComponent().getSharedPreferences().getInt(Constant.DESIGNED_HEIGHT, 0));
     }
 
     @Nullable
@@ -96,43 +123,48 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     protected P presenter;
 
 
-    public ImageView getBack() {
-        return back;
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         SkinManager.getInstance().apply(this);
         super.onCreate(savedInstanceState);
+        UMGameAgent.init(this);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         if (isNeedHeadLayout()) {
-            LinearLayout linearLayout= (LinearLayout) LayoutInflater.from(this).inflate(R.layout.content_layout_ll,null);
-            headerLayout =LayoutInflater.from(this).inflate(R.layout.header_layout, null);
-            linearLayout.addView(headerLayout);
+            bg = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.content_layout_ll, null);
+            headerLayout = LayoutInflater.from(this).inflate(R.layout.header_layout, null);
+            ((TextView) headerLayout.findViewById(R.id.tv_header_layout_title)).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            bg.addView(headerLayout);
             if (isNeedEmptyLayout()) {
                 FrameLayout frameLayout = new FrameLayout(this);
                 frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 mEmptyLayout = new EmptyLayout(this);
                 mEmptyLayout.setVisibility(View.GONE);
-                frameLayout.addView(LayoutInflater.from(this).inflate(getContentLayout(), null));
+                if (getContentLayout() != 0) {
+                    LayoutInflater.from(this).inflate(getContentLayout(), frameLayout);
+                }
                 mEmptyLayout.setContentView(mEmptyLayout.getChildAt(0));
                 frameLayout.addView(mEmptyLayout);
-                linearLayout.addView(frameLayout);
+                bg.addView(frameLayout);
             } else {
-                linearLayout.addView(LayoutInflater.from(this).inflate(getContentLayout(), null));
+                if (getContentLayout() != 0) {
+                    LayoutInflater.from(this).inflate(getContentLayout(), bg);
+                }
             }
-            setContentView(linearLayout);
         } else {
-            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.content_layout_fl,null);
-            frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            frameLayout.addView(LayoutInflater.from(this).inflate(getContentLayout(), null));
+            bg = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.content_layout_fl, null);
+            bg.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            if (getContentLayout() != 0) {
+                LayoutInflater.from(this).inflate(getContentLayout(), bg);
+            }
             if (isNeedEmptyLayout()) {
                 mEmptyLayout = new EmptyLayout(this);
                 mEmptyLayout.setVisibility(View.GONE);
-                mEmptyLayout.setContentView(frameLayout.getChildAt(0));
-                frameLayout.addView(mEmptyLayout);
-
+                mEmptyLayout.setContentView(bg.getChildAt(0));
+                bg.addView(mEmptyLayout);
             }
-            setContentView(frameLayout);
+        }
+        if (getContentLayout() != 0) {
+            setContentView(bg);
         }
         initBaseView();
         initData();
@@ -143,6 +175,7 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     protected RoundAngleImageView getIcon() {
         return icon;
     }
+
     protected abstract boolean isNeedHeadLayout();
 
     protected abstract boolean isNeedEmptyLayout();
@@ -152,32 +185,34 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
     protected abstract void initView();
 
     protected abstract void initData();
+
     protected void initBaseView() {
         if (isNeedHeadLayout()) {
-            icon =  headerLayout.findViewById(R.id.riv_header_layout_icon);
-            title =  headerLayout.findViewById(R.id.tv_header_layout_title);
-            right =  headerLayout.findViewById(R.id.tv_header_layout_right);
-            back =  headerLayout.findViewById(R.id.iv_header_layout_back);
-            rightImage =  headerLayout.findViewById(R.id.iv_header_layout_right);
+            icon = headerLayout.findViewById(R.id.riv_header_layout_icon);
+            title = headerLayout.findViewById(R.id.tv_header_layout_title);
+            right = headerLayout.findViewById(R.id.tv_header_layout_right);
+            back = headerLayout.findViewById(R.id.iv_header_layout_back);
+            rightImage = headerLayout.findViewById(R.id.iv_header_layout_right);
             rightImage.setVisibility(View.GONE);
             right.setVisibility(View.VISIBLE);
-            setSupportActionBar( headerLayout.findViewById(R.id.toolbar));
+            setSupportActionBar(headerLayout.findViewById(R.id.toolbar));
             getSupportActionBar().setTitle("");
         }
         initView();
     }
 
     protected void updateStatusBar() {
-        StatusBarUtil.setTranslucentForImageViewInFragment(this,0, getPaddingView());
+        StatusBarUtil.setTranslucentForImageViewInFragment(this, 0, getPaddingView());
     }
 
     private View getPaddingView() {
         if (needStatusPadding()) {
-            return headerLayout!=null?headerLayout: ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+            return headerLayout != null ? headerLayout : ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         }
         return null;
     }
-    protected boolean needStatusPadding(){
+
+    protected boolean needStatusPadding() {
         return true;
     }
 
@@ -194,16 +229,15 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             return;
         }
 
-        if (option.getBgColor() !=0) {
+        if (option.getBgColor() != -1) {
             headerLayout.setBackgroundColor(option.getBgColor());
         }
         if (option.getCustomView() != null) {
-            ViewGroup container= headerLayout.findViewById(R.id.toolbar);
+            ViewGroup container = headerLayout.findViewById(R.id.toolbar);
             container.removeAllViews();
             container.addView(option.getCustomView());
             return;
         }
-
         if (option.getAvatar() != null) {
             icon.setVisibility(View.VISIBLE);
             Glide.with(this).load(option.getAvatar()).into(icon);
@@ -227,6 +261,10 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         if (option.getTitle() != null) {
             title.setVisibility(View.VISIBLE);
             title.setText(option.getTitle());
+            if (option.getTitleColor() != -10) {
+                title.setTextColor(option.getTitleColor());
+            }
+
         } else {
             title.setVisibility(View.GONE);
         }
@@ -237,8 +275,12 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             back.setVisibility(View.GONE);
         }
 
-    }
+        if (option.getBackResId() != 0) {
+            back.setImageResource(option.getBackResId());
+        }
 
+
+    }
 
 
     public void updateTitle(String title) {
@@ -249,78 +291,50 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
 
 
     public void showBaseDialog(String title, String message, String leftName, String rightName, View.OnClickListener leftListener, View.OnClickListener rightListener) {
-        if (mBaseDialog == null) {
-            mBaseDialog=new BaseDialog(this);
-        }
-        mBaseDialog.setTitle(title).setMessage(message).setLeftButton(leftName, leftListener).setRightButton(rightName, rightListener).show();
+        //        if (mBaseDialog == null) {
+        //        mBaseDialog = new BaseDialog(this);
+        //        mBaseDialog.setTitle(title).setMessage(message).setLeftButton(leftName, leftListener).setRightButton(rightName, rightListener).show();
+        CommonDialog.newBuild(this).setTitle(title)
+                .setInfo(message).setLeftButton(leftName, leftListener).setRightButton(rightName, rightListener).build().show();
     }
 
 
-
-
-
-
-    public void showCustomDialog(String title,View view,String leftName, String rightName, View.OnClickListener leftListener, View.OnClickListener rightListener){
-        if (mBaseDialog == null) {
-            mBaseDialog=new BaseDialog(this);
-        }
-        mBaseDialog.setDialogContentView(view).setTitle(title)
-                .setLeftButton(leftName,leftListener)
-                .setRightButton(rightName,rightListener).show();
+    public void showChooseDialog(String title, List<String> titleList, OnSimpleItemClickListener onSimpleItemClickListener) {
+        ListItemAdapter listItemAdapter = new ListItemAdapter();
+        SuperRecyclerView superRecyclerView = new SuperRecyclerView(this);
+        superRecyclerView.setLayoutManager(new WrappedLinearLayoutManager(this));
+        superRecyclerView.setAdapter(listItemAdapter);
+        superRecyclerView.addItemDecoration(new ListViewDecoration(DensityUtil.toDp(10)));
+        listItemAdapter.refreshData(titleList);
+        CommonDialog commonDialog = showCustomDialog(title, superRecyclerView, null, "确定", null, null);
+        listItemAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view) {
+                commonDialog.dismiss();
+                if (onSimpleItemClickListener != null) {
+                    onSimpleItemClickListener.onItemClick(position, view);
+                }
+            }
+        });
     }
 
 
-
-    public void dismissBaseDialog() {
-        if (mBaseDialog != null && mBaseDialog.isShowing()) {
-            mBaseDialog.dismiss();
-        }
-    }
-
-    public void cancelBaseDialog() {
-        if (mBaseDialog != null && mBaseDialog.isShowing()) {
-            mBaseDialog.cancel();
-        }
+    public CommonDialog showCustomDialog(String title, View view, String leftName, String rightName, View.OnClickListener leftListener, View.OnClickListener rightListener) {
+        CommonDialog commonDialog = CommonDialog.newBuild(this).setTitle(title)
+                .setContentView(view).setLeftButton(leftName, leftListener).setRightButton(rightName, rightListener).build();
+        commonDialog.show();
+        return commonDialog;
     }
 
 
     public void showLoadDialog(final String message) {
-        if (!isFinishing()&&(mProgressDialog == null || !mProgressDialog.isShowing())) {
-            if (mProgressDialog == null) {
-                mProgressDialog = new ProgressDialog(this);
-                mProgressDialog.setCancelable(false);
-            }
-            mProgressDialog.setMessage(message);
-            mProgressDialog.show();
-        }
+        ToastUtils.showShortToast(message);
     }
 
     public void dismissLoadDialog() {
         showEmptyLayout(EmptyLayout.STATUS_HIDE);
-        if (!isFinishing()) {
-            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
-            }
-        }
     }
 
-    public void cancelLoadDialog() {
-        if (!isFinishing()) {
-            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                mProgressDialog.cancel();
-            }
-        }
-    }
-
-    public void showChooseDialog(String title, List<String> list, AdapterView.OnItemClickListener listener) {
-        ListView view = (ListView) getLayoutInflater().inflate(R.layout.base_dialog_list, null);
-        view.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list));
-        view.setOnItemClickListener(listener);
-        if (mBaseDialog == null) {
-            mBaseDialog=new BaseDialog(this);
-        }
-        mBaseDialog.setDialogContentView(view).setTitle(title).setBottomLayoutVisible(false).show();
-    }
 
     public void addOrReplaceFragment(Fragment fragment) {
         addOrReplaceFragment(fragment, 0);
@@ -328,9 +342,6 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
 
     /**
      * 第一次加载的时候调用该方法设置resId
-     *
-     * @param fragment
-     * @param resId
      */
     public void addOrReplaceFragment(Fragment fragment, int resId) {
         if (resId != 0) {
@@ -342,7 +353,6 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
         if (currentFragment == null) {
             getSupportFragmentManager().beginTransaction().add(resId, fragment).show(fragment).commitAllowingStateLoss();
             currentFragment = fragment;
-            return;
         } else if (currentFragment != fragment) {
             if (fragment.isAdded()) {
                 getSupportFragmentManager().beginTransaction().hide(currentFragment).show(fragment).commit();
@@ -351,6 +361,35 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             }
             currentFragment = fragment;
         }
+    }
+
+
+    private int backStackLayoutId = 0;
+
+    protected void addBackStackFragment(Fragment fragment, int resId) {
+        backStackLayoutId = resId;
+        addBackStackFragment(fragment, true);
+    }
+
+
+    protected void addBackStackFragment(Fragment fragment, int resId, boolean needAddBackStack) {
+        backStackLayoutId = resId;
+        addBackStackFragment(fragment, needAddBackStack);
+    }
+
+
+    protected void addBackStackFragment(Fragment fragment, boolean needAddBackStack) {
+        if (backStackLayoutId == 0) {
+            return;
+        }
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction
+                .add(backStackLayoutId, fragment)
+                .setCustomAnimations(R.anim.slide_bottom_in, R.anim.slide_bottom_out);
+        if (needAddBackStack) {
+            fragmentTransaction.addToBackStack(null);
+        }
+        fragmentTransaction.commit();
     }
 
 
@@ -385,8 +424,8 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
             }
         } else {
             ToastUtils.showShortToast(errorMsg);
-
         }
+        CommonLogger.e(errorMsg);
 
     }
 
@@ -414,7 +453,34 @@ public  abstract class BaseActivity<T, P extends BasePresenter> extends RxAppCom
                 compositeDisposable.dispose();
             }
             compositeDisposable.clear();
-            compositeDisposable=null;
+            compositeDisposable = null;
         }
+
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (needRecord()) {
+            MobclickAgent.onPageStart(this.getClass().getName());
+        }
+        UMGameAgent.onResume(this);
+    }
+
+    protected boolean needRecord() {
+        return true;
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (needRecord()) {
+            MobclickAgent.onPageEnd(this.getClass().getName());
+        }
+        UMGameAgent.onPause(this);
+    }
+
+
 }

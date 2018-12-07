@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:id="@+id/rl_recent_item_container"
-                android:layout_height="@dimen/recent_top_height">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_recent_item_container"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/recent_top_height">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,61 +22,66 @@
             android:scaleType="centerCrop"
             android:src="@drawable/head"
             app:roundHeight="30dp"
-            app:roundWidth="30dp"/>
+            app:roundWidth="30dp" />
 
-        <TextView
-            android:id="@+id/tv_recent_time"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:text="时间"
-            android:textColor="@color/base_color_text_grey"
-            android:textSize="10sp"/>
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_recent_unread"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/tv_recent_time"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/custom_drawable_red_point"
-            android:gravity="center"
-            android:text="2"
-            android:textColor="@color/base_color_text_white"
-            android:textSize="10sp"
-        />
+            <TextView
+                android:id="@+id/tv_recent_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="时间"
+                android:textColor="@color/base_color_text_grey"
+                android:textSize="10sp" />
 
+            <TextView
+                android:id="@+id/tv_recent_unread"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@id/tv_recent_time"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/custom_drawable_red_point"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="@color/base_color_text_white"
+                android:textSize="10sp" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_recent_name"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/tv_recent_time"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:layout_toLeftOf="@+id/tv_recent_time"
-            android:layout_toRightOf="@id/riv_recent_avatar"
-            android:text="姓名"
-            android:textColor="@color/base_color_text_black"
-            android:textSize="18sp"/>
-
-        <TextView
-            android:id="@+id/tv_recent_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/tv_recent_unread"
-            android:layout_below="@+id/tv_recent_name"
-            android:layout_marginLeft="10dp"
-            android:layout_toLeftOf="@+id/tv_recent_unread"
             android:layout_toRightOf="@+id/riv_recent_avatar"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="内容"
-            android:textColor="@color/base_color_text_grey"
-            android:textSize="16sp"/>
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_recent_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="姓名"
+                android:textColor="@color/base_color_text_black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_recent_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_recent_name"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="内容"
+                android:textColor="@color/base_color_text_grey"
+                android:textSize="16sp" />
+        </LinearLayout>
     </RelativeLayout>
 
 </RelativeLayout>

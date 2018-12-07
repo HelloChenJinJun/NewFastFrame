@@ -4,16 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.manager.UserManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-
-import okhttp3.ResponseBody;
 
 /**
  * 项目名称:    TestChat
@@ -63,7 +58,7 @@ public class FileUtil {
          */
         public static String getUserVoiceFilePath(String uid, long createTime) {
                 try {
-                        File file = new File(Constant.VOICE_CACHE_DIR + CommonUtils.md5(UserManager.getInstance().getCurrentUserObjectId()) + File.separator + uid + File.separator + createTime + ".amr");
+                        File file = new File(ConstantUtil.VOICE_CACHE_DIR + CommonUtils.md5(UserManager.getInstance().getCurrentUserObjectId()) + File.separator + uid + File.separator + createTime + ".amr");
                         if (!file.exists()) {
                                 file.createNewFile();
                         }
@@ -106,7 +101,7 @@ public class FileUtil {
         }
 
         public static boolean isExistFileLocalPath(String uid, long createTime) {
-                File file = new File(Constant.VOICE_CACHE_DIR + CommonUtils.md5(UserManager.getInstance().getCurrentUserObjectId()) + File.separator + uid + File.separator + createTime + ".amr");
+                File file = new File(ConstantUtil.VOICE_CACHE_DIR + CommonUtils.md5(UserManager.getInstance().getCurrentUserObjectId()) + File.separator + uid + File.separator + createTime + ".amr");
                 return file.exists();
         }
 

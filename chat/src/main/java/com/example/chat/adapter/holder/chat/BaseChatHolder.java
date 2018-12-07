@@ -3,13 +3,10 @@ package com.example.chat.adapter.holder.chat;
 import android.view.View;
 
 import com.example.chat.R;
-import com.example.chat.adapter.ChatMessageAdapter;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.BaseMessage;
-import com.example.chat.bean.ChatMessage;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
-import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.bean.chat.UserEntity;
@@ -50,17 +47,17 @@ public abstract class BaseChatHolder extends BaseWrappedViewHolder {
                         .setOnItemChildClickListener(R.id.iv_item_activity_chat_send_retry);
                         int sendStatus = baseMessage.getSendStatus();
                         int readStatus = baseMessage.getReadStatus();
-                        if (sendStatus == Constant.SEND_STATUS_SUCCESS) {
+                        if (sendStatus == ConstantUtil.SEND_STATUS_SUCCESS) {
 //                         发送状态成功
                                 setVisible(R.id.pb_item_activity_chat_send_loading, false)
                                 .setVisible(R.id.iv_item_activity_chat_send_retry, false)
                                 .setVisible(R.id.tv_item_activity_chat_send_read, true);
-                                if (readStatus == Constant.READ_STATUS_READED) {
+                                if (readStatus == ConstantUtil.READ_STATUS_READED) {
                                         setText(R.id.tv_item_activity_chat_send_read, "已阅读");
                                 } else {
                                         setText(R.id.tv_item_activity_chat_send_read, "已发送");
                                 }
-                        } else if (sendStatus == Constant.SEND_STATUS_FAILED) {
+                        } else if (sendStatus == ConstantUtil.SEND_STATUS_FAILED) {
                                 //                        发送失败
                                 setVisible(R.id.pb_item_activity_chat_send_loading, false);
                                 setVisible(R.id.iv_item_activity_chat_send_retry, true);

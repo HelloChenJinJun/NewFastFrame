@@ -5,7 +5,7 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/chat_logo2"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/CustomTheme.Day.Main">
@@ -18,9 +18,12 @@
 
 
         <activity android:name=".GuideActivity" />
-        <activity android:name=".MainActivity" android:launchMode="singleTask">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
-                <action android:name="custom.activity.action.main"/>
+                <action android:name="custom.activity.action.main" />
             </intent-filter>
 
         </activity>

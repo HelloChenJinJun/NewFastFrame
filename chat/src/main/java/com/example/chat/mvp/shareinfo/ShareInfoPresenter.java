@@ -1,7 +1,7 @@
 package com.example.chat.mvp.shareinfo;
 
 import com.example.chat.base.AppBasePresenter;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
@@ -15,9 +15,6 @@ import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.example.commonlibrary.bean.chat.DaoSession;
-import com.example.commonlibrary.bean.chat.PostNotifyInfo;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.PublicPostEntityDao;
 import com.example.commonlibrary.mvp.model.DefaultModel;
@@ -60,7 +57,7 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
             iView.showLoading(null);
         }
         addSubscription(MsgManager
-                .getInstance().getAllPostData(isPublic,isRefresh,uid,time, new FindListener<PublicPostBean>() {
+                .getInstance().getAllPostData(isPublic, isRefresh, uid, time, new FindListener<PublicPostBean>() {
                     @Override
                     public void done(List<PublicPostBean> list, BmobException e) {
                         if (e == null || e.getErrorCode() == 101) {
@@ -74,9 +71,9 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                                     }
                                 }
                                 String strTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
-                                String key=Constant.UPDATE_TIME_SHARE+uid;
+                                String key = ConstantUtil.UPDATE_TIME_SHARE + uid;
                                 if (isPublic) {
-                                    key+=Constant.PUBLIC;
+                                    key += ConstantUtil.PUBLIC;
                                 }
                                 BaseApplication.getAppComponent()
                                         .getSharedPreferences().edit()
@@ -86,35 +83,35 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                             }
                             iView.updateData(list);
                         } else {
-                            QueryBuilder<PublicPostEntity> queryBuilder= UserDBManager.getInstance().getDaoSession()
+                            QueryBuilder<PublicPostEntity> queryBuilder = UserDBManager.getInstance().getDaoSession()
                                     .getPublicPostEntityDao().queryBuilder();
-                            if (!isPublic){
+                            if (!isPublic) {
                                 queryBuilder.where(PublicPostEntityDao.Properties
                                         .Uid.eq(uid));
                             }
                             long currentTime = TimeUtil.getTime(time, "yyyy-MM-dd HH:mm:ss");
                             if (isRefresh) {
-                                String key=Constant.UPDATE_TIME_SHARE+uid;
+                                String key = ConstantUtil.UPDATE_TIME_SHARE + uid;
                                 if (isPublic) {
-                                    key+=Constant.PUBLIC;
+                                    key += ConstantUtil.PUBLIC;
                                 }
-                                String updateTime=BaseApplication
+                                String updateTime = BaseApplication
                                         .getAppComponent().getSharedPreferences()
-                                        .getString(key,null);
-                                if (updateTime != null && !time.equals(Constant.REFRESH_TIME)) {
+                                        .getString(key, null);
+                                if (updateTime != null && !time.equals(ConstantUtil.REFRESH_TIME)) {
                                     long resultTime = TimeUtil.getTime(updateTime, "yyyy-MM-dd HH:mm:ss");
                                     queryBuilder.where(PublicPostEntityDao.Properties.UpdatedTime.gt(resultTime));
                                 } else {
                                     queryBuilder.where(PublicPostEntityDao.Properties.UpdatedTime.gt(currentTime));
                                 }
                                 queryBuilder.where(PublicPostEntityDao.Properties.CreatedTime.gt(currentTime));
-                            }else {
+                            } else {
                                 queryBuilder.where(PublicPostEntityDao.Properties.CreatedTime.lt(currentTime));
                             }
                             queryBuilder.orderDesc(PublicPostEntityDao.Properties.CreatedTime);
                             queryBuilder.limit(10);
                             List<PublicPostEntity> publicPostEntities = queryBuilder.build().list();
-                            List<PublicPostBean>  result=new ArrayList<>(publicPostEntities.size());
+                            List<PublicPostBean> result = new ArrayList<>(publicPostEntities.size());
                             for (PublicPostEntity item :
                                     publicPostEntities) {
                                 result.add(MsgManager.getInstance().cover(item));
@@ -126,10 +123,6 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                 }));
 
     }
-
-
-
-
 
 
     public void dealLike(final String objectId, final boolean isAdd) {
@@ -157,34 +150,34 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                         public void done(BmobException e) {
                             iView.hideLoading();
                             if (e == null) {
-//                                不管下面操作是否成功
+                                //                                不管下面操作是否成功
                                 UserDBManager.getInstance()
                                         .addOrUpdatePost(publicPostBean);
-                                RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE, isAdd?CommentEvent.ACTION_ADD:CommentEvent
-                                .ACTION_DELETE));
+                                RxBusManager.getInstance().post(new CommentEvent(objectId, CommentEvent.TYPE_LIKE, isAdd ? CommentEvent.ACTION_ADD : CommentEvent
+                                        .ACTION_DELETE));
                                 if (isAdd) {
                                     if (!publicPostBean.getAuthor().getObjectId().equals(UserManager
-                                    .getInstance().getCurrentUserObjectId())) {
-                                        MsgManager.getInstance().sendPostNotifyInfo(Constant.TYPE_LIKE,objectId,UserManager.getInstance().getCurrentUserObjectId()
-                                        ,publicPostBean.getAuthor().getObjectId());
+                                            .getInstance().getCurrentUserObjectId())) {
+                                        MsgManager.getInstance().sendPostNotifyInfo(ConstantUtil.TYPE_LIKE, objectId, UserManager.getInstance().getCurrentUserObjectId()
+                                                , publicPostBean.getAuthor().getObjectId());
                                     }
                                 }
 
-                            }else{
-                                ToastUtils.showShortToast("点赞失败"+e.toString());
+                            } else {
+                                ToastUtils.showShortToast("点赞失败" + e.toString());
                             }
                         }
                     }));
-                }else {
+                } else {
                     iView.hideLoading();
-                    ToastUtils.showShortToast("点赞失败"+(e!=null?e.toString():""));
+                    ToastUtils.showShortToast("点赞失败" + (e != null ? e.toString() : ""));
                 }
             }
         }));
     }
 
     public void deleteShareInfo(PublicPostBean data, UpdateListener listener) {
-        if (!data.getSendStatus().equals(Constant.SEND_STATUS_SUCCESS)) {
+        if (!data.getSendStatus().equals(ConstantUtil.SEND_STATUS_SUCCESS)) {
             UserDBManager.getInstance()
                     .getDaoSession()
                     .getPublicPostEntityDao().deleteByKey(data.getObjectId());
@@ -203,7 +196,7 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                     BmobQuery<PublicCommentBean> bmobQuery1 = new BmobQuery<>();
                     PublicPostBean item1 = new PublicPostBean();
                     item1.setObjectId(data.getObjectId());
-                    bmobQuery1.addWhereEqualTo(Constant.POST, new BmobPointer(item1));
+                    bmobQuery1.addWhereEqualTo(ConstantUtil.POST, new BmobPointer(item1));
                     bmobQuery1.findObjects(new FindListener<PublicCommentBean>() {
                         @Override
                         public void done(List<PublicCommentBean> list, BmobException e) {
@@ -229,13 +222,13 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
                             }
                         }
                     });
-                    if (data.getMsgType() == Constant.EDIT_TYPE_VIDEO
+                    if (data.getMsgType() == ConstantUtil.EDIT_TYPE_VIDEO
                             ||
-                            data.getMsgType() == Constant.EDIT_TYPE_IMAGE) {
+                            data.getMsgType() == ConstantUtil.EDIT_TYPE_IMAGE) {
                         PostDataBean postDataBean = BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
-                        String[] temp=new String[postDataBean.getImageList().size()];
+                        String[] temp = new String[postDataBean.getImageList().size()];
                         for (int i = 0; i < postDataBean.getImageList().size(); i++) {
-                            temp[i]=postDataBean.getImageList().get(i);
+                            temp[i] = postDataBean.getImageList().get(i);
                         }
                         BmobFile.deleteBatch(temp, new DeleteBatchListener() {
                             @Override
@@ -258,7 +251,7 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
         addSubscription(MsgManager.getInstance().reSendPublicPostBean(data, new OnCreatePublicPostListener() {
             @Override
             public void onSuccess(PublicPostBean publicPostBean) {
-                publicPostBean.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                publicPostBean.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
                 UserDBManager.getInstance()
                         .getDaoSession().getPublicPostEntityDao()
                         .deleteByKey(objectId);
@@ -268,7 +261,7 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
 
             @Override
             public void onFailed(String errorMsg, int errorCode, PublicPostBean publicPostBean) {
-                publicPostBean.setSendStatus(Constant.SEND_STATUS_FAILED);
+                publicPostBean.setSendStatus(ConstantUtil.SEND_STATUS_FAILED);
                 UserDBManager.getInstance().addOrUpdatePost(publicPostBean);
                 RxBusManager.getInstance().post(new UpdatePostEvent(publicPostBean));
 
@@ -280,24 +273,24 @@ public class ShareInfoPresenter extends AppBasePresenter<IView<List<PublicPostBe
         addSubscription(MsgManager.getInstance().updatePublicPostBean(data, new OnCreatePublicPostListener() {
             @Override
             public void onSuccess(PublicPostBean publicPostBean) {
-                publicPostBean.setSendStatus(Constant.SEND_STATUS_SUCCESS);
+                publicPostBean.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
                 UserDBManager.getInstance().addOrUpdatePost(publicPostBean);
                 RxBusManager.getInstance().post(new UpdatePostEvent(publicPostBean));
             }
 
             @Override
             public void onFailed(String errorMsg, int errorCode, PublicPostBean publicPostBean) {
-                publicPostBean.setSendStatus(Constant.SEND_STATUS_FAILED);
+                publicPostBean.setSendStatus(ConstantUtil.SEND_STATUS_FAILED);
                 UserDBManager.getInstance().addOrUpdatePost(publicPostBean);
                 RxBusManager.getInstance().post(new UpdatePostEvent(publicPostBean));
             }
         }));
     }
 
-    public void getFirstPostNotifyBean( ) {
-        BmobQuery<PostNotifyBean> bmobQuery=new BmobQuery<>();
-        bmobQuery.addWhereEqualTo("toUser",new BmobPointer(UserManager.getInstance().getCurrentUser()));
-        bmobQuery.addWhereEqualTo("readStatus",Constant.READ_STATUS_READED);
+    public void getFirstPostNotifyBean() {
+        BmobQuery<PostNotifyBean> bmobQuery = new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("toUser", new BmobPointer(UserManager.getInstance().getCurrentUser()));
+        bmobQuery.addWhereEqualTo("readStatus", ConstantUtil.READ_STATUS_READED);
         bmobQuery.order("-createdAt");
         bmobQuery.setLimit(1);
         bmobQuery.include("relatedUser");

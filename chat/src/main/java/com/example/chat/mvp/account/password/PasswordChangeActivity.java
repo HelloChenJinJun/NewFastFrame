@@ -8,13 +8,11 @@ import android.widget.Button;
 
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.dagger.account.password.DaggerPasswordChangeComponent;
 import com.example.chat.dagger.account.password.PasswordChangeModule;
-import com.example.chat.util.CommonUtils;
 import com.example.chat.view.AutoEditText;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.rxbus.event.PwChangeEvent;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
@@ -25,22 +23,18 @@ import com.example.commonlibrary.utils.ToastUtils;
  * QQ:         1981367757
  */
 
-public class PasswordChangeActivity extends SlideBaseActivity<Object,PasswordChangePresenter> implements View.OnClickListener {
+public class PasswordChangeActivity extends ChatBaseActivity<Object, PasswordChangePresenter> implements View.OnClickListener {
 
-    private AutoEditText old,news,confirm;
+    private AutoEditText old, news, confirm;
 
 
     public static void start(Activity activity) {
-        Intent intent=new Intent(activity,PasswordChangeActivity.class);
+        Intent intent = new Intent(activity, PasswordChangeActivity.class);
         activity.startActivity(intent);
     }
 
     @Override
     public void updateData(Object o) {
-        if (o != null && o instanceof PwChangeEvent) {
-            ToastUtils.showShortToast("最终密码修改成功");
-            finish();
-        }
     }
 
     @Override
@@ -60,10 +54,10 @@ public class PasswordChangeActivity extends SlideBaseActivity<Object,PasswordCha
 
     @Override
     protected void initView() {
-        old= (AutoEditText) findViewById(R.id.aet_activity_password_change_old);
-        news= (AutoEditText) findViewById(R.id.aet_activity_password_change_new);
-        Button commit = (Button) findViewById(R.id.btn_activity_password_change_commit);
-        confirm= (AutoEditText) findViewById(R.id.aet_activity_password_change_confirm);
+        old = findViewById(R.id.aet_activity_password_change_old);
+        news = findViewById(R.id.aet_activity_password_change_new);
+        Button commit = findViewById(R.id.btn_activity_password_change_commit);
+        confirm = findViewById(R.id.aet_activity_password_change_confirm);
         commit.setOnClickListener(this);
     }
 
@@ -71,16 +65,11 @@ public class PasswordChangeActivity extends SlideBaseActivity<Object,PasswordCha
     protected void initData() {
         DaggerPasswordChangeComponent.builder().chatMainComponent(ChatApplication.getChatMainComponent())
                 .passwordChangeModule(new PasswordChangeModule(this)).build().inject(this);
-        ToolBarOption toolBarOption=new ToolBarOption();
+        ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("修改密码");
         toolBarOption.setNeedNavigation(true);
         setToolBar(toolBarOption);
     }
-
-
-
-
-
 
 
     @Override
@@ -107,6 +96,6 @@ public class PasswordChangeActivity extends SlideBaseActivity<Object,PasswordCha
             ToastUtils.showShortToast(getString(R.string.network_tip));
             return;
         }
-        presenter.resetPassword(old.getText().toString().trim(),news.getText().toString().trim());
+        presenter.resetPassword(old.getText().toString().trim(), news.getText().toString().trim());
     }
 }

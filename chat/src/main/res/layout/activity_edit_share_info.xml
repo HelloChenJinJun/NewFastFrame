@@ -52,7 +52,7 @@
         android:layout_marginTop="20dp"/>
 
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cv_activity_edit_share_info_share_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                 android:textColor="@color/grey_500"
                 android:textSize="16sp" />
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
     
     
     

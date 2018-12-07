@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.AppBarLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:skin="http://schemas.android.com/tools"
     android:id="@+id/app_bar_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:tag="skin"
     android:background="@color/custom_color_app_title_bg"
-    app:elevation="10dp">
+    app:elevation="10dp"
+    skin:enable="true">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
@@ -21,12 +21,13 @@
             android:paddingRight="10dp">
 
             <ImageView
-                android:tag="skin"
                 android:id="@+id/iv_header_layout_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_back" />
+                android:tag="skin"
+
+                app:srcCompat="@drawable/ic_back" />
 
             <com.example.commonlibrary.cusotomview.RoundAngleImageView
                 android:id="@+id/riv_header_layout_icon"
@@ -39,28 +40,30 @@
                 app:roundWidth="25dp" />
 
             <TextView
-                android:tag="skin"
                 android:id="@+id/tv_header_layout_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/riv_header_layout_icon"
+                android:tag="skin"
                 android:text="标题"
                 android:textColor="@color/custom_color_text_main"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                skin:enable="true" />
 
             <TextView
-                android:tag="skin"
                 android:id="@+id/tv_header_layout_right"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
+                android:tag="skin"
                 android:text="保存"
                 android:textColor="@color/custom_color_text_main"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                skin:enable="true" />
 
             <ImageView
                 android:id="@+id/iv_header_layout_right"
@@ -71,6 +74,6 @@
 
         </RelativeLayout>
 
-    </android.support.v7.widget.Toolbar>
-</android.support.design.widget.AppBarLayout>
+    </androidx.appcompat.widget.Toolbar>
+</com.google.android.material.appbar.AppBarLayout>
 

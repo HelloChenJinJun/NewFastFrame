@@ -3,13 +3,9 @@ package com.example.chat.adapter.holder.publicShare;
 import android.view.View;
 import android.view.ViewStub;
 
-import com.bumptech.glide.Glide;
 import com.example.chat.R;
-import com.example.chat.adapter.holder.publicShare.BaseShareInfoViewHolder;
 import com.example.chat.bean.post.PostDataBean;
-
-import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerStandard;
+import com.example.commonlibrary.manager.video.DefaultVideoPlayer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -19,13 +15,13 @@ import cn.jzvd.JZVideoPlayerStandard;
  */
 
 public class VideoShareInfoHolder extends BaseShareInfoViewHolder {
-    private JZVideoPlayerStandard jzVideoPlayerStandard;
+    private DefaultVideoPlayer mDefaultVideoPlayer;
 
     public VideoShareInfoHolder(View view) {
         super(view);
         ViewStub viewStub = itemView.findViewById(R.id.vs_item_fragment_share_info_stub);
         viewStub.setLayoutResource(R.layout.item_fragment_share_info_video);
-        jzVideoPlayerStandard = viewStub.inflate().findViewById(R.id.js_item_fragment_share_info_video_display);
+        mDefaultVideoPlayer = viewStub.inflate().findViewById(R.id.dvp_item_fragment_share_info_video_container);
     }
 
 
@@ -35,14 +31,11 @@ public class VideoShareInfoHolder extends BaseShareInfoViewHolder {
             for (String item :
                     data.getImageList()) {
                 if (item.endsWith(".mp4")) {
-                    jzVideoPlayerStandard.setUp(item, JZVideoPlayer.SCREEN_WINDOW_LIST, "测试");
+                    mDefaultVideoPlayer.setUp(item, null);
                 } else {
-                    Glide.with(getContext()).load(item)
-                            .into(jzVideoPlayerStandard.thumbImageView);
+                    mDefaultVideoPlayer.setImageCover(item);
                 }
             }
-
-
         }
     }
 }

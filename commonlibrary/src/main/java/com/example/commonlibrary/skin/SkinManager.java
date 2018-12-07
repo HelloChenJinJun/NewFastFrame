@@ -8,36 +8,23 @@ import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.CheckBox;
 
-import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.R;
-import com.example.commonlibrary.mvp.presenter.BasePresenter;
 import com.example.commonlibrary.net.NetManager;
 import com.example.commonlibrary.net.download.DownloadListener;
-import com.example.commonlibrary.net.download.FileInfo;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.SkinUpdateEvent;
-import com.example.commonlibrary.skin.theme.ThemeUtil;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.FileUtil;
-import com.example.commonlibrary.utils.SkinUtil;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.LayoutInflaterCompat;
 
 /**
  * Created by COOTEK on 2017/9/3.

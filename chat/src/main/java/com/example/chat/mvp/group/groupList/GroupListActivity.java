@@ -2,20 +2,18 @@ package com.example.chat.mvp.group.groupList;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.example.chat.R;
 import com.example.chat.adapter.GroupListAdapter;
-import com.example.chat.base.Constant;
-import com.example.chat.bean.GroupTableMessage;
+import com.example.chat.base.ChatBaseActivity;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.chat.ChatActivity;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
@@ -29,8 +27,8 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
  *
  * 群列表适配器
  */
-public class GroupListActivity extends SlideBaseActivity {
-        private RecyclerView display;
+public class GroupListActivity extends ChatBaseActivity {
+        private SuperRecyclerView display;
         private GroupListAdapter groupListAdapter;
 
 
@@ -53,21 +51,20 @@ public class GroupListActivity extends SlideBaseActivity {
 
         @Override
         public void initView() {
-                display = (RecyclerView) findViewById(R.id.rcv_group_list_display);
+                display = (SuperRecyclerView) findViewById(R.id.srcv_group_list_display);
         }
 
         @Override
         public void initData() {
-                display.setLayoutManager(new LinearLayoutManager(this));
-                display.setItemAnimator(new DefaultItemAnimator());
+                display.setLayoutManager(new WrappedLinearLayoutManager(this));
                 display.setHasFixedSize(true);
-                display.addItemDecoration(new ListViewDecoration(this));
+                display.addItemDecoration(new ListViewDecoration());
                 groupListAdapter = new GroupListAdapter();
                 groupListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
                         @Override
                         public void onItemClick(int position, View view) {
                                 GroupTableEntity message = groupListAdapter.getData(position);
-                               ChatActivity.start(GroupListActivity.this, Constant.TYPE_GROUP
+                               ChatActivity.start(GroupListActivity.this, ConstantUtil.TYPE_GROUP
                                ,message.getGroupId());
                         }
                 });

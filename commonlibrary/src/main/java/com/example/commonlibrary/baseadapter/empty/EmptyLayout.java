@@ -3,9 +3,6 @@ package com.example.commonlibrary.baseadapter.empty;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -14,6 +11,10 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.commonlibrary.R;
+
+import androidx.annotation.AttrRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * 项目名称:    Cugappplat
@@ -25,7 +26,7 @@ import com.example.commonlibrary.R;
 public class EmptyLayout extends FrameLayout implements View.OnClickListener {
 
 
-    private RelativeLayout errorLayout,emptyLayout,loadingLayout;
+    private RelativeLayout errorLayout, emptyLayout, loadingLayout;
     private ImageView loadingImage;
     private View contentView;
 
@@ -69,7 +70,6 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
     }
 
 
-
     public void setCurrentStatus(int currentStatus) {
         this.currentStatus = currentStatus;
         updateViewVisible();
@@ -83,7 +83,7 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
         } else {
             if (getVisibility() == VISIBLE) {
                 setVisibility(GONE);
-                if (contentView!=null) {
+                if (contentView != null) {
                     contentView.setVisibility(VISIBLE);
                 }
             }
@@ -127,7 +127,7 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
     }
 
     public void setContentView(View contentView) {
-        this.contentView=contentView;
+        this.contentView = contentView;
     }
 
 
@@ -142,7 +142,6 @@ public class EmptyLayout extends FrameLayout implements View.OnClickListener {
     public void setOnRetryListener(OnRetryListener onRetryListener) {
         mOnRetryListener = onRetryListener;
     }
-
 
 
 }

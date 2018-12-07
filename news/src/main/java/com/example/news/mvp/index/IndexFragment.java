@@ -1,14 +1,11 @@
 package com.example.news.mvp.index;
 
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
@@ -18,17 +15,16 @@ import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBeanDao;
 import com.example.commonlibrary.cusotomview.CustomPopWindow;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.utils.ConstantUtil;
-import com.example.news.mvp.newsType.AdjustNewsTypeActivity;
 import com.example.news.NewsApplication;
 import com.example.news.R;
 import com.example.news.adapter.PopWindowAdapter;
 import com.example.news.event.TypeNewsEvent;
-import com.example.news.mvp.news.college.CollegeNewsMainFragment;
 import com.example.news.mvp.news.othernew.OtherNewsListFragment;
 import com.example.news.mvp.news.othernew.photolist.PhotoListFragment;
-import com.example.news.util.NewsUtil;
+import com.example.news.mvp.newsType.AdjustNewsTypeActivity;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +39,7 @@ import java.util.List;
 public class IndexFragment extends BaseFragment implements View.OnClickListener {
     private ViewPagerAdapter viewPagerAdapter;
     private TabLayout tabLayout;
-    private ViewPager display;
-    private ImageView expend;
+    private WrappedViewPager display;
     private List<String> titleList;
     private List<BaseFragment> fragmentList;
     private PopWindowAdapter popWindowAdapter;
@@ -78,9 +73,9 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     protected void initView() {
-        display = (ViewPager) findViewById(R.id.vp_fragment_index_display);
+        display = (WrappedViewPager) findViewById(R.id.vp_fragment_index_display);
         tabLayout = (TabLayout) findViewById(R.id.tl_fragment_index_tab);
-        expend = (ImageView) findViewById(R.id.iv_fragment_index_expend_list);
+        ImageView expend = (ImageView) findViewById(R.id.iv_fragment_index_expend_list);
         expend.setOnClickListener(this);
     }
 
@@ -121,35 +116,29 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
     private void initFragment() {
         titleList = new ArrayList<>();
         fragmentList = new ArrayList<>();
-       List<OtherNewsTypeBean> list= NewsApplication
+        List<OtherNewsTypeBean> list = NewsApplication
                 .getNewsComponent().getRepositoryManager()
                 .getDaoSession()
                 .getOtherNewsTypeBeanDao()
                 .queryBuilder().where(OtherNewsTypeBeanDao.Properties.HasSelected.eq(Boolean.TRUE))
                 .build().list();
-        List<OtherNewsTypeBean> tempList=new ArrayList<>();
-        List<OtherNewsTypeBean> otherList=new ArrayList<>();
-        String college= BaseApplication.getAppComponent().getSharedPreferences()
-                .getString(ConstantUtil.COLLEGE,null);
-        String type = NewsUtil.getTypeFromName(college);
+        List<OtherNewsTypeBean> tempList = new ArrayList<>();
+        List<OtherNewsTypeBean> otherList = new ArrayList<>();
+
         for (OtherNewsTypeBean bean :
                 list) {
-            if (bean.getName().equals("地大")
-                    ||bean.getName().equals("福利")
-                    ||bean.getName().equals("头条")
-                    ||bean.getTypeId().equals(type)) {
+            if (bean.getName().equals("福利") || bean.getName().equals("头条")
+                    ) {
                 tempList.add(bean);
-            }else {
+            } else {
                 otherList.add(bean);
             }
         }
-        otherList.addAll(0,tempList);
+        otherList.addAll(0, tempList);
         for (OtherNewsTypeBean bean :
                 otherList) {
             titleList.add(bean.getName());
-            if (bean.getTypeId().startsWith("TYPE")) {
-                fragmentList.add(CollegeNewsMainFragment.newInstance(bean.getTypeId()));
-            } else if (TextUtils.isEmpty(bean.getTypeId())) {
+            if (TextUtils.isEmpty(bean.getTypeId())) {
                 fragmentList.add(PhotoListFragment.newInstance());
             } else {
                 fragmentList.add(OtherNewsListFragment.newInstance(bean));
@@ -165,7 +154,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         int id = v.getId();
         if (id == R.id.iv_fragment_index_expend_list) {
             if (customPopWindow == null) {
-                customPopWindow = new CustomPopWindow.Builder().parentView(v).activity(getActivity()).contentView(getContentView())
+                customPopWindow = new CustomPopWindow.Builder().contentView(getContentView())
                         .build();
             }
             List<OtherNewsTypeBean> result = new ArrayList<>();
@@ -186,9 +175,6 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             customPopWindow.dismiss();
         }
     }
-
-
-
 
 
     private View getContentView() {

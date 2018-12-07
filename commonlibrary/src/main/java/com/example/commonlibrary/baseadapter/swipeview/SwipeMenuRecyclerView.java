@@ -16,15 +16,12 @@
 package com.example.commonlibrary.baseadapter.swipeview;
 
 import android.content.Context;
-import android.support.annotation.IntDef;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-
 
 import com.example.commonlibrary.baseadapter.adapter.BaseSwipeRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.swipeview.touch.DefaultItemTouchHelper;
@@ -36,6 +33,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.IntDef;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class SwipeMenuRecyclerView extends RecyclerView {

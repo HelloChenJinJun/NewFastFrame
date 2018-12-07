@@ -1,6 +1,6 @@
 package com.example.chat.util;
 
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.utils.CommonLogger;
 
@@ -93,7 +93,7 @@ public class TimeUtil {
 
     public static String getServerFormatTime() {
         long deltaTime = BaseApplication.getAppComponent().getSharedPreferences()
-                .getLong(Constant.DELTA_TIME, -1L);
+                .getLong(ConstantUtil.DELTA_TIME, -1L);
         LogUtil.e("这里通过缓存的时间差值来计算出服务器上的时间");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long realServerTime = System.currentTimeMillis() - deltaTime;
@@ -115,7 +115,7 @@ public class TimeUtil {
     public static String getRealTime(long serverTime) {
         LogUtil.e("服务器上的时间:" + serverTime);
         long deltaTime = BaseApplication.getAppComponent().getSharedPreferences()
-                .getLong(Constant.DELTA_TIME, -1L);
+                .getLong(ConstantUtil.DELTA_TIME, -1L);
         long realTime = serverTime + deltaTime;
         LogUtil.e("客户端的时间:" + realTime);
         LogUtil.e("现在的客户端的时间:" + System.currentTimeMillis());
@@ -185,7 +185,7 @@ public class TimeUtil {
                     long deltaTime = System.currentTimeMillis() - aLong * 1000L;
                     LogUtil.e("客户端与服务器端的时间差值 :" + deltaTime);
                     BaseApplication.getAppComponent().getSharedPreferences()
-                            .edit().putLong(Constant.DELTA_TIME, deltaTime).apply();
+                            .edit().putLong(ConstantUtil.DELTA_TIME, deltaTime).apply();
                 } else {
                     LogUtil.e("获取服务器上的时间失败" + e.toString());
                 }
@@ -203,13 +203,13 @@ public class TimeUtil {
         }
         LogUtil.e("服务器上的时间:" + serverTime);
         long deltaTime = BaseApplication.getAppComponent().getSharedPreferences()
-                .getLong(Constant.DELTA_TIME, -1L);
+                .getLong(ConstantUtil.DELTA_TIME, -1L);
         return serverTime + deltaTime;
     }
 
     public static long localToServerTime(long time){
         long deltaTime = BaseApplication.getAppComponent().getSharedPreferences()
-                .getLong(Constant.DELTA_TIME, 0L);
+                .getLong(ConstantUtil.DELTA_TIME, 0L);
         return time-deltaTime;
     }
 
@@ -223,7 +223,7 @@ public class TimeUtil {
         }
         CommonLogger.e("服务器上的时间:" + serverTime);
         long deltaTime = BaseApplication.getAppComponent().getSharedPreferences()
-                .getLong(Constant.DELTA_TIME, 0L);
+                .getLong(ConstantUtil.DELTA_TIME, 0L);
         return serverTime + deltaTime;
     }
 

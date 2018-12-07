@@ -2,7 +2,6 @@ package com.example.chat.mvp.preview;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -11,19 +10,21 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.example.chat.R;
 import com.example.chat.adapter.PhotoPreViewAdapter;
-import com.example.chat.base.Constant;
-import com.example.chat.bean.ImageItem;
+import com.example.chat.base.ConstantUtil;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.events.PhotoPreViewEvent;
-import com.example.chat.base.SlideBaseActivity;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.StatusBarUtil;
+import com.example.commonlibrary.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * 项目名称:    PostDemo
@@ -32,7 +33,7 @@ import java.util.List;
  * QQ:         1981367757
  */
 
-public class PhotoPreViewActivity extends SlideBaseActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, Animation.AnimationListener {
+public class PhotoPreViewActivity extends ChatBaseActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, Animation.AnimationListener {
 
     private RelativeLayout topContainer;
     private TextView number;
@@ -70,19 +71,19 @@ public class PhotoPreViewActivity extends SlideBaseActivity implements CompoundB
 
     @Override
     protected void initView() {
-        display = (WrappedViewPager) findViewById(R.id.vp_activity_photo_preview_display);
-        topContainer = (RelativeLayout) findViewById(R.id.rl_activity_photo_preview_top_container);
+        display = findViewById(R.id.vp_activity_photo_preview_display);
+        topContainer = findViewById(R.id.rl_activity_photo_preview_top_container);
         StatusBarUtil.setStatusPadding(topContainer);
-        number = (TextView) findViewById(R.id.tv_activity_photo_preview_number);
-        checkBox = (CheckBox) findViewById(R.id.cb_activity_photo_preview_check);
+        number = findViewById(R.id.tv_activity_photo_preview_number);
+        checkBox = findViewById(R.id.cb_activity_photo_preview_check);
         checkBox.setOnCheckedChangeListener(this);
         findViewById(R.id.iv_activity_photo_preview_finish).setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
-        List<ImageItem> list = (List<ImageItem>) getIntent().getSerializableExtra(Constant.IMAGE_PRE_VIEW);
-        if (getIntent().getBooleanExtra(Constant.IS_SELECT, false)) {
+        List<SystemUtil.ImageItem> list = (List<SystemUtil.ImageItem>) getIntent().getSerializableExtra(ConstantUtil.IMAGE_PRE_VIEW);
+        if (getIntent().getBooleanExtra(ConstantUtil.IS_SELECT, false)) {
             checkBox.setVisibility(View.VISIBLE);
         } else {
             checkBox.setVisibility(View.GONE);
@@ -121,13 +122,13 @@ public class PhotoPreViewActivity extends SlideBaseActivity implements CompoundB
 
             }
         });
-        int position=getIntent().getIntExtra(Constant.POSITION,0);
+        int position = getIntent().getIntExtra(Constant.POSITION, 0);
         display.setCurrentItem(position);
         number.setText((position + 1) + "/" + totalSize);
-//        if (position == 0) {
-//            number.setText((position + 1) + "/" + totalSize);
-//            checkBox.setChecked(checkArray[position]);
-//        }
+        //        if (position == 0) {
+        //            number.setText((position + 1) + "/" + totalSize);
+        //            checkBox.setChecked(checkArray[position]);
+        //        }
 
     }
 
@@ -168,11 +169,11 @@ public class PhotoPreViewActivity extends SlideBaseActivity implements CompoundB
 
     }
 
-    public static void start(Activity activity, int position, ArrayList<ImageItem> imageItemList, boolean isSelect) {
+    public static void start(Activity activity, int position, ArrayList<SystemUtil.ImageItem> imageItemList, boolean isSelect) {
         Intent intent = new Intent(activity, PhotoPreViewActivity.class);
         intent.putExtra(Constant.POSITION, position);
-        intent.putExtra(Constant.IMAGE_PRE_VIEW, imageItemList);
-        intent.putExtra(Constant.IS_SELECT, isSelect);
+        intent.putExtra(ConstantUtil.IMAGE_PRE_VIEW, imageItemList);
+        intent.putExtra(ConstantUtil.IS_SELECT, isSelect);
         activity.startActivity(intent);
     }
 }

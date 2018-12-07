@@ -27,7 +27,8 @@ public class LoadMoreFooterView extends FrameLayout {
     private TextView mToTopTV;
     private OnRetryListener mOnRetryListener;
 
-    private RecyclerFooterViewClickListener listener ;
+    private RecyclerFooterViewClickListener listener;
+
     public LoadMoreFooterView(Context context) {
         this(context, null);
     }
@@ -35,20 +36,22 @@ public class LoadMoreFooterView extends FrameLayout {
     public LoadMoreFooterView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-    public void setBottomViewClickListener(RecyclerFooterViewClickListener listener){
-        this.listener = listener ;
+
+    public void setBottomViewClickListener(RecyclerFooterViewClickListener listener) {
+        this.listener = listener;
     }
+
     public LoadMoreFooterView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.layout_superrecyclerview_load_more_footer_view, this, true);
         mLoadingView = findViewById(R.id.loadingView);
         mErrorView = findViewById(R.id.errorView);
-        mTheEndView =  findViewById(R.id.theEndView);
+        mTheEndView = findViewById(R.id.theEndView);
         mToTopTV = (TextView) findViewById(R.id.to_list_top_textview);
         mToTopTV.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(null != listener)
+                if (null != listener)
                     listener.onBottomViewClickListener(v);
             }
         });
@@ -62,7 +65,7 @@ public class LoadMoreFooterView extends FrameLayout {
             }
         });
 
-        mStatus=Status.GONE;
+        mStatus = Status.GONE;
         change();
     }
 
@@ -75,7 +78,7 @@ public class LoadMoreFooterView extends FrameLayout {
     }
 
     public void setStatus(Status status) {
-        if (mStatus!=status) {
+        if (mStatus != status) {
             this.mStatus = status;
             change();
         }

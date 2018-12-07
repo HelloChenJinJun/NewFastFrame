@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:layout_height="wrap_content">
 
-    <cn.jzvd.JZVideoPlayerStandard
+    <com.example.commonlibrary.manager.video.DefaultVideoPlayer
+        android:id="@+id/dvp_item_fragment_share_info_video_container"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/js_item_fragment_share_info_video_display"/>
-
-</LinearLayout>
+        android:layout_height="200dp" />
+</FrameLayout>

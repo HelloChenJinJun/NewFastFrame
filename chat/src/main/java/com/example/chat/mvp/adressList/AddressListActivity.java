@@ -6,8 +6,8 @@ import android.view.View;
 
 import com.example.chat.R;
 import com.example.chat.adapter.AddressListAdapter;
-import com.example.chat.base.Constant;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ConstantUtil;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.bean.CityInfoBean;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * QQ:         1981367757
  */
 
-public class AddressListActivity extends SlideBaseActivity {
+public class AddressListActivity extends ChatBaseActivity {
     private SuperRecyclerView display;
     private AddressListAdapter addressListAdapter;
     private CityInfoBean cityInfoBean;
@@ -64,7 +64,7 @@ public class AddressListActivity extends SlideBaseActivity {
     protected void initData() {
         addressListAdapter = new AddressListAdapter();
         display.setLayoutManager(new WrappedLinearLayoutManager(this));
-        display.addItemDecoration(new ListViewDecoration(this));
+        display.addItemDecoration(new ListViewDecoration());
         display.setAdapter(addressListAdapter);
         addressListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
@@ -78,16 +78,16 @@ public class AddressListActivity extends SlideBaseActivity {
                         if (cityInfoBean.getName().trim().equals("重庆市")) {
                             cityInfoBean.getCityList().get(0).getCityList().addAll(cityInfoBean.getCityList().get(1).getCityList());
                         }
-                        AddressListActivity.start(AddressListActivity.this, cityInfoBean.getCityList().get(0), Constant.REQUEST_CODE_NORMAL);
+                        AddressListActivity.start(AddressListActivity.this, cityInfoBean.getCityList().get(0), ConstantUtil.REQUEST_CODE_NORMAL);
                         return;
                     }
                 }
                 if (cityInfoBean.getCityList() != null && cityInfoBean.getCityList().size() > 0) {
 
-                    AddressListActivity.start(AddressListActivity.this, cityInfoBean, Constant.REQUEST_CODE_NORMAL);
+                    AddressListActivity.start(AddressListActivity.this, cityInfoBean, ConstantUtil.REQUEST_CODE_NORMAL);
                 } else {
                     Intent intent = new Intent();
-                    intent.putExtra(Constant.CONTENT, AddressListActivity.this.cityInfoBean.getName() + cityInfoBean.getName().trim());
+                    intent.putExtra(ConstantUtil.CONTENT, AddressListActivity.this.cityInfoBean.getName() + cityInfoBean.getName().trim());
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -95,7 +95,7 @@ public class AddressListActivity extends SlideBaseActivity {
             }
         });
 
-        cityInfoBean = getIntent().getParcelableExtra(Constant.CONTENT);
+        cityInfoBean = getIntent().getParcelableExtra(ConstantUtil.CONTENT);
 
 
         ToolBarOption toolBarOption = new ToolBarOption();
@@ -149,8 +149,8 @@ public class AddressListActivity extends SlideBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == Constant.REQUEST_CODE_NORMAL) {
-                String content = data.getStringExtra(Constant.CONTENT);
+            if (requestCode == ConstantUtil.REQUEST_CODE_NORMAL) {
+                String content = data.getStringExtra(ConstantUtil.CONTENT);
                 Intent intent = new Intent();
                 StringBuilder stringBuilder = new StringBuilder();
 
@@ -164,7 +164,7 @@ public class AddressListActivity extends SlideBaseActivity {
                     stringBuilder.append(name);
                 }
                 stringBuilder.append(content);
-                intent.putExtra(Constant.CONTENT, stringBuilder.toString());
+                intent.putExtra(ConstantUtil.CONTENT, stringBuilder.toString());
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -175,7 +175,7 @@ public class AddressListActivity extends SlideBaseActivity {
 
     public static void start(Activity activity, CityInfoBean cityInfoBean, int requestCode) {
         Intent intent = new Intent(activity, AddressListActivity.class);
-        intent.putExtra(Constant.CONTENT, cityInfoBean);
+        intent.putExtra(ConstantUtil.CONTENT, cityInfoBean);
         activity.startActivityForResult(intent, requestCode);
     }
 }

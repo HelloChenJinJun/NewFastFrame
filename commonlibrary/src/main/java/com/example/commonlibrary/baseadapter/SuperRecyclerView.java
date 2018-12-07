@@ -4,11 +4,6 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +25,13 @@ import com.example.commonlibrary.baseadapter.refresh.OnRefreshListener;
 import com.example.commonlibrary.baseadapter.refresh.RefreshHeaderLayout;
 import com.example.commonlibrary.baseadapter.refresh.RefreshTrigger;
 import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuRecyclerView;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
+import androidx.core.view.MotionEventCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 public class SuperRecyclerView extends SwipeMenuRecyclerView {
@@ -145,15 +147,11 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
     }
 
 
-
-
-
-    public void setLoadMoreStatus(LoadMoreFooterView.Status status){
-        if (mLoadMoreFooterView!= null) {
+    public void setLoadMoreStatus(LoadMoreFooterView.Status status) {
+        if (mLoadMoreFooterView != null) {
             ((LoadMoreFooterView) mLoadMoreFooterView).setStatus(status);
         }
     }
-
 
 
     public boolean ismLoadMoreEnabled() {
@@ -170,11 +168,11 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
     }
 
     public void setRefreshing(boolean refreshing) {
-//        TLog.e(SuperRecyclerView.class, "SuperRecyclerView_setRefreshing");
+        //        TLog.e(SuperRecyclerView.class, "SuperRecyclerView_setRefreshing");
         if (mStatus == STATUS_DEFAULT && refreshing) {
             this.mIsAutoRefreshing = true;
             setStatus(STATUS_SWIPING_TO_REFRESH);
-//            TLog.e(SuperRecyclerView.class, "自动刷新");
+            //            TLog.e(SuperRecyclerView.class, "自动刷新");
             startScrollDefaultStatusToRefreshingStatus();
         } else if (mStatus == STATUS_REFRESHING && !refreshing) {
             this.mIsAutoRefreshing = false;
@@ -423,7 +421,7 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
                 break;
 
                 case MotionEvent.ACTION_MOVE: {
-//                TLog.e(SuperRecyclerView.class, "截获到滚动事件");
+                    //                TLog.e(SuperRecyclerView.class, "截获到滚动事件");
                     final int index = MotionEventCompat.findPointerIndex(e, mActivePointerId);
                     if (index < 0) {
                         Log.e(TAG, "Error processing scroll; pointer index for id " + index + " not found. Did any MotionEvents get skipped?");
@@ -449,7 +447,7 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
 
                         if (dy > 0 && mStatus == STATUS_DEFAULT) {
                             setStatus(STATUS_SWIPING_TO_REFRESH);
-//                        TLog.e(SuperRecyclerView.class, "滚动刷新");
+                            //                        TLog.e(SuperRecyclerView.class, "滚动刷新");
                             mRefreshTrigger.onStart(false, refreshHeaderViewHeight, mRefreshFinalMoveOffset);
                         } else if (dy < 0) {
                             if (mStatus == STATUS_SWIPING_TO_REFRESH && refreshHeaderContainerHeight <= 0) {
@@ -464,7 +462,7 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
                             if (refreshHeaderContainerHeight >= refreshHeaderViewHeight) {
                                 setStatus(STATUS_RELEASE_TO_REFRESH);
                             } else {
-//                            TLog.e(SuperRecyclerView.class, "这里开始下拉刷新");
+                                //                            TLog.e(SuperRecyclerView.class, "这里开始下拉刷新");
                                 setStatus(STATUS_SWIPING_TO_REFRESH);
                             }
                             fingerMove(dy);
@@ -567,9 +565,9 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
 
     private void move(int dy) {
         if (dy != 0) {
-//            TLog.e(SuperRecyclerView.class, "核心刷新" + dy);
+            //            TLog.e(SuperRecyclerView.class, "核心刷新" + dy);
             int height = mRefreshHeaderContainer.getMeasuredHeight() + dy;
-//            TLog.e(SuperRecyclerView.class, "核心刷新偏移:" + dy + "刷新高度" + height);
+            //            TLog.e(SuperRecyclerView.class, "核心刷新偏移:" + dy + "刷新高度" + height);
             setRefreshHeaderContainerHeight(height);
             mRefreshTrigger.onMove(false, false, height);
         }
@@ -581,7 +579,7 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
     }
 
     private void startScrollDefaultStatusToRefreshingStatus() {
-//        TLog.e(SuperRecyclerView.class, "自动刷新");
+        //        TLog.e(SuperRecyclerView.class, "自动刷新");
         mRefreshTrigger.onStart(true, mRefreshHeaderView.getMeasuredHeight(), mRefreshFinalMoveOffset);
 
         int targetHeight = mRefreshHeaderView.getMeasuredHeight();
@@ -770,9 +768,13 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
     };
 
     private boolean isRefreshing() {
-        if (getParent() != null && getParent() instanceof SwipeRefreshLayout) {
-            SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) getParent();
-            return refreshLayout.isRefreshing();
+        if (getParent() != null && (getParent() instanceof SwipeRefreshLayout || getParent() instanceof CustomSwipeRefreshLayout)) {
+            if (getParent() instanceof SwipeRefreshLayout) {
+                SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) getParent();
+                return refreshLayout.isRefreshing();
+            } else {
+                return ((CustomSwipeRefreshLayout) getParent()).isRefreshing();
+            }
         } else {
             return mStatus != STATUS_DEFAULT;
         }

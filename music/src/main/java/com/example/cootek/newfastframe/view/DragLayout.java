@@ -1,8 +1,6 @@
 package com.example.cootek.newfastframe.view;
 
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -12,6 +10,9 @@ import android.view.ViewGroup;
 
 import com.example.commonlibrary.utils.DensityUtil;
 import com.nineoldandroids.view.ViewHelper;
+
+import androidx.core.view.ViewCompat;
+import androidx.customview.widget.ViewDragHelper;
 
 
 /**

@@ -1,9 +1,8 @@
 package com.example.commonlibrary.net.upload;
 
-import android.support.annotation.Nullable;
-
 import java.io.IOException;
 
+import androidx.annotation.Nullable;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okio.Buffer;

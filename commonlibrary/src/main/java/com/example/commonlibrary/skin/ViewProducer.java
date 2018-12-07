@@ -1,13 +1,14 @@
 package com.example.commonlibrary.skin;
 
 import android.content.Context;
-import android.support.v4.util.ArrayMap;
 import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.View;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
+
+import androidx.collection.ArrayMap;
 
 class ViewProducer {
     private static final Object[] mConstructorArgs = new Object[2];

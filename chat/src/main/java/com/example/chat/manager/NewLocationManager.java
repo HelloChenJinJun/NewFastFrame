@@ -4,8 +4,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.example.chat.base.Constant;
-import com.example.chat.bean.User;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.events.LocationEvent;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -107,12 +106,12 @@ public class NewLocationManager implements AMapLocationListener {
                     locationEvent.setCity(aMapLocation.getCity());
                     locationEvent.setTitle(aMapLocation.getPoiName());
                     RxBusManager.getInstance().post(locationEvent);
-                    BaseApplication.getAppComponent().getSharedPreferences().edit().putString(Constant.LATITUDE, latitude+"")
-                            .putString(Constant.LONGITUDE,longitude+"")
-                            .putString(Constant.ADDRESS, address)
-                    .putString(Constant.CITY,aMapLocation.getCity()).apply();
+                    BaseApplication.getAppComponent().getSharedPreferences().edit().putString(ConstantUtil.LATITUDE, latitude+"")
+                            .putString(ConstantUtil.LONGITUDE,longitude+"")
+                            .putString(ConstantUtil.ADDRESS, address)
+                    .putString(ConstantUtil.CITY,aMapLocation.getCity()).apply();
                     if (UserManager.getInstance().getCurrentUser() != null) {
-                        UserManager.getInstance().updateUserInfo(Constant.LOCATION,longitude+"&"+latitude,null);
+                        UserManager.getInstance().updateUserInfo(ConstantUtil.LOCATION,longitude+"&"+latitude,null);
                     }
                 } else {
                     CommonLogger.e("定位相同,不定位");

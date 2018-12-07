@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.v4.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
+        android:id="@+id/refresh_fragment_photo_list_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/refresh_fragment_photo_list_refresh">
+        android:layout_height="match_parent">
+
         <com.example.commonlibrary.baseadapter.SuperRecyclerView
+            android:id="@+id/srcv_fragment_photo_list_display"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/srcv_fragment_photo_list_display"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent" />
+    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
 
 </LinearLayout>

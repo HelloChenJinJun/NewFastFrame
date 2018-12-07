@@ -2,50 +2,50 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chat">
     <!--网络连接权限-->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <!--监听网络变化的权限-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!--设备休眠-->
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- sd卡存储-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!--摄像头-->
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <!--录音-->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!--通知震动-->
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
-    <uses-permission android:name="android.permission.ACCESS_GPS"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
 
     <!--用于访问GPS定位-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--用于申请调用A-GPS模块-->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
 
     <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->   <!--用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!--<permission android:name="cn.bmob.permission.push" android:protectionLevel="normal"/>-->
     <!--<uses-permission android:name="cn.bmob.permission.push"/>&lt;!&ndash; 添加自定义的权限&ndash;&gt;-->
-    <uses-permission android:name="android.permission.READ_LOGS"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
 
     <application
         android:allowBackup="true"
@@ -55,41 +55,48 @@
             android:name=".mvp.splash.SplashActivity"
             android:theme="@style/splashTheme">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--<action android:name="android.intent.action.MAIN"/>-->
+            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
         </activity>
-        <activity android:name=".mvp.login.LoginActivity"
-            android:exported="true"/>
-        <activity android:name=".mvp.main.HomeActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.register.RegisterActivity"/>
-        <activity android:name=".mvp.searchFriend.SearchFriendActivity"/>
-        <activity android:name=".mvp.chat.ChatActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.map.MapActivity"/>
-        <activity android:name=".mvp.selectFriend.SelectedFriendsActivity"/>
-        <activity android:name=".mvp.search.SearchActivity"/>
-        <activity android:name=".mvp.editInfo.EditUserInfoDetailActivity"/>
-        <activity android:name=".mvp.editInfo.EditUserInfoActivity"/>
-        <activity android:name=".mvp.group.groupInfo.GroupInfoActivity"/>
-        <activity android:name=".mvp.settings.SettingsActivity"/>
-        <activity android:name=".mvp.group.groupList.GroupListActivity"/>
-        <activity android:name=".mvp.blackList.BlackListActivity"/>
-        <activity android:name=".mvp.weather.WeatherInfoActivity"/>
-        <activity android:name=".mvp.wallpaper.WallPaperActivity"/>
-        <activity android:name=".mvp.account.AccountManageActivity"/>
-        <activity android:name=".mvp.account.password.PasswordChangeActivity"/>
-        <activity android:name=".mvp.notify.SystemNotifyActivity"/>
-        <activity android:name=".mvp.commentlist.CommentListActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".mvp.login.LoginActivity"
+            android:exported="true" />
+        <activity
+            android:name=".mvp.main.HomeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
+        <activity android:name=".mvp.register.RegisterActivity" />
+        <activity android:name=".mvp.searchFriend.SearchFriendActivity" />
+        <activity
+            android:name=".mvp.chat.ChatActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".mvp.map.MapActivity" />
+        <activity android:name=".mvp.selectFriend.SelectedFriendsActivity" />
+        <activity android:name=".mvp.search.SearchActivity" />
+        <activity android:name=".mvp.editInfo.EditUserInfoDetailActivity" />
+        <activity android:name=".mvp.editInfo.EditUserInfoActivity" />
+        <activity android:name=".mvp.group.groupInfo.GroupInfoActivity" />
+        <activity android:name=".mvp.settings.SettingsActivity" />
+        <activity android:name=".mvp.group.groupList.GroupListActivity" />
+        <activity android:name=".mvp.blackList.BlackListActivity" />
+        <activity android:name=".mvp.weather.WeatherInfoActivity" />
+        <activity android:name=".mvp.wallpaper.WallPaperActivity" />
+        <activity android:name=".mvp.account.AccountManageActivity" />
+        <activity android:name=".mvp.account.password.PasswordChangeActivity" />
+        <activity android:name=".mvp.notify.SystemNotifyActivity" />
+        <activity
+            android:name=".mvp.commentlist.CommentListActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".mvp.commentdetail.CommentListDetailActivity" />
-        <activity android:name=".mvp.nearbyList.NearbyListActivity"/>
-        <activity android:name=".mvp.adressList.AddressListActivity"/>
-        <activity android:name=".mvp.UserDetail.UserDetailActivity"/>
-        <activity android:name=".mvp.NearByPeople.NearbyPeopleActivity"/>
-        <activity android:name=".mvp.UserInfoTask.UserInfoActivity"/>
-        <activity android:name=".mvp.photoSelect.PhotoSelectActivity"/>
-        <activity android:name=".mvp.preview.PhotoPreViewActivity"/>
-        <activity android:name=".mvp.EditShare.EditShareInfoActivity"/>
+        <activity android:name=".mvp.nearbyList.NearbyListActivity" />
+        <activity android:name=".mvp.adressList.AddressListActivity" />
+        <activity android:name=".mvp.UserDetail.UserDetailActivity" />
+        <activity android:name=".mvp.NearByPeople.NearbyPeopleActivity" />
+        <activity android:name=".mvp.UserInfoTask.UserInfoActivity" />
+        <activity android:name=".mvp.photoSelect.PhotoSelectActivity" />
+        <activity android:name=".mvp.preview.PhotoPreViewActivity" />
+        <activity android:name=".mvp.EditShare.EditShareInfoActivity" />
         <activity android:name=".mvp.commentnotify.CommentNotifyActivity" />
         <activity android:name=".mvp.skin.SkinListActivity" />
         <activity android:name=".mvp.skin.skinDetail.SkinDetailActivity" />
@@ -104,15 +111,15 @@
             </intent-filter>
         </receiver>
         <!--高德地图API_KEY-->
-        <meta-data android:name="com.amap.api.v2.apikey"
-            android:value="d20d35b2237fa46693bfad21e0bc41fe">
-        </meta-data>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="d20d35b2237fa46693bfad21e0bc41fe"></meta-data>
         <!--定位服务-->
 
-        <service android:name="com.amap.api.location.APSService"/>
+        <service android:name="com.amap.api.location.APSService" />
 
         <!--后台实时监听服务-->
-        <service android:name=".service.GroupMessageService"/>
+        <service android:name=".service.GroupMessageService" />
         <!--推送服务-->
         <service android:name=".service.PollService">
 
@@ -124,32 +131,31 @@
             android:label="PushService"
             android:process=":bmobpush">
             <intent-filter>
-                <action android:name="cn.bmob.push.lib.service.PushService"/>
+                <action android:name="cn.bmob.push.lib.service.PushService" />
             </intent-filter>
         </service>
 
         <!-- 用于进程保活 -->
         <service
             android:name="cn.bmob.push.lib.service.PushNotifyService"
-            android:process=":bmobpush">
-        </service>
+            android:process=":bmobpush"></service>
 
         <receiver android:name="cn.bmob.push.PushReceiver">
             <!--优先级设置最高/以至于不会被KILL掉-->
             <intent-filter android:priority="2147483647">
                 <!-- 系统启动完成后会调用 -->
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <!-- 解锁完成后会调用 -->
-                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.intent.action.USER_PRESENT" />
                 <!-- 监听网络连通性 -->
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
         <!--推送消息的接收器-->
         <receiver android:name=".receiver.PushMessageReceiver">
             <intent-filter>
-                <action android:name="cn.bmob.push.action.MESSAGE"/>
+                <action android:name="cn.bmob.push.action.MESSAGE" />
             </intent-filter>
         </receiver>
         <!-- 接收心跳和唤醒的广播，要和PushService运行在同个进程 -->
@@ -158,9 +164,9 @@
             android:process=":bmobpush">
             <intent-filter>
                 <!-- 接收心跳广播的action -->
-                <action android:name="cn.bmob.push.action.HEARTBEAT"/>
+                <action android:name="cn.bmob.push.action.HEARTBEAT" />
                 <!-- 接收唤醒广播的action -->
-                <action android:name="cn.bmob.push.action.NOTIFY"/>
+                <action android:name="cn.bmob.push.action.NOTIFY" />
             </intent-filter>
         </receiver>
         <!--推送服务-->

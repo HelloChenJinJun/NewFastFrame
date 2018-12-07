@@ -2,7 +2,7 @@ package com.example.commonlibrary.mvp.view;
 
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
-import com.trello.rxlifecycle2.LifecycleTransformer;
+import com.trello.rxlifecycle3.LifecycleTransformer;
 
 public interface IView<T> {
 
@@ -37,6 +37,8 @@ public interface IView<T> {
      * @param t
      */
     void updateData(T t);
+
+
 
 
 

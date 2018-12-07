@@ -1,28 +1,28 @@
 package com.example.cootek.newfastframe.ui.fragment;
 
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.ViewPagerIndicator;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
-import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.cootek.newfastframe.R;
+import com.example.cootek.newfastframe.base.MusicBaseFragment;
 import com.example.cootek.newfastframe.ui.MainActivity;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.viewpager.widget.ViewPager;
+
 /**
  * Created by COOTEK on 2017/8/16.
  */
 
-public class HolderFragment extends BaseFragment implements View.OnClickListener {
+public class HolderFragment extends MusicBaseFragment implements View.OnClickListener {
 
 
     private ViewPagerIndicator viewPagerIndicator;
@@ -66,8 +66,6 @@ public class HolderFragment extends BaseFragment implements View.OnClickListener
 
     private View getToolBarView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_holder_header_view, null, false);
-//        view.setPadding(view.getPaddingLeft(),view.getPaddingTop()+ StatusBarUtil
-//        .getStatusBarHeight(getContext()),view.getPaddingRight(),view.getPaddingBottom());
         viewPagerIndicator = view.findViewById(R.id.vpi_view_fragment_holder_header_view_indicator);
         expend = view.findViewById(R.id.iv_view_Fragment_holder_header_view_expend);
         expend.setOnClickListener(this);
@@ -79,15 +77,12 @@ public class HolderFragment extends BaseFragment implements View.OnClickListener
     protected void initData() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         List<String> titleList = new ArrayList<>();
-        titleList.add("听");
-        titleList.add("看");
-        titleList.add("唱");
+        titleList.add("首页");
+        titleList.add("排行榜");
         List<BaseFragment> fragments = new ArrayList<>();
         fragments.add(ListenerFragment.newInstance());
         fragments.add(RankFragment.newInstance());
-        fragments.add(MainFragment.newInstance());
         viewPagerAdapter.setTitleAndFragments(titleList, fragments);
-        display.setOffscreenPageLimit(2);
         display.setAdapter(viewPagerAdapter);
         display.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -109,7 +104,6 @@ public class HolderFragment extends BaseFragment implements View.OnClickListener
 
             }
         });
-        viewPagerIndicator.setTabItemTitles(titleList);
         viewPagerIndicator.setViewPager(display, 0);
     }
 
@@ -125,14 +119,12 @@ public class HolderFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_view_activity_singer_info_header_search) {
-
-        } else if (v.getId() == R.id.iv_view_Fragment_holder_header_view_expend) {
+         if (v.getId() == R.id.iv_view_Fragment_holder_header_view_expend) {
             ((MainActivity) getActivity()).switchMenu();
         }
     }
 
     public void onDrag(float delta) {
-        ViewHelper.setAlpha(expend, (1-delta));
+        ViewHelper.setAlpha(expend, (1 - delta));
     }
 }

@@ -4,13 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.NotifyPostResult;
-import com.example.chat.bean.User;
 import com.example.chat.events.GroupTableEvent;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.RecentEvent;
@@ -19,7 +17,6 @@ import com.example.chat.manager.ChatNotificationManager;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
-
 import com.example.chat.util.JsonUtil;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -30,6 +27,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import cn.bmob.v3.BmobRealTimeData;
 import cn.bmob.v3.listener.ValueEventListener;
 

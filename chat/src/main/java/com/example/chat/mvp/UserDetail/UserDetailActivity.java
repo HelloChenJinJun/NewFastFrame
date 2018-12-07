@@ -1,20 +1,17 @@
 package com.example.chat.mvp.UserDetail;
+
 import android.app.Activity;
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.chat.R;
-import com.example.chat.base.Constant;
-import com.example.chat.bean.User;
+import com.example.chat.base.ConstantUtil;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.manager.UserDBManager;
-import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.editInfo.EditUserInfoActivity;
-import com.example.chat.base.SlideBaseActivity;
-import com.example.chat.mvp.editInfo.EditUserInfoDetailActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
@@ -22,16 +19,10 @@ import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.utils.ToastUtils;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import rx.Subscription;
 
 
 /**
@@ -41,7 +32,7 @@ import rx.Subscription;
  * QQ:             1981367757
  */
 
-public class UserDetailActivity extends SlideBaseActivity implements View.OnClickListener {
+public class UserDetailActivity extends ChatBaseActivity implements View.OnClickListener {
     private RoundAngleImageView avatar;
     private TextView name,signature,follow,fans,visit,sexContent,school,major;
     private ImageView sex;
@@ -93,7 +84,7 @@ public class UserDetailActivity extends SlideBaseActivity implements View.OnClic
 
     @Override
     protected void initData() {
-        String uid=getIntent().getStringExtra(Constant.ID);
+        String uid=getIntent().getStringExtra(ConstantUtil.ID);
         user= UserDBManager.getInstance().getUser(uid);
         updateUserInfo();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -135,7 +126,7 @@ public class UserDetailActivity extends SlideBaseActivity implements View.OnClic
 
     public static void start(Activity activity, String uid) {
         Intent intent=new Intent(activity,UserDetailActivity.class);
-        intent.putExtra(Constant.ID,uid);
+        intent.putExtra(ConstantUtil.ID,uid);
         activity.startActivity(intent);
     }
 

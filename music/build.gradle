@@ -7,7 +7,7 @@ if (rootProject.ext.isAlone) {
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
-//    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
     defaultConfig {
 
         if (rootProject.ext.isAlone) {
@@ -18,15 +18,6 @@ android {
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        if (!rootProject.ext.isAlone) {
-            javaCompileOptions {
-                annotationProcessorOptions {
-                    arguments = [moduleName: project.getName()]
-                }
-            }
-        }
-
     }
     buildTypes {
         release {
@@ -36,8 +27,8 @@ android {
     }
     compileOptions {
 
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     sourceSets {
         main {
@@ -63,24 +54,21 @@ dependencies {
     })
     implementation project(':commonlibrary')
     //用作颜色选择器
-    implementation ('com.afollestad.material-dialogs:commons:0.9.1.0'){
+    implementation('com.afollestad.material-dialogs:commons:0.9.1.0') {
         exclude module: "support-v4"
-        exclude module:"support-core-ui"
-        exclude module:"support-compat"
-        exclude module:"appcompat-v7"
-        exclude module :"recyclerview-v7"
+        exclude module: "support-core-ui"
+        exclude module: "support-compat"
+        exclude module: "appcompat-v7"
+        exclude module: "recyclerview-v7"
     }
-    implementation ('com.komi.slider:slider:0.4.0'){
+    implementation('com.komi.slider:slider:0.4.0') {
         exclude module: "support-v4"
-        exclude module:"support-core-ui"
-        exclude module:"support-compat"
-        exclude module:"appcompat-v7"
-        exclude module :"recyclerview-v7"
+        exclude module: "support-core-ui"
+        exclude module: "support-compat"
+        exclude module: "appcompat-v7"
+        exclude module: "recyclerview-v7"
     }
     annotationProcessor rootProject.ext.dependencies.dagger2_compiler
-    if (!rootProject.ext.isAlone) {
-        annotationProcessor rootProject.ext.dependencies.arouter_compiler
-    }
     testImplementation 'junit:junit:4.12'
 //    compile files('libs/nineoldandroids-2.4.0.jar')
 }

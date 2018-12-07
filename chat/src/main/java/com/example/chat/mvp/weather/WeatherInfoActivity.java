@@ -14,13 +14,12 @@ import com.amap.api.services.weather.LocalWeatherLiveResult;
 import com.amap.api.services.weather.WeatherSearch;
 import com.amap.api.services.weather.WeatherSearchQuery;
 import com.example.chat.R;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ChatBaseActivity;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.WeatherInfoBean;
 import com.example.chat.events.LocationEvent;
 import com.example.chat.manager.NewLocationManager;
 import com.example.chat.manager.UserManager;
-import com.example.chat.base.SlideBaseActivity;
-import com.example.chat.util.CommonUtils;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -36,7 +35,7 @@ import java.util.List;
  * QQ:             1981367757
  */
 
-public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSearch.OnWeatherSearchListener {
+public class WeatherInfoActivity extends ChatBaseActivity implements WeatherSearch.OnWeatherSearchListener {
         private TextView city;
         private TextView realTime;
         private TextView forecastTime;
@@ -90,7 +89,7 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
 
         @Override
         public void initData() {
-                WeatherInfoBean weatherInfoBean = (WeatherInfoBean) getIntent().getSerializableExtra(Constant.DATA);
+                WeatherInfoBean weatherInfoBean = (WeatherInfoBean) getIntent().getSerializableExtra(ConstantUtil.DATA);
                 if (weatherInfoBean != null) {
                         mWeatherInfoBean = weatherInfoBean;
                         city.setText(mWeatherInfoBean.getCity());
@@ -170,7 +169,6 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
 
         @Override
         public void onWeatherLiveSearched(LocalWeatherLiveResult localWeatherLiveResult, int i) {
-                dismissBaseDialog();
                 if (i == 1000) {
                         if (localWeatherLiveResult != null && localWeatherLiveResult.getLiveResult() != null) {
                                 LocalWeatherLive localWeatherLive = localWeatherLiveResult.getLiveResult();
@@ -258,7 +256,7 @@ public class WeatherInfoActivity extends SlideBaseActivity implements WeatherSea
                 super.finish();
                 if (mWeatherInfoBean != null) {
                         Intent intent = new Intent();
-                        intent.putExtra(Constant.DATA, mWeatherInfoBean);
+                        intent.putExtra(ConstantUtil.DATA, mWeatherInfoBean);
                         setResult(Activity.RESULT_OK, intent);
                 } else {
                         setResult(Activity.RESULT_CANCELED);

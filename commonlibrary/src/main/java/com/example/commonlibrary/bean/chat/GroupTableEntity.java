@@ -2,10 +2,10 @@ package com.example.commonlibrary.bean.chat;
 
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
 import java.util.List;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * 项目名称:    NewFastFrame
@@ -81,9 +81,9 @@ public class GroupTableEntity {
 
     @Generated(hash = 511628014)
     public GroupTableEntity(String groupName, String groupDescription, String groupId,
-            String creatorId, long createdTime, List<String> groupNumber, String groupAvatar,
-            int readStatus, int sendStatus, String toId, String notification,
-            Boolean isRemind) {
+                            String creatorId, long createdTime, List<String> groupNumber, String groupAvatar,
+                            int readStatus, int sendStatus, String toId, String notification,
+                            Boolean isRemind) {
         this.groupName = groupName;
         this.groupDescription = groupDescription;
         this.groupId = groupId;

@@ -5,8 +5,13 @@ import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.commonlibrary.BaseApplication;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -19,58 +24,32 @@ import javax.inject.Inject;
  */
 
 public class ActivityManager implements Application.ActivityLifecycleCallbacks {
-    private List<Activity> activityList;
-    private Application application;
-    private Activity currentActivity;
+
+    private LinkedHashMap<String, Activity> mMap;
 
     @Inject
     public ActivityManager(Application application) {
-        this.application = application;
-        activityList = new ArrayList<>();
+        mMap = new LinkedHashMap<>();
+        application.registerActivityLifecycleCallbacks(this);
     }
 
     public void addActivity(Activity activity) {
-        if (activityList == null) {
-            activityList = new ArrayList<>();
-        }
-        if (!activityList.contains(activity)) {
-            activityList.add(activity);
+        if (!containActivity(activity.getClass().getName())) {
+            mMap.put(activity.getClass().getName(), activity);
         }
     }
 
 
-
-
-
-    public Activity getCurrentActivity() {
-        return currentActivity;
+    public boolean containActivity(String name) {
+        return mMap.containsKey(name);
     }
 
-    public void startActivity(Intent intent) {
-        if (currentActivity != null) {
-            currentActivity.startActivity(intent);
-        } else if (getTopActivity() != null) {
-            getTopActivity().startActivity(intent);
-        } else {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            application.startActivity(intent);
-        }
-    }
-
-    private Activity getTopActivity() {
-        if (activityList != null && activityList.size() > 0) {
-            return activityList.get(activityList.size() - 1);
-        }
-        return null;
+    public Activity getActivity(String name) {
+        return mMap.get(name);
     }
 
 
-    public void clearAllActivity() {
-        if (activityList != null) {
-            activityList.clear();
-            activityList = null;
-        }
-    }
+    private Activity currentActivity;
 
 
     @Override
@@ -81,12 +60,10 @@ public class ActivityManager implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityStarted(Activity activity) {
-        currentActivity = activity;
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        currentActivity = activity;
     }
 
     @Override
@@ -107,12 +84,35 @@ public class ActivityManager implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onActivityDestroyed(Activity activity) {
         removeActivity(activity);
-    }
-
-    private void removeActivity(Activity activity) {
-        if (activityList != null && activityList.contains(activity)) {
-            activityList.remove(activity);
+        if (currentActivity != null && currentActivity.equals(activity)) {
+            currentActivity = null;
         }
     }
 
+    private void removeActivity(Activity activity) {
+        if (containActivity(activity.getClass().getName())) {
+            mMap.remove(activity.getClass().getName());
+        }
+    }
+
+    public void start(Class aClass, boolean finish) {
+        if (mMap.values().size() > 0) {
+            Activity activity = mMap.values().iterator().next();
+            Intent intent = new Intent(activity, aClass);
+            activity.startActivity(intent);
+            if (finish) {
+                activity.finish();
+            }
+        } else {
+            Intent intent = new Intent();
+            intent.setClass(BaseApplication.getInstance(), aClass);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            BaseApplication.getInstance().startActivity(intent);
+        }
+    }
+
+
+    public Activity getCurrentActivity() {
+        return currentActivity;
+    }
 }

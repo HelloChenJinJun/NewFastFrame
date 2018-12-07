@@ -4,10 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.base.RandomData;
 import com.example.chat.bean.CustomInstallation;
-import com.example.chat.bean.ImageItem;
 import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.dagger.ChatMainModule;
 import com.example.chat.dagger.DaggerChatMainComponent;
@@ -19,7 +18,9 @@ import com.example.commonlibrary.router.BaseAction;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.router.RouterResult;
-import com.example.commonlibrary.utils.ConstantUtil;
+import com.example.commonlibrary.utils.Constant;
+import com.example.commonlibrary.utils.SystemUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,6 @@ public class ChatApplication implements IAppLife {
     private static ChatMainComponent chatMainComponent;
 
 
-
     @Override
     public void attachBaseContext(Context base) {
 
@@ -54,10 +54,10 @@ public class ChatApplication implements IAppLife {
     public void onCreate(Application application) {
         chatMainComponent = DaggerChatMainComponent.builder().appComponent(BaseApplication.getAppComponent())
                 .chatMainModule(new ChatMainModule()).build();
-        Bmob.initialize(application, Constant.KEY);
-//        AppStat.i(Constant.KEY, null);
+        Bmob.initialize(application, ConstantUtil.KEY);
+        //        AppStat.i(ConstantUtil.KEY, null);
         LogUtil.e("1服务器端初始化完成");
-        CustomInstallation customInstallation=new CustomInstallation();
+        CustomInstallation customInstallation = new CustomInstallation();
         customInstallation.save();
         LogUtil.e("设备ID在这里上传了");
         BmobPush.startWork(application);
@@ -67,21 +67,21 @@ public class ChatApplication implements IAppLife {
     }
 
     private void initRouter() {
-        Router.getInstance().registerProvider("chat:preview", new BaseAction() {
+        Router.getInstance().registerProvider("chat","preview", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
-                Map<String,Object> map=routerRequest.getParamMap();
-                List<String>  imageList= (List<String>) routerRequest.getObject();
-                if (imageList != null&&imageList.size()>0) {
-                    ArrayList<ImageItem>  list=new ArrayList<>();
-                    for (String item:
+                Map<String, Object> map = routerRequest.getParamMap();
+                List<String> imageList = (List<String>) routerRequest.getObject();
+                if (imageList != null && imageList.size() > 0) {
+                    ArrayList<SystemUtil.ImageItem> list = new ArrayList<>();
+                    for (String item :
                             imageList
-                         ) {
-                        ImageItem imageItem=new ImageItem();
+                            ) {
+                        SystemUtil.ImageItem imageItem = new SystemUtil.ImageItem();
                         imageItem.setPath(item);
                         list.add(imageItem);
                     }
-                    PhotoPreViewActivity.start(((Activity) routerRequest.getContext()),(Integer) map.get(ConstantUtil.POSITION),list,false
+                    PhotoPreViewActivity.start(((Activity) routerRequest.getContext()), (Integer) map.get(Constant.POSITION), list, false
                     );
                 }
                 return null;

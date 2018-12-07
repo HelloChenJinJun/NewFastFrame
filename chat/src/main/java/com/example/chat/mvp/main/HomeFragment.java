@@ -4,13 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -23,13 +17,9 @@ import com.amap.api.services.weather.LocalWeatherLiveResult;
 import com.amap.api.services.weather.WeatherSearch;
 import com.amap.api.services.weather.WeatherSearchQuery;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.chat.R;
 import com.example.chat.adapter.MenuDisplayAdapter;
-import com.example.chat.base.Constant;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
@@ -44,29 +34,29 @@ import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.NewLocationManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
+import com.example.chat.mvp.UserDetail.UserDetailActivity;
+import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.mvp.main.friends.FriendsFragment;
 import com.example.chat.mvp.main.invitation.InvitationFragment;
 import com.example.chat.mvp.main.recent.RecentFragment;
 import com.example.chat.mvp.shareinfo.ShareInfoFragment;
-import com.example.chat.service.PollService;
-import com.example.chat.mvp.chat.ChatActivity;
-import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.chat.mvp.weather.WeatherInfoActivity;
+import com.example.chat.service.PollService;
 import com.example.chat.util.LogUtil;
 import com.example.chat.view.MainDragLayout;
-import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.BaseFragment;
+import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.nineoldandroids.view.ViewHelper;
@@ -74,7 +64,9 @@ import com.nineoldandroids.view.ViewHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -91,7 +83,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     private Fragment[] mFragments = new Fragment[5];
     private int currentPosition;
     private MainDragLayout container;
-    private RecyclerView menuDisplay;
+    private SuperRecyclerView menuDisplay;
     private List<String> data = new ArrayList<>();
     private MenuDisplayAdapter menuAdapter;
     private ImageView bg;
@@ -103,18 +95,19 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     private TextView weatherCity;
     private TextView weatherTemperature;
     private WeatherInfoBean mWeatherInfoBean = new WeatherInfoBean();
+
     @Override
     public void initView() {
         RecentFragment recentFragment = new RecentFragment();
-        FriendsFragment contactsFragment =FriendsFragment.newInstance();
+        FriendsFragment contactsFragment = FriendsFragment.newInstance();
         InvitationFragment invitationFragment = new InvitationFragment();
-        ShareInfoFragment shareInfoFragment = ShareInfoFragment.newInstance(UserManager.getInstance().getCurrentUserObjectId(),true);
+        ShareInfoFragment shareInfoFragment = ShareInfoFragment.newInstance(UserManager.getInstance().getCurrentUserObjectId(), true);
         mFragments[0] = recentFragment;
         mFragments[1] = contactsFragment;
         mFragments[2] = invitationFragment;
         mFragments[3] = shareInfoFragment;
         container = (MainDragLayout) findViewById(R.id.dl_activity_main_drag_container);
-        menuDisplay = (RecyclerView) findViewById(R.id.rev_menu_display);
+        menuDisplay = (SuperRecyclerView) findViewById(R.id.srcv_menu_display);
         nick = (TextView) findViewById(R.id.tv_menu_nick);
         signature = (TextView) findViewById(R.id.tv_menu_signature);
         avatar = (RoundAngleImageView) findViewById(R.id.riv_menu_avatar);
@@ -150,7 +143,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         rightImage_1 = (ImageView) findViewById(R.id.iv_header_layout_right);
         back_1 = (ImageView) findViewById(R.id.iv_header_layout_back);
         Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
-        findViewById(R.id.header_layout_id).setPadding(0,StatusBarUtil.getStatusBarHeight(getContext()),0,0);
+        findViewById(R.id.header_layout_id).setPadding(0, StatusBarUtil.getStatusBarHeight(getContext()), 0, 0);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolBar);
 
     }
@@ -166,12 +159,12 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         updateUserInfo(UserDBManager.getInstance().getUser(UserManager.getInstance().getCurrentUserObjectId()));
         initToolBarData();
         startSearchLiveWeather(BaseApplication.getAppComponent()
-        .getSharedPreferences().getString(Constant.CITY,null));
+                .getSharedPreferences().getString(ConstantUtil.CITY, null));
         bindPollService(20);
     }
 
     private void initToolBarData() {
-        ToolBarOption toolBarOption=new ToolBarOption();
+        ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("");
         toolBarOption.setAvatar(user.getAvatar());
         toolBarOption.setNeedNavigation(false);
@@ -179,7 +172,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     }
 
     private void initSkin() {
-        SkinEntity currentSkinEntity=UserDBManager
+        SkinEntity currentSkinEntity = UserDBManager
                 .getInstance().getCurrentSkin();
         if (currentSkinEntity != null) {
             SkinManager.getInstance().update(currentSkinEntity.getPath());
@@ -191,7 +184,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         data.add("好友");
         data.add("邀请");
         if (BaseApplication.getAppComponent().getSharedPreferences()
-                .getBoolean(ConstantUtil.IS_ALONE,true)) {
+                .getBoolean(ConstantUtil.IS_ALONE, true)) {
             data.add("动态");
         }
         menuAdapter = new MenuDisplayAdapter();
@@ -227,10 +220,10 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
             }
         }));
         addDisposable(RxBusManager.getInstance().registerEvent(UserEntity.class, this::updateUserInfo));
-//        网络变化监听
+        //        网络变化监听
         addDisposable(RxBusManager.getInstance().registerEvent(NetStatusEvent.class, netStatusEvent -> {
             if (netStatusEvent.isConnected()) {
-//                        这里判断网络的连接类型
+                //                        这里判断网络的连接类型
                 if (netStatusEvent.getType() == ConnectivityManager.TYPE_WIFI) {
                     CommonLogger.e("wife类型的");
                     bindPollService(10);
@@ -244,15 +237,15 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
                     public void done(List<GroupChatMessage> list, BmobException e) {
                         if (e == null) {
                             if (list != null && list.size() > 0) {
-                                RxBusManager.getInstance().post(new RecentEvent(list.get(0).getGroupId(),RecentEvent.ACTION_ADD));
+                                RxBusManager.getInstance().post(new RecentEvent(list.get(0).getGroupId(), RecentEvent.ACTION_ADD));
                                 notifyMenuUpdate(0);
                             }
-                        }else {
-                            CommonLogger.e("查询群消息失败"+e.toString());
+                        } else {
+                            CommonLogger.e("查询群消息失败" + e.toString());
                         }
                     }
                 });
-//                UserManager.getInstance().refreshUserInfo();
+                //                UserManager.getInstance().refreshUserInfo();
             } else {
                 net.setVisibility(View.VISIBLE);
             }
@@ -265,7 +258,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         addDisposable(RxBusManager.getInstance().registerEvent(RefreshMenuEvent.class, refreshMenuEvent -> {
             if (refreshMenuEvent.getPosition() == -1) {
                 menuAdapter.notifyDataSetChanged();
-            }else {
+            } else {
                 notifyMenuUpdate(refreshMenuEvent.getPosition());
             }
         }));
@@ -276,10 +269,10 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
             @Override
             public void done(List<GroupChatMessage> list, BmobException e) {
                 if (e == null) {
-                    RxBusManager.getInstance().post(new RecentEvent(list.get(0).getGroupId(),RecentEvent.ACTION_ADD));
+                    RxBusManager.getInstance().post(new RecentEvent(list.get(0).getGroupId(), RecentEvent.ACTION_ADD));
                     notifyMenuUpdate(0);
-                }else {
-                    CommonLogger.e("查询群消息失败"+e.toString());
+                } else {
+                    CommonLogger.e("查询群消息失败" + e.toString());
                 }
             }
         });
@@ -287,7 +280,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     }
 
     private void onProcessGroupChatMessage(GroupChatMessage message) {
-        RxBusManager.getInstance().post(new RecentEvent(message.getGroupId(),RecentEvent.ACTION_ADD));
+        RxBusManager.getInstance().post(new RecentEvent(message.getGroupId(), RecentEvent.ACTION_ADD));
         notifyMenuUpdate(0);
         if (!mFragments[0].isAdded()) {
             currentPosition = 0;
@@ -304,33 +297,25 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         } else {
             signature.setText(user.getSignature());
         }
-        Glide.with(this).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL).into(icon_1);
+
+        getAppComponent()
+                .getImageLoader().loadImage(getContext(), GlideImageLoaderConfig
+                .newBuild().cacheStrategy(GlideImageLoaderConfig.CACHE_ALL).url(user.getAvatar()).imageView(icon_1).build());
         ToastUtils.showShortToast("保存个人信息成功");
-        Glide.with(this).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL).into(avatar);
-        Glide.with(this).load(UserManager.getInstance().getCurrentUser().getWallPaper()).into(new SimpleTarget<GlideDrawable>() {
-            @Override
-            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                container.setBackground(resource);
-            }
-        });
+        getAppComponent()
+                .getImageLoader().loadImage(getContext(), GlideImageLoaderConfig
+                .newBuild().cacheStrategy(GlideImageLoaderConfig.CACHE_ALL).url(UserManager.getInstance().getCurrentUser().getWallPaper()).imageView(container).build());
     }
-
-
 
 
     private void bindPollService(int second) {
         Intent intent = new Intent(getActivity(), PollService.class);
-        intent.putExtra(Constant.TIME, second);
+        intent.putExtra(ConstantUtil.TIME, second);
         getActivity().startService(intent);
     }
 
 
-
-
-
-
-
-    public void updateTitle(String title){
+    public void updateTitle(String title) {
         title_1.setText(title);
     }
 
@@ -371,9 +356,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
             back_1.setVisibility(GONE);
         }
     }
-
-
-
 
 
     private void startSearchLiveWeather(String city) {
@@ -443,19 +425,19 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     }
 
     public void notifyNewIntentCome(Intent intent) {
-        String from = intent.getStringExtra(Constant.NOTIFICATION_TAG);
+        String from = intent.getStringExtra(ConstantUtil.NOTIFICATION_TAG);
         if (from == null) {
             ToastUtils.showShortToast("系统通知");
             return;
         }
-        if (from.equals(Constant.NOTIFICATION_TAG_GROUP_MESSAGE)) {
+        if (from.equals(ConstantUtil.NOTIFICATION_TAG_GROUP_MESSAGE)) {
             Intent chat = new Intent(getActivity(), ChatActivity.class);
-            chat.putExtra(Constant.ID, getActivity().getIntent().getStringExtra(Constant.GROUP_ID));
+            chat.putExtra(ConstantUtil.ID, getActivity().getIntent().getStringExtra(ConstantUtil.GROUP_ID));
             startActivity(chat);
             return;
         }
 
-        if (from.equals(Constant.NOTIFICATION_TAG_ADD)) {
+        if (from.equals(ConstantUtil.NOTIFICATION_TAG_ADD)) {
             addOrReplaceFragment(mFragments[2], R.id.fl_content_container);
             currentPosition = 2;
         } else {
@@ -463,8 +445,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
             currentPosition = 0;
         }
     }
-
-
 
 
     private void onProcessNewMessages(List<ChatMessage> list) {
@@ -485,14 +465,14 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
                         currentPosition = 1;
                         addOrReplaceFragment(mFragments[1]);
                     }
-                    RxBusManager.getInstance().post(new RecentEvent(chatMessage.getBelongId(),RecentEvent.ACTION_ADD));
+                    RxBusManager.getInstance().post(new RecentEvent(chatMessage.getBelongId(), RecentEvent.ACTION_ADD));
                     break;
                 case ChatMessage.MESSAGE_TYPE_READED:
                     LogUtil.e("接收到的回执已读标签消息");
                     break;
                 default:
                     notifyMenuUpdate(0);
-                    RxBusManager.getInstance().post(new RecentEvent(chatMessage.getBelongId(),RecentEvent.ACTION_ADD));
+                    RxBusManager.getInstance().post(new RecentEvent(chatMessage.getBelongId(), RecentEvent.ACTION_ADD));
                     if (!mFragments[0].isAdded()) {
                         currentPosition = 0;
                         addOrReplaceFragment(mFragments[0], R.id.fl_content_container);
@@ -503,10 +483,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     }
 
 
-
-
-
-//        这里说明下，由于头基类封装的头部布局与侧滑发生冲突，这里我们直接在主布局上写入头部布局,所以这里弃用基类的头部布局
+    //        这里说明下，由于头基类封装的头部布局与侧滑发生冲突，这里我们直接在主布局上写入头部布局,所以这里弃用基类的头部布局
 
     @Override
     protected boolean isNeedHeadLayout() {
@@ -530,8 +507,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
     }
 
 
-
-
     @Override
     public void onDrag(View view, float delta) {
         ViewHelper.setAlpha(bg, delta);
@@ -541,7 +516,7 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
 
     @Override
     public void onCloseMenu() {
-//                当侧滑完全关闭的时候调用
+        //                当侧滑完全关闭的时候调用
         if (ViewHelper.getAlpha(bg) != 0) {
             ViewHelper.setAlpha(bg, 0);
         }
@@ -566,8 +541,6 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
             container.closeMenu();
         }
     }
-
-
 
 
     public void openMenu() {
@@ -595,8 +568,8 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
             startActivity(settingIntent);
         } else if (i == R.id.ll_menu_bottom_container) {
             Intent weatherIntent = new Intent(getContext(), WeatherInfoActivity.class);
-            weatherIntent.putExtra(Constant.DATA, mWeatherInfoBean);
-            startActivityForResult(weatherIntent, Constant.REQUEST_CODE_WEATHER_INFO);
+            weatherIntent.putExtra(ConstantUtil.DATA, mWeatherInfoBean);
+            startActivityForResult(weatherIntent, ConstantUtil.REQUEST_CODE_WEATHER_INFO);
         }
     }
 
@@ -606,8 +579,8 @@ public class HomeFragment extends BaseFragment implements OnDragDeltaChangeListe
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case Constant.REQUEST_CODE_WEATHER_INFO:
-                    WeatherInfoBean weatherInfoBean = (WeatherInfoBean) data.getSerializableExtra(Constant.DATA);
+                case ConstantUtil.REQUEST_CODE_WEATHER_INFO:
+                    WeatherInfoBean weatherInfoBean = (WeatherInfoBean) data.getSerializableExtra(ConstantUtil.DATA);
                     if (weatherInfoBean != null) {
                         mWeatherInfoBean = weatherInfoBean;
                         weatherCity.setText(mWeatherInfoBean.getCity());

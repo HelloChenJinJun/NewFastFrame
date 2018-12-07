@@ -1,12 +1,13 @@
 package com.example.chat.view.fab;
 
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.TouchDelegate;
 import android.view.View;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
 
 public class TouchDelegateGroup extends TouchDelegate {
         private static final Rect USELESS_HACKY_RECT = new Rect();

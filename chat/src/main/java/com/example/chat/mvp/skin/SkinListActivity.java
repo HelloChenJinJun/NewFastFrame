@@ -2,12 +2,11 @@ package com.example.chat.mvp.skin;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import com.example.chat.R;
 import com.example.chat.adapter.SkinListAdapter;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.dagger.skin.DaggerSkinListComponent;
 import com.example.chat.dagger.skin.SkinListModule;
 import com.example.chat.mvp.skin.skinDetail.SkinDetailActivity;
@@ -20,6 +19,7 @@ import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 
 import java.util.List;
 
@@ -31,9 +31,9 @@ import javax.inject.Inject;
  * 创建时间:    2018/5/22     23:39
  */
 
-public class SkinListActivity extends SlideBaseActivity<List<SkinEntity>, SkinListPresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
+public class SkinListActivity extends ChatBaseActivity<List<SkinEntity>, SkinListPresenter> implements CustomSwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener {
     private SuperRecyclerView display;
-    private SwipeRefreshLayout refresh;
+    private CustomSwipeRefreshLayout refresh;
 
     @Inject
     SkinListAdapter skinListAdapter;
@@ -66,8 +66,8 @@ public class SkinListActivity extends SlideBaseActivity<List<SkinEntity>, SkinLi
 
     @Override
     protected void initView() {
-        display = (SuperRecyclerView) findViewById(R.id.srcv_activity_skin_list_display);
-        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_activity_skin_list_refresh);
+        display = findViewById(R.id.srcv_activity_skin_list_display);
+        refresh = findViewById(R.id.refresh_activity_skin_list_refresh);
         refresh.setOnRefreshListener(this);
     }
 
@@ -84,7 +84,7 @@ public class SkinListActivity extends SlideBaseActivity<List<SkinEntity>, SkinLi
         skinListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                currentPosition=position;
+                currentPosition = position;
                 SkinDetailActivity.start(SkinListActivity.this, skinListAdapter.getData(position));
             }
         });

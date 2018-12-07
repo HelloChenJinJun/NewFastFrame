@@ -2,8 +2,8 @@ package com.example.commonlibrary.bean.chat;
 
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.converter.PropertyConverter;
 
 import java.util.Arrays;
@@ -101,8 +101,8 @@ public class PublicPostEntity  {
 
     @Generated(hash = 1619757679)
     public PublicPostEntity(String pid, String uid, String content, String location,
-            List<String> likeList, int msgType, int likeCount, int commentCount,
-            int shareCount, int sendStatus, long createdTime, long updatedTime) {
+                            List<String> likeList, int msgType, int likeCount, int commentCount,
+                            int shareCount, int sendStatus, long createdTime, long updatedTime) {
         this.pid = pid;
         this.uid = uid;
         this.content = content;

@@ -9,7 +9,7 @@
         android:layout_weight="1"
         android:background="@color/chat_bg">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
             android:id="@+id/swl_chat_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -20,7 +20,7 @@
 
             </com.example.commonlibrary.baseadapter.SuperRecyclerView>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
 
         <RelativeLayout
             android:id="@+id/r1_chat_middle_voice_container"

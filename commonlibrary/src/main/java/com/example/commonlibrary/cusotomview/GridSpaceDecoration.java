@@ -1,8 +1,11 @@
 package com.example.commonlibrary.cusotomview;
 
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 项目名称:    NewFastFrame
@@ -27,19 +30,34 @@ public class GridSpaceDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view); // item position
-        int column = position % spanCount; // item column
-        if (position>=spanCount) {
-            outRect.top=spacing;
+        boolean hasFoot=false;
+        if (parent instanceof SuperRecyclerView) {
+            SuperRecyclerView superRecyclerView = (SuperRecyclerView) parent;
+            if (superRecyclerView.getHeaderContainer().getChildCount() > position) {
+                return;
+            }
+            position -= superRecyclerView.getHeaderContainer().getChildCount();
+            hasFoot=superRecyclerView.getLoadMoreFooterView()!=null;
         }
-        if (includeEdge) {
-            if (column==spanCount-1) {
-                outRect.right=spacing;
+        int column = position % spanCount; // item column
+        outRect.top = spacing;
+//        if (!hasFoot) {
+        //            if (position==)
+        //
+        //        }
+        if (column == spanCount - 1) {
+            if (includeEdge) {
+                outRect.right = spacing;
             }
-            outRect.left=spacing;
-        }else {
-            if (column!=0) {
-                outRect.left=spacing;
+            outRect.left = spacing / 2;
+        } else if (column == 0) {
+            if (includeEdge) {
+                outRect.left = spacing;
             }
+            outRect.right = spacing / 2;
+        } else {
+            outRect.left = spacing / 2;
+            outRect.right = spacing / 2;
         }
     }
 }

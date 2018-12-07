@@ -1,20 +1,20 @@
 package com.example.chat.adapter;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.chat.R;
-import com.example.chat.bean.ImageItem;
+import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.utils.DensityUtil;
+import com.example.commonlibrary.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.viewpager.widget.PagerAdapter;
 import uk.co.senab.photoview.PhotoView;
 
 /**
@@ -27,7 +27,7 @@ import uk.co.senab.photoview.PhotoView;
 public class PhotoPreViewAdapter extends PagerAdapter {
 
     private OnPhotoViewClickListener mOnPhotoViewClickListener;
-    private List<ImageItem> data;
+    private List<SystemUtil.ImageItem> data;
     private Context mContext;
     /**
      * 屏幕宽度
@@ -38,7 +38,7 @@ public class PhotoPreViewAdapter extends PagerAdapter {
      */
     private int screenHeight;
 
-    public ImageItem getData(int position) {
+    public SystemUtil.ImageItem getData(int position) {
         return data.get(position);
     }
 
@@ -46,7 +46,7 @@ public class PhotoPreViewAdapter extends PagerAdapter {
         void onPhotoViewClick(View view, int position);
     }
 
-    public PhotoPreViewAdapter(Context context, List<ImageItem> previewList) {
+    public PhotoPreViewAdapter(Context context, List<SystemUtil.ImageItem> previewList) {
         this.mContext = context;
         screenWidth = DensityUtil.getScreenWidth(context);
         screenHeight = DensityUtil.getScreenHeight(context);
@@ -66,13 +66,20 @@ public class PhotoPreViewAdapter extends PagerAdapter {
                 mOnPhotoViewClickListener.onPhotoViewClick(view1, position);
             }
         });
-        ImageItem imageItem = data.get(position);
+        SystemUtil.ImageItem imageItem = data.get(position);
         String url = imageItem.getPath();
-        if (url!=null) {
+        if (url != null) {
             if (url.endsWith(".gif")) {
-                Glide.with(mContext).load(url).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).override(screenWidth, screenHeight).thumbnail(0.1f).into(photoView);
+                BaseApplication
+                        .getAppComponent()
+                        .getImageLoader().loadImage(mContext
+                        , GlideImageLoaderConfig.newBuild().cacheStrategy(GlideImageLoaderConfig.CACHE_SOURCE)
+                                .asGif().override(screenWidth, screenHeight).imageView(photoView).url(url).build());
             } else {
-                Glide.with(mContext).load(url).override(screenWidth, screenHeight).diskCacheStrategy(DiskCacheStrategy.RESULT).into(photoView);
+                BaseApplication
+                        .getAppComponent()
+                        .getImageLoader().loadImage(mContext
+                        , GlideImageLoaderConfig.newBuild().cacheStrategy(GlideImageLoaderConfig.CACHE_RESULT).override(screenWidth, screenHeight).url(url).imageView(photoView).build());
             }
         }
         container.addView(view);

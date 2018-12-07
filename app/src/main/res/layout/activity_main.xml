@@ -13,81 +13,82 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/custom_color_app_content_div"/>
+        android:background="@color/custom_color_app_content_div" />
+
     <RadioGroup
-        android:tag="skin"
-        android:background="@color/custom_color_app_title_bg"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
         android:id="@+id/rg_activity_main_bottom_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/custom_color_app_title_bg"
         android:checkedButton="@+id/rb_activity_main_bottom_chat"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:tag="skin">
 
         <RadioButton
-            android:tag="skin"
             android:id="@+id/rb_activity_main_bottom_index"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@null"
-            android:drawableTop="@drawable/ic_demo_one"
-            android:gravity="center"
+            android:drawableTop="@drawable/ic_main_bottom_one"
             android:drawablePadding="3dp"
+            android:gravity="center"
+            android:tag="skin"
             android:text="首页"
             android:textColor="@color/tab_text_color" />
 
         <RadioButton
-            android:tag="skin"
-            android:drawablePadding="3dp"
             android:id="@+id/rb_activity_main_bottom_public"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@null"
-            android:drawableTop="@drawable/ic_demo_two"
+            android:drawableTop="@drawable/ic_main_bottom_two"
+            android:drawablePadding="3dp"
             android:gravity="center"
+            android:tag="skin"
             android:text="闲聊"
             android:textColor="@color/tab_text_color" />
 
         <RadioButton
-            android:tag="skin"
-            android:drawablePadding="3dp"
             android:id="@+id/rb_activity_main_bottom_center"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@null"
-            android:drawableTop="@drawable/ic_demo_three"
+            android:drawableTop="@drawable/ic_main_bottom_three"
+            android:drawablePadding="3dp"
             android:gravity="center"
+            android:tag="skin"
             android:text="中心"
             android:textColor="@color/tab_text_color" />
 
         <RadioButton
-            android:tag="skin"
-            android:drawablePadding="3dp"
             android:id="@+id/rb_activity_main_bottom_person"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@null"
-            android:drawableTop="@drawable/ic_demo_four"
+            android:drawableTop="@drawable/ic_main_bottom_four"
+            android:drawablePadding="3dp"
             android:gravity="center"
+            android:tag="skin"
             android:text="个人"
             android:textColor="@color/tab_text_color" />
 
         <RadioButton
-            android:tag="skin"
-            android:drawablePadding="3dp"
             android:id="@+id/rb_activity_main_bottom_chat"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@null"
-            android:drawableTop="@drawable/ic_demo_five"
+            android:drawableTop="@drawable/ic_main_bottom_five"
+            android:drawablePadding="3dp"
             android:gravity="center"
+            android:tag="skin"
             android:text="聊天"
             android:textColor="@color/tab_text_color" />
 

@@ -2,7 +2,7 @@ package com.example.cootek.newfastframe.dagger.recommend;
 
 import com.example.commonlibrary.dagger.scope.PerFragment;
 import com.example.cootek.newfastframe.dagger.main.MainComponent;
-import com.example.cootek.newfastframe.ui.fragment.RecommendFragment;
+import com.example.cootek.newfastframe.mvp.recommend.RecommendFragment;
 
 import dagger.Component;
 

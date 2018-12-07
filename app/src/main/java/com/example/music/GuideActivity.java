@@ -2,19 +2,20 @@ package com.example.music;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.mvp.login.LoginActivity;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
-import com.example.commonlibrary.utils.ConstantUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * 项目名称:    NewFastFrame

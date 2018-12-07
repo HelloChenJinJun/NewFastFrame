@@ -1,6 +1,5 @@
 package com.example.news.adapter;
 
-import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import com.example.news.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.viewpager.widget.PagerAdapter;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -22,7 +22,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * QQ:             1981367757
  */
 
-public class OtherNewPhotoSetAdapter extends PagerAdapter{
+public class OtherNewPhotoSetAdapter extends PagerAdapter {
     private List<String>  imageList=new ArrayList<>();
     private OnItemClickListener onItemClickListener;
 

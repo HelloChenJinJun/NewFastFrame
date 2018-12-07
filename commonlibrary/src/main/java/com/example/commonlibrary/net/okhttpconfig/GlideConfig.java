@@ -3,27 +3,28 @@ package com.example.commonlibrary.net.okhttpconfig;
 import android.content.Context;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.Registry;
+import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.module.GlideModule;
+import com.bumptech.glide.module.LibraryGlideModule;
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.utils.CommonLogger;
 
 import java.io.InputStream;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by COOTEK on 2017/8/17.
  */
 
-public class GlideConfig implements GlideModule {
-    @Override
-    public void applyOptions(Context context, GlideBuilder builder) {
-        CommonLogger.e("applyOptions");
-    }
+@GlideModule
+public class GlideConfig extends LibraryGlideModule {
 
     @Override
-    public void registerComponents(Context context, Glide glide) {
-        CommonLogger.e("registerComponents");
-        glide.register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(BaseApplication.getAppComponent().getOkHttpClient()));
+    public void registerComponents(@NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) {
+        OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(BaseApplication.getAppComponent().getOkHttpClient());
+        registry.replace(GlideUrl.class, InputStream.class, factory);
+
+
     }
 }

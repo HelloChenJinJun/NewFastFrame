@@ -2,16 +2,14 @@ package com.example.chat.mvp.editInfo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.chat.R;
-import com.example.chat.base.Constant;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ConstantUtil;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.adressList.AddressListActivity;
@@ -35,7 +33,7 @@ import cn.bmob.v3.listener.UpdateListener;
  * 创建时间:    2016/12/26      23:47
  * QQ:             1981367757
  */
-public class EditUserInfoDetailActivity extends SlideBaseActivity implements View.OnClickListener {
+public class EditUserInfoDetailActivity extends ChatBaseActivity implements View.OnClickListener {
         private AutoEditText mAutoEditText;
         private String from;
         private TextView address;
@@ -62,21 +60,21 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
 
         @Override
         protected int getContentLayout() {
-                from = getIntent().getStringExtra(Constant.FROM);
-                groupId = getIntent().getStringExtra(Constant.GROUP_ID);
-                content = getIntent().getStringExtra(Constant.DATA);
+                from = getIntent().getStringExtra(ConstantUtil.FROM);
+                groupId = getIntent().getStringExtra(ConstantUtil.GROUP_ID);
+                content = getIntent().getStringExtra(ConstantUtil.DATA);
                 switch (from) {
-                        case Constant.NICK:
-                        case Constant.PHONE:
-                        case Constant.EMAIL:
-                        case Constant.SIGNATURE:
-                        case Constant.GROUP_DESCRIPTION:
-                        case Constant.GROUP_NOTIFICATION:
-                        case Constant.GROUP_NAME:
+                        case ConstantUtil.NICK:
+                        case ConstantUtil.PHONE:
+                        case ConstantUtil.EMAIL:
+                        case ConstantUtil.SIGNATURE:
+                        case ConstantUtil.GROUP_DESCRIPTION:
+                        case ConstantUtil.GROUP_NOTIFICATION:
+                        case ConstantUtil.GROUP_NAME:
                                 return R.layout.activity_edit_user_detail;
-                        case Constant.GENDER:
+                        case ConstantUtil.GENDER:
                                 return R.layout.activity_edit_user_detail_gender;
-                        case Constant.ADDRESS:
+                        case ConstantUtil.ADDRESS:
                                 return R.layout.activity_edit_user_detail_address;
                         default:
                                 return R.layout.activity_edit_user_detail_birth;
@@ -88,19 +86,19 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
         protected void initView() {
                 if (from != null) {
                         switch (from) {
-                                case Constant.NICK:
-                                case Constant.PHONE:
-                                case Constant.EMAIL:
-                                case Constant.SIGNATURE:
-                                case Constant.GROUP_DESCRIPTION:
-                                case Constant.GROUP_NOTIFICATION:
-                                case Constant.GROUP_NAME:
+                                case ConstantUtil.NICK:
+                                case ConstantUtil.PHONE:
+                                case ConstantUtil.EMAIL:
+                                case ConstantUtil.SIGNATURE:
+                                case ConstantUtil.GROUP_DESCRIPTION:
+                                case ConstantUtil.GROUP_NOTIFICATION:
+                                case ConstantUtil.GROUP_NAME:
                                         initNormalView();
                                         break;
-                                case Constant.GENDER:
+                                case ConstantUtil.GENDER:
                                         initGenderView();
                                         break;
-                                case Constant.ADDRESS:
+                                case ConstantUtil.ADDRESS:
                                         initAddressView();
                                         break;
                                 default:
@@ -177,30 +175,30 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                         }
                         final Intent intent = new Intent();
                         switch (from) {
-                                case Constant.NICK:
-                                case Constant.PHONE:
-                                case Constant.EMAIL:
-                                case Constant.SIGNATURE:
-                                case Constant.GROUP_DESCRIPTION:
-                                case Constant.GROUP_NOTIFICATION:
-                                case Constant.GROUP_NAME:
+                                case ConstantUtil.NICK:
+                                case ConstantUtil.PHONE:
+                                case ConstantUtil.EMAIL:
+                                case ConstantUtil.SIGNATURE:
+                                case ConstantUtil.GROUP_DESCRIPTION:
+                                case ConstantUtil.GROUP_NOTIFICATION:
+                                case ConstantUtil.GROUP_NAME:
                                         if (mAutoEditText.getText() != null && !mAutoEditText.getText().toString().trim().equals("")) {
                                                 if (content != null && content.equals(mAutoEditText.getText().toString().trim())) {
                                                         LogUtil.e("没有修改");
                                                         ToastUtils.showShortToast("没有修改");
                                                 } else {
                                                         String temp=mAutoEditText.getText().toString().trim();
-                                                        if (from.equals(Constant.PHONE) && !CommonUtils.isPhone(temp)) {
+                                                        if (from.equals(ConstantUtil.PHONE) && !CommonUtils.isPhone(temp)) {
                                                                 ToastUtils.showShortToast("输入的手机号码格式不对，请重新输入");
                                                                 LogUtil.e("输入的手机号码格式不对，请重新输入");
                                                                 return;
                                                         }
-                                                        if (from.equals(Constant.EMAIL) && !AppUtil.isEmail(temp)) {
+                                                        if (from.equals(ConstantUtil.EMAIL) && !AppUtil.isEmail(temp)) {
                                                                 LogUtil.e("输入的邮箱号码格式不对，请重新输入");
                                                                 LogUtil.e("输入的邮箱号码格式不对，请重新输入");
                                                                 return;
                                                         }
-                                                        intent.putExtra(Constant.DATA, temp);
+                                                        intent.putExtra(ConstantUtil.DATA, temp);
                                                         setResult(Activity.RESULT_OK, intent);
                                                 }
                                         } else {
@@ -209,19 +207,19 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                                 return;
                                         }
                                         break;
-                                case Constant.GENDER:
+                                case ConstantUtil.GENDER:
                                         if (content != null && content.equals(currentGender)) {
                                                 LogUtil.e("当前的性别未修改");
                                         } else {
-                                                intent.putExtra(Constant.DATA, currentGender);
+                                                intent.putExtra(ConstantUtil.DATA, currentGender);
                                                 setResult(Activity.RESULT_OK, intent);
                                         }
                                         break;
-                                case Constant.ADDRESS:
+                                case ConstantUtil.ADDRESS:
                                         if (content != null && content.equals(currentSelectedAddress)) {
                                                 LogUtil.e("现在的地址并没有改变");
                                         } else {
-                                                intent.putExtra(Constant.DATA, currentSelectedAddress);
+                                                intent.putExtra(ConstantUtil.DATA, currentSelectedAddress);
                                                 setResult(Activity.RESULT_OK, intent);
                                         }
                                         break;
@@ -231,12 +229,12 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                                         if (content != null && content.equals(time)) {
                                                 LogUtil.e("现在时间并没有改变");
                                         } else {
-                                                intent.putExtra(Constant.DATA, time);
+                                                intent.putExtra(ConstantUtil.DATA, time);
                                                 setResult(Activity.RESULT_OK, intent);
                                         }
                                         break;
                         }
-                        String data=intent.getStringExtra(Constant.DATA);
+                        String data=intent.getStringExtra(ConstantUtil.DATA);
                         if (data != null) {
                                 showLoadDialog("正在修改........");
                                 if (groupId == null) {
@@ -279,27 +277,27 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
 
         private String getTitle(String from) {
                 switch (from) {
-                        case Constant.NICK:
+                        case ConstantUtil.NICK:
                                 return "昵称";
-                        case Constant.AVATAR:
+                        case ConstantUtil.AVATAR:
                                 return "头像";
-                        case Constant.GENDER:
+                        case ConstantUtil.GENDER:
                                 return "性别";
-                        case Constant.BIRTHDAY:
+                        case ConstantUtil.BIRTHDAY:
                                 return "生日";
-                        case Constant.EMAIL:
+                        case ConstantUtil.EMAIL:
                                 return "邮箱";
-                        case Constant.PHONE:
+                        case ConstantUtil.PHONE:
                                 return "手机号码";
-                        case Constant.GROUP_DESCRIPTION:
+                        case ConstantUtil.GROUP_DESCRIPTION:
                                 return "群介绍";
-                        case Constant.GROUP_NOTIFICATION:
+                        case ConstantUtil.GROUP_NOTIFICATION:
                                 return "群通知";
-                        case Constant.GROUP_NAME:
+                        case ConstantUtil.GROUP_NAME:
                                 return "群名";
-                        case Constant.SIGNATURE:
+                        case ConstantUtil.SIGNATURE:
                                 return "签名";
-                        case Constant.ADDRESS:
+                        case ConstantUtil.ADDRESS:
                                 return "地址";
                         default:
                                 return "未知类型";
@@ -314,7 +312,7 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
                         openDatePicker();
 
                 } else if (i == R.id.rl_edit_user_info_detail_address) {
-                        AddressListActivity.start(this, null, Constant.REQUEST_CODE_NORMAL);
+                        AddressListActivity.start(this, null, ConstantUtil.REQUEST_CODE_NORMAL);
                 }
         }
 
@@ -346,8 +344,8 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
         protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 super.onActivityResult(requestCode, resultCode, data);
                 if (resultCode == Activity.RESULT_OK) {
-                        if (requestCode == Constant.REQUEST_CODE_NORMAL) {
-                                String address=data.getStringExtra(Constant.CONTENT);
+                        if (requestCode == ConstantUtil.REQUEST_CODE_NORMAL) {
+                                String address=data.getStringExtra(ConstantUtil.CONTENT);
                                 this.address.setText(address);
                                 currentSelectedAddress=address;
                         }
@@ -360,9 +358,9 @@ public class EditUserInfoDetailActivity extends SlideBaseActivity implements Vie
 
         public static void start(Activity activity, String groupId, String from, String data, int requestCode) {
                 Intent intent=new Intent(activity,EditUserInfoDetailActivity.class);
-                intent.putExtra(Constant.FROM,from);
-                intent.putExtra(Constant.DATA,data);
-                intent.putExtra(Constant.GROUP_ID,groupId);
+                intent.putExtra(ConstantUtil.FROM,from);
+                intent.putExtra(ConstantUtil.DATA,data);
+                intent.putExtra(ConstantUtil.GROUP_ID,groupId);
                 activity.startActivityForResult(intent,requestCode);
         }
 }

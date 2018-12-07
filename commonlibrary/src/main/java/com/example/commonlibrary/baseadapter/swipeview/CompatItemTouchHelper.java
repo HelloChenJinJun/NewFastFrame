@@ -15,7 +15,8 @@
  */
 package com.example.commonlibrary.baseadapter.swipeview;
 
-import android.support.v7.widget.helper.ItemTouchHelper;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class CompatItemTouchHelper extends ItemTouchHelper {
         private Callback mCallback;

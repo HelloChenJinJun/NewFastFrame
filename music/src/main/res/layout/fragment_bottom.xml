@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <com.example.commonlibrary.cusotomview.RoundAngleImageView
         android:id="@+id/iv_fragment_bottom_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         android:alpha="0"
         android:scaleType="centerCrop"
         android:visibility="invisible" />
@@ -18,10 +19,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="7.5dp"
-        android:scaleType="fitCenter"
-        app:roundHeight="25dp"
-        app:roundWidth="25dp"
-        android:src="@drawable/icon_album_default"/>
+        android:scaleType="fitCenter" />
 
 
     <RelativeLayout
@@ -63,10 +61,10 @@
 
     <ImageView
         android:id="@+id/iv_fragment_bottom_back"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
         android:alpha="0"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
@@ -134,8 +132,6 @@
             android:tag="skin" />
 
         <com.example.commonlibrary.cusotomview.RoundAngleImageView
-            app:roundWidth="20dp"
-            app:roundHeight="20dp"
             android:id="@+id/riv_fragment_bottom_previous"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -145,7 +141,9 @@
             android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
             android:src="@drawable/ic_skip_previous_black_24dp"
-            android:tag="skin" />
+            android:tag="skin"
+            app:roundHeight="20dp"
+            app:roundWidth="20dp" />
 
         <com.example.commonlibrary.cusotomview.RoundAngleImageView
             android:id="@+id/riv_fragment_bottom_mode"
@@ -187,33 +185,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0"
-            android:text="05:30:00"
+            android:text="30:00"
             android:textColor="?attr/custom_attr_btn_text"
             android:textSize="12sp"
             android:visibility="gone" />
 
         <SeekBar
             android:id="@+id/sb_fragment_bottom_seek"
-            style="@style/Widget.AppCompat.SeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:background="@color/transparent"
-            android:maxHeight="2dp"
-            android:progress="0"
-            android:progressDrawable="@drawable/progressbar_color"
-            android:secondaryProgress="0"
-            android:splitTrack="false"
-            android:tag="skin"
-            android:thumb="@drawable/thumb_normal"
-            android:visibility="visible" />
+            android:background="@null"
+            android:maxHeight="1.5dp"
+            android:minHeight="1.5dp"
+            android:progressDrawable="@drawable/seek_progress"
+            android:thumb="@drawable/seek_thumb" />
 
         <TextView
             android:id="@+id/tv_fragment_bottom_end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0"
-            android:text="05:30:00"
+            android:text="30:00"
             android:textColor="?attr/custom_attr_btn_text"
             android:textSize="12sp"
             android:visibility="gone" />

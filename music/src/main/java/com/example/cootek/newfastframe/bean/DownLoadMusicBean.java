@@ -18,6 +18,15 @@ public class DownLoadMusicBean {
 
 
     @Override
+    public String toString() {
+        return "DownLoadMusicBean{" +
+                "songinfo=" + songinfo +
+                ", error_code=" + error_code +
+                ", bitrate=" + bitrate +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return obj != null && obj instanceof DownLoadMusicBean && ((DownLoadMusicBean) obj).getSonginfo() != null && ((DownLoadMusicBean) obj).getSonginfo().getSong_id().equals(getSonginfo().getSong_id());
     }
@@ -47,6 +56,47 @@ public class DownLoadMusicBean {
     }
 
     public static class SonginfoBean {
+        @Override
+        public String toString() {
+            return "SonginfoBean{" +
+                    "special_type=" + special_type +
+                    ", pic_huge='" + pic_huge + '\'' +
+                    ", ting_uid='" + ting_uid + '\'' +
+                    ", pic_premium='" + pic_premium + '\'' +
+                    ", havehigh=" + havehigh +
+                    ", si_proxycompany='" + si_proxycompany + '\'' +
+                    ", author='" + author + '\'' +
+                    ", toneid='" + toneid + '\'' +
+                    ", has_mv=" + has_mv +
+                    ", song_id='" + song_id + '\'' +
+                    ", title='" + title + '\'' +
+                    ", artist_id='" + artist_id + '\'' +
+                    ", lrclink='" + lrclink + '\'' +
+                    ", relate_status='" + relate_status + '\'' +
+                    ", learn=" + learn +
+                    ", pic_big='" + pic_big + '\'' +
+                    ", play_type=" + play_type +
+                    ", album_id='" + album_id + '\'' +
+                    ", pic_radio='" + pic_radio + '\'' +
+                    ", bitrate_fee='" + bitrate_fee + '\'' +
+                    ", song_source='" + song_source + '\'' +
+                    ", all_artist_id='" + all_artist_id + '\'' +
+                    ", all_artist_ting_uid='" + all_artist_ting_uid + '\'' +
+                    ", piao_id='" + piao_id + '\'' +
+                    ", charge=" + charge +
+                    ", copy_type='" + copy_type + '\'' +
+                    ", all_rate='" + all_rate + '\'' +
+                    ", korean_bb_song='" + korean_bb_song + '\'' +
+                    ", is_first_publish=" + is_first_publish +
+                    ", has_mv_mobile=" + has_mv_mobile +
+                    ", album_title='" + album_title + '\'' +
+                    ", pic_small='" + pic_small + '\'' +
+                    ", album_no='" + album_no + '\'' +
+                    ", resource_type_ext='" + resource_type_ext + '\'' +
+                    ", resource_type='" + resource_type + '\'' +
+                    '}';
+        }
+
         /**
          * special_type : 0
          * pic_huge : http://musicdata.baidu.com/data2/pic/59cffb7aa3a14d30f14fefb1c08c0739/549122402/549122402.jpg@s_1,w_1000,h_1000
@@ -84,6 +134,9 @@ public class DownLoadMusicBean {
          * resource_type_ext : 0
          * resource_type : 0
          */
+
+
+
 
 
         private int special_type;
@@ -404,6 +457,21 @@ public class DownLoadMusicBean {
     }
 
     public static class BitrateBean {
+        @Override
+        public String toString() {
+            return "BitrateBean{" +
+                    "show_link='" + show_link + '\'' +
+                    ", free=" + free +
+                    ", song_file_id=" + song_file_id +
+                    ", file_size=" + file_size +
+                    ", file_extension='" + file_extension + '\'' +
+                    ", file_duration=" + file_duration +
+                    ", file_bitrate=" + file_bitrate +
+                    ", file_link='" + file_link + '\'' +
+                    ", hash='" + hash + '\'' +
+                    '}';
+        }
+
         /**
          * show_link : http://zhangmenshiting.baidu.com/data2/music/e4fa62a4048f9e557d8af3e36374ec9b/549124828/549124828.mp3?xcode=d96b2722c520a570dcd0b1435228577d
          * free : 1
@@ -415,6 +483,9 @@ public class DownLoadMusicBean {
          * file_link : http://yinyueshiting.baidu.com/data2/music/e4fa62a4048f9e557d8af3e36374ec9b/549124828/549124828.mp3?xcode=d96b2722c520a570dcd0b1435228577d
          * hash : 27f99bed0364f4f7686d8453bcfbb7f9c43589ed
          */
+
+
+
 
         private String show_link;
         private int free;

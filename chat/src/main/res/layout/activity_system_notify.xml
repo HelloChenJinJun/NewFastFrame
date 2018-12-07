@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/refresh_activity_system_notify_refresh">
@@ -14,6 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/srcv_activity_system_notify_display"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
 
 </LinearLayout>

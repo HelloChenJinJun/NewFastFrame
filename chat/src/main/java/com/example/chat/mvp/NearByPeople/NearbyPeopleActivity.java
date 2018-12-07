@@ -2,13 +2,11 @@ package com.example.chat.mvp.NearByPeople;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import com.example.chat.R;
 import com.example.chat.adapter.NearbyPeopleAdapter;
-import com.example.chat.base.Constant;
-import com.example.chat.base.SlideBaseActivity;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.bean.User;
 import com.example.chat.dagger.nearbyPeople.DaggerNearbyPeopleComponent;
 import com.example.chat.dagger.nearbyPeople.NearbyPeopleModule;
@@ -16,8 +14,6 @@ import com.example.chat.events.LocationEvent;
 import com.example.chat.manager.NewLocationManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.UserInfoTask.UserInfoActivity;
-import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
-import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
@@ -25,6 +21,7 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.utils.PermissionPageUtils;
 import com.example.commonlibrary.utils.PermissionUtil;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -34,8 +31,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.functions.Consumer;
-
 
 /**
  * 项目名称:    TestChat
@@ -44,8 +39,8 @@ import io.reactivex.functions.Consumer;
  * QQ:             1981367757
  */
 
-public class NearbyPeopleActivity extends SlideBaseActivity<List<User>, NearbyPeoplePresenter> implements SwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, PermissionUtil.RequestPermissionCallBack {
-    private SwipeRefreshLayout refresh;
+public class NearbyPeopleActivity extends ChatBaseActivity<List<User>, NearbyPeoplePresenter> implements CustomSwipeRefreshLayout.OnRefreshListener, OnLoadMoreListener, PermissionUtil.RequestPermissionCallBack {
+    private CustomSwipeRefreshLayout refresh;
     private SuperRecyclerView display;
     @Inject
     NearbyPeopleAdapter mNearbyPeopleAdapter;
@@ -70,8 +65,8 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<User>, NearbyPe
 
     @Override
     public void initView() {
-        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_activity_nearby_people_refresh);
-        display = (SuperRecyclerView) findViewById(R.id.srcv_activity_nearby_people_display);
+        refresh = findViewById(R.id.refresh_activity_nearby_people_refresh);
+        display = findViewById(R.id.srcv_activity_nearby_people_display);
         refresh.setOnRefreshListener(this);
     }
 
@@ -83,7 +78,7 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<User>, NearbyPe
                 .nearbyPeopleModule(new NearbyPeopleModule(this))
                 .build().inject(this);
         display.setLayoutManager(new WrappedLinearLayoutManager(this));
-        display.addItemDecoration(new ListViewDecoration(this));
+        display.addItemDecoration(new ListViewDecoration());
         display.setLoadMoreFooterView(new LoadMoreFooterView(this));
         display.setOnLoadMoreListener(this);
         mNearbyPeopleAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
@@ -104,17 +99,19 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<User>, NearbyPe
         toolBarOption.setAvatar(UserManager.getInstance().getCurrentUser().getAvatar());
         toolBarOption.setTitle("附近的人");
         toolBarOption.setNeedNavigation(true);
-        toolBarOption.setRightResId(R.drawable.ic_list_blue_grey_900_24dp);
+        toolBarOption.setRightResId(R.drawable.ic_expend_more);
         toolBarOption.setRightListener(v -> {
             List<String> list = new ArrayList<>();
             list.add("查看全部");
             list.add("只查看女生");
             list.add("只查看男生");
-            showChooseDialog("搜索条件", list, (parent, view, position, id) -> {
-                dismissBaseDialog();
-                if (currentPosition != position) {
-                    currentPosition = position;
-                    loadData(true);
+            showChooseDialog("搜索条件", list, new OnSimpleItemClickListener() {
+                @Override
+                public void onItemClick(int position, View view) {
+                    if (currentPosition != position) {
+                        currentPosition = position;
+                        loadData(true);
+                    }
                 }
             });
         });
@@ -177,10 +174,8 @@ public class NearbyPeopleActivity extends SlideBaseActivity<List<User>, NearbyPe
         ToastUtils.showShortToast("附近人功能需要定位信息");
         showBaseDialog("权限界面操作", "是否需要打开权限界面", "取消", "确定"
                 , v12 -> {
-                    dismissBaseDialog();
                     finish();
                 }, v1 -> {
-                    dismissBaseDialog();
                     PermissionPageUtils.jumpPermissionPage(NearbyPeopleActivity.this);
                 });
     }

@@ -3,39 +3,33 @@ package com.example.chat.mvp.photoSelect;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-
 import com.example.chat.R;
 import com.example.chat.adapter.PhotoSelectAdapter;
-import com.example.chat.base.Constant;
-import com.example.chat.bean.ImageFolder;
-import com.example.chat.bean.ImageItem;
+import com.example.chat.base.ChatBaseActivity;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.events.ImageFolderEvent;
 import com.example.chat.events.PhotoPreViewEvent;
-import com.example.chat.listener.OnImageLoadListener;
-import com.example.chat.mvp.chat.ChatActivity;
-import com.example.chat.mvp.preview.PhotoPreViewActivity;
-import com.example.chat.base.SlideBaseActivity;
 import com.example.chat.mvp.bottomFolder.CustomBottomFragment;
-import com.example.chat.util.SystemUtil;
+import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.utils.ConstantUtil;
-import com.example.commonlibrary.utils.PermissionPageUtils;
 import com.example.commonlibrary.utils.PermissionUtil;
+import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.fragment.app.Fragment;
 
 
 /**
@@ -45,7 +39,7 @@ import java.util.List;
  * QQ:         1981367757
  */
 
-public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoadListener, View.OnClickListener {
+public class PhotoSelectActivity extends ChatBaseActivity implements SystemUtil.OnImageLoadListener, View.OnClickListener {
 
     private SuperRecyclerView display;
 
@@ -53,11 +47,11 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
     private PhotoSelectAdapter photoSelectAdapter;
 
 
-    private List<ImageFolder> imageFolderList;
+    private List<SystemUtil.ImageFolder> imageFolderList;
 
     private TextView preView;
     private String takePhotoPath;
-    private ArrayList<ImageItem> selectedImageItemList;
+    private ArrayList<SystemUtil.ImageItem> selectedImageItemList;
     private Button all;
     private boolean isOne;
     private Uri cropUri;
@@ -95,8 +89,8 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
     @Override
     protected void initData() {
         photoSelectAdapter = new PhotoSelectAdapter();
-        isOne = getIntent().getBooleanExtra(Constant.IS_ONE, false);
-        isCrop = getIntent().getBooleanExtra(Constant.IS_CROP, false);
+        isOne = getIntent().getBooleanExtra(ConstantUtil.IS_ONE, false);
+        isCrop = getIntent().getBooleanExtra(ConstantUtil.IS_CROP, false);
         photoSelectAdapter.setOne(isOne);
         if (isOne) {
             preView.setVisibility(View.GONE);
@@ -134,13 +128,13 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
                         } else {
                             Intent intent = new Intent();
                             intent.putExtra(ConstantUtil.PATH, photoSelectAdapter.getData(position).getPath());
-                            intent.putExtra(Constant.FROM, getIntent().getStringExtra(Constant.FROM));
+                            intent.putExtra(ConstantUtil.FROM, getIntent().getStringExtra(ConstantUtil.FROM));
                             setResult(RESULT_OK, intent);
                             finish();
                         }
                         return;
                     }
-                    ArrayList<ImageItem> list = new ArrayList<>();
+                    ArrayList<SystemUtil.ImageItem> list = new ArrayList<>();
                     list.addAll(photoSelectAdapter.getData());
                     list.remove(0);
                     PhotoPreViewActivity.start(PhotoSelectActivity.this, position - 1, list, true);
@@ -153,12 +147,8 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
 
                         @Override
                         public void onRequestPermissionFailure() {
-                                ToastUtils.showShortToast("需要开启摄像头权限才能进行拍照");
-                            showBaseDialog("权限界面操作", "是否需要打开权限界面", "取消", "确定"
-                                    , v12 -> cancelBaseDialog(), v1 -> {
-                                        dismissBaseDialog();
-                                        PermissionPageUtils.jumpPermissionPage(PhotoSelectActivity.this);
-                                    });                        }
+
+                        }
                     });
                 }
             }
@@ -166,11 +156,11 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
         SystemUtil.getAllImageFolder(this, this);
         addDisposable(RxBusManager.getInstance().registerEvent(ImageFolderEvent.class, imageFolderEvent -> {
             if (imageFolderEvent.getFrom().equals(ImageFolderEvent.FROM_FOLDER)) {
-                ImageItem imageItem = new ImageItem();
-                imageItem.setLayoutType(ImageItem.ITEM_CAMERA);
+                SystemUtil.ImageItem imageItem = new SystemUtil.ImageItem();
+                imageItem.setLayoutType(SystemUtil.ImageItem.ITEM_CAMERA);
                 int size = imageFolderEvent.getImageItems().size();
                 for (int i = 0; i < size; i++) {
-                    for (ImageItem select :
+                    for (SystemUtil.ImageItem select :
                             selectedImageItemList) {
                         if (imageFolderEvent.getImageItems().get(i).equals(select)) {
                             imageFolderEvent.getImageItems().set(i, select);
@@ -224,24 +214,24 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
     }
 
     @Override
-    public void onImageLoaded(List<ImageFolder> imageFolderList) {
+    public void onImageLoaded(List<SystemUtil.ImageFolder> imageFolderList) {
         this.imageFolderList = imageFolderList;
         if (imageFolderList.size() > 0) {
-            List<ImageItem> list = new ArrayList<>(imageFolderList.get(0).getAllImages());
-            for (ImageItem item :
+            List<SystemUtil.ImageItem> list = new ArrayList<>(imageFolderList.get(0).getAllImages());
+            for (SystemUtil.ImageItem item :
                     list) {
-                item.setLayoutType(ImageItem.ITEM_NORMAL);
+                item.setLayoutType(SystemUtil.ImageItem.ITEM_NORMAL);
             }
-            ImageItem imageItem = new ImageItem();
-            imageItem.setLayoutType(ImageItem.ITEM_CAMERA);
+            SystemUtil.ImageItem imageItem = new SystemUtil.ImageItem();
+            imageItem.setLayoutType(SystemUtil.ImageItem.ITEM_CAMERA);
             list.add(0, imageItem);
             photoSelectAdapter.refreshData(list);
         }
-        selectedImageItemList = (ArrayList<ImageItem>) getIntent().getSerializableExtra(Constant.DATA);
+        selectedImageItemList = (ArrayList<SystemUtil.ImageItem>) getIntent().getSerializableExtra(ConstantUtil.DATA);
         if (selectedImageItemList == null) {
             selectedImageItemList = new ArrayList<>();
         }
-        for (ImageItem item :
+        for (SystemUtil.ImageItem item :
                 selectedImageItemList) {
             if (!photoSelectAdapter.getData().contains(item)) {
                 item.setCheck(true);
@@ -259,7 +249,7 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.btn_activity_photo_select_all) {
-            CustomBottomFragment.newInstance((ArrayList<ImageFolder>) imageFolderList, currentImageFolderPosition).show(getSupportFragmentManager(), "dialog");
+            CustomBottomFragment.newInstance((ArrayList<SystemUtil.ImageFolder>) imageFolderList, currentImageFolderPosition).show(getSupportFragmentManager(), "dialog");
         } else if (id == R.id.tv_activity_photo_select_preview) {
             if (selectedImageItemList != null && selectedImageItemList.size() > 0) {
                 PhotoPreViewActivity.start(this, 0, selectedImageItemList, true);
@@ -276,9 +266,9 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
         if (resultCode == RESULT_OK) {
             if (requestCode == SystemUtil.REQUEST_CODE_TAKE_PHOTO) {
                 if (!isOne) {
-                    ImageItem imageItem = new ImageItem();
+                    SystemUtil.ImageItem imageItem = new SystemUtil.ImageItem();
                     imageItem.setPath(takePhotoPath);
-                    imageItem.setLayoutType(ImageItem.ITEM_NORMAL);
+                    imageItem.setLayoutType(SystemUtil.ImageItem.ITEM_NORMAL);
                     if (!selectedImageItemList.contains(imageItem)) {
                         selectedImageItemList.add(imageItem);
                     }
@@ -290,45 +280,46 @@ public class PhotoSelectActivity extends SlideBaseActivity implements OnImageLoa
                     } else {
                         Intent intent = new Intent();
                         intent.putExtra(ConstantUtil.PATH, takePhotoPath);
-                        intent.putExtra(Constant.FROM, getIntent().getStringExtra(Constant.FROM));
+                        intent.putExtra(ConstantUtil.FROM, getIntent().getStringExtra(ConstantUtil.FROM));
                         setResult(RESULT_OK, intent);
                         finish();
                     }
                 }
-            } else if (requestCode == ConstantUtil.REQUEST_CODE_CROP) {
+            } else if (requestCode == com.example.commonlibrary.utils.SystemUtil.REQUEST_CODE_CROP) {
                 Intent intent = new Intent();
                 intent.putExtra(ConstantUtil.PATH, cropUri.toString());
-                intent.putExtra(Constant.FROM, getIntent().getStringExtra(Constant.FROM));
+                intent.putExtra(ConstantUtil.FROM, getIntent().getStringExtra(ConstantUtil.FROM));
                 setResult(RESULT_OK, intent);
                 finish();
             }
         }
     }
 
-    public static void start(Activity activity, String from, boolean isOne, boolean isCrop, ArrayList<ImageItem> selectedImageItemList) {
+    public static void start(Activity activity, String from, boolean isOne, boolean isCrop, ArrayList<SystemUtil.ImageItem> selectedImageItemList) {
         Intent intent = new Intent(activity, PhotoSelectActivity.class);
-        intent.putExtra(Constant.DATA, selectedImageItemList);
-        intent.putExtra(Constant.IS_ONE, isOne);
-        intent.putExtra(Constant.IS_CROP, isCrop);
-        intent.putExtra(Constant.FROM, from);
+        intent.putExtra(ConstantUtil.DATA, selectedImageItemList);
+        intent.putExtra(ConstantUtil.IS_ONE, isOne);
+        intent.putExtra(ConstantUtil.IS_CROP, isCrop);
+        intent.putExtra(ConstantUtil.FROM, from);
         if (isOne) {
-            activity.startActivityForResult(intent, ConstantUtil.REQUEST_CODE_ONE_PHOTO);
+            activity.startActivityForResult(intent, com.example.commonlibrary.utils.SystemUtil.REQUEST_CODE_ONE_PHOTO);
         } else {
             activity.startActivity(intent);
         }
     }
 
-    public static void start(Fragment fragment, String from, boolean isOne, boolean isCrop, ArrayList<ImageItem> selectedImageItemList) {
+    public static void start(Fragment fragment, String from, boolean isOne, boolean isCrop, ArrayList<SystemUtil.ImageItem> selectedImageItemList) {
         Intent intent = new Intent(fragment.getContext(), PhotoSelectActivity.class);
-        intent.putExtra(Constant.DATA, selectedImageItemList);
-        intent.putExtra(Constant.IS_ONE, isOne);
-        intent.putExtra(Constant.IS_CROP, isCrop);
-        intent.putExtra(Constant.FROM, from);
+        intent.putExtra(ConstantUtil.DATA, selectedImageItemList);
+        intent.putExtra(ConstantUtil.IS_ONE, isOne);
+        intent.putExtra(ConstantUtil.IS_CROP, isCrop);
+        intent.putExtra(ConstantUtil.FROM, from);
         if (isOne) {
-            fragment.startActivityForResult(intent, ConstantUtil.REQUEST_CODE_ONE_PHOTO);
+            fragment.startActivityForResult(intent, com.example.commonlibrary.utils.SystemUtil.REQUEST_CODE_ONE_PHOTO);
         } else {
             fragment.startActivity(intent);
         }
     }
+
 
 }

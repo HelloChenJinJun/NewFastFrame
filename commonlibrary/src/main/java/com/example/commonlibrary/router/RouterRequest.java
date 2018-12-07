@@ -14,7 +14,7 @@ import java.util.Map;
 public class RouterRequest {
     private String provideName;
     private String actionName;
-    private Map<String,Object> paramMap;
+    private Map<String, Object> paramMap;
     private Context context;
     private boolean isFinish;
     private Object object;
@@ -77,12 +77,17 @@ public class RouterRequest {
         this.paramMap = paramMap;
     }
 
+
+    public static Builder newBuild() {
+        return new Builder();
+    }
+
     public static final class Builder {
         private String provideName;
         private String actionName;
         private Map<String, Object> paramMap;
         private Context context;
-        public boolean isFinish=false;
+        public boolean isFinish = false;
         public Object object;
 
         public Builder() {
@@ -94,14 +99,14 @@ public class RouterRequest {
         }
 
 
-        public Builder object(Object object){
-            this.object=object;
+        public Builder object(Object object) {
+            this.object = object;
             return this;
         }
 
 
-        public Builder isFinish(boolean isFinish){
-            this.isFinish=isFinish;
+        public Builder isFinish(boolean isFinish) {
+            this.isFinish = isFinish;
             return this;
         }
 
@@ -116,8 +121,8 @@ public class RouterRequest {
         }
 
 
-        public Builder context(Context context){
-            this.context=context;
+        public Builder context(Context context) {
+            this.context = context;
             return this;
         }
 

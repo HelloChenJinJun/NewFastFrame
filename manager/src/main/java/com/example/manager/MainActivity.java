@@ -6,10 +6,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
+import android.webkit.URLUtil;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -17,15 +18,10 @@ import com.bumptech.glide.Glide;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
-import com.example.commonlibrary.cusotomview.BaseDialog;
-import com.example.commonlibrary.utils.ConstantUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 
-import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobPushManager;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
@@ -40,6 +36,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private ImageView imageView;
     private String path;
     private EditText title, subTitle, link;
+    private Button send;
 
 
     @Override
@@ -59,13 +56,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initView() {
-        imageView = (ImageView) findViewById(R.id.iv_activity_manager_image);
+        imageView = findViewById(R.id.iv_activity_manager_image);
         findViewById(R.id.btn_activity_manager_image).setOnClickListener(this);
         imageView.setOnClickListener(this);
-        findViewById(R.id.btn_activity_manager_send).setOnClickListener(this);
-        subTitle = (EditText) findViewById(R.id.et_activity_manager_subtitle);
-        title = (EditText) findViewById(R.id.et_activity_manager_title);
-        link = (EditText) findViewById(R.id.et_activity_manager_link);
+        send = findViewById(R.id.btn_activity_manager_send);
+        send.setOnClickListener(this);
+        subTitle = findViewById(R.id.et_activity_manager_subtitle);
+        title = findViewById(R.id.et_activity_manager_title);
+        link = findViewById(R.id.et_activity_manager_link);
     }
 
     @Override
@@ -89,6 +87,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 ToastUtils.showShortToast("输入不能为空");
                 return;
             }
+
+
+            if (!Patterns.WEB_URL.matcher(link.getText().toString()).matches() && !URLUtil.isValidUrl(link.getText().toString())) {
+                ToastUtils.showShortToast("输入的链接格式有误");
+                return;
+            }
+
+            send.setEnabled(false);
             showLoading("正在发送中.........");
             BmobFile bmobFile = new BmobFile(new File(path));
             bmobFile.upload(new UploadFileListener() {
@@ -100,7 +106,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         systemNotifyBean.setTitle(title.getText().toString().trim());
                         systemNotifyBean.setSubTitle(subTitle.getText().toString().trim());
                         systemNotifyBean.setImageUrl(bmobFile.getFileUrl());
-                        systemNotifyBean.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
+                        systemNotifyBean.setReadStatus(ManagerConfig.READ_STATUS_UNREAD);
                         systemNotifyBean.save(new SaveListener<String>() {
                             @Override
                             public void done(String s, BmobException e) {
@@ -118,7 +124,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                     systemNotifyEntity.setTitle(title.getText().toString().trim());
                                     systemNotifyEntity.setSubTitle(subTitle.getText().toString().trim());
                                     systemNotifyEntity.setImageUrl(bmobFile.getFileUrl());
-                                    systemNotifyEntity.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
+                                    systemNotifyEntity.setReadStatus(ManagerConfig.READ_STATUS_UNREAD);
                                     bmobPushManager.pushMessage(BaseApplication.getAppComponent()
                                             .getGson().toJson(systemNotifyEntity), new PushListener() {
                                         @Override
@@ -138,6 +144,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     } else {
                         ToastUtils.showShortToast("图片上传失败" + e.toString());
                     }
+                    send.setEnabled(true);
                 }
             });
 
