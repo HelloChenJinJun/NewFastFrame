@@ -6,6 +6,7 @@ import com.example.cootek.newfastframe.bean.ArtistSongsBean;
 import com.example.cootek.newfastframe.bean.DownLoadMusicBean;
 import com.example.cootek.newfastframe.bean.RankListBean;
 import com.example.cootek.newfastframe.bean.RecommendSongBean;
+import com.example.cootek.newfastframe.bean.RelatedSongBean;
 import com.example.cootek.newfastframe.bean.SearchMusicBean;
 import com.example.cootek.newfastframe.bean.SongMenuBean;
 
@@ -64,7 +65,7 @@ public interface MusicApi {
      * @return
      */
     @GET("/v1/restserver/ting?from=android&version=5.6.5.6&format=json&method=baidu.ting.song.getRecommandSongList")
-    public Observable<ArtistSongsBean> getReCommendSongList(@Query("song_id") String songId, @Query("num") int unm);
+    public Observable<RelatedSongBean> getReCommendSongList(@Query("song_id") String songId, @Query("num") int unm);
 
     /**
      * 获取歌曲的基本信息，包括播放地址和歌词地址

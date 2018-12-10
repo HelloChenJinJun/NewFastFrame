@@ -86,6 +86,7 @@ dependencies {
         api project(':chat')
         api project(':music')
         api project(':news')
+        api project(':video')
 //        api project(':live')
     }
 

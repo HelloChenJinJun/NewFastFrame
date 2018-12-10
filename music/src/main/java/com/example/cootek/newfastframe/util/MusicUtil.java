@@ -1,13 +1,11 @@
 package com.example.cootek.newfastframe.util;
 
 import android.content.ContentUris;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
 
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.FileUtil;
 import com.example.cootek.newfastframe.view.lrc.LrcRow;
 
@@ -35,23 +33,13 @@ public class MusicUtil {
     };
     public static final int FROM_RANK = 0;
     public static final String FROM = "from";
-    public static final int FROM_SONG_MENU = 1;
-    public static final String LIST_ID = "list_id";
-    public static final String RANK_TYPE = "TYPE";
     public static final int FROM_ALBUM = 2;
-    public static final String ALBUM_ID = "album_id";
-    public static final int FROM_RADIO = 3;
-    public static final String RADIO_ID = "RADIO_ID";
-    public static final int FROM_SINGER = 4;
-    public static final String TING_UID = "ting_uid";
-    public static final String SINGER_AVATAR = "singer_avatar";
     public static final String SHARED_PREFERENCES_NAME = "music";
     public static final String PLAY_MODE = "PLAY_MODE";
-    public static final String POSITION = "position";
-    public static final String SEEK = "seek";
     public static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting/";
-    public static final String SONG_COUNT = "count";
-    public static final String TYPE = "type";
+    public static final String DATA = "data";
+    public static final int FROM_RECOMMEND = 1;
+    public static final int FROM_BOTTOM_ALBUM = 3;
 
     public static Uri getAlbumArtUri(long paramInt) {
         return ContentUris.withAppendedId(Uri.parse("content://media/exjava.lang.Stringternal/audio/albumart"), paramInt);
@@ -145,13 +133,11 @@ public class MusicUtil {
         return sb.toString();
     }
 
-    public static String getRealUrl(String uri, Context context) {
+    public static String getRealUrl(String uri,int size) {
         int index = uri.lastIndexOf("@s_");
         if (index > 0) {
-            int screenWidth = DensityUtil.getScreenWidth(context);
-            int screenHeight = DensityUtil.getScreenHeight(context);
             uri = uri.substring(0, index);
-            uri = uri + "@s_1,w_" + screenWidth + ",h_" + screenHeight;
+            uri = uri + "@s_1,w_" + size + ",h_" + size;
         }
         return uri;
     }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.commonlibrary.manager.video.DefaultVideoPlayer xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dvp_item_activity_video_list_display"
+    android:layout_width="match_parent"
+    android:layout_height="200dp" />
+

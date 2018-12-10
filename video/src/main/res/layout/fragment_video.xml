@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tb_fragment_video_display"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/red_500"
+        app:tabTextColor="@color/custom_color_text_main" />
+
+    <com.example.commonlibrary.cusotomview.WrappedViewPager
+        android:id="@+id/wcp_fragment_video_display"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

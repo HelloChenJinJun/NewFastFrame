@@ -2,7 +2,15 @@
 
     package="com.example.commonlibrary">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--网络连接权限-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--监听网络变化的权限-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
@@ -15,6 +23,32 @@
             android:theme="@android:style/Theme.Translucent" />
         <activity android:name=".mvp.base.WebActivity" />
 
+
+        <receiver android:name=".keeplive.receiver.ScreenNotificationReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.Net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".keeplive.service.AliveJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <activity
+            android:name=".keeplive.onepix.OnePxActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|navigation|keyboard"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="false"
+            android:launchMode="singleInstance"
+            android:theme="@style/OnePxActivityStyle" />
+
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -26,8 +60,8 @@
         </provider>
 
         <!--<meta-data-->
-            <!--android:name="com.example.commonlibrary.net.okhttpconfig.GlideConfig"-->
-            <!--android:value="GlideModule" />-->
+        <!--android:name="com.example.commonlibrary.net.okhttpconfig.GlideConfig"-->
+        <!--android:value="GlideModule" />-->
     </application>
 
 

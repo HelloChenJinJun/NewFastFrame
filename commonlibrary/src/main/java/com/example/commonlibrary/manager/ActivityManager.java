@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.keeplive.onepix.OnePxActivity;
+import com.example.commonlibrary.utils.CommonLogger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -54,6 +52,7 @@ public class ActivityManager implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        CommonLogger.e("activity启动:" + activity.getClass().getName());
         addActivity(activity);
         currentActivity = activity;
     }
@@ -84,6 +83,10 @@ public class ActivityManager implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onActivityDestroyed(Activity activity) {
         removeActivity(activity);
+        CommonLogger.e("activity销毁:" + activity.getClass().getName());
+
+        if (activity instanceof OnePxActivity) {
+        }
         if (currentActivity != null && currentActivity.equals(activity)) {
             currentActivity = null;
         }
@@ -114,5 +117,12 @@ public class ActivityManager implements Application.ActivityLifecycleCallbacks {
 
     public Activity getCurrentActivity() {
         return currentActivity;
+    }
+
+    public void finish(Class aClass) {
+        Activity activity = getActivity(aClass.getName());
+        if (activity != null) {
+            activity.finish();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.commonlibrary.manager.music;
 
+import com.example.commonlibrary.bean.music.MusicPlayBean;
+
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
@@ -14,19 +16,19 @@ public class PlayData {
     public static final int PLAY_MODE_RANDOM = 1;
     public static final int PLAY_MODE_ORDER = 2;
     public static final int PLAY_MODE_RECYCLER = 3;
-    private List<String> urlList;
+    private List<MusicPlayBean> urlList;
     private int position;
     private int playMode = PLAY_MODE_ORDER;
     private boolean needRecycler = true;
 
 
-    public void setData(List<String> urlList, int position) {
+    public void setData(List<MusicPlayBean> urlList, int position) {
         this.urlList = urlList;
         this.position = position;
         randomPositionList = new Stack<>();
     }
 
-    public String getCurrentUrl() {
+    public MusicPlayBean getCurrentItem() {
         if (urlList != null && position >= 0 && position < urlList.size()) {
             return urlList.get(position);
         }
@@ -40,7 +42,7 @@ public class PlayData {
 
     private Stack<Integer> randomPositionList;
 
-    public String next() {
+    public MusicPlayBean next() {
         if (urlList == null || urlList.size() == 0) {
             return null;
         }
@@ -69,7 +71,7 @@ public class PlayData {
         }
     }
 
-    public String pre() {
+    public MusicPlayBean pre() {
         if (urlList == null || urlList.size() == 0) {
             return null;
         }
@@ -96,5 +98,9 @@ public class PlayData {
 
     public int getPlayMode() {
         return playMode;
+    }
+
+    public int getPosition() {
+        return position;
     }
 }

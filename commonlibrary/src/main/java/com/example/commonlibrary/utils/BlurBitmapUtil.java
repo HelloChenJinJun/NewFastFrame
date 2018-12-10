@@ -5,9 +5,11 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -15,6 +17,9 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 import android.view.View;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 import static android.content.ContentValues.TAG;
 
@@ -54,7 +59,7 @@ public class BlurBitmapUtil {
         }
 
         Bitmap overlay = Bitmap.createBitmap(
-                (int) (toView.getMeasuredWidth()/ scaleFactor),
+                (int) (toView.getMeasuredWidth() / scaleFactor),
                 (int) (toView.getMeasuredHeight() / scaleFactor),
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(overlay);
@@ -110,6 +115,33 @@ public class BlurBitmapUtil {
 
         return outputBitmap;
     }
+
+
+    public static Drawable createBlurredImageFromBitmap(Bitmap bitmap, Context context, int inSampleSize) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            RenderScript rs = RenderScript.create(context);
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = inSampleSize;
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] imageInByte = stream.toByteArray();
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
+            Bitmap blurTemplate = BitmapFactory.decodeStream(bis, null, options);
+
+            final Allocation input = Allocation.createFromBitmap(rs, blurTemplate);
+            final Allocation output = Allocation.createTyped(rs, input.getType());
+            final ScriptIntrinsicBlur script;
+            script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+            script.setRadius(8f);
+            script.setInput(input);
+            script.forEach(output);
+            output.copyTo(blurTemplate);
+            return new BitmapDrawable(context.getResources(), blurTemplate);
+        }
+        return null;
+    }
+
 
     /**
      * 高斯模糊操作

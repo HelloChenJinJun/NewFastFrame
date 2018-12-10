@@ -3,11 +3,14 @@ package com.example.commonlibrary.manager.music;
 import android.media.MediaPlayer;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.bean.music.MusicSortBean;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.PlayStateEvent;
+import com.example.commonlibrary.utils.Constant;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,7 +21,6 @@ import java.util.List;
  */
 public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnErrorListener {
     private MediaPlayer mMediaPlayer;
-    private String url;
     private PlayData mPlayData;
 
     //  资源准备中
@@ -61,29 +63,46 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
         mMediaPlayer.setOnBufferingUpdateListener(this);
     }
 
+
+    private MusicPlayBean mMusicPlayBean;
+
+    public MusicPlayBean getMusicPlayBean() {
+        return mMusicPlayBean;
+    }
+
     @Override
-    public void play(String url) {
-        if (url != null) {
-            this.url = url;
-            play();
+    public void play(MusicPlayBean musicPlayBean, long seekPosition) {
+        if (musicPlayBean != null) {
+            this.mMusicPlayBean = musicPlayBean;
+            play(seekPosition);
         }
     }
 
     @Override
-    public void play(List<String> urlList, int position) {
-        mPlayData.setData(urlList, position);
-        play(mPlayData.getCurrentUrl());
+    public void play(List<MusicPlayBean> musicPlayBeans, int position, long seekPosition) {
+        List<String> urlList = new ArrayList<>();
+        for (MusicPlayBean item :
+                musicPlayBeans) {
+            urlList.add(item.getSongUrl());
+        }
+        BaseApplication.getAppComponent()
+                .getSharedPreferences().edit()
+                .putString(Constant.RECENT_SONG_URL_LIST, BaseApplication
+                        .getAppComponent().getGson().toJson(urlList)).apply();
+        mPlayData.setData(musicPlayBeans, position);
+        play(mPlayData.getCurrentItem(), seekPosition);
     }
 
+
     @Override
-    public void play() {
+    public void play(long seekPosition) {
         if (mState == PLAY_STATE_PAUSE) {
             mState = PLAY_STATE_PLAYING;
             RxBusManager.getInstance().post(new PlayStateEvent(mState));
             mMediaPlayer.start();
             return;
         }
-        if (url == null) {
+        if (mMusicPlayBean == null) {
             return;
         }
         try {
@@ -91,14 +110,15 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
             RxBusManager.getInstance().post(new PlayStateEvent(mState));
             MusicSortBean sortBean = new MusicSortBean();
             sortBean.setPlayTime(System.currentTimeMillis());
-            sortBean.setUrl(mPlayData.getCurrentUrl());
+            sortBean.setUrl(mPlayData.getCurrentItem().getSongUrl());
             BaseApplication.getAppComponent()
                     .getDaoSession()
                     .getMusicSortBeanDao()
                     .insertOrReplace(sortBean);
             mMediaPlayer.reset();
-            mMediaPlayer.setDataSource(url);
+            mMediaPlayer.setDataSource(mPlayData.getCurrentItem().getSongUrl());
             mMediaPlayer.prepareAsync();
+            mMediaPlayer.seekTo((int) seekPosition);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -138,21 +158,21 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
 
     @Override
     public void next() {
-        String nextPath = mPlayData.next();
+        MusicPlayBean nextPath = mPlayData.next();
         if (nextPath == null) {
             mMediaPlayer.reset();
         } else {
-            play(nextPath);
+            play(nextPath, 0);
         }
     }
 
     @Override
     public void pre() {
-        String prePath = mPlayData.pre();
+        MusicPlayBean prePath = mPlayData.pre();
         if (prePath == null) {
             mMediaPlayer.reset();
         } else {
-            play(prePath);
+            play(prePath, 0);
         }
     }
 
@@ -170,7 +190,13 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
 
     @Override
     public void release() {
-        mMediaPlayer.release();
+        if (mMusicPlayBean != null) {
+            BaseApplication
+                    .getAppComponent().getSharedPreferences()
+                    .edit().putLong(Constant.SEEK, mMediaPlayer.getCurrentPosition())
+                    .putInt(Constant.MUSIC_POSITION, mPlayData.getPosition()).apply();
+            mMediaPlayer.release();
+        }
         mPlayData = null;
         mMediaPlayer = null;
     }
@@ -178,7 +204,10 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
 
     @Override
     public String getUrl() {
-        return url;
+        if (mMusicPlayBean != null) {
+            return mMusicPlayBean.getSongUrl();
+        }
+        return null;
     }
 
     @Override
@@ -197,11 +226,11 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        String nextPath = mPlayData.next();
+        MusicPlayBean nextPath = mPlayData.next();
         if (nextPath == null) {
             mMediaPlayer.reset();
         } else {
-            play(nextPath);
+            play(nextPath, 0);
         }
     }
 

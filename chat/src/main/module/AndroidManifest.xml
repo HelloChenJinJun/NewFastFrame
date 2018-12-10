@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chat">
-    <!--网络连接权限-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--监听网络变化的权限-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!--设备休眠-->
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -99,14 +92,6 @@
         <activity android:name=".mvp.EditShare.EditShareInfoActivity"/>
 
 
-
-        <receiver android:name=".receiver.NetWorkChangedReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.Net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.net.wifi.STATE_CHANGE" />
-            </intent-filter>
-        </receiver>
         <!--高德地图API_KEY-->
         <meta-data
             android:name="com.amap.api.v2.apikey"

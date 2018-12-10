@@ -44,8 +44,10 @@ public class ListVideoManager {
 
 
     public void release() {
-        currentPlayer.release();
-        currentPlayer = null;
+        if (currentPlayer != null) {
+            currentPlayer.release();
+            currentPlayer = null;
+        }
     }
 
     public void error() {

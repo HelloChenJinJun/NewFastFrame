@@ -55,15 +55,15 @@ public class AlbumBean {
          * language : 英语
          * songs_total : 14
          * info : 冲破摇滚原点2017霸气进化
-
-         ◎继三张英国冠军专辑、一张亚军专辑后，爱尔兰摇滚天团睽违三年重量回归
-         ◎荣获全英音乐奖“最佳国际乐团”两度提名、世界音乐奖“爱尔兰最佳销售乐团”肯定
-         ◎力邀Toby Gad (Beyoncé、John Legend、Madonna)及格莱美雷鬼乐团Magic!灵魂人物Nasri Atweh倾力打造
-         ◎冲破摇滚原点，启动与流行电音混搭风格，颠覆自我霸气进化
-
-         2008-2014年间，The Script陆续送上《The Script》、《Science & Faith》、《#3》和《No Sound Without Silence》等四张专辑，全部空降爱尔兰榜冠军、英国则缔造3冠+1亚军记录，送出爱尔兰10首TOP25单曲的佳绩，作品销量全球加总逼进3000万张大关！
-
-         2017年回归歌坛的全新大碟《Freedom Child》，The Script在修整的日子中搜寻音乐新方向，从现今流行的电音潮派切入。首支单曲《Rain》，仍然怀念旧爱之情弥漫全曲，琅琅上口的副歌增添深刻记忆点，让那冰凉的雨水驱赶酷暑闷热，直接冲入多国iTunes榜前10强之林，短短不到3周时间快速突破Spotify的800万和YouTube的600万点击率。同名曲《Freedom Child》，跳动的舞韵回味无穷，迎接崭新面貌的The Script！
+         * <p>
+         * ◎继三张英国冠军专辑、一张亚军专辑后，爱尔兰摇滚天团睽违三年重量回归
+         * ◎荣获全英音乐奖“最佳国际乐团”两度提名、世界音乐奖“爱尔兰最佳销售乐团”肯定
+         * ◎力邀Toby Gad (Beyoncé、John Legend、Madonna)及格莱美雷鬼乐团Magic!灵魂人物Nasri Atweh倾力打造
+         * ◎冲破摇滚原点，启动与流行电音混搭风格，颠覆自我霸气进化
+         * <p>
+         * 2008-2014年间，The Script陆续送上《The Script》、《Science & Faith》、《#3》和《No Sound Without Silence》等四张专辑，全部空降爱尔兰榜冠军、英国则缔造3冠+1亚军记录，送出爱尔兰10首TOP25单曲的佳绩，作品销量全球加总逼进3000万张大关！
+         * <p>
+         * 2017年回归歌坛的全新大碟《Freedom Child》，The Script在修整的日子中搜寻音乐新方向，从现今流行的电音潮派切入。首支单曲《Rain》，仍然怀念旧爱之情弥漫全曲，琅琅上口的副歌增添深刻记忆点，让那冰凉的雨水驱赶酷暑闷热，直接冲入多国iTunes榜前10强之林，短短不到3周时间快速突破Spotify的800万和YouTube的600万点击率。同名曲《Freedom Child》，跳动的舞韵回味无穷，迎接崭新面貌的The Script！
          * styles :
          * style_id : null
          * publishtime : 2017-09-01

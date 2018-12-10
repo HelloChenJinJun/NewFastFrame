@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.news">
+    package="com.example.video">
 
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -31,7 +31,7 @@
         <activity android:name=".mvp.course.CourseQueryActivity"/>
 
         <meta-data
-            android:name="com.example.news.NewsApplication"
+            android:name="com.example.video.NewsApplication"
             android:value="IModuleConfig" />
     </application>
 

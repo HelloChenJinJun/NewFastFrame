@@ -18,43 +18,28 @@ import androidx.viewpager.widget.PagerAdapter;
 public class CommonPagerAdapter extends PagerAdapter {
 
     private List<View> viewList;
-    private boolean isBannerStyle=false;
 
 
-    public CommonPagerAdapter(List<View> viewList){
+    public CommonPagerAdapter(List<View> viewList) {
         if (viewList == null) {
-            this.viewList=new ArrayList<>();
-        }else {
-            this.viewList=viewList;
+            this.viewList = new ArrayList<>();
+        } else {
+            this.viewList = viewList;
         }
     }
-
-
 
 
     @Override
     public int getCount() {
-        if (!isBannerStyle) {
-            return viewList.size();
-        }else {
-            return Integer.MAX_VALUE;
-        }
+        return viewList.size();
+
     }
 
-
-
-    public void setIsBannerStyle(boolean isBannerStyle){
-        this.isBannerStyle=isBannerStyle;
-    }
-
-    public boolean isBannerStyle() {
-        return isBannerStyle;
-    }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        container.addView(viewList.get(isBannerStyle?position%viewList.size():position));
-        return viewList.get(isBannerStyle?position%viewList.size():position);
+        container.addView(viewList.get(position));
+        return viewList.get(position);
     }
 
     @Override

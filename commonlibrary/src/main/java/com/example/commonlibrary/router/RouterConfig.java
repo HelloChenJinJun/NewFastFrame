@@ -8,4 +8,5 @@ package com.example.commonlibrary.router;
 public class RouterConfig {
     public static final String MAIN_PROVIDE_NAME = "app";
     public static final String MUSIC_PROVIDE_NAME = "music";
+    public static final String VIDEO_PROVIDE_NAME = "video";
 }

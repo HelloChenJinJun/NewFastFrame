@@ -1,7 +1,5 @@
 package com.example.commonlibrary.baseadapter.adapter;
 
-import com.example.commonlibrary.BaseFragment;
-
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
@@ -10,7 +8,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private List<String> titleList;
-    private List<BaseFragment> fragments;
+    private List<Fragment> fragments;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -23,7 +21,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return titleList.get(position);
+        if (titleList != null) {
+            return titleList.get(position);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -35,7 +37,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-    public void setTitleAndFragments(List<String> titleList, List<BaseFragment> fragments) {
+    public void setTitleAndFragments(List<String> titleList, List<Fragment> fragments) {
         this.titleList = titleList;
         this.fragments = fragments;
     }

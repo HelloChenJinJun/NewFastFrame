@@ -16,7 +16,7 @@ import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.dagger.shareinfo.DaggerShareInfoComponent;
 import com.example.chat.dagger.shareinfo.ShareInfoModule;
 import com.example.chat.events.CommentEvent;
-import com.example.chat.events.NetStatusEvent;
+import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.chat.events.UnReadPostNotifyEvent;
 import com.example.chat.events.UpdatePostEvent;
 import com.example.chat.events.UserInfoUpdateEvent;

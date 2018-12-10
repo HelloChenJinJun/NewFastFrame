@@ -13,7 +13,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
-import com.example.commonlibrary.bean.music.MusicPlayBeanDao;
 import com.example.commonlibrary.manager.music.IMusicPlayer;
 import com.example.commonlibrary.manager.music.MusicPlayerManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -115,10 +114,7 @@ public class MusicService extends Service {
             remoteViews.setOnClickPendingIntent(R.id.iv_notification_play, PendingIntent.getService(this, 0, new Intent(PLAY_ACTION_PLAY), 0));
             remoteViews.setOnClickPendingIntent(R.id.iv_notification_next, PendingIntent.getService(this, 0, new Intent(PLAY_ACTION_NEXT), 0));
         } else {
-            MusicPlayBean musicPlayBean = BaseApplication
-                    .getAppComponent().getDaoSession()
-                    .getMusicPlayBeanDao().queryBuilder().where(MusicPlayBeanDao.Properties.SongUrl.eq(mMusicPlayerManager
-                            .getUrl())).build().unique();
+            MusicPlayBean musicPlayBean = MusicPlayerManager.getInstance().getMusicPlayBean();
             if (musicPlayBean != null) {
                 remoteViews.setTextViewText(R.id.tv_notification_title, musicPlayBean.getSongName());
                 remoteViews.setTextViewText(R.id.tv_notification_sub_title, musicPlayBean.getArtistName());
@@ -162,13 +158,13 @@ public class MusicService extends Service {
 
 
         @Override
-        public void play(String url) {
-            mMusicPlayerManager.play(url);
+        public void play(MusicPlayBean musicPlayBean) {
+            mMusicPlayerManager.play(musicPlayBean);
         }
 
         @Override
-        public void play(List<String> urlList, int position) {
-            mMusicPlayerManager.play(urlList, position);
+        public void play(List<MusicPlayBean> musicPlayBeans, int position,long seekPosition) {
+            mMusicPlayerManager.play(musicPlayBeans, position,seekPosition);
         }
 
         @Override

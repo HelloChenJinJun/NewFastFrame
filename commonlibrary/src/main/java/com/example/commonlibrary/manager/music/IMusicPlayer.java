@@ -1,5 +1,7 @@
 package com.example.commonlibrary.manager.music;
 
+import com.example.commonlibrary.bean.music.MusicPlayBean;
+
 import java.util.List;
 
 /**
@@ -10,11 +12,11 @@ import java.util.List;
 public interface IMusicPlayer {
 
 
-    void play(String url);
+    void play(MusicPlayBean musicPlayBean,long seekPosition);
 
-    void play(List<String> urlList, int position);
+    void play(List<MusicPlayBean> urlList, int position,long seekPosition);
 
-    void play();
+    void play(long seekPosition);
 
 
     void pause();

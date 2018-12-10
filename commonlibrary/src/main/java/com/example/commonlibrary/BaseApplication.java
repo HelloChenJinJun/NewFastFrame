@@ -3,6 +3,8 @@ package com.example.commonlibrary;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,6 +13,8 @@ import com.example.commonlibrary.cusotomview.CommonDialog;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.component.DaggerAppComponent;
 import com.example.commonlibrary.dagger.module.GlobalConfigModule;
+import com.example.commonlibrary.keeplive.service.JobSchedulerManager;
+import com.example.commonlibrary.keeplive.service.KeepLiveService;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.DataCleanUtil;
@@ -66,7 +70,19 @@ public class BaseApplication extends Application implements View.OnClickListener
         initUM();
         initScreenAdapt();
         initBugly();
+        initKeepLive();
         applicationDelegate.onCreate(this);
+    }
+
+
+    //    保活策略
+    protected void initKeepLive() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String serviceName = KeepLiveService.getKeepLiveService(this);
+            if (!TextUtils.isEmpty(serviceName)) {
+                JobSchedulerManager.getJobSchedulerManager().startJobScheduler(serviceName);
+            }
+        }
     }
 
 

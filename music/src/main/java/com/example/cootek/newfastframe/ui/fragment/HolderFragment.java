@@ -3,19 +3,20 @@ package com.example.cootek.newfastframe.ui.fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.ViewPagerIndicator;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.base.MusicBaseFragment;
+import com.example.cootek.newfastframe.mvp.rank.RankFragment;
 import com.example.cootek.newfastframe.ui.MainActivity;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 /**
@@ -79,7 +80,7 @@ public class HolderFragment extends MusicBaseFragment implements View.OnClickLis
         List<String> titleList = new ArrayList<>();
         titleList.add("首页");
         titleList.add("排行榜");
-        List<BaseFragment> fragments = new ArrayList<>();
+        List<Fragment> fragments = new ArrayList<>();
         fragments.add(ListenerFragment.newInstance());
         fragments.add(RankFragment.newInstance());
         viewPagerAdapter.setTitleAndFragments(titleList, fragments);

@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
         android:id="@+id/refresh_fragment_list_live_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,6 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/srcv_fragment_list_live_display"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
 
 </LinearLayout>

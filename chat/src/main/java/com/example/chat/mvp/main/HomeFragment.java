@@ -26,7 +26,7 @@ import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.bean.WeatherInfoBean;
 import com.example.chat.events.LocationEvent;
 import com.example.chat.events.MessageInfoEvent;
-import com.example.chat.events.NetStatusEvent;
+import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.chat.events.RecentEvent;
 import com.example.chat.events.RefreshMenuEvent;
 import com.example.chat.listener.OnDragDeltaChangeListener;

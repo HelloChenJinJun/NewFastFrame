@@ -1,0 +1,115 @@
+if (rootProject.ext.isAlone) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+    android {
+        lintOptions {
+            checkReleaseBuilds false
+            // Or, if you prefer, you can continue to check for errors in release builds,
+            // but continue the build even when errors are found:
+            abortOnError false
+        }
+    }
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+        if (rootProject.ext.isAlone) {
+            applicationId "com.new.video"
+        }
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86'//, 'x86_64', 'arm64-v8a'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+
+    buildTypes {
+        debug {
+            shrinkResources false   // 移除无用的resource文件
+            minifyEnabled false //不启用混淆
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            shrinkResources false   // 移除无用的resource文件
+            minifyEnabled false //不启用混淆
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            if (rootProject.ext.isAlone) {
+                manifest.srcFile 'src/main/module/AndroidManifest.xml'
+                java.srcDirs = ['src/main/java', 'src/main/module/java']
+                res.srcDirs = ['src/main/res', 'src/main/module/res']
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+
+        }
+    }
+
+}
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation project(':commonlibrary')
+    annotationProcessor rootProject.ext.dependencies.dagger2_compiler
+    testImplementation 'junit:junit:4.12'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+
+
+
+
+    implementation files('libs/js.jar')
+}
+
+
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                //这里写你想统一的版本是多少，前提是你sdk里有
+                details.useVersion '25.4.0'
+            } else {
+                details.useVersion '1.0.2'
+            }
+        }
+
+        if (requested.group == 'com.squareup.okio') {
+            if (requested.name.startsWith('okio')) {
+
+            }
+        }
+
+    }
+}
+//apply from: 'tinker-support.gradle'
+//apply from: 'multiple-channel.gradle'
+
+

@@ -91,14 +91,7 @@ public class TimeUtil {
     }
 
 
-    public static String getServerFormatTime() {
-        long deltaTime = BaseApplication.getAppComponent().getSharedPreferences()
-                .getLong(ConstantUtil.DELTA_TIME, -1L);
-        LogUtil.e("这里通过缓存的时间差值来计算出服务器上的时间");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long realServerTime = System.currentTimeMillis() - deltaTime;
-        return simpleDateFormat.format(new Date(realServerTime));
-    }
+
 
     public static String getRealTime(String time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

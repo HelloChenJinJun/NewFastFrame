@@ -1,7 +1,6 @@
 package com.example.live.mvp.list;
 
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import com.example.commonlibrary.BaseFragment;
@@ -9,6 +8,7 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.live.LiveApplication;
 import com.example.live.R;
 import com.example.live.adapter.ListLiveAdapter;
@@ -27,9 +27,9 @@ import javax.inject.Inject;
  * QQ:             1981367757
  */
 
-public class ListLiveFragment extends BaseFragment<ListLiveBean,ListLivePresenter> implements SwipeRefreshLayout.OnRefreshListener {
+public class ListLiveFragment extends BaseFragment<ListLiveBean,ListLivePresenter> implements CustomSwipeRefreshLayout.OnRefreshListener {
     private SuperRecyclerView display;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private CustomSwipeRefreshLayout swipeRefreshLayout;
     private String slug;
     @Inject
     ListLiveAdapter listLiveAdapter;
@@ -57,8 +57,8 @@ public class ListLiveFragment extends BaseFragment<ListLiveBean,ListLivePresente
 
     @Override
     protected void initView() {
-        swipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.refresh_fragment_list_live_refresh);
-        display= (SuperRecyclerView) findViewById(R.id.srcv_fragment_list_live_display);
+        swipeRefreshLayout= findViewById(R.id.refresh_fragment_list_live_refresh);
+        display= findViewById(R.id.srcv_fragment_list_live_display);
     }
 
     @Override

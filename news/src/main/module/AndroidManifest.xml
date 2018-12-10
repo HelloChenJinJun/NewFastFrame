@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.news">
+    package="com.example.video">
 
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -18,18 +18,18 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/CustomTheme.Day">
-        <activity android:name=".NewsActivity">
+        <activity android:name="com.example.video.NewsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mvp.news.othernew.special.SpecialNewsActivity" />
-        <activity android:name=".mvp.news.othernew.detail.OtherNewsDetailActivity" />
-        <activity android:name=".mvp.news.othernew.photo.OtherNewPhotoSetActivity" />
-        <activity android:name=".mvp.newsType.AdjustNewsTypeActivity" />
+        <activity android:name="com.example.video.mvp.news.othernew.special.SpecialNewsActivity" />
+        <activity android:name="com.example.video.mvp.news.othernew.detail.OtherNewsDetailActivity" />
+        <activity android:name="com.example.video.mvp.news.othernew.photo.OtherNewPhotoSetActivity" />
+        <activity android:name="com.example.video.mvp.newsType.AdjustNewsTypeActivity" />
         <meta-data
-            android:name="com.example.news.NewsApplication"
+            android:name="com.example.video.NewsApplication"
             android:value="IModuleConfig" />
     </application>
 

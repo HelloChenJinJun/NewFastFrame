@@ -10,14 +10,17 @@ import com.example.chat.bean.CustomInstallation;
 import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.dagger.ChatMainModule;
 import com.example.chat.dagger.DaggerChatMainComponent;
+import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.util.LogUtil;
+import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.router.BaseAction;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.router.RouterResult;
+import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.SystemUtil;
 
@@ -64,10 +67,21 @@ public class ChatApplication implements IAppLife {
         LogUtil.e("推送服务初始化完成");
         RandomData.initAllRanDomData();
         initRouter();
+        initRxBus();
+    }
+
+    private void initRxBus() {
+        RxBusManager.getInstance().registerEvent(NetStatusEvent.class, netStatusEvent -> {
+            if (netStatusEvent.isConnected()) {
+                if (BaseApplication.getAppComponent().getSharedPreferences().getLong(ConstantUtil.DELTA_TIME, 0L) == 0L) {
+                    TimeUtil.getServerTime();
+                }
+            }
+        });
     }
 
     private void initRouter() {
-        Router.getInstance().registerProvider("chat","preview", new BaseAction() {
+        Router.getInstance().registerProvider("chat", "preview", new BaseAction() {
             @Override
             public RouterResult invoke(RouterRequest routerRequest) {
                 Map<String, Object> map = routerRequest.getParamMap();

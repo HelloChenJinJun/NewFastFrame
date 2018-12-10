@@ -38,7 +38,7 @@ import com.example.chat.bean.MessageContent;
 import com.example.chat.dagger.chat.ChatActivityModule;
 import com.example.chat.dagger.chat.DaggerChatActivityComponent;
 import com.example.chat.events.MessageInfoEvent;
-import com.example.chat.events.NetStatusEvent;
+import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.chat.events.RecentEvent;
 import com.example.chat.events.RefreshMenuEvent;
 import com.example.chat.manager.MsgManager;

@@ -11,7 +11,7 @@
         android:scaleType="fitXY"/>
 
 
-    <com.example.news.widget.flowlayout.TagFlowLayout
+    <com.example.video.widget.flowlayout.TagFlowLayout
         android:padding="10dp"
         app:max_select="1"
         android:layout_width="match_parent"

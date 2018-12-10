@@ -397,7 +397,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
         } else {
             ToastUtils.showShortToast(errorMsg);
         }
-        if (errorMsg!=null) {
+        if (errorMsg != null) {
             CommonLogger.e(errorMsg);
         }
     }
@@ -418,17 +418,17 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (compositeDisposable != null) {
-            if (!compositeDisposable.isDisposed()) {
-                compositeDisposable.dispose();
-            }
-        }
     }
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (compositeDisposable != null) {
+            if (!compositeDisposable.isDisposed()) {
+                compositeDisposable.dispose();
+            }
+        }
         if (presenter != null) {
             presenter.onDestroy();
         }
@@ -487,7 +487,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
 
 
     protected void addBackStackFragment(Fragment fragment) {
-        ((BaseActivity) getActivity()).addBackStackFragment(fragment, true) ;
+        ((BaseActivity) getActivity()).addBackStackFragment(fragment, true);
     }
 
 

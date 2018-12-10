@@ -2,48 +2,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_fragment_bottom_container"
     android:layout_width="match_parent"
+    android:background="#3C5F78"
     android:layout_height="match_parent">
 
-    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+    <ImageView
         android:id="@+id/iv_fragment_bottom_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:alpha="0"
-        android:scaleType="centerCrop"
-        android:visibility="invisible" />
+        android:scaleType="centerCrop" />
 
 
     <com.example.commonlibrary.cusotomview.RoundAngleImageView
         android:id="@+id/riv_fragment_bottom_album"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="7.5dp"
+        android:layout_marginTop="10dp"
         android:scaleType="fitCenter" />
 
 
-    <RelativeLayout
-        android:id="@+id/rl_fragment_bottom_lrc_container"
+    <com.example.commonlibrary.cusotomview.WrappedViewPager
+        android:id="@+id/wvp_fragment_bottom_display"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible">
-
-        <com.example.cootek.newfastframe.view.lrc.LrcView
-            android:id="@+id/lv_fragment_bottom_lrc"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginTop="70dp"
-            android:alpha="0"
-            android:visibility="invisible" />
+        android:layout_height="400dp"
+        android:layout_marginTop="70dp"
+        android:visibility="invisible" />
 
 
-        <com.example.cootek.newfastframe.view.lrc.LrcView
-            android:id="@+id/lv_fragment_bottom_lrc_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:alpha="0"
-            android:visibility="invisible" />
-    </RelativeLayout>
+    <com.example.cootek.newfastframe.view.lrc.LrcView
+        android:id="@+id/lv_fragment_bottom_lrc_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignBottom="@+id/wvp_fragment_bottom_display"
+        android:alpha="0"
+        android:visibility="invisible" />
 
 
     <TextView
@@ -74,7 +66,7 @@
         android:id="@+id/ll_fragment_bottom_name_container"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginLeft="80dp"
+        android:layout_marginLeft="70dp"
         android:layout_marginRight="160dp"
         android:orientation="vertical"
         android:paddingTop="10dp">
@@ -86,7 +78,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="歌名"
-            android:textColor="@color/base_color_text_blue"
+            android:textColor="@color/white"
             android:textSize="16sp" />
 
         <TextView
@@ -97,7 +89,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="专辑"
-            android:textColor="@color/base_color_text_grey"
+            android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -105,6 +97,7 @@
         android:id="@+id/rl_fragment_bottom_icon_container"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -114,7 +107,6 @@
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
             android:src="@drawable/ic_skip_next_black_24dp"
             android:tag="skin" />
@@ -126,7 +118,6 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@+id/riv_fragment_bottom_next"
-            android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
             android:src="@drawable/ic_play_arrow_black_24dp"
             android:tag="skin" />
@@ -138,7 +129,6 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@+id/riv_fragment_bottom_play"
-            android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
             android:src="@drawable/ic_skip_previous_black_24dp"
             android:tag="skin"
@@ -153,7 +143,6 @@
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@+id/riv_fragment_bottom_previous"
             android:alpha="0"
-            android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
             android:src="@drawable/ic_compare_arrows_white_24dp"
             android:tag="skin"
@@ -167,7 +156,6 @@
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/riv_fragment_bottom_next"
             android:alpha="0"
-            android:background="?attr/custom_attr_btn_bg"
             android:scaleType="centerInside"
             android:src="@drawable/ic_queue_music_black_24dp"
             android:tag="skin" />
@@ -177,6 +165,7 @@
         android:id="@+id/ll_fragment_bottom_seek_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -186,7 +175,7 @@
             android:layout_height="wrap_content"
             android:alpha="0"
             android:text="30:00"
-            android:textColor="?attr/custom_attr_btn_text"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:visibility="gone" />
 
@@ -208,7 +197,7 @@
             android:layout_height="wrap_content"
             android:alpha="0"
             android:text="30:00"
-            android:textColor="?attr/custom_attr_btn_text"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:visibility="gone" />
     </LinearLayout>

@@ -14,7 +14,6 @@ import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.event.ServiceStateEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -123,16 +122,16 @@ public class MusicManager {
 
     }
 
-    public void play(List<MusicPlayBean> list, int position) {
+    public void play(List<MusicPlayBean> list, int position, long seekPosition) {
         if (service != null && list != null && list.size() > 0) {
             BaseApplication.getAppComponent().getDaoSession()
                     .getMusicPlayBeanDao().insertOrReplaceInTx(list);
-            List<String> list1 = new ArrayList<>();
+
             for (MusicPlayBean bean : list
                     ) {
-                list1.add(bean.getSongUrl());
+                CommonLogger.e("插入播放的音乐数据" + bean.toString());
             }
-            service.play(list1, position);
+            service.play(list, position, seekPosition);
         }
     }
 

@@ -24,8 +24,8 @@ import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.ToastUtils;
-import com.example.news.mvp.center.CenterFragment;
-import com.example.news.mvp.index.IndexFragment;
+import com.example.video.mvp.center.CenterFragment;
+import com.example.video.mvp.index.IndexFragment;
 
 import java.util.ArrayList;
 import java.util.List;
