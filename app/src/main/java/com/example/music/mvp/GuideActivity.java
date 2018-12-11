@@ -1,4 +1,4 @@
-package com.example.music;
+package com.example.music.mvp;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,9 @@ import com.example.chat.mvp.login.LoginActivity;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
+import com.example.music.adapter.GuideAdapter;
+import com.example.music.R;
+import com.example.music.mvp.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

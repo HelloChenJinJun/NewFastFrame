@@ -102,8 +102,10 @@ public class SongListFragment extends MusicBaseFragment<Object, SongListPresente
         from = getArguments().getInt(MusicUtil.FROM);
         data = getArguments().getString(MusicUtil.DATA);
         display.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
-        display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
-        display.setOnLoadMoreListener(this);
+        if (from != MusicUtil.FROM_RECOMMEND) {
+            display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
+            display.setOnLoadMoreListener(this);
+        }
         if (from == MusicUtil.FROM_RANK || from == MusicUtil.FROM_ALBUM) {
             display.addHeaderView(getHeaderView());
             root.setBackgroundColor(Color.WHITE);
@@ -115,7 +117,7 @@ public class SongListFragment extends MusicBaseFragment<Object, SongListPresente
         songListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                MusicManager.getInstance().play(songListAdapter.getData(), position);
+                MusicManager.getInstance().play(songListAdapter.getData(), position, 0);
             }
         });
     }
@@ -239,8 +241,6 @@ public class SongListFragment extends MusicBaseFragment<Object, SongListPresente
             presenter.getRankDetailInfo(Integer.parseInt(data), false);
         } else if (from == MusicUtil.FROM_ALBUM || from == MusicUtil.FROM_BOTTOM_ALBUM) {
             presenter.getAlbumInfoData(data, false);
-        } else if (from == MusicUtil.FROM_RECOMMEND) {
-            presenter.getRecommendData(data, false);
         }
     }
 

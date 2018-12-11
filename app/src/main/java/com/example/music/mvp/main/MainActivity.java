@@ -1,4 +1,4 @@
-package com.example.music;
+package com.example.music.mvp.main;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,7 +24,8 @@ import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.ToastUtils;
-import com.example.video.mvp.center.CenterFragment;
+import com.example.music.R;
+import com.example.music.mvp.center.CenterFragment;
 import com.example.video.mvp.index.IndexFragment;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.music;
+package com.example.music.bean;
 
 /**
  * 项目名称:    NewFastFrame

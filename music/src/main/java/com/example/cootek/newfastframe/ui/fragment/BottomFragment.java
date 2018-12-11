@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.os.Build;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -87,7 +86,7 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
     private TextView startTime;
     private TextView endTime;
     private LrcView bottomLrc;
-    private ImageView back;
+    //    private ImageView back;
     private TextView comment;
     private IntEvaluator intEvaluator;
     private int endSongName;
@@ -98,7 +97,6 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
     private SlidingPanelLayout slidingUpPanelLayout;
     private int mode = 0;
     private SharedPreferences sharedPreferences;
-    private LinearLayout nameContainer;
     private int screenWidth;
     private int playMaxSize = 60;
     private int playMinSize = 40;
@@ -133,8 +131,9 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
     protected void initView() {
         display = findViewById(R.id.wvp_fragment_bottom_display);
         comment = findViewById(R.id.tv_fragment_bottom_comment);
-        back = findViewById(R.id.iv_fragment_bottom_back);
+        //        back = findViewById(R.id.iv_fragment_bottom_back);
         bottomLrc = findViewById(R.id.lv_fragment_bottom_lrc_bottom);
+        bottomLrc.setTouchEnable(false);
         endTime = findViewById(R.id.tv_fragment_bottom_end_time);
         startTime = findViewById(R.id.tv_fragment_bottom_start_time);
         seekContainer = findViewById(R.id.ll_fragment_bottom_seek_container);
@@ -149,15 +148,14 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
         artistName = findViewById(R.id.tv_fragment_bottom_artist_name);
         album = findViewById(R.id.riv_fragment_bottom_album);
         songName = findViewById(R.id.tv_fragment_bottom_song_name);
-        nameContainer = findViewById(R.id.ll_fragment_bottom_name_container);
         next.setOnClickListener(this);
-        back.setOnClickListener(this);
+        //        back.setOnClickListener(this);
         previous.setOnClickListener(this);
         playOrPause.setOnClickListener(this);
         playMode.setOnClickListener(this);
         list.setOnClickListener(this);
         comment.setOnClickListener(this);
-        slidingUpPanelLayout = (SlidingPanelLayout) root.getParent().getParent();
+        slidingUpPanelLayout = ((MainActivity) getActivity()).getSlidingPanelLayout();
         slidingUpPanelLayout.addPanelSlideListener(this);
     }
 
@@ -214,7 +212,25 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
         });
         presenter.registerEvent(ServiceStateEvent.class, serviceStateEvent -> {
             if (serviceStateEvent.isConnected()) {
-                presenter.loadData();
+                if (MusicPlayerManager.getInstance().getCurrentState() == MusicPlayerManager
+                        .PLAY_STATE_PLAYING) {
+                    updateContent();
+                    updateMaxProgress(MusicPlayerManager.getInstance().getDuration());
+                    playOrPause.setImageResource(R.drawable.ic_pause_black_24dp);
+                    startTimer();
+                    startAnimation();
+                } else if (MusicPlayerManager.getInstance().getCurrentState() == MusicPlayerManager.PLAY_STATE_PAUSE) {
+                    updateContent();
+                    updateMaxProgress(MusicPlayerManager.getInstance().getDuration());
+                    cancelTimer();
+                    pauseAnimation();
+                    updateProgress();
+                    playOrPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                } else {
+                    presenter.loadData();
+                }
+
+
             }
         });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -268,7 +284,11 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
 
             @Override
             public void onPageSelected(int position) {
-
+                if (position == 1) {
+                    slidingUpPanelLayout.setTouchEnabled(true);
+                } else {
+                    slidingUpPanelLayout.setTouchEnabled(false);
+                }
             }
 
             @Override
@@ -295,21 +315,17 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
     }
 
 
+    private long animationPlayTime = 0;
+
     private void pauseAnimation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (mRotateAnimator != null && !mRotateAnimator.isPaused()) {
-                mRotateAnimator.pause();
-            }
-        }
+        animationPlayTime = mRotateAnimator.getCurrentPlayTime();
+        mRotateAnimator.cancel();
     }
 
 
     private void resumeAnimation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (mRotateAnimator != null && mRotateAnimator.isPaused()) {
-                mRotateAnimator.resume();
-            }
-        }
+        mRotateAnimator.start();
+        mRotateAnimator.setCurrentPlayTime(animationPlayTime);
     }
 
     private void updateContent() {
@@ -356,7 +372,9 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
         playOrPause.getLayoutParams().width = playResult;
         playOrPause.getLayoutParams().height = playResult;
         playOrPause.requestLayout();
-        songName.setTranslationX(intEvaluator.evaluate(slideOffset, 0, endSongName));
+        ((RelativeLayout.LayoutParams) songName.getLayoutParams()).leftMargin = intEvaluator
+                .evaluate(slideOffset, DensityUtil.toDp(60), endSongName);
+        songName.requestLayout();
         artistName.setTranslationX(intEvaluator.evaluate(slideOffset, 0, endArtistName));
         next.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay - DensityUtil.toDp(15)));
         playMode.setTranslationX(-intEvaluator.evaluate(slideOffset, 0, endPlay + DensityUtil.toDp(30)));
@@ -375,7 +393,7 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
         startTime.setAlpha(value);
         endTime.setAlpha(value);
         bottomLrc.setAlpha(value);
-        back.setAlpha(value);
+        //        back.setAlpha(value);
         //        comment.setAlpha(value);
         iconContainer.setTranslationY(intEvaluator.evaluate(slideOffset, 0, screenHeight - (2 * iconContainer.getHeight())));
         //        comment.setTranslationY(intEvaluator.evaluate(slideOffset, 0, screenHeight - (3 * iconContainer.getHeight())));
@@ -389,36 +407,27 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
     public void onPanelStateChanged(View panel, SlidingPanelLayout.PanelState previousState, SlidingPanelLayout.PanelState newState) {
         if (previousState == SlidingPanelLayout.PanelState.COLLAPSED && newState == SlidingPanelLayout.PanelState.DRAGGING) {
             endPlay = (int) (DensityUtil.getScreenWidth(getContext()) / 2 - (1.5 * playMode.getLayoutParams().width) - ((RelativeLayout.LayoutParams) playOrPause.getLayoutParams()).rightMargin) - (DensityUtil.dip2px(getContext(), 8));
-            ((RelativeLayout.LayoutParams) nameContainer.getLayoutParams()).rightMargin = 0;
-            nameContainer.requestLayout();
             playMode.setVisibility(View.VISIBLE);
-            back.setVisibility(View.VISIBLE);
+            //            back.setVisibility(View.VISIBLE);
             bottomLrc.setVisibility(View.VISIBLE);
-            startTime.setVisibility(View.VISIBLE);
-            endTime.setVisibility(View.VISIBLE);
         } else if (previousState == SlidingPanelLayout.PanelState.DRAGGING && newState == SlidingPanelLayout.PanelState.COLLAPSED) {
             playMode.setVisibility(View.INVISIBLE);
-            back.setVisibility(View.INVISIBLE);
+            //            back.setVisibility(View.INVISIBLE);
             //            comment.setVisibility(View.INVISIBLE);
             bottomLrc.setVisibility(View.INVISIBLE);
-            if (startTime.getVisibility() == View.VISIBLE) {
-                startTime.setVisibility(View.GONE);
-            }
-            if (endTime.getVisibility() == View.VISIBLE) {
-                endTime.setVisibility(View.GONE);
-            }
-            slidingUpPanelLayout.setTouchEnabled(true);
-        } else if (previousState == SlidingPanelLayout.PanelState.EXPANDED && newState == SlidingPanelLayout.PanelState.DRAGGING) {
-            ((RelativeLayout.LayoutParams) nameContainer.getLayoutParams()).rightMargin = DensityUtil.dip2px(getContext(), 160);
-            nameContainer.requestLayout();
             startTime.setVisibility(View.GONE);
             endTime.setVisibility(View.GONE);
+        } else if (previousState == SlidingPanelLayout.PanelState.EXPANDED && newState == SlidingPanelLayout.PanelState.DRAGGING) {
             display.setVisibility(View.GONE);
             ((MainActivity) getActivity()).notifyIntercept(false);
+            if (display.getCurrentItem() != 1) {
+                display.setCurrentItem(1, false);
+            }
         } else if (previousState == SlidingPanelLayout.PanelState.DRAGGING && newState == SlidingPanelLayout.PanelState.EXPANDED) {
-            slidingUpPanelLayout.setTouchEnabled(false);
             display.setVisibility(View.VISIBLE);
             ((MainActivity) getActivity()).notifyIntercept(true);
+            startTime.setVisibility(View.VISIBLE);
+            endTime.setVisibility(View.VISIBLE);
         }
     }
 
@@ -479,14 +488,15 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
         songName.setText(name);
         Rect bound = new Rect();
         songName.getPaint().getTextBounds(songName.getText().toString(), 0, songName.getText().length(), bound);
-        endSongName = (DensityUtil.getScreenWidth(getContext()) - bound.width()) / 2 - DensityUtil.dip2px(getContext(), 80);
+        endSongName = (DensityUtil.getScreenWidth(getContext()) - bound.width()) / 2;
     }
 
     private void updateArtistName(String name) {
         artistName.setText(name);
         Rect bound = new Rect();
         artistName.getPaint().getTextBounds(artistName.getText().toString(), 0, artistName.getText().length(), bound);
-        endArtistName = (DensityUtil.getScreenWidth(getContext()) - bound.width()) / 2 - DensityUtil.dip2px(getContext(), 80);
+        endArtistName = (DensityUtil.getScreenWidth(getContext()) - bound.width()) / 2 - ((RelativeLayout.LayoutParams) artistName.getLayoutParams()).leftMargin;
+
     }
 
 

@@ -72,7 +72,7 @@ public class MusicManager {
             if (service.getCurrentState() == MusicPlayerManager.PLAY_STATE_PLAYING) {
                 service.pause();
             } else {
-                service.play();
+                service.play(0);
             }
         }
     }

@@ -4,7 +4,6 @@ import android.media.MediaPlayer;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
-import com.example.commonlibrary.bean.music.MusicSortBean;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.PlayStateEvent;
 import com.example.commonlibrary.utils.Constant;
@@ -108,17 +107,16 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
         try {
             mState = PLAY_STATE_PREPARING;
             RxBusManager.getInstance().post(new PlayStateEvent(mState));
-            MusicSortBean sortBean = new MusicSortBean();
-            sortBean.setPlayTime(System.currentTimeMillis());
-            sortBean.setUrl(mPlayData.getCurrentItem().getSongUrl());
-            BaseApplication.getAppComponent()
-                    .getDaoSession()
-                    .getMusicSortBeanDao()
-                    .insertOrReplace(sortBean);
+            mMusicPlayBean.setUpdateTime(System.currentTimeMillis());
+            BaseApplication
+                    .getAppComponent().getDaoSession().getMusicPlayBeanDao()
+                    .update(mMusicPlayBean);
             mMediaPlayer.reset();
             mMediaPlayer.setDataSource(mPlayData.getCurrentItem().getSongUrl());
             mMediaPlayer.prepareAsync();
-            mMediaPlayer.seekTo((int) seekPosition);
+            if (seekPosition != 0) {
+                mMediaPlayer.seekTo((int) seekPosition);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

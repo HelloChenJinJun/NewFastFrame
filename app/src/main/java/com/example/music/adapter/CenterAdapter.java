@@ -1,9 +1,9 @@
-package com.example.video.adapter;
+package com.example.music.adapter;
 
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.skin.SkinManager;
-import com.example.video.R;
+import com.example.music.R;
 import com.example.video.bean.CenterBean;
 
 /**

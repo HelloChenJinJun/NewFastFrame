@@ -174,7 +174,7 @@ public class LrcView extends View implements ILrcView {
     public void init(Context context) {
         mScroller = new Scroller(getContext());
         mPaintForHighLightLrc = new Paint();
-//        mCurColorForHightLightLrc
+        //        mCurColorForHightLightLrc
         mPaintForHighLightLrc.setColor(getResources().getColor(R.color.light_blue_500));
         mPaintForHighLightLrc.setTextSize(mCurSizeForHightLightLrc);
         mPaintForHighLightLrc.setAntiAlias(true);
@@ -291,9 +291,16 @@ public class LrcView extends View implements ILrcView {
     private float lastY;
     private float lastX;
 
+
+    private boolean touchEnable = true;
+
+    public void setTouchEnable(boolean touchEnable) {
+        this.touchEnable = touchEnable;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mLrcRows == null || mLrcRows.size() == 0) {
+        if (mLrcRows == null || mLrcRows.size() == 0 || !touchEnable) {
             return false;
         }
         switch (event.getAction()) {

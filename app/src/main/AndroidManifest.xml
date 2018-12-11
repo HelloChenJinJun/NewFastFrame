@@ -9,7 +9,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/CustomTheme.Day.Main">
-        <activity android:name=".SplashActivity">
+        <activity android:name=".mvp.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -17,9 +17,9 @@
         </activity>
 
 
-        <activity android:name=".GuideActivity" />
+        <activity android:name=".mvp.GuideActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".mvp.main.MainActivity"
             android:launchMode="singleTask"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>

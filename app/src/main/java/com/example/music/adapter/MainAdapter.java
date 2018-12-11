@@ -1,10 +1,12 @@
-package com.example.music;
+package com.example.music.adapter;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
+import com.example.music.bean.MainItemBean;
+import com.example.music.R;
 
 /**
  * 项目名称:    NewFastFrame

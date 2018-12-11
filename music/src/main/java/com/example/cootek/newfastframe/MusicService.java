@@ -68,7 +68,7 @@ public class MusicService extends Service {
                     if (mMusicBinder.getCurrentState() == MusicPlayerManager.PLAY_STATE_PLAYING) {
                         mMusicBinder.pause();
                     } else {
-                        mMusicBinder.play();
+                        mMusicBinder.play(0);
                     }
                     break;
                 case PLAY_ACTION_NEXT:
@@ -83,7 +83,7 @@ public class MusicService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         RxBusManager.getInstance().post(new PlayStateEvent(MusicPlayerManager.PLAY_STATE_ERROR));
-        return super.onUnbind(intent);
+        return true;
     }
 
 
@@ -158,18 +158,18 @@ public class MusicService extends Service {
 
 
         @Override
-        public void play(MusicPlayBean musicPlayBean) {
-            mMusicPlayerManager.play(musicPlayBean);
+        public void play(MusicPlayBean musicPlayBean, long seekPosition) {
+            mMusicPlayerManager.play(musicPlayBean, seekPosition);
         }
 
         @Override
-        public void play(List<MusicPlayBean> musicPlayBeans, int position,long seekPosition) {
-            mMusicPlayerManager.play(musicPlayBeans, position,seekPosition);
+        public void play(List<MusicPlayBean> musicPlayBeans, int position, long seekPosition) {
+            mMusicPlayerManager.play(musicPlayBeans, position, seekPosition);
         }
 
         @Override
-        public void play() {
-            mMusicPlayerManager.play();
+        public void play(long seekPosition) {
+            mMusicPlayerManager.play(seekPosition);
         }
 
         @Override

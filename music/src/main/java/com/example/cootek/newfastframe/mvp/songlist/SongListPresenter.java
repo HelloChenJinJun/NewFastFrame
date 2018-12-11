@@ -246,7 +246,7 @@ public class SongListPresenter extends BasePresenter<IView<Object>, DefaultModel
         }
         num++;
         baseModel.getRepositoryManager().getApi(MusicApi.class)
-                .getReCommendSongList(songId, num).subscribeOn(Schedulers.io())
+                .getReCommendSongList(songId, 20).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).doOnNext(artistSongsBean -> {
             iView.updateData(artistSongsBean);
             if (artistSongsBean.getError_code() != 22000 || artistSongsBean.getResult() == null
@@ -292,7 +292,7 @@ public class SongListPresenter extends BasePresenter<IView<Object>, DefaultModel
             musicPlayBean.setTingId(downLoadMusicBean.getSonginfo().getTing_uid());
             CommonLogger.e(downLoadMusicBean.toString());
             return musicPlayBean;
-        }).toList(20).subscribe(new SingleObserver<List<MusicPlayBean>>() {
+        }).toList(20).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<List<MusicPlayBean>>() {
             @Override
             public void onSubscribe(Disposable d) {
                 addDispose(d);

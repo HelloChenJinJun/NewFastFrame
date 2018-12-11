@@ -1,4 +1,4 @@
-package com.example.video.mvp.center;
+package com.example.music.mvp.center;
 
 import android.view.View;
 
@@ -12,8 +12,8 @@ import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterConfig;
 import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.utils.ToastUtils;
-import com.example.video.R;
-import com.example.video.adapter.CenterAdapter;
+import com.example.music.R;
+import com.example.music.adapter.CenterAdapter;
 import com.example.video.bean.CenterBean;
 
 import java.util.ArrayList;

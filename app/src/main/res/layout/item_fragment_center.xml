@@ -4,23 +4,23 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical">
+
     <ImageView
-        android:tag="skin"
         android:id="@+id/item_fragment_center_icon"
-        android:scaleType="centerCrop"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@mipmap/ic_launcher"/>
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher"
+        android:tag="skin" />
+
     <TextView
-        android:tag="skin"
-        android:textColor="@color/custom_color_text_main"
-        android:layout_marginTop="5dp"
         android:id="@+id/tv_item_fragment_center_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="标题"/>
-
-
+        android:layout_marginTop="5dp"
+        android:tag="skin"
+        android:text="标题"
+        android:textColor="@color/custom_color_text_main" />
 
 
 </LinearLayout>

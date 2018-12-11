@@ -11,6 +11,7 @@ import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.base.MusicBaseFragment;
 import com.example.cootek.newfastframe.mvp.rank.RankFragment;
 import com.example.cootek.newfastframe.ui.MainActivity;
+import com.example.cootek.newfastframe.view.slide.SlidingPanelLayout;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import androidx.viewpager.widget.ViewPager;
  * Created by COOTEK on 2017/8/16.
  */
 
-public class HolderFragment extends MusicBaseFragment implements View.OnClickListener {
+public class HolderFragment extends MusicBaseFragment implements View.OnClickListener, SlidingPanelLayout.PanelSlideListener {
 
 
     private ViewPagerIndicator viewPagerIndicator;
@@ -59,10 +60,7 @@ public class HolderFragment extends MusicBaseFragment implements View.OnClickLis
     @Override
     protected void initView() {
         display = (WrappedViewPager) findViewById(R.id.vp_fragment_holder_display);
-        ToolBarOption toolBarOption = new ToolBarOption();
-        toolBarOption.setCustomView(getToolBarView());
-        toolBarOption.setBgColor(getResources().getColor(R.color.light_blue_600));
-        setToolBar(toolBarOption);
+        (((MainActivity) getActivity()).getSlidingPanelLayout()).addPanelSlideListener(this);
     }
 
     private View getToolBarView() {
@@ -76,6 +74,10 @@ public class HolderFragment extends MusicBaseFragment implements View.OnClickLis
 
     @Override
     protected void initData() {
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setCustomView(getToolBarView());
+        toolBarOption.setBgColor(getResources().getColor(R.color.light_blue_600));
+        setToolBar(toolBarOption);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         List<String> titleList = new ArrayList<>();
         titleList.add("首页");
@@ -120,12 +122,30 @@ public class HolderFragment extends MusicBaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-         if (v.getId() == R.id.iv_view_Fragment_holder_header_view_expend) {
+        if (v.getId() == R.id.iv_view_Fragment_holder_header_view_expend) {
             ((MainActivity) getActivity()).switchMenu();
         }
     }
 
     public void onDrag(float delta) {
         ViewHelper.setAlpha(expend, (1 - delta));
+    }
+
+    @Override
+    public void onPanelSlide(View panel, float slideOffset) {
+
+    }
+
+    @Override
+    public void onPanelStateChanged(View panel, SlidingPanelLayout.PanelState previousState, SlidingPanelLayout.PanelState newState) {
+        if (newState == SlidingPanelLayout.PanelState.COLLAPSED) {
+            if (display != null) {
+                if (display.getCurrentItem() == 0) {
+                    ((MainActivity) getActivity()).notifyIntercept(false);
+                } else {
+                    ((MainActivity) getActivity()).notifyIntercept(true);
+                }
+            }
+        }
     }
 }

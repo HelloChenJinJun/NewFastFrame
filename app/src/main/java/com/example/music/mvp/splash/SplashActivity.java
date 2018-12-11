@@ -1,4 +1,4 @@
-package com.example.music;
+package com.example.music.mvp.splash;
 
 import android.os.Bundle;
 import android.view.animation.Animation;
@@ -10,6 +10,8 @@ import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.login.LoginActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.utils.StatusBarUtil;
+import com.example.music.R;
+import com.example.music.mvp.main.MainActivity;
 
 import java.util.concurrent.TimeUnit;
 

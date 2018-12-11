@@ -33,7 +33,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
 
-import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.adaptScreen.IAdaptScreen;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
@@ -357,7 +357,7 @@ public class CustomSwipeRefreshLayout extends ViewGroup implements NestedScrolli
         mDecelerateInterpolator = new DecelerateInterpolator(DECELERATE_INTERPOLATION_FACTOR);
 
         final DisplayMetrics metrics = getResources().getDisplayMetrics();
-        if (((BaseActivity) getContext()).cancelAdapt()) {
+        if (((IAdaptScreen) getContext()).cancelAdapt()) {
             mCircleDiameter = (int) (MaterialProgressDrawable.CIRCLE_DIAMETER_LARGE * metrics.density);
         } else {
             mCircleDiameter = (int) (MaterialProgressDrawable.CIRCLE_DIAMETER * metrics.density);

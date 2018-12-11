@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_fragment_bottom_container"
     android:layout_width="match_parent"
-    android:background="#3C5F78"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#3C5F78">
 
     <ImageView
         android:id="@+id/iv_fragment_bottom_bg"
@@ -55,47 +55,44 @@
         android:id="@+id/iv_fragment_bottom_back"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:alpha="0"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
         android:visibility="invisible" />
 
-    <LinearLayout
-        android:id="@+id/ll_fragment_bottom_name_container"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+
+    <TextView
+        android:id="@+id/tv_fragment_bottom_song_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="70dp"
-        android:layout_marginRight="160dp"
-        android:orientation="vertical"
-        android:paddingTop="10dp">
+        android:layout_marginTop="15dp"
+        android:ellipsize="end"
+        android:maxWidth="100dp"
+        android:maxLines="1"
+        android:text="歌名"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_fragment_bottom_song_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="歌名"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/tv_fragment_bottom_artist_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="专辑"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_fragment_bottom_artist_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_fragment_bottom_song_name"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxWidth="100dp"
+        android:maxLines="1"
+        android:text="专辑"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
 
     <RelativeLayout
         android:id="@+id/rl_fragment_bottom_icon_container"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
         android:gravity="center_vertical"

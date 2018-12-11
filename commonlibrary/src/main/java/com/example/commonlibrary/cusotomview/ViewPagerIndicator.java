@@ -58,7 +58,7 @@ public class ViewPagerIndicator extends LinearLayout {
         spaceHeight = (int) a.getDimension(R.styleable.ViewPagerIndicator_spaceHeight, 2);
         tabNormalColor = a.getColor(R.styleable.ViewPagerIndicator_tabNormalColor, getResources().getColor(R.color.black_transparency_500));
         lineHeight = (int) a.getDimension(R.styleable.ViewPagerIndicator_lineHeight, 2);
-        tabTextSize = (int) a.getDimension(R.styleable.ViewPagerIndicator_tabTextSize, 9);
+        tabTextSize = (int) a.getDimension(R.styleable.ViewPagerIndicator_tabTextSize, 14);
         margin = (int) a.getDimension(R.styleable.ViewPagerIndicator_margin, 0);
         int lineColor = a.getColor(R.styleable.ViewPagerIndicator_lineColor, getResources().getColor(R.color.orange_500));
         if (mVisibleTabCount < 0) {

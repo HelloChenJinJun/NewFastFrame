@@ -22,7 +22,6 @@
         android:layout_centerInParent="true"
         android:gravity="center_vertical"
         app:tabNormalColor="@color/white"
-        app:tabTextSize="16sp"
         app:tabSelectedColor="@color/orange_500"
         app:visibleTabCount="3" />
 

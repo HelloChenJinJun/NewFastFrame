@@ -30,6 +30,10 @@ public class MainActivity extends SlideBaseActivity implements OnLoadMoreListene
     }
 
 
+    public SlidingPanelLayout getSlidingPanelLayout() {
+        return mSlidingPanelLayout;
+    }
+
     @Override
     protected boolean isNeedHeadLayout() {
         return false;

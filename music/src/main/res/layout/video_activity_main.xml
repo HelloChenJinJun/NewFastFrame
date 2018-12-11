@@ -15,7 +15,6 @@
         android:background="@color/base_color_text_white"
         android:gravity="bottom"
         android:orientation="vertical"
-        app:umanoDragView="@+id/fl_view_music_content_bottom"
         app:umanoOverlay="false"
         app:umanoPanelHeight="60dp"
         app:umanoShadowHeight="5dp">
