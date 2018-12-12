@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.DaoMaster;
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.imageloader.base.BaseImageLoaderStrategy;
@@ -14,7 +13,6 @@ import com.example.commonlibrary.interceptor.TokenInterceptor;
 import com.example.commonlibrary.manager.ActivityManager;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.net.OkHttpGlobalHandler;
-import com.example.commonlibrary.net.okhttpconfig.SSLConfig;
 import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.FileUtil;
@@ -24,11 +22,9 @@ import com.google.gson.GsonBuilder;
 import org.greenrobot.greendao.database.Database;
 
 import java.io.File;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
-import javax.net.ssl.X509TrustManager;
 
 import androidx.annotation.Nullable;
 import dagger.Module;
@@ -161,7 +157,6 @@ public class GlobalConfigModule {
     @Provides
     public Gson provideGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-
         gsonBuilder.serializeNulls().enableComplexMapKeySerialization();
         return gsonBuilder.create();
     }

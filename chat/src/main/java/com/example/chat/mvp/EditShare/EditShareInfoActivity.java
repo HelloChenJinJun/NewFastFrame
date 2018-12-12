@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.chat.R;
 import com.example.chat.adapter.EditShareInfoAdapter;
-import com.example.chat.base.ConstantUtil;
 import com.example.chat.base.ChatBaseActivity;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.dagger.EditShare.DaggerEditShareInfoComponent;
@@ -36,6 +36,8 @@ import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.manager.video.DefaultVideoController;
+import com.example.commonlibrary.manager.video.DefaultVideoPlayer;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.SystemUtil;
@@ -50,8 +52,6 @@ import javax.inject.Inject;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerStandard;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -65,7 +65,7 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
 
     private EditText input;
     private TextView location, visibility;
-    private JZVideoPlayerStandard video;
+    private DefaultVideoPlayer video;
     private SuperRecyclerView display;
 
     private TextView shareTitle;
@@ -116,16 +116,16 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
     @Override
     protected void initView() {
         shareContainer = findViewById(R.id.cv_activity_edit_share_info_share_container);
-        shareTitle = (TextView) findViewById(R.id.tv_activity_edit_share_info_title);
-        shareCover = (ImageView) findViewById(R.id.iv_activity_edit_share_info_cover);
-        input = (EditText) findViewById(R.id.et_activity_edit_share_info_edit);
-        video = (JZVideoPlayerStandard) findViewById(R.id.js_activity_edit_share_info_video);
-        record = (ImageView) findViewById(R.id.iv_activity_edit_share_info_video);
-        RelativeLayout locationContainer = (RelativeLayout) findViewById(R.id.rl_activity_edit_share_info_location);
-        RelativeLayout visibilityContainer = (RelativeLayout) findViewById(R.id.rl_activity_edit_share_info_visibility_container);
-        location = (TextView) findViewById(R.id.tv_activity_edit_share_info_location);
-        visibility = (TextView) findViewById(R.id.tv_activity_edit_share_info_visibility);
-        display = (SuperRecyclerView) findViewById(R.id.srcv_activity_edit_share_info_display);
+        shareTitle = findViewById(R.id.tv_activity_edit_share_info_title);
+        shareCover = findViewById(R.id.iv_activity_edit_share_info_cover);
+        input = findViewById(R.id.et_activity_edit_share_info_edit);
+        video = findViewById(R.id.dvp_activity_edit_share_info_video);
+        record = findViewById(R.id.iv_activity_edit_share_info_video);
+        RelativeLayout locationContainer = findViewById(R.id.rl_activity_edit_share_info_location);
+        RelativeLayout visibilityContainer = findViewById(R.id.rl_activity_edit_share_info_visibility_container);
+        location = findViewById(R.id.tv_activity_edit_share_info_location);
+        visibility = findViewById(R.id.tv_activity_edit_share_info_visibility);
+        display = findViewById(R.id.srcv_activity_edit_share_info_display);
         locationContainer.setOnClickListener(this);
         visibilityContainer.setOnClickListener(this);
         shareContainer.setOnClickListener(this);
@@ -298,11 +298,11 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
                 for (String str :
                         postDataBean.getImageList()) {
                     if (str.endsWith("mp4")) {
-                        video.setUp(str, JZVideoPlayer.SCREEN_WINDOW_NORMAL, "测试");
                         videoPath = str;
+                        video.setUp(str, null);
                     } else {
-                        Glide.with(this).load(str).into(video.thumbImageView);
                         thumbImage = str;
+                        video.setImageCover(thumbImage);
                     }
                 }
             }
@@ -492,13 +492,18 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SystemUtil.REQUEST_CODE_VIDEO_RECORDER) {
-                video.setVisibility(View.VISIBLE);
                 record.setVisibility(View.GONE);
-                video.setUp(videoPath, JZVideoPlayer.SCREEN_WINDOW_NORMAL, "测试");
-                Bitmap bitmap = SystemUtil.getVideoThumbnail(videoPath, DensityUtil.getScreenWidth(this), DensityUtil.getScreenHeight(this)
-                        , MediaStore.Images.Thumbnails.MINI_KIND);
-                thumbImage = SystemUtil.bitmapToFile(bitmap);
-                video.thumbImageView.setImageBitmap(bitmap);
+                video.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        video.setVisibility(View.VISIBLE);
+                        Bitmap bitmap = SystemUtil.getVideoThumbnail(videoPath, DensityUtil.getScreenWidth(EditShareInfoActivity.this), DensityUtil.getScreenHeight(EditShareInfoActivity.this)
+                                , MediaStore.Images.Thumbnails.MINI_KIND);
+                        thumbImage = SystemUtil.bitmapToFile(bitmap);
+                        ((DefaultVideoController) video.setUp(videoPath, null).getController()).getImageCover()
+                                .setImageBitmap(bitmap);
+                    }
+                }, 2000);
             } else if (requestCode == ConstantUtil.REQUEST_CODE_LOCATION) {
                 LocationEvent locationEvent = (LocationEvent) data.getSerializableExtra(ConstantUtil.LOCATION);
                 updateLocation(locationEvent);

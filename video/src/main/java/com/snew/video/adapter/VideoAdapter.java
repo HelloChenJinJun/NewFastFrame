@@ -4,15 +4,8 @@ import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.manager.video.DefaultVideoController;
 import com.example.commonlibrary.manager.video.DefaultVideoPlayer;
-import com.example.commonlibrary.manager.video.ListVideoManager;
-import com.example.commonlibrary.manager.video.VideoController;
-import com.example.commonlibrary.rxbus.RxBusManager;
 import com.snew.video.R;
 import com.snew.video.bean.VideoBean;
-import com.snew.video.bean.VideoDetailBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 项目名称:    Update
@@ -26,23 +19,7 @@ public class VideoAdapter extends BaseRecyclerAdapter<VideoBean, BaseWrappedView
 
     public VideoAdapter() {
         super();
-        RxBusManager.getInstance().registerEvent(VideoDetailBean.class, videoDetailBean -> {
-            if (videoDetailBean != null) {
-                if (videoDetailBean.getRetCode() != 200) {
-                    ListVideoManager.getInstance().error();
-                } else {
-                    List<VideoController.Clarity> list = new ArrayList<>();
-                    for (VideoDetailBean.DataBean.VideoBean.LinkBean dataBean :
-                            videoDetailBean.getData().getVideo().getLink()) {
-                        VideoController.Clarity clarity = new VideoController.Clarity(dataBean.getType().substring(0, 2)
-                                , dataBean.getType().substring(2, dataBean.getType().length()), dataBean.getUrl());
-                        list.add(clarity);
-                    }
-                    ListVideoManager.getInstance().getCurrentPlayer().setClarity(list);
-                    ListVideoManager.getInstance().updateUrl(videoDetailBean.getData().getVideo().getLink().get(0).getUrl());
-                }
-            }
-        });
+
 
     }
 

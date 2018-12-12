@@ -25,10 +25,10 @@ import java.io.LineNumberReader;
 public class JSEngine {
     private StringBuffer sb;
 
-    public JSEngine() {
+    public JSEngine(String name) {
         LineNumberReader reader;
         try {
-            reader = new LineNumberReader(new InputStreamReader(BaseApplication.getInstance().getAssets().open("parse.js")));
+            reader = new LineNumberReader(new InputStreamReader(BaseApplication.getInstance().getAssets().open(name)));
             String temp;
             sb = new StringBuffer();
             while ((temp = reader.readLine()) != null) {
@@ -43,7 +43,7 @@ public class JSEngine {
     /**
      * 执行JS
      */
-    public String runScript(String functionParams) {
+    public String runScript(String functionParams, String methodName) {
         Context rhino = Context.enter();
         rhino.setOptimizationLevel(-1);
         try {
@@ -52,7 +52,7 @@ public class JSEngine {
             ScriptableObject.putProperty(scope, "javaContext", Context.javaToJS(this, scope));
             ScriptableObject.putProperty(scope, "javaLoader", Context.javaToJS(JSEngine.class.getClassLoader(), scope));
             rhino.evaluateString(scope, sb.toString(), JSEngine.class.getName(), 1, null);
-            Function function = (Function) scope.get("getRelatedParams", scope);
+            Function function = (Function) scope.get(methodName, scope);
             Object result = function.call(rhino, scope, scope, new Object[]{functionParams});
             if (result instanceof String) {
                 return (String) result;

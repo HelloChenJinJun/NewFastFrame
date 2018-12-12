@@ -2,10 +2,11 @@ package com.snew.video.mvp.video;
 
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.manager.video.ListVideoManager;
+import com.example.commonlibrary.manager.video.VideoController;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
-import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.snew.video.api.VideoApi;
 import com.snew.video.bean.VideoBean;
@@ -38,7 +39,7 @@ public class VideoPresenter extends RxBasePresenter<IView<List<VideoBean>>, Defa
 
     public VideoPresenter(IView<List<VideoBean>> iView, DefaultModel baseModel) {
         super(iView, baseModel);
-        mJSEngine = new JSEngine();
+        mJSEngine = new JSEngine("parse.js");
     }
 
     public void getData(boolean isRefresh, String type) {
@@ -151,7 +152,7 @@ public class VideoPresenter extends RxBasePresenter<IView<List<VideoBean>>, Defa
             getCookie(url);
             return;
         }
-        String result = mJSEngine.runScript(url);
+        String result = mJSEngine.runScript(url,"getRelatedParams");
         String[] strings = result.split("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("link=").append(url)
@@ -172,7 +173,21 @@ public class VideoPresenter extends RxBasePresenter<IView<List<VideoBean>>, Defa
                         if (videoDetailBean.getRetCode() == 300) {
                             getCookie(url);
                         } else if (videoDetailBean.getRetCode() == 200) {
-                            RxBusManager.getInstance().post(videoDetailBean);
+                            if (videoDetailBean != null) {
+                                if (videoDetailBean.getRetCode() != 200) {
+                                    ListVideoManager.getInstance().error();
+                                } else {
+                                    List<VideoController.Clarity> list = new ArrayList<>();
+                                    for (VideoDetailBean.DataBean.VideoBean.LinkBean dataBean :
+                                            videoDetailBean.getData().getVideo().getLink()) {
+                                        VideoController.Clarity clarity = new VideoController.Clarity(dataBean.getType().substring(0, 2)
+                                                , dataBean.getType().substring(2, dataBean.getType().length()), dataBean.getUrl());
+                                        list.add(clarity);
+                                    }
+                                    ListVideoManager.getInstance().getCurrentPlayer().setClarity(list);
+                                    ListVideoManager.getInstance().updateUrl(videoDetailBean.getData().getVideo().getLink().get(0).getUrl());
+                                }
+                            }
                             CommonLogger.e(videoDetailBean.toString());
                         }
                     }
@@ -188,4 +203,5 @@ public class VideoPresenter extends RxBasePresenter<IView<List<VideoBean>>, Defa
                     }
                 });
     }
+
 }

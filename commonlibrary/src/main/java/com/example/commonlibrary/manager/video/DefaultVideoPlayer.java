@@ -30,15 +30,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import tv.danmaku.ijk.media.player.IMediaPlayer;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
  * 项目名称:    Update
  * 创建人:      陈锦军
  * 创建时间:    2018/11/22     11:04
  */
-public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, TextureView.SurfaceTextureListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnInfoListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnVideoSizeChangedListener {
+public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, TextureView.SurfaceTextureListener, IMediaPlayer.OnPreparedListener, IMediaPlayer.OnInfoListener, IMediaPlayer.OnCompletionListener, IMediaPlayer.OnErrorListener, IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnVideoSizeChangedListener {
 
-    MediaPlayer mMediaPlayer;
+    IMediaPlayer mMediaPlayer;
 
     //    播放未开始
     public static final int PLAY_STATE_IDLE = 0;
@@ -170,7 +172,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
 
     private void initMediaPlayer() {
         if (mMediaPlayer == null) {
-            mMediaPlayer = new MediaPlayer();
+            mMediaPlayer = new IjkMediaPlayer();
             mMediaPlayer.setOnPreparedListener(this);
             mMediaPlayer.setOnInfoListener(this);
             mMediaPlayer.setOnCompletionListener(this);
@@ -223,7 +225,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     }
 
     @Override
-    public int getDuration() {
+    public long getDuration() {
         if (mMediaPlayer != null) {
             return mMediaPlayer.getDuration();
         } else {
@@ -232,7 +234,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     }
 
     @Override
-    public int getPosition() {
+    public long getPosition() {
         return mMediaPlayer.getCurrentPosition();
     }
 
@@ -400,8 +402,16 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
 
     }
 
+
+    private void innerStart(long position) {
+        mMediaPlayer.start();
+        mMediaPlayer.seekTo(position);
+        mVideoController.onPlayStateChanged(mState);
+    }
+
+
     @Override
-    public void onPrepared(MediaPlayer mp) {
+    public void onPrepared(IMediaPlayer iMediaPlayer) {
         mState = PLAY_STATE_PREPARED;
         mVideoController.onPlayStateChanged(mState);
         long position = 0;
@@ -413,14 +423,8 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
         innerStart((int) position);
     }
 
-    private void innerStart(int position) {
-        mMediaPlayer.start();
-        mMediaPlayer.seekTo(position);
-        mVideoController.onPlayStateChanged(mState);
-    }
-
     @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+    public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
         if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
             //            渲染开始
             mState = PLAY_STATE_PLAYING;
@@ -441,6 +445,12 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
                 mState = PLAY_STATE_PLAYING;
             }
             mVideoController.onPlayStateChanged(mState);
+        } else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED) {
+            // 视频旋转了extra度，需要恢复
+            if (defaultTextureView != null) {
+                defaultTextureView.setRotation(extra);
+                CommonLogger.d("视频旋转角度：" + extra);
+            }
         } else {
             CommonLogger.e("播放视频出错" + what + ":::" + extra);
         }
@@ -448,7 +458,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     }
 
     @Override
-    public void onCompletion(MediaPlayer mp) {
+    public void onCompletion(IMediaPlayer iMediaPlayer) {
         container.setKeepScreenOn(false);
         mState = PLAY_STATE_FINISH;
         //        BaseApplication.getAppComponent().getSharedPreferences().edit().putBoolean(url, true).apply();
@@ -456,25 +466,22 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     }
 
     @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
+    public boolean onError(IMediaPlayer iMediaPlayer, int i, int i1) {
         // 直播流播放时去调用mediaPlayer.getDuration会导致-38和-2147483648错误，忽略该错误
         mState = PLAY_STATE_ERROR;
         mVideoController.onPlayStateChanged(mState);
-        CommonLogger.e("视频播放出错 ———— what：" + what + ", extra: " + extra);
+        CommonLogger.e("视频播放出错 ———— what：" + i + ", extra: " + i1);
         return true;
     }
 
     @Override
-    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+    public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
         mBufferedPercent = percent;
     }
 
     @Override
-    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-        //        切换window状态时候回调
+    public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int width, int height, int sar_num, int sar_den) {
         CommonLogger.e("width:::" + width + "height:::" + height);
         defaultTextureView.adaptVideoSize(width, height);
     }
-
-
 }

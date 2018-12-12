@@ -6,8 +6,9 @@ if (rootProject.ext.isAlone) {
 
 
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
     buildToolsVersion rootProject.ext.android.buildToolsVersion
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'

@@ -31,7 +31,7 @@ public abstract class VideoController extends FrameLayout implements View.OnTouc
     private boolean changePosition;
     private boolean changeVolume;
     private boolean changeBrightness;
-    private int changeStartPosition;
+    private long changeStartPosition;
     private float changeStartBrightness;
     private int changeStartVolume;
     private long currentPosition;

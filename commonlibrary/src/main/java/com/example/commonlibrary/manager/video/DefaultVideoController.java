@@ -313,8 +313,8 @@ public class DefaultVideoController extends VideoController implements View.OnCl
 
     private void updateProgress() {
         CommonLogger.e("updateProgress");
-        int currentPosition = mIVideoPlayer.getPosition();
-        int duration = mIVideoPlayer.getDuration();
+        long currentPosition = mIVideoPlayer.getPosition();
+        long duration = mIVideoPlayer.getDuration();
         int buffered = mIVideoPlayer.getBufferedPercentage();
         bottomSeek.setProgress((int) ((currentPosition * 1.0f / duration) * 100));
         bottomSeek.setSecondaryProgress(buffered);
@@ -516,6 +516,10 @@ public class DefaultVideoController extends VideoController implements View.OnCl
                 ToastUtils.showShortToast("网络连接失败，请检查网络配置");
             }
         }
+    }
+
+    public ImageView getImageCover() {
+        return bg;
     }
 
 

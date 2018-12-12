@@ -28,8 +28,6 @@ public class IndexInterceptor implements Interceptor {
             builder.addHeader("Accept-Encoding", "gzip, deflate");
             builder.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
             builder.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-            builder.addHeader("Origin", "http://toutiao.iiilab.com");
-            builder.addHeader("Referer", "http://toutiao.iiilab.com/");
             builder.addHeader("Connection", "keep-alive");
             Response response;
             SharedPreferences sharedPreferences = BaseApplication.getAppComponent().getSharedPreferences();

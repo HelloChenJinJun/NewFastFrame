@@ -28,9 +28,9 @@ public interface IVideoPlayer {
 
     int getVolume();
 
-    int getDuration();
+    long getDuration();
 
-    int getPosition();
+    long getPosition();
 
     int getBufferedPercentage();
 

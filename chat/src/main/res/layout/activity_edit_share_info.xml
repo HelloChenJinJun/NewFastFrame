@@ -7,41 +7,42 @@
     android:orientation="vertical">
 
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-        <EditText
-            android:id="@+id/et_activity_edit_share_info_edit"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="start"
-            android:hint="这一刻的想法"
-            android:lineSpacingExtra="5dp"
-            android:textColorHint="@color/base_color_text_blue"/>
+        android:orientation="vertical">
+
+
         <RelativeLayout
-            android:id="@+id/rl_activity_edit_share_info_right"
-            android:layout_width="wrap_content"
+            android:id="@+id/rl_activity_edit_share_info_video_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true">
 
-            <cn.jzvd.JZVideoPlayerStandard
-                android:id="@+id/js_activity_edit_share_info_video"
-                android:layout_width="80dp"
-                android:layout_height="80dp" />
+            <com.example.commonlibrary.manager.video.DefaultVideoPlayer
+                android:id="@+id/dvp_activity_edit_share_info_video"
+                android:layout_width="match_parent"
+                android:layout_height="150dp" />
 
             <ImageView
                 android:id="@+id/iv_activity_edit_share_info_video"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:layout_centerInParent="true"
                 android:src="@drawable/ic_videocam_blue_grey_900_24dp" />
         </RelativeLayout>
+
+
+        <EditText
+            android:id="@+id/et_activity_edit_share_info_edit"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:hint="这一刻的想法"
+            android:lineSpacingExtra="5dp"
+            android:textColorHint="@color/base_color_text_blue" />
     </LinearLayout>
 
 
@@ -49,16 +50,16 @@
         android:id="@+id/srcv_activity_edit_share_info_display"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp" />
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_activity_edit_share_info_share_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:padding="10dp"
         android:visibility="gone">
         <!--android:gravity="center_vertical"-->
@@ -87,15 +88,15 @@
                 android:textSize="16sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-    
-    
-    
+
+
     <RelativeLayout
         android:id="@+id/rl_activity_edit_share_info_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/base_color_text_white"
         android:padding="10dp">
+
         <TextView
             android:id="@+id/tv_activity_edit_share_info_location_title"
             android:layout_width="wrap_content"
@@ -105,7 +106,8 @@
             android:gravity="center|start"
             android:text="所在的位置"
             android:textColor="@color/base_color_text_grey"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
+
         <TextView
             android:id="@+id/tv_activity_edit_share_info_location"
             android:layout_width="match_parent"
@@ -120,7 +122,7 @@
             android:maxLines="1"
             android:text="不显示"
             android:textColor="@color/base_color_text_grey"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
     </RelativeLayout>
 
 
@@ -131,6 +133,7 @@
         android:layout_marginTop="20dp"
         android:background="@color/base_color_text_white"
         android:padding="10dp">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -139,8 +142,8 @@
             android:gravity="center_vertical"
             android:text="谁可以看"
             android:textColor="@color/base_color_text_grey"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
+
         <TextView
             android:id="@+id/tv_activity_edit_share_info_visibility"
             android:layout_width="wrap_content"
@@ -150,10 +153,8 @@
             android:layout_gravity="center_vertical"
             android:text="公开"
             android:textColor="@color/base_color_text_grey"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
     </RelativeLayout>
-
-
 
 
 </LinearLayout>

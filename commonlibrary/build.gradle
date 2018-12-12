@@ -116,6 +116,17 @@ dependencies {
         exclude module: 'okio'
 
     }
+
+    api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+//    compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.8.3'
+    api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
+    api 'tv.danmaku.ijk.media:ijkplayer-armv5:0.8.3'
+//    compile 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.3'
+
+    api 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.3'
+//    compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.3'
+
+
     api rootProject.ext.dependencies.greenDao
     //    compile rootProject.ext.dependencies.okhttp3
     api rootProject.ext.dependencies.gson

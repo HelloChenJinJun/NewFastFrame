@@ -17,19 +17,20 @@ import okhttp3.Response;
  */
 
 public class CacheControlInterceptor implements Interceptor {
-    private static final long CACHE_STALE_SEC =60 * 60 * 24L;
+    private static final long CACHE_STALE_SEC = 60 * 60 * 24L;
     public static final String CACHE_CONTROL_CACHE = "only-if-cached, max-stale=" + CACHE_STALE_SEC;
+
     @Override
     public Response intercept(Chain chain) throws IOException {
-        Request request=chain.request();
-        Response response=chain.proceed(request);
+        Request request = chain.request();
+        Response response = chain.proceed(request);
         if (AppUtil.isNetworkAvailable(BaseApplication.getInstance())) {
             String cacheControl = request.cacheControl().toString();
-          return   response.newBuilder()
+            return response.newBuilder()
                     .header("Cache-Control", cacheControl)
                     .removeHeader("Pragma")
                     .build();
-        }else {
+        } else {
             return response.newBuilder()
                     .header("Cache-Control", "public, " + CACHE_CONTROL_CACHE)
                     .removeHeader("Pragma")

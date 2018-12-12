@@ -6,7 +6,7 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.snew.video.R;
-import com.snew.video.base.MainBaseFragment;
+import com.snew.video.base.VideoBaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment;
  * 创建人:      陈锦军
  * 创建时间:    2018/11/30     18:00
  */
-public class VideoFragment extends MainBaseFragment {
+public class VideoFragment extends VideoBaseFragment {
 
     private WrappedViewPager display;
     private TabLayout mTabLayout;
