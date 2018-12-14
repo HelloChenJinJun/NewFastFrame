@@ -128,9 +128,11 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
         ListVideoManager.getInstance().setCurrentPlayer(this);
         if (((DefaultVideoController) mVideoController).getOnItemClickListener() != null
                 && !((DefaultVideoController) mVideoController).getOnItemClickListener().onStartClick(null, url)) {
+            mState = PLAY_STATE_PREPARING;
+            mVideoController.onPlayStateChanged(mState);
             return;
         }
-        if (getCurrentState() == PLAY_STATE_IDLE) {
+        if (mState == PLAY_STATE_IDLE || mState == PLAY_STATE_PREPARING) {
             initMediaPlayer();
             initAudioManager();
             initTextureView();

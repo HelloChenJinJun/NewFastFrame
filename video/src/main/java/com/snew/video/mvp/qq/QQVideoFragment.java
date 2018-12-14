@@ -1,5 +1,7 @@
 package com.snew.video.mvp.qq;
 
+import android.view.View;
+
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
@@ -7,6 +9,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.snew.video.R;
 import com.snew.video.base.VideoBaseFragment;
 import com.snew.video.bean.QQVideoTabBean;
+import com.snew.video.mvp.search.SearchVideoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +58,13 @@ public class QQVideoFragment extends VideoBaseFragment {
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("腾讯视频");
         toolBarOption.setNeedNavigation(false);
+        toolBarOption.setRightResId(R.drawable.ic_news_search);
+        toolBarOption.setRightListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchVideoActivity.start();
+            }
+        });
         setToolBar(toolBarOption);
     }
 
@@ -77,11 +87,11 @@ public class QQVideoFragment extends VideoBaseFragment {
     private List<QQVideoTabBean> getDefaultData() {
         List<QQVideoTabBean> list = new ArrayList<>();
         QQVideoTabBean one = new QQVideoTabBean();
-        one.setTitle("最新");
-        one.setType(19);
+        one.setTitle("电影");
+        one.setType(1);
         QQVideoTabBean two = new QQVideoTabBean();
-        two.setType(17);
-        two.setTitle("最热");
+        two.setType(2);
+        two.setTitle("连续剧");
         list.add(one);
         list.add(two);
         return list;

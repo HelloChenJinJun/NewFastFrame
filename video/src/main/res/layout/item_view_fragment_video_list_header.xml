@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_view_item_fragment_video_list_header_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_drawable_selector_video_header_item"
+    android:gravity="center"
+    android:padding="5dp"
+    android:textColor="@color/select_change_video_header_color" />

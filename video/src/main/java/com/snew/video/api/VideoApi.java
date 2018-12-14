@@ -1,5 +1,6 @@
 package com.snew.video.api;
 
+import com.snew.video.bean.HotVideoBean;
 import com.snew.video.bean.QQTVVideoDetailBean;
 import com.snew.video.bean.QQVideoDetailBean;
 import com.snew.video.bean.VideoDetailBean;
@@ -49,4 +50,13 @@ public interface VideoApi {
     @POST
         //    $.post("api.php", {"id": "1006_43dc5ba04ae343ff97111d83b437f2f4","type": "qqmtv","siteuser": '',"md5": sign($('#hdMd5').val()),"hd":"","lg":""},
     Observable<QQTVVideoDetailBean> postQQTVUrlInfo(@Url String url, @Body RequestBody requestBody);
+
+    @GET
+    Observable<ResponseBody> getVideoListHeaderData(@Url String url);
+
+    @GET
+    Observable<HotVideoBean> getHotVideoData(@Url String url);
+
+    @GET
+    Observable<ResponseBody> searchVideo(@Url String url);
 }

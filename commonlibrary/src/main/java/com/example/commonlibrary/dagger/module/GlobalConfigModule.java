@@ -13,6 +13,7 @@ import com.example.commonlibrary.interceptor.TokenInterceptor;
 import com.example.commonlibrary.manager.ActivityManager;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.net.OkHttpGlobalHandler;
+import com.example.commonlibrary.net.TrustAllCerts;
 import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.FileUtil;
@@ -108,7 +109,9 @@ public class GlobalConfigModule {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(10, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS);
         //        自定义签名证书
-        //        builder.sslSocketFactory(SSLConfig.getSSLSocketFactory(BaseApplication.getInstance()), (X509TrustManager) Objects.requireNonNull(SSLConfig.getTrustManager(BaseApplication.getInstance())));
+        //                builder.sslSocketFactory(SSLConfig.getSSLSocketFactory(BaseApplication.getInstance()), (X509TrustManager) Objects.requireNonNull(SSLConfig.getTrustManager(BaseApplication.getInstance())));
+        builder.sslSocketFactory(TrustAllCerts.createSSLSocketFactory());
+        builder.hostnameVerifier(new TrustAllCerts.TrustAllHostnameVerifier());
         if (tokenInterceptor != null) {
             builder.addNetworkInterceptor(tokenInterceptor);
         }

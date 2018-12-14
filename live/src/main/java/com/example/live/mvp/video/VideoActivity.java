@@ -22,8 +22,6 @@ import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
 import com.pili.pldroid.player.widget.PLVideoView;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
-
 /**
  * 项目名称:    NewFastFrame
  * 创建人:        陈锦军
@@ -120,7 +118,7 @@ public class VideoActivity extends BaseActivity<LiveRoomBean, VideoPresenter> im
         if (isFull) {
             String url = getIntent().getStringExtra(LiveUtil.THUMB);
             BaseApplication.getAppComponent().getImageLoader().loadImage(this, new GlideImageLoaderConfig.Builder()
-                    .url(url).bitmapTransformation(new BlurTransformation(this, 18, 3)).imageView(thumb).build());
+                    .url(url).imageView(thumb).build());
         }
         DaggerVideoComponent.builder().videoModule(new VideoModule(this)).mainComponent(LiveApplication.getMainComponent())
                 .build().inject(this);
@@ -187,7 +185,7 @@ public class VideoActivity extends BaseActivity<LiveRoomBean, VideoPresenter> im
     public void onBackPressed() {
         if (isLandscape()) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }

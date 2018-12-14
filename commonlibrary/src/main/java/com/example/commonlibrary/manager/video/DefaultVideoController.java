@@ -471,7 +471,9 @@ public class DefaultVideoController extends VideoController implements View.OnCl
 
     @Override
     public void setImageCover(String imageUrl) {
-        Glide.with(getContext()).load(imageUrl).into(bg);
+        if (imageUrl != null) {
+            Glide.with(getContext()).load(imageUrl).into(bg);
+        }
     }
 
 

@@ -17,13 +17,6 @@ public class VideoAdapter extends BaseRecyclerAdapter<VideoBean, BaseWrappedView
     private DefaultVideoController.OnItemClickListener mOnItemClickListener;
 
 
-    public VideoAdapter() {
-        super();
-
-
-    }
-
-
     public void setOnItemClickListener(DefaultVideoController.OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }

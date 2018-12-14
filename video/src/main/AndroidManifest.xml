@@ -19,9 +19,13 @@
             android:name="com.snew.video.base.VideoApplication"
             android:value="IModuleConfig" />
 
-        <activity android:name=".MainActivity"
-            android:launchMode="singleTask"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".mvp.qq.detail.QQVideoDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
     </application>
 
 </manifest>

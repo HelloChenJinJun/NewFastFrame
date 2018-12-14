@@ -141,42 +141,6 @@ dependencies {
         exclude module: 'okio'
 
     }
-    implementation('com.komi.slider:slider:0.4.0') {
-        exclude module: "support-v4"
-        exclude module: "support-compat"
-        exclude module: 'rxjava'
-        exclude module: 'retrofit'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-        exclude module: 'support-annotations'
-        exclude module: 'support-core-utils'
-        exclude module: 'support-media-compat'
-        exclude module: 'support-vector-drawable'
-        exclude module: 'support-fragment'
-        exclude module: 'multidex'
-        exclude module: 'rxandroid'
-        exclude module: 'gson'
-        exclude module: 'okio'
-
-    }
-    implementation(rootProject.ext.dependencies.cardview) {
-        exclude module: "support-v4"
-        exclude module: "support-compat"
-        exclude module: 'rxjava'
-        exclude module: 'retrofit'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-        exclude module: 'support-annotations'
-        exclude module: 'support-core-utils'
-        exclude module: 'support-media-compat'
-        exclude module: 'support-vector-drawable'
-        exclude module: 'support-fragment'
-        exclude module: 'multidex'
-        exclude module: 'rxandroid'
-        exclude module: 'gson'
-        exclude module: 'okio'
-
-    }
     annotationProcessor rootProject.ext.dependencies.dagger2_compiler
     testImplementation 'junit:junit:4.12'
     implementation 'cn.jzvd:jiaozivideoplayer:6.2.4'

@@ -61,13 +61,7 @@ dependencies {
         exclude module: "appcompat-v7"
         exclude module: "recyclerview-v7"
     }
-    implementation('com.komi.slider:slider:0.4.0') {
-        exclude module: "support-v4"
-        exclude module: "support-core-ui"
-        exclude module: "support-compat"
-        exclude module: "appcompat-v7"
-        exclude module: "recyclerview-v7"
-    }
+
     annotationProcessor rootProject.ext.dependencies.dagger2_compiler
     testImplementation 'junit:junit:4.12'
 //    compile files('libs/nineoldandroids-2.4.0.jar')

@@ -13,6 +13,7 @@ import com.example.commonlibrary.bean.chat.UserEntity;
 import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
 
+
 /**
  * 项目名称:    NewFastFrame
  * 创建人:      陈锦军

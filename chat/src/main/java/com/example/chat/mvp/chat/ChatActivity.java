@@ -81,9 +81,6 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import cn.jzvd.JZMediaManager;
-import cn.jzvd.JZUtils;
-import cn.jzvd.JZVideoPlayer;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -274,25 +271,6 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
                 }
             }
         });
-
-        display.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
-            @Override
-            public void onChildViewAttachedToWindow(View view) {
-
-            }
-
-            @Override
-            public void onChildViewDetachedFromWindow(View view) {
-                JZVideoPlayer jzvd = view.findViewById(R.id.js_item_activity_chat_receive_video);
-                if (jzvd == null) {
-                    jzvd = view.findViewById(R.id.js_item_activity_chat_send_video);
-                }
-                if (jzvd != null && JZUtils.dataSourceObjectsContainsUri(jzvd.dataSourceObjects, JZMediaManager.getCurrentDataSource())) {
-                    JZVideoPlayer.releaseAllVideos();
-                }
-            }
-        });
-
 
         display.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

@@ -1,7 +1,7 @@
 package com.snew.video.dagger.qq;
 
 import com.example.commonlibrary.mvp.model.DefaultModel;
-import com.snew.video.adapter.VideoAdapter;
+import com.snew.video.adapter.QQVideoListAdapter;
 import com.snew.video.mvp.qq.QQVideoListFragment;
 import com.snew.video.mvp.qq.QQVideoListPresenter;
 
@@ -28,8 +28,8 @@ public class QQVideoListModule {
     }
 
     @Provides
-    VideoAdapter provideAdapter() {
-        return new VideoAdapter();
+    QQVideoListAdapter provideAdapter() {
+        return new QQVideoListAdapter();
     }
 
 }

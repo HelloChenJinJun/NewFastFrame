@@ -152,7 +152,7 @@ public class VideoPresenter extends RxBasePresenter<IView<List<VideoBean>>, Defa
             getCookie(url);
             return;
         }
-        String result = mJSEngine.runScript(url,"getRelatedParams");
+        String result = mJSEngine.runScript(url, "getRelatedParams");
         String[] strings = result.split("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("link=").append(url)
@@ -203,5 +203,6 @@ public class VideoPresenter extends RxBasePresenter<IView<List<VideoBean>>, Defa
                     }
                 });
     }
+
 
 }

@@ -2,6 +2,7 @@ package com.snew.video.bean;
 
 import com.example.commonlibrary.manager.video.VideoController;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,8 @@ import androidx.annotation.Nullable;
  * 创建人:      陈锦军
  * 创建时间:    2018/11/23     11:07
  */
-public class VideoBean {
+public class VideoBean implements Serializable {
+
     private String title;
     private String imageCover;
     private String url;
@@ -25,6 +27,15 @@ public class VideoBean {
         this.imageCover = imageCover;
         this.url = url;
         this.totalLength = totalLength;
+    }
+
+    public VideoBean(String title, String imageCover, String url) {
+        this(title, 0, imageCover, url);
+    }
+
+
+    public VideoBean(String title, String url) {
+        this(title, 0, null, url);
     }
 
 

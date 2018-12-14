@@ -96,9 +96,12 @@ public class VideoListFragment extends VideoBaseFragment<List<VideoBean>, VideoP
         });
     }
 
+
+
     @Override
     protected void updateView() {
         onRefresh();
+
     }
 
     @Override

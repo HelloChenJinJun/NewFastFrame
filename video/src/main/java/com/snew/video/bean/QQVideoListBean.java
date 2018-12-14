@@ -1,6 +1,9 @@
 package com.snew.video.bean;
 
+import java.io.Serializable;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * 项目名称:    NewFastFrame
@@ -148,7 +151,7 @@ public class QQVideoListBean {
             this.results = results;
         }
 
-        public static class ResultsBean {
+        public static class ResultsBean implements Serializable {
             /**
              * fields : {"average_score":null,"c_hlw_score":8.75669,"c_title":"特种兵归来2：黑色罂粟","cartoon_aspect":null,"cartoon_genre":null,"column_info":null,"cover_checkup_grade":4,"cover_id":"46mf4p93209f4d4","horizontal_pic_url":"http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/hori/4/46mf4p93209f4d4.jpg","new_pic_hz":"http://puui.qpic.cn/vcover_hz_pic/0/46mf4p93209f4d41543992762/0","new_pic_vt":"http://puui.qpic.cn/vcover_vt_pic/0/46mf4p93209f4d41543992745/0","online_time":"2018-12-11 00:00:00","opinion_score":7.7,"pay_episodes":null,"pay_imgtag":null,"pay_status":6,"pay_subscript":null,"playright":["1","2","3","4","5","8"],"real_exclusive":"1","score":{"c_mix_score":"7.7","hot":"9.97247","score":"7.7"},"second_title":"血狼丛林激战搏命制敌","title":"特种兵归来2：黑色罂粟","title_en":null,"type":1,"type_name":"电影","vertical_pic_url":"http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/4/46mf4p93209f4d4.jpg","web20_imgtag":"{\"tag_1\":{\"id\":\"-1\",\"param\":\"\",\"param2\":\"\",\"text\":\"\"},\"tag_2\":{\"id\":\"20009\",\"param\":\"http://i.gtimg.cn/qqlive/images/mark/mark_1.png\",\"param2\":\"\",\"text\":\"独播\"},\"tag_3\":{\"id\":\"-1\",\"param\":\"\",\"param2\":\"\",\"text\":\"\"},\"tag_4\":{\"id\":\"40003\",\"param\":\"mark_sd\",\"param2\":\"\",\"text\":\"蓝光\"}}"}
              * id : 46mf4p93209f4d4
@@ -158,6 +161,11 @@ public class QQVideoListBean {
             private FieldsBean fields;
             private String id;
             private int retcode;
+
+            @Override
+            public boolean equals(@Nullable Object obj) {
+                return obj instanceof ResultsBean && ((ResultsBean) obj).getId().equals(getId());
+            }
 
             public FieldsBean getFields() {
                 return fields;
@@ -183,7 +191,7 @@ public class QQVideoListBean {
                 this.retcode = retcode;
             }
 
-            public static class FieldsBean {
+            public static class FieldsBean implements Serializable {
                 /**
                  * average_score : null
                  * c_hlw_score : 8.75669
@@ -458,7 +466,7 @@ public class QQVideoListBean {
                     this.playright = playright;
                 }
 
-                public static class ScoreBean {
+                public static class ScoreBean implements Serializable {
                     /**
                      * c_mix_score : 7.7
                      * hot : 9.97247

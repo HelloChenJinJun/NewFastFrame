@@ -18,46 +18,48 @@ public class GridSpaceDecoration extends RecyclerView.ItemDecoration {
 
 
     private int spanCount;
-    private int spacing;
     private boolean includeEdge;
+    private int horizontalSize;
+    private int verticalSize;
 
     public GridSpaceDecoration(int spanCount, int spacing, boolean includeEdge) {
+        this(spanCount, spacing, spacing, includeEdge);
+    }
+
+
+    public GridSpaceDecoration(int spanCount, int horizontalSize, int verticalSize, boolean includeEdge) {
         this.spanCount = spanCount;
-        this.spacing = spacing;
         this.includeEdge = includeEdge;
+        this.horizontalSize = horizontalSize;
+        this.verticalSize = verticalSize;
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view); // item position
-        boolean hasFoot=false;
         if (parent instanceof SuperRecyclerView) {
             SuperRecyclerView superRecyclerView = (SuperRecyclerView) parent;
             if (superRecyclerView.getHeaderContainer().getChildCount() > position) {
                 return;
             }
             position -= superRecyclerView.getHeaderContainer().getChildCount();
-            hasFoot=superRecyclerView.getLoadMoreFooterView()!=null;
         }
         int column = position % spanCount; // item column
-        outRect.top = spacing;
-//        if (!hasFoot) {
-        //            if (position==)
-        //
-        //        }
+        outRect.top = verticalSize;
+
         if (column == spanCount - 1) {
             if (includeEdge) {
-                outRect.right = spacing;
+                outRect.right = horizontalSize;
             }
-            outRect.left = spacing / 2;
+            outRect.left = horizontalSize / 2;
         } else if (column == 0) {
             if (includeEdge) {
-                outRect.left = spacing;
+                outRect.left = horizontalSize;
             }
-            outRect.right = spacing / 2;
+            outRect.right = horizontalSize / 2;
         } else {
-            outRect.left = spacing / 2;
-            outRect.right = spacing / 2;
+            outRect.left = horizontalSize / 2;
+            outRect.right = horizontalSize / 2;
         }
     }
 }

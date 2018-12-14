@@ -6,4 +6,9 @@
 
     <item type="id" name="statusbarutil_fake_status_bar_view" />
     <item type="id" name="statusbarutil_translucent_view" />
+
+
+    <item name="sticky_header" type="id" />
+    <item name="sticky_tab" type="id" />
+    <item name="sticky_display" type="id" />
 </resources>
