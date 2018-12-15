@@ -18,6 +18,12 @@ public class SearchVideoDetailAdapter extends BaseRecyclerAdapter<SearchVideoBea
 
     @Override
     protected void convert(BaseWrappedViewHolder holder, SearchVideoBean.ItemBean data) {
-        //todo
+        holder.setText(R.id.tv_item_fragment_search_video_detail_type, data.getClassX())
+                .setText(R.id.tv_item_fragment_search_video_detail_title, data.getTt())
+                .setImageUrl(R.id.iv_item_fragment_search_video_detail_image, data.getDc())
+                .setText(R.id.tv_item_fragment_search_video_detail_num, null)
+                .setText(R.id.tv_item_fragment_search_video_detail_desc, data.getPa())
+                .setOnItemChildClickListener(R.id.tv_item_fragment_search_video_detail_play);
+
     }
 }

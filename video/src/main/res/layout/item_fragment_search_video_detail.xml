@@ -21,6 +21,7 @@
             android:id="@+id/tv_item_fragment_search_video_detail_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:textColor="@color/grey_500" />
     </LinearLayout>
 
@@ -28,6 +29,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

@@ -62,7 +62,7 @@ public class QQVideoFragment extends VideoBaseFragment {
         toolBarOption.setRightListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchVideoActivity.start();
+                SearchVideoActivity.start(getActivity());
             }
         });
         setToolBar(toolBarOption);

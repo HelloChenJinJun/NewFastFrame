@@ -38,8 +38,7 @@ public class SearchVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>,
                 .searchVideo(stringBuilder.toString()).subscribeOn(Schedulers.io())
                 .flatMap((Function<ResponseBody, ObservableSource<SearchVideoBean>>) responseBody -> {
                     String body = responseBody.string().replace("QZOutputJson=", "");
-                    SearchVideoBean searchVideoBean
-                            = BaseApplication.getAppComponent().getGson().fromJson(body.substring(0, body.length() - 1)
+                    SearchVideoBean searchVideoBean = BaseApplication.getAppComponent().getGson().fromJson(body.substring(0, body.length() - 1)
                             , SearchVideoBean.class);
                     return Observable.just(searchVideoBean);
                 }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SearchVideoBean>() {

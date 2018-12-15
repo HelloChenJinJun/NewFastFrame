@@ -21,7 +21,7 @@ public class IndexInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         String url = chain.request().url().toString();
-        if (!url.contains(VideoUtil.BASE_VIDEO_URL)) {
+        if (url.contains(VideoUtil.BASE_VIDEO_URL)) {
             Request.Builder builder = chain.request().newBuilder();
             builder.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.7 Safari/537.36");
             builder.addHeader("Accept-Language", "zh-CN,zh;q=0.9");

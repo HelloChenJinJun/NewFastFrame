@@ -10,7 +10,11 @@ import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.snew.video.R;
 import com.snew.video.adapter.SearchVideoDetailAdapter;
+import com.snew.video.adapter.SearchVideoDetailListAdapter;
 import com.snew.video.base.VideoBaseFragment;
+import com.snew.video.bean.SearchVideoBean;
+import com.snew.video.dagger.search.detail.DaggerSearchDetailComponent;
+import com.snew.video.dagger.search.detail.SearchDetailModule;
 import com.snew.video.util.VideoUtil;
 
 import javax.inject.Inject;
@@ -26,7 +30,7 @@ public class SearchVideoDetailFragment extends VideoBaseFragment<BaseBean, Searc
     private String content;
 
     @Inject
-    SearchVideoDetailAdapter mSearchVideoDetailAdapter;
+    SearchVideoDetailListAdapter mSearchVideoDetailAdapter;
 
     public static SearchVideoDetailFragment newInstance(String content) {
         Bundle bundle = new Bundle();
@@ -46,6 +50,12 @@ public class SearchVideoDetailFragment extends VideoBaseFragment<BaseBean, Searc
         return false;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
+
     @Override
     protected int getContentLayout() {
         return R.layout.fragment_search_video_detail;
@@ -60,19 +70,27 @@ public class SearchVideoDetailFragment extends VideoBaseFragment<BaseBean, Searc
 
     @Override
     protected void initData() {
+        DaggerSearchDetailComponent.builder().searchDetailModule(new SearchDetailModule(this))
+                .videoComponent(getComponent())
+                .build().inject(this);
         content = getArguments().getString(VideoUtil.DATA);
         display.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
         display.addItemDecoration(new ListViewDecoration());
+        display.setAdapter(mSearchVideoDetailAdapter);
     }
 
     @Override
     protected void updateView() {
-
+        onRefresh();
     }
 
 
     @Override
     public void updateData(BaseBean baseBean) {
+        if (baseBean.getType() == VideoUtil.BASE_TYPE_SEARCH_CONTENT) {
+            SearchVideoBean searchVideoBean = (SearchVideoBean) baseBean.getData();
+            mSearchVideoDetailAdapter.refreshData(searchVideoBean.getItem());
+        }
 
     }
 

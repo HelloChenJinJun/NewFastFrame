@@ -1,31 +1,42 @@
 package com.snew.video.mvp.search;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.text.Editable;
 import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
+import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.BaseBean;
 import com.example.commonlibrary.cusotomview.CustomEditText;
+import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.snew.video.R;
+import com.snew.video.adapter.SearchVideoDetailAdapter;
 import com.snew.video.base.VideoBaseActivity;
 import com.snew.video.bean.HotVideoBean;
 import com.snew.video.bean.HotVideoItemBean;
 import com.snew.video.bean.SearchVideoBean;
+import com.snew.video.dagger.search.DaggerSearchVideoComponent;
+import com.snew.video.dagger.search.SearchVideoModule;
 import com.snew.video.mvp.search.detail.SearchVideoDetailFragment;
 import com.snew.video.mvp.search.hot.HotVideoListFragment;
 import com.snew.video.util.VideoUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import androidx.fragment.app.Fragment;
 
@@ -44,6 +55,16 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
     private ViewPagerAdapter viewPagerAdapter;
     private CustomEditText search;
     private SearchVideoDetailFragment searchFragment;
+    private SuperRecyclerView preSearch;
+
+
+    @Inject
+    SearchVideoDetailAdapter mSearchVideoDetailAdapter;
+
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, SearchVideoActivity.class);
+        activity.startActivity(intent);
+    }
 
 
     @Override
@@ -63,33 +84,78 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
 
     @Override
     protected void initView() {
+        preSearch = findViewById(R.id.srcv_activity_search_video_display);
+        searchHistory = findViewById(R.id.srcv_activity_search_video_header_display);
         refresh = findViewById(R.id.refresh_activity_search_video_refresh);
         search = findViewById(R.id.cet_activity_search_video_search);
-        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {//搜索按键action
-                    String content = search.getText().toString().trim();
-                    if (TextUtils.isEmpty(content)) {
-                        ToastUtils.showShortToast("输入内容不能为空");
-                        return true;
-                    }
-                    if (searchFragment == null) {
-                        searchFragment = SearchVideoDetailFragment.newInstance(content);
-                        addBackStackFragment(searchFragment, R.id.fl_activity_search_video_container);
-                    } else {
-                        searchFragment.notifyDataChanged(content);
-                    }
-                    SystemUtil.hideSoftInput(SearchVideoActivity.this, search);
+        search.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {//搜索按键action
+                String content = search.getText().toString().trim();
+                if (TextUtils.isEmpty(content)) {
+                    ToastUtils.showShortToast("输入内容不能为空");
                     return true;
                 }
-                return false;
+
+                jump(content);
+
+                return true;
+            }
+            return false;
+        });
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    preSearch.setVisibility(View.VISIBLE);
+                    presenter.preSearch((String) s);
+                } else {
+                    preSearch.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
         refresh.setOnChildScrollUpCallback((parent, child) -> child.getScrollY() > 0);
         mTabLayout = findViewById(R.id.sticky_tab);
         display = findViewById(R.id.sticky_display);
         findViewById(R.id.iv_activity_search_video_finish).setOnClickListener(this);
+
+    }
+
+    private void jump(String content) {
+        if (searchFragment == null) {
+            searchFragment = SearchVideoDetailFragment.newInstance(content);
+            addBackStackFragment(searchFragment, R.id.fl_activity_search_video_container);
+        } else {
+            searchFragment.notifyDataChanged(content);
+        }
+        SystemUtil.hideSoftInput(SearchVideoActivity.this, search);
+    }
+
+
+    @Override
+    protected void initData() {
+        DaggerSearchVideoComponent.builder().searchVideoModule(new SearchVideoModule(this))
+                .videoComponent(getComponent()).build().inject(this);
+        preSearch.setLayoutManager(new WrappedLinearLayoutManager(this));
+        preSearch.addItemDecoration(new ListViewDecoration());
+        preSearch.setAdapter(mSearchVideoDetailAdapter);
+        mSearchVideoDetailAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view) {
+                String content = mSearchVideoDetailAdapter.getData(position).getTitle();
+                jump(content);
+            }
+        });
+        searchHistory.setLayoutManager(new WrappedGridLayoutManager(this, 3));
         mTabLayout.setupWithViewPager(display);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         runOnUiThread(new Runnable() {
@@ -98,11 +164,6 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
                 presenter.getHotVideoData();
             }
         });
-    }
-
-    @Override
-    protected void initData() {
-
     }
 
 
@@ -116,9 +177,8 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             display.setCurrentItem(0);
         } else if (baseBean.getType() == VideoUtil.BASE_TYPE_SEARCH_CONTENT) {
             SearchVideoBean searchVideoBean = (SearchVideoBean) baseBean.getData();
-            //            updateSearchContent(searchVideoBean);
+            mSearchVideoDetailAdapter.refreshData(searchVideoBean.getItem());
         }
-
     }
 
 

@@ -21,6 +21,7 @@ public class HotVideoAdapter extends BaseRecyclerAdapter<HotVideoItemBean, BaseW
     @Override
     protected void convert(BaseWrappedViewHolder holder, HotVideoItemBean data) {
         holder.setText(R.id.tv_item_fragment_hot_video_list_title, data.getTitle())
+                .setText(R.id.tv_item_Fragment_hot_video_list_order, (holder.getAdapterPosition() + 1) + "")
                 .setOnItemClickListener();
         if (holder.getAdapterPosition() > 2) {
             holder.setTextColor(R.id.tv_item_Fragment_hot_video_list_order, Color.GRAY);

@@ -22,15 +22,17 @@
 
 
         <com.example.commonlibrary.cusotomview.CustomEditText
-            android:imeOptions="actionSearch"
             android:id="@+id/cet_activity_search_video_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:background="@null"
+            android:ellipsize="end"
             android:hint="搜索"
+            android:imeOptions="actionSearch"
             android:maxLines="1"
+            android:singleLine="true"
             android:textColor="@color/white"
             android:textColorHint="@color/grey_200"
             android:textSize="14sp" />
@@ -40,6 +42,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
             android:id="@+id/refresh_activity_search_video_refresh"
             android:layout_width="match_parent"
@@ -86,10 +89,18 @@
 
             </com.example.commonlibrary.cusotomview.StickyNavLayout>
         </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
-        <FrameLayout
+
+
+        <com.example.commonlibrary.baseadapter.SuperRecyclerView
+            android:id="@+id/srcv_activity_search_video_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/fl_activity_search_video_container"/>
+            android:background="@color/white" />
+
+        <FrameLayout
+            android:id="@+id/fl_activity_search_video_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </RelativeLayout>
 
 
