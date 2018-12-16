@@ -30,6 +30,7 @@ public class SearchVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>,
 
     public void search(String content) {
         //        http://s.video.qq.com/smartbox?num=10&otype=json&query=%E6%98%AF%E6%98%AF
+
         iView.showLoading(null);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("http://s.video.qq.com/smartbox?num=10&otype=json&query=")

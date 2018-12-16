@@ -1,6 +1,7 @@
 package com.snew.video.dagger.search;
 
 import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.snew.video.adapter.SearchVideoDetailAdapter;
 import com.snew.video.mvp.search.SearchVideoActivity;
 import com.snew.video.mvp.search.SearchVideoPresenter;
 
@@ -24,6 +25,12 @@ public class SearchVideoModule {
     @Provides
     public SearchVideoPresenter providePresenter(DefaultModel defaultModel) {
         return new SearchVideoPresenter(mSearchVideoActivity, defaultModel);
+    }
+
+
+    @Provides
+    public SearchVideoDetailAdapter provideAdapter() {
+        return new SearchVideoDetailAdapter();
     }
 
 }

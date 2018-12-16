@@ -57,6 +57,7 @@ public class ListVideoManager {
     }
 
     public void updateUrl(String url) {
+        currentPlayer.release();
         currentPlayer.setUp(url, null);
         currentPlayer.start();
     }

@@ -24,9 +24,10 @@ public class VideoUtil {
     public static final String DATA = "data";
     public static final int BASE_TYPE_VIDEO_LIST_HEADER = 1;
     public static final int BASE_TYPE_VIDEO_LIST_DATA = 2;
-    public static final String HOT_VIDEO_URL ="http://node.video.qq.com/x/api/hot_search/" ;
+    public static final String HOT_VIDEO_URL = "http://node.video.qq.com/x/api/hot_search/";
     public static final int BASE_TYPE_SEARCH_HOT = 10;
     public static final int BASE_TYPE_SEARCH_CONTENT = 11;
+    public static final int BASE_TYPE_VIDEO_DETAIL_INFO = 20;
 
     public static String getSignedValue(String coreString) {
         JSEngine jsEngine = new JSEngine("vip.js");
@@ -79,6 +80,18 @@ public class VideoUtil {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("https://v.qq.com/x/cover/").append(id).append(".html");
         //        "https://v.qq.com/x/cover/h0meep6p766jgqh.html"
+        return stringBuilder.toString();
+    }
+
+
+    public static String getIdFromUrl(String url) {
+        return url.substring(url.indexOf("cover/") + 6, url.indexOf(".html"));
+    }
+
+
+    public static String getVideoDetailUrl(String id) {
+        //        https://v.qq.com/detail/b/bojb6fxtqh2ekw0.html
+        StringBuilder stringBuilder = new StringBuilder("https://v.qq.com/detail/b/").append(id).append(".html");
         return stringBuilder.toString();
     }
 }

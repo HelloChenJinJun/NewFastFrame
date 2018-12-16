@@ -45,7 +45,7 @@ public class QQVideoListPresenter extends RxBasePresenter<IView<BaseBean>, Defau
         }
         page++;
         //        http://list.video.qq.com/fcgi-bin/list_common_cgi?otype=json&platform=1&version=10000&intfname=web_vip_movie_new&tid=687&appkey=c8094537f5337021&appid=200010596&sort=17&pagesize=2&offset=0
-        stringBuilder.append("&sort=").append(type).append("&pagesize=").append(10).append("&offset=").append((page - 1) * 10)
+        stringBuilder.append("&sort=").append(type).append("&pagesize=").append(15).append("&offset=").append((page - 1) * 15)
                 .append("&sourcetype=1")
                 .append("&type=").append(videoType)
                 .append("&itype=").append(type).append("&iyear=").append(year).append("&iarea=").append(area).append("&iawards=").append(award)

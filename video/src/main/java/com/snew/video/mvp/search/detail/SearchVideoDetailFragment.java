@@ -9,7 +9,6 @@ import com.example.commonlibrary.bean.BaseBean;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.snew.video.R;
-import com.snew.video.adapter.SearchVideoDetailAdapter;
 import com.snew.video.adapter.SearchVideoDetailListAdapter;
 import com.snew.video.base.VideoBaseFragment;
 import com.snew.video.bean.SearchVideoBean;
@@ -89,7 +88,7 @@ public class SearchVideoDetailFragment extends VideoBaseFragment<BaseBean, Searc
     public void updateData(BaseBean baseBean) {
         if (baseBean.getType() == VideoUtil.BASE_TYPE_SEARCH_CONTENT) {
             SearchVideoBean searchVideoBean = (SearchVideoBean) baseBean.getData();
-            mSearchVideoDetailAdapter.refreshData(searchVideoBean.getItem());
+            //            mSearchVideoDetailAdapter.refreshData(searchVideoBean.getItem());
         }
 
     }

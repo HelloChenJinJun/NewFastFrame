@@ -1,7 +1,7 @@
 package com.snew.video.dagger.search.detail;
 
 import com.example.commonlibrary.mvp.model.DefaultModel;
-import com.snew.video.adapter.SearchVideoDetailAdapter;
+import com.snew.video.adapter.SearchVideoDetailListAdapter;
 import com.snew.video.mvp.search.detail.SearchVideoDetailFragment;
 import com.snew.video.mvp.search.detail.SearchVideoDetailPresenter;
 
@@ -27,7 +27,9 @@ public class SearchDetailModule {
     }
 
     @Provides
-    public SearchVideoDetailAdapter provideAdapter() {
-        return new SearchVideoDetailAdapter();
+    public SearchVideoDetailListAdapter provideAdapter() {
+        return new SearchVideoDetailListAdapter();
     }
+
+
 }
