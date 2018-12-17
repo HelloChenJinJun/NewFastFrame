@@ -113,7 +113,7 @@ public class SearchVideoDetailFragment extends VideoBaseFragment<BaseBean, Searc
 
     @Override
     public void onRefresh() {
-        presenter.search(content);
+//        presenter.search(content);
     }
 
     public void notifyDataChanged(String content) {

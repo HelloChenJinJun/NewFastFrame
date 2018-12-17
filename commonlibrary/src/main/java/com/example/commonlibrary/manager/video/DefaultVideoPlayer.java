@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import tv.danmaku.ijk.media.player.AndroidMediaPlayer;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
@@ -40,6 +41,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  */
 public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, TextureView.SurfaceTextureListener, IMediaPlayer.OnPreparedListener, IMediaPlayer.OnInfoListener, IMediaPlayer.OnCompletionListener, IMediaPlayer.OnErrorListener, IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnVideoSizeChangedListener {
 
+    private static final int MAX_SWITCH_NUM = 1;
     IMediaPlayer mMediaPlayer;
 
     //    播放未开始
@@ -118,6 +120,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
 
     @Override
     public IVideoPlayer setUp(String url, Map<String, String> headers) {
+        switchNum = 0;
         this.url = url;
         this.headers = headers;
         return this;
@@ -174,7 +177,11 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
 
     private void initMediaPlayer() {
         if (mMediaPlayer == null) {
-            mMediaPlayer = new IjkMediaPlayer();
+            if (checkAndroidMediaPlayer) {
+                mMediaPlayer = new AndroidMediaPlayer();
+            } else {
+                mMediaPlayer = new IjkMediaPlayer();
+            }
             mMediaPlayer.setOnPreparedListener(this);
             mMediaPlayer.setOnInfoListener(this);
             mMediaPlayer.setOnCompletionListener(this);
@@ -367,7 +374,6 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
             prepareAsync();
         } else {
             defaultTextureView.setSurfaceTexture(mSurfaceTexture);
-
         }
     }
 
@@ -467,13 +473,36 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
         mVideoController.onPlayStateChanged(mState);
     }
 
+
+    private int switchNum;
+
     @Override
-    public boolean onError(IMediaPlayer iMediaPlayer, int i, int i1) {
+    public boolean onError(IMediaPlayer iMediaPlayer, int what, int extra) {
         // 直播流播放时去调用mediaPlayer.getDuration会导致-38和-2147483648错误，忽略该错误
+        if ((what == -10000 && extra == 0) && switchNum < MAX_SWITCH_NUM) {
+            switchNum++;
+            switchMediaPlayer();
+            return true;
+        }
         mState = PLAY_STATE_ERROR;
         mVideoController.onPlayStateChanged(mState);
-        CommonLogger.e("视频播放出错 ———— what：" + i + ", extra: " + i1);
+        CommonLogger.e("视频播放出错 ———— what：" + what + "extra " + extra);
         return true;
+    }
+
+
+    private boolean checkAndroidMediaPlayer = false;
+
+    private void switchMediaPlayer() {
+        CommonLogger.e("切换播放器");
+        release();
+        if (mMediaPlayer instanceof AndroidMediaPlayer) {
+            checkAndroidMediaPlayer = false;
+        } else {
+            checkAndroidMediaPlayer = true;
+        }
+        mMediaPlayer = null;
+        start();
     }
 
     @Override

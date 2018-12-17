@@ -6,6 +6,7 @@ import android.webkit.URLUtil;
 
 import com.example.commonlibrary.bean.BaseBean;
 import com.example.commonlibrary.manager.video.ListVideoManager;
+import com.example.commonlibrary.manager.video.VideoController;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
@@ -47,6 +48,10 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
     }
 
     public void getDetailData(String url) {
+        if (url.startsWith("http://m.bt361.cn")) {
+            getUpdateDetailData(url);
+            return;
+        }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), "url=" + url);
         baseModel.getRepositoryManager().getApi(VideoApi.class)
                 .postUrlInfo("http://api.bbbbbb.me/zy/api.php", requestBody).subscribeOn(Schedulers.io())
@@ -59,7 +64,10 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
                             String type = uri.getQueryParameter("type");
                             String cid = uri.getQueryParameter("cid");
                             if (qqVideoDetailBean.getPlay().equals("url")) {
-                                if (key.endsWith(".m3u8")) {
+                                if (key.contains(".m3u8") || key.contains(".mp4")) {
+                                    if (!qqVideoDetailBean.getUrl().startsWith("http")) {
+                                        qqVideoDetailBean.setUrl(key);
+                                    }
 
                                 } else if ("qqmtv".equals(type)) {
                                     String content = Jsoup.connect(qqVideoDetailBean.getUrl()).get().outerHtml();
@@ -126,13 +134,21 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
                                 deocderUrl = deocderUrl.substring(deocderUrl.indexOf("url=") + 4, deocderUrl.length());
                             }
                             CommonLogger.e("deocderUrl:" + deocderUrl);
-                            ListVideoManager.getInstance().updateUrl(deocderUrl);
+                            if (!deocderUrl.startsWith("http://api.bbbbbb.me")) {
+                                ListVideoManager.getInstance().updateUrl(deocderUrl);
+                            } else {
+                                ListVideoManager.getInstance().error();
+                            }
                         } else if (object instanceof QQTVVideoDetailBean) {
                             QQTVVideoDetailBean qqtvVideoDetailBean = (QQTVVideoDetailBean) object;
                             CommonLogger.e(qqtvVideoDetailBean.toString());
                             String deocderUrl = URLDecoder.decode(qqtvVideoDetailBean.getUrl());
                             CommonLogger.e("deocderUrl:" + deocderUrl);
-                            ListVideoManager.getInstance().updateUrl(deocderUrl);
+                            if (!deocderUrl.startsWith("http://api.bbbbbb.me")) {
+                                ListVideoManager.getInstance().updateUrl(deocderUrl);
+                            } else {
+                                ListVideoManager.getInstance().error();
+                            }
                         }
 
                     }
@@ -148,6 +164,63 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
                     }
                 });
 
+    }
+
+    private void getUpdateDetailData(String url) {
+        Observable.just(url).subscribeOn(Schedulers.io())
+                .map(new Function<String, List<VideoController.Clarity>>() {
+                    @Override
+                    public List<VideoController.Clarity> apply(String s) throws Exception {
+                        Document document = Jsoup.connect(s).get();
+                        Elements elements = document.select(".swiper-slide");
+                        List<VideoController.Clarity> list = new ArrayList<>();
+                        if (elements.size() > 0) {
+                            for (int i = 0; i < elements.size(); i++) {
+                                Element item = elements.get(i);
+
+                                String link = item.getElementsByTag("a").first().attr("href");
+                                //                                http://m.tbb361.com/index.php/vod/play/id/60010/sid/2/nid/1/
+                                String realLink = "http://m.tbb361.com/index.php" + link;
+                                Document document1 = Jsoup.connect(realLink).get();
+                                String content = document1.outerHtml();
+                                String start = "\"url\":\"";
+                                //                                ","link_next
+                                String end = "\",\"url_next";
+                                String url = content.substring(content.indexOf(start) + start.length(), content.indexOf(end));
+                                String decoderUrl = URLDecoder.decode(url);
+                                VideoController.Clarity clarity = new VideoController.Clarity(item.text(), null, decoderUrl);
+                                list.add(clarity);
+                            }
+                        }
+                        return list;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<VideoController.Clarity>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDispose(d);
+                    }
+
+                    @Override
+                    public void onNext(List<VideoController.Clarity> clarities) {
+                        if (clarities != null && clarities.size() > 0) {
+                            ListVideoManager.getInstance().getCurrentPlayer().setClarity(clarities);
+                            ListVideoManager.getInstance().updateUrl(clarities.get(0).getVideoUrl());
+                        } else {
+                            ListVideoManager.getInstance().error();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        iView.showError(e.getMessage(), null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        iView.hideLoading();
+                    }
+                });
     }
 
 

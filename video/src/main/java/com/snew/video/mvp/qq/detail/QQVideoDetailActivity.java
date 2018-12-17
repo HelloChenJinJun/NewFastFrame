@@ -87,7 +87,6 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
         subTitle = findViewById(R.id.tv_activity_qq_video_detail_sub_title);
         desc = findViewById(R.id.tv_activity_qq_video_detail_desc);
         score = findViewById(R.id.tv_activity_qq_video_detail_score);
-
     }
 
 
@@ -96,7 +95,9 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
         DaggerQQVideoDetailComponent.builder().qQVideoDetailModule(new QQVideoDetailModule(this))
                 .videoComponent(getComponent()).build().inject(this);
         data = (VideoBean) getIntent().getSerializableExtra(VideoUtil.DATA);
-        id = VideoUtil.getIdFromUrl(data.getUrl());
+        if (data.getUrl().startsWith("https://v.qq.com/x/cover/")) {
+            id = VideoUtil.getIdFromUrl(data.getUrl());
+        }
         display.setTitle(data.getTitle())
                 .setImageCover(data.getImageCover())
                 .setUp(data.getUrl(), null);
@@ -104,7 +105,6 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
         person.setNestedScrollingEnabled(false);
         tag.setNestedScrollingEnabled(false);
         tv.setNestedScrollingEnabled(false);
-
 
         person.setLayoutManager(new WrappedLinearLayoutManager(this, LinearLayoutManager.HORIZONTAL));
         person.addItemDecoration(new ListViewDecoration(DensityUtil.toDp(10)));
@@ -153,7 +153,7 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
 
     @Override
     public boolean onStartClick(View view, String url) {
-        if (url.contains("html")) {
+        if (url.contains("html") || url.startsWith("http://m.bt361.cn")) {
             presenter.getDetailData(url);
             return false;
         } else {

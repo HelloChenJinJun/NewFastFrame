@@ -55,9 +55,16 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
     private int videoType = -1;
     private VideoHeaderAdapter videoHeaderAdapter;
 
-    static QQVideoListFragment newInstance(int type) {
+
+    private String classify = "全部";
+    private String areas = "全部";
+    private String years = "全部";
+    private String sorts = "按人气";
+
+    static QQVideoListFragment newInstance(int originType, int type) {
         Bundle bundle = new Bundle();
         bundle.putInt(VideoUtil.VIDEO_TYPE, type);
+        bundle.putInt(VideoUtil.VIDEO_URL_TYPE, originType);
         QQVideoListFragment qqVideoListFragment = new QQVideoListFragment();
         qqVideoListFragment.setArguments(bundle);
         return qqVideoListFragment;
@@ -93,11 +100,15 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
 
     }
 
+
+    private int videoUrlType;
+
     @Override
     protected void initData() {
         DaggerQQVideoListComponent.builder().qQVideoListModule(new QQVideoListModule(this))
                 .videoComponent(getComponent()).build().inject(this);
         videoType = getArguments().getInt(VideoUtil.VIDEO_TYPE);
+        videoUrlType = getArguments().getInt(VideoUtil.VIDEO_URL_TYPE);
         display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 3));
         display.addHeaderView(getHeaderView());
         display.addItemDecoration(new GridSpaceDecoration(3, DensityUtil.toDp(3), DensityUtil.toDp(15), true));
@@ -108,7 +119,7 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
             @Override
             public void onItemClick(int position, View view) {
                 QQVideoListBean.JsonvalueBean.ResultsBean resultsBean = mVideoAdapter.getData(position);
-                VideoBean videoBean = new VideoBean(resultsBean.getFields().getTitle(), resultsBean.getFields().getHorizontal_pic_url(), VideoUtil.getParseUrl(resultsBean.getId()));
+                VideoBean videoBean = new VideoBean(resultsBean.getFields().getTitle(), resultsBean.getFields().getHorizontal_pic_url(), VideoUtil.getParseUrl(resultsBean.getId(), videoUrlType));
                 QQVideoDetailActivity.start(getActivity(), videoBean);
             }
         });
@@ -123,38 +134,60 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
         videoHeaderAdapter = new VideoHeaderAdapter();
         display.setAdapter(videoHeaderAdapter);
         videoHeaderAdapter.setOnInnerItemClickListener((position, innerPosition, bean) -> {
-            int value = Integer.parseInt(bean.getOption().get(innerPosition).getValue());
-            switch (bean.getName()) {
-                case "iawards":
-                    if (award != value) {
-                        award = value;
-                        break;
+            QQVideoTabListBean.IndexBean.OptionBean item = bean.getOption().get(innerPosition);
+            if (videoUrlType == VideoUtil.VIDEO_URL_TYPE_QQ) {
+                int value = Integer.parseInt(item.getValue());
+                switch (bean.getName()) {
+                    case "iawards":
+                        if (award != value) {
+                            award = value;
+                            break;
+                        }
+                        return;
+                    case "iarea":
+                        if (area != value) {
+                            area = value;
+                            break;
+                        }
+                        return;
+                    case "iyear":
+                        if (year != value) {
+                            year = value;
+                            break;
+                        }
+                        return;
+                    case "itype":
+                        if (type != value) {
+                            type = value;
+                            break;
+                        }
+                        return;
+                    case "sort":
+                        if (sort != value) {
+                            sort = value;
+                            break;
+                        }
+                        return;
+                }
+            } else {
+                if ("地区".equals(bean.getDisplay_name())) {
+                    if (areas.equals(item.getDisplay_name())) {
+                        return;
                     }
-                    return;
-                case "iarea":
-                    if (area != value) {
-                        area = value;
-                        break;
+                } else if ("分类".equals(bean.getDisplay_name())) {
+                    if (classify.equals(bean.getDisplay_name())) {
+                        return;
                     }
-                    return;
-                case "iyear":
-                    if (year != value) {
-                        year = value;
-                        break;
+
+                } else if ("年代".equals(bean.getDisplay_name())) {
+                    if (years.equals(bean.getDisplay_name())) {
+                        return;
                     }
-                    return;
-                case "itype":
-                    if (type != value) {
-                        type = value;
-                        break;
+                } else {
+                    if (sorts.equals(bean.getDisplay_name())) {
+                        return;
                     }
-                    return;
-                case "sort":
-                    if (sort != value) {
-                        sort = value;
-                        break;
-                    }
-                    return;
+                }
             }
             onRefresh();
         });
@@ -163,7 +196,7 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
 
     @Override
     protected void updateView() {
-        presenter.getHeaderListData(videoType);
+        presenter.getHeaderListData(videoUrlType, videoType);
     }
 
     @Override
@@ -178,27 +211,29 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
             QQVideoTabListBean qqVideoTabListBean = (QQVideoTabListBean) baseBean.getData();
             videoHeaderAdapter.refreshData(qqVideoTabListBean.getIndex());
             if (qqVideoTabListBean.getIndex() != null && qqVideoTabListBean.getIndex().size() > 0) {
-                for (QQVideoTabListBean.IndexBean bean :
-                        qqVideoTabListBean.getIndex()) {
-                    switch (bean.getName()) {
-                        case "iawards":
-                            award = bean.getDefault_value();
-                            break;
-                        case "iarea":
-                            area = bean.getDefault_value();
-                            break;
-                        case "iyear":
-                            year = bean.getDefault_value();
-                            break;
-                        case "itype":
-                            type = bean.getDefault_value();
-                            break;
-                        case "sort":
-                            sort = bean.getDefault_value();
-                            break;
+                if (videoUrlType == VideoUtil.VIDEO_URL_TYPE_QQ) {
+                    for (QQVideoTabListBean.IndexBean bean :
+                            qqVideoTabListBean.getIndex()) {
+                        switch (bean.getName()) {
+                            case "iawards":
+                                award = bean.getDefault_value();
+                                break;
+                            case "iarea":
+                                area = bean.getDefault_value();
+                                break;
+                            case "iyear":
+                                year = bean.getDefault_value();
+                                break;
+                            case "itype":
+                                type = bean.getDefault_value();
+                                break;
+                            case "sort":
+                                sort = bean.getDefault_value();
+                                break;
+                        }
                     }
+                    onRefresh();
                 }
-                onRefresh();
             }
         }
     }
@@ -225,12 +260,20 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
 
     @Override
     public void onRefresh() {
-        presenter.getData(true, videoType, type, year, area, award, sort);
+        if (videoUrlType == VideoUtil.VIDEO_URL_TYPE_QQ) {
+            presenter.getData(true, videoType, type, year, area, award, sort);
+        } else {
+            presenter.getUpdateData(true, videoType, classify, areas, years, sorts);
+        }
     }
 
     @Override
     public void loadMore() {
-        presenter.getData(false, videoType, type, year, area, award, sort);
+        if (videoUrlType == VideoUtil.VIDEO_URL_TYPE_QQ) {
+            presenter.getData(false, videoType, type, year, area, award, sort);
+        } else {
+            presenter.getUpdateData(false, videoType, classify, areas, years, sorts);
+        }
     }
 
 

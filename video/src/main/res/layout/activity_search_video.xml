@@ -95,7 +95,8 @@
             android:id="@+id/srcv_activity_search_video_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white" />
+            android:background="@color/white"
+            android:visibility="gone" />
 
         <FrameLayout
             android:id="@+id/fl_activity_search_video_container"

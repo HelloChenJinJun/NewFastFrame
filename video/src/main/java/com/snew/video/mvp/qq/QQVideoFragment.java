@@ -1,5 +1,6 @@
 package com.snew.video.mvp.qq;
 
+import android.os.Bundle;
 import android.view.View;
 
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
@@ -10,6 +11,7 @@ import com.snew.video.R;
 import com.snew.video.base.VideoBaseFragment;
 import com.snew.video.bean.QQVideoTabBean;
 import com.snew.video.mvp.search.SearchVideoActivity;
+import com.snew.video.util.VideoUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +29,12 @@ public class QQVideoFragment extends VideoBaseFragment {
     private TabLayout mTabLayout;
 
 
-    public static QQVideoFragment newInstance() {
-        return new QQVideoFragment();
+    public static QQVideoFragment newInstance(int videoUrlType) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(VideoUtil.VIDEO_URL_TYPE, videoUrlType);
+        QQVideoFragment qqVideoFragment = new QQVideoFragment();
+        qqVideoFragment.setArguments(bundle);
+        return qqVideoFragment;
     }
 
     @Override
@@ -52,11 +58,19 @@ public class QQVideoFragment extends VideoBaseFragment {
         mTabLayout = (TabLayout) findViewById(R.id.tb_fragment_qq_video_display);
     }
 
+
+    private int type;
+
     @Override
     protected void initData() {
+        type = getArguments().getInt(VideoUtil.VIDEO_URL_TYPE, VideoUtil.VIDEO_URL_TYPE_QQ);
         init();
         ToolBarOption toolBarOption = new ToolBarOption();
-        toolBarOption.setTitle("腾讯视频");
+        if (type == VideoUtil.VIDEO_URL_TYPE_QQ) {
+            toolBarOption.setTitle("腾讯视频");
+        } else {
+            toolBarOption.setTitle("天天更新");
+        }
         toolBarOption.setNeedNavigation(false);
         toolBarOption.setRightResId(R.drawable.ic_news_search);
         toolBarOption.setRightListener(new View.OnClickListener() {
@@ -76,7 +90,7 @@ public class QQVideoFragment extends VideoBaseFragment {
         for (QQVideoTabBean item :
                 tabBeanList) {
             titleList.add(item.getTitle());
-            baseFragments.add(QQVideoListFragment.newInstance(item.getType()));
+            baseFragments.add(QQVideoListFragment.newInstance(type, item.getType()));
         }
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         viewPagerAdapter.setTitleAndFragments(titleList, baseFragments);
@@ -86,14 +100,49 @@ public class QQVideoFragment extends VideoBaseFragment {
 
     private List<QQVideoTabBean> getDefaultData() {
         List<QQVideoTabBean> list = new ArrayList<>();
-        QQVideoTabBean one = new QQVideoTabBean();
-        one.setTitle("电影");
-        one.setType(1);
-        QQVideoTabBean two = new QQVideoTabBean();
-        two.setType(2);
-        two.setTitle("连续剧");
-        list.add(one);
-        list.add(two);
+        if (type == VideoUtil.VIDEO_URL_TYPE_QQ) {
+            QQVideoTabBean one = new QQVideoTabBean();
+            one.setTitle("电影");
+            one.setType(1);
+            QQVideoTabBean two = new QQVideoTabBean();
+            two.setType(2);
+            two.setTitle("连续剧");
+            list.add(one);
+            list.add(two);
+            QQVideoTabBean three = new QQVideoTabBean();
+            three.setType(3);
+            three.setTitle("动漫");
+            list.add(three);
+            QQVideoTabBean four = new QQVideoTabBean();
+            four.setType(10);
+            four.setTitle("综艺");
+            list.add(four);
+            QQVideoTabBean five = new QQVideoTabBean();
+            five.setType(9);
+            five.setTitle("记录片");
+            list.add(five);
+            QQVideoTabBean six = new QQVideoTabBean();
+            six.setType(22);
+            six.setTitle("音乐");
+            list.add(six);
+        } else {
+            QQVideoTabBean one = new QQVideoTabBean();
+            one.setTitle("电影");
+            one.setType(1);
+            QQVideoTabBean two = new QQVideoTabBean();
+            two.setTitle("连续剧");
+            two.setType(2);
+            QQVideoTabBean three = new QQVideoTabBean();
+            three.setTitle("综艺");
+            three.setType(3);
+            QQVideoTabBean four = new QQVideoTabBean();
+            four.setTitle("动漫");
+            four.setType(4);
+            list.add(one);
+            list.add(two);
+            list.add(three);
+            list.add(four);
+        }
         return list;
     }
 

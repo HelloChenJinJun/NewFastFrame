@@ -27,8 +27,10 @@ import com.snew.video.base.VideoBaseActivity;
 import com.snew.video.bean.HotVideoBean;
 import com.snew.video.bean.HotVideoItemBean;
 import com.snew.video.bean.SearchVideoBean;
+import com.snew.video.bean.VideoBean;
 import com.snew.video.dagger.search.DaggerSearchVideoComponent;
 import com.snew.video.dagger.search.SearchVideoModule;
+import com.snew.video.mvp.qq.detail.QQVideoDetailActivity;
 import com.snew.video.mvp.search.detail.SearchVideoDetailFragment;
 import com.snew.video.mvp.search.hot.HotVideoListFragment;
 import com.snew.video.util.VideoUtil;
@@ -112,7 +114,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
                     preSearch.setVisibility(View.VISIBLE);
-                    presenter.preSearch((String) s);
+                    presenter.preSearch(s.toString());
                 } else {
                     preSearch.setVisibility(View.GONE);
                 }
@@ -154,16 +156,21 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
                 String content = mSearchVideoDetailAdapter.getData(position).getTitle();
                 jump(content);
             }
+
+
+            @Override
+            public void onItemChildClick(int position, View view, int id) {
+                if (id == R.id.tv_item_fragment_search_video_detail_play) {
+                    SearchVideoBean.ItemBean itemBean = mSearchVideoDetailAdapter.getData(position);
+                    VideoBean videoBean = new VideoBean(itemBean.getTt(), itemBean.getUrl());
+                    QQVideoDetailActivity.start(SearchVideoActivity.this, videoBean);
+                }
+            }
         });
         searchHistory.setLayoutManager(new WrappedGridLayoutManager(this, 3));
         mTabLayout.setupWithViewPager(display);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                presenter.getHotVideoData();
-            }
-        });
+        runOnUiThread(() -> presenter.getHotVideoData());
     }
 
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.snew.video.base.VideoBaseActivity;
 import com.snew.video.mvp.qq.QQVideoFragment;
+import com.snew.video.util.VideoUtil;
 
 public class MainActivity extends VideoBaseActivity {
 
@@ -42,7 +43,9 @@ public class MainActivity extends VideoBaseActivity {
 
     @Override
     protected void initData() {
-        addOrReplaceFragment(QQVideoFragment.newInstance(), R.id.fl_activity_video_container);
+        addOrReplaceFragment(QQVideoFragment.newInstance(VideoUtil.VIDEO_URL_TYPE_UPDATE), R.id.fl_activity_video_container);
+        //        addOrReplaceFragment(UpdateVideoFragment.newInstance(), R.id.fl_activity_video_container);
+
     }
 
     @Override

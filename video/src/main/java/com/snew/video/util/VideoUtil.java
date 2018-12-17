@@ -28,57 +28,42 @@ public class VideoUtil {
     public static final int BASE_TYPE_SEARCH_HOT = 10;
     public static final int BASE_TYPE_SEARCH_CONTENT = 11;
     public static final int BASE_TYPE_VIDEO_DETAIL_INFO = 20;
+    public static final String VIDEO_URL_TYPE = "video_url_type";
+    public static final int VIDEO_URL_TYPE_QQ = 20;
+    public static final int VIDEO_URL_TYPE_UPDATE = 21;
+
 
     public static String getSignedValue(String coreString) {
         JSEngine jsEngine = new JSEngine("vip.js");
         return jsEngine.runScript(jsEngine.runScript(coreString, "cover"), "sign");
     }
 
-    private static String cover(String hexStr) {
-        String str = "0123456789ABCDEF";
-        char[] hexs = hexStr.toCharArray();
-        byte[] bytes = new byte[hexStr.length() / 2];
-        int n;
-        for (int i = 0; i < bytes.length; i++) {
-            n = str.indexOf(hexs[2 * i]) * 16;
-            n += str.indexOf(hexs[2 * i + 1]);
-            bytes[i] = (byte) (n & 0xff);
-        }
-        return new String(bytes);
-    }
-
-
-    // 转化十六进制编码为字符串
-    public static String toStringHex2(String s) {
-        byte[] baKeyword = new byte[s.length() / 2];
-        for (int i = 0; i < baKeyword.length; i++) {
-            try {
-                baKeyword[i] = (byte) (0xff & Integer.parseInt(s.substring(
-                        i * 2, i * 2 + 2), 16));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            s = new String(baKeyword, "utf-8");// UTF-16le:Not
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-        return s;
-    }
-
 
     public static String getVideoHeaderType(int videoType) {
         if (videoType == 1) {
             return "web_vip_movie_new";
-        } else {
+        } else if (videoType == 2) {
             return "web_vip_tv_new";
+        } else if (videoType == 3) {
+            return "web_vip_cartoon_new";
+        } else if (videoType == 10) {
+            return "vip_variety";
+        } else if (videoType == 9) {
+            return "web_vip_doco_new";
+        } else if (videoType == 22) {
+            return "web_vip_music_new";
         }
+        return null;
     }
 
-    public static String getParseUrl(String id) {
+    public static String getParseUrl(String id, int videoUrlType) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("https://v.qq.com/x/cover/").append(id).append(".html");
+        if (videoUrlType == VideoUtil.VIDEO_URL_TYPE_QQ) {
+            stringBuilder.append("https://v.qq.com/x/cover/").append(id).append(".html");
+        } else {
+            //        http://m.bt361.cn/vod/detail/id/79618/
+            stringBuilder.append("http://m.bt361.cn/vod/detail/id/").append(id).append("/");
+        }
         //        "https://v.qq.com/x/cover/h0meep6p766jgqh.html"
         return stringBuilder.toString();
     }
@@ -93,5 +78,21 @@ public class VideoUtil {
         //        https://v.qq.com/detail/b/bojb6fxtqh2ekw0.html
         StringBuilder stringBuilder = new StringBuilder("https://v.qq.com/detail/b/").append(id).append(".html");
         return stringBuilder.toString();
+    }
+
+    public static int getVideoVersion(int videoType) {
+        if (videoType == 10) {
+            return 20340;
+        } else {
+            return 10000;
+        }
+    }
+
+    public static int getSourceType(int videoType) {
+        if (videoType == 10) {
+            return 3;
+        } else {
+            return 1;
+        }
     }
 }
