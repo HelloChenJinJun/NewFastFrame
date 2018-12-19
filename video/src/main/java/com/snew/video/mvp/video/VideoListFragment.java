@@ -86,14 +86,14 @@ public class VideoListFragment extends VideoBaseFragment<List<VideoBean>, VideoP
         display.setAdapter(mVideoAdapter);
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);
-        mVideoAdapter.setOnItemClickListener((view, url) -> {
-            if (url.contains(VideoUtil.BASE_VIDEO_URL)) {
-                presenter.getDetailData(url);
-                return false;
-            } else {
-                return true;
-            }
-        });
+//        mVideoAdapter.setOnItemClickListener((view, url,isSwitch) -> {
+//            if (url.contains(VideoUtil.BASE_VIDEO_URL)) {
+//                presenter.getDetailData(url,isSwitch);
+//                return false;
+//            } else {
+//                return true;
+//            }
+//        });
     }
 
 

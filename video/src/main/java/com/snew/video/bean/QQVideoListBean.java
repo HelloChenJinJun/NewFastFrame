@@ -186,6 +186,7 @@ public class QQVideoListBean {
             public int getRetcode() {
                 return retcode;
             }
+            //            http://v.qq.com/detail/8/80464.html
 
             public void setRetcode(int retcode) {
                 this.retcode = retcode;
@@ -222,12 +223,197 @@ public class QQVideoListBean {
                  * web20_imgtag : {"tag_1":{"id":"-1","param":"","param2":"","text":""},"tag_2":{"id":"20009","param":"http://i.gtimg.cn/qqlive/images/mark/mark_1.png","param2":"","text":"独播"},"tag_3":{"id":"-1","param":"","param2":"","text":""},"tag_4":{"id":"40003","param":"mark_sd","param2":"","text":"蓝光"}}
                  */
 
+
+                public static class ColumnInfo {
+
+
+                    /**
+                     * column_id : 81361
+                     * columnview : {"c_allnumc":25483185,"c_allnumc_m":25483185,"c_column_id":81361,"c_tdnumc":102591,"c_tdnumc_m":102591,"c_ydnumc":2055528,"c_ydnumc_m":2124804}
+                     * description : 《吐槽大会吃瓜版》将选取每期《吐槽大会》中最为精彩且经过较少剪辑的脱口秀表演，并将画面一分为五，其中一格播放脱口秀表演，剩余4格将分别播放剩余嘉宾的实时反应。观众可以同时欣赏最精彩的脱口秀表演和4位主要嘉宾、脱口秀演员的实时反应，犹如身在现场，方便观众进行精准观察、微表情分析、多次对比回看，发现《吐槽大会》中更多的隐藏乐趣。
+                     * hide_flag : 0
+                     * hori_pic2_url : http://i.gtimg.cn/qqlive/images/newcolumn/v2/5/5i85rj.jpg
+                     * hori_pic_url : http://i.gtimg.cn/qqlive/images/newcolumn/v0/5/5i85rj.jpg
+                     * last_cover : 901velcushp2oqh
+                     * title : 吐槽大会吃瓜版
+                     * type : 10
+                     * vert_pic_url : http://i.gtimg.cn/qqlive/images/newcolumn/v1/5/5i85rj.jpg
+                     */
+
+                    private String column_id;
+                    private ColumnviewBean columnview;
+                    private String description;
+                    private int hide_flag;
+                    private String hori_pic2_url;
+                    private String hori_pic_url;
+                    private String last_cover;
+                    private String title;
+                    private int type;
+                    private String vert_pic_url;
+
+                    public String getColumn_id() {
+                        return column_id;
+                    }
+
+                    public void setColumn_id(String column_id) {
+                        this.column_id = column_id;
+                    }
+
+                    public ColumnviewBean getColumnview() {
+                        return columnview;
+                    }
+
+                    public void setColumnview(ColumnviewBean columnview) {
+                        this.columnview = columnview;
+                    }
+
+                    public String getDescription() {
+                        return description;
+                    }
+
+                    public void setDescription(String description) {
+                        this.description = description;
+                    }
+
+                    public int getHide_flag() {
+                        return hide_flag;
+                    }
+
+                    public void setHide_flag(int hide_flag) {
+                        this.hide_flag = hide_flag;
+                    }
+
+                    public String getHori_pic2_url() {
+                        return hori_pic2_url;
+                    }
+
+                    public void setHori_pic2_url(String hori_pic2_url) {
+                        this.hori_pic2_url = hori_pic2_url;
+                    }
+
+                    public String getHori_pic_url() {
+                        return hori_pic_url;
+                    }
+
+                    public void setHori_pic_url(String hori_pic_url) {
+                        this.hori_pic_url = hori_pic_url;
+                    }
+
+                    public String getLast_cover() {
+                        return last_cover;
+                    }
+
+                    public void setLast_cover(String last_cover) {
+                        this.last_cover = last_cover;
+                    }
+
+                    public String getTitle() {
+                        return title;
+                    }
+
+                    public void setTitle(String title) {
+                        this.title = title;
+                    }
+
+                    public int getType() {
+                        return type;
+                    }
+
+                    public void setType(int type) {
+                        this.type = type;
+                    }
+
+                    public String getVert_pic_url() {
+                        return vert_pic_url;
+                    }
+
+                    public void setVert_pic_url(String vert_pic_url) {
+                        this.vert_pic_url = vert_pic_url;
+                    }
+
+                    public static class ColumnviewBean {
+                        /**
+                         * c_allnumc : 25483185
+                         * c_allnumc_m : 25483185
+                         * c_column_id : 81361
+                         * c_tdnumc : 102591
+                         * c_tdnumc_m : 102591
+                         * c_ydnumc : 2055528
+                         * c_ydnumc_m : 2124804
+                         */
+
+                        private int c_allnumc;
+                        private int c_allnumc_m;
+                        private int c_column_id;
+                        private int c_tdnumc;
+                        private int c_tdnumc_m;
+                        private int c_ydnumc;
+                        private int c_ydnumc_m;
+
+                        public int getC_allnumc() {
+                            return c_allnumc;
+                        }
+
+                        public void setC_allnumc(int c_allnumc) {
+                            this.c_allnumc = c_allnumc;
+                        }
+
+                        public int getC_allnumc_m() {
+                            return c_allnumc_m;
+                        }
+
+                        public void setC_allnumc_m(int c_allnumc_m) {
+                            this.c_allnumc_m = c_allnumc_m;
+                        }
+
+                        public int getC_column_id() {
+                            return c_column_id;
+                        }
+
+                        public void setC_column_id(int c_column_id) {
+                            this.c_column_id = c_column_id;
+                        }
+
+                        public int getC_tdnumc() {
+                            return c_tdnumc;
+                        }
+
+                        public void setC_tdnumc(int c_tdnumc) {
+                            this.c_tdnumc = c_tdnumc;
+                        }
+
+                        public int getC_tdnumc_m() {
+                            return c_tdnumc_m;
+                        }
+
+                        public void setC_tdnumc_m(int c_tdnumc_m) {
+                            this.c_tdnumc_m = c_tdnumc_m;
+                        }
+
+                        public int getC_ydnumc() {
+                            return c_ydnumc;
+                        }
+
+                        public void setC_ydnumc(int c_ydnumc) {
+                            this.c_ydnumc = c_ydnumc;
+                        }
+
+                        public int getC_ydnumc_m() {
+                            return c_ydnumc_m;
+                        }
+
+                        public void setC_ydnumc_m(int c_ydnumc_m) {
+                            this.c_ydnumc_m = c_ydnumc_m;
+                        }
+                    }
+                }
+
                 private Object average_score;
                 private double c_hlw_score;
                 private String c_title;
                 private Object cartoon_aspect;
                 private Object cartoon_genre;
-                private Object column_info;
+                private String column_info;
                 private int cover_checkup_grade;
                 private String cover_id;
                 private String horizontal_pic_url;
@@ -290,11 +476,11 @@ public class QQVideoListBean {
                     this.cartoon_genre = cartoon_genre;
                 }
 
-                public Object getColumn_info() {
+                public String getColumn_info() {
                     return column_info;
                 }
 
-                public void setColumn_info(Object column_info) {
+                public void setColumn_info(String column_info) {
                     this.column_info = column_info;
                 }
 

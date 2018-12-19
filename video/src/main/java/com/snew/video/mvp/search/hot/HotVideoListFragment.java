@@ -73,8 +73,8 @@ public class HotVideoListFragment extends VideoBaseFragment {
             @Override
             public void onItemClick(int position, View view) {
                 HotVideoItemBean hotVideoItemBean = mHotVideoAdapter.getData(position);
-                VideoBean videoBean = new VideoBean(hotVideoItemBean.getTitle(), VideoUtil.getParseUrl(hotVideoItemBean.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
-                QQVideoDetailActivity.start(getActivity(), videoBean);
+                VideoBean videoBean = new VideoBean(hotVideoItemBean.getTitle(), hotVideoItemBean.getUrl());
+                QQVideoDetailActivity.start(getActivity(), videoBean, hotVideoItemBean.getId());
             }
         });
     }

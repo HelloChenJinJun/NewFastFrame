@@ -14,12 +14,7 @@ import com.snew.video.bean.VideoBean;
  */
 public class VideoAdapter extends BaseRecyclerAdapter<VideoBean, BaseWrappedViewHolder> {
 
-    private DefaultVideoController.OnItemClickListener mOnItemClickListener;
 
-
-    public void setOnItemClickListener(DefaultVideoController.OnItemClickListener onItemClickListener) {
-        mOnItemClickListener = onItemClickListener;
-    }
 
     @Override
     protected int getLayoutId() {
@@ -32,7 +27,6 @@ public class VideoAdapter extends BaseRecyclerAdapter<VideoBean, BaseWrappedView
         defaultVideoPlayer.setTitle(data.getTitle()).setClarity(data.getClarities())
                 .setImageCover(data.getImageCover())
                 .setUp(data.getUrl(), data.getHeaders());
-        ((DefaultVideoController) defaultVideoPlayer.getController()).setOnItemClickListener(mOnItemClickListener);
     }
 
 

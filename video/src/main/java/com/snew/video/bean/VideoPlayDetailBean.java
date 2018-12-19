@@ -16,6 +16,27 @@ public class VideoPlayDetailBean {
     private String desc;
     private List<VideoPlayPerson> mVideoPlayPeople;
 
+    private List<String> subTitleList;
+
+    public List<String> getSubTitleList() {
+        return subTitleList;
+    }
+
+
+    public void setSubTitleList(List<String> subTitleList) {
+        this.subTitleList = subTitleList;
+    }
+
+    private List<VarietyVideoDetailBean> mVarietyVideoDetailBeans;
+
+
+    public List<VarietyVideoDetailBean> getVarietyVideoDetailBeans() {
+        return mVarietyVideoDetailBeans;
+    }
+
+    public void setVarietyVideoDetailBeans(List<VarietyVideoDetailBean> varietyVideoDetailBeans) {
+        mVarietyVideoDetailBeans = varietyVideoDetailBeans;
+    }
 
     private String score;
 
@@ -26,7 +47,6 @@ public class VideoPlayDetailBean {
     public void setScore(String score) {
         this.score = score;
     }
-
 
 
     public void setVideoType(int videoType) {
@@ -94,6 +114,17 @@ public class VideoPlayDetailBean {
 
         private String detail;
 
+
+        private String url;
+
+        public String getUrl() {
+            return url;
+        }
+
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
 
         public String getDetail() {
             return detail;

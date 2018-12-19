@@ -1,6 +1,7 @@
 package com.snew.video.api;
 
 import com.snew.video.bean.HotVideoBean;
+import com.snew.video.bean.OtherVideoDetailBean;
 import com.snew.video.bean.QQTVVideoDetailBean;
 import com.snew.video.bean.QQVideoDetailBean;
 import com.snew.video.bean.VideoDetailBean;
@@ -59,4 +60,11 @@ public interface VideoApi {
 
     @GET
     Observable<ResponseBody> searchVideo(@Url String url);
+
+
+    @POST
+    Observable<OtherVideoDetailBean> postBaiYuUrl(@Url String url, @Body RequestBody requestBody);
+
+    @GET
+    Observable<ResponseBody> getVarietyDetailInfo(@Url String url);
 }

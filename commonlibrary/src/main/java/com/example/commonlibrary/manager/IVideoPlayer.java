@@ -15,6 +15,9 @@ public interface IVideoPlayer {
     IVideoPlayer setUp(String url, Map<String, String> headers);
 
 
+    public void setState(int state);
+
+
     void start();
 
 

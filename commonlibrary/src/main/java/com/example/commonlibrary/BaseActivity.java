@@ -351,7 +351,7 @@ public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppComp
             return;
         }
         if (currentFragment == null) {
-            getSupportFragmentManager().beginTransaction().add(resId, fragment).show(fragment).commitAllowingStateLoss();
+            getSupportFragmentManager().beginTransaction().add(fragmentContainerResId, fragment).show(fragment).commitAllowingStateLoss();
             currentFragment = fragment;
         } else if (currentFragment != fragment) {
             if (fragment.isAdded()) {

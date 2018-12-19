@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
+        android:id="@+id/refresh_activity_actor_detail_info_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.example.commonlibrary.baseadapter.SuperRecyclerView
+            android:id="@+id/srcv_activity_actor_detail_info_display"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_activity_actor_detail_info_header"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white">
+
+
+        <ImageView
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/iv_activity_actor_detail_info_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_arrow_left" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

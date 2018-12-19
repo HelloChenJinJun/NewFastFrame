@@ -14,6 +14,7 @@
             android:id="@+id/iv_item_fragment_qq_video_list_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/grey_500"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -22,8 +23,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="3dp"
-            android:layout_marginBottom="3dp"
+            android:background="@drawable/ic_video_list_score_bg"
+            android:gravity="end|bottom"
+            android:text="9.6"
             android:textColor="@color/orange_500"
             android:textSize="12sp" />
     </RelativeLayout>
@@ -50,6 +52,7 @@
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
         android:textColor="@color/grey_500"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone" />
 
 </LinearLayout>

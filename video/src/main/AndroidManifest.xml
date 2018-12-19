@@ -25,8 +25,10 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".mvp.qq.detail.QQVideoDetailActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
         <activity android:name=".mvp.search.SearchVideoActivity" />
+        <activity android:name=".mvp.actor.ActorDetailInfoActivity" />
     </application>
 
 </manifest>

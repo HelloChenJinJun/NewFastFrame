@@ -162,6 +162,7 @@ public class DefaultVideoController extends VideoController implements View.OnCl
         clarityDisplay = view.findViewById(R.id.srcv_view_video_control_clarity);
         clarityDisplay.setLayoutManager(new WrappedLinearLayoutManager(getContext()));
         clarityDisplay.addItemDecoration(new ListViewDecoration(DensityUtil.toDp(5)));
+        findViewById(R.id.tv_view_video_control_error_switch).setOnClickListener(this);
         back.setOnClickListener(this);
         screen.setOnClickListener(this);
         retry.setOnClickListener(this);
@@ -517,29 +518,40 @@ public class DefaultVideoController extends VideoController implements View.OnCl
             } else {
                 ToastUtils.showShortToast("网络连接失败，请检查网络配置");
             }
+        } else if (id == R.id.tv_view_video_control_error_switch) {
+            if (AppUtil.isNetworkAvailable()) {
+                if (mOnSwitchUrlListener != null) {
+                    isSwitch = !isSwitch;
+                    mOnSwitchUrlListener.onSwitchUrl(isSwitch);
+                }
+            } else {
+                ToastUtils.showShortToast("网络连接失败，请检查网络配置");
+            }
         }
+    }
+
+
+    private boolean isSwitch = false;
+
+    public boolean isSwitchUrl() {
+        return isSwitch;
+    }
+
+    public interface onSwitchUrlListener {
+        public boolean onSwitchUrl(boolean isSwitch);
+    }
+
+
+    private onSwitchUrlListener mOnSwitchUrlListener;
+
+    public void setOnSwitchUrlListener(onSwitchUrlListener onSwitchUrlListener) {
+        mOnSwitchUrlListener = onSwitchUrlListener;
     }
 
     public ImageView getImageCover() {
         return bg;
     }
 
-
-    public interface OnItemClickListener {
-        boolean onStartClick(View view, String url);
-    }
-
-
-    private OnItemClickListener mOnItemClickListener;
-
-
-    public OnItemClickListener getOnItemClickListener() {
-        return mOnItemClickListener;
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        mOnItemClickListener = onItemClickListener;
-    }
 
     private class ClarityAdapter extends BaseRecyclerAdapter<Clarity, BaseWrappedViewHolder> {
 

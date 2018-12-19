@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:gravity="center"
     android:layout_height="wrap_content"
-    android:id="@+id/tv_item_activity_qq_video_detail_tv_title"/>
+    android:background="@color/grey_100"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:id="@+id/tv_item_activity_qq_video_detail_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textColor="@color/select_change_video_header_color" />
+
+</RelativeLayout>
 

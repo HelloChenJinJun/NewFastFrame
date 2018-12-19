@@ -2,4 +2,12 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tv_item_activity_qq_video_detail_tag"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_drawable_video_tag_bg"
+    android:gravity="center"
+    android:paddingLeft="10dp"
+    android:paddingTop="3dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="3dp"
+    android:textColor="@color/orange_500"
+    android:textSize="14sp" />

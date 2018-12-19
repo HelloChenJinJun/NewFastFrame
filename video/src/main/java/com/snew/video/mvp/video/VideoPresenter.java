@@ -104,7 +104,7 @@ public class VideoPresenter extends RxBasePresenter<IView<List<VideoBean>>, Defa
 
             @Override
             public void onNext(Object o) {
-                getDetailData(url);
+                getDetailData(url, false);
             }
 
             @Override
@@ -145,7 +145,7 @@ public class VideoPresenter extends RxBasePresenter<IView<List<VideoBean>>, Defa
     }
 
 
-    public void getDetailData(String url) {
+    public void getDetailData(String url, boolean isSwitch) {
         boolean needGetCookie = BaseApplication.getAppComponent().getSharedPreferences()
                 .getString(VideoUtil.GSP, null) == null;
         if (needGetCookie) {

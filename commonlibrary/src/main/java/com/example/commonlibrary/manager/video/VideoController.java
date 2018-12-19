@@ -4,9 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-
 
 import com.example.commonlibrary.manager.IVideoPlayer;
 
@@ -52,7 +52,7 @@ public abstract class VideoController extends FrameLayout implements View.OnTouc
     public VideoController(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setOnTouchListener(this);
-        //        threshold = ViewConfiguration.get(context).getScaledTouchSlop();
+        threshold = ViewConfiguration.get(context).getScaledTouchSlop();
     }
 
 
@@ -78,6 +78,7 @@ public abstract class VideoController extends FrameLayout implements View.OnTouc
             case MotionEvent.ACTION_MOVE:
                 float deltaX = Math.abs(x - downX);
                 float deltaY = Math.abs(y - downY);
+
                 if (!changePosition && !changeBrightness && !changeVolume && downY > getHeight() / 5) {
                     if (deltaY < deltaX && deltaX > threshold) {
                         changePosition = true;

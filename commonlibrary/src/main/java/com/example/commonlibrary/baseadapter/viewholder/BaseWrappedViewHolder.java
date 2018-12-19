@@ -68,9 +68,6 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
             if (listener != null) {
                 listener.onClick(v);
             }
-            if (adapter.getOnItemClickListener() != null) {
-                adapter.getOnItemClickListener().onItemClick(getAdapterPosition() - adapter.getItemUpCount(), v);
-            }
         });
         return this;
     }
@@ -104,9 +101,7 @@ public class BaseWrappedViewHolder extends RecyclerView.ViewHolder {
                 if (listener != null) {
                     listener.onClick(v);
                 }
-                if (adapter.getOnItemClickListener() != null) {
-                    adapter.getOnItemClickListener().onItemChildClick(getAdapterPosition() - adapter.getItemUpCount(), v, v.getId());
-                }
+
             });
         }
         return this;

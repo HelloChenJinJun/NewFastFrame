@@ -120,7 +120,14 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
             public void onItemClick(int position, View view) {
                 QQVideoListBean.JsonvalueBean.ResultsBean resultsBean = mVideoAdapter.getData(position);
                 VideoBean videoBean = new VideoBean(resultsBean.getFields().getTitle(), resultsBean.getFields().getHorizontal_pic_url(), VideoUtil.getParseUrl(resultsBean.getId(), videoUrlType));
-                QQVideoDetailActivity.start(getActivity(), videoBean);
+                String id;
+                if (resultsBean.getFields().getColumn_info() != null) {
+                    QQVideoListBean.JsonvalueBean.ResultsBean.FieldsBean.ColumnInfo columnInfo = getAppComponent().getGson().fromJson(resultsBean.getFields().getColumn_info(), QQVideoListBean.JsonvalueBean.ResultsBean.FieldsBean.ColumnInfo.class);
+                    id = columnInfo.getColumn_id();
+                } else {
+                    id = resultsBean.getId();
+                }
+                QQVideoDetailActivity.start(getActivity(), videoBean, id);
             }
         });
 
@@ -173,19 +180,27 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
                 if ("地区".equals(bean.getDisplay_name())) {
                     if (areas.equals(item.getDisplay_name())) {
                         return;
+                    } else {
+                        areas = item.getDisplay_name();
                     }
                 } else if ("分类".equals(bean.getDisplay_name())) {
-                    if (classify.equals(bean.getDisplay_name())) {
+                    if (classify.equals(item.getDisplay_name())) {
                         return;
+                    } else {
+                        classify = item.getDisplay_name();
                     }
 
                 } else if ("年代".equals(bean.getDisplay_name())) {
-                    if (years.equals(bean.getDisplay_name())) {
+                    if (years.equals(item.getDisplay_name())) {
                         return;
+                    } else {
+                        years = item.getDisplay_name();
                     }
                 } else {
-                    if (sorts.equals(bean.getDisplay_name())) {
+                    if (sorts.equals(item.getDisplay_name())) {
                         return;
+                    } else {
+                        sorts = item.getDisplay_name();
                     }
                 }
             }

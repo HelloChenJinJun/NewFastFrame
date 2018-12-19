@@ -30,6 +30,15 @@ public class VideoHeaderViewHolder extends BaseWrappedViewHolder {
 
     VideoListHeaderAdapter bindData(QQVideoTabListBean.IndexBean data) {
         VideoListHeaderAdapter videoListHeaderAdapter = new VideoListHeaderAdapter();
+        if (data != null && data.getOption() != null && data.getOption().size() > 0) {
+            for (int i = 0; i < data.getOption().size(); i++) {
+                String itemId = data.getOption().get(i).getValue();
+                if (Integer.parseInt(itemId) == data.getDefault_value()) {
+                    videoListHeaderAdapter.setCurrentPosition(i);
+                    break;
+                }
+            }
+        }
         display.setAdapter(videoListHeaderAdapter);
         videoListHeaderAdapter.refreshData(data.getOption());
         return videoListHeaderAdapter;

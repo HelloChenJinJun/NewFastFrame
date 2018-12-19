@@ -32,7 +32,6 @@ public class ToolBarOption {
         private View customView;
 
 
-
         private int titleColor=-10;
         private int mBackResId;
 

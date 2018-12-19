@@ -127,14 +127,16 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     }
 
     @Override
+    public void setState(int state) {
+        if (mState != state) {
+            mState = state;
+            mVideoController.onPlayStateChanged(mState);
+        }
+    }
+
+    @Override
     public void start() {
         ListVideoManager.getInstance().setCurrentPlayer(this);
-        if (((DefaultVideoController) mVideoController).getOnItemClickListener() != null
-                && !((DefaultVideoController) mVideoController).getOnItemClickListener().onStartClick(null, url)) {
-            mState = PLAY_STATE_PREPARING;
-            mVideoController.onPlayStateChanged(mState);
-            return;
-        }
         if (mState == PLAY_STATE_IDLE || mState == PLAY_STATE_PREPARING) {
             initMediaPlayer();
             initAudioManager();
@@ -484,6 +486,10 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
             switchMediaPlayer();
             return true;
         }
+
+        if (what == 1 && extra == -1004) {
+            return true;
+        }
         mState = PLAY_STATE_ERROR;
         mVideoController.onPlayStateChanged(mState);
         CommonLogger.e("视频播放出错 ———— what：" + what + "extra " + extra);
@@ -514,5 +520,12 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int width, int height, int sar_num, int sar_den) {
         CommonLogger.e("width:::" + width + "height:::" + height);
         defaultTextureView.adaptVideoSize(width, height);
+    }
+
+
+    private boolean isSwitch = false;
+
+    public void setSwitchFlag(boolean isSwitch) {
+        this.isSwitch = isSwitch;
     }
 }

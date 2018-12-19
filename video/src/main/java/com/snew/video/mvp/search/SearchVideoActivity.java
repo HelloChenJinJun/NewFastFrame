@@ -163,7 +163,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
                 if (id == R.id.tv_item_fragment_search_video_detail_play) {
                     SearchVideoBean.ItemBean itemBean = mSearchVideoDetailAdapter.getData(position);
                     VideoBean videoBean = new VideoBean(itemBean.getTt(), itemBean.getUrl());
-                    QQVideoDetailActivity.start(SearchVideoActivity.this, videoBean);
+                    QQVideoDetailActivity.start(SearchVideoActivity.this, videoBean, itemBean.getId());
                 }
             }
         });

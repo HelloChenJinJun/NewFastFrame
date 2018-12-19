@@ -2,8 +2,10 @@ package com.snew.video.dagger.qq.detail;
 
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.snew.video.adapter.VideoPersonAdapter;
+import com.snew.video.adapter.VideoSubTitleAdapter;
 import com.snew.video.adapter.VideoTVItemAdapter;
 import com.snew.video.adapter.VideoTagAdapter;
+import com.snew.video.adapter.VideoVarietyAdapter;
 import com.snew.video.mvp.qq.detail.QQVideoDetailActivity;
 import com.snew.video.mvp.qq.detail.QQVideoDetailPresenter;
 
@@ -32,6 +34,18 @@ public class QQVideoDetailModule {
     @Provides
     public VideoTVItemAdapter provideTVAdapter() {
         return new VideoTVItemAdapter();
+    }
+
+
+    @Provides
+    public VideoVarietyAdapter provideAdapter() {
+        return new VideoVarietyAdapter();
+    }
+
+
+    @Provides
+    public VideoSubTitleAdapter provideSubTilteAdapter() {
+        return new VideoSubTitleAdapter();
     }
 
     @Provides

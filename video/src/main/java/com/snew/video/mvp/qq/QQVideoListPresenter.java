@@ -115,16 +115,7 @@ public class QQVideoListPresenter extends RxBasePresenter<IView<BaseBean>, Defau
         //        href="/index.php/vod/show/by/hits/class/%E7%BD%91%E7%BB%9C%E7%94%B5%E5%BD%B1/id/1/"
         //        index.php/vod/show/area/%E9%A6%99%E6%B8%AF/by/hits/id/1/"
         //        /index.php/vod/show/by/hits/id/1/year/2011/"
-        StringBuilder stringBuilder = new StringBuilder("http://m.tbb361.com/index.php/vod.show");
-        if (!classify.equals("全部")) {
-            stringBuilder.append("/class/").append(classify);
-        }
-        if (!area.equals("全部")) {
-            stringBuilder.append("/area/").append(area);
-        }
-        if (!year.equals("全部")) {
-            stringBuilder.append("/year/").append(year);
-        }
+        StringBuilder stringBuilder = new StringBuilder("http://m.bt361.cn/vod/show");
         stringBuilder.append("/by/");
         switch (sort) {
             case "按时间":
@@ -137,6 +128,16 @@ public class QQVideoListPresenter extends RxBasePresenter<IView<BaseBean>, Defau
                 stringBuilder.append("score");
                 break;
         }
+        if (!classify.equals("全部")) {
+            stringBuilder.append("/class/").append(classify);
+        }
+        if (!area.equals("全部")) {
+            stringBuilder.append("/area/").append(area);
+        }
+        if (!year.equals("全部")) {
+            stringBuilder.append("/year/").append(year);
+        }
+
         stringBuilder.append("/id/").append(videoType);
 
         if (page > 1) {
@@ -156,7 +157,10 @@ public class QQVideoListPresenter extends RxBasePresenter<IView<BaseBean>, Defau
                             String id = link.substring(link.indexOf("id/") + 3, link.length() - 1);
                             String imageCover = a.get(0).attr("data-original");
                             String title = a.get(1).text();
-                            String subTitle = item.select(".video-duration").get(0).text();
+                            String subTitle = null;
+                            if (item.select(".video-duration").first() != null) {
+                                subTitle = item.select(".video-duration").first().text();
+                            }
                             QQVideoListBean.JsonvalueBean.ResultsBean bean = new QQVideoListBean.JsonvalueBean.ResultsBean();
                             QQVideoListBean.JsonvalueBean.ResultsBean.FieldsBean fieldsBean = new QQVideoListBean.JsonvalueBean.ResultsBean.FieldsBean();
                             fieldsBean.setTitle(title);

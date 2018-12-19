@@ -43,9 +43,8 @@ public class MainActivity extends VideoBaseActivity {
 
     @Override
     protected void initData() {
-        addOrReplaceFragment(QQVideoFragment.newInstance(VideoUtil.VIDEO_URL_TYPE_UPDATE), R.id.fl_activity_video_container);
+        addOrReplaceFragment(QQVideoFragment.newInstance(VideoUtil.VIDEO_URL_TYPE_QQ), R.id.fl_activity_video_container);
         //        addOrReplaceFragment(UpdateVideoFragment.newInstance(), R.id.fl_activity_video_container);
-
     }
 
     @Override

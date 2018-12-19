@@ -7,15 +7,16 @@
 
     <com.example.commonlibrary.cusotomview.RoundAngleImageView
         android:id="@+id/riv_item_activity_qq_video_detail_person_avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
 
 
     <TextView
+        android:textSize="14sp"
         android:id="@+id/tv_item_activity_qq_video_detail_person_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:textColor="@color/black" />
 
 </LinearLayout>

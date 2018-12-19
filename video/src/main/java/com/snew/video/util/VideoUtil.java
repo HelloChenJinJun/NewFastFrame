@@ -31,6 +31,9 @@ public class VideoUtil {
     public static final String VIDEO_URL_TYPE = "video_url_type";
     public static final int VIDEO_URL_TYPE_QQ = 20;
     public static final int VIDEO_URL_TYPE_UPDATE = 21;
+    public static final int BASE_TYPE_VIDEO_DETAIL_URL = 21;
+    public static final String VIDEO_ID = "video_id";
+    public static final int BASE_TYPE_ACTOR_VIDEO_DATA = 11;
 
 
     public static String getSignedValue(String coreString) {
@@ -62,7 +65,7 @@ public class VideoUtil {
             stringBuilder.append("https://v.qq.com/x/cover/").append(id).append(".html");
         } else {
             //        http://m.bt361.cn/vod/detail/id/79618/
-            stringBuilder.append("http://m.bt361.cn/vod/detail/id/").append(id).append("/");
+            stringBuilder.append("http://m.bt361.cn/index.php/vod/detail/id/").append(id).append("/");
         }
         //        "https://v.qq.com/x/cover/h0meep6p766jgqh.html"
         return stringBuilder.toString();
@@ -76,8 +79,14 @@ public class VideoUtil {
 
     public static String getVideoDetailUrl(String id) {
         //        https://v.qq.com/detail/b/bojb6fxtqh2ekw0.html
-        StringBuilder stringBuilder = new StringBuilder("https://v.qq.com/detail/b/").append(id).append(".html");
-        return stringBuilder.toString();
+
+        try {
+            Integer.parseInt(id);
+            return getVideoVarietyDetailUrl(id);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return new StringBuilder("https://v.qq.com/detail/b/").append(id).append(".html").toString();
+        }
     }
 
     public static int getVideoVersion(int videoType) {
@@ -94,5 +103,11 @@ public class VideoUtil {
         } else {
             return 1;
         }
+    }
+
+    public static String getVideoVarietyDetailUrl(String id) {
+        //        http://v.qq.com/detail/8/80464.html
+        StringBuilder stringBuilder = new StringBuilder("http://v.qq.com/detail/8/").append(id).append(".html");
+        return stringBuilder.toString();
     }
 }

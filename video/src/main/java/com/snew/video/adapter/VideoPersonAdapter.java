@@ -19,6 +19,7 @@ public class VideoPersonAdapter extends BaseRecyclerAdapter<VideoPlayDetailBean.
     @Override
     protected void convert(BaseWrappedViewHolder holder, VideoPlayDetailBean.VideoPlayPerson data) {
         holder.setText(R.id.tv_item_activity_qq_video_detail_person_title, data.getName())
-                .setImageUrl(R.id.riv_item_activity_qq_video_detail_person_avatar, data.getAvatar());
+                .setImageUrl(R.id.riv_item_activity_qq_video_detail_person_avatar, data.getAvatar())
+        .setOnItemClickListener();
     }
 }
