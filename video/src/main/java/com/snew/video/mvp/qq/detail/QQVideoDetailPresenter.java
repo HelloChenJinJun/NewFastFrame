@@ -2,7 +2,6 @@ package com.snew.video.mvp.qq.detail;
 
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.webkit.URLUtil;
 
 import com.example.commonlibrary.BaseApplication;
@@ -15,7 +14,6 @@ import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.snew.video.api.VideoApi;
 import com.snew.video.bean.NorVideoDetailBean;
-import com.snew.video.bean.OtherVideoDetailBean;
 import com.snew.video.bean.QQTVVideoDetailBean;
 import com.snew.video.bean.QQVideoDetailBean;
 import com.snew.video.bean.TVPlayBean;
@@ -29,6 +27,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,169 +53,60 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
     }
 
 
-    public void commonParseUrl(String url) {
-//http://api.bbbbbb.me/yunjx/?url=
+    public Observable<String> commonParseUrl(String url) {
+        //http://api.bbbbbb.me/yunjx/?url=
+        return Observable.just(url).subscribeOn(Schedulers.io())
+                .flatMap(new Function<String, Observable<String>>() {
+                    @Override
+                    public Observable<String> apply(String s) throws Exception {
+                        StringBuilder stringBuilder = new StringBuilder("http://api.bbbbbb.me/yunjxs/?url=").append(s);
+                        Document document = Jsoup.connect(stringBuilder.toString()).get();
+                        String content = document.outerHtml();
+                        String parseContent = VideoUtil.getMd5Value(content);
+                        StringBuilder body = new StringBuilder();
+                        body.append("id=").append(s).append("&type=auto&siteuser=&md5=").append(parseContent)
+                                .append("&hd=&lg=");
+                        RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), body.toString());
+                        return baseModel.getRepositoryManager().getApi(VideoApi.class)
+                                .postQQTVUrlInfo("http://api.bbbbbb.me/yunjxs/api.php", requestBody1)
+                                .flatMap(new Function<QQTVVideoDetailBean, Observable<String>>() {
+                                    @Override
+                                    public Observable<String> apply(QQTVVideoDetailBean qqtvVideoDetailBean) throws Exception {
+                                        String ext = qqtvVideoDetailBean.getExt();
+                                        if (ext != null && (ext.equals("mp4") || ext.equals("m3u8"))) {
+                                            return Observable.just(qqtvVideoDetailBean.getUrl());
+                                        } else if (ext != null && ext.equals("link")) {
+                                            String realUrl = qqtvVideoDetailBean.getUrl().substring(qqtvVideoDetailBean.getUrl().indexOf("url=") + 4);
 
-
-//
-//        Observable.just(url).subscribeOn(Schedulers.io())
-//                .map(new Function<String, Object>() {
-//                    @Override
-//                    public Object apply(String s) throws Exception {
-//                        return null;
-//                    }
-//                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Object>() {
-//            @Override
-//            public void onSubscribe(Disposable d) {
-//
-//            }
-//
-//            @Override
-//            public void onNext(Object o) {
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onComplete() {
-//
-//            }
-//        });
-//        StringBuilder stringBuilder=new StringBuilder("http://api.bbbbbb.me/yunjx/?url=").append(url);
-//        baseModel.getRepositoryManager().getApi(VideoApi.class)
-//                .postUrlInfo(stringBuilder.toString())
-
-
+                                            return commonParseUrl(realUrl);
+                                        }
+                                        return null;
+                                    }
+                                })
+                                .subscribeOn(Schedulers.io());
+                    }
+                });
     }
 
 
-    public void getDetailData(String url, boolean isSwitch) {
-        if (url.startsWith("http://m.bt361.cn")) {
-            getUpdateDetailData(url);
-            return;
-        }
-
-        if (isSwitch) {
-            getDetailDataForOther(url);
-            return;
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), "url=" + url);
-        baseModel.getRepositoryManager().getApi(VideoApi.class)
-                .postUrlInfo("http://api.bbbbbb.me/zy/api.php", requestBody).subscribeOn(Schedulers.io())
-                .flatMap(qqVideoDetailBean -> {
-                    if (qqVideoDetailBean.getCode() == 0) {
-                        Uri uri;
-                        String key;
-                        String type;
-                        String cid;
-                        if (URLUtil.isValidUrl(qqVideoDetailBean.getUrl())) {
-                            uri = Uri.parse(qqVideoDetailBean.getUrl());
-                            key = uri.getQueryParameter("url");
-                            type = uri.getQueryParameter("type");
-                            cid = uri.getQueryParameter("cid");
-                        } else {
-                            return Observable.just(qqVideoDetailBean);
-                        }
-                        if (qqVideoDetailBean.getPlay().equals("url")) {
-                            if (key.contains(".m3u8") || key.contains(".mp4")) {
-                                if (!qqVideoDetailBean.getUrl().startsWith("http")) {
-                                    qqVideoDetailBean.setUrl(key);
-                                }
-
-                            } else if ("qqmtv".equals(type)) {
-                                String content = Jsoup.connect(qqVideoDetailBean.getUrl()).get().outerHtml();
-                                String s = "\"\\x24\\x28\\x27\\x23\\x68\\x64\\x4d\\x64\\x35\\x27\\x29\\x2e\\x76\\x61\\x6c\\x28\\x27\\x63\\x34\\x35\\x36\\x30\\x62\\x34\\x35\\x38\\x33\\x62\\x39\\x30\\x65\\x35\\x39\\x36\\x36\\x34\\x37\\x35\\x36\\x31\\x34\\x66\\x35\\x35\\x38\\x30\\x61\\x34\\x34\\x27\\x29\\x3b\"";
-                                String start = "eval(";
-                                int index = content.indexOf(start);
-                                String coreString = content.substring(index + start.length(), index + start.length() + s.length());
-                                String parseContent = VideoUtil.getSignedValue(coreString);
-                                CommonLogger.e("parseContent" + parseContent);
-                                StringBuilder stringBuilder = new StringBuilder();
-                                stringBuilder.append("id=").append(key).append("&type=qqmtv&siteuser=&md5=").append(parseContent)
-                                        .append("&hd=&lg=");
-                                RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), stringBuilder.toString());
-                                return baseModel.getRepositoryManager().getApi(VideoApi.class)
-                                        .postQQTVUrlInfo(VideoUtil.QQ_TV_URL, requestBody1).subscribeOn(Schedulers.io());
-                            } else if (key.endsWith("html") || key.contains(".jsp") || !TextUtils.isEmpty(cid)) {
-                                String realUrl;
-                                if (qqVideoDetailBean.getUrl().startsWith("https://api.bbbbbb.me")) {
-                                    realUrl = qqVideoDetailBean.getUrl();
-                                    if (TextUtils.isEmpty(uri.getQueryParameter("type"))) {
-                                        realUrl += "&type=";
-                                    }
-                                } else {
-                                    realUrl = key;
-                                }
-                                CommonLogger.e("realUrl:" + realUrl);
-                                String content = Jsoup.connect(realUrl).header("referer", qqVideoDetailBean.getUrl()).get().outerHtml();
-                                String s = "\"\\x24\\x28\\x27\\x23\\x68\\x64\\x4d\\x64\\x35\\x27\\x29\\x2e\\x76\\x61\\x6c\\x28\\x27\\x63\\x34\\x35\\x36\\x30\\x62\\x34\\x35\\x38\\x33\\x62\\x39\\x30\\x65\\x35\\x39\\x36\\x36\\x34\\x37\\x35\\x36\\x31\\x34\\x66\\x35\\x35\\x38\\x30\\x61\\x34\\x34\\x27\\x29\\x3b\"";
-                                String start = "eval(";
-                                int index = content.indexOf(start);
-                                String coreString = content.substring(index + start.length(), index + start.length() + s.length());
-                                String parseContent = VideoUtil.getSignedValue(coreString);
-                                CommonLogger.e("parseContent" + parseContent);
-                                StringBuilder stringBuilder = new StringBuilder();
-                                stringBuilder.append("id=").append(key).append("&type=auto&siteuser=&md5=").append(parseContent)
-                                        .append("&hd=&lg=");
-                                RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), stringBuilder.toString());
-                                return baseModel.getRepositoryManager().getApi(VideoApi.class)
-                                        .postQQTVUrlInfo("http://api.bbbbbb.me/yunjx2/api.php", requestBody1).subscribeOn(Schedulers.io());
-                            }
-                        } else if (qqVideoDetailBean.getPlay().equals("normal") || qqVideoDetailBean.getPlay().equals("hls")) {
-
-                        }
-                    }
-                    return Observable.just(qqVideoDetailBean);
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Object>() {
+    public void getData(String url) {
+        commonParseUrl(url).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         addDispose(d);
                     }
 
                     @Override
-                    public void onNext(Object object) {
-                        if (object instanceof QQVideoDetailBean) {
-                            QQVideoDetailBean qqVideoDetailBean = (QQVideoDetailBean) object;
-                            CommonLogger.e(qqVideoDetailBean.toString());
-                            String deocderUrl = URLDecoder.decode(qqVideoDetailBean.getUrl());
-                            if (!URLUtil.isValidUrl(deocderUrl) && deocderUrl.endsWith(".m3u8")) {
-                                deocderUrl = deocderUrl.substring(deocderUrl.indexOf("url=") + 4, deocderUrl.length());
-                            }
-                            CommonLogger.e("deocderUrl:" + deocderUrl);
-                            if (!deocderUrl.startsWith("http://api.bbbbbb.me") && URLUtil.isValidUrl(deocderUrl)) {
-                                BaseBean baseBean = new BaseBean();
-                                baseBean.setType(VideoUtil.BASE_TYPE_VIDEO_DETAIL_URL);
-                                baseBean.setData(deocderUrl);
-                                //                                用于标识当前请求的url
-                                baseBean.setExtraInfo(url);
-                                baseBean.setCode(200);
-                                iView.updateData(baseBean);
-                            } else {
-                                getDetailDataForOther(url);
-                            }
-                        } else if (object instanceof QQTVVideoDetailBean) {
-                            QQTVVideoDetailBean qqtvVideoDetailBean = (QQTVVideoDetailBean) object;
-                            CommonLogger.e(qqtvVideoDetailBean.toString());
-                            String deocderUrl = URLDecoder.decode(qqtvVideoDetailBean.getUrl());
-                            CommonLogger.e("deocderUrl:" + deocderUrl);
-                            if (!deocderUrl.startsWith("http://api.bbbbbb.me") && URLUtil.isValidUrl(deocderUrl)) {
-                                BaseBean baseBean = new BaseBean();
-                                baseBean.setType(VideoUtil.BASE_TYPE_VIDEO_DETAIL_URL);
-                                baseBean.setData(deocderUrl);
-                                baseBean.setCode(200);
-                                baseBean.setExtraInfo(url);
-                                iView.updateData(baseBean);
-                            } else {
-                                getDetailDataForOther(url);
-                            }
-                        }
-
+                    public void onNext(String s) {
+                        String decoderUrl = URLDecoder.decode(s);
+                        BaseBean baseBean = new BaseBean();
+                        baseBean.setType(VideoUtil.BASE_TYPE_VIDEO_DETAIL_URL);
+                        baseBean.setData(decoderUrl);
+                        //                                用于标识当前请求的url
+                        baseBean.setExtraInfo(url);
+                        baseBean.setCode(200);
+                        iView.updateData(baseBean);
                     }
 
                     @Override
@@ -229,7 +119,129 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
                         iView.hideLoading();
                     }
                 });
+    }
 
+
+    public void getDetailData(String url, boolean isSwitch) {
+        if (url.startsWith("http://m.bt361.cn")) {
+            getUpdateDetailData(url);
+            return;
+        }
+        Observable<String> observable;
+        if (isSwitch) {
+            observable = getDetailDataForTwo(url);
+        } else {
+            observable = getDetailDataForOne(url);
+        }
+        observable.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDispose(d);
+                    }
+
+                    @Override
+                    public void onNext(String string) {
+                        CommonLogger.e("最终url" + string);
+                        BaseBean baseBean = new BaseBean();
+                        baseBean.setType(VideoUtil.BASE_TYPE_VIDEO_DETAIL_URL);
+                        if (string != null) {
+                            string = URLDecoder.decode(string);
+                        }
+                        baseBean.setData(string);
+                        baseBean.setCode(200);
+                        baseBean.setExtraInfo(url);
+                        iView.updateData(baseBean);
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        iView.showError(e.getMessage(), null);
+                        BaseBean baseBean = new BaseBean();
+                        baseBean.setType(VideoUtil.BASE_TYPE_VIDEO_DETAIL_URL);
+                        baseBean.setCode(-1);
+                        baseBean.setExtraInfo(url);
+                        iView.updateData(baseBean);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        iView.hideLoading();
+                    }
+                });
+
+    }
+
+    private Observable<String> getDetailDataForOne(String url) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), "url=" + url);
+        return baseModel.getRepositoryManager().getApi(VideoApi.class)
+                .postUrlInfo("http://api.bbbbbb.me/zy/api.php", requestBody).subscribeOn(Schedulers.io())
+                .flatMap((Function<QQVideoDetailBean, ObservableSource<String>>) qqVideoDetailBean -> {
+                    if (qqVideoDetailBean.getCode() == 0) {
+                        String tempUrl = null;
+                        if (qqVideoDetailBean.getPlay().equals("url")) {
+                            if (URLUtil.isValidUrl(qqVideoDetailBean.getUrl())) {
+                                tempUrl = qqVideoDetailBean.getUrl();
+                            } else {
+                                tempUrl = "http://api.bbbbbb.me" + qqVideoDetailBean.getUrl();
+                            }
+                            Uri uri;
+                            String key;
+                            String type;
+                            String cid;
+                            uri = Uri.parse(tempUrl);
+                            key = uri.getQueryParameter("url");
+                            type = uri.getQueryParameter("type");
+                            cid = uri.getQueryParameter("cid");
+                            CommonLogger.e("url:" + uri.toString());
+                            if (key != null && (key.contains(".mp4") || key.contains(".m3u8"))) {
+                                return Observable.just(key);
+                            }
+
+                            String md5 = VideoUtil.getMd5Value(Jsoup.connect(tempUrl).get().outerHtml());
+                            StringBuilder body = new StringBuilder();
+                            if (tempUrl.contains("jiexi/")) {
+                                return getDetailDataForThree(url);
+                            } else if (tempUrl.contains("yunjxs")) {
+                                body.append("id=").append(key).append("&type=").append(TextUtils.isEmpty(type) ? "auto" : type).append("&siteuser=&md5=").append(md5)
+                                        .append("&hd=&lg=");
+                            } else if (tempUrl.contains("anlehe")) {
+                                return getDetailDataForThree(url);
+                            }
+                            RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), body.toString());
+                            return baseModel.getRepositoryManager().getApi(VideoApi.class)
+                                    .postUrlInfo(tempUrl.substring(0, tempUrl.indexOf("?")) + "api.php", requestBody1)
+                                    .map(qqVideoDetailBean1 -> qqVideoDetailBean1.getUrl()).subscribeOn(Schedulers.io());
+                        } else if (qqVideoDetailBean.getPlay().equals("normal")) {
+                            return Observable.just(qqVideoDetailBean.getUrl());
+                        }
+                    }
+                    return getDetailDataForThree(url);
+                });
+    }
+
+    private Observable<String> getDetailDataForTwo(String url) {
+        return Observable.just(url).subscribeOn(Schedulers.io())
+                .flatMap(new Function<String, ObservableSource<String>>() {
+                    @Override
+                    public ObservableSource<String> apply(String s) throws Exception {
+                        StringBuilder stringBuilder = new StringBuilder("http://all.baiyug.cn:2021/QQQ/index.php").append("?url=")
+                                .append(s);
+                        Document document = Jsoup.connect(stringBuilder.toString()).header("Referer", "http://app.baiyug.cn").get();
+                        String content = document.outerHtml();
+                        String start = "url:";
+                        int startIndex = content.indexOf(start);
+                        String end = "pic: pic";
+                        String url1 = content.substring(startIndex + start.length(), content.lastIndexOf(end)).trim();
+                        String realUrl = url1.substring(1, url1.length() - 2);
+                        if (URLUtil.isValidUrl(realUrl)) {
+                            return Observable.just(realUrl);
+                        } else {
+                            return getDetailDataForThree(url);
+                        }
+                    }
+                });
     }
 
     private void getUpdateDetailData(String url) {
@@ -288,73 +300,54 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
     }
 
 
-    public void getDetailDataForOther(String url) {
-        //        http://baiyug.php20.scutsource.cn/vip_cc/index.php?url=https://v.qq.com/x/cover/8uc2yffueif7n39.html
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(VideoUtil.URL_ONE).append("?url=").append(url);
-        Observable.just(stringBuilder.toString()).subscribeOn(Schedulers.io())
-                .flatMap((Function<String, ObservableSource<OtherVideoDetailBean>>) str -> {
-                    Document document = Jsoup.connect(str).header("Referer", "http://app.baiyug.cn").get();
-
-                    Elements bodyContent = document.getElementsByTag("iframe");
-                    String src = bodyContent.attr("src");
-                    String url1 = src.substring(src.indexOf("?url=") + 5, src.length() - 1);
-
-
-                    int num = 1;
-                    while (!URLUtil.isValidUrl(url1) && num < 5) {
-                        url1 = new String(Base64.decode(url1, Base64.DEFAULT));
-                        num++;
+    public Observable<String> getDetailDataForThree(String url) {
+        //       http://app.baiyug.cn:2019/vip/search/qq.php?url=https://v.qq.com/x/cover/og0eputlxwet1cn.html
+        return Observable.just(url).subscribeOn(Schedulers.io())
+                .flatMap((Function<String, ObservableSource<String>>) s -> {
+                    StringBuilder stringBuilder = new StringBuilder("http://app.baiyug.cn:2019/vip/search/qq.php").append("?url=")
+                            .append(s);
+                    Document document;
+                    try {
+                        document = Jsoup.connect(stringBuilder.toString()).header("Referer", "http://app.baiyug.cn").get();
+                        String src = document.getElementsByTag("iframe").first().attr("src");
+                        String str;
+                        if (URLUtil.isValidUrl(src)) {
+                            Uri uri = Uri.parse(src);
+                            str = uri.getQueryParameter("url");
+                        } else {
+                            str = src.substring(src.indexOf("url=") + 4);
+                        }
+                        if (str == null || str.contains("html")) {
+                            return getDetailDataForFour(url);
+                        } else {
+                            return Observable.just(str);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return getDetailDataForFour(url);
                     }
+                });
+    }
 
 
+    public Observable<String> getDetailDataForFour(String url) {
+        return Observable.just(url).subscribeOn(Schedulers.io())
+                .flatMap((Function<String, ObservableSource<String>>) s -> {
+                    StringBuilder stringBuilder = new StringBuilder("http://all.baiyug.cn:2021/QQ/index.php").append("?url=")
+                            .append(s);
+                    Document document = Jsoup.connect(stringBuilder.toString()).header("Referer", "http://app.baiyug.cn").get();
                     String content = document.outerHtml();
-
-                    String keyStart = "key\":\"";
-                    String keyEnd = "\", \"url";
-                    int keyIndex = content.indexOf(keyStart);
-                    String key;
-                    if (keyIndex > 0) {
-                        key = content.substring(keyIndex + keyStart.length(), content.indexOf(keyEnd));
+                    String start = "url:";
+                    int startIndex = content.indexOf(start);
+                    String end = "pic: pic";
+                    String url1 = content.substring(startIndex + start.length(), content.lastIndexOf(end)).trim();
+                    String realUrl = url1.substring(1, url1.length() - 2);
+                    if (URLUtil.isValidUrl(realUrl)) {
+                        return Observable.just(realUrl);
                     } else {
-                        String s = "\"\\x24\\x28\\x27\\x23\\x68\\x64\\x4d\\x64\\x35\\x27\\x29\\x2e\\x76\\x61\\x6c\\x28\\x27\\x63\\x34\\x35\\x36\\x30\\x62\\x34\\x35\\x38\\x33\\x62\\x39\\x30\\x65\\x35\\x39\\x36\\x36\\x34\\x37\\x35\\x36\\x31\\x34\\x66\\x35\\x35\\x38\\x30\\x61\\x34\\x34\\x27\\x29\\x3b\"";
-                        String start = "eval(";
-                        int index = content.lastIndexOf(start);
-                        String coreString = content.substring(index + start.length(), index + start.length() + s.length());
-                        key = VideoUtil.getSignedValue(coreString);
+                        return getDetailDataForThree(url);
                     }
-                    StringBuilder bodyInfo = new StringBuilder();
-                    bodyInfo.append("key=").append(key).append("&url=").append(url);
-                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), bodyInfo.toString());
-                    return baseModel.getRepositoryManager().getApi(VideoApi.class)
-                            .postBaiYuUrl("http://baiyug.php20.scutsource.cn/vip_cc/api.php", requestBody);
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<OtherVideoDetailBean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                addDispose(d);
-            }
-
-            @Override
-            public void onNext(OtherVideoDetailBean o) {
-
-                BaseBean baseBean = new BaseBean();
-                baseBean.setType(VideoUtil.BASE_TYPE_VIDEO_DETAIL_URL);
-                baseBean.setData(o.getUrl());
-                baseBean.setCode(200);
-                baseBean.setExtraInfo(url);
-                iView.updateData(baseBean);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                iView.showError(e.getMessage(), null);
-            }
-
-            @Override
-            public void onComplete() {
-                iView.hideLoading();
-            }
-        });
+                });
     }
 
     public void getDetailInfo(String id) {
@@ -394,7 +387,7 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
 
 
     private Observable<VideoPlayDetailBean> getNormalDetailInfo(String url, String id) {
-        StringBuilder stringBuilder = new StringBuilder("http://s.video.qq.com/get_playsource?type=4&range=1-20&otype=json&num_mod_cnt=20&id=");
+        StringBuilder stringBuilder = new StringBuilder("http://s.video.qq.com/get_playsource?type=4&range=1-200&otype=json&num_mod_cnt=20&id=");
         stringBuilder.append(id);
         return baseModel.getRepositoryManager().getApi(VideoApi.class)
                 .getContent(stringBuilder.toString()).subscribeOn(Schedulers.io())

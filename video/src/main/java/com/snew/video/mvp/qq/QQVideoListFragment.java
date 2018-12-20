@@ -20,6 +20,7 @@ import com.snew.video.R;
 import com.snew.video.adapter.QQVideoListAdapter;
 import com.snew.video.adapter.VideoHeaderAdapter;
 import com.snew.video.base.VideoBaseFragment;
+import com.snew.video.bean.CommonVideoBean;
 import com.snew.video.bean.QQVideoListBean;
 import com.snew.video.bean.QQVideoTabListBean;
 import com.snew.video.bean.VideoBean;
@@ -119,7 +120,6 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
             @Override
             public void onItemClick(int position, View view) {
                 QQVideoListBean.JsonvalueBean.ResultsBean resultsBean = mVideoAdapter.getData(position);
-                VideoBean videoBean = new VideoBean(resultsBean.getFields().getTitle(), resultsBean.getFields().getHorizontal_pic_url(), VideoUtil.getParseUrl(resultsBean.getId(), videoUrlType));
                 String id;
                 if (resultsBean.getFields().getColumn_info() != null) {
                     QQVideoListBean.JsonvalueBean.ResultsBean.FieldsBean.ColumnInfo columnInfo = getAppComponent().getGson().fromJson(resultsBean.getFields().getColumn_info(), QQVideoListBean.JsonvalueBean.ResultsBean.FieldsBean.ColumnInfo.class);
@@ -127,7 +127,13 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
                 } else {
                     id = resultsBean.getId();
                 }
-                QQVideoDetailActivity.start(getActivity(), videoBean, id);
+                CommonVideoBean commonVideoBean=new CommonVideoBean();
+                commonVideoBean.setVideoType(videoType);
+                commonVideoBean.setId(id);
+                commonVideoBean.setTitle(resultsBean.getFields().getTitle());
+                commonVideoBean.setImage(resultsBean.getFields().getHorizontal_pic_url());
+                commonVideoBean.setUrl(VideoUtil.getParseUrl(resultsBean.getId(),videoUrlType));
+                QQVideoDetailActivity.start(getActivity(),commonVideoBean);
             }
         });
 

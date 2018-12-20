@@ -477,6 +477,11 @@ public class DefaultVideoController extends VideoController implements View.OnCl
         }
     }
 
+    @Override
+    public String getTitle() {
+        return title.getText().toString();
+    }
+
 
     @Override
     public void onClick(View v) {

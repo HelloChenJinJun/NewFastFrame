@@ -24,6 +24,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.snew.video.R;
 import com.snew.video.adapter.SearchVideoDetailAdapter;
 import com.snew.video.base.VideoBaseActivity;
+import com.snew.video.bean.CommonVideoBean;
 import com.snew.video.bean.HotVideoBean;
 import com.snew.video.bean.HotVideoItemBean;
 import com.snew.video.bean.SearchVideoBean;
@@ -162,8 +163,14 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             public void onItemChildClick(int position, View view, int id) {
                 if (id == R.id.tv_item_fragment_search_video_detail_play) {
                     SearchVideoBean.ItemBean itemBean = mSearchVideoDetailAdapter.getData(position);
-                    VideoBean videoBean = new VideoBean(itemBean.getTt(), itemBean.getUrl());
-                    QQVideoDetailActivity.start(SearchVideoActivity.this, videoBean, itemBean.getId());
+//                    VideoBean videoBean = new VideoBean(itemBean.getTt(), itemBean.getUrl());
+                    CommonVideoBean commonVideoBean=new CommonVideoBean();
+                    commonVideoBean.setTitle(itemBean.getTt());
+                    commonVideoBean.setUrl(itemBean.getUrl());
+                    commonVideoBean.setId(itemBean.getId());
+                    commonVideoBean.setImage(itemBean.getDc());
+                    commonVideoBean.setVideoType(itemBean.getItemType());
+                                        QQVideoDetailActivity.start(SearchVideoActivity.this,commonVideoBean);
                 }
             }
         });
@@ -202,6 +209,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -215,6 +223,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -228,6 +237,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -240,6 +250,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -252,6 +263,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -264,6 +276,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -276,6 +289,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -290,6 +304,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -303,6 +318,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -316,6 +332,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -329,6 +346,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -342,6 +360,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));

@@ -245,6 +245,11 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     }
 
     @Override
+    public String getTitle() {
+        return mVideoController.getTitle();
+    }
+
+    @Override
     public long getPosition() {
         return mMediaPlayer.getCurrentPosition();
     }
@@ -333,6 +338,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
         }
         mState = PLAY_STATE_IDLE;
         mVideoController.onPlayStateChanged(mState);
+        mMediaPlayer = null;
     }
 
     @Override
@@ -380,6 +386,8 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     }
 
     private void prepareAsync() {
+        if (mMediaPlayer == null)
+            return;
         container.setKeepScreenOn(true);
         try {
             mState = PLAY_STATE_PREPARING;
@@ -481,13 +489,10 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     @Override
     public boolean onError(IMediaPlayer iMediaPlayer, int what, int extra) {
         // 直播流播放时去调用mediaPlayer.getDuration会导致-38和-2147483648错误，忽略该错误
-        if ((what == -10000 && extra == 0) && switchNum < MAX_SWITCH_NUM) {
+        //        1extra -2147483648
+        if ((what == 1 && extra == -2147483648) && !url.contains(".mp4") && !url.contains(".m3u8") && switchNum < MAX_SWITCH_NUM) {
             switchNum++;
-            switchMediaPlayer();
-            return true;
-        }
-
-        if (what == 1 && extra == -1004) {
+            switchMediaPlayer(false);
             return true;
         }
         mState = PLAY_STATE_ERROR;
@@ -497,17 +502,13 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     }
 
 
-    private boolean checkAndroidMediaPlayer = false;
+    private boolean checkAndroidMediaPlayer = true;
 
-    private void switchMediaPlayer() {
+    private void switchMediaPlayer(boolean isCheckAndroid) {
         CommonLogger.e("切换播放器");
         release();
-        if (mMediaPlayer instanceof AndroidMediaPlayer) {
-            checkAndroidMediaPlayer = false;
-        } else {
-            checkAndroidMediaPlayer = true;
-        }
-        mMediaPlayer = null;
+        checkAndroidMediaPlayer = isCheckAndroid;
+        setState(DefaultVideoPlayer.PLAY_STATE_PREPARING);
         start();
     }
 

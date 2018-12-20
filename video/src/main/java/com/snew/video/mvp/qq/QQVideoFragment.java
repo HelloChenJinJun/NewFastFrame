@@ -103,22 +103,22 @@ public class QQVideoFragment extends VideoBaseFragment {
         if (type == VideoUtil.VIDEO_URL_TYPE_QQ) {
             QQVideoTabBean one = new QQVideoTabBean();
             one.setTitle("电影");
-            one.setType(1);
+            one.setType(VideoUtil.VIDEO_TYPE_QQ_CAMERA);
             QQVideoTabBean two = new QQVideoTabBean();
-            two.setType(2);
+            two.setType(VideoUtil.VIDEO_TYPE_QQ_TV);
             two.setTitle("连续剧");
             list.add(one);
             list.add(two);
             QQVideoTabBean three = new QQVideoTabBean();
-            three.setType(3);
+            three.setType(VideoUtil.VIDEO_TYPE_QQ_CARTOON);
             three.setTitle("动漫");
             list.add(three);
             QQVideoTabBean four = new QQVideoTabBean();
-            four.setType(10);
+            four.setType(VideoUtil.VIDEO_TYPE_QQ_VARIETY);
             four.setTitle("综艺");
             list.add(four);
             QQVideoTabBean five = new QQVideoTabBean();
-            five.setType(9);
+            five.setType(VideoUtil.VIDEO_TYPE_QQ_RECORD);
             five.setTitle("记录片");
             list.add(five);
             QQVideoTabBean six = new QQVideoTabBean();

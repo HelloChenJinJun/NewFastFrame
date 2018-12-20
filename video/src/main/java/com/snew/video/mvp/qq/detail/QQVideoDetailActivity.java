@@ -24,10 +24,11 @@ import com.snew.video.adapter.VideoTVItemAdapter;
 import com.snew.video.adapter.VideoTagAdapter;
 import com.snew.video.adapter.VideoVarietyAdapter;
 import com.snew.video.base.VideoBaseActivity;
-import com.snew.video.bean.VideoBean;
+import com.snew.video.bean.CommonVideoBean;
 import com.snew.video.bean.VideoPlayDetailBean;
 import com.snew.video.dagger.qq.detail.DaggerQQVideoDetailComponent;
 import com.snew.video.dagger.qq.detail.QQVideoDetailModule;
+import com.snew.video.manager.VideoUpLoadManager;
 import com.snew.video.mvp.actor.ActorDetailInfoActivity;
 import com.snew.video.util.VideoUtil;
 
@@ -44,7 +45,6 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
 
 
     private DefaultVideoPlayer display;
-    private String id;
 
     private SuperRecyclerView person, tag, tv, variety, subTitle;
     private TextView title, desc, score;
@@ -57,7 +57,7 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
 
     @Inject
     VideoTVItemAdapter mVideoTVItemAdapter;
-    private VideoBean data;
+    private CommonVideoBean data;
 
 
     @Inject
@@ -67,10 +67,9 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
     @Inject
     VideoSubTitleAdapter mVideoSubTitleAdapter;
 
-    public static void start(Activity activity, VideoBean data, String id) {
+    public static void start(Activity activity, CommonVideoBean commonVideoBean) {
         Intent intent = new Intent(activity, QQVideoDetailActivity.class);
-        intent.putExtra(VideoUtil.DATA, data);
-        intent.putExtra(VideoUtil.VIDEO_ID, id);
+        intent.putExtra(VideoUtil.DATA, commonVideoBean);
         activity.startActivity(intent);
     }
 
@@ -78,10 +77,9 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        data = (VideoBean) intent.getSerializableExtra(VideoUtil.DATA);
-        id = intent.getStringExtra(VideoUtil.VIDEO_ID);
+        data = (CommonVideoBean) intent.getSerializableExtra(VideoUtil.DATA);
         display.setTitle(data.getTitle())
-                .setImageCover(data.getImageCover());
+                .setImageCover(data.getImage());
         updateTitle(data.getTitle());
         deal();
     }
@@ -119,16 +117,14 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
     protected void initData() {
         DaggerQQVideoDetailComponent.builder().qQVideoDetailModule(new QQVideoDetailModule(this))
                 .videoComponent(getComponent()).build().inject(this);
-        data = (VideoBean) getIntent().getSerializableExtra(VideoUtil.DATA);
-        id = getIntent().getStringExtra(VideoUtil.VIDEO_ID);
-        display.setTitle(data.getTitle())
-                .setImageCover(data.getImageCover());
+        data = (CommonVideoBean) getIntent().getSerializableExtra(VideoUtil.DATA);
+        display.setTitle(data.getVideoType() == VideoUtil.VIDEO_TYPE_QQ_TV || data.getVideoType() == VideoUtil.VIDEO_TYPE_QQ_CARTOON ? data.getTitle() + " 第" + data.getPlayNumber() + "集" : data.getTitle())
+                .setImageCover(data.getImage());
         person.setNestedScrollingEnabled(false);
         tag.setNestedScrollingEnabled(false);
         tv.setNestedScrollingEnabled(false);
         variety.setNestedScrollingEnabled(false);
         subTitle.setNestedScrollingEnabled(false);
-
         subTitle.setLayoutManager(new WrappedGridLayoutManager(this, 2));
         subTitle.addItemDecoration(new GridSpaceDecoration(2, 0, DensityUtil.toDp(10), false));
         subTitle.setAdapter(mVideoSubTitleAdapter);
@@ -158,7 +154,9 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
             @Override
             public void onItemClick(int position, View view) {
                 data.setUrl(mVideoVarietyAdapter.getData(position).getUrl());
+                data.setTitle(mVideoVarietyAdapter.getData(position).getTitle());
                 display.release();
+                display.setTitle(mVideoVarietyAdapter.getData(position).getTitle());
                 display.setState(DefaultVideoPlayer.PLAY_STATE_PREPARING);
                 presenter.getDetailData(mVideoVarietyAdapter.getData(position).getUrl(), ((DefaultVideoController) display.getController()).isSwitchUrl());
             }
@@ -170,6 +168,8 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
             public void onItemClick(int position, View view) {
                 data.setUrl(mVideoTVItemAdapter.getData(position).getUrl());
                 display.release();
+                display.setTitle(data.getTitle() + " 第" + mVideoTVItemAdapter.getData(position).getTitle() + "集");
+                data.setPlayNumber(Integer.parseInt(mVideoTVItemAdapter.getData(position).getTitle()));
                 display.setState(DefaultVideoPlayer.PLAY_STATE_PREPARING);
                 presenter.getDetailData(mVideoTVItemAdapter.getData(position).getUrl(), ((DefaultVideoController) display.getController()).isSwitchUrl());
             }
@@ -180,6 +180,8 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
         toolBarOption.setTitle(data.getTitle());
         setToolBar(toolBarOption);
         ((DefaultVideoController) display.getController()).setOnSwitchUrlListener(isSwitch -> {
+            display.release();
+            display.setState(DefaultVideoPlayer.PLAY_STATE_PREPARING);
             presenter.getDetailData(data.getUrl(), isSwitch);
             return false;
         });
@@ -192,7 +194,7 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
         if (data.getUrl() != null) {
             presenter.getDetailData(data.getUrl(), ((DefaultVideoController) display.getController()).isSwitchUrl());
         }
-        presenter.getDetailInfo(id);
+        presenter.getDetailInfo(data.getId());
     }
 
 
@@ -230,12 +232,21 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
                 presenter.getDetailData(data.getUrl(), ((DefaultVideoController) display.getController()).isSwitchUrl());
             }
         } else if (o.getType() == VideoUtil.BASE_TYPE_VIDEO_DETAIL_URL) {
-            if (o.getExtraInfo() != null && o.getExtraInfo().equals(data.getUrl())) {
-                String url = (String) o.getData();
-                display.setUp(url, null);
-                display.start();
+            if (o.getCode() == 200) {
+                if (o.getExtraInfo() != null && o.getExtraInfo().equals(data.getUrl())) {
+                    String url = (String) o.getData();
+                    display.setUp(url, null);
+                    display.start();
+                    VideoUpLoadManager.getInstance().uploadVideoBean(data.getUrl(), getUpLoadTitle(), url);
+                }
+            } else {
+                display.setState(DefaultVideoPlayer.PLAY_STATE_ERROR);
             }
         }
+    }
+
+    private String getUpLoadTitle() {
+        return display.getTitle();
     }
 
 

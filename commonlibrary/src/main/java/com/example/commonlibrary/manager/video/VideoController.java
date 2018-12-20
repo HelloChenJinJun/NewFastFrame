@@ -184,6 +184,8 @@ public abstract class VideoController extends FrameLayout implements View.OnTouc
 
     public abstract void setImageCover(String imageUrl);
 
+    public abstract String getTitle();
+
 
     public static class Clarity {
         private String grade;    // 清晰度等级

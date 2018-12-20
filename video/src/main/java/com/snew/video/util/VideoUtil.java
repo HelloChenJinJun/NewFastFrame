@@ -36,9 +36,33 @@ public class VideoUtil {
     public static final int BASE_TYPE_ACTOR_VIDEO_DATA = 11;
 
 
-    public static String getSignedValue(String coreString) {
+    //    视频类型
+    public static final int VIDEO_TYPE_QQ_CAMERA = 1;
+    public static final int VIDEO_TYPE_QQ_TV = 2;
+    public static final int VIDEO_TYPE_QQ_CARTOON = 3;
+    public static final int VIDEO_TYPE_QQ_VARIETY = 10;
+    public static final int VIDEO_TYPE_QQ_RECORD = 9;
+
+
+    public static String getSignedValue(String md5) {
         JSEngine jsEngine = new JSEngine("vip.js");
-        return jsEngine.runScript(jsEngine.runScript(coreString, "cover"), "sign");
+        return jsEngine.runScript(md5, "sign");
+    }
+
+
+    public static String getMd5Value(String content) {
+        String s = "\"\\x24\\x28\\x27\\x23\\x68\\x64\\x4d\\x64\\x35\\x27\\x29\\x2e\\x76\\x61\\x6c\\x28\\x27\\x63\\x34\\x35\\x36\\x30\\x62\\x34\\x35\\x38\\x33\\x62\\x39\\x30\\x65\\x35\\x39\\x36\\x36\\x34\\x37\\x35\\x36\\x31\\x34\\x66\\x35\\x35\\x38\\x30\\x61\\x34\\x34\\x27\\x29\\x3b\"";
+        String start = "eval(";
+        int index = content.lastIndexOf(start);
+        String coreString = content.substring(index + start.length(), index + start.length() + s.length());
+        JSEngine jsEngine = new JSEngine("vip.js");
+        return jsEngine.runScript(coreString, "cover");
+    }
+
+
+    public static String cmd5(String content) {
+        JSEngine jsEngine = new JSEngine("cmd5.js");
+        return jsEngine.runScript(content, "desn");
     }
 
 

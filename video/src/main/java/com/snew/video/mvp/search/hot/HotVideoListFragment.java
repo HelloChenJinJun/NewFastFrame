@@ -10,8 +10,8 @@ import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.snew.video.R;
 import com.snew.video.adapter.HotVideoAdapter;
 import com.snew.video.base.VideoBaseFragment;
+import com.snew.video.bean.CommonVideoBean;
 import com.snew.video.bean.HotVideoItemBean;
-import com.snew.video.bean.VideoBean;
 import com.snew.video.mvp.qq.detail.QQVideoDetailActivity;
 import com.snew.video.util.VideoUtil;
 
@@ -73,8 +73,11 @@ public class HotVideoListFragment extends VideoBaseFragment {
             @Override
             public void onItemClick(int position, View view) {
                 HotVideoItemBean hotVideoItemBean = mHotVideoAdapter.getData(position);
-                VideoBean videoBean = new VideoBean(hotVideoItemBean.getTitle(), hotVideoItemBean.getUrl());
-                QQVideoDetailActivity.start(getActivity(), videoBean, hotVideoItemBean.getId());
+                CommonVideoBean commonVideoBean = new CommonVideoBean();
+                commonVideoBean.setId(hotVideoItemBean.getId());
+                commonVideoBean.setVideoType(hotVideoItemBean.getVideoType());
+                commonVideoBean.setTitle(hotVideoItemBean.getTitle());
+                QQVideoDetailActivity.start(getActivity(), commonVideoBean);
             }
         });
     }

@@ -27,7 +27,7 @@ import com.snew.video.R;
 import com.snew.video.adapter.ActorVideoDetailAdapter;
 import com.snew.video.base.VideoBaseActivity;
 import com.snew.video.bean.ActorDetailInfoBean;
-import com.snew.video.bean.VideoBean;
+import com.snew.video.bean.CommonVideoBean;
 import com.snew.video.dagger.actor.ActorDetailInfoModule;
 import com.snew.video.dagger.actor.DaggerActorDetailInfoComponent;
 import com.snew.video.mvp.qq.detail.QQVideoDetailActivity;
@@ -133,8 +133,12 @@ public class ActorDetailInfoActivity extends VideoBaseActivity<BaseBean, ActorDe
             @Override
             public void onItemClick(int position, View view) {
                 ActorDetailInfoBean.ActorVideoDetailBean detailBean = mQQVideoListAdapter.getData(position);
-                VideoBean videoBean = new VideoBean(detailBean.getTitle(), detailBean.getUrl());
-                QQVideoDetailActivity.start(ActorDetailInfoActivity.this, videoBean, VideoUtil.getIdFromUrl(detailBean.getUrl()));
+                CommonVideoBean commonVideoBean = new CommonVideoBean();
+                commonVideoBean.setId(VideoUtil.getIdFromUrl(detailBean.getUrl()));
+                commonVideoBean.setUrl(detailBean.getUrl());
+                commonVideoBean.setVideoType(VideoUtil.VIDEO_TYPE_QQ_CAMERA);
+                commonVideoBean.setTitle(detailBean.getTitle());
+                QQVideoDetailActivity.start(ActorDetailInfoActivity.this, commonVideoBean);
             }
         });
         runOnUiThread(this::onRefresh);

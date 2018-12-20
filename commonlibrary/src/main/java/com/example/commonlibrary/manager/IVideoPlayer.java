@@ -33,6 +33,9 @@ public interface IVideoPlayer {
 
     long getDuration();
 
+
+    String getTitle();
+
     long getPosition();
 
     int getBufferedPercentage();

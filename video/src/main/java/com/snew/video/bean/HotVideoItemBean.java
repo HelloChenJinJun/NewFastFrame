@@ -14,6 +14,16 @@ public class HotVideoItemBean implements Serializable {
     private String url;
 
 
+    private int videoType;
+
+    public int getVideoType() {
+        return videoType;
+    }
+
+    public void setVideoType(int videoType) {
+        this.videoType = videoType;
+    }
+
     public String getUrl() {
         return url;
     }
