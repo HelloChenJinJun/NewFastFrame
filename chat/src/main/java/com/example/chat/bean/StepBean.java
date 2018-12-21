@@ -1,6 +1,6 @@
 package com.example.chat.bean;
 
-import android.content.Intent;
+import com.example.commonlibrary.bean.chat.User;
 
 import cn.bmob.v3.BmobObject;
 

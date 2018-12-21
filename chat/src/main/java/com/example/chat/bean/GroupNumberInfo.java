@@ -1,5 +1,7 @@
 package com.example.chat.bean;
 
+import com.example.commonlibrary.bean.chat.User;
+
 import java.io.Serializable;
 
 /**

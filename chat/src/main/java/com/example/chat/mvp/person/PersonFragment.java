@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.example.chat.R;
 import com.example.chat.base.AppBaseFragment;
 import com.example.chat.base.ConstantUtil;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.dagger.person.DaggerPersonComponent;
 import com.example.chat.dagger.person.PersonModule;
 import com.example.chat.events.UnReadSystemNotifyEvent;

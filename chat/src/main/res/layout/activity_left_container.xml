@@ -57,15 +57,15 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/custom_color_app_content_div"
         android:tag="skin" />
 
     <com.example.commonlibrary.baseadapter.SuperRecyclerView
         android:id="@+id/srcv_menu_display"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:id="@+id/ll_menu_bottom_container"

@@ -10,7 +10,7 @@ import android.widget.EditText;
 import com.example.chat.R;
 import com.example.chat.adapter.SearchFriendAdapter;
 import com.example.chat.base.ChatBaseActivity;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.UserInfoTask.UserInfoActivity;
 import com.example.chat.util.LogUtil;

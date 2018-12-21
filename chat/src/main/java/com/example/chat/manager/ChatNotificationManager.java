@@ -12,7 +12,7 @@ import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.MessageContent;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.mvp.main.HomeActivity;
 import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.LogUtil;

@@ -1,37 +1,99 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
+    android:id="@+id/refresh_activity_actor_detail_info_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
-        android:id="@+id/refresh_activity_actor_detail_info_refresh"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/cl_activity_actor_detail_info_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.example.commonlibrary.baseadapter.SuperRecyclerView
-            android:id="@+id/srcv_activity_actor_detail_info_display"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/al_activity_actor_detail_info_bar"
+            theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+            android:layout_height="300dp">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/ctb_activity_actor_detail_info_collapsing"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleMarginEnd="64dp"
+                app:expandedTitleMarginStart="48dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
 
-    <RelativeLayout
-        android:id="@+id/rl_activity_actor_detail_info_header"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/white">
+                <RelativeLayout
+                    android:id="@+id/rl_activity_actor_detail_info_image_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_collapseMode="parallax">
+
+                    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                        android:id="@+id/riv_activity_actor_detail_info_avatar"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:scaleType="fitCenter" />
 
 
-        <ImageView
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/iv_activity_actor_detail_info_back"
+                </RelativeLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/tb_activity_actor_detail_info_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/iv_activity_actor_detail_info_back"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            app:srcCompat="@drawable/ic_arrow_left" />
+                    </RelativeLayout>
+
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tb_activity_actor_detail_info_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                app:tabMode="scrollable" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <com.example.commonlibrary.cusotomview.WrappedViewPager
+            android:id="@+id/wvp_activity_actor_detail_info_display"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        </com.example.commonlibrary.cusotomview.WrappedViewPager>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_activity_actor_detail_info_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_arrow_left" />
+            android:layout_gravity="end|bottom"
+            android:layout_margin="15dp"
+            app:layout_behavior="@string/fab_transformation_scrim_behavior"
+            fab:fab_icon="@drawable/ic_person_info" />
 
-    </RelativeLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-</RelativeLayout>
+</com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>

@@ -20,7 +20,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="5dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_item_fragment_photo_list_description"
@@ -28,7 +29,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:textColor="@color/base_color_text_black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/iv_item_fragment_photo_list_share"

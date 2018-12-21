@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.dagger.component.AppComponent;
@@ -129,12 +130,12 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
             }
             initBaseView();
             initData();
+            if (needStatusPadding()) {
+                StatusBarUtil.setStatusPadding(getPaddingView());
+            }
         }
         if (root.getParent() != null) {
             ((ViewGroup) root.getParent()).removeView(root);
-        }
-        if (needStatusPadding()) {
-            StatusBarUtil.setStatusPadding(getPaddingView());
         }
         return root;
     }
@@ -177,7 +178,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     }
 
 
-    protected void updateTitle(String title) {
+    public void updateTitle(String title) {
         ((BaseActivity) getActivity()).updateTitle(title);
     }
 
@@ -304,7 +305,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
         }
         if (option.getAvatar() != null) {
             icon.setVisibility(View.VISIBLE);
-            //            Glide.with(BaseApplication.getInstance()).load(option.getAvatar()).into(icon);
+            Glide.with(BaseApplication.getInstance()).load(option.getAvatar()).into(icon);
         } else {
             icon.setVisibility(GONE);
         }

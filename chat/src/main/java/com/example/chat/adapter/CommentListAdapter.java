@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.chat.R;
 import com.example.chat.base.ConstantUtil;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.manager.UserManager;

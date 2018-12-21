@@ -5,7 +5,7 @@ import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;

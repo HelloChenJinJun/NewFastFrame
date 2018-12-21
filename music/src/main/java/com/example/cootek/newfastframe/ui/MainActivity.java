@@ -10,8 +10,8 @@ import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.ui.fragment.BottomFragment;
 import com.example.cootek.newfastframe.ui.fragment.HolderFragment;
-import com.example.cootek.newfastframe.view.DragLayout;
-import com.example.cootek.newfastframe.view.OnDragDeltaChangeListener;
+import com.example.commonlibrary.cusotomview.draglayout.DragLayout;
+import com.example.commonlibrary.cusotomview.draglayout.OnDragDeltaChangeListener;
 import com.example.cootek.newfastframe.view.slide.SlidingPanelLayout;
 
 

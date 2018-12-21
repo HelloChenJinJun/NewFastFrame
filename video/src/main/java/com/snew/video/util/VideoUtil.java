@@ -42,6 +42,7 @@ public class VideoUtil {
     public static final int VIDEO_TYPE_QQ_CARTOON = 3;
     public static final int VIDEO_TYPE_QQ_VARIETY = 10;
     public static final int VIDEO_TYPE_QQ_RECORD = 9;
+    public static final int VIDEO_TYPE_QQ_MV = 11;
 
 
     public static String getSignedValue(String md5) {

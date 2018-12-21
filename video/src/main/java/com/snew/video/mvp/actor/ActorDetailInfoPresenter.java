@@ -52,19 +52,30 @@ public class ActorDetailInfoPresenter extends RxBasePresenter<IView<BaseBean>, D
                     }
                     actorDetailInfoBean.setName(img.attr("alt"));
                     Elements videoList = document.select(".figure_list._content_list");
-                    Element movie = videoList.get(0);
-                    if (movie != null && movie.children().size() > 0) {
-                        List<ActorDetailInfoBean.ActorVideoDetailBean> beanList = new ArrayList<>();
-                        for (Element child :
-                                movie.children()) {
-                            ActorDetailInfoBean.ActorVideoDetailBean item = new ActorDetailInfoBean.ActorVideoDetailBean();
-                            item.setImage("https:" + child.getElementsByTag("img").first().attr("src"));
-                            Element element = child.getElementsByTag("a").first();
-                            item.setTitle(element.attr("title"));
-                            item.setUrl("https:" + element.attr("href"));
-                            beanList.add(item);
+                    if (videoList.size() > 0) {
+                        List<ActorDetailInfoBean.ActorVideoWrappedDetailBean> wrappedDetailBeans = new ArrayList<>();
+                        for (Element item :
+                                videoList) {
+                            if (item != null && item.children().size() > 0) {
+                                ActorDetailInfoBean.ActorVideoWrappedDetailBean actorVideoWrappedDetailBean = new ActorDetailInfoBean.ActorVideoWrappedDetailBean();
+                                List<ActorDetailInfoBean.ActorVideoDetailBean> beanList = new ArrayList<>();
+                                for (Element child :
+                                        item.children()) {
+                                    ActorDetailInfoBean.ActorVideoDetailBean bean = new ActorDetailInfoBean.ActorVideoDetailBean();
+                                    bean.setImage("https:" + child.getElementsByTag("img").first().attr("src"));
+                                    Element element = child.getElementsByTag("a").first();
+                                    bean.setTitle(element.attr("title"));
+                                    bean.setUrl("https:" + element.attr("href"));
+                                    beanList.add(bean);
+                                    if (actorVideoWrappedDetailBean.getVideoType() == 0) {
+                                        actorVideoWrappedDetailBean.setVideoType(getVideoType(child.attr("_dokistat")));
+                                    }
+                                }
+                                actorVideoWrappedDetailBean.setActorVideoDetailBeanList(beanList);
+                                wrappedDetailBeans.add(actorVideoWrappedDetailBean);
+                            }
                         }
-                        actorDetailInfoBean.setActorVideoDetailBeans(beanList);
+                        actorDetailInfoBean.setActorVideoWrappedDetailBeanList(wrappedDetailBeans);
                     }
                     return actorDetailInfoBean;
                 }).observeOn(AndroidSchedulers.mainThread())
@@ -95,5 +106,18 @@ public class ActorDetailInfoPresenter extends RxBasePresenter<IView<BaseBean>, D
                 });
 
 
+    }
+
+    private int getVideoType(String content) {
+        if (content.equals("movie")) {
+            return VideoUtil.VIDEO_TYPE_QQ_CAMERA;
+        } else if (content.equals("tv")) {
+            return VideoUtil.VIDEO_TYPE_QQ_TV;
+        } else if (content.equals("joinArts")) {
+            return VideoUtil.VIDEO_TYPE_QQ_VARIETY;
+        } else if (content.equals("mv")) {
+            return VideoUtil.VIDEO_TYPE_QQ_MV;
+        }
+        return 0;
     }
 }

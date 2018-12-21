@@ -2,7 +2,6 @@ package com.example.chat.adapter;
 
 
 import com.example.chat.R;
-import com.example.chat.bean.User;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.bean.chat.UserEntity;

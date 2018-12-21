@@ -13,7 +13,7 @@ import android.content.SharedPreferences;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.CustomInstallation;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.listener.AddBlackCallBackListener;
 import com.example.chat.listener.AddFriendCallBackListener;
 import com.example.chat.listener.CancelBlackCallBlackListener;

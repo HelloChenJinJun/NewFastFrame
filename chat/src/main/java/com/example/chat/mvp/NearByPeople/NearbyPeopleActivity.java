@@ -7,7 +7,7 @@ import android.view.View;
 import com.example.chat.R;
 import com.example.chat.adapter.NearbyPeopleAdapter;
 import com.example.chat.base.ChatBaseActivity;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.dagger.nearbyPeople.DaggerNearbyPeopleComponent;
 import com.example.chat.dagger.nearbyPeople.NearbyPeopleModule;
 import com.example.chat.events.LocationEvent;

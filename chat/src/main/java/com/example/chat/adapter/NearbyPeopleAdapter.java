@@ -2,12 +2,10 @@ package com.example.chat.adapter;
 
 
 import com.example.chat.R;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.util.CommonUtils;
 import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
-
-import java.util.List;
 
 /**
  * 项目名称:    TestChat

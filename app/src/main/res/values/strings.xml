@@ -5,4 +5,5 @@
     Rxjava2+retrofit+mvp+dagger2+RxbusManager,
     由于module单独调试时,需要切换library和application状态，而当module变成library的时候，资源id是不能为常量的，
         导致用butterKnife出现各种错误，所以没有用butterKnife</string>
+    <string name="behavior_footer">com.example.music.behavior.FooterBehavior</string>
 </resources>

@@ -1,97 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.commonlibrary.cusotomview.draglayout.DragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dl_activity_main_drag_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/fl_activity_main_container"
+    <include layout="@layout/activity_left_container" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/custom_color_app_content_div" />
 
-    <RadioGroup
-        android:id="@+id/rg_activity_main_bottom_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/custom_color_app_title_bg"
-        android:checkedButton="@+id/rb_activity_main_bottom_chat"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:tag="skin">
-
-        <RadioButton
-            android:id="@+id/rb_activity_main_bottom_index"
-            android:layout_width="0dp"
+        <com.example.commonlibrary.cusotomview.WrappedViewPager
+            android:id="@+id/wvp_activity_main_display"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/ic_main_bottom_one"
-            android:drawablePadding="3dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <RadioGroup
+            android:id="@+id/rg_activity_main_bottom_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/custom_color_app_title_bg"
+            android:checkedButton="@+id/rb_activity_main_bottom_chat"
             android:gravity="center"
-            android:tag="skin"
-            android:text="首页"
-            android:textColor="@color/tab_text_color" />
-
-        <RadioButton
-            android:id="@+id/rb_activity_main_bottom_public"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/ic_main_bottom_two"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:tag="skin"
-            android:text="闲聊"
-            android:textColor="@color/tab_text_color" />
-
-        <RadioButton
-            android:id="@+id/rb_activity_main_bottom_center"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/ic_main_bottom_three"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:tag="skin"
-            android:text="中心"
-            android:textColor="@color/tab_text_color" />
-
-        <RadioButton
-            android:id="@+id/rb_activity_main_bottom_person"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/ic_main_bottom_four"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:tag="skin"
-            android:text="个人"
-            android:textColor="@color/tab_text_color" />
-
-        <RadioButton
-            android:id="@+id/rb_activity_main_bottom_chat"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/ic_main_bottom_five"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:tag="skin"
-            android:text="聊天"
-            android:textColor="@color/tab_text_color" />
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:tag="skin">
 
 
-    </RadioGroup>
-</LinearLayout>
+            <RadioButton
+                android:id="@+id/rb_activity_main_bottom_chat"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/ic_main_bottom_five"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:tag="skin"
+                android:text="聊天"
+                android:textColor="@color/tab_text_color" />
+
+            <RadioButton
+                android:id="@+id/rb_activity_main_bottom_public"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/ic_main_bottom_two"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:tag="skin"
+                android:text="闲聊"
+                android:textColor="@color/tab_text_color" />
+
+            <RadioButton
+                android:id="@+id/rb_activity_main_bottom_center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/ic_main_bottom_three"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:tag="skin"
+                android:text="中心"
+                android:textColor="@color/tab_text_color" />
+
+            <RadioButton
+                android:id="@+id/rb_activity_main_bottom_index"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/ic_main_bottom_one"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:tag="skin"
+                android:text="新闻"
+                android:textColor="@color/tab_text_color" />
+
+
+            <RadioButton
+                android:id="@+id/rb_activity_main_bottom_person"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/ic_main_bottom_four"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:tag="skin"
+                android:text="个人"
+                android:textColor="@color/tab_text_color" />
+
+
+        </RadioGroup>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</com.example.commonlibrary.cusotomview.draglayout.DragLayout>

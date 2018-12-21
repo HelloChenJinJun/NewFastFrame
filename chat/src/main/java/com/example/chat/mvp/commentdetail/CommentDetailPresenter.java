@@ -1,6 +1,6 @@
 package com.example.chat.mvp.commentdetail;
 
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.ReplyDetailContent;

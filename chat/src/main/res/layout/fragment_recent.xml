@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_fragment_recent_net"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/header_layout_id"
+        android:background="@color/net_work_bg_color"
+        android:gravity="center"
+        android:text="网络连接失败,请检查网络配置"
+        android:textColor="@color/base_color_text_white"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
     <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
         android:id="@+id/refresh_recent_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.example.commonlibrary.baseadapter.swipeview.SwipeMenuRecyclerView
-            android:id="@+id/rcv_recent_display"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.example.commonlibrary.baseadapter.SuperRecyclerView
+            android:id="@+id/srcv_fragment_recent_display"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-        />
+            android:layout_height="wrap_content" />
     </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

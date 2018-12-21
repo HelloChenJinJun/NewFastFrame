@@ -1,32 +1,41 @@
 package com.example.chat.mvp.main.recent;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.provider.Settings;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.chat.R;
 import com.example.chat.adapter.RecentListAdapter;
 import com.example.chat.base.AppBaseFragment;
 import com.example.chat.base.ConstantUtil;
-import com.example.chat.events.GroupTableEvent;
+import com.example.chat.bean.ChatMessage;
+import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.RecentEvent;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.chat.ChatActivity;
-import com.example.chat.mvp.main.HomeFragment;
+import com.example.chat.service.PollService;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.baseadapter.swipeview.Closeable;
-import com.example.commonlibrary.baseadapter.swipeview.OnSwipeMenuItemClickListener;
-import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuItem;
-import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuRecyclerView;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
+import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.NetStatusEvent;
+import com.example.commonlibrary.skin.SkinManager;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
+
+import java.util.List;
+
+import androidx.appcompat.widget.PopupMenu;
 
 
 /**
@@ -40,15 +49,21 @@ import com.example.commonlibrary.utils.ToastUtils;
 /**
  * 最近会话列表fragment
  */
-public class RecentFragment extends AppBaseFragment implements CustomSwipeRefreshLayout.OnRefreshListener {
+public class RecentFragment extends AppBaseFragment implements CustomSwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
     private RecentListAdapter mAdapter;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private WrappedLinearLayoutManager mLinearLayoutManager;
+    private SuperRecyclerView display;
+    private TextView net;
+
+    public static RecentFragment newInstance() {
+        return new RecentFragment();
+    }
 
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return false;
+        return true;
     }
 
     @Override
@@ -59,7 +74,7 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
 
     @Override
     protected boolean needStatusPadding() {
-        return false;
+        return true;
     }
 
     @Override
@@ -69,25 +84,12 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
 
     @Override
     public void initView() {
-        SwipeMenuRecyclerView display = (SwipeMenuRecyclerView) findViewById(R.id.rcv_recent_display);
+        display = (SuperRecyclerView) findViewById(R.id.srcv_fragment_recent_display);
+        net = (TextView) findViewById(R.id.tv_fragment_recent_net);
+        net.setOnClickListener(this);
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(R.id.refresh_recent_container);
         display.setLayoutManager(mLinearLayoutManager = new WrappedLinearLayoutManager(getActivity()));
         display.addItemDecoration(new ListViewDecoration());
-        display.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
-            int width = getActivity().getResources().getDimensionPixelSize(R.dimen.recent_top_height);
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            //                                 添加左右侧菜单
-            {
-                SwipeMenuItem topItem = new SwipeMenuItem(getActivity());
-                topItem.setBackgroundDrawable(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE))).setText("置顶").setTextColor(Color.WHITE).setWidth(width).setHeight(height);
-                SwipeMenuItem deleteItem = new SwipeMenuItem(getActivity());
-                deleteItem.setBackgroundDrawable(new ColorDrawable(Color.rgb(0xF9,
-                        0x3F, 0x25))).setText("删除").setTextColor(Color.WHITE).setHeight(height).setWidth(width);
-                swipeRightMenu.addMenuItem(topItem);
-                swipeRightMenu.addMenuItem(deleteItem);
-            }
-        });
         mSwipeRefreshLayout.setOnRefreshListener(this);
         display.setAdapter(mAdapter = new RecentListAdapter());
         mAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
@@ -101,8 +103,67 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
                     ChatActivity.start(getActivity(), ConstantUtil.TYPE_PERSON, msg.getId());
                 }
             }
+
+
+            @Override
+            public boolean onItemLongClick(int position, View view) {
+                showPopMenu(view, position);
+                return true;
+            }
         });
-        display.setSwipeMenuItemClickListener(new MySwipeItemClickListener());
+    }
+
+
+    private void onProcessNewMessages(List<ChatMessage> list) {
+        for (ChatMessage chatMessage :
+                list) {
+            int messageType = chatMessage.getMessageType();
+            switch (messageType) {
+                case ChatMessage.MESSAGE_TYPE_ADD:
+                    break;
+                case ChatMessage.MESSAGE_TYPE_AGREE:
+                    RxBusManager.getInstance().post(new RecentEvent(chatMessage.getBelongId(), RecentEvent.ACTION_ADD));
+                    break;
+                case ChatMessage.MESSAGE_TYPE_READED:
+                    LogUtil.e("接收到的回执已读标签消息");
+                    break;
+                default:
+                    RxBusManager.getInstance().post(new RecentEvent(chatMessage.getBelongId(), RecentEvent.ACTION_ADD));
+                    break;
+            }
+        }
+    }
+
+
+    public void notifyNewIntentCome(Intent intent) {
+        String from = intent.getStringExtra(ConstantUtil.NOTIFICATION_TAG);
+        if (from == null) {
+            ToastUtils.showShortToast("系统通知");
+            return;
+        }
+        if (from.equals(ConstantUtil.NOTIFICATION_TAG_GROUP_MESSAGE)) {
+            Intent chat = new Intent(getActivity(), ChatActivity.class);
+            chat.putExtra(ConstantUtil.ID, getActivity().getIntent().getStringExtra(ConstantUtil.GROUP_ID));
+            startActivity(chat);
+        }
+    }
+
+
+    public void showPopMenu(View view, int position) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.item_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_recent_delete) {
+                RecentMessageEntity msg = mAdapter.getData(position);
+                UserDBManager.getInstance().deleteRecentMessage(msg.getId());
+                mAdapter.removeData(msg);
+            } else {
+                ToastUtils.showShortToast("置顶");
+            }
+            return true;
+        });
+        popupMenu.setGravity(Gravity.CENTER_HORIZONTAL);
+        popupMenu.show();
     }
 
 
@@ -112,22 +173,29 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
             mLinearLayoutManager.findViewByPosition(0).setVisibility(View.GONE);
         }
         registerRxBus();
+        initSkin();
+        initToolBarData();
+    }
+
+    private void initToolBarData() {
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setTitle("");
+        toolBarOption.setAvatar(UserManager.getInstance().getCurrentUser().getAvatar());
+        toolBarOption.setNeedNavigation(false);
+        setToolBar(toolBarOption);
+    }
+
+    private void initSkin() {
+        SkinEntity currentSkinEntity = UserDBManager
+                .getInstance().getCurrentSkin();
+        if (currentSkinEntity != null) {
+            SkinManager.getInstance().update(currentSkinEntity.getPath());
+        }
     }
 
 
     private void registerRxBus() {
-        addDisposable(RxBusManager.getInstance().registerEvent(GroupTableEvent.class, groupTableEvent -> {
-            //                                刷新过来的，更新下群结构消息
-            if (groupTableEvent.getType() == GroupTableEvent.TYPE_GROUP_NUMBER
-                    && groupTableEvent.getAction() == GroupTableEvent.ACTION_DELETE
-                    && UserManager.getInstance()
-                    .getCurrentUserObjectId().equals(groupTableEvent.getUid())) {
-                String content = groupTableEvent.getGroupId();
-                RecentMessageEntity recentMsg = new RecentMessageEntity();
-                recentMsg.setId(content);
-                mAdapter.removeData(recentMsg);
-            }
-        }));
+
         addDisposable(RxBusManager.getInstance().registerEvent(RecentEvent.class, recentEvent -> {
             RecentMessageEntity recentMessageEntity = UserDBManager
                     .getInstance().getRecentMessage(recentEvent.getId());
@@ -137,7 +205,32 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
                 mAdapter.removeData(recentMessageEntity);
             }
         }));
+        addDisposable(RxBusManager.getInstance().registerEvent(MessageInfoEvent.class, messageInfoEvent -> {
+            if (messageInfoEvent.getMessageType() == MessageInfoEvent.TYPE_PERSON) {
+                                onProcessNewMessages(messageInfoEvent.getChatMessageList());
+            }
+        }));
+        addDisposable(RxBusManager.getInstance().registerEvent(NetStatusEvent.class, netStatusEvent -> {
+            if (netStatusEvent.isConnected()) {
+                //                        这里判断网络的连接类型
+                if (netStatusEvent.getType() == ConnectivityManager.TYPE_WIFI) {
+                    CommonLogger.e("wife类型的");
+                    bindPollService(10);
+                } else {
+                    CommonLogger.e("非wifi类型");
+                    bindPollService(15);
+                }
+                net.setVisibility(View.GONE);
+            } else {
+                net.setVisibility(View.VISIBLE);
+            }
+        }));
+    }
 
+    private void bindPollService(int second) {
+        Intent intent = new Intent(getActivity(), PollService.class);
+        intent.putExtra(ConstantUtil.TIME, second);
+        getActivity().startService(intent);
     }
 
 
@@ -153,19 +246,11 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
         onHiddenChanged(false);
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden) {
-            ((HomeFragment) getParentFragment()).updateTitle("聊天");
-        }
-    }
+
 
 
     @Override
     public void onRefresh() {
-        //                这里进行更新操作
-        LogUtil.e("主界面刷新拉");
         mAdapter.refreshData(UserDBManager.getInstance().getAllRecentMessage());
         mSwipeRefreshLayout.setRefreshing(false);
     }
@@ -176,22 +261,21 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
 
     }
 
-    private class MySwipeItemClickListener implements OnSwipeMenuItemClickListener {
-        @Override
-        public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
-            //                        删除操作
-            if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-                if (menuPosition == 0) {
-                    ToastUtils.showShortToast("置顶操作");
-                    //                                        置顶操作
-                } else if (menuPosition == 1) {
-                    //                                        删除操作，1、最近会话删除
-                    RecentMessageEntity msg = mAdapter.getData(adapterPosition);
-                    UserDBManager.getInstance().deleteRecentMessage(msg.getId());
-                    //                                        删除操作，2、聊天消息删除
-                    mAdapter.removeData(msg);
-                }
-            }
-        }
+    @Override
+    public void onClick(View v) {
+        Intent settingIntent = new Intent();
+        settingIntent.setAction(Settings.ACTION_WIFI_SETTINGS);
+        startActivity(settingIntent);
+
     }
+
+
+    @Override
+    public void onDestroy() {
+        Intent intent = new Intent(getActivity(), PollService.class);
+        getActivity().stopService(intent);
+        super.onDestroy();
+    }
+
+
 }

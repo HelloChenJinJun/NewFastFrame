@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.example.chat.R;
 import com.example.chat.listener.OnDragDeltaChangeListener;
 import com.example.chat.util.LogUtil;
+import com.example.commonlibrary.cusotomview.draglayout.ContentView;
 import com.nineoldandroids.view.ViewHelper;
 
 import androidx.core.view.ViewCompat;

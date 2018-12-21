@@ -1,4 +1,4 @@
-package com.example.cootek.newfastframe.view;
+package com.example.commonlibrary.cusotomview.draglayout;
 
 import android.content.Context;
 import android.util.AttributeSet;

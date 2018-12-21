@@ -4,7 +4,7 @@ package com.example.chat.mvp.splash;
 import com.example.chat.R;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.GroupTableMessage;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;

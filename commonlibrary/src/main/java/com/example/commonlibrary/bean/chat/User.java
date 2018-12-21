@@ -1,4 +1,4 @@
-package com.example.chat.bean;
+package com.example.commonlibrary.bean.chat;
 
 import com.example.commonlibrary.utils.AppUtil;
 

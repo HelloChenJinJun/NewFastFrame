@@ -1,7 +1,7 @@
 package com.example.chat.mvp.main.friends;
 
 import com.example.chat.base.AppBasePresenter;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.commonlibrary.bean.chat.UserEntity;

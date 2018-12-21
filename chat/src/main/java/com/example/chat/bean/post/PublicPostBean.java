@@ -1,7 +1,7 @@
 package com.example.chat.bean.post;
 
 import com.example.chat.base.ConstantUtil;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.baseadapter.baseitem.MultipleItem;
 
 import java.util.ArrayList;

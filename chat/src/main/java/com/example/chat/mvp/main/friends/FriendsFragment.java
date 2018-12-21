@@ -19,7 +19,6 @@ import com.example.chat.mvp.NearByPeople.NearbyPeopleActivity;
 import com.example.chat.mvp.blackList.BlackListActivity;
 import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.mvp.group.groupList.GroupListActivity;
-import com.example.chat.mvp.main.HomeFragment;
 import com.example.chat.view.IndexView;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
@@ -27,6 +26,7 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
+import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
-
 
 
 /**
@@ -73,18 +72,14 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return false;
+        return true;
     }
+
     @Override
     protected boolean isNeedEmptyLayout() {
         return false;
     }
 
-
-    @Override
-    protected boolean needStatusPadding() {
-        return false;
-    }
 
     @Override
     protected int getContentLayout() {
@@ -124,7 +119,6 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
         });
         refresh.setOnRefreshListener(this);
         indexView.setListener(this);
-
     }
 
     @Override
@@ -139,8 +133,8 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
         adapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                ChatActivity.start(getActivity(), ConstantUtil.TYPE_PERSON,adapter
-                .getData(position).getUid());
+                ChatActivity.start(getActivity(), ConstantUtil.TYPE_PERSON, adapter
+                        .getData(position).getUid());
             }
         });
         presenter.registerEvent(UserEntity.class, user -> {
@@ -161,37 +155,34 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
         });
         presenter.registerEvent(UserEvent.class, userEvent -> {
             if (userEvent.getAction() == UserEvent.ACTION_ADD) {
-                UserEntity userEntity= UserDBManager.getInstance()
+                UserEntity userEntity = UserDBManager.getInstance()
                         .getUser(userEvent.getUid());
                 adapter.addData(userEntity);
-            }else {
-               adapter.deleteFriendById(userEvent.getUid());
+            } else {
+                adapter.deleteFriendById(userEvent.getUid());
             }
         });
+        initToolBar();
     }
 
-
+    private void initToolBar() {
+        ToolBarOption toolBarOption = new ToolBarOption();
+        toolBarOption.setTitle("好友");
+        toolBarOption.setAvatar(UserManager.getInstance().getCurrentUser().getAvatar());
+        toolBarOption.setNeedNavigation(true);
+        setToolBar(toolBarOption);
+    }
 
 
     private View getHeaderView() {
         View headerView = LayoutInflater.from(getContext())
-                .inflate(R.layout.view_fragment_friends_header, null);
+                .inflate(R.layout.view_fragment_friends_header, display.getHeaderContainer(), false);
         headerView.findViewById(R.id.tv_view_fragment_friends_header_black).setOnClickListener(this);
         headerView.findViewById(R.id.tv_view_fragment_friends_header_nearby).setOnClickListener(this);
         headerView.findViewById(R.id.tv_view_fragment_friends_header_group).setOnClickListener(this);
         return headerView;
     }
 
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden) {
-            if (!hidden) {
-                ((HomeFragment) getParentFragment()).updateTitle("好友管理");
-            }
-        }
-    }
 
     @Override
     protected void updateView() {
@@ -225,9 +216,9 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
         int id = view.getId();
         if (id == R.id.tv_view_fragment_friends_header_black) {
             BlackListActivity.start(getActivity());
-        }else if (id==R.id.tv_view_fragment_friends_header_nearby){
+        } else if (id == R.id.tv_view_fragment_friends_header_nearby) {
             NearbyPeopleActivity.start(getActivity());
-        }else if (id==R.id.tv_view_fragment_friends_header_group){
+        } else if (id == R.id.tv_view_fragment_friends_header_group) {
             GroupListActivity.start(getActivity());
         }
     }

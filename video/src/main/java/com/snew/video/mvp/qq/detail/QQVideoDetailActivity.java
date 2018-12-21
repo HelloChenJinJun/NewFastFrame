@@ -78,6 +78,9 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         data = (CommonVideoBean) intent.getSerializableExtra(VideoUtil.DATA);
+        if (data.getVideoType() == VideoUtil.VIDEO_TYPE_QQ_CAMERA) {
+            tv.setVisibility(View.GONE);
+        }
         display.setTitle(data.getTitle())
                 .setImageCover(data.getImage());
         updateTitle(data.getTitle());
@@ -120,6 +123,10 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
         data = (CommonVideoBean) getIntent().getSerializableExtra(VideoUtil.DATA);
         display.setTitle(data.getVideoType() == VideoUtil.VIDEO_TYPE_QQ_TV || data.getVideoType() == VideoUtil.VIDEO_TYPE_QQ_CARTOON ? data.getTitle() + " 第" + data.getPlayNumber() + "集" : data.getTitle())
                 .setImageCover(data.getImage());
+
+        if (data.getVideoType() == VideoUtil.VIDEO_TYPE_QQ_CAMERA) {
+            tv.setVisibility(View.GONE);
+        }
         person.setNestedScrollingEnabled(false);
         tag.setNestedScrollingEnabled(false);
         tv.setNestedScrollingEnabled(false);

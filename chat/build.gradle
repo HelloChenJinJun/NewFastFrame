@@ -60,7 +60,7 @@ android {
     }
 
 
-    if(rootProject.ext.isAlone){
+    if (rootProject.ext.isAlone) {
         signingConfigs {
             config {
                 keyAlias 'chat'
@@ -73,7 +73,7 @@ android {
 
 
     buildTypes {
-        if(rootProject.ext.isAlone){
+        if (rootProject.ext.isAlone) {
             release {
                 signingConfig signingConfigs.config
                 minifyEnabled false
@@ -82,7 +82,7 @@ android {
             debug {
                 signingConfig signingConfigs.config
             }
-        }else{
+        } else {
             release {
                 minifyEnabled false
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -144,7 +144,7 @@ dependencies {
     annotationProcessor rootProject.ext.dependencies.dagger2_compiler
     testImplementation 'junit:junit:4.12'
     implementation 'cn.jzvd:jiaozivideoplayer:6.2.4'
-    implementation files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
+    api files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
 
 }
 

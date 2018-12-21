@@ -2,7 +2,7 @@ package com.example.chat.bean;
 
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.PublicPostBean;
-import com.example.chat.manager.UserManager;
+import com.example.commonlibrary.bean.chat.User;
 
 import cn.bmob.v3.BmobObject;
 

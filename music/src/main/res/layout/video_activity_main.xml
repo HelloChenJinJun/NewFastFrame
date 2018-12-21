@@ -1,4 +1,4 @@
-<com.example.cootek.newfastframe.view.DragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.commonlibrary.cusotomview.draglayout.DragLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dl_activity_main_drag"
     android:layout_width="match_parent"
@@ -33,6 +33,6 @@
     </com.example.cootek.newfastframe.view.slide.SlidingPanelLayout>
 
 
-</com.example.cootek.newfastframe.view.DragLayout>
+</com.example.commonlibrary.cusotomview.draglayout.DragLayout>
 
 

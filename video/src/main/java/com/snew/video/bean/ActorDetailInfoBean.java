@@ -1,5 +1,6 @@
 package com.snew.video.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,8 +11,16 @@ import java.util.List;
 public class ActorDetailInfoBean {
     private String avatar;
     private String name;
-    private List<ActorVideoDetailBean> mActorVideoDetailBeans;
+    private List<ActorVideoWrappedDetailBean> mActorVideoWrappedDetailBeanList;
 
+    public List<ActorVideoWrappedDetailBean> getActorVideoWrappedDetailBeanList() {
+        return mActorVideoWrappedDetailBeanList;
+    }
+
+
+    public void setActorVideoWrappedDetailBeanList(List<ActorVideoWrappedDetailBean> actorVideoWrappedDetailBeanList) {
+        mActorVideoWrappedDetailBeanList = actorVideoWrappedDetailBeanList;
+    }
 
     public String getAvatar() {
         return avatar;
@@ -29,15 +38,34 @@ public class ActorDetailInfoBean {
         this.name = name;
     }
 
-    public List<ActorVideoDetailBean> getActorVideoDetailBeans() {
-        return mActorVideoDetailBeans;
+
+    public static class ActorVideoWrappedDetailBean implements Serializable {
+        private List<ActorVideoDetailBean> mActorVideoDetailBeanList;
+
+        private int videoType;
+
+        public List<ActorVideoDetailBean> getActorVideoDetailBeanList() {
+            return mActorVideoDetailBeanList;
+        }
+
+
+        public void setActorVideoDetailBeanList(List<ActorVideoDetailBean> actorVideoDetailBeanList) {
+            mActorVideoDetailBeanList = actorVideoDetailBeanList;
+        }
+
+        public int getVideoType() {
+            return videoType;
+        }
+
+        public void setVideoType(int videoType) {
+            this.videoType = videoType;
+        }
+
+
     }
 
-    public void setActorVideoDetailBeans(List<ActorVideoDetailBean> actorVideoDetailBeans) {
-        mActorVideoDetailBeans = actorVideoDetailBeans;
-    }
 
-    public static class ActorVideoDetailBean {
+    public static class ActorVideoDetailBean implements Serializable {
         private String image;
         private String title;
         private String url;

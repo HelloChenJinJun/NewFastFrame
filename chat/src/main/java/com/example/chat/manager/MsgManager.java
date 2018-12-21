@@ -12,7 +12,7 @@ import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.SkinBean;
 import com.example.chat.bean.StepBean;
 import com.example.chat.bean.SystemNotifyBean;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;

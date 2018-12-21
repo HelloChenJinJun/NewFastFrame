@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.example.chat.R;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.listener.AddBlackCallBackListener;
 import com.example.chat.listener.CancelBlackCallBlackListener;
 import com.example.chat.listener.OnSendTagMessageListener;

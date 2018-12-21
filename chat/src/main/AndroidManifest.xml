@@ -93,6 +93,8 @@
         <activity android:name=".mvp.skin.SkinListActivity" />
         <activity android:name=".mvp.skin.skinDetail.SkinDetailActivity" />
         <activity android:name=".mvp.step.RecordStepActivity" />
+        <activity android:name=".mvp.main.invitation.InvitationActivity" />
+        <activity android:name=".mvp.main.friends.FriendsActivity" />
 
 
         <intent-filter>

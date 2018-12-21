@@ -1,7 +1,5 @@
 package com.example.chat.listener;
 
-import com.example.chat.bean.User;
-
 import cn.bmob.v3.exception.BmobException;
 
 /**

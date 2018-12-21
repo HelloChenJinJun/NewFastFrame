@@ -42,8 +42,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginBottom="10dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/wallpaper_bg" />
+                android:background="@drawable/custom_drawable_place_holder"
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/tv_item_activity_system_notify_title"

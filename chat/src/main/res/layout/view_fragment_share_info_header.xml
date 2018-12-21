@@ -3,35 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
     <ImageView
-        android:src="@drawable/head"
         android:id="@+id/iv_view_fragment_share_info_header_bg"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:background="@drawable/custom_drawable_place_holder"
         android:scaleType="center" />
+
     <LinearLayout
         android:id="@+id/ll_view_fragment_share_info_header_unread"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/grey_200"
-        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/grey_200"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/iv_view_fragment_share_info_header_avatar"
-            android:scaleType="centerCrop"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/head"/>
+            android:background="@drawable/custom_drawable_place_holder"
+            android:scaleType="centerCrop" />
+
         <TextView
             android:id="@+id/tv_view_fragment_share_info_header_unread"
-            android:paddingRight="10dp"
-            android:paddingLeft="10dp"
-            android:text="你有一条未读消息"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="你有一条未读消息" />
     </LinearLayout>
 
 

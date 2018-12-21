@@ -11,6 +11,7 @@ import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.editInfo.EditUserInfoActivity;
+import com.example.chat.mvp.main.recent.RecentFragment;
 import com.example.chat.mvp.search.SearchActivity;
 import com.example.chat.mvp.searchFriend.SearchFriendActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
@@ -38,7 +39,7 @@ public class HomeActivity extends ChatBaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        ((HomeFragment) currentFragment).notifyNewIntentCome(intent);
+        ((RecentFragment) currentFragment).notifyNewIntentCome(intent);
     }
 
     @Override

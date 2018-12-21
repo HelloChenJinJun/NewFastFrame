@@ -1,7 +1,7 @@
 package com.example.chat.mvp.NearByPeople;
 
 import com.example.chat.base.AppBasePresenter;
-import com.example.chat.bean.User;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.manager.UserManager;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;

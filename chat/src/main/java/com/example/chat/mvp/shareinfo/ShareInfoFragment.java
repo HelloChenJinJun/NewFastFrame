@@ -88,7 +88,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return getArguments().getBoolean(ConstantUtil.IS_PUBLIC, false);
+        return false;
     }
 
     @Override
@@ -101,6 +101,11 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         return R.layout.fragment_share_info;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
 
     @Override
     protected void initView() {
@@ -132,7 +137,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         } else {
             mMenu.setVisibility(View.GONE);
         }
-        initTopBar();
+        //        initTopBar();
         presenter.registerEvent(UnReadPostNotifyEvent.class, unReadCommentEvent -> updateInfo(unReadCommentEvent != null ? unReadCommentEvent.getPostNotifyBean().getRelatedUser().getAvatar() : null));
         presenter.registerEvent(UserInfoUpdateEvent.class, userInfoUpdateEvent -> getAppComponent().getImageLoader()
                 .loadImage(getContext(), GlideImageLoaderConfig
