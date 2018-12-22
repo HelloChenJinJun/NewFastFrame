@@ -27,6 +27,11 @@ public class OtherNewsListAdapter extends BaseMultipleRecyclerAdapter<NewInfoBea
         return sparseArray;
     }
 
+    @Override
+    protected boolean isApplySkin() {
+        return true;
+
+    }
 
     @Override
     protected void convert(BaseWrappedViewHolder holder, NewInfoBean data) {

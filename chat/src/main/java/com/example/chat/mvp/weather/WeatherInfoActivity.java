@@ -69,7 +69,7 @@ public class WeatherInfoActivity extends ChatBaseActivity implements WeatherSear
 
     @Override
     protected boolean needStatusPadding() {
-        return false;
+        return true;
     }
 
     @Override

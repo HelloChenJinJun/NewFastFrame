@@ -1,63 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:skin="http://schemas.android.com/android/skin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="10dp">
 
     <ImageView
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:background="@color/base_color_text_grey"
+        android:id="@+id/iv_item_fragment_other_news_list_display"
         android:layout_width="100dp"
         android:layout_height="75dp"
-        android:scaleType="centerCrop"
-        android:id="@+id/iv_item_fragment_other_news_list_display"/>
-
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/base_color_text_grey"
+        android:scaleType="centerCrop" />
 
 
     <com.flyco.labelview.LabelView
-        android:visibility="gone"
         android:id="@+id/lv_item_fragment_other_news_list_label"
-        app:lv_text_size="12sp"
-        app:lv_text="专题"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:lv_fill_triangle="true"/>
+        android:visibility="gone"
+        app:lv_fill_triangle="true"
+        app:lv_text="专题"
+        app:lv_text_size="12sp" />
 
     <TextView
-        android:tag="skin"
-        android:textColor="@color/custom_color_text_main"
-        android:layout_marginTop="15dp"
         android:id="@+id/tv_item_fragment_other_news_list_title"
-        android:layout_toRightOf="@+id/iv_item_fragment_other_news_list_display"
         android:layout_width="match_parent"
-        android:layout_marginRight="10dp"
         android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:textSize="16sp"
         android:layout_marginLeft="10dp"
-        />
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@+id/iv_item_fragment_other_news_list_display"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/custom_color_text_main"
+        android:textSize="16sp"
+        skin:enable="true" />
 
 
     <TextView
-        android:tag="skin"
-        android:textColor="@color/custom_color_text_sub"
-        android:textSize="12sp"
         android:id="@+id/tv_item_fragment_other_news_list_from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tv_item_fragment_other_news_list_title"
         android:layout_alignBottom="@+id/iv_item_fragment_other_news_list_display"
-        android:layout_marginBottom="5dp"/>
-    <TextView
-        android:layout_marginRight="10dp"
-        android:textSize="12sp"
+        android:layout_marginBottom="5dp"
         android:tag="skin"
-        android:textColor="@color/custom_color_text_sub"        android:id="@+id/tv_item_fragment_other_news_list_time"
-        android:layout_alignParentRight="true"
+        android:textColor="@color/custom_color_text_sub"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_item_fragment_other_news_list_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tv_item_fragment_other_news_list_from"/>
+        android:layout_alignBottom="@+id/tv_item_fragment_other_news_list_from"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:tag="skin"
+        android:textColor="@color/custom_color_text_sub"
+        android:textSize="12sp" />
 </RelativeLayout>

@@ -150,18 +150,18 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
 
     @Override
     protected void initView() {
-        refresh = (CustomSwipeRefreshLayout) findViewById(R.id.refresh_activity_comment_list_refresh);
-        display = (SuperRecyclerView) findViewById(R.id.srcv_activity_comment_list_display);
+        refresh = findViewById(R.id.refresh_activity_comment_list_refresh);
+        display = findViewById(R.id.srcv_activity_comment_list_display);
         refresh.setOnRefreshListener(this);
-        face = (Button) findViewById(R.id.btn_comment_bottom_face);
+        face = findViewById(R.id.btn_comment_bottom_face);
 
-        input = (EditText) findViewById(R.id.et_comment_bottom_input);
-        keyboard = (Button) findViewById(R.id.btn_comment_bottom_keyboard);
-        send = (Button) findViewById(R.id.btn_comment_bottom_send);
+        input = findViewById(R.id.et_comment_bottom_input);
+        keyboard = findViewById(R.id.btn_comment_bottom_keyboard);
+        send = findViewById(R.id.btn_comment_bottom_send);
         face.setOnClickListener(this);
         keyboard.setOnClickListener(this);
         send.setOnClickListener(this);
-        emotionPager = (WrappedViewPager) findViewById(R.id.vp_comment_bottom_emotion);
+        emotionPager = findViewById(R.id.vp_comment_bottom_emotion);
         initEmotionInfo();
     }
 

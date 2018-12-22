@@ -2,11 +2,16 @@ package com.example.chat.mvp.UserDetail;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.chat.R;
 import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.base.ConstantUtil;
@@ -17,12 +22,19 @@ import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
+import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.BlurBitmapUtil;
+import com.example.commonlibrary.utils.StatusBarUtil;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 
@@ -39,8 +51,13 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
     private ImageView sex;
     private WrappedViewPager display;
     private UserEntity user;
+    private Toolbar mToolbar;
+    private RelativeLayout headerBg;
+    private AppBarLayout mAppBarLayout;
+    private CustomSwipeRefreshLayout refresh;
 
     @Override
+
     public void updateData(Object object) {
 
     }
@@ -55,6 +72,12 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         return false;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
+
     @Override
     protected int getContentLayout() {
         return R.layout.activity_user_detail;
@@ -63,22 +86,49 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
     @Override
     protected void initView() {
         initHeaderView();
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tl_activity_user_detail_tab);
-        display = (WrappedViewPager) findViewById(R.id.vp_activity_user_detail_display);
+        TabLayout tabLayout = findViewById(R.id.tl_activity_user_detail_tab);
+        display = findViewById(R.id.vp_activity_user_detail_display);
+        findViewById(R.id.iv_activity_user_detail_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        mToolbar = findViewById(R.id.tb_activity_user_detail_title);
+        headerBg = findViewById(R.id.rl_activity_user_detail_header_bg);
+        refresh = findViewById(R.id.refresh_activity_user_detail_refresh);
+        setSupportActionBar(mToolbar);
+        mToolbar.getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mToolbar.getRootView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mToolbar.getLayoutParams().height += StatusBarUtil.getStatusBarHeight(UserDetailActivity.this);
+                mToolbar.requestLayout();
+            }
+        });
+
+        mAppBarLayout = findViewById(R.id.al_activity_user_detail_bar);
+        mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (verticalOffset >= 0) {
+                refresh.setEnabled(true);
+            } else {
+                refresh.setEnabled(false);
+            }
+        });
         tabLayout.setupWithViewPager(display);
     }
 
     private void initHeaderView() {
-        avatar = (RoundAngleImageView) findViewById(R.id.riv_view_activity_user_detail_header_avatar);
-        name = (TextView) findViewById(R.id.tv_view_activity_user_detail_header_name);
-        signature = (TextView) findViewById(R.id.tv_view_activity_user_detail_header_signature);
-        sex = (ImageView) findViewById(R.id.iv_view_activity_user_detail_header_sex);
-        follow = (TextView) findViewById(R.id.tv_view_activity_user_detail_header_follow);
-        fans = (TextView) findViewById(R.id.tv_view_activity_user_detail_header_fans);
-        visit = (TextView) findViewById(R.id.tv_view_activity_user_detail_header_visit);
-        sexContent = (TextView) findViewById(R.id.tv_view_activity_user_detail_header_sex_content);
-        school = (TextView) findViewById(R.id.tv_view_activity_user_detail_header_school);
-        major = (TextView) findViewById(R.id.tv_view_activity_user_detail_header_major);
+        avatar = findViewById(R.id.riv_view_activity_user_detail_header_avatar);
+        name = findViewById(R.id.tv_view_activity_user_detail_header_name);
+        signature = findViewById(R.id.tv_view_activity_user_detail_header_signature);
+        sex = findViewById(R.id.iv_view_activity_user_detail_header_sex);
+        follow = findViewById(R.id.tv_view_activity_user_detail_header_follow);
+        fans = findViewById(R.id.tv_view_activity_user_detail_header_fans);
+        visit = findViewById(R.id.tv_view_activity_user_detail_header_visit);
+        sexContent = findViewById(R.id.tv_view_activity_user_detail_header_sex_content);
+        school = findViewById(R.id.tv_view_activity_user_detail_header_school);
+        major = findViewById(R.id.tv_view_activity_user_detail_header_major);
         findViewById(R.id.tv_view_activity_user_detail_header_look)
                 .setOnClickListener(this);
 
@@ -118,6 +168,13 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
             stringBuilder.append(user.getYear()).append("级")
                     .append(user.getMajor());
             major.setText(stringBuilder.toString());
+            Glide.with(this).asBitmap().load(user.getTitlePaper()).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    headerBg.setBackground(BlurBitmapUtil.createBlurredImageFromBitmap(resource, UserDetailActivity.this, 20));
+                }
+            });
+
             if (user.isSex()) {
                 sexContent.setText("他");
             } else {

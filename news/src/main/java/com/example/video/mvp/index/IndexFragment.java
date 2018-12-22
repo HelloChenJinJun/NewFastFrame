@@ -1,7 +1,6 @@
 package com.example.video.mvp.index;
 
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -171,7 +170,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             }
             popWindowAdapter.refreshData(result);
             if (!customPopWindow.isShowing()) {
-                customPopWindow.showAtLocation(display, Gravity.END, 0, 0);
+                customPopWindow.showAsDropDown(tabLayout);
             } else {
                 customPopWindow.dismiss();
             }
@@ -186,8 +185,8 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.view_fragment_index_pop_window, null);
         Button adjust = contentView.findViewById(R.id.btn_view_fragment_index_pop_adjust);
         final SuperRecyclerView display = contentView.findViewById(R.id.srcv_view_fragment_index_pop_display);
-        display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 5));
-        display.addItemDecoration(new GridSpaceDecoration(5, 0, DensityUtil.toDp(10), true));
+        display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 4));
+        display.addItemDecoration(new GridSpaceDecoration(4, 0, DensityUtil.toDp(10), true));
         popWindowAdapter = new PopWindowAdapter();
         display.setAdapter(popWindowAdapter);
         popWindowAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {

@@ -61,7 +61,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            app:srcCompat="@drawable/ic_arrow_left" />
+                            app:srcCompat="@drawable/ic_back" />
                     </RelativeLayout>
 
                 </androidx.appcompat.widget.Toolbar>

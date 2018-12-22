@@ -1,17 +1,12 @@
 package com.example.commonlibrary.cusotomview;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
 import com.example.commonlibrary.R;
-import com.example.commonlibrary.utils.BlurBitmapUtil;
-import com.example.commonlibrary.utils.DensityUtil;
 
 /**
  * Created by COOTEK on 2017/8/22.
@@ -37,7 +32,6 @@ public class CustomPopWindow extends PopupWindow {
         this.setTouchable(true);
         this.setOutsideTouchable(true);
         this.setFocusable(true);
-        setAnimationStyle(R.style.CustomPopWindow);
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         //        this.setTouchInterceptor((v, event) -> {

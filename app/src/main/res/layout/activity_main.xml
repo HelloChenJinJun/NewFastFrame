@@ -10,16 +10,16 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        skin:enable="true">
+        android:layout_height="match_parent">
 
 
         <com.example.commonlibrary.cusotomview.WrappedViewPager
             android:id="@+id/wvp_activity_main_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:background="@color/custom_color_app_bg"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            skin:enable="true" />
 
         <RadioGroup
             android:id="@+id/rg_activity_main_bottom_container"
@@ -32,7 +32,8 @@
             android:orientation="horizontal"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            app:layout_behavior="@string/behavior_footer">
+            app:layout_behavior="@string/behavior_footer"
+            skin:enable="true">
 
 
             <RadioButton
@@ -41,7 +42,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:button="@null"
-                android:drawableTop="@drawable/ic_main_bottom_five"
+                android:drawableTop="@drawable/ic_demo_five"
                 android:drawablePadding="3dp"
                 android:gravity="center"
                 android:text="聊天"
@@ -54,7 +55,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:button="@null"
-                android:drawableTop="@drawable/ic_main_bottom_two"
+                android:drawableTop="@drawable/ic_demo_two"
                 android:drawablePadding="3dp"
                 android:gravity="center"
                 android:text="闲聊"
@@ -67,7 +68,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:button="@null"
-                android:drawableTop="@drawable/ic_main_bottom_three"
+                android:drawableTop="@drawable/ic_demo_three"
                 android:drawablePadding="3dp"
                 android:gravity="center"
                 android:text="中心"
@@ -80,7 +81,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:button="@null"
-                android:drawableTop="@drawable/ic_main_bottom_one"
+                android:drawableTop="@drawable/ic_demo_one"
                 android:drawablePadding="3dp"
                 android:gravity="center"
                 android:text="新闻"
@@ -94,7 +95,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:button="@null"
-                android:drawableTop="@drawable/ic_main_bottom_four"
+                android:drawableTop="@drawable/ic_demo_four"
                 android:drawablePadding="3dp"
                 android:gravity="center"
                 android:text="个人"

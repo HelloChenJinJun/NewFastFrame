@@ -3,7 +3,7 @@ package com.example.video.mvp.news.othernew.detail;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.commonlibrary.BaseActivity;
+import com.example.commonlibrary.SlideBaseActivity;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.video.NewsApplication;
 import com.example.video.R;
@@ -20,7 +20,7 @@ import com.example.video.widget.rich.RichText;
  * QQ:             1981367757
  */
 
-public class OtherNewsDetailActivity extends BaseActivity<OtherNewsDetailBean, OtherNewsDetailPresenter> {
+public class OtherNewsDetailActivity extends SlideBaseActivity<OtherNewsDetailBean, OtherNewsDetailPresenter> {
     private RichText content;
 
 

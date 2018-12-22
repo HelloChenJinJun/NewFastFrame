@@ -1,5 +1,6 @@
 package com.example.music.mvp.main;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
@@ -234,18 +235,21 @@ public class MainActivity extends SlideBaseActivity implements OnDragDeltaChange
                     case 0:
                         ((RadioButton) findViewById(R.id.rb_activity_main_bottom_chat)).setChecked(true);
                         dragLayout.setIntercept(false);
+                        show(bottomContainer);
                         break;
                     case 1:
                         ((RadioButton) findViewById(R.id.rb_activity_main_bottom_public)).setChecked(true);
                         break;
                     case 2:
                         ((RadioButton) findViewById(R.id.rb_activity_main_bottom_center)).setChecked(true);
+                        show(bottomContainer);
                         break;
                     case 3:
                         ((RadioButton) findViewById(R.id.rb_activity_main_bottom_index)).setChecked(true);
                         break;
                     case 4:
                         ((RadioButton) findViewById(R.id.rb_activity_main_bottom_person)).setChecked(true);
+                        show(bottomContainer);
                         break;
                 }
 
@@ -258,6 +262,13 @@ public class MainActivity extends SlideBaseActivity implements OnDragDeltaChange
             }
         });
         display.setAdapter(viewPagerAdapter);
+    }
+
+
+    private void show(final View view) {
+        if (view.getTranslationY() != 0) {
+            ObjectAnimator.ofFloat(view, "translationY", view.getTranslationY(), 0).setDuration(200).start();
+        }
     }
 
     private void initMenu() {

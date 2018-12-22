@@ -104,7 +104,6 @@ public class ActorDetailInfoActivity extends VideoBaseActivity<BaseBean, ActorDe
         });
         refresh.setOnRefreshListener(this);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("svsc");
         mAppBarLayout = findViewById(R.id.al_activity_actor_detail_info_bar);
         mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             if (verticalOffset >= 0) {

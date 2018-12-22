@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:skin="http://schemas.android.com/android/skin"
     android:id="@+id/fl_empty_layout_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/base_color_text_white"
-    android:visibility="visible">
+    android:background="@color/custom_color_app_bg"
+    android:visibility="visible"
+    skin:enable="true">
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/rl_empty_layout_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:visibility="gone">
 
         <ImageView
-            android:src="@drawable/websearch_disconnected"
-            android:layout_centerHorizontal="true"
             android:id="@+id/iv_empty_error_image"
-            android:scaleType="centerInside"
             android:layout_width="100dp"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/websearch_disconnected" />
 
         <TextView
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/iv_empty_error_image"
             android:id="@+id/tv_empty_error_retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_empty_error_image"
+            android:layout_marginTop="10dp"
             android:text="网络加载失败，请点击重试"
             android:textColor="@color/base_color_text_black"
             android:textSize="20sp" />
     </RelativeLayout>
-
 
 
     <RelativeLayout
@@ -39,47 +40,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
-    <ImageView
-        android:src="@drawable/websearch_error"
-        android:id="@+id/iv_empty_empty_image"
-        android:layout_centerHorizontal="true"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="centerInside"/>
+
+        <ImageView
+            android:id="@+id/iv_empty_empty_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/websearch_error" />
 
         <TextView
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/iv_empty_empty_image"
             android:id="@+id/tv_empty_empty_retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_empty_empty_image"
+            android:layout_marginTop="10dp"
             android:text="暂时没有数据，请点击重试"
             android:textColor="@color/base_color_text_black"
             android:textSize="20sp" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/rl_empty_layout_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-       <ImageView
-           android:layout_centerHorizontal="true"
-           android:layout_width="100dp"
-           android:layout_height="100dp"
-           android:scaleType="centerCrop"
-           android:id="@+id/iv_empty_loading_image"/>
+        <ImageView
+            android:id="@+id/iv_empty_loading_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop" />
 
         <TextView
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/iv_empty_loading_image"
             android:id="@+id/tv_empty_layout_loading_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_empty_loading_image"
+            android:layout_marginTop="10dp"
             android:text="正在加载，请稍后.........."
             android:textColor="@color/base_color_text_black"
             android:textSize="18sp" />

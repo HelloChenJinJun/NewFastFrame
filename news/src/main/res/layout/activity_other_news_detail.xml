@@ -10,11 +10,12 @@
         android:padding="10dp">
 
         <com.example.video.widget.rich.RichText
+
             android:id="@+id/tv_activity_other_news_detail_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:lineSpacingExtra="20dp"
-            android:textColor="?android:textColorPrimary"
+            android:lineSpacingExtra="15dp"
+            android:textColor="@color/custom_color_text_main"
             android:textSize="16sp" />
     </LinearLayout>
 </ScrollView>

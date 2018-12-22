@@ -30,7 +30,8 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/custom_drawable_place_holder" />
+            android:background="@drawable/custom_drawable_place_holder"
+            android:scaleType="centerCrop" />
     </RelativeLayout>
 
     <View
