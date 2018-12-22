@@ -29,17 +29,22 @@ public class ShareInfoAdapter extends BaseMultipleRecyclerAdapter<PublicPostBean
         sparseArray.put(ConstantUtil.EDIT_TYPE_IMAGE, R.layout.item_fragment_share_info);
         sparseArray.put(ConstantUtil.EDIT_TYPE_SHARE, R.layout.item_fragment_share_info);
         sparseArray.put(ConstantUtil.EDIT_TYPE_TEXT, R.layout.item_fragment_share_info);
-        sparseArray.put(ConstantUtil.EDIT_TYPE_VOICE,R.layout.item_fragment_share_info);
-        sparseArray.put(ConstantUtil.EDIT_TYPE_VIDEO,R.layout.item_fragment_share_info);
+        sparseArray.put(ConstantUtil.EDIT_TYPE_VOICE, R.layout.item_fragment_share_info);
+        sparseArray.put(ConstantUtil.EDIT_TYPE_VIDEO, R.layout.item_fragment_share_info);
         return sparseArray;
     }
 
 
     @Override
+    protected boolean isApplySkin() {
+        return true;
+    }
+
+    @Override
     public BaseShareInfoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ConstantUtil.EDIT_TYPE_IMAGE) {
             return new ImageShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
-        }else if (viewType==ConstantUtil.EDIT_TYPE_SHARE){
+        } else if (viewType == ConstantUtil.EDIT_TYPE_SHARE) {
             return new ShareShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
         } else if (viewType == ConstantUtil.EDIT_TYPE_TEXT) {
             return new TextShareInfoHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutIds().get(viewType), parent, false));
@@ -50,6 +55,7 @@ public class ShareInfoAdapter extends BaseMultipleRecyclerAdapter<PublicPostBean
         }
         return super.onCreateViewHolder(parent, viewType);
     }
+
     @Override
     protected void convert(BaseShareInfoViewHolder holder, PublicPostBean data) {
         holder.bindAdapter(this);

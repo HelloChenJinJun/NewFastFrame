@@ -512,6 +512,8 @@ public class DefaultVideoController extends VideoController implements View.OnCl
             clarityAdapter.notifyDataSetChanged();
         } else if (id == R.id.ll_view_video_control_restart) {
             finishContainer.setVisibility(GONE);
+            mIVideoPlayer.release();
+            mIVideoPlayer.setState(DefaultVideoPlayer.PLAY_STATE_PREPARING);
             mIVideoPlayer.start();
         } else if (id == R.id.ll_view_video_control_share) {
             ToastUtils.showShortToast("分享功能");

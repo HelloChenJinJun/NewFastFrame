@@ -1,159 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:layout_marginBottom="20dp"
-    android:tag="skin"
-    android:background="@color/custom_color_app_content_bg"
-android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:skin="http://schemas.android.com/android/skin"
 
-<RelativeLayout
-    android:id="@+id/rl_item_fragment_share_info_top_container"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
-    <com.example.commonlibrary.cusotomview.RoundAngleImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:roundHeight="25dp"
-        app:roundWidth="25dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/head"
-        android:id="@+id/riv_item_fragment_share_info_avatar"
-        android:layout_centerVertical="true"/>
-    <LinearLayout
-        android:layout_marginLeft="20dp"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/riv_item_fragment_share_info_avatar"
-        android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:background="@color/custom_color_app_content_bg"
+    android:orientation="vertical"
+    skin:enable="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_item_fragment_share_info_top_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:padding="10dp">
+
+        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            android:id="@+id/riv_item_fragment_share_info_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/head"
+            app:roundHeight="25dp"
+            app:roundWidth="25dp" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/riv_item_fragment_share_info_avatar"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_item_fragment_share_info_main_text"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawablePadding="5dp"
-                android:textColor="@color/custom_color_text_main"
-                android:text="无聊的->人类" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/iv_item_fragment_share_info_sex"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="10dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_sex_female" />
+                <TextView
+                    android:id="@+id/tv_item_fragment_share_info_main_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="5dp"
+                    android:text="无聊的->人类"
+                    android:textColor="@color/custom_color_text_main" />
 
-            <RelativeLayout
-                android:id="@+id/rl_item_fragment_share_info_load_container"
-                android:layout_marginLeft="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/iv_item_fragment_share_info_retry"
-                    android:src="@drawable/ic_retry"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"/>
+                    android:id="@+id/iv_item_fragment_share_info_sex"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_sex_female" />
 
-                <ProgressBar
-                    android:visibility="gone"
-                    android:id="@+id/pb_item_fragment_share_info_retry_loading"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp" />
-            </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/rl_item_fragment_share_info_load_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp">
+
+                    <ImageView
+                        android:id="@+id/iv_item_fragment_share_info_retry"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_retry" />
+
+                    <ProgressBar
+                        android:id="@+id/pb_item_fragment_share_info_retry_loading"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:visibility="gone" />
+                </RelativeLayout>
 
 
+            </LinearLayout>
 
+            <TextView
+                android:id="@+id/tv_item_fragment_share_info_sub_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="无聊的->人类"
+                android:textColor="@color/custom_color_text_sub"
+                android:textSize="12sp" />
         </LinearLayout>
-        <TextView
-            android:layout_marginTop="5dp"
-            android:id="@+id/tv_item_fragment_share_info_sub_text"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="@color/custom_color_text_sub"
+
+        <ImageView
+            android:id="@+id/iv_item_fragment_share_info_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="无聊的->人类"/>
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/iv_item_fragment_share_info_more"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_expend_more"
-        android:layout_marginTop="10dp"/>
-</RelativeLayout>
-
-<TextView
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:maxLines="5"
-    android:tag="skin"
-    android:textColor="@color/custom_color_text_main"
-    android:textSize="16sp"
-    android:ellipsize="end"
-    android:id="@+id/tv_item_fragment_share_info_normal_text"/>
-<ViewStub
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/vs_item_fragment_share_info_stub"/>
-
-<View
-    android:layout_marginTop="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="1px"
-    android:background="#808080"/>
-<RelativeLayout
-    android:paddingStart="50dp"
-    android:paddingEnd="50dp"
-    android:layout_width="match_parent"
-    android:layout_height="40dp">
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_expend_more" />
+    </RelativeLayout>
 
     <TextView
-        android:drawablePadding="3dp"
-        android:gravity="center"
-        android:drawableLeft="@drawable/ic_share_public"
-        android:layout_centerVertical="true"
-        android:textSize="12sp"
-        android:textColor="@color/custom_color_text_sub"
-        android:id="@+id/tv_item_fragment_share_info_share"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_item_fragment_share_info_normal_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="转发"/>
-    <TextView
-        android:textColor="@color/custom_color_text_sub"
-        android:drawablePadding="3dp"
-        android:gravity="center"
-        android:drawableLeft="@drawable/ic_comment_public"
-        android:layout_centerInParent="true"
-        android:textSize="12sp"
-        android:id="@+id/tv_item_fragment_share_info_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="59"/>
-    <TextView
-        android:drawablePadding="3dp"
-        android:gravity="center"
-        android:drawableLeft="@drawable/ic_favorite_border_deep_orange_a700_24dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:textSize="12sp"
-        android:textColor="@color/custom_color_text_sub"
-        android:id="@+id/tv_item_fragment_share_info_like"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="32"/>
+        android:layout_margin="10dp"
+        android:ellipsize="end"
+        android:maxLines="5"
+        skin:enable="true"
+        android:textColor="@color/custom_color_text_main"
+        android:textSize="16sp" />
 
-</RelativeLayout>
+    <ViewStub
+        android:id="@+id/vs_item_fragment_share_info_stub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="10dp"
+        android:background="#808080" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp">
+
+        <TextView
+            android:id="@+id/tv_item_fragment_share_info_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/ic_share_public"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="转发"
+            android:textColor="@color/custom_color_text_sub"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_item_fragment_share_info_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@drawable/ic_comment_public"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="59"
+            android:textColor="@color/custom_color_text_sub"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_item_fragment_share_info_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/ic_favorite_border_deep_orange_a700_24dp"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="32"
+            android:textColor="@color/custom_color_text_sub"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
 
 </LinearLayout>

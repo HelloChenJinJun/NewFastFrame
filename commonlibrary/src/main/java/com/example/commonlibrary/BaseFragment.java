@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
@@ -56,9 +56,6 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     private TextView title;
     private ImageView rightImage;
     protected ImageView back;
-
-
-
 
 
     @Nullable
@@ -293,9 +290,6 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     protected abstract void updateView();
 
 
-
-
-
     public void setToolBar(ToolBarOption option) {
         if (!isNeedHeadLayout()) {
             return;
@@ -391,8 +385,8 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     }
 
 
-    protected void showChooseDialog(String title, List<String> list, AdapterView.OnItemClickListener listener) {
-
+    protected void showChooseDialog(String title, List<String> list, OnSimpleItemClickListener listener) {
+        ((BaseActivity) getActivity()).showChooseDialog(title, list, listener);
     }
 
     @Override

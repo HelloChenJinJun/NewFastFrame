@@ -190,27 +190,29 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                         List<String> list1 = new ArrayList<>();
                         list1.add("删除");
                         list1.add("修改");
-                        showChooseDialog("帖子操作", list1, (adapterView, view1, i, l) -> {
-                            hideBaseDialog();
-                            if (i == 0) {
-                                showLoadDialog("删除中....");
-                                presenter.deleteShareInfo(shareInfoAdapter.getData(position), new UpdateListener() {
-                                    @Override
-                                    public void done(BmobException e) {
-                                        dismissLoadDialog();
-                                        if (e == null) {
-                                            ToastUtils.showShortToast("删除成功");
-                                            CommonLogger.e("删除成功");
-                                            shareInfoAdapter.removeData(position);
-                                        } else {
-                                            ToastUtils.showShortToast("删除失败" + e.toString());
-                                            CommonLogger.e("删除失败" + e.toString());
+                        showChooseDialog("帖子操作", list1, new OnSimpleItemClickListener() {
+                            @Override
+                            public void onItemClick(int i, View view) {
+                                if (i == 0) {
+                                    showLoadDialog("删除中....");
+                                    presenter.deleteShareInfo(shareInfoAdapter.getData(position), new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            dismissLoadDialog();
+                                            if (e == null) {
+                                                ToastUtils.showShortToast("删除成功");
+                                                CommonLogger.e("删除成功");
+                                                shareInfoAdapter.removeData(position);
+                                            } else {
+                                                ToastUtils.showShortToast("删除失败" + e.toString());
+                                                CommonLogger.e("删除失败" + e.toString());
+                                            }
                                         }
-                                    }
-                                });
-                            } else {
-                                PublicPostBean publicPostBean = shareInfoAdapter.getData(position);
-                                EditShareInfoActivity.start(getActivity(), publicPostBean.getMsgType(), publicPostBean, true);
+                                    });
+                                } else {
+                                    PublicPostBean publicPostBean = shareInfoAdapter.getData(position);
+                                    EditShareInfoActivity.start(getActivity(), publicPostBean.getMsgType(), publicPostBean, true);
+                                }
                             }
                         });
                     } else {
