@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.example.commonlibrary.cusotomview.draglayout.DragLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:skin="http://schemas.android.com/android/skin"
     android:id="@+id/dl_activity_main_drag_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,7 +11,8 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        skin:enable="true">
 
 
         <com.example.commonlibrary.cusotomview.WrappedViewPager
@@ -30,7 +32,7 @@
             android:orientation="horizontal"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:tag="skin">
+            app:layout_behavior="@string/behavior_footer">
 
 
             <RadioButton
@@ -42,9 +44,9 @@
                 android:drawableTop="@drawable/ic_main_bottom_five"
                 android:drawablePadding="3dp"
                 android:gravity="center"
-                android:tag="skin"
                 android:text="聊天"
-                android:textColor="@color/tab_text_color" />
+                android:textColor="@color/tab_text_color"
+                skin:enable="true" />
 
             <RadioButton
                 android:id="@+id/rb_activity_main_bottom_public"
@@ -55,9 +57,9 @@
                 android:drawableTop="@drawable/ic_main_bottom_two"
                 android:drawablePadding="3dp"
                 android:gravity="center"
-                android:tag="skin"
                 android:text="闲聊"
-                android:textColor="@color/tab_text_color" />
+                android:textColor="@color/tab_text_color"
+                skin:enable="true" />
 
             <RadioButton
                 android:id="@+id/rb_activity_main_bottom_center"
@@ -68,9 +70,9 @@
                 android:drawableTop="@drawable/ic_main_bottom_three"
                 android:drawablePadding="3dp"
                 android:gravity="center"
-                android:tag="skin"
                 android:text="中心"
-                android:textColor="@color/tab_text_color" />
+                android:textColor="@color/tab_text_color"
+                skin:enable="true" />
 
             <RadioButton
                 android:id="@+id/rb_activity_main_bottom_index"
@@ -81,9 +83,9 @@
                 android:drawableTop="@drawable/ic_main_bottom_one"
                 android:drawablePadding="3dp"
                 android:gravity="center"
-                android:tag="skin"
                 android:text="新闻"
-                android:textColor="@color/tab_text_color" />
+                android:textColor="@color/tab_text_color"
+                skin:enable="true" />
 
 
             <RadioButton
@@ -95,9 +97,9 @@
                 android:drawableTop="@drawable/ic_main_bottom_four"
                 android:drawablePadding="3dp"
                 android:gravity="center"
-                android:tag="skin"
                 android:text="个人"
-                android:textColor="@color/tab_text_color" />
+                android:textColor="@color/tab_text_color"
+                skin:enable="true" />
 
 
         </RadioGroup>

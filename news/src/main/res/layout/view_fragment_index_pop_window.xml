@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
 
     <com.example.commonlibrary.baseadapter.SuperRecyclerView
+        android:id="@+id/srcv_view_fragment_index_pop_display"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/srcv_view_fragment_index_pop_display"/>
+        android:layout_height="wrap_content" />
 
     <Button
-        android:visibility="gone"
-        android:text="调整"
         android:id="@+id/btn_view_fragment_index_pop_adjust"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="调整"
         android:textColor="@color/base_color_text_black"
         android:textSize="18sp"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"/>
+        android:visibility="gone" />
 
 </LinearLayout>

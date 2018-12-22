@@ -79,7 +79,7 @@ public class PhotoPreViewAdapter extends PagerAdapter {
                 BaseApplication
                         .getAppComponent()
                         .getImageLoader().loadImage(mContext
-                        , GlideImageLoaderConfig.newBuild().cacheStrategy(GlideImageLoaderConfig.CACHE_RESULT).override(screenWidth, screenHeight).url(url).imageView(photoView).build());
+                        , GlideImageLoaderConfig.newBuild().cacheStrategy(GlideImageLoaderConfig.CACHE_RESULT).centerInside().url(url).imageView(photoView).build());
             }
         }
         container.addView(view);

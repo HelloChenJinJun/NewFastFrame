@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="1/5"
-            android:textColor="@color/white" />
+            android:textColor="@color/black" />
 
 
         <CheckBox

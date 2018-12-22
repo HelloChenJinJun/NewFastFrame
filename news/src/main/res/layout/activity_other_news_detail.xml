@@ -1,34 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <ScrollView
+    android:layout_height="match_parent">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <com.example.video.widget.rich.RichText
+            android:id="@+id/tv_activity_other_news_detail_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_activity_other_news_detail_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/base_color_text_blue"
-                android:text="标题"
-                android:textColor="@color/base_color_text_white"
-                android:textSize="18sp"
-                android:padding="10dp"
-                android:maxLines="1"
-                android:ellipsize="end"/>
-            <com.example.video.widget.rich.RichText
-                android:textSize="16sp"
-                android:textColor="?android:textColorPrimary"
-                android:id="@+id/tv_activity_other_news_detail_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
+            android:lineSpacingExtra="20dp"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="16sp" />
+    </LinearLayout>
+</ScrollView>
 
-    </ScrollView>
-
-</LinearLayout>

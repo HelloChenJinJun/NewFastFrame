@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView android:layout_width="wrap_content"
-    android:layout_margin="5dp"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:background="@drawable/custom_selector_text_bg"
-    android:textColor="@drawable/custom_selector_text_color"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_view_fragment_index_pop_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    />
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_selector_text_bg"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:maxLines="1"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:textColor="@drawable/custom_selector_text_color" />

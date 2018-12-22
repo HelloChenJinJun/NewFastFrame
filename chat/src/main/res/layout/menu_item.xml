@@ -16,7 +16,7 @@
         android:layout_centerInParent="true"
         android:gravity="center_vertical"
         android:text="菜单子项"
-        android:textColor="@color/base_color_bg_gray"
+        android:textColor="@color/white"
         android:textSize="18sp"/>
     <TextView
         android:text="11"

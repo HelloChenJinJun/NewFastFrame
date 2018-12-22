@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/custom_color_app_bg"
-    android:tag="skin"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:tag="skin">
 
 
     <RelativeLayout
@@ -17,196 +17,195 @@
             android:id="@+id/iv_fragment_person_title_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+            android:background="@drawable/custom_drawable_place_holder" />
 
         <com.example.commonlibrary.cusotomview.RoundAngleImageView
-            android:scaleType="centerCrop"
             android:id="@+id/riv_fragment_person_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            app:roundHeight="30dp"
-            app:roundWidth="30dp"
             android:layout_centerInParent="true"
-            android:src="@mipmap/ic_launcher"/>
+            android:background="@drawable/custom_drawable_place_holder"
+            android:scaleType="centerCrop"
+            app:roundHeight="30dp"
+            app:roundWidth="30dp" />
+
         <TextView
-            android:textColor="@color/red_500"
-            android:layout_marginTop="10dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/riv_fragment_person_avatar"
-            android:text="签名"
             android:id="@+id/tv_fragment_person_signature"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/riv_fragment_person_avatar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="签名"
+            android:textColor="@color/orange_500" />
     </RelativeLayout>
 
 
-
-
     <RelativeLayout
-        android:tag="skin"
         android:id="@+id/rl_fragment_person_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:background="@color/custom_color_app_content_bg"
         android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:tag="skin">
+
         <TextView
-            android:tag="skin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
-            android:textSize="16sp"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:tag="skin"
             android:text="个人资料"
             android:textColor="@color/custom_color_text_main"
-            android:drawablePadding="10dp"
-            android:gravity="center"/>
+            android:textSize="16sp" />
 
 
         <ImageView
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp" />
 
     </RelativeLayout>
+
     <RelativeLayout
-        android:background="@color/custom_color_app_content_bg"
-        android:tag="skin"
         android:id="@+id/rl_fragment_person_index"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/custom_color_app_content_bg"
+        android:padding="10dp"
+        android:tag="skin">
+
         <TextView
-            android:tag="skin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
-            android:textSize="16sp"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:tag="skin"
             android:text="个人主页"
             android:textColor="@color/custom_color_text_main"
-            android:drawablePadding="10dp"
-            android:gravity="center"/>
+            android:textSize="16sp" />
 
 
         <ImageView
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp" />
 
     </RelativeLayout>
 
 
-
-
     <RelativeLayout
-        android:background="@color/custom_color_app_content_bg"
-        android:tag="skin"
         android:id="@+id/rl_fragment_person_settings"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/custom_color_app_content_bg"
+        android:padding="10dp"
+        android:tag="skin">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
-            android:textSize="16sp"
-            android:text="设置"
-            android:tag="skin"
-            android:textColor="@color/custom_color_text_main"
             android:drawablePadding="10dp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:tag="skin"
+            android:text="设置"
+            android:textColor="@color/custom_color_text_main"
+            android:textSize="16sp" />
 
 
         <ImageView
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp" />
 
     </RelativeLayout>
 
 
-
     <RelativeLayout
-        android:background="@color/custom_color_app_content_bg"
-        android:tag="skin"
         android:id="@+id/rl_fragment_person_comment"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/custom_color_app_content_bg"
+        android:padding="10dp"
+        android:tag="skin">
+
         <TextView
-            android:tag="skin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
-            android:textSize="16sp"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:tag="skin"
             android:text="留言通知"
             android:textColor="@color/custom_color_text_main"
-            android:drawablePadding="10dp"
-            android:gravity="center"/>
+            android:textSize="16sp" />
 
 
         <ImageView
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp" />
 
     </RelativeLayout>
 
 
-
     <RelativeLayout
-        android:background="@color/custom_color_app_content_bg"
-        android:tag="skin"
         android:id="@+id/rl_fragment_person_notify"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/custom_color_app_content_bg"
+        android:padding="10dp"
+        android:tag="skin">
+
         <TextView
-            android:tag="skin"
             android:id="@+id/tv_fragment_person_system_notify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
-            android:textSize="16sp"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:tag="skin"
             android:text="系统通知"
             android:textColor="@color/custom_color_text_main"
-            android:drawablePadding="10dp"
-            android:gravity="center"/>
+            android:textSize="16sp" />
 
 
         <TextView
             android:id="@+id/tv_fragment_person_system_notify_count"
-            android:layout_toRightOf="@+id/tv_fragment_person_system_notify"
-            android:background="@drawable/custom_drawable_red_point"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:text="10"
             android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/tv_fragment_person_system_notify"
+            android:background="@drawable/custom_drawable_red_point"
             android:gravity="center"
-            android:textColor="@color/white"
-            />
+            android:text="10"
+            android:textColor="@color/white" />
 
 
         <ImageView
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp" />
 
     </RelativeLayout>
-
 
 
 </LinearLayout>

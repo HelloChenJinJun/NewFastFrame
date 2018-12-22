@@ -60,6 +60,7 @@ import com.example.commonlibrary.utils.ToastUtils;
 import com.example.music.R;
 import com.example.music.mvp.center.CenterFragment;
 import com.example.video.mvp.index.IndexFragment;
+import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,7 @@ public class MainActivity extends SlideBaseActivity implements OnDragDeltaChange
     private TextView weatherCity;
     private TextView weatherTemperature;
     private MenuDisplayAdapter menuDisplayAdapter;
+    private ArrayList<Fragment> fragmentList;
 
 
     @Override
@@ -210,7 +212,7 @@ public class MainActivity extends SlideBaseActivity implements OnDragDeltaChange
         startSearchLiveWeather(BaseApplication.getAppComponent().getSharedPreferences().getString(ConstantUtil.CITY, null));
         updateUserInfo(UserDBManager.getInstance().getUser(UserManager.getInstance().getCurrentUserObjectId()));
         initMenu();
-        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList = new ArrayList<>();
         fragmentList.add(RecentFragment.newInstance());
         fragmentList.add(ShareInfoFragment.newInstance(UserManager
                 .getInstance().getCurrentUserObjectId(), true));
@@ -397,7 +399,7 @@ public class MainActivity extends SlideBaseActivity implements OnDragDeltaChange
 
     @Override
     public void onDrag(View view, float delta) {
-
+        ViewHelper.setAlpha(((RecentFragment) fragmentList.get(display.getCurrentItem())).getIcon(), (1 - delta));
     }
 
     @Override

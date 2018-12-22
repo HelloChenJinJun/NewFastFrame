@@ -2,7 +2,6 @@ package com.example.video.mvp.news.othernew.detail;
 
 import android.content.Context;
 import android.content.Intent;
-import android.widget.TextView;
 
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
@@ -22,14 +21,13 @@ import com.example.video.widget.rich.RichText;
  */
 
 public class OtherNewsDetailActivity extends BaseActivity<OtherNewsDetailBean, OtherNewsDetailPresenter> {
-    private TextView title;
     private RichText content;
 
 
     @Override
     public void updateData(OtherNewsDetailBean otherNewsDetailBean) {
         if (otherNewsDetailBean != null) {
-            title.setText(otherNewsDetailBean.getTitle());
+            updateTitle(otherNewsDetailBean.getTitle());
             content.setRichText(otherNewsDetailBean.getBody());
         }
     }
@@ -51,7 +49,6 @@ public class OtherNewsDetailActivity extends BaseActivity<OtherNewsDetailBean, O
 
     @Override
     protected void initView() {
-        title = findViewById(R.id.tv_activity_other_news_detail_title);
         content = findViewById(R.id.tv_activity_other_news_detail_content);
     }
 

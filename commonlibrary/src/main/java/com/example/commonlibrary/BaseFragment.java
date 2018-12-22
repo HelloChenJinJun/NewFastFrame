@@ -57,6 +57,10 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     private ImageView rightImage;
     protected ImageView back;
 
+
+
+
+
     @Nullable
     @Inject
     protected P presenter;
@@ -287,6 +291,9 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     protected abstract void initData();
 
     protected abstract void updateView();
+
+
+
 
 
     public void setToolBar(ToolBarOption option) {

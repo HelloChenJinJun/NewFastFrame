@@ -1,11 +1,12 @@
 package com.example.music.behavior;
 
-import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
 import android.view.animation.Interpolator;
+
+import com.example.commonlibrary.utils.CommonLogger;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -38,6 +39,11 @@ public class FooterBehavior extends CoordinatorLayout.Behavior<View> {
     @Override
     public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
+        if (dyConsumed > 0) {
+            hide(child);
+        } else if (dyConsumed < 0) {
+            show(child);
+        }
     }
 
 
@@ -54,74 +60,17 @@ public class FooterBehavior extends CoordinatorLayout.Behavior<View> {
 
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
-        if (dy > 0 && sinceDirectionChange < 0 || dy < 0 && sinceDirectionChange > 0) {
-            child.animate().cancel();
-            sinceDirectionChange = 0;
-        }
-        sinceDirectionChange += dy;
-        int visibility = child.getVisibility();
-        if (sinceDirectionChange > child.getHeight() && visibility == View.VISIBLE) {
-            hide(child);
-        } else {
-            if (sinceDirectionChange < 0) {
-                show(child);
-            }
-        }
     }
 
     private void hide(final View view) {
-        ViewPropertyAnimator animator = view.animate().translationY(view.getHeight()).
-                setInterpolator(INTERPOLATOR).setDuration(200);
-        animator.setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                //                view.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-                show(view);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-        animator.start();
+        if (view.getTranslationY() != view.getHeight()) {
+            ObjectAnimator.ofFloat(view, "translationY", view.getTranslationY(), view.getHeight()).setDuration(200).start();
+        }
     }
 
     private void show(final View view) {
-        ViewPropertyAnimator animator = view.animate().translationY(0).
-                setInterpolator(INTERPOLATOR).
-                setDuration(200);
-        animator.setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                view.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-                hide(view);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-        animator.start();
-
+        if (view.getTranslationY() != 0) {
+            ObjectAnimator.ofFloat(view, "translationY", view.getTranslationY(), 0).setDuration(200).start();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.video.mvp.index;
 
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -14,9 +15,11 @@ import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBeanDao;
 import com.example.commonlibrary.cusotomview.CustomPopWindow;
+import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.utils.DensityUtil;
 import com.example.video.NewsApplication;
 import com.example.video.R;
 import com.example.video.adapter.PopWindowAdapter;
@@ -89,7 +92,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         tabLayout.setupWithViewPager(display);
         display.setAdapter(viewPagerAdapter);
         ToolBarOption toolBarOption = new ToolBarOption();
-        toolBarOption.setTitle("地大新闻");
+        toolBarOption.setTitle("前沿新闻");
         toolBarOption.setNeedNavigation(false);
         setToolBar(toolBarOption);
         addDisposable(RxBusManager.getInstance().registerEvent(TypeNewsEvent.class, typeNewsEvent -> {
@@ -168,7 +171,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
             }
             popWindowAdapter.refreshData(result);
             if (!customPopWindow.isShowing()) {
-                customPopWindow.showAsDropDown(v);
+                customPopWindow.showAtLocation(display, Gravity.END, 0, 0);
             } else {
                 customPopWindow.dismiss();
             }
@@ -184,6 +187,7 @@ public class IndexFragment extends BaseFragment implements View.OnClickListener 
         Button adjust = contentView.findViewById(R.id.btn_view_fragment_index_pop_adjust);
         final SuperRecyclerView display = contentView.findViewById(R.id.srcv_view_fragment_index_pop_display);
         display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 5));
+        display.addItemDecoration(new GridSpaceDecoration(5, 0, DensityUtil.toDp(10), true));
         popWindowAdapter = new PopWindowAdapter();
         display.setAdapter(popWindowAdapter);
         popWindowAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {

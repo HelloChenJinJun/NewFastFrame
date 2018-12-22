@@ -66,6 +66,12 @@ public class WeatherInfoActivity extends ChatBaseActivity implements WeatherSear
         return false;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
+
     @Override
     protected int getContentLayout() {
         return R.layout.activity_weather_info;
@@ -74,16 +80,16 @@ public class WeatherInfoActivity extends ChatBaseActivity implements WeatherSear
 
     @Override
     public void initView() {
-        city = (TextView) findViewById(R.id.tv_weather_city);
-        realTime = (TextView) findViewById(R.id.tv_weather_real_time);
-        weatherStatus = (TextView) findViewById(R.id.tv_weather_weather_info);
-        forecastInfo = (TextView) findViewById(R.id.tv_weather_forecast_info);
-        wind = (TextView) findViewById(R.id.tv_weather_wind);
-        humidity = (TextView) findViewById(R.id.tv_weather_humidity);
-        temperature = (TextView) findViewById(R.id.tv_weather_temperature);
-        forecastTime = (TextView) findViewById(R.id.tv_weather_forecast_time);
-        container = (LinearLayout) findViewById(R.id.ll_weather_container);
-        emptyView = (TextView) findViewById(R.id.tv_weather_empty);
+        city = findViewById(R.id.tv_weather_city);
+        realTime = findViewById(R.id.tv_weather_real_time);
+        weatherStatus = findViewById(R.id.tv_weather_weather_info);
+        forecastInfo = findViewById(R.id.tv_weather_forecast_info);
+        wind = findViewById(R.id.tv_weather_wind);
+        humidity = findViewById(R.id.tv_weather_humidity);
+        temperature = findViewById(R.id.tv_weather_temperature);
+        forecastTime = findViewById(R.id.tv_weather_forecast_time);
+        container = findViewById(R.id.ll_weather_container);
+        emptyView = findViewById(R.id.tv_weather_empty);
     }
 
 
