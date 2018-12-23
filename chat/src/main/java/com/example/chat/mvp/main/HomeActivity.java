@@ -12,7 +12,6 @@ import com.example.chat.base.ConstantUtil;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.editInfo.EditUserInfoActivity;
 import com.example.chat.mvp.main.recent.RecentFragment;
-import com.example.chat.mvp.search.SearchActivity;
 import com.example.chat.mvp.searchFriend.SearchFriendActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
 import com.example.chat.mvp.wallpaper.WallPaperActivity;
@@ -55,8 +54,8 @@ public class HomeActivity extends ChatBaseActivity {
         String title = (String) item.getTitle();
         switch (title) {
             case "搜索":
-                Intent intent = new Intent(this, SearchActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(this, SearchActivity.class);
+//                startActivity(intent);
                 break;
             case "添加好友":
                 ToastUtils.showShortToast("点击了添加好友");
@@ -101,7 +100,7 @@ public class HomeActivity extends ChatBaseActivity {
 
     @Override
     protected void initData() {
-        addOrReplaceFragment(HomeFragment.newInstance(), R.id.fl_activity_home_container);
+        addOrReplaceFragment(RecentFragment.newInstance(), R.id.fl_activity_home_container);
         if (getIntent().getBooleanExtra(ConstantUtil.FIRST_LOGIN, false)) {
             EditUserInfoActivity.start(this, UserManager.getInstance()
                     .getCurrentUserObjectId());

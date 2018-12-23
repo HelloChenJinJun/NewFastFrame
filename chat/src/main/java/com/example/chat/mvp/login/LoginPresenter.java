@@ -4,15 +4,13 @@ import android.content.SharedPreferences;
 
 import com.example.chat.base.AppBasePresenter;
 import com.example.chat.base.ConstantUtil;
-import com.example.chat.base.RandomData;
-import com.example.chat.bean.CustomInstallation;
 import com.example.chat.bean.GroupTableMessage;
-import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -27,8 +25,6 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
-
-import static com.amap.api.col.t.a.i;
 
 /**
  * 项目名称:    NewFastFrame
@@ -145,38 +141,5 @@ public class LoginPresenter extends AppBasePresenter<IView<Object>, DefaultModel
     private void jumpToHome() {
         iView.hideLoading();
         iView.updateData(null);
-    }
-
-
-    private void registerAccount() {
-        User user = new User();
-        //                                默认注册为男性
-        //                                 设备类型
-        user.setDeviceType("android");
-        //                                与设备ID绑定
-        user.setInstallId(new CustomInstallation().getInstallationId());
-        user.setNick(RandomData.getRandomNick());
-        user.setAvatar(RandomData.getRandomAvatar());
-        user.setSex(true);
-        user.setPw(password);
-        user.setUsername(account);
-        user.setPassword(password);
-        user.setTitleWallPaper(RandomData.getRandomTitleWallPaper());
-        user.setWallPaper(RandomData.getRandomWallPaper());
-        user.signUp(new SaveListener<User>() {
-            @Override
-            public void done(User s, BmobException e) {
-                iView.hideLoading();
-                if (e == null) {
-                    ToastUtils.showShortToast("注册成功，登录中...........");
-                    BaseApplication.getAppComponent()
-                            .getSharedPreferences().edit().putBoolean(ConstantUtil.FIRST_STATUS, true)
-                            .apply();
-                    login(account, password);
-                } else {
-                    ToastUtils.showShortToast("注册失败" + s + i);
-                }
-            }
-        });
     }
 }

@@ -92,9 +92,13 @@ public class SettingsActivity extends ChatBaseActivity implements View.OnClickLi
         if (i == R.id.rl_setting_header) {
         } else if (i == R.id.rl_activity_settings_clear) {
         } else if (i == R.id.btn_setting_logout) {
-
-            UserManager.getInstance().logout();
-            finish();
+            showBaseDialog("下线", "确定要退出吗?", "取消", "确定", null, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserManager.getInstance().logout();
+                    finish();
+                }
+            });
         } else if (i == R.id.rl_activity_settings_account_manage) {
             AccountManageActivity.start(this);
         }

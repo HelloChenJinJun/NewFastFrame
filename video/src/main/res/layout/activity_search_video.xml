@@ -7,8 +7,9 @@
 
 
     <LinearLayout
+        android:id="@+id/ll_activity_search_video_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="@color/light_blue_500"
         android:gravity="center_vertical"
         android:orientation="horizontal"

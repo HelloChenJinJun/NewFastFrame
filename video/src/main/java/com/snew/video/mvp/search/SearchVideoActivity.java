@@ -6,7 +6,9 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
+import android.widget.LinearLayout;
 
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
@@ -18,6 +20,7 @@ import com.example.commonlibrary.cusotomview.CustomEditText;
 import com.example.commonlibrary.cusotomview.ListViewDecoration;
 import com.example.commonlibrary.cusotomview.WrappedViewPager;
 import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.android.material.tabs.TabLayout;
@@ -28,7 +31,6 @@ import com.snew.video.bean.CommonVideoBean;
 import com.snew.video.bean.HotVideoBean;
 import com.snew.video.bean.HotVideoItemBean;
 import com.snew.video.bean.SearchVideoBean;
-import com.snew.video.bean.VideoBean;
 import com.snew.video.dagger.search.DaggerSearchVideoComponent;
 import com.snew.video.dagger.search.SearchVideoModule;
 import com.snew.video.mvp.qq.detail.QQVideoDetailActivity;
@@ -48,7 +50,7 @@ import androidx.fragment.app.Fragment;
  * 创建人:      陈锦军
  * 创建时间:    2018/12/14     18:16
  */
-public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideoPresenter> implements View.OnClickListener {
+public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideoPresenter> implements View.OnClickListener, CustomSwipeRefreshLayout.OnRefreshListener {
     private SuperRecyclerView searchHistory;
     private CustomSwipeRefreshLayout refresh;
     private WrappedViewPager display;
@@ -60,6 +62,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
     private SearchVideoDetailFragment searchFragment;
     private SuperRecyclerView preSearch;
 
+    private LinearLayout header;
 
     @Inject
     SearchVideoDetailAdapter mSearchVideoDetailAdapter;
@@ -80,6 +83,12 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
         return false;
     }
 
+
+    @Override
+    protected boolean needStatusPadding() {
+        return false;
+    }
+
     @Override
     protected int getContentLayout() {
         return R.layout.activity_search_video;
@@ -88,8 +97,10 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
     @Override
     protected void initView() {
         preSearch = findViewById(R.id.srcv_activity_search_video_display);
+        header = findViewById(R.id.ll_activity_search_video_header);
         searchHistory = findViewById(R.id.srcv_activity_search_video_header_display);
         refresh = findViewById(R.id.refresh_activity_search_video_refresh);
+        refresh.setOnRefreshListener(this);
         search = findViewById(R.id.cet_activity_search_video_search);
         search.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {//搜索按键action
@@ -98,12 +109,20 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
                     ToastUtils.showShortToast("输入内容不能为空");
                     return true;
                 }
-
-                jump(content);
-
+                //                jump(content);
                 return true;
             }
             return false;
+        });
+
+
+        header.getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                header.getRootView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                header.getLayoutParams().height += StatusBarUtil.getStatusBarHeight(SearchVideoActivity.this);
+                header.requestLayout();
+            }
         });
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -163,14 +182,14 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             public void onItemChildClick(int position, View view, int id) {
                 if (id == R.id.tv_item_fragment_search_video_detail_play) {
                     SearchVideoBean.ItemBean itemBean = mSearchVideoDetailAdapter.getData(position);
-//                    VideoBean videoBean = new VideoBean(itemBean.getTt(), itemBean.getUrl());
-                    CommonVideoBean commonVideoBean=new CommonVideoBean();
+                    //                    VideoBean videoBean = new VideoBean(itemBean.getTt(), itemBean.getUrl());
+                    CommonVideoBean commonVideoBean = new CommonVideoBean();
                     commonVideoBean.setTitle(itemBean.getTt());
                     commonVideoBean.setUrl(itemBean.getUrl());
                     commonVideoBean.setId(itemBean.getId());
                     commonVideoBean.setImage(itemBean.getDc());
                     commonVideoBean.setVideoType(itemBean.getItemType());
-                                        QQVideoDetailActivity.start(SearchVideoActivity.this,commonVideoBean);
+                    QQVideoDetailActivity.start(SearchVideoActivity.this, commonVideoBean);
                 }
             }
         });
@@ -210,6 +229,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
             hotVideoItemBean.setVideoType(item.getDataType());
+            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -224,6 +244,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
             hotVideoItemBean.setVideoType(item.getDataType());
+            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -238,6 +259,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
             hotVideoItemBean.setVideoType(item.getDataType());
+            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -251,35 +273,38 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
             hotVideoItemBean.setVideoType(item.getDataType());
+            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
-
-        //      5
-        titleList.add(hotVideoBean.getData().getMapResult().get_$5().getChannelTitle());
-        list = new ArrayList<>();
-        for (HotVideoBean.DataBean.MapResultBean._$5Bean.ListInfoBeanXXXX item :
-                hotVideoBean.getData().getMapResult().get_$5().getListInfo()) {
-            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
-            hotVideoItemBean.setId(item.getId());
-            hotVideoItemBean.setTitle(item.getTitle());
-            hotVideoItemBean.setVideoType(item.getDataType());
-            list.add(hotVideoItemBean);
-        }
-        fragmentList.add(HotVideoListFragment.newInstance(list));
-
-        //        6
-        titleList.add(hotVideoBean.getData().getMapResult().get_$6().getChannelTitle());
-        list = new ArrayList<>();
-        for (HotVideoBean.DataBean.MapResultBean._$6Bean.ListInfoBeanXXXXX item :
-                hotVideoBean.getData().getMapResult().get_$6().getListInfo()) {
-            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
-            hotVideoItemBean.setId(item.getId());
-            hotVideoItemBean.setTitle(item.getTitle());
-            hotVideoItemBean.setVideoType(item.getDataType());
-            list.add(hotVideoItemBean);
-        }
-        fragmentList.add(HotVideoListFragment.newInstance(list));
+        //
+        //        //      5
+        //        titleList.add(hotVideoBean.getData().getMapResult().get_$5().getChannelTitle());
+        //        list = new ArrayList<>();
+        //        for (HotVideoBean.DataBean.MapResultBean._$5Bean.ListInfoBeanXXXX item :
+        //                hotVideoBean.getData().getMapResult().get_$5().getListInfo()) {
+        //            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
+        //            hotVideoItemBean.setId(item.getId());
+        //            hotVideoItemBean.setTitle(item.getTitle());
+        //            hotVideoItemBean.setVideoType(item.getDataType());
+        //            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
+        //            list.add(hotVideoItemBean);
+        //        }
+        //        fragmentList.add(HotVideoListFragment.newInstance(list));
+        //
+        //        //        6
+        //        titleList.add(hotVideoBean.getData().getMapResult().get_$6().getChannelTitle());
+        //        list = new ArrayList<>();
+        //        for (HotVideoBean.DataBean.MapResultBean._$6Bean.ListInfoBeanXXXXX item :
+        //                hotVideoBean.getData().getMapResult().get_$6().getListInfo()) {
+        //            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
+        //            hotVideoItemBean.setId(item.getId());
+        //            hotVideoItemBean.setTitle(item.getTitle());
+        //            hotVideoItemBean.setVideoType(item.getDataType());
+        //            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
+        //            list.add(hotVideoItemBean);
+        //        }
+        //        fragmentList.add(HotVideoListFragment.newInstance(list));
 
         //        9
         titleList.add(hotVideoBean.getData().getMapResult().get_$9().getChannelTitle());
@@ -290,6 +315,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
             hotVideoItemBean.setVideoType(item.getDataType());
+            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -305,6 +331,7 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
             hotVideoItemBean.setVideoType(item.getDataType());
+            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
@@ -319,51 +346,55 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
             hotVideoItemBean.setId(item.getId());
             hotVideoItemBean.setTitle(item.getTitle());
             hotVideoItemBean.setVideoType(item.getDataType());
+            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
             list.add(hotVideoItemBean);
         }
         fragmentList.add(HotVideoListFragment.newInstance(list));
 
-
-        //        106
-        titleList.add(hotVideoBean.getData().getMapResult().get_$106().getChannelTitle());
-        list = new ArrayList<>();
-        for (HotVideoBean.DataBean.MapResultBean._$106Bean.ListInfoBeanXXXXXXXXX item :
-                hotVideoBean.getData().getMapResult().get_$106().getListInfo()) {
-            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
-            hotVideoItemBean.setId(item.getId());
-            hotVideoItemBean.setTitle(item.getTitle());
-            hotVideoItemBean.setVideoType(item.getDataType());
-            list.add(hotVideoItemBean);
-        }
-        fragmentList.add(HotVideoListFragment.newInstance(list));
-
-
-        //       556
-        titleList.add(hotVideoBean.getData().getMapResult().get_$556().getChannelTitle());
-        list = new ArrayList<>();
-        for (HotVideoBean.DataBean.MapResultBean._$556Bean.ListInfoBeanXXXXXXXXXX item :
-                hotVideoBean.getData().getMapResult().get_$556().getListInfo()) {
-            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
-            hotVideoItemBean.setId(item.getId());
-            hotVideoItemBean.setTitle(item.getTitle());
-            hotVideoItemBean.setVideoType(item.getDataType());
-            list.add(hotVideoItemBean);
-        }
-        fragmentList.add(HotVideoListFragment.newInstance(list));
-
-
-        //        10001
-        titleList.add(hotVideoBean.getData().getMapResult().get_$10001().getChannelTitle());
-        list = new ArrayList<>();
-        for (HotVideoBean.DataBean.MapResultBean._$10001Bean.ListInfoBeanXXXXXXXXXXX item :
-                hotVideoBean.getData().getMapResult().get_$10001().getListInfo()) {
-            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
-            hotVideoItemBean.setId(item.getId());
-            hotVideoItemBean.setTitle(item.getTitle());
-            hotVideoItemBean.setVideoType(item.getDataType());
-            list.add(hotVideoItemBean);
-        }
-        fragmentList.add(HotVideoListFragment.newInstance(list));
+        //
+        //        //        106
+        //        titleList.add(hotVideoBean.getData().getMapResult().get_$106().getChannelTitle());
+        //        list = new ArrayList<>();
+        //        for (HotVideoBean.DataBean.MapResultBean._$106Bean.ListInfoBeanXXXXXXXXX item :
+        //                hotVideoBean.getData().getMapResult().get_$106().getListInfo()) {
+        //            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
+        //            hotVideoItemBean.setId(item.getId());
+        //            hotVideoItemBean.setTitle(item.getTitle());
+        //            hotVideoItemBean.setVideoType(item.getDataType());
+        //            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
+        //            list.add(hotVideoItemBean);
+        //        }
+        //        fragmentList.add(HotVideoListFragment.newInstance(list));
+        //
+        //
+        //        //       556
+        //        titleList.add(hotVideoBean.getData().getMapResult().get_$556().getChannelTitle());
+        //        list = new ArrayList<>();
+        //        for (HotVideoBean.DataBean.MapResultBean._$556Bean.ListInfoBeanXXXXXXXXXX item :
+        //                hotVideoBean.getData().getMapResult().get_$556().getListInfo()) {
+        //            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
+        //            hotVideoItemBean.setId(item.getId());
+        //            hotVideoItemBean.setTitle(item.getTitle());
+        //            hotVideoItemBean.setVideoType(item.getDataType());
+        //            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
+        //            list.add(hotVideoItemBean);
+        //        }
+        //        fragmentList.add(HotVideoListFragment.newInstance(list));
+        //
+        //
+        //        //        10001
+        //        titleList.add(hotVideoBean.getData().getMapResult().get_$10001().getChannelTitle());
+        //        list = new ArrayList<>();
+        //        for (HotVideoBean.DataBean.MapResultBean._$10001Bean.ListInfoBeanXXXXXXXXXXX item :
+        //                hotVideoBean.getData().getMapResult().get_$10001().getListInfo()) {
+        //            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
+        //            hotVideoItemBean.setId(item.getId());
+        //            hotVideoItemBean.setTitle(item.getTitle());
+        //            hotVideoItemBean.setVideoType(item.getDataType());
+        //            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
+        //            list.add(hotVideoItemBean);
+        //        }
+        //        fragmentList.add(HotVideoListFragment.newInstance(list));
 
 
     }
@@ -374,5 +405,10 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
         if (id == R.id.iv_activity_search_video_finish) {
             finish();
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        refresh.setRefreshing(false);
     }
 }

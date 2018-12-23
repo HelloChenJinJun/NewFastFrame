@@ -5,6 +5,7 @@
     android:layout_height="230dp">
 
     <RelativeLayout
+        android:id="@+id/rl_view_activity_user_detail_header_container"
         android:layout_width="match_parent"
         android:layout_height="70dp">
 
@@ -80,6 +81,9 @@
 
 
         </LinearLayout>
+
+
+
 
     </RelativeLayout>
 

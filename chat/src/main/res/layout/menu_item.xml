@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/rl_menu_item_container"
-              android:layout_width="match_parent"
-              android:layout_height="50dp"
-              android:background="@drawable/selector_main_menu_bg"
-              android:gravity="center_vertical"
-              android:orientation="horizontal"
-              android:paddingLeft="90dp"
->
+    android:id="@+id/rl_menu_item_container"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/selector_main_menu_bg"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="90dp">
 
     <TextView
         android:id="@+id/tv_menu_item"
@@ -16,20 +15,20 @@
         android:layout_centerInParent="true"
         android:gravity="center_vertical"
         android:text="菜单子项"
-        android:textColor="@color/white"
-        android:textSize="18sp"/>
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
     <TextView
-        android:text="11"
-        android:gravity="center"
         android:id="@+id/tv_menu_item_tips"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/tv_menu_item"
         android:background="@drawable/custom_drawable_red_point"
+        android:gravity="center"
+        android:text="11"
         android:textColor="@color/base_color_text_white"
         android:textSize="10sp"
-        android:visibility="invisible"
-    />
+        android:visibility="invisible" />
 
 </LinearLayout>

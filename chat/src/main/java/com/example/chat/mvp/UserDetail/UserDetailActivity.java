@@ -15,9 +15,14 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.chat.R;
 import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.base.ConstantUtil;
+import com.example.chat.bean.ChatMessage;
+import com.example.chat.listener.OnSendTagMessageListener;
+import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
+import com.example.chat.mvp.UserInfoTask.UserInfoActivity;
 import com.example.chat.mvp.editInfo.EditUserInfoActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoFragment;
+import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.cusotomview.RoundAngleImageView;
@@ -26,6 +31,7 @@ import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.BlurBitmapUtil;
 import com.example.commonlibrary.utils.StatusBarUtil;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
@@ -36,6 +42,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import cn.bmob.v3.exception.BmobException;
 
 
 /**
@@ -88,15 +95,12 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         initHeaderView();
         TabLayout tabLayout = findViewById(R.id.tl_activity_user_detail_tab);
         display = findViewById(R.id.vp_activity_user_detail_display);
-        findViewById(R.id.iv_activity_user_detail_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        findViewById(R.id.iv_activity_user_detail_back).setOnClickListener(v -> finish());
+        findViewById(R.id.rl_view_activity_user_detail_header_container).setOnClickListener(v -> UserInfoActivity.start(UserDetailActivity.this, user.getUid()));
         mToolbar = findViewById(R.id.tb_activity_user_detail_title);
         headerBg = findViewById(R.id.rl_activity_user_detail_header_bg);
         refresh = findViewById(R.id.refresh_activity_user_detail_refresh);
+
         setSupportActionBar(mToolbar);
         mToolbar.getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -132,6 +136,31 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         findViewById(R.id.tv_view_activity_user_detail_header_look)
                 .setOnClickListener(this);
 
+    }
+
+
+    /**
+     * 发送好友请求
+     */
+    private void sendAddFriendMsg() {
+        showLoadDialog("正在发送请求，请稍候..........");
+        LogUtil.e("正在发送好友请求，请稍后.............");
+        MsgManager.getInstance().sendTagMessage(user.getUid(), ChatMessage.MESSAGE_TYPE_ADD,
+                new OnSendTagMessageListener() {
+                    @Override
+                    public void onSuccess(ChatMessage chatMessage) {
+                        dismissLoadDialog();
+                        ToastUtils.showShortToast("发送好友请求成功");
+                        LogUtil.e("发送好友请求成功");
+                    }
+
+                    @Override
+                    public void onFailed(BmobException e) {
+                        dismissLoadDialog();
+                        ToastUtils.showShortToast("发送好友请求失败");
+                        LogUtil.e("发送好友请求失败");
+                    }
+                });
     }
 
     @Override

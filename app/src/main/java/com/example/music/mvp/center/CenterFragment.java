@@ -11,6 +11,7 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterConfig;
 import com.example.commonlibrary.router.RouterRequest;
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.music.R;
 import com.example.music.adapter.CenterAdapter;
 import com.example.video.bean.CenterBean;
@@ -71,8 +72,9 @@ public class CenterFragment extends BaseFragment {
                             .actionName("enter")
                             .context(getContext()).build());
                 } else if (position == 1) {
-                    Router.getInstance().deal(RouterRequest.newBuild().provideName(RouterConfig
-                            .VIDEO_PROVIDE_NAME).actionName("enter").context(getContext()).build());
+                    //                    Router.getInstance().deal(RouterRequest.newBuild().provideName(RouterConfig
+                    //                            .LIVE_PROVIDE_NAME).actionName("enter").context(getContext()).build());
+                    ToastUtils.showShortToast("由于全名直播平台的原因暂时关闭");
                 } else if (position == 2) {
                     //                    ToastUtils.showShortToast("暂时不开放");
                     MainActivity.start(getActivity());

@@ -158,11 +158,11 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
                 UserDBManager.getInstance().deleteRecentMessage(msg.getId());
                 mAdapter.removeData(msg);
             } else {
-                ToastUtils.showShortToast("置顶");
+                ToastUtils.showShortToast("1置顶");
             }
             return true;
         });
-        popupMenu.setGravity(Gravity.CENTER_HORIZONTAL);
+        popupMenu.setGravity(Gravity.END);
         popupMenu.show();
     }
 
@@ -207,7 +207,7 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
         }));
         addDisposable(RxBusManager.getInstance().registerEvent(MessageInfoEvent.class, messageInfoEvent -> {
             if (messageInfoEvent.getMessageType() == MessageInfoEvent.TYPE_PERSON) {
-                                onProcessNewMessages(messageInfoEvent.getChatMessageList());
+                onProcessNewMessages(messageInfoEvent.getChatMessageList());
             }
         }));
         addDisposable(RxBusManager.getInstance().registerEvent(NetStatusEvent.class, netStatusEvent -> {
@@ -245,8 +245,6 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
         super.onResume();
         onHiddenChanged(false);
     }
-
-
 
 
     @Override

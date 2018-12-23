@@ -131,7 +131,7 @@ public class CommonDialog extends Dialog implements View.OnClickListener {
             TextView textView = new TextView(mContext);
             layoutParams.gravity = Gravity.CENTER;
             textView.setText(info);
-            textView.setTextSize(9);
+            textView.setTextSize(14);
             textView.setTextColor(Color.parseColor("#ff333333"));
             textView.setLayoutParams(layoutParams);
             this.contentView = textView;

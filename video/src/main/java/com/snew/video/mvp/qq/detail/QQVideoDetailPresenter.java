@@ -203,7 +203,10 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
                             StringBuilder body = new StringBuilder();
                             if (tempUrl.contains("jiexi/")) {
                                 return getDetailDataForThree(url);
-                            } else if (tempUrl.contains("yunjxs")) {
+                            } else if (tempUrl.contains("yunjxs") || tempUrl.contains("qqmtv")) {
+                                if (tempUrl.contains("qqmtv")) {
+                                    md5 = VideoUtil.getSignedValue(md5);
+                                }
                                 body.append("id=").append(key).append("&type=").append(TextUtils.isEmpty(type) ? "auto" : type).append("&siteuser=&md5=").append(md5)
                                         .append("&hd=&lg=");
                             } else if (tempUrl.contains("anlehe")) {

@@ -77,6 +77,7 @@ public class HotVideoListFragment extends VideoBaseFragment {
                 commonVideoBean.setId(hotVideoItemBean.getId());
                 commonVideoBean.setVideoType(hotVideoItemBean.getVideoType());
                 commonVideoBean.setTitle(hotVideoItemBean.getTitle());
+                commonVideoBean.setUrl(hotVideoItemBean.getUrl());
                 QQVideoDetailActivity.start(getActivity(), commonVideoBean);
             }
         });

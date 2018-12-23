@@ -3,6 +3,7 @@ package com.example.chat.mvp.account.password;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
+import com.example.commonlibrary.utils.CommonLogger;
 
 /**
  * 项目名称:    NewFastFrame
@@ -19,6 +20,6 @@ public class PasswordChangePresenter extends RxBasePresenter<IView<Object>, Defa
 
 
     public void resetPassword(String trim, String trim1) {
-
+        CommonLogger.e("暂时不支持");
     }
 }

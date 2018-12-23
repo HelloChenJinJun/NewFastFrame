@@ -19,6 +19,7 @@ import com.amap.api.services.weather.LocalWeatherLiveResult;
 import com.amap.api.services.weather.WeatherSearch;
 import com.amap.api.services.weather.WeatherSearchQuery;
 import com.example.chat.adapter.MenuDisplayAdapter;
+import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.WeatherInfoBean;
 import com.example.chat.events.LocationEvent;
@@ -31,7 +32,6 @@ import com.example.chat.mvp.main.friends.FriendsActivity;
 import com.example.chat.mvp.main.invitation.InvitationActivity;
 import com.example.chat.mvp.main.recent.RecentFragment;
 import com.example.chat.mvp.person.PersonFragment;
-import com.example.chat.mvp.search.SearchActivity;
 import com.example.chat.mvp.searchFriend.SearchFriendActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
 import com.example.chat.mvp.shareinfo.ShareInfoFragment;
@@ -41,7 +41,6 @@ import com.example.chat.mvp.wallpaper.WallPaperActivity;
 import com.example.chat.mvp.weather.WeatherInfoActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.SlideBaseActivity;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
@@ -69,7 +68,7 @@ import java.util.List;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-public class MainActivity extends SlideBaseActivity implements OnDragDeltaChangeListener, View.OnClickListener {
+public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeListener, View.OnClickListener {
 
     private WrappedViewPager display;
     private RadioGroup bottomContainer;
@@ -115,8 +114,8 @@ public class MainActivity extends SlideBaseActivity implements OnDragDeltaChange
         String title = (String) item.getTitle();
         switch (title) {
             case "搜索":
-                Intent intent = new Intent(this, SearchActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(this, SearchActivity.class);
+                //                startActivity(intent);
                 break;
             case "添加好友":
                 ToastUtils.showShortToast("点击了添加好友");
@@ -126,11 +125,9 @@ public class MainActivity extends SlideBaseActivity implements OnDragDeltaChange
                 ToastUtils.showShortToast("创建群由于后台实时数据服务收费问题暂未开放");
                 break;
             case "背景":
-                ToastUtils.showShortToast("点击了背景");
                 WallPaperActivity.start(this, ConstantUtil.WALLPAPER);
                 break;
             case "设置":
-                ToastUtils.showShortToast("点击了设置");
                 SettingsActivity.start(this);
                 break;
             case "重置皮肤":
