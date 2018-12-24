@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/refresh_activity_chat_list_refresh">
+        <com.example.commonlibrary.baseadapter.SuperRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/srcv_activity_chat_list_display"/>
+    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_activity_chat_list_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#f6f6f6"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/et_activity_chat_list_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="说点什么呢........"
+            android:textColorHint="@color/blue_500"/>
+        <ImageView
+            android:id="@+id/iv_activity_chat_list_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_chat_bottom_send_selector"/>
+    </LinearLayout>
+
+
+</LinearLayout>

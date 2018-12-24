@@ -14,6 +14,7 @@ import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.RecentEvent;
+import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.chat.ChatActivity;
@@ -250,6 +251,7 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
     @Override
     public void onRefresh() {
         mAdapter.refreshData(UserDBManager.getInstance().getAllRecentMessage());
+        MsgManager.getInstance().getPersonChatInfo(getContext());
         mSwipeRefreshLayout.setRefreshing(false);
     }
 

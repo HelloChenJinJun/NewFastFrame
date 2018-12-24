@@ -7,13 +7,12 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
-import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
+import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
 import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
-import com.example.commonlibrary.router.Router;
-import com.example.commonlibrary.router.RouterRequest;
-import com.example.commonlibrary.utils.Constant;
+import com.example.commonlibrary.mvp.base.ImagePreViewActivity;
+import com.example.commonlibrary.rxbus.event.PhotoPreEvent;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.video.NewsApplication;
 import com.example.video.R;
@@ -23,11 +22,13 @@ import com.example.video.dagger.news.othernews.photolist.DaggerPhotoListComponen
 import com.example.video.dagger.news.othernews.photolist.PhotoListModule;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import androidx.core.app.SharedElementCallback;
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -41,6 +42,7 @@ public class PhotoListFragment extends BaseFragment<PictureBean, PhotoListPresen
     PhotoListAdapter photoListAdapter;
     private CustomSwipeRefreshLayout refresh;
     private SuperRecyclerView display;
+    private int index = -1;
 
     @Override
     public void updateData(PictureBean pictureBean) {
@@ -88,28 +90,48 @@ public class PhotoListFragment extends BaseFragment<PictureBean, PhotoListPresen
         refresh.setOnRefreshListener(this);
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
         display.setOnLoadMoreListener(this);
-        photoListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+        photoListAdapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
             @Override
-            public void onItemClick(int position, View view) {
+            public void onItemChildClick(int position, View view, int id) {
                 List<PictureBean.PictureEntity> imageList = photoListAdapter.getData();
                 if (imageList != null && imageList.size() > 0) {
-                    List<String> result = new ArrayList<>();
+                    ArrayList<String> result = new ArrayList<>();
                     for (PictureBean.PictureEntity item :
                             imageList) {
                         result.add(item.getUrl());
                     }
-                    Map<String, Object> map = new HashMap<>();
-                    map.put(Constant.POSITION, position);
-                    Router.getInstance().deal(new RouterRequest.Builder()
-                            .provideName("chat").actionName("preview")
-                            .context(view.getContext())
-                            .paramMap(map).object(result).build());
+
+                    ImagePreViewActivity.start(getActivity(), result, position, view);
+                    //                    Map<String, Object> map = new HashMap<>();
+                    //                    map.put(Constant.POSITION, position);
+                    //                    map.put(Constant.VIEW, view);
+                    //                    Router.getInstance().deal(new RouterRequest.Builder()
+                    //                            .provideName("chat").actionName("preview")
+                    //                            .context(view.getContext())
+                    //                            .paramMap(map).object(result).build());
                 }
             }
         });
         display.setAdapter(photoListAdapter);
-
+        getActivity().setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                View itemView = display.getLayoutManager().findViewByPosition(index);
+                if (itemView != null) {
+                    sharedElements.clear();
+                    sharedElements.put(photoListAdapter.getData(index).getUrl(), itemView.findViewById(R.id.iv_item_fragment_photo_list_picture));
+                }
+            }
+        });
+        presenter.registerEvent(PhotoPreEvent.class, new Consumer<PhotoPreEvent>() {
+            @Override
+            public void accept(PhotoPreEvent photoPreEvent) throws Exception {
+                index = photoPreEvent.getIndex();
+            }
+        });
     }
+
+
 
     @Override
     protected void updateView() {
@@ -139,8 +161,6 @@ public class PhotoListFragment extends BaseFragment<PictureBean, PhotoListPresen
         if (refresh.isRefreshing()) {
             super.showError(errorMsg, listener);
             refresh.setRefreshing(false);
-        } else {
-            ((LoadMoreFooterView) display.getLoadMoreFooterView()).setStatus(LoadMoreFooterView.Status.ERROR);
         }
     }
 

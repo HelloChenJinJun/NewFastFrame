@@ -95,15 +95,15 @@ public class CenterFragment extends BaseFragment {
     private List<CenterBean> getDefaultData() {
         List<CenterBean> result = new ArrayList<>();
         CenterBean library = new CenterBean();
-        library.setTitle("听一听");
+        library.setTitle("音乐");
         library.setResId(R.drawable.ic_demo_one);
         result.add(library);
         CenterBean card = new CenterBean();
-        card.setTitle("看一看");
+        card.setTitle("直播");
         card.setResId(R.drawable.ic_demo_two);
         result.add(card);
         CenterBean system = new CenterBean();
-        system.setTitle("系统");
+        system.setTitle("视频");
         system.setResId(R.drawable.ic_demo_three);
         result.add(system);
         return result;

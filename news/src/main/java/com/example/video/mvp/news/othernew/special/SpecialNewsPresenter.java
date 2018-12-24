@@ -18,6 +18,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -38,9 +39,19 @@ public class SpecialNewsPresenter extends BasePresenter<ISpecialNewsView<List<Sp
         baseModel.getRepositoryManager().getApi(OtherNewsApi.class)
                 .getSpecialNewsData(specialId)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .map(stringRawSpecialNewsBeanMap -> stringRawSpecialNewsBeanMap.get(specialId))
-                .doOnNext(rawSpecialNewsBean -> iView.updateBanner(rawSpecialNewsBean.getBanner())).flatMap(rawSpecialNewsBean -> Observable.fromIterable(rawSpecialNewsBean.getTopics())
+                .doOnNext(new Consumer<RawSpecialNewsBean>() {
+                    @Override
+                    public void accept(RawSpecialNewsBean rawSpecialNewsBean) throws Exception {
+                        addDispose(Observable.just(rawSpecialNewsBean.getBanner()).subscribeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Consumer<String>() {
+                                    @Override
+                                    public void accept(String s) throws Exception {
+                                        iView.updateBanner(s);
+                                    }
+                                }));
+                    }
+                }).flatMap(rawSpecialNewsBean -> Observable.fromIterable(rawSpecialNewsBean.getTopics())
                 .flatMap(topicsEntity -> Observable.fromIterable(topicsEntity.getDocs())
                         .map(SpecialNewsBean::new).startWith(new SpecialNewsBean(topicsEntity.getShortname()))))
                 .flatMap((Function<SpecialNewsBean, ObservableSource<SpecialNewsBean>>) specialNewsBean -> {
@@ -61,7 +72,7 @@ public class SpecialNewsPresenter extends BasePresenter<ISpecialNewsView<List<Sp
                                 });
                     }
                     return Observable.fromArray(specialNewsBean);
-                }).toList().subscribe(new SingleObserver<List<SpecialNewsBean>>() {
+                }).toList().observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<List<SpecialNewsBean>>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
                 addDispose(d);

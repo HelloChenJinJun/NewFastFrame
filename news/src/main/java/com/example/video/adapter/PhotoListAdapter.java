@@ -22,7 +22,7 @@ public class PhotoListAdapter extends BaseRecyclerAdapter<PictureBean.PictureEnt
     protected void convert(BaseWrappedViewHolder holder, PictureBean.PictureEntity data) {
         holder.setText(R.id.tv_item_fragment_photo_list_description, data.getDesc())
                 .setOnItemChildClickListener(R.id.iv_item_fragment_photo_list_share)
-                .setOnItemClickListener()
+                .setOnItemChildClickListener(R.id.iv_item_fragment_photo_list_picture)
                 .setImageUrl(R.id.iv_item_fragment_photo_list_picture, data.getUrl());
     }
 }

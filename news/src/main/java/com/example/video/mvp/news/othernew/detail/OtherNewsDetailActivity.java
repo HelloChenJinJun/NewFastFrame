@@ -5,6 +5,9 @@ import android.content.Intent;
 
 import com.example.commonlibrary.SlideBaseActivity;
 import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.router.Router;
+import com.example.commonlibrary.router.RouterRequest;
+import com.example.commonlibrary.utils.Constant;
 import com.example.video.NewsApplication;
 import com.example.video.R;
 import com.example.video.bean.OtherNewsDetailBean;
@@ -12,6 +15,9 @@ import com.example.video.dagger.news.othernews.detail.DaggerOtherNewsDetailCompo
 import com.example.video.dagger.news.othernews.detail.OtherNewsDetailModule;
 import com.example.video.util.NewsUtil;
 import com.example.video.widget.rich.RichText;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 项目名称:    NewFastFrame
@@ -50,6 +56,16 @@ public class OtherNewsDetailActivity extends SlideBaseActivity<OtherNewsDetailBe
     @Override
     protected void initView() {
         content = findViewById(R.id.tv_activity_other_news_detail_content);
+        content.setOnRichTextImageClickListener((imageUrls, position) -> {
+            if (imageUrls != null && imageUrls.size() > 0) {
+                Map<String, Object> map = new HashMap<>();
+                map.put(Constant.POSITION, position);
+                Router.getInstance().deal(new RouterRequest.Builder()
+                        .provideName("chat").actionName("preview")
+                        .context(OtherNewsDetailActivity.this)
+                        .paramMap(map).object(imageUrls).build());
+            }
+        });
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.video.mvp.news.othernew.special;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,22 +35,19 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- *
  * 项目名称:    NewFastFrame
  * 创建人:        陈锦军
  * 创建时间:    2017/9/25      18:43
  * QQ:             1981367757
  */
 
-public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,SpecialNewsPresenter> implements ISpecialNewsView<List<SpecialNewsBean>>,TagFlowLayout.OnTagClickListener {
+public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>, SpecialNewsPresenter> implements ISpecialNewsView<List<SpecialNewsBean>>, TagFlowLayout.OnTagClickListener {
 
     private SuperRecyclerView display;
     @Inject
     SpecialNewsAdapter specialNewsAdapter;
     private String specialId;
     private WrappedLinearLayoutManager wrappedLinearLayoutManager;
-
-
 
 
     @Override
@@ -61,8 +59,9 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
     private void updateTag(List<SpecialNewsBean> list) {
 
         if (list != null && list.size() > 0) {
-            if (list.size()==1)return;
-            List<String>  list1=new ArrayList<>();
+            if (list.size() == 1)
+                return;
+            List<String> list1 = new ArrayList<>();
             for (SpecialNewsBean bean :
                     list) {
                 if (bean.getItemViewType() == SpecialNewsBean.TYPE_HEADER) {
@@ -72,7 +71,7 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
             tagFlowLayout.setAdapter(new TagAdapter<String>(list1) {
                 @Override
                 public View getView(FlowLayout parent, int position, String o) {
-                    TextView textView= (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.view_tag_flow_layout_item,null);
+                    TextView textView = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.view_tag_flow_layout_item, null);
                     textView.setText(o);
                     return textView;
                 }
@@ -98,7 +97,7 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
 
     @Override
     protected void initView() {
-            display= (SuperRecyclerView) findViewById(R.id.srcv_activity_special_news_display);
+        display = findViewById(R.id.srcv_activity_special_news_display);
     }
 
     @Override
@@ -107,28 +106,24 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
                 .specialNewsModule(new SpecialNewsModule(this))
                 .newsComponent(NewsApplication.getNewsComponent())
                 .build().inject(this);
-        specialId=getIntent().getStringExtra(NewsUtil.SPECIAL_ID);
-        display.setLayoutManager(wrappedLinearLayoutManager=new WrappedLinearLayoutManager(this));
+        specialId = getIntent().getStringExtra(NewsUtil.SPECIAL_ID);
+        display.setLayoutManager(wrappedLinearLayoutManager = new WrappedLinearLayoutManager(this));
         display.addHeaderView(getHeaderView());
         display.setAdapter(specialNewsAdapter);
         specialNewsAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                SpecialNewsBean bean=specialNewsAdapter.getData(position);
+                SpecialNewsBean bean = specialNewsAdapter.getData(position);
                 if (NewsUtil.PHOTO_SET.equals(bean.getBean().getSkipType())) {
-                    OtherNewPhotoSetActivity.start(SpecialNewsActivity.this,bean.getBean().getSkipID());
-                }else {
-                    OtherNewsDetailActivity.start(view.getContext(),bean.getBean().getPostid());
+                    OtherNewPhotoSetActivity.start(SpecialNewsActivity.this, bean.getBean().getSkipID());
+                } else {
+                    OtherNewsDetailActivity.start(view.getContext(), TextUtils.isEmpty(bean.getBean().getPostid()) ? bean.getBean().getSkipID() : bean
+                            .getBean().getPostid());
                 }
             }
         });
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                presenter.getSpecialNewsData(specialId);
-            }
-        });
-        ToolBarOption toolBarOption=new ToolBarOption();
+        runOnUiThread(() -> presenter.getSpecialNewsData(specialId));
+        ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle(getIntent().getStringExtra(NewsUtil.TITLE));
         toolBarOption.setNeedNavigation(true);
         setToolBar(toolBarOption);
@@ -136,18 +131,19 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
 
     private ImageView banner;
     private TagFlowLayout tagFlowLayout;
+
     private View getHeaderView() {
-        View headerView= LayoutInflater.from(this)
-                .inflate(R.layout.view_activity_special_news_header,null);
-        banner= (ImageView) headerView.findViewById(R.id.iv_view_activity_special_news_header_banner);
-        tagFlowLayout= (TagFlowLayout) headerView.findViewById(R.id.tfl_view_activity_special_news_header_flow);
+        View headerView = LayoutInflater.from(this)
+                .inflate(R.layout.view_activity_special_news_header, null);
+        banner = headerView.findViewById(R.id.iv_view_activity_special_news_header_banner);
+        tagFlowLayout = headerView.findViewById(R.id.tfl_view_activity_special_news_header_flow);
         return headerView;
     }
 
     public static void start(Context context, String skipID, String title) {
-        Intent intent=new Intent(context,SpecialNewsActivity.class);
-        intent.putExtra(NewsUtil.SPECIAL_ID,skipID);
-        intent.putExtra(NewsUtil.TITLE,title);
+        Intent intent = new Intent(context, SpecialNewsActivity.class);
+        intent.putExtra(NewsUtil.SPECIAL_ID, skipID);
+        intent.putExtra(NewsUtil.TITLE, title);
         context.startActivity(intent);
     }
 
@@ -157,17 +153,17 @@ public class SpecialNewsActivity extends BaseActivity<List<SpecialNewsBean>,Spec
         BaseApplication
                 .getAppComponent()
                 .getImageLoader()
-                .loadImage(this,new GlideImageLoaderConfig.Builder()
-                .imageView(banner)
-                .url(url).centerInside().cacheStrategy(GlideImageLoaderConfig.CACHE_RESULT)
-                .build());
+                .loadImage(this, new GlideImageLoaderConfig.Builder()
+                        .imageView(banner)
+                        .url(url).centerInside().cacheStrategy(GlideImageLoaderConfig.CACHE_RESULT)
+                        .build());
     }
 
     @Override
     public boolean onTagClick(View view, int position, FlowLayout parent) {
-       String title=((TextView) ((ViewGroup)view).getChildAt(0)).getText().toString().trim();
-        int adapterPosition=specialNewsAdapter.getPositionFromTitle(title);
-        wrappedLinearLayoutManager.scrollToPositionWithOffset(adapterPosition,0);
+        String title = ((TextView) ((ViewGroup) view).getChildAt(0)).getText().toString().trim();
+        int adapterPosition = specialNewsAdapter.getPositionFromTitle(title);
+        wrappedLinearLayoutManager.scrollToPositionWithOffset(adapterPosition, 0);
         return true;
     }
 }

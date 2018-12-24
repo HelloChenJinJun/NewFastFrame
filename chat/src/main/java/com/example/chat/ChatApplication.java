@@ -10,7 +10,6 @@ import com.example.chat.bean.CustomInstallation;
 import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.dagger.ChatMainModule;
 import com.example.chat.dagger.DaggerChatMainComponent;
-import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.util.LogUtil;
 import com.example.chat.util.TimeUtil;
@@ -21,6 +20,7 @@ import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.router.RouterResult;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.SystemUtil;
 

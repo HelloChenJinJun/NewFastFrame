@@ -1,6 +1,7 @@
 package com.example.video.mvp.news.othernew;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.example.commonlibrary.BaseFragment;
@@ -100,7 +101,7 @@ public class OtherNewsListFragment extends BaseFragment<List<NewInfoBean>, Other
                 } else if (NewsUtil.PHOTO_SET.equals(newInfoBean.getSkipType())) {
                     OtherNewPhotoSetActivity.start(getContext(), newInfoBean.getPhotosetID());
                 } else {
-                    OtherNewsDetailActivity.start(getContext(), newInfoBean.getPostid());
+                    OtherNewsDetailActivity.start(getContext(), TextUtils.isEmpty(newInfoBean.getPostid())?newInfoBean.getSkipID():newInfoBean.getPostid());
                 }
             }
         });

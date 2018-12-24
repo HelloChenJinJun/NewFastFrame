@@ -41,6 +41,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import cn.bmob.v3.exception.BmobException;
 
@@ -52,7 +54,7 @@ import cn.bmob.v3.exception.BmobException;
  * QQ:             1981367757
  */
 
-public class UserDetailActivity extends ChatBaseActivity implements View.OnClickListener {
+public class UserDetailActivity extends ChatBaseActivity implements View.OnClickListener, CustomSwipeRefreshLayout.OnRefreshListener {
     private RoundAngleImageView avatar;
     private TextView name, signature, follow, fans, visit, sexContent, school, major;
     private ImageView sex;
@@ -100,7 +102,6 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         mToolbar = findViewById(R.id.tb_activity_user_detail_title);
         headerBg = findViewById(R.id.rl_activity_user_detail_header_bg);
         refresh = findViewById(R.id.refresh_activity_user_detail_refresh);
-
         setSupportActionBar(mToolbar);
         mToolbar.getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -120,6 +121,15 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
             }
         });
         tabLayout.setupWithViewPager(display);
+        ViewCompat.setTransitionName(avatar, "avatar");
+        //        ViewCompat.setTransitionName(name, "name");
+        refresh.setOnRefreshListener(this);
+    }
+
+
+    @Override
+    protected boolean needSlide() {
+        return false;
     }
 
     private void initHeaderView() {
@@ -189,7 +199,7 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
             Glide.with(this)
                     .load(user.getAvatar())
                     .into(avatar);
-            name.setText(user.getNick());
+            name.setText(user.getName());
             signature.setText(user.getSignature());
             sex.setImageResource(user.isSex() ? R.drawable.ic_sex_male : R.drawable.ic_sex_female);
             school.setText(user.getSchool());
@@ -213,9 +223,18 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
     }
 
     public static void start(Activity activity, String uid) {
+        start(activity, uid, null);
+    }
+
+
+    public static void start(Activity activity, String uid, ActivityOptionsCompat activityOptionsCompat) {
         Intent intent = new Intent(activity, UserDetailActivity.class);
         intent.putExtra(ConstantUtil.ID, uid);
-        activity.startActivity(intent);
+        if (activityOptionsCompat != null) {
+            activity.startActivity(intent, activityOptionsCompat.toBundle());
+        } else {
+            activity.startActivity(intent);
+        }
     }
 
     @Override
@@ -224,5 +243,10 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         if (id == R.id.tv_view_activity_user_detail_header_look) {
             EditUserInfoActivity.start(this, user.getUid());
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        refresh.setRefreshing(false);
     }
 }

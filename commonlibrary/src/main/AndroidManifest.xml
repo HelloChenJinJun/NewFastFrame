@@ -47,6 +47,7 @@
             android:finishOnTaskLaunch="false"
             android:launchMode="singleInstance"
             android:theme="@style/OnePxActivityStyle" />
+        <activity android:name=".mvp.base.ImagePreViewActivity" />
 
 
         <provider

@@ -85,12 +85,12 @@ public class OtherNewPhotoSetActivity extends BaseActivity<PhotoSetBean, OtherNe
 
     @Override
     protected void initView() {
-        display = (WrappedViewPager) findViewById(R.id.wvp_activity_other_new_photo_set_display);
-        back = (ImageView) findViewById(R.id.iv_activity_other_new_photo_set_back);
-        index = (TextView) findViewById(R.id.tv_activity_other_new_photo_index);
-        bottomContainer = (LinearLayout) findViewById(R.id.ll_activity_other_new_photo_set_bottom);
-        title = (TextView) findViewById(R.id.tv_activity_other_new_photo_set_title);
-        content = (TextView) findViewById(R.id.tv_activity_other_new_photo_set_content);
+        display = findViewById(R.id.wvp_activity_other_new_photo_set_display);
+        back = findViewById(R.id.iv_activity_other_new_photo_set_back);
+        index = findViewById(R.id.tv_activity_other_new_photo_index);
+        bottomContainer = findViewById(R.id.ll_activity_other_new_photo_set_bottom);
+        title = findViewById(R.id.tv_activity_other_new_photo_set_title);
+        content = findViewById(R.id.tv_activity_other_new_photo_set_content);
     }
 
 

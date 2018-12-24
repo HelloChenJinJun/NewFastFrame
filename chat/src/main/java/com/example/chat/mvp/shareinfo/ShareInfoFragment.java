@@ -16,7 +16,6 @@ import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.dagger.shareinfo.DaggerShareInfoComponent;
 import com.example.chat.dagger.shareinfo.ShareInfoModule;
 import com.example.chat.events.CommentEvent;
-import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.chat.events.UnReadPostNotifyEvent;
 import com.example.chat.events.UpdatePostEvent;
 import com.example.chat.events.UserInfoUpdateEvent;
@@ -45,6 +44,7 @@ import com.example.commonlibrary.cusotomview.ToolBarOption;
 import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.SystemUtil;
@@ -57,6 +57,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.jzvd.JZVideoPlayer;
@@ -110,7 +112,6 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     @Override
     protected void initView() {
         display = findViewById(R.id.srcv_fragment_share_info_display);
-        refresh = findViewById(R.id.refresh_fragment_share_info_refresh);
         mMenu = findViewById(R.id.fam_share_info_menu);
         FloatingActionButton normal = findViewById(R.id.fab_share_info_normal);
         FloatingActionButton video = findViewById(R.id.fab_share_info_video);
@@ -118,6 +119,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         normal.setOnClickListener(this);
         video.setOnClickListener(this);
         image.setOnClickListener(this);
+        refresh = findViewById(R.id.refresh_fragment_share_info_refresh);
         refresh.setOnRefreshListener(this);
 
     }
@@ -145,7 +147,11 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                         .imageView(titleBg).build()));
         display.setLayoutManager(manager = new WrappedLinearLayoutManager(getContext()));
         display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
-        display.addHeaderView(getHeaderView());
+        if (isPublic) {
+            display.addHeaderView(getHeaderView());
+        } else {
+            refresh.setEnabled(false);
+        }
         display.setOnLoadMoreListener(this);
         mMenu.attachToRecyclerView(display);
         display.setAdapter(shareInfoAdapter);
@@ -184,7 +190,8 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                     dealLike(shareInfoAdapter.getData(position));
                 } else if (id == R.id.riv_item_fragment_share_info_avatar) {
                     UserDetailActivity.start(getActivity(), shareInfoAdapter.getData(position)
-                            .getAuthor().getObjectId());
+                            .getAuthor().getObjectId(), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(view, "avatar")
+                    ));
                 } else if (id == R.id.iv_item_fragment_share_info_more) {
                     if (shareInfoAdapter.getData(position).getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
                         List<String> list1 = new ArrayList<>();
@@ -297,7 +304,6 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         View headerView = getLayoutInflater().inflate(R.layout.view_fragment_share_info_header, null);
         titleBg = headerView.findViewById(R.id.iv_view_fragment_share_info_header_bg);
         unReadContainer = headerView.findViewById(R.id.ll_view_fragment_share_info_header_unread);
-
         unReadAvatar = headerView.findViewById(R.id.iv_view_fragment_share_info_header_avatar);
         unReadCount = headerView.findViewById(R.id.tv_view_fragment_share_info_header_unread);
         unReadContainer.setOnClickListener(this);
@@ -362,13 +368,17 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
     @Override
     protected void updateView() {
-        Glide.with(this).load(UserManager.getInstance().getCurrentUser()
-                .getTitleWallPaper()).into(titleBg);
+        if (titleBg != null) {
+            Glide.with(this).load(UserManager.getInstance().getCurrentUser()
+                    .getTitleWallPaper()).into(titleBg);
+        }
         updateInfo(null);
         presenter.getAllPostData(isPublic, true, userEntity.getUid(), getRefreshTime(true));
     }
 
     private void updateInfo(String avatar) {
+        if (!isPublic)
+            return;
         unReadPostNotifyList = UserDBManager.getInstance().getUnReadPostNotify();
         int count = 0;
         if (unReadPostNotifyList != null) {

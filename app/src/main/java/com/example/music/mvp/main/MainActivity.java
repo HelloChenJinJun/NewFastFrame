@@ -3,10 +3,13 @@ package com.example.music.mvp.main;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -65,6 +68,7 @@ import com.nineoldandroids.view.ViewHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -103,6 +107,13 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
 
     }
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        }
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected boolean needSlide() {
@@ -114,7 +125,7 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
         String title = (String) item.getTitle();
         switch (title) {
             case "搜索":
-//                Intent intent = new Intent(this, SearchActivity.class);
+                //                Intent intent = new Intent(this, SearchActivity.class);
                 //                startActivity(intent);
                 break;
             case "添加好友":
@@ -236,6 +247,7 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
                         break;
                     case 1:
                         ((RadioButton) findViewById(R.id.rb_activity_main_bottom_public)).setChecked(true);
+                        getSupportActionBar().hide();
                         break;
                     case 2:
                         ((RadioButton) findViewById(R.id.rb_activity_main_bottom_center)).setChecked(true);

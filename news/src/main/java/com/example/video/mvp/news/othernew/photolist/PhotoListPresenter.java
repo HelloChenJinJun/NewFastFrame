@@ -2,7 +2,7 @@ package com.example.video.mvp.news.othernew.photolist;
 
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.mvp.model.DefaultModel;
-import com.example.commonlibrary.mvp.presenter.BasePresenter;
+import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.video.api.OtherNewsApi;
 import com.example.video.bean.PictureBean;
@@ -21,7 +21,7 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:             1981367757
  */
 
-public class PhotoListPresenter extends BasePresenter<IView<PictureBean>,DefaultModel>{
+public class PhotoListPresenter extends RxBasePresenter<IView<PictureBean>,DefaultModel> {
     private int num=0;
     public PhotoListPresenter(IView<PictureBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);

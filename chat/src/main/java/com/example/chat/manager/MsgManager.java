@@ -1,5 +1,7 @@
 package com.example.chat.manager;
 
+import android.content.Context;
+
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
@@ -12,13 +14,13 @@ import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.SkinBean;
 import com.example.chat.bean.StepBean;
 import com.example.chat.bean.SystemNotifyBean;
-import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.bean.post.ReplyCommentListBean;
 import com.example.chat.bean.post.ReplyDetailContent;
+import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.listener.AddFriendCallBackListener;
 import com.example.chat.listener.OnCreateChatMessageListener;
 import com.example.chat.listener.OnCreateGroupTableListener;
@@ -41,7 +43,9 @@ import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.bean.chat.SkinEntityDao;
 import com.example.commonlibrary.bean.chat.StepData;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
+import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -95,7 +99,7 @@ public class MsgManager {
 
     private MsgManager() {
         mPushManager = new BmobPushManager<>();
-        gson=BaseApplication.getAppComponent().getGson();
+        gson = BaseApplication.getAppComponent().getGson();
     }
 
     public static MsgManager getInstance() {
@@ -113,21 +117,21 @@ public class MsgManager {
      * 发送标签消息
      * 不保存在本地数据库    ,发送完后上传消息到服务器上面
      *
-     * @param targetId 对方的ID
-     * @param messageType      消息的类型
-     * @param listener 回调
+     * @param targetId    对方的ID
+     * @param messageType 消息的类型
+     * @param listener    回调
      */
     public void sendTagMessage(final String targetId, int messageType, final OnSendTagMessageListener listener) {
         final ChatMessage msg = createTagMessage(targetId, messageType);
-//                                  在这里发送完同意请求后，把消息转为对方发送的消息
-        if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
+        //                                  在这里发送完同意请求后，把消息转为对方发送的消息
+        if (messageType == ChatMessage.MESSAGE_TYPE_AGREE) {
             UserDBManager.getInstance().addOrUpdateRecentMessage(msg);
             LogUtil.e("保存同意消息到聊天消息表中");
-//                                    这里将发送的欢迎消息转为对方发送
-            ChatMessage chatMessage=new ChatMessage();
+            //                                    这里将发送的欢迎消息转为对方发送
+            ChatMessage chatMessage = new ChatMessage();
             chatMessage.setToId(msg.getBelongId());
             chatMessage.setMessageType(msg.getMessageType());
-            chatMessage.setConversationId(targetId+"&"+UserManager
+            chatMessage.setConversationId(targetId + "&" + UserManager
                     .getInstance().getCurrentUserObjectId());
             chatMessage.setBelongId(msg.getToId());
             chatMessage.setCreateTime(msg.getCreateTime());
@@ -141,17 +145,17 @@ public class MsgManager {
         saveMessageToService(msg, new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
-                if (e==null) {
+                if (e == null) {
                     listener.onSuccess(msg);
                     findInstallation(targetId, new FindListener<CustomInstallation>() {
                         @Override
                         public void done(List<CustomInstallation> list, BmobException e) {
-                            if (e==null&&list!=null&&list.size()>0){
-                                sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(msg),null);
+                            if (e == null && list != null && list.size() > 0) {
+                                sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(msg), null);
                             }
                         }
                     });
-                }else {
+                } else {
                     listener.onFailed(e);
                 }
             }
@@ -162,7 +166,7 @@ public class MsgManager {
 
     private void findInstallation(String uid, FindListener<CustomInstallation> listener) {
         BmobQuery<CustomInstallation> query = new BmobQuery<>();
-        query.addWhereEqualTo("uid",uid);
+        query.addWhereEqualTo("uid", uid);
         query.findObjects(listener);
     }
 
@@ -171,9 +175,9 @@ public class MsgManager {
      *
      * @param msg 消息
      */
-    private void saveMessageToService(final ChatMessage msg,SaveListener<String> listener) {
-        if (msg.getMessageType()==ChatMessage.MESSAGE_TYPE_READED) {
-//            添加这一步验证主要是为了防止Bmob有时候上传多个回执消息的Bug,
+    private void saveMessageToService(final ChatMessage msg, SaveListener<String> listener) {
+        if (msg.getMessageType() == ChatMessage.MESSAGE_TYPE_READED) {
+            //            添加这一步验证主要是为了防止Bmob有时候上传多个回执消息的Bug,
             findReadTag(msg.getConversationId(), msg.getCreateTime(), new FindListener<ChatMessage>() {
                 @Override
                 public void done(List<ChatMessage> list, BmobException e) {
@@ -191,7 +195,7 @@ public class MsgManager {
                                 }
                             }
                         });
-                    }else {
+                    } else {
                         if (listener != null) {
                             listener.done(null, e);
                         }
@@ -218,6 +222,58 @@ public class MsgManager {
     }
 
 
+    public void getPersonChatInfo(Context context) {
+        BmobQuery<ChatMessage> query = new BmobQuery<>();
+        if (UserManager.getInstance().getCurrentUser() != null) {
+            query.addWhereEqualTo(ConstantUtil.TAG_TO_ID, UserManager.getInstance().getCurrentUserObjectId());
+        } else {
+            return;
+        }
+        query.addWhereEqualTo(ConstantUtil.TAG_MESSAGE_SEND_STATUS, ConstantUtil.SEND_STATUS_SUCCESS);
+        query.addWhereEqualTo(ConstantUtil.TAG_MESSAGE_READ_STATUS, ConstantUtil.READ_STATUS_UNREAD);
+        //                按升序进行排序
+        query.setLimit(50);
+        query.order("createdAt");
+        query.findObjects(new FindListener<ChatMessage>() {
+            @Override
+            public void done(List<ChatMessage> list, BmobException e) {
+                if (e == null) {
+                    LogUtil.e("1拉取单聊消息成功");
+                    if (list != null && list.size() > 0) {
+                        for (ChatMessage item :
+                                list) {
+                            MsgManager.getInstance().dealReceiveChatMessage(item, new OnReceiveListener() {
+                                @Override
+                                public void onSuccess(BaseMessage baseMessage) {
+                                    if (baseMessage instanceof ChatMessage) {
+                                        ChatMessage chatMessage = (ChatMessage) baseMessage;
+                                        CommonLogger.e("接受成功");
+                                        LogUtil.e(chatMessage);
+                                        List<ChatMessage> list = new ArrayList<>(1);
+                                        list.add(chatMessage);
+                                        MessageInfoEvent messageInfoEvent = new MessageInfoEvent(MessageInfoEvent.TYPE_PERSON);
+                                        messageInfoEvent.setChatMessageList(list);
+                                        //                        聊天消息
+                                        RxBusManager.getInstance().post(messageInfoEvent);
+                                        ChatNotificationManager.getInstance(context).sendChatMessageNotification(chatMessage, context);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailed(BmobException e) {
+                                    LogUtil.e("接受消息失败!>>>>" + e.getMessage() + e.getErrorCode());
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    LogUtil.e("拉取单聊消息失败");
+                    LogUtil.e("在服务器上查询聊天消息失败：" + e.toString());
+                }
+            }
+        });
+    }
+
 
     /**
      * 创建json
@@ -232,7 +288,7 @@ public class MsgManager {
             result.put(ConstantUtil.TAG_MESSAGE_SEND_STATUS, message.getSendStatus());
             result.put(ConstantUtil.TAG_CONTENT, message.getContent());
             result.put(ConstantUtil.TAG_CONVERSATION, message.getConversationId());
-            result.put(ConstantUtil.TAG_CONTENT_TYPE,message.getContentType());
+            result.put(ConstantUtil.TAG_CONTENT_TYPE, message.getContentType());
             result.put(ConstantUtil.TAG_MESSAGE_TYPE, message.getMessageType());
             result.put(ConstantUtil.TAG_CREATE_TIME, message.getCreateTime());
             result.put(ConstantUtil.TAG_BELONG_ID, message.getBelongId());
@@ -251,14 +307,14 @@ public class MsgManager {
      * @param targetId 对方ID
      * @return 标签实体类
      */
-    public ChatMessage createTagMessage(String targetId,int messageType) {
-        return createTagMessage(targetId,UserManager.getInstance().getCurrentUserObjectId()+"&"+targetId
-        ,System.currentTimeMillis(),messageType);
+    public ChatMessage createTagMessage(String targetId, int messageType) {
+        return createTagMessage(targetId, UserManager.getInstance().getCurrentUserObjectId() + "&" + targetId
+                , System.currentTimeMillis(), messageType);
     }
 
-    public ChatMessage createTagMessage(String targetId,String conversationId,Long time,int messageType) {
+    public ChatMessage createTagMessage(String targetId, String conversationId, Long time, int messageType) {
         User user = UserManager.getInstance().getCurrentUser();
-        ChatMessage chatMessage=new ChatMessage();
+        ChatMessage chatMessage = new ChatMessage();
         chatMessage.setToId(targetId);
         chatMessage.setMessageType(messageType);
         chatMessage.setConversationId(conversationId);
@@ -267,8 +323,8 @@ public class MsgManager {
         chatMessage.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
         chatMessage.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
         chatMessage.setContentType(ConstantUtil.TAG_MSG_TYPE_TEXT);
-        if (messageType==ChatMessage.MESSAGE_TYPE_AGREE) {
-            MessageContent messageContent=new MessageContent();
+        if (messageType == ChatMessage.MESSAGE_TYPE_AGREE) {
+            MessageContent messageContent = new MessageContent();
             messageContent.setContent("你们已经成为好友可以聊天啦啦啦");
             chatMessage.setContent(gson.toJson(messageContent));
         }
@@ -295,7 +351,7 @@ public class MsgManager {
      * @param json     json数据
      * @param listener 回调
      */
-    public void createReceiveMsg(String json,  OnReceiveListener listener) {
+    public void createReceiveMsg(String json, OnReceiveListener listener) {
         try {
             JSONObject jsonObject = new JSONObject(json);
             final ChatMessage message = new ChatMessage();
@@ -308,27 +364,27 @@ public class MsgManager {
             message.setReadStatus(ConstantUtil.RECEIVE_UNREAD);
             message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
             message.setContent(JsonUtil.getString(jsonObject, ConstantUtil.TAG_CONTENT));
-            dealReceiveChatMessage(message,listener);
+            dealReceiveChatMessage(message, listener);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
 
-    public void dealReceiveGroupChatMessage(GroupChatMessage groupChatMessage){
+    public void dealReceiveGroupChatMessage(GroupChatMessage groupChatMessage) {
         UserDBManager.getInstance().addOrUpdateGroupChatMessage(groupChatMessage);
         UserDBManager.getInstance().addOrUpdateRecentMessage(groupChatMessage);
     }
 
 
-    public void dealReceiveGroupChatMessage(List<GroupChatMessage> groupChatMessageList){
+    public void dealReceiveGroupChatMessage(List<GroupChatMessage> groupChatMessageList) {
         UserDBManager.getInstance().addOrUpdateGroupChatMessage(groupChatMessageList);
-        if (groupChatMessageList.size()>0) {
+        if (groupChatMessageList.size() > 0) {
             UserDBManager.getInstance().addOrUpdateRecentMessage(groupChatMessageList.get(0));
         }
     }
 
-    public void dealReceiveChatMessage(ChatMessage message,final OnReceiveListener listener) {
+    public void dealReceiveChatMessage(ChatMessage message, final OnReceiveListener listener) {
         message.setReadStatus(ConstantUtil.RECEIVE_UNREAD);
         message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
         switch (message.getMessageType()) {
@@ -349,39 +405,39 @@ public class MsgManager {
                             listener.onFailed(e);
                         }
                     });
-                }else {
+                } else {
                     updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                 }
                 break;
             case ChatMessage.MESSAGE_TYPE_ADD:
                 if (!UserDBManager.getInstance().hasMessage(message.getConversationId(), message.getCreateTime())) {
                     UserDBManager.getInstance().addChatMessage(message);
-//                    这里获取邀请列表的用户数据
-                    UserManager.getInstance().findUserById(message.getBelongId(),null);
+                    //                    这里获取邀请列表的用户数据
+                    UserManager.getInstance().findUserById(message.getBelongId(), null);
                     updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                     listener.onSuccess(message);
-                }else {
+                } else {
                     updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                 }
                 break;
             case ChatMessage.MESSAGE_TYPE_READED:
-                if (!UserDBManager.getInstance().hasReadMessage(message.getConversationId(),message.getCreateTime())) {
+                if (!UserDBManager.getInstance().hasReadMessage(message.getConversationId(), message.getCreateTime())) {
                     UserDBManager.getInstance().addChatMessage(message);
                     updateMsgReaded(true, message.getConversationId(), message.getCreateTime());
-                    UserDBManager.getInstance().updateMessageReadStatus(message.getConversationId(),message.getCreateTime(),ConstantUtil.READ_STATUS_READED);
+                    UserDBManager.getInstance().updateMessageReadStatus(message.getConversationId(), message.getCreateTime(), ConstantUtil.READ_STATUS_READED);
                     listener.onSuccess(message);
                 }
                 break;
             default:
                 //                                聊天消息
-//                                接收到的消息有种情况，1、推送接收到的消息，已经在检测得到了，所以推送的就不要了
-                if (!UserDBManager.getInstance().hasMessage(message.getConversationId(), message.getCreateTime())){
+                //                                接收到的消息有种情况，1、推送接收到的消息，已经在检测得到了，所以推送的就不要了
+                if (!UserDBManager.getInstance().hasMessage(message.getConversationId(), message.getCreateTime())) {
                     UserDBManager.getInstance().addChatMessage(message);
                     UserDBManager.getInstance().addOrUpdateRecentMessage(message);
-                    updateMsgReaded(false,message.getConversationId(), message.getCreateTime());
+                    updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                     sendAskReadMsg(message.getConversationId(), message.getCreateTime());
                     listener.onSuccess(message);
-                }else {
+                } else {
                     updateMsgReaded(false, message.getConversationId(), message.getCreateTime());
                 }
                 break;
@@ -402,8 +458,6 @@ public class MsgManager {
     }
 
 
-
-
     /**
      * 根据会话ID和消息的创建时间来发送一个回执已读消息
      *
@@ -411,7 +465,7 @@ public class MsgManager {
      * @param createTime     消息创建时间
      */
     private void sendAskReadMsg(final String conversationId, final Long createTime) {
-        final ChatMessage chatMessage = createTagMessage(conversationId.split("&")[0],conversationId, createTime,ChatMessage.MESSAGE_TYPE_READED);
+        final ChatMessage chatMessage = createTagMessage(conversationId.split("&")[0], conversationId, createTime, ChatMessage.MESSAGE_TYPE_READED);
         saveMessageToService(chatMessage, new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
@@ -419,26 +473,25 @@ public class MsgManager {
                     findInstallation(conversationId.split("&")[0], new FindListener<CustomInstallation>() {
                         @Override
                         public void done(List<CustomInstallation> list, BmobException e) {
-                            if (e==null&&list!=null&&list.size()>0){
-                                sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(chatMessage),null);
+                            if (e == null && list != null && list.size() > 0) {
+                                sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(chatMessage), null);
                             }
                         }
                     });
-                }else {
-                    CommonLogger.e("保存到服务器已读类型消息失败"+e.toString());
+                } else {
+                    CommonLogger.e("保存到服务器已读类型消息失败" + e.toString());
                 }
             }
         });
     }
 
 
-
     /**
      * 在服务器上面更新聊天消息的已读状态(首先根据用户ID在服务器上查询获取该消息,然后再更新该消息)
      *
      * @param isReadedMessage 查询的标志
-     * @param id         会话ID或者是belongID
-     * @param createTime 创建时间
+     * @param id              会话ID或者是belongID
+     * @param createTime      创建时间
      */
     public void updateMsgReaded(boolean isReadedMessage, String id, Long createTime) {
         queryMsg(isReadedMessage, id, createTime, new FindListener<ChatMessage>() {
@@ -471,29 +524,20 @@ public class MsgManager {
     /**
      * 根据是否是标签和ID值(conversation 或  belongId)和创建时间来查询消息
      *
-     * @param isReadedMessage   是否是标签消息
-     * @param id           会话id或者是用户ID
-     * @param createTime   创建时间
-     * @param findListener 找到消息的回调
+     * @param isReadedMessage 是否是标签消息
+     * @param id              会话id或者是用户ID
+     * @param createTime      创建时间
+     * @param findListener    找到消息的回调
      */
-    private void queryMsg(boolean isReadedMessage , String id, Long createTime, FindListener<ChatMessage> findListener) {
+    private void queryMsg(boolean isReadedMessage, String id, Long createTime, FindListener<ChatMessage> findListener) {
         BmobQuery<ChatMessage> query = new BmobQuery<>();
         query.addWhereEqualTo("conversationId", id);
         query.addWhereEqualTo("createTime", createTime);
-        if (isReadedMessage){
-            query.addWhereEqualTo("messageType",ChatMessage.MESSAGE_TYPE_READED);
+        if (isReadedMessage) {
+            query.addWhereEqualTo("messageType", ChatMessage.MESSAGE_TYPE_READED);
         }
         query.findObjects(findListener);
     }
-
-
-
-
-
-
-
-
-
 
 
     public void queryGroupChatMessage(String groupId, FindListener<GroupChatMessage> listener) {
@@ -513,7 +557,7 @@ public class MsgManager {
                 String groupId = groupIdList.get(i);
                 LogUtil.e(groupId);
                 BmobQuery<GroupChatMessage> query = new BmobQuery<>("g" + groupId);
-                final RecentMessageEntity recentMsg=UserDBManager.getInstance().getRecentMessage(groupId);
+                final RecentMessageEntity recentMsg = UserDBManager.getInstance().getRecentMessage(groupId);
                 long lastTime;
                 if (recentMsg == null) {
                     lastTime = 0;
@@ -553,14 +597,6 @@ public class MsgManager {
     }
 
 
-
-
-
-
-
-
-
-
     /**
      * 根据内容和目标ID创建消息实体
      *
@@ -574,7 +610,7 @@ public class MsgManager {
         message.setBelongId(currentUser.getObjectId());
         message.setToId(uid);
         message.setConversationId(currentUser.getObjectId() + "&" + uid);
-//                 默认设置消息发送成功
+        //                 默认设置消息发送成功
         message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
         message.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
         message.setContent(content);
@@ -623,25 +659,23 @@ public class MsgManager {
         query.addWhereEqualTo("installationId", installationId);
         mPushManager.setQuery(query);
         mPushManager.pushMessage(jsonObject, listener);
-}
+    }
 
 
-
-    public void sendJsonMessage(List<String> installationIdList,String json,PushListener pushListener){
-        BmobQuery<CustomInstallation> query=new BmobQuery<>();
-        query.addWhereContainedIn("installationId",installationIdList);
+    public void sendJsonMessage(List<String> installationIdList, String json, PushListener pushListener) {
+        BmobQuery<CustomInstallation> query = new BmobQuery<>();
+        query.addWhereContainedIn("installationId", installationIdList);
         mPushManager.setQuery(query);
         mPushManager.pushMessage(json, pushListener);
     }
 
 
-    public void sendJsonMessage(String installId,String json,PushListener pushListener){
-        BmobQuery<CustomInstallation> query=new BmobQuery<>();
-        query.addWhereEqualTo("installationId",installId);
+    public void sendJsonMessage(String installId, String json, PushListener pushListener) {
+        BmobQuery<CustomInstallation> query = new BmobQuery<>();
+        query.addWhereEqualTo("installationId", installId);
         mPushManager.setQuery(query);
         mPushManager.pushMessage(json, pushListener);
     }
-
 
 
     /**
@@ -659,7 +693,7 @@ public class MsgManager {
      * @param contacts         群组成员(还没包括群主)
      */
     public void sendCreateGroupMessage(String groupName, final String groupDescription, final List<String> contacts, final OnCreateGroupTableListener listener) {
-//                这里要把群主消息加进来
+        //                这里要把群主消息加进来
         contacts.add(0, UserManager.getInstance().getCurrentUser().getObjectId());
         GroupTableMessage message = createGroupTableMessage(groupName, groupDescription, contacts);
         message.setReadStatus(ConstantUtil.READ_STATUS_READED);
@@ -674,7 +708,7 @@ public class MsgManager {
                                      public void done(BmobException e) {
                                          if (e == null) {
                                              UserDBManager.getInstance().addOrUpdateGroupTable(message);
-//            这里先上传再推送，因为对方可能接收到推送信息的时候无法即时获取到服务器上的群结构消息,也就查询信息失败
+                                             //            这里先上传再推送，因为对方可能接收到推送信息的时候无法即时获取到服务器上的群结构消息,也就查询信息失败
                                              //  todo  群结构的解决
                                              uploadChatTableMessage(message, new QueryListListener<BatchResult>() {
                                                  @Override
@@ -682,7 +716,7 @@ public class MsgManager {
 
                                                      if (e == null) {
                                                          LogUtil.e("批量保存群结构消息成功");
-                                                         MessageContent messageContent=new MessageContent();
+                                                         MessageContent messageContent = new MessageContent();
                                                          messageContent.setContent("大家好");
                                                          sendGroupChatMessage(createGroupChatMessage(gson.toJson(messageContent)
                                                                  , message.getGroupId(), ConstantUtil.TAG_MSG_TYPE_TEXT), new OnCreateChatMessageListener() {
@@ -702,7 +736,8 @@ public class MsgManager {
                                                              public void onFailed(String errorMsg, BaseMessage baseMessage) {
                                                                  UserDBManager
                                                                          .getInstance().addOrUpdateGroupTable(message);
-                                                                 listener.done(message, null);                                                             }
+                                                                 listener.done(message, null);
+                                                             }
                                                          });
                                                      } else {
                                                          listener.done(null, e);
@@ -720,7 +755,7 @@ public class MsgManager {
                                  });
                              } else {
                                  LogUtil.e("保存群主所建的群结构消息到服务器上失败" + e.toString());
-                                 listener.done(null,e);
+                                 listener.done(null, e);
                              }
 
                          }
@@ -774,7 +809,6 @@ public class MsgManager {
     }
 
 
-
     public void queryGroupTableMessage(String uid, FindListener<GroupTableMessage> findListener) {
         BmobQuery<GroupTableMessage> query = new BmobQuery<>();
         query.addWhereEqualTo(ConstantUtil.TAG_TO_ID, uid);
@@ -794,11 +828,6 @@ public class MsgManager {
     }
 
 
-
-
-
-
-
     public GroupTableMessage createReceiveGroupTableMsg(String json) {
         GroupTableMessage message = gson.fromJson(json, GroupTableMessage.class);
         LogUtil.e("实时监听到的群结构消息如下1");
@@ -809,16 +838,12 @@ public class MsgManager {
     }
 
 
-
-
     public User createUserFromJsonObject(JSONObject jsonObject) {
         User user;
         user = gson.fromJson(jsonObject.toString(), User.class);
         LogUtil.e(user);
         return user;
     }
-
-
 
 
     private void findReadTag(String conversationId, long createTime, FindListener<ChatMessage> findListener) {
@@ -868,12 +893,12 @@ public class MsgManager {
 
 
     public void updateGroupMessage(final String groupId, final String name, final String content, final UpdateListener listener) {
-        GroupTableMessage groupTableMessage=new GroupTableMessage();
+        GroupTableMessage groupTableMessage = new GroupTableMessage();
         groupTableMessage.setObjectId(groupId);
-        switch (name){
+        switch (name) {
             case ConstantUtil.GROUP_AVATAR:
-            groupTableMessage.setGroupAvatar(content);
-            break;
+                groupTableMessage.setGroupAvatar(content);
+                break;
             case ConstantUtil.GROUP_NOTIFICATION:
                 groupTableMessage.setNotification(content);
                 break;
@@ -886,8 +911,8 @@ public class MsgManager {
             case ConstantUtil.GROUP_REMIND:
                 groupTableMessage.setRemind(Boolean.parseBoolean(content));
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
         groupTableMessage.update(listener);
     }
@@ -969,9 +994,6 @@ public class MsgManager {
     }
 
 
-
-
-
     public Subscription getAllPostData(boolean isPublic, boolean isRefresh, String uid, String time, FindListener<PublicPostBean> findCallback) {
         BmobQuery<PublicPostBean> query = new BmobQuery<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -985,19 +1007,19 @@ public class MsgManager {
         BmobDate bmobDate;
         if (isRefresh) {
             bmobDate = new BmobDate(new Date(currentTime));
-            String key=ConstantUtil.UPDATE_TIME_SHARE+uid;
+            String key = ConstantUtil.UPDATE_TIME_SHARE + uid;
             if (isPublic) {
-                key+=ConstantUtil.PUBLIC;
+                key += ConstantUtil.PUBLIC;
             }
-            String updateTime=BaseApplication
+            String updateTime = BaseApplication
                     .getAppComponent()
                     .getSharedPreferences()
-                    .getString(key,null);
-            if (updateTime != null&&!time.equals("0000-00-00 01:00:00")) {
-//                这里有个Bug,WhereGreaterThan 也查出相等时间的消息,所以在这里加上一秒的时间
-                long resultTime=TimeUtil.getTime(updateTime,"yyyy-MM-dd HH:mm:ss")+1000;
+                    .getString(key, null);
+            if (updateTime != null && !time.equals("0000-00-00 01:00:00")) {
+                //                这里有个Bug,WhereGreaterThan 也查出相等时间的消息,所以在这里加上一秒的时间
+                long resultTime = TimeUtil.getTime(updateTime, "yyyy-MM-dd HH:mm:ss") + 1000;
                 query.addWhereGreaterThan("updatedAt", new BmobDate(new Date(resultTime)));
-            }else {
+            } else {
                 query.addWhereGreaterThan("updatedAt", bmobDate);
             }
             query.addWhereGreaterThanOrEqualTo("createdAt", bmobDate);
@@ -1008,15 +1030,15 @@ public class MsgManager {
             query.addWhereLessThan("createdAt", bmobDate);
         }
         if (!isPublic) {
-            User user=new User();
+            User user = new User();
             user.setObjectId(uid);
-            query.addWhereEqualTo("author",new BmobPointer(user));
+            query.addWhereEqualTo("author", new BmobPointer(user));
         }
         query.order("-createdAt");
         query.include("author");
         query.setLimit(10);
         query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ONLY);
-       return query.findObjects(findCallback);
+        return query.findObjects(findCallback);
     }
 
     public Subscription sendPublicPostMessage(int type, String content, String location, final ArrayList<SystemUtil.ImageItem> imageList,
@@ -1030,9 +1052,9 @@ public class MsgManager {
         publicPostBean.setAuthor(UserManager.getInstance().getCurrentUser());
         final Gson gson = BaseApplication
                 .getAppComponent().getGson();
-        if (type==ConstantUtil.EDIT_TYPE_SHARE) {
+        if (type == ConstantUtil.EDIT_TYPE_SHARE) {
             postDataBean.setShareContent(gson.toJson(MsgManager.getInstance().cover(postBean)));
-        }else if (type==ConstantUtil.EDIT_TYPE_IMAGE) {
+        } else if (type == ConstantUtil.EDIT_TYPE_IMAGE) {
             List<String> photoUrls = new ArrayList<>();
             if (imageList != null && imageList.size() > 0) {
                 CommonLogger.e("发送的全部path为:");
@@ -1043,7 +1065,7 @@ public class MsgManager {
                 }
                 postDataBean.setImageList(photoUrls);
             }
-        }else if (type==ConstantUtil.EDIT_TYPE_VIDEO){
+        } else if (type == ConstantUtil.EDIT_TYPE_VIDEO) {
             List<String> photoUrls = new ArrayList<>();
             photoUrls.add(shotScreen);
             photoUrls.add(videoPath);
@@ -1059,18 +1081,18 @@ public class MsgManager {
         publicPostBean.setObjectId(postId);
         BmobQuery<PublicCommentBean> query = new BmobQuery<>();
         query.addWhereEqualTo(ConstantUtil.POST, publicPostBean);
-        long currentTime=TimeUtil.getTime(time);
-        BmobDate bmobDate=new BmobDate(new Date(currentTime));
+        long currentTime = TimeUtil.getTime(time);
+        BmobDate bmobDate = new BmobDate(new Date(currentTime));
         if (isPullRefresh) {
             String key = ConstantUtil.UPDATE_TIME_COMMENT + postId;
             String updateTime = BaseApplication
                     .getAppComponent().getSharedPreferences()
                     .getString(key, null);
-            if (updateTime != null&&!time.equals("0000-00-00 01:00:00")) {
-//                这里有个Bug,WhereGreaterThan 也查出相等时间的消息,所以在这里加上一秒的时间
-                long resultTime=TimeUtil.getTime(updateTime,"yyyy-MM-dd HH:mm:ss")+1000;
+            if (updateTime != null && !time.equals("0000-00-00 01:00:00")) {
+                //                这里有个Bug,WhereGreaterThan 也查出相等时间的消息,所以在这里加上一秒的时间
+                long resultTime = TimeUtil.getTime(updateTime, "yyyy-MM-dd HH:mm:ss") + 1000;
                 query.addWhereGreaterThan("updatedAt", new BmobDate(new Date(resultTime)));
-            }else {
+            } else {
                 query.addWhereGreaterThan("updatedAt", bmobDate);
             }
             query.addWhereGreaterThanOrEqualTo("createdAt", bmobDate);
@@ -1095,7 +1117,7 @@ public class MsgManager {
 
 
     public PublicCommentBean cover(PostCommentEntity entity) {
-        DaoSession daoSession=UserDBManager.getInstance().getDaoSession();
+        DaoSession daoSession = UserDBManager.getInstance().getDaoSession();
         PublicCommentBean posterComments = new PublicCommentBean();
         posterComments.setObjectId(entity.getCid());
         posterComments.setSendStatus(entity.getSendStatus());
@@ -1107,7 +1129,7 @@ public class MsgManager {
                 daoSession
                         .getPublicPostEntityDao()
                         .queryBuilder().where(PublicPostEntityDao.Properties.Pid.eq(entity.getPid())).build().list().get(0);
-        PublicPostBean publicPostBean =cover(publicPostEntity);
+        PublicPostBean publicPostBean = cover(publicPostEntity);
         posterComments.setPost(publicPostBean);
         User commentUser;
         if (!entity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId())) {
@@ -1124,7 +1146,7 @@ public class MsgManager {
 
 
     public PublicPostBean cover(PublicPostEntity posterMessageEntity) {
-        User user=UserManager.getInstance().cover(UserDBManager.getInstance().getUser(posterMessageEntity.getUid()));
+        User user = UserManager.getInstance().cover(UserDBManager.getInstance().getUser(posterMessageEntity.getUid()));
         PublicPostBean posterMessage = new PublicPostBean();
         posterMessage.setAuthor(user);
         posterMessage.setCreateTime(TimeUtil.getTime(posterMessageEntity.getCreatedTime(), "yyyy-MM-dd HH:mm:ss"));
@@ -1160,7 +1182,7 @@ public class MsgManager {
     }
 
     public Subscription reSendPublicPostBean(PublicPostBean data, OnCreatePublicPostListener listener) {
-        PostDataBean bean =BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
+        PostDataBean bean = BaseApplication.getAppComponent().getGson().fromJson(data.getContent(), PostDataBean.class);
         if (data.getMsgType() == ConstantUtil.EDIT_TYPE_IMAGE) {
             List<String> imageList = bean.getImageList();
             if (imageList != null && imageList.size() > 0) {
@@ -1276,7 +1298,7 @@ public class MsgManager {
                     if (e == null) {
                         PublicPostBean temp = new PublicPostBean();
                         temp.increment("shareCount");
-                        PublicPostEntity publicPostEntity=gson.fromJson(bean.getShareContent(),PublicPostEntity.class);
+                        PublicPostEntity publicPostEntity = gson.fromJson(bean.getShareContent(), PublicPostEntity.class);
                         temp.update(publicPostEntity.getPid(), new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
@@ -1284,12 +1306,12 @@ public class MsgManager {
                                     CommonLogger.e("更新转发个数失败");
                                 } else {
                                     CommonLogger.e("更新转发个数成功");
-                                    publicPostEntity.setShareCount(publicPostEntity.getShareCount()+1);
+                                    publicPostEntity.setShareCount(publicPostEntity.getShareCount() + 1);
                                     bean.setShareContent(gson.toJson(publicPostEntity));
                                     data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean));
                                 }
-                                MsgManager.getInstance().sendPostNotifyInfo(ConstantUtil.TYPE_SHARE,data.getObjectId(),UserManager.getInstance()
-                                .getCurrentUserObjectId(),getUidForShareContent(bean.getShareContent()));
+                                MsgManager.getInstance().sendPostNotifyInfo(ConstantUtil.TYPE_SHARE, data.getObjectId(), UserManager.getInstance()
+                                        .getCurrentUserObjectId(), getUidForShareContent(bean.getShareContent()));
                                 listener.onSuccess(data);
                             }
                         });
@@ -1321,7 +1343,7 @@ public class MsgManager {
                 String item = bean.getImageList().get(i);
                 if (item.startsWith("http")
                         || item.startsWith(ConstantUtil.IMAGE_COMPRESS_DIR)) {
-//                    没有改变
+                    //                    没有改变
                 } else {
                     upLoad.add(bean.getImageList().get(i));
                 }
@@ -1394,7 +1416,7 @@ public class MsgManager {
                 || data.getMsgType() == ConstantUtil.EDIT_TYPE_VIDEO) {
             data.setContent(BaseApplication.getAppComponent().getGson().toJson(bean)
             );
-            if (!data.getSendStatus().equals( ConstantUtil.SEND_STATUS_SUCCESS)) {
+            if (!data.getSendStatus().equals(ConstantUtil.SEND_STATUS_SUCCESS)) {
                 data.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
             }
             return data.update(new UpdateListener() {
@@ -1413,7 +1435,7 @@ public class MsgManager {
     }
 
     public GroupTableEntity cover(GroupTableMessage groupTableMessage) {
-        GroupTableEntity groupTableEntity=new GroupTableEntity();
+        GroupTableEntity groupTableEntity = new GroupTableEntity();
         groupTableEntity.setCreatedTime(groupTableMessage.getCreatedTime());
         groupTableEntity.setCreatorId(groupTableMessage.getCreatorId());
         groupTableEntity.setGroupAvatar(groupTableMessage.getGroupAvatar());
@@ -1429,7 +1451,7 @@ public class MsgManager {
     }
 
     public ChatMessageEntity cover(ChatMessage message) {
-        ChatMessageEntity chatMessageEntity=new ChatMessageEntity();
+        ChatMessageEntity chatMessageEntity = new ChatMessageEntity();
         chatMessageEntity.setBelongId(message.getBelongId());
         chatMessageEntity.setContent(message.getContent());
         chatMessageEntity.setContentType(message.getContentType());
@@ -1443,13 +1465,13 @@ public class MsgManager {
     }
 
     public RecentMessageEntity coverRecentMessage(BaseMessage message) {
-        RecentMessageEntity recentMessageEntity=new RecentMessageEntity();
+        RecentMessageEntity recentMessageEntity = new RecentMessageEntity();
         if (message instanceof ChatMessage) {
             recentMessageEntity.setType(RecentMessageEntity.TYPE_PERSON);
             if (message.getBelongId().equals(UserManager.getInstance()
-            .getCurrentUserObjectId())) {
+                    .getCurrentUserObjectId())) {
                 recentMessageEntity.setId(((ChatMessage) message).getToId());
-            }else {
+            } else {
                 recentMessageEntity.setId(message.getBelongId());
             }
         } else if (message instanceof GroupChatMessage) {
@@ -1464,7 +1486,7 @@ public class MsgManager {
     }
 
     public GroupChatEntity cover(GroupChatMessage groupChatMessage) {
-        GroupChatEntity groupChatEntity=new GroupChatEntity();
+        GroupChatEntity groupChatEntity = new GroupChatEntity();
         groupChatEntity.setBelongId(groupChatMessage.getBelongId());
         groupChatEntity.setContent(groupChatMessage.getContent());
         groupChatEntity.setCreatedTime(groupChatMessage.getCreateTime());
@@ -1476,13 +1498,13 @@ public class MsgManager {
     }
 
     public void refreshGroupChatMessage(FindListener<GroupChatMessage> findListener) {
-        MsgManager.getInstance().queryGroupChatMessage(UserDBManager.getInstance().getAllGroupId(),findListener);
+        MsgManager.getInstance().queryGroupChatMessage(UserDBManager.getInstance().getAllGroupId(), findListener);
 
 
     }
 
     public ChatMessage cover(ChatMessageEntity chatMessageEntity) {
-        ChatMessage chatMessage=new ChatMessage();
+        ChatMessage chatMessage = new ChatMessage();
         chatMessage.setReadStatus(chatMessageEntity.getReadStatus());
         chatMessage.setContentType(chatMessageEntity.getContentType());
         chatMessage.setContent(chatMessageEntity.getContent());
@@ -1496,7 +1518,7 @@ public class MsgManager {
     }
 
     public GroupChatMessage cover(GroupChatEntity item) {
-        GroupChatMessage groupChatMessage=new GroupChatMessage();
+        GroupChatMessage groupChatMessage = new GroupChatMessage();
         groupChatMessage.setContentType(item.getContentType());
         groupChatMessage.setContent(item.getContent());
         groupChatMessage.setGroupId(item.getGroupId());
@@ -1508,14 +1530,14 @@ public class MsgManager {
     }
 
     public Subscription sendChatMessage(ChatMessage message, OnCreateChatMessageListener listener) {
-        MessageContent messageContent=gson.fromJson(message.getContent(),MessageContent.class);
-        int contentType=message.getContentType();
-        if (contentType!=ConstantUtil.TAG_MSG_TYPE_TEXT){
-            List<String>  urlList=messageContent.getUrlList();
+        MessageContent messageContent = gson.fromJson(message.getContent(), MessageContent.class);
+        int contentType = message.getContentType();
+        if (contentType != ConstantUtil.TAG_MSG_TYPE_TEXT) {
+            List<String> urlList = messageContent.getUrlList();
             BmobFile.uploadBatch(urlList.toArray(new String[]{}), new UploadBatchListener() {
                 @Override
                 public void onSuccess(List<BmobFile> list, List<String> list1) {
-                    if (urlList.size()==list1.size()){
+                    if (urlList.size() == list1.size()) {
                         messageContent.setUrlList(list1);
                         message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
                         message.setContent(gson.toJson(messageContent));
@@ -1530,14 +1552,14 @@ public class MsgManager {
                                         public void done(List<CustomInstallation> list, BmobException e) {
                                             if (e == null && list != null
                                                     && list.size() > 0) {
-                                                sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(message),null);
+                                                sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(message), null);
                                             }
                                         }
                                     });
                                     listener.onSuccess(message);
-//
-                                }else {
-                                    listener.onFailed(e.toString(),message);
+                                    //
+                                } else {
+                                    listener.onFailed(e.toString(), message);
                                 }
                             }
                         });
@@ -1551,11 +1573,11 @@ public class MsgManager {
 
                 @Override
                 public void onError(int i, String s) {
-                    listener.onFailed(s+i,message);
+                    listener.onFailed(s + i, message);
                 }
             });
             return null;
-        }else {
+        } else {
             message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
             return message.save(new SaveListener<String>() {
                 @Override
@@ -1566,13 +1588,13 @@ public class MsgManager {
                             public void done(List<CustomInstallation> list, BmobException e) {
                                 if (e == null && list != null
                                         && list.size() > 0) {
-                                    sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(message),null);
+                                    sendJsonMessage(list.get(0).getInstallationId(), createJsonMessage(message), null);
                                 }
                             }
                         });
                         listener.onSuccess(message);
-                    }else {
-                        listener.onFailed(e.toString(),message);
+                    } else {
+                        listener.onFailed(e.toString(), message);
                     }
                 }
             });
@@ -1580,18 +1602,18 @@ public class MsgManager {
     }
 
     public Subscription sendGroupChatMessage(GroupChatMessage message, OnCreateChatMessageListener listener) {
-        MessageContent messageContent=gson.fromJson(message.getContent(),MessageContent.class);
-        int contentType=message.getContentType();
-        if (contentType!=ConstantUtil.TAG_MSG_TYPE_TEXT){
-            List<String>  urlList=messageContent.getUrlList();
+        MessageContent messageContent = gson.fromJson(message.getContent(), MessageContent.class);
+        int contentType = message.getContentType();
+        if (contentType != ConstantUtil.TAG_MSG_TYPE_TEXT) {
+            List<String> urlList = messageContent.getUrlList();
             BmobFile.uploadBatch(urlList.toArray(new String[]{}), new UploadBatchListener() {
                 @Override
                 public void onSuccess(List<BmobFile> list, List<String> list1) {
-                    if (urlList.size()==list1.size()){
+                    if (urlList.size() == list1.size()) {
                         messageContent.setUrlList(list1);
                         message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
                         message.setContent(gson.toJson(messageContent));
-                        message.setTableName("g"+message.getGroupId());
+                        message.setTableName("g" + message.getGroupId());
                         message.save(new SaveListener<String>() {
                             @Override
                             public void done(String s, BmobException e) {
@@ -1599,8 +1621,8 @@ public class MsgManager {
                                 message.setContent(gson.toJson(messageContent));
                                 if (e == null) {
                                     listener.onSuccess(message);
-                                }else {
-                                    listener.onFailed(e.toString(),message);
+                                } else {
+                                    listener.onFailed(e.toString(), message);
                                 }
                             }
                         });
@@ -1614,30 +1636,30 @@ public class MsgManager {
 
                 @Override
                 public void onError(int i, String s) {
-                    listener.onFailed(s+i,message);
+                    listener.onFailed(s + i, message);
                 }
             });
             return null;
-        }else {
-            message.setTableName("g"+message.getGroupId());
+        } else {
+            message.setTableName("g" + message.getGroupId());
             message.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
             return message.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
                     if (e == null) {
                         listener.onSuccess(message);
-                    }else {
-                        listener.onFailed(e.toString(),message);
+                    } else {
+                        listener.onFailed(e.toString(), message);
                     }
                 }
             });
         }
     }
 
-    public void exitGroup(String groupId,String uid,UpdateListener updateListener) {
-        GroupTableEntity groupTableEntity= UserDBManager.getInstance()
+    public void exitGroup(String groupId, String uid, UpdateListener updateListener) {
+        GroupTableEntity groupTableEntity = UserDBManager.getInstance()
                 .getGroupTableEntity(groupId);
-        GroupTableMessage groupTableMessage=new GroupTableMessage();
+        GroupTableMessage groupTableMessage = new GroupTableMessage();
         groupTableMessage.setObjectId(groupTableEntity.getGroupId());
         groupTableEntity.setGroupNumber(groupTableEntity.getGroupNumber());
         groupTableMessage.getGroupNumber().remove(uid);
@@ -1646,7 +1668,7 @@ public class MsgManager {
     }
 
     public GroupTableMessage cover(GroupTableEntity
-                                   entity) {
+                                           entity) {
         return null;
     }
 
@@ -1667,37 +1689,37 @@ public class MsgManager {
         commentDetailBean.setContent(content);
         if (publicCommentBean != null) {
             CommentDetailBean originBean = gson.fromJson(publicCommentBean.getContent(), CommentDetailBean.class);
-            String publicId=publicCommentBean.getUser().getObjectId() + "&" +
+            String publicId = publicCommentBean.getUser().getObjectId() + "&" +
                     UserManager.getInstance().getCurrentUserObjectId();
-            List<ReplyDetailContent>  list=originBean.getConversationList().get(publicId);
+            List<ReplyDetailContent> list = originBean.getConversationList().get(publicId);
             if (list == null) {
-                publicId=UserManager.getInstance().getCurrentUserObjectId()+"&"+publicCommentBean.getUser().getObjectId();
-                list=originBean.getConversationList().get(publicId);
+                publicId = UserManager.getInstance().getCurrentUserObjectId() + "&" + publicCommentBean.getUser().getObjectId();
+                list = originBean.getConversationList().get(publicId);
             }
-            Map<String,List<ReplyDetailContent>> map=new HashMap<>();
+            Map<String, List<ReplyDetailContent>> map = new HashMap<>();
             if (list == null) {
-//                首次双方对话
-                List<ReplyDetailContent> replyDetailContents=new ArrayList<>();
-                ReplyDetailContent one=new ReplyDetailContent();
+                //                首次双方对话
+                List<ReplyDetailContent> replyDetailContents = new ArrayList<>();
+                ReplyDetailContent one = new ReplyDetailContent();
                 one.setTime(TimeUtil.severToLocalTime(publicCommentBean.getCreatedAt()));
                 one.setContent(originBean.getContent());
                 one.setUid(publicCommentBean.getUser().getObjectId());
                 replyDetailContents.add(one);
-                ReplyDetailContent two=new ReplyDetailContent();
+                ReplyDetailContent two = new ReplyDetailContent();
                 two.setTime(System.currentTimeMillis());
                 two.setUid(UserManager.getInstance().getCurrentUserObjectId());
                 two.setContent(content);
                 replyDetailContents.add(two);
-                map.put(publicId,replyDetailContents);
-            }else {
-                ReplyDetailContent two=new ReplyDetailContent();
+                map.put(publicId, replyDetailContents);
+            } else {
+                ReplyDetailContent two = new ReplyDetailContent();
                 two.setTime(System.currentTimeMillis());
                 two.setContent(content);
                 two.setUid(UserManager.getInstance().getCurrentUserObjectId());
-                List<ReplyDetailContent>  other=new ArrayList<>();
+                List<ReplyDetailContent> other = new ArrayList<>();
                 other.addAll(list);
                 other.add(two);
-                map.put(publicId,other);
+                map.put(publicId, other);
             }
             commentDetailBean.setConversationList(map);
             commentDetailBean.setPublicId(publicId);
@@ -1713,33 +1735,33 @@ public class MsgManager {
     }
 
     public Subscription sendNotifyCommentInfo(PublicCommentBean newBean) {
-        CommentDetailBean commentDetailBean=gson.fromJson(newBean.getContent()
-                ,CommentDetailBean.class);
+        CommentDetailBean commentDetailBean = gson.fromJson(newBean.getContent()
+                , CommentDetailBean.class);
 
-        StringBuilder stringBuilder=new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         if (!newBean.getPost().getAuthor().getObjectId().equals(UserManager.getInstance()
-                .getCurrentUserObjectId())){
+                .getCurrentUserObjectId())) {
             stringBuilder.append(newBean.getPost().getAuthor().getObjectId());
         }
         if (commentDetailBean.getPublicId() != null) {
-//                        回复评论
-            String[] str=commentDetailBean.getPublicId().split("&");
+            //                        回复评论
+            String[] str = commentDetailBean.getPublicId().split("&");
             String otherUid;
             if (str[0].equals(newBean.getPost().getAuthor().getObjectId())) {
-                otherUid=str[1];
-            }else {
-                otherUid=str[0];
+                otherUid = str[1];
+            } else {
+                otherUid = str[0];
             }
             stringBuilder.append("&");
             stringBuilder.append(otherUid);
         }
-        return MsgManager.getInstance().sendPostNotifyInfo(ConstantUtil.TYPE_COMMENT,newBean.getObjectId(),UserManager.getInstance().getCurrentUserObjectId()
-                ,stringBuilder.toString());
+        return MsgManager.getInstance().sendPostNotifyInfo(ConstantUtil.TYPE_COMMENT, newBean.getObjectId(), UserManager.getInstance().getCurrentUserObjectId()
+                , stringBuilder.toString());
     }
 
-    private String createNotifyInfo(Integer type,String id) {
-        PostNotifyInfo postNotifyInfo=new PostNotifyInfo();
+    private String createNotifyInfo(Integer type, String id) {
+        PostNotifyInfo postNotifyInfo = new PostNotifyInfo();
         postNotifyInfo.setId(id);
         postNotifyInfo.setType(type);
         postNotifyInfo.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
@@ -1747,12 +1769,9 @@ public class MsgManager {
     }
 
 
-
-
-
     public void getCommentBean(String commentId, FindListener<PublicCommentBean> findListener) {
-        BmobQuery<PublicCommentBean> bmobQuery=new BmobQuery<>();
-        bmobQuery.addWhereEqualTo("objectId",commentId);
+        BmobQuery<PublicCommentBean> bmobQuery = new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("objectId", commentId);
         bmobQuery.findObjects(findListener);
     }
 
@@ -1761,50 +1780,50 @@ public class MsgManager {
                 result) {
             bean.setReadStatus(ConstantUtil.READ_STATUS_READED);
         }
-        List<BmobObject>  bmobObjectList=new ArrayList<>(result);
+        List<BmobObject> bmobObjectList = new ArrayList<>(result);
         new BmobBatch().updateBatch(bmobObjectList).doBatch(new QueryListListener<BatchResult>() {
             @Override
             public void done(List<BatchResult> list, BmobException e) {
                 if (e == null) {
                     CommonLogger.e("批量更新评论已读成功");
-                }    else {
-                    CommonLogger.e("批量更新评论已读失败"+e.toString());
+                } else {
+                    CommonLogger.e("批量更新评论已读失败" + e.toString());
                 }
             }
         });
     }
 
-    public void updateCommentReadStatus(PublicCommentBean publicCommentBean,UpdateListener listener) {
+    public void updateCommentReadStatus(PublicCommentBean publicCommentBean, UpdateListener listener) {
 
     }
 
-    public void updateSystemNotifyReadStatus(String id,UpdateListener listener) {
-        SystemNotifyBean systemNotifyBean=new SystemNotifyBean();
+    public void updateSystemNotifyReadStatus(String id, UpdateListener listener) {
+        SystemNotifyBean systemNotifyBean = new SystemNotifyBean();
         systemNotifyBean.setObjectId(id);
         systemNotifyBean.setReadStatus(ConstantUtil.READ_STATUS_READED);
         systemNotifyBean.update(listener);
     }
 
-    public Subscription sendPostNotifyInfo(Integer type,String id, String uid,String toId) {
-        if (type.equals(ConstantUtil.TYPE_LIKE)||type.equals(ConstantUtil.TYPE_SHARE)) {
-            PostNotifyBean postNotifyBean=new PostNotifyBean();
+    public Subscription sendPostNotifyInfo(Integer type, String id, String uid, String toId) {
+        if (type.equals(ConstantUtil.TYPE_LIKE) || type.equals(ConstantUtil.TYPE_SHARE)) {
+            PostNotifyBean postNotifyBean = new PostNotifyBean();
             postNotifyBean.setType(type);
             postNotifyBean.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
-            User user=new User();
+            User user = new User();
             user.setObjectId(toId);
             postNotifyBean.setToUser(user);
-            User relatedUser=new User();
+            User relatedUser = new User();
             relatedUser.setObjectId(uid);
             postNotifyBean.setRelatedUser(relatedUser);
-            PublicPostBean publicPostBean=new PublicPostBean();
+            PublicPostBean publicPostBean = new PublicPostBean();
             publicPostBean.setObjectId(id);
             postNotifyBean.setPublicPostBean(publicPostBean);
             return postNotifyBean.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
                     if (e == null) {
-                        BmobQuery<User> bmobQuery=new BmobQuery<>();
-                        bmobQuery.addWhereEqualTo("objectId",toId);
+                        BmobQuery<User> bmobQuery = new BmobQuery<>();
+                        bmobQuery.addWhereEqualTo("objectId", toId);
                         bmobQuery.findObjects(new FindListener<User>() {
                             @Override
                             public void done(List<User> list, BmobException e) {
@@ -1815,8 +1834,8 @@ public class MsgManager {
                                             public void done(BmobException e) {
                                                 if (e == null) {
                                                     CommonLogger.e("推送帖子相关通知信息成功");
-                                                }else {
-                                                    CommonLogger.e("推送帖子相关通知信息失败"+e.toString());
+                                                } else {
+                                                    CommonLogger.e("推送帖子相关通知信息失败" + e.toString());
                                                 }
                                             }
                                         });
@@ -1827,25 +1846,25 @@ public class MsgManager {
                     }
                 }
             });
-        }else if (type.equals(ConstantUtil.TYPE_COMMENT)){
-            List<String> list=new ArrayList<>();
+        } else if (type.equals(ConstantUtil.TYPE_COMMENT)) {
+            List<String> list = new ArrayList<>();
             if (toId.contains("&")) {
-                list=Arrays.asList(toId.split("&"));
-            }else {
+                list = Arrays.asList(toId.split("&"));
+            } else {
                 list.add(toId);
             }
-            List<BmobObject> list1=new ArrayList<>();
+            List<BmobObject> list1 = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
-                PublicCommentBean publicCommentBean=new PublicCommentBean();
+                PublicCommentBean publicCommentBean = new PublicCommentBean();
                 publicCommentBean.setObjectId(id);
-                PostNotifyBean postNotifyBean=new PostNotifyBean();
+                PostNotifyBean postNotifyBean = new PostNotifyBean();
                 postNotifyBean.setPublicCommentBean(publicCommentBean);
                 postNotifyBean.setReadStatus(ConstantUtil.READ_STATUS_UNREAD);
                 postNotifyBean.setType(type);
-                User toUser=new User();
+                User toUser = new User();
                 toUser.setObjectId(list.get(0));
                 postNotifyBean.setToUser(toUser);
-                User relatedUser=new User();
+                User relatedUser = new User();
                 relatedUser.setObjectId(uid);
                 postNotifyBean.setRelatedUser(relatedUser);
                 list1.add(postNotifyBean);
@@ -1856,24 +1875,24 @@ public class MsgManager {
                 public void done(List<BatchResult> batchResults, BmobException e) {
                     if (e == null) {
                         CommonLogger.e("批量添加评论通知成功");
-                        BmobQuery<User>  userBmobQuery=new BmobQuery<>();
+                        BmobQuery<User> userBmobQuery = new BmobQuery<>();
                         userBmobQuery.addWhereContainedIn("objectId", finalList);
                         userBmobQuery.findObjects(new FindListener<User>() {
                             @Override
                             public void done(List<User> list, BmobException e) {
                                 if (e == null) {
-                                    if (list!=null&&list.size()>0){
-                                        List<String>  installIdList=new ArrayList<>(list.size());
+                                    if (list != null && list.size() > 0) {
+                                        List<String> installIdList = new ArrayList<>(list.size());
                                         for (User item :
                                                 list) {
                                             installIdList.add(item.getInstallId());
                                         }
-                                        StringBuilder stringBuilder=new StringBuilder();
+                                        StringBuilder stringBuilder = new StringBuilder();
 
                                         if (toId.contains("&")) {
                                             stringBuilder.append(batchResults.get(0).getObjectId()).append("&").append(batchResults
                                                     .get(1).getObjectId());
-                                        }else {
+                                        } else {
                                             stringBuilder.append(batchResults.get(0).getObjectId());
                                         }
                                         sendJsonMessage(installIdList, createNotifyInfo(type, stringBuilder.toString()), new PushListener() {
@@ -1881,8 +1900,8 @@ public class MsgManager {
                                             public void done(BmobException e) {
                                                 if (e == null) {
                                                     CommonLogger.e("推送帖子相关通知信息成功");
-                                                }else {
-                                                    CommonLogger.e("推送帖子相关通知信息失败"+e.toString());
+                                                } else {
+                                                    CommonLogger.e("推送帖子相关通知信息失败" + e.toString());
                                                 }
                                             }
                                         });
@@ -1891,8 +1910,8 @@ public class MsgManager {
                                 }
                             }
                         });
-                    }else {
-                        CommonLogger.e("批量添加评论通知失败"+e.toString());
+                    } else {
+                        CommonLogger.e("批量添加评论通知失败" + e.toString());
                     }
                 }
             });
@@ -1901,17 +1920,17 @@ public class MsgManager {
     }
 
     public void updatePostNotifyReadStatus(PostNotifyInfo postNotifyInfo, FindListener<PostNotifyBean> listener) {
-        BmobQuery<PostNotifyBean> bmobQuery=new BmobQuery<>();
-        bmobQuery.addWhereEqualTo("readStatus",ConstantUtil.READ_STATUS_UNREAD);
-        bmobQuery.addWhereEqualTo("toUser",UserManager.getInstance().getCurrentUser());
-        if (postNotifyInfo.getType().equals(ConstantUtil.TYPE_LIKE)||postNotifyInfo
-                .getType().equals(ConstantUtil.TYPE_SHARE)){
-            bmobQuery.addWhereEqualTo("objectId",postNotifyInfo.getId());
-        }else {
+        BmobQuery<PostNotifyBean> bmobQuery = new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("readStatus", ConstantUtil.READ_STATUS_UNREAD);
+        bmobQuery.addWhereEqualTo("toUser", UserManager.getInstance().getCurrentUser());
+        if (postNotifyInfo.getType().equals(ConstantUtil.TYPE_LIKE) || postNotifyInfo
+                .getType().equals(ConstantUtil.TYPE_SHARE)) {
+            bmobQuery.addWhereEqualTo("objectId", postNotifyInfo.getId());
+        } else {
             if (postNotifyInfo.getId().contains("&")) {
-                bmobQuery.addWhereContainedIn("objectId",Arrays.asList(postNotifyInfo.getId().split("&")));
-            }else {
-                bmobQuery.addWhereEqualTo("objectId",postNotifyInfo.getId());
+                bmobQuery.addWhereContainedIn("objectId", Arrays.asList(postNotifyInfo.getId().split("&")));
+            } else {
+                bmobQuery.addWhereEqualTo("objectId", postNotifyInfo.getId());
             }
         }
         bmobQuery.include("relatedUser");
@@ -1925,21 +1944,21 @@ public class MsgManager {
                         list.get(0).update(new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
-                                listener.done(list,e);
+                                listener.done(list, e);
                             }
                         });
-                    }else {
-                        listener.done(null,null);
+                    } else {
+                        listener.done(null, null);
                     }
-                }else {
-                    listener.done(null,e);
+                } else {
+                    listener.done(null, e);
                 }
             }
         });
     }
 
     public SkinEntity cover(SkinBean bean) {
-        List<SkinEntity> list=UserDBManager.getInstance()
+        List<SkinEntity> list = UserDBManager.getInstance()
                 .getDaoSession().getSkinEntityDao().queryBuilder()
                 .where(SkinEntityDao.Properties.Url.eq(bean.getUrl()))
                 .build().list();
@@ -1949,8 +1968,8 @@ public class MsgManager {
             UserDBManager.getInstance().getDaoSession().getSkinEntityDao()
                     .update(list.get(0));
             return list.get(0);
-        }else {
-            SkinEntity skinEntity=new SkinEntity();
+        } else {
+            SkinEntity skinEntity = new SkinEntity();
             skinEntity.setTitle(bean.getTitle());
             skinEntity.setImageList(bean.getImageList());
             skinEntity.setHasSelected(false);
@@ -1962,7 +1981,7 @@ public class MsgManager {
     }
 
     public StepData cover(StepBean stepBean) {
-        StepData stepData=new StepData();
+        StepData stepData = new StepData();
         stepData.setUid(stepBean.getUser().getObjectId());
         stepData.setTime(stepBean.getTime());
         stepData.setId(stepBean.getObjectId());
@@ -1971,7 +1990,7 @@ public class MsgManager {
     }
 
     public void saveCurrentStep(int stepNumber) {
-       StepData stepData=UserDBManager.getInstance().getStepData(TimeUtil.getCurrentTime());
+        StepData stepData = UserDBManager.getInstance().getStepData(TimeUtil.getCurrentTime());
         if (stepData != null) {
             stepData.setStepCount(stepNumber);
             UserDBManager.getInstance().getDaoSession().update(stepData);

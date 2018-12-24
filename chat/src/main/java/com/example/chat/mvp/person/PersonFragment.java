@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.chat.R;
 import com.example.chat.base.AppBaseFragment;
 import com.example.chat.base.ConstantUtil;
+import com.example.chat.mvp.feedback.ChatListActivity;
 import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.dagger.person.DaggerPersonComponent;
 import com.example.chat.dagger.person.PersonModule;
@@ -92,6 +93,7 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
         edit.setOnClickListener(this);
         index.setOnClickListener(this);
         notify.setOnClickListener(this);
+        findViewById(R.id.rl_fragment_person_feedback).setOnClickListener(this);
         titleBg.setOnLongClickListener(v -> {
             PhotoSelectActivity.start(this, ConstantUtil.TITLE_WALLPAPER, true, false, null);
             return true;
@@ -162,6 +164,8 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
             SystemNotifyActivity.start(getActivity());
         } else if (id == R.id.rl_fragment_person_comment) {
             CommentNotifyActivity.start(getActivity(), null);
+        } else if (id == R.id.rl_fragment_person_feedback) {
+            ChatListActivity.start(getActivity());
         }
     }
 
