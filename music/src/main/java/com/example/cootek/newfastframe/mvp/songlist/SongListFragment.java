@@ -17,16 +17,16 @@ import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
-import com.example.commonlibrary.cusotomview.ListViewDecoration;
-import com.example.commonlibrary.cusotomview.RoundAngleImageView;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
+import com.example.commonlibrary.customview.RoundAngleImageView;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.manager.music.MusicPlayerManager;
 import com.example.commonlibrary.utils.BlurBitmapUtil;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.R;
-import com.example.cootek.newfastframe.adapter.SongListAdapter;
+import com.example.cootek.newfastframe.adapter.RecentPlayListAdapter;
 import com.example.cootek.newfastframe.base.MusicBaseFragment;
 import com.example.cootek.newfastframe.bean.AlbumBean;
 import com.example.cootek.newfastframe.bean.ArtistSongsBean;
@@ -51,7 +51,7 @@ public class SongListFragment extends MusicBaseFragment<Object, SongListPresente
     private CustomSwipeRefreshLayout refresh;
     private SuperRecyclerView display;
     @Inject
-    SongListAdapter songListAdapter;
+    RecentPlayListAdapter mRecentPlayListAdapter;
 
 
     private String data;
@@ -113,11 +113,11 @@ public class SongListFragment extends MusicBaseFragment<Object, SongListPresente
             root.setBackgroundColor(Color.TRANSPARENT);
         }
         display.addItemDecoration(new ListViewDecoration(DensityUtil.toDp(10)));
-        display.setAdapter(songListAdapter);
-        songListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
+        display.setAdapter(mRecentPlayListAdapter);
+        mRecentPlayListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                MusicManager.getInstance().play(songListAdapter.getData(), position, 0);
+                MusicManager.getInstance().play(mRecentPlayListAdapter.getData(), position, 0);
             }
         });
     }
@@ -180,9 +180,9 @@ public class SongListFragment extends MusicBaseFragment<Object, SongListPresente
         if (object instanceof List) {
             List<MusicPlayBean> bean = ((List<MusicPlayBean>) object);
             if (refresh.isRefreshing()) {
-                songListAdapter.refreshData(bean);
+                mRecentPlayListAdapter.refreshData(bean);
             } else {
-                songListAdapter.addData(bean);
+                mRecentPlayListAdapter.addData(bean);
             }
         } else if (object instanceof RankListBean) {
             RankListBean rankListBean = (RankListBean) object;

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -14,8 +15,8 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.bean.BaseBean;
-import com.example.commonlibrary.cusotomview.WrappedViewPager;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.customview.WrappedViewPager;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.utils.BlurBitmapUtil;
 import com.example.commonlibrary.utils.StatusBarUtil;
 import com.google.android.material.appbar.AppBarLayout;
@@ -35,6 +36,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -56,13 +59,19 @@ public class ActorDetailInfoActivity extends VideoBaseActivity<BaseBean, ActorDe
     private WrappedViewPager display;
     private TabLayout mTabLayout;
     private ViewPagerAdapter mViewPagerAdapter;
+    private TextView name;
 
     private FloatingActionButton mFloatingActionButton;
 
     public static void start(Activity activity, String data) {
+        start(activity, data, null);
+    }
+
+
+    public static void start(Activity activity, String data, ActivityOptionsCompat activityOptionsCompat) {
         Intent intent = new Intent(activity, ActorDetailInfoActivity.class);
         intent.putExtra(VideoUtil.DATA, data);
-        activity.startActivity(intent);
+        activity.startActivity(intent, activityOptionsCompat.toBundle());
     }
 
 
@@ -90,6 +99,7 @@ public class ActorDetailInfoActivity extends VideoBaseActivity<BaseBean, ActorDe
     @Override
     protected void initView() {
         display = findViewById(R.id.wvp_activity_actor_detail_info_display);
+        name = findViewById(R.id.tv_activity_actor_detail_info_name);
         mTabLayout = findViewById(R.id.tb_activity_actor_detail_info_tab);
         refresh = findViewById(R.id.refresh_activity_actor_detail_info_refresh);
         avatar = findViewById(R.id.riv_activity_actor_detail_info_avatar);
@@ -120,6 +130,9 @@ public class ActorDetailInfoActivity extends VideoBaseActivity<BaseBean, ActorDe
                 mToolbar.requestLayout();
             }
         });
+        ViewCompat.setTransitionName(name, "name");
+        ViewCompat.setTransitionName(avatar, "avatar");
+        supportPostponeEnterTransition();
     }
 
     @Override
@@ -133,6 +146,11 @@ public class ActorDetailInfoActivity extends VideoBaseActivity<BaseBean, ActorDe
 
 
     @Override
+    protected boolean needSlide() {
+        return false;
+    }
+
+    @Override
     public void updateData(BaseBean baseBean) {
         if (baseBean.getCode() == 200) {
             if (baseBean.getType() == VideoUtil.BASE_TYPE_ACTOR_VIDEO_DATA) {
@@ -144,8 +162,8 @@ public class ActorDetailInfoActivity extends VideoBaseActivity<BaseBean, ActorDe
                     }
                 });
                 Glide.with(this).load(actorDetailInfoBean.getAvatar()).into(avatar);
-                getSupportActionBar().setTitle(actorDetailInfoBean.getName());
-
+                name.setText(actorDetailInfoBean.getName());
+                supportStartPostponedEnterTransition();
                 if (actorDetailInfoBean.getActorVideoWrappedDetailBeanList() != null && actorDetailInfoBean.getActorVideoWrappedDetailBeanList().size() > 0) {
                     if (mViewPagerAdapter == null) {
                         List<String> titleList = new ArrayList<>();

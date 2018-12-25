@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/base_comment_emo_bar"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
@@ -21,7 +20,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="6dp"
-            android:background="@drawable/btn_chat_bottom_emotion_selector"
+            android:background="@drawable/ic_chat_bottom_face"
             android:gravity="center" />
 
         <Button
@@ -29,7 +28,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginRight="6dp"
-            android:background="@drawable/btn_chat_bottom_keyboard_selector"
+            android:background="@drawable/ic_chat_bottom_keyboard"
             android:gravity="center"
             android:visibility="gone" />
 
@@ -40,7 +39,6 @@
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
             android:layout_weight="1"
-            android:background="@drawable/base_edit_input"
             android:minHeight="@dimen/base_chat_bottom_input_height"
             android:padding="5dp" />
 
@@ -50,7 +48,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginRight="6dp"
-            android:background="@drawable/btn_chat_bottom_send_selector"
+            android:background="@drawable/ic_chat_bottom_send"
             android:gravity="center"
             android:visibility="visible" />
     </LinearLayout>
@@ -61,9 +59,9 @@
         android:background="@color/chat_bottom_divider"
         android:focusable="false" />
 
-    <com.example.commonlibrary.cusotomview.WrappedViewPager
+    <com.example.commonlibrary.customview.WrappedViewPager
         android:id="@+id/vp_comment_bottom_emotion"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:visibility="gone"></com.example.commonlibrary.cusotomview.WrappedViewPager>
+        android:visibility="gone" />
 </LinearLayout>

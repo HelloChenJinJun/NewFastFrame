@@ -52,6 +52,7 @@ public class UserManager {
     private static final Object INSTANCE_LOCK = new Object();
     private static UserManager INSTANCE;
     private String uid;
+
     public static UserManager getInstance() {
         if (INSTANCE == null) {
             synchronized (INSTANCE_LOCK) {
@@ -62,9 +63,6 @@ public class UserManager {
         }
         return INSTANCE;
     }
-
-
-
 
 
     /**
@@ -89,43 +87,43 @@ public class UserManager {
         query.order("-updatedAt");
         query.setLimit(ConstantUtil.LIMIT_CONTACTS);
         query.addWhereRelatedTo(ConstantUtil.COLUMN_NAME_CONTACTS, new BmobPointer(getCurrentUser()));
-       return query.findObjects(new FindListener<User>() {
-                              @Override
-                              public void done(final List<User> friend, BmobException e) {
-                                  if (e == null) {
-                                      UserDBManager.getInstance().addOrUpdateContacts(friend);
-                                      queryAddBlackList(new FindListener<User>() {
-                                                         @Override
-                                                         public void done(List<User> list, BmobException e) {
-                                                             if (e == null) {
-                                                                 if (list != null && list.size() > 0) {
-                                                                     UserDBManager.getInstance().addOrUpdateBlack(list,UserEntity.BLACK_TYPE_ADD);
-                                                                 }
-                                                             }else {
-                                                                 CommonLogger.e("在服务器上查询添加黑名单失败"+e.toString());
-                                                             }
+        return query.findObjects(new FindListener<User>() {
+                                     @Override
+                                     public void done(final List<User> friend, BmobException e) {
+                                         if (e == null) {
+                                             UserDBManager.getInstance().addOrUpdateContacts(friend);
+                                             queryAddBlackList(new FindListener<User>() {
+                                                                   @Override
+                                                                   public void done(List<User> list, BmobException e) {
+                                                                       if (e == null) {
+                                                                           if (list != null && list.size() > 0) {
+                                                                               UserDBManager.getInstance().addOrUpdateBlack(list, UserEntity.BLACK_TYPE_ADD);
+                                                                           }
+                                                                       } else {
+                                                                           CommonLogger.e("在服务器上查询添加黑名单失败" + e.toString());
+                                                                       }
 
+                                                                   }
+                                                               }
+                                             );
+                                             queryOtherBlackList(new FindListener<User>() {
+                                                 @Override
+                                                 public void done(List<User> list, BmobException e) {
+                                                     if (e == null) {
+                                                         if (list != null && list.size() > 0) {
+                                                             UserDBManager.getInstance().addOrUpdateBlack(list, UserEntity.BLACK_TYPE_OTHER);
                                                          }
+                                                     } else {
+                                                         CommonLogger.e("在服务器上查询其他黑名单失败" + e.toString());
                                                      }
-                                      );
-                                      queryOtherBlackList(new FindListener<User>() {
-                                          @Override
-                                          public void done(List<User> list, BmobException e) {
-                                              if (e == null) {
-                                                  if (list != null && list.size() > 0) {
-                                                      UserDBManager.getInstance().addOrUpdateBlack(list,UserEntity.BLACK_TYPE_OTHER);
-                                                  }
-                                              }else {
-                                                  CommonLogger.e("在服务器上查询其他黑名单失败"+e.toString());
-                                              }
-                                          }
-                                      });
-                                  } else {
-                                      LogUtil.e("在服务器上查询好友失败" + e.toString());
-                                  }
-                                  callback.done(friend, e);
-                              }
-                          }
+                                                 }
+                                             });
+                                         } else {
+                                             LogUtil.e("在服务器上查询好友失败" + e.toString());
+                                         }
+                                         callback.done(friend, e);
+                                     }
+                                 }
         );
     }
 
@@ -151,8 +149,6 @@ public class UserManager {
     }
 
 
-
-
     /**
      * 获取本用户ID
      *
@@ -160,7 +156,7 @@ public class UserManager {
      */
     public String getCurrentUserObjectId() {
         if (uid == null) {
-            uid=getCurrentUser().getObjectId();
+            uid = getCurrentUser().getObjectId();
         }
         return uid;
     }
@@ -184,17 +180,17 @@ public class UserManager {
      * 下线操作
      */
     public void logout() {
-        List<String>  list=UserDBManager.getInstance().getAllFriendId();
+        List<String> list = UserDBManager.getInstance().getAllFriendId();
         list.add(uid);
-        SharedPreferences.Editor edit=BaseApplication.getAppComponent().getSharedPreferences()
+        SharedPreferences.Editor edit = BaseApplication.getAppComponent().getSharedPreferences()
                 .edit();
         for (String item :
                 list) {
-            edit.putString(ConstantUtil.UPDATE_TIME_SHARE+item,null);
+            edit.putString(ConstantUtil.UPDATE_TIME_SHARE + item, null);
         }
-        edit.putBoolean(ConstantUtil.LOGIN_STATUS,false);
+        edit.putBoolean(ConstantUtil.LOGIN_STATUS, false);
         edit.apply();
-        uid=null;
+        uid = null;
         User.logOut();
     }
 
@@ -259,7 +255,7 @@ public class UserManager {
             if (getCurrentUser() != null) {
                 LogUtil.e("现在的UID：" + getCurrentUserObjectId());
             }
-//                        不是当前用户的情况下
+            //                        不是当前用户的情况下
             LogUtil.e("不是当前的用户，不在服务器上关联该好友");
             updateListener.done(new BmobException(0, "不是当前的用户，不在服务器上关联该好友"));
         }
@@ -272,8 +268,8 @@ public class UserManager {
      * @param findListener 回调
      */
     public Subscription findUserById(String uid, FindListener<User> findListener) {
-        UserEntity userEntity=UserDBManager.getInstance().getUser(uid);
-        if (userEntity==null) {
+        UserEntity userEntity = UserDBManager.getInstance().getUser(uid);
+        if (userEntity == null) {
             BmobQuery<User> query = new BmobQuery<>();
             query.addWhereEqualTo("objectId", uid);
             return query.findObjects(new FindListener<User>() {
@@ -282,7 +278,7 @@ public class UserManager {
                     if (e == null) {
                         if (list != null && list.size() > 0) {
                             UserDBManager.getInstance()
-                                    .addOrUpdateUser(cover(list.get(0),true));
+                                    .addOrUpdateUser(cover(list.get(0), true));
                         }
                     }
                     if (findListener != null) {
@@ -290,22 +286,21 @@ public class UserManager {
                     }
                 }
             });
-        }else {
-            List<User>  list1=new ArrayList<>(1);
+        } else {
+            List<User> list1 = new ArrayList<>(1);
             list1.add(cover(userEntity));
-            if (findListener!=null) {
-                findListener.done(list1,null);
+            if (findListener != null) {
+                findListener.done(list1, null);
             }
             return null;
         }
     }
 
 
-
     /**
      * 添加为黑名单
      *
-     * @param uid                     用户实体
+     * @param uid                      用户实体
      * @param addBlackCallBackListener 回调
      */
     public void addToBlack(String uid, final AddBlackCallBackListener addBlackCallBackListener) {
@@ -318,7 +313,7 @@ public class UserManager {
                                             , new OnSendTagMessageListener() {
                                                 @Override
                                                 public void onSuccess(ChatMessage chatMessage) {
-                                                    UserEntity userEntity=UserDBManager
+                                                    UserEntity userEntity = UserDBManager
                                                             .getInstance().getUser(uid);
                                                     userEntity.setIsBlack(true);
                                                     userEntity.setBlackType(UserEntity.BLACK_TYPE_ADD);
@@ -327,7 +322,7 @@ public class UserManager {
                                                             .getUserEntityDao().update(userEntity);
                                                     UserDBManager.getInstance()
                                                             .deleteChatMessage(chatMessage.getConversationId()
-                                                                    ,ChatMessage.MESSAGE_TYPE_CANCEL_BLACK);
+                                                                    , ChatMessage.MESSAGE_TYPE_CANCEL_BLACK);
                                                     addBlackCallBackListener.onSuccess();
                                                 }
 
@@ -353,7 +348,7 @@ public class UserManager {
         User currentUser = new User();
         currentUser.setObjectId(getCurrentUserObjectId());
         BmobRelation relation = new BmobRelation();
-        User friend=new User();
+        User friend = new User();
         friend.setObjectId(uid);
         relation.add(friend);
         currentUser.setAddBlack(relation);
@@ -363,7 +358,7 @@ public class UserManager {
     /**
      * 取消黑名单回调
      *
-     * @param uid     用户实体
+     * @param uid      用户实体
      * @param listener 回调
      */
     public void cancelBlack(String uid, final CancelBlackCallBlackListener listener) {
@@ -375,7 +370,7 @@ public class UserManager {
                                     .sendTagMessage(uid, ChatMessage.MESSAGE_TYPE_CANCEL_BLACK, new OnSendTagMessageListener() {
                                         @Override
                                         public void onSuccess(ChatMessage chatMessage) {
-                                            UserEntity userEntity=UserDBManager
+                                            UserEntity userEntity = UserDBManager
                                                     .getInstance().getUser(uid);
                                             userEntity.setIsBlack(false);
                                             userEntity.setBlackType(0);
@@ -384,7 +379,7 @@ public class UserManager {
                                                     .getUserEntityDao().update(userEntity);
                                             UserDBManager.getInstance()
                                                     .deleteChatMessage(chatMessage.getConversationId()
-                                                    ,ChatMessage.MESSAGE_TYPE_ADD_BLACK);
+                                                            , ChatMessage.MESSAGE_TYPE_ADD_BLACK);
                                             listener.onSuccess();
                                         }
 
@@ -404,7 +399,7 @@ public class UserManager {
     private void deleteBlackRelation(String uid, UpdateListener listener) {
         User currentUser = new User();
         BmobRelation relation = new BmobRelation();
-        User friend=new User();
+        User friend = new User();
         friend.setObjectId(uid);
         relation.remove(friend);
         currentUser.setAddBlack(relation);
@@ -450,42 +445,42 @@ public class UserManager {
         BmobQuery<CustomInstallation> query = new BmobQuery<>();
         CommonLogger.e("checkInstallation UID：" + getCurrentUserObjectId());
         query.addWhereEqualTo("uid", getCurrentUserObjectId());
-       return query.findObjects(new FindListener<CustomInstallation>() {
-                              @Override
-                              public void done(List<CustomInstallation> list, BmobException e) {
-                                  if (e == null) {
-                                      if (list != null && list.size() > 0) {
-                                          CustomInstallation customInstallation = list.get(0);
-                                          if (customInstallation.getInstallationId().equals(new CustomInstallation().getInstallationId())) {
-                                              CommonLogger.e("由于绑定的是本设备表，不做操作所以");
-                                              listener.done(null);
-                                          } else {
-//                                                        不管推送成功与否，都要更新设备表的UID
-                                              MsgManager.getInstance().sendOfflineNotificationMsg(customInstallation, new PushListener() {
-                                                          @Override
-                                                          public void done(BmobException e) {
-                                                              if (e == null) {
-                                                                  LogUtil.e("推送下线通知消息成功");
-                                                              } else {
-                                                                  LogUtil.e("推送下线通知消息失败" + e.toString());
+        return query.findObjects(new FindListener<CustomInstallation>() {
+                                     @Override
+                                     public void done(List<CustomInstallation> list, BmobException e) {
+                                         if (e == null) {
+                                             if (list != null && list.size() > 0) {
+                                                 CustomInstallation customInstallation = list.get(0);
+                                                 if (customInstallation.getInstallationId().equals(new CustomInstallation().getInstallationId())) {
+                                                     CommonLogger.e("由于绑定的是本设备表，不做操作所以");
+                                                     listener.done(null);
+                                                 } else {
+                                                     //                                                        不管推送成功与否，都要更新设备表的UID
+                                                     MsgManager.getInstance().sendOfflineNotificationMsg(customInstallation, new PushListener() {
+                                                                 @Override
+                                                                 public void done(BmobException e) {
+                                                                     if (e == null) {
+                                                                         LogUtil.e("推送下线通知消息成功");
+                                                                     } else {
+                                                                         LogUtil.e("推送下线通知消息失败" + e.toString());
 
-                                                              }
-                                                              bindInstallation(listener);
-                                                          }
-                                                      }
-                                              );
-                                          }
-                                      } else {
-//                                          LogUtil.e("查询不到本用户所对应的设备ID,这里新建一个设备表");
-                                          bindInstallation(listener);
-                                      }
-                                  } else {
-                                      LogUtil.e("查询本用户对应的设备表出错" + e.toString());
-                                      listener.done(e);
-                                  }
-                              }
+                                                                     }
+                                                                     bindInstallation(listener);
+                                                                 }
+                                                             }
+                                                     );
+                                                 }
+                                             } else {
+                                                 //                                          LogUtil.e("查询不到本用户所对应的设备ID,这里新建一个设备表");
+                                                 bindInstallation(listener);
+                                             }
+                                         } else {
+                                             LogUtil.e("查询本用户对应的设备表出错" + e.toString());
+                                             listener.done(e);
+                                         }
+                                     }
 
-                          }
+                                 }
         );
     }
 
@@ -538,8 +533,8 @@ public class UserManager {
             public void done(BmobException e) {
                 if (e == null) {
                     CommonLogger.e("用户信息更新成功");
-                }    else {
-                    CommonLogger.e("用户信息更新失败"+e.toString());
+                } else {
+                    CommonLogger.e("用户信息更新失败" + e.toString());
                 }
                 if (listener != null) {
                     listener.done(e);
@@ -549,9 +544,9 @@ public class UserManager {
     }
 
     public void queryNearbyPeople(int num, int flag, FindListener<User> findListener) {
-        User currentUser=getCurrentUser();
+        User currentUser = getCurrentUser();
         BmobQuery<User> query = new BmobQuery<>();
-        if (flag==1) {
+        if (flag == 1) {
             query.addWhereEqualTo("sex", false);
         } else if (flag == 2) {
             query.addWhereEqualTo("sex", true);
@@ -559,21 +554,21 @@ public class UserManager {
         double longitude;
         double latitude;
         if (currentUser.getLocation() != null) {
-            longitude=currentUser.getLocation().getLongitude();
-            latitude=currentUser.getLocation().getLatitude();
-        }else {
-            SharedPreferences sharedPreferences=BaseApplication.getAppComponent()
+            longitude = currentUser.getLocation().getLongitude();
+            latitude = currentUser.getLocation().getLatitude();
+        } else {
+            SharedPreferences sharedPreferences = BaseApplication.getAppComponent()
                     .getSharedPreferences();
             if (sharedPreferences.getString(ConstantUtil.LONGITUDE, null) == null) {
-                findListener.done(null,new BmobException("定位信息为空!!!!"));
+                findListener.done(null, new BmobException("定位信息为空!!!!"));
                 return;
             }
-            longitude=Double.parseDouble(sharedPreferences.getString(ConstantUtil.LONGITUDE,null));
-            latitude=Double.parseDouble(sharedPreferences.getString(ConstantUtil.LATITUDE,null));
-            updateUserInfo(ConstantUtil.LOCATION, longitude + "&" + latitude,null);
+            longitude = Double.parseDouble(sharedPreferences.getString(ConstantUtil.LONGITUDE, null));
+            latitude = Double.parseDouble(sharedPreferences.getString(ConstantUtil.LATITUDE, null));
+            updateUserInfo(ConstantUtil.LOCATION, longitude + "&" + latitude, null);
         }
-        query.addWhereNear("location", new BmobGeoPoint(longitude,latitude));
-        query.addWhereNotEqualTo("objectId",currentUser.getObjectId());
+        query.addWhereNear("location", new BmobGeoPoint(longitude, latitude));
+        query.addWhereNotEqualTo("objectId", currentUser.getObjectId());
         query.setSkip(num);
         query.setLimit(10);
         query.findObjects(findListener);
@@ -582,16 +577,16 @@ public class UserManager {
 
     public void refreshUserInfo() {
         List<String> userList = UserDBManager.getInstance().getAllFriendId();
-        String currentUserObjectId=getCurrentUserObjectId();
+        String currentUserObjectId = getCurrentUserObjectId();
         if (userList != null && userList.size() > 0) {
             for (final String uid :
                     userList) {
                 BmobQuery<User> query = new BmobQuery<>();
 
-               String  lastTime=BaseApplication
+                String lastTime = BaseApplication
                         .getAppComponent()
-                        .getSharedPreferences().getString(currentUserObjectId+"&"+uid,null);
-//                                        第一次断网查询用户数据
+                        .getSharedPreferences().getString(currentUserObjectId + "&" + uid, null);
+                //                                        第一次断网查询用户数据
                 query.addWhereGreaterThan("updatedAt", new BmobDate(new Date(TimeUtil.getTime(lastTime))));
                 query.addWhereEqualTo("objectId", uid);
                 query.findObjects(new FindListener<User>() {
@@ -602,7 +597,7 @@ public class UserManager {
                                 User user = list.get(0);
                                 BaseApplication.getAppComponent()
                                         .getSharedPreferences()
-                                        .edit().putString(currentUserObjectId+"&"+user.getObjectId(),user.getUpdatedAt())
+                                        .edit().putString(currentUserObjectId + "&" + user.getObjectId(), user.getUpdatedAt())
                                         .apply();
                                 UserDBManager.getInstance().addOrUpdateUser(user);
                             }
@@ -614,7 +609,6 @@ public class UserManager {
             }
         }
     }
-
 
 
     public UserEntity cover(User currentUser, boolean isStranger) {
@@ -653,8 +647,8 @@ public class UserManager {
     public UserEntity cover(User user) {
         return cover(user, UserDBManager.getInstance().getDaoSession().getUserEntityDao()
                 .queryBuilder()
-                .where(UserEntityDao.Properties.Uid.eq(user.getObjectId()),UserEntityDao
-                        .Properties.IsStranger.eq(Boolean.FALSE)).buildCount().count()<0);
+                .where(UserEntityDao.Properties.Uid.eq(user.getObjectId()), UserEntityDao
+                        .Properties.IsStranger.eq(Boolean.FALSE)).buildCount().count() < 0);
     }
 
 

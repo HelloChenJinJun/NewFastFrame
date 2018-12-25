@@ -14,7 +14,7 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.video.NewsApplication;
 import com.example.video.R;

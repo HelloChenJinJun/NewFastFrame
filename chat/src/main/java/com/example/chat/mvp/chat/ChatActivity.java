@@ -2,10 +2,12 @@ package com.example.chat.mvp.chat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,11 +26,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.chat.R;
 import com.example.chat.adapter.ChatMessageAdapter;
 import com.example.chat.adapter.EmotionViewAdapter;
-import com.example.chat.base.ConstantUtil;
 import com.example.chat.base.ChatBaseActivity;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.FaceText;
@@ -38,7 +43,6 @@ import com.example.chat.bean.MessageContent;
 import com.example.chat.dagger.chat.ChatActivityModule;
 import com.example.chat.dagger.chat.DaggerChatActivityComponent;
 import com.example.chat.events.MessageInfoEvent;
-import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.chat.events.RecentEvent;
 import com.example.chat.events.RefreshMenuEvent;
 import com.example.chat.manager.MsgManager;
@@ -49,7 +53,6 @@ import com.example.chat.mvp.UserInfoTask.UserInfoActivity;
 import com.example.chat.mvp.group.groupInfo.GroupInfoActivity;
 import com.example.chat.mvp.map.MapActivity;
 import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
-import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.FileUtil;
@@ -63,10 +66,15 @@ import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.cusotomview.WrappedViewPager;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.customview.ToolBarOption;
+import com.example.commonlibrary.customview.WrappedViewPager;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.manager.video.ListVideoManager;
+import com.example.commonlibrary.mvp.base.ImagePreViewActivity;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.NetStatusEvent;
+import com.example.commonlibrary.rxbus.event.PhotoPreEvent;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.PermissionPageUtils;
 import com.example.commonlibrary.utils.PermissionUtil;
@@ -77,8 +85,10 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Flowable;
@@ -116,6 +126,7 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
     private String groupId;
     private GroupTableEntity groupTableEntity;
     private String videoPath;
+    private int index = -1;
 
 
     @Override
@@ -233,8 +244,7 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
 
             public void onItemChildClick(int position, View view, int id) {
                 BaseMessage baseMessage = mAdapter.getData(position);
-                if (id == R.id.iv_item_activity_chat_send_retry
-                        ) {
+                if (id == R.id.iv_item_activity_chat_send_retry) {
                     reSendMessage(baseMessage);
                 } else if (id == R.id.iv_item_activity_chat_send_avatar) {
                     UserInfoActivity.start(ChatActivity.this, UserManager.getInstance()
@@ -251,6 +261,7 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
                 } else if (id == R.id.iv_item_activity_chat_send_image
                         || id == R.id.iv_item_activity_chat_receive_image) {
                     ArrayList<SystemUtil.ImageItem> list = new ArrayList<>();
+                    List<String> urlList = new ArrayList<>();
                     int temp = 0;
                     int currentPosition = 0;
                     for (int i = 0; i < mAdapter.getData().size(); i++) {
@@ -264,10 +275,12 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
                             SystemUtil.ImageItem imageItem = new SystemUtil.ImageItem();
                             imageItem.setPath(messageContent.getUrlList().get(0));
                             list.add(imageItem);
+                            urlList.add(imageItem.getPath());
                             temp++;
                         }
                     }
-                    PhotoPreViewActivity.start(ChatActivity.this, currentPosition, list, false);
+                    ImagePreViewActivity.start(ChatActivity.this, (ArrayList<String>) urlList, currentPosition, view, ConstantUtil.CHAT_FLAG);
+                    //                    PhotoPreViewActivity.start(ChatActivity.this, currentPosition, list, false);
                 }
             }
         });
@@ -284,6 +297,49 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
         refreshData();
         scrollToBottom();
         registerRxBus();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setExitSharedElementCallback(new SharedElementCallback() {
+                @Override
+                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                    CommonLogger.e("onMapSharedElements");
+                }
+
+
+                @Override
+                public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                    CommonLogger.e("onSharedElementStart");
+                }
+
+
+                @Override
+                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
+                    CommonLogger.e("onSharedElementEnd");
+                }
+
+                @Override
+                public void onSharedElementsArrived(List<String> sharedElementNames, List<View> sharedElements, OnSharedElementsReadyListener listener) {
+                    CommonLogger.e("onSharedElementsArrived");
+                }
+
+
+                @Override
+                public void onRejectSharedElements(List<View> rejectedSharedElements) {
+                    CommonLogger.e("onRejectSharedElements");
+                }
+            });
+            presenter.registerEvent(PhotoPreEvent.class, photoPreEvent -> {
+                if (photoPreEvent.getFlag() == ConstantUtil.CHAT_FLAG) {
+                    index = photoPreEvent.getIndex();
+                }
+            });
+        }
+        Glide.with(this).load(UserManager.getInstance().getCurrentUser().getWallPaper())
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        bg.setBackground(resource);
+                    }
+                });
     }
 
     private void reSendMessage(BaseMessage data) {
@@ -678,7 +734,9 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
             mAdapter.addData(baseMessage);
             presenter.sendGroupChatMessage(((GroupChatMessage) baseMessage));
         }
-        input.setText("");
+        if (!TextUtils.isEmpty(input.getText().toString().trim())) {
+            input.setText("");
+        }
         CommonUtils.hideSoftInput(this, input);
     }
 
@@ -694,6 +752,7 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
             voice.setVisibility(View.GONE);
             send.setVisibility(View.VISIBLE);
         } else {
+            //            这里长按录音会触发
             voice.setVisibility(View.VISIBLE);
             send.setVisibility(View.GONE);
         }
@@ -777,6 +836,13 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
         return false;
     }
 
+
+    @Override
+    public void onBackPressed() {
+        if (!ListVideoManager.getInstance().onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     protected void onDestroy() {

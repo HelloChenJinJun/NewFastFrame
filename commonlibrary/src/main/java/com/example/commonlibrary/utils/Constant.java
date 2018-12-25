@@ -30,6 +30,7 @@ public class Constant {
     public static final String MUSIC_POSITION = "music_position";
     public static final String RECENT_SONG_URL_LIST = "recent_song_list";
     public static final String VIEW = "view";
+    public static final String FLAG = "flag";
     private static final String BASE_CACHE_DIR = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "common" + File.separator;
     /**
      * 声音的缓存目录

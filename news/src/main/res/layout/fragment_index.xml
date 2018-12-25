@@ -43,7 +43,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_list_white_24dp" />
     </LinearLayout>
-    <com.example.commonlibrary.cusotomview.WrappedViewPager
+    <com.example.commonlibrary.customview.WrappedViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/vp_fragment_index_display"/>

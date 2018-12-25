@@ -30,7 +30,8 @@ public class ChatListAdapter extends BaseMultipleRecyclerAdapter<ChatBean, BaseW
             } else {
                 holder.setVisible(R.id.tv_item_activity_chat_list_left_time, false);
             }
-            holder.setText(R.id.tv_item_activity_chat_list_left_content, data.getContent());
+            holder.setText(R.id.tv_item_activity_chat_list_left_content, data.getContent())
+                    .setImageResource(R.id.riv_item_activity_chat_list_left_avatar, R.drawable.manager);
         } else {
             if (shouldShowTime(holder.getAdapterPosition())) {
                 holder.setVisible(R.id.tv_item_activity_chat_list_right_time, true)

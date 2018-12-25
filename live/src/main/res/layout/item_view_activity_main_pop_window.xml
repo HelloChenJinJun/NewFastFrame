@@ -6,7 +6,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+    <com.example.commonlibrary.customview.RoundAngleImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:roundHeight="25dp"

@@ -20,11 +20,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
+            android:id="@+id/riv_item_activity_chat_list_left_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/manager"/>
+            android:background="@drawable/custom_drawable_place_holder"/>
 
         <LinearLayout
             android:layout_marginLeft="10dp"

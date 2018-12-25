@@ -13,7 +13,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp">
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_recent_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"

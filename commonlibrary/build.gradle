@@ -93,6 +93,25 @@ dependencies {
         exclude module: "appcompat-v7"
         exclude module: "recyclerview-v7"
     }
+
+    api('com.github.chrisbanes:PhotoView:2.3.0') {
+        exclude module: "support-v4"
+        exclude module: "support-compat"
+        exclude module: 'rxjava'
+        exclude module: 'retrofit'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+        exclude module: 'support-core-utils'
+        exclude module: 'support-media-compat'
+        exclude module: 'support-vector-drawable'
+        exclude module: 'support-fragment'
+        exclude module: 'multidex'
+        exclude module: 'rxandroid'
+        exclude module: 'gson'
+        exclude module: 'okio'
+    }
+
     //    字体库
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     //    bugly

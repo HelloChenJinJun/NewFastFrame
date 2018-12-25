@@ -17,8 +17,8 @@ import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.cusotomview.ListViewDecoration;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;

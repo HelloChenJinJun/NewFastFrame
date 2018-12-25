@@ -10,12 +10,12 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.SystemUtil;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.viewpager.widget.PagerAdapter;
-import uk.co.senab.photoview.PhotoView;
 
 /**
  * 项目名称:    PostDemo

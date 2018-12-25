@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="6dp"
         android:layout_marginTop="5dp">
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_comment_detail_right_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -51,7 +51,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:background="@drawable/chat_right_qp"
                 android:gravity="center"
                 android:lineSpacingExtra="6dp"
                 android:maxWidth="225dp"

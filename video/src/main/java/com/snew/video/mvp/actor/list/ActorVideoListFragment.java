@@ -6,7 +6,7 @@ import android.view.View;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
-import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
+import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.snew.video.R;
 import com.snew.video.adapter.ActorVideoDetailAdapter;

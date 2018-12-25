@@ -15,7 +15,7 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 
 import java.util.List;

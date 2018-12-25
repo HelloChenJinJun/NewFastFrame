@@ -28,7 +28,7 @@
                 android:src="@drawable/ic_back"
                 skin:enable="true" />
 
-            <com.example.commonlibrary.cusotomview.RoundAngleImageView
+            <com.example.commonlibrary.customview.RoundAngleImageView
                 android:id="@+id/riv_header_layout_icon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"

@@ -10,7 +10,7 @@ import com.example.chat.base.ConstantUtil;
 import com.example.chat.mvp.login.LoginActivity;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.cusotomview.WrappedViewPager;
+import com.example.commonlibrary.customview.WrappedViewPager;
 import com.example.music.adapter.GuideAdapter;
 import com.example.music.R;
 import com.example.music.mvp.main.MainActivity;

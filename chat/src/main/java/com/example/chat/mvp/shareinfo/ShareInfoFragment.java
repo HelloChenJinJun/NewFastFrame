@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.example.chat.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.ShareInfoAdapter;
+import com.example.chat.adapter.holder.publicShare.ImageShareInfoHolder;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicPostBean;
@@ -26,7 +27,6 @@ import com.example.chat.mvp.EditShare.EditShareInfoActivity;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.chat.mvp.commentlist.CommentListActivity;
 import com.example.chat.mvp.commentnotify.CommentNotifyActivity;
-import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.view.fab.FloatingActionButton;
 import com.example.chat.view.fab.FloatingActionsMenu;
 import com.example.commonlibrary.BaseApplication;
@@ -37,32 +37,37 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
+import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 import com.example.commonlibrary.bean.chat.PostNotifyInfo;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.customview.ToolBarOption;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
+import com.example.commonlibrary.mvp.base.ImagePreViewActivity;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.NetStatusEvent;
+import com.example.commonlibrary.rxbus.event.PhotoPreEvent;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.app.SharedElementCallback;
 import androidx.core.util.Pair;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.jzvd.JZVideoPlayer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -87,6 +92,8 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     private ImageView unReadAvatar;
     private TextView unReadCount;
     private ArrayList<PostNotifyInfo> unReadPostNotifyList;
+    private int index = -1;
+    private int currentImageIndex = -1;
 
     @Override
     protected boolean isNeedHeadLayout() {
@@ -158,7 +165,10 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         shareInfoAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position));
+                BaseWrappedViewHolder baseWrappedViewHolder = (BaseWrappedViewHolder) display.findViewHolderForAdapterPosition(position + shareInfoAdapter.getItemUpCount());
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()
+                        , Pair.create(baseWrappedViewHolder.itemView, "header"));
+                CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position), activityOptionsCompat);
             }
 
 
@@ -185,12 +195,18 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                         }
                     }
                 } else if (id == R.id.tv_item_fragment_share_info_comment) {
-                    CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position));
+                    BaseWrappedViewHolder baseWrappedViewHolder = (BaseWrappedViewHolder) display.findViewHolderForAdapterPosition(position + shareInfoAdapter.getItemUpCount());
+                    ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()
+                            , Pair.create(baseWrappedViewHolder.itemView, "header"));
+                    CommentListActivity.start(getActivity(), shareInfoAdapter.getData(position), activityOptionsCompat);
                 } else if (id == R.id.tv_item_fragment_share_info_like) {
                     dealLike(shareInfoAdapter.getData(position));
                 } else if (id == R.id.riv_item_fragment_share_info_avatar) {
+                    BaseWrappedViewHolder baseWrappedViewHolder = (BaseWrappedViewHolder) display.findViewHolderForAdapterPosition(position + shareInfoAdapter.getItemUpCount());
                     UserDetailActivity.start(getActivity(), shareInfoAdapter.getData(position)
                             .getAuthor().getObjectId(), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(view, "avatar")
+                            , Pair.create(baseWrappedViewHolder.getView(R.id.tv_item_fragment_share_info_main_text), "name")
+                            , Pair.create(baseWrappedViewHolder.getView(R.id.iv_item_fragment_share_info_sex), "sex")
                     ));
                 } else if (id == R.id.iv_item_fragment_share_info_more) {
                     if (shareInfoAdapter.getData(position).getAuthor().getObjectId().equals(UserManager.getInstance().getCurrentUserObjectId())) {
@@ -239,23 +255,52 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                             .getGson().fromJson(shareInfoAdapter.getData(position)
                                     .getContent(), PostDataBean.class).getImageList();
                     if (imageList != null && imageList.size() > 0) {
-                        ArrayList<SystemUtil.ImageItem> result = new ArrayList<>();
-                        for (String str :
-                                imageList) {
-                            SystemUtil.ImageItem imageItem = new SystemUtil.ImageItem();
-                            imageItem.setPath(str);
-                            result.add(imageItem);
-                        }
-                        PhotoPreViewActivity.start(getActivity(), id, result, false);
+                        currentImageIndex = position;
+                        //                        ArrayList<SystemUtil.ImageItem> result = new ArrayList<>();
+                        //                        for (String str :
+                        //                                imageList) {
+                        //                            SystemUtil.ImageItem imageItem = new SystemUtil.ImageItem();
+                        //                            imageItem.setPath(str);
+                        //                            result.add(imageItem);
+                        //                        }
+                        //                        PhotoPreViewActivity.start(getActivity(), id, result, false);
+                        ImagePreViewActivity.start(getActivity(), (ArrayList<String>) imageList, id, view, ConstantUtil.SHARE_INFO_FLAG);
                     } else {
                         dealSharePostData(position);
                     }
                 }
-
             }
-
-
         });
+
+        getActivity().setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                ImageShareInfoHolder imageShareInfoHolder = null;
+                if (currentImageIndex != -1) {
+                    imageShareInfoHolder = (ImageShareInfoHolder) display.findViewHolderForAdapterPosition(currentImageIndex + shareInfoAdapter.getItemUpCount());
+                }
+                View view = null;
+                if (imageShareInfoHolder != null) {
+                    view = imageShareInfoHolder.getDisplay().getLayoutManager().findViewByPosition(index);
+                }
+                if (view != null) {
+                    sharedElements.clear();
+                    sharedElements.put(((ImageShareInfoHolder.ImageShareAdapter) imageShareInfoHolder.getDisplay().getAdapter())
+                            .getData(index), view);
+                    index = -1;
+                    currentImageIndex = -1;
+                }
+            }
+        });
+        presenter.registerEvent(PhotoPreEvent.class, new Consumer<PhotoPreEvent>() {
+            @Override
+            public void accept(PhotoPreEvent photoPreEvent) throws Exception {
+                if (photoPreEvent.getFlag() == ConstantUtil.SHARE_INFO_FLAG) {
+                    index = photoPreEvent.getIndex();
+                }
+            }
+        });
+
         presenter.registerEvent(PublicPostBean.class, publicPostBean -> {
             if (!publicPostBean.getObjectId().contains("-") && shareInfoAdapter.getData().contains(publicPostBean)) {
                 ToastUtils.showLongToast("更新帖子中...........");
@@ -426,6 +471,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 shareInfoAdapter.removeEndData(shareInfoAdapter.getData().size() - 10);
             }
             shareInfoAdapter.addData(0, publicPostBeans);
+            manager.scrollToPosition(0);
         } else {
             shareInfoAdapter.addData(publicPostBeans);
         }

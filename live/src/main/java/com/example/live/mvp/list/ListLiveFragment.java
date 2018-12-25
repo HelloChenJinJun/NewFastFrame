@@ -8,7 +8,7 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.live.LiveApplication;
 import com.example.live.R;
 import com.example.live.adapter.ListLiveAdapter;

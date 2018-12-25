@@ -26,7 +26,6 @@
 
     <style name="ActionBar">
         <!--头部布局的背景-->
-        <item name="android:background">@drawable/top_bar</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/base_actionbar_height</item>
 
@@ -44,7 +43,6 @@
     <style name="register_input">
         <item name="android:layout_height">@dimen/base_actionbar_height</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:background">@drawable/base_edit_input</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_marginLeft">@dimen/register_margin</item>
         <item name="android:layout_marginRight">@dimen/register_margin</item>
@@ -75,9 +73,6 @@
     </style>
     <style name="Custom_scroll_view"
            parent="@android:style/Widget.ScrollView">
-        <item name="android:scrollbarThumbVertical">@drawable/nim_scrollbar_handle_holo_dark</item>
-        <item name="android:scrollbarThumbHorizontal">@drawable/nim_scrollbar_handle_holo_dark
-        </item>
     </style>
     <dimen name="base_actionbar_title_size">22dp</dimen>
     <dimen name="register_margin">10dp</dimen>

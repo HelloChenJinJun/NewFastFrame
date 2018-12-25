@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
-  <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
+  <com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout
       android:id="@+id/refresh_fragment_invitation_refresh"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
@@ -12,6 +12,6 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           />
-  </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+  </com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>
 
 </RelativeLayout>

@@ -1,7 +1,7 @@
 package com.example.video.mvp.news.othernew.detail;
 
 import com.example.commonlibrary.mvp.model.DefaultModel;
-import com.example.commonlibrary.mvp.presenter.BasePresenter;
+import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
 import com.example.video.api.OtherNewsApi;
 import com.example.video.bean.OtherNewsDetailBean;
@@ -23,7 +23,7 @@ import io.reactivex.schedulers.Schedulers;
  * QQ:             1981367757
  */
 
-public class OtherNewsDetailPresenter extends BasePresenter<IView<OtherNewsDetailBean>, DefaultModel> {
+public class OtherNewsDetailPresenter extends RxBasePresenter<IView<OtherNewsDetailBean>, DefaultModel> {
     public OtherNewsDetailPresenter(IView<OtherNewsDetailBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }

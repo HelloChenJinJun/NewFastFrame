@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/custom_drawable_place_holder" />
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_fragment_person_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -37,8 +37,11 @@
             android:layout_below="@+id/riv_fragment_person_avatar"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="签名"
-            android:textColor="@color/orange_500" />
+            android:textColor="@color/blue_500"
+            android:textSize="12sp" />
     </RelativeLayout>
 
 

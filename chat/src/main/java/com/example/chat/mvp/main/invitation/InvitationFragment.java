@@ -27,9 +27,9 @@ import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuRecyclerView;
 import com.example.commonlibrary.bean.chat.ChatMessageEntity;
 import com.example.commonlibrary.bean.chat.ChatMessageEntityDao;
 import com.example.commonlibrary.bean.chat.User;
-import com.example.commonlibrary.cusotomview.ListViewDecoration;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
+import com.example.commonlibrary.customview.ToolBarOption;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
 
 import java.util.List;

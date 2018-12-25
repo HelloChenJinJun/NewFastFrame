@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
-    <com.example.commonlibrary.cusotomview.CustomScrollView
+    <com.example.commonlibrary.customview.CustomScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -134,7 +134,7 @@
 
         </LinearLayout>
 
-    </com.example.commonlibrary.cusotomview.CustomScrollView>
+    </com.example.commonlibrary.customview.CustomScrollView>
 
 
 </LinearLayout>

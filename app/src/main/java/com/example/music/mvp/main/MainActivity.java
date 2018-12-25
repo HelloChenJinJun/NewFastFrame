@@ -3,13 +3,10 @@ package com.example.music.mvp.main;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -25,6 +22,7 @@ import com.example.chat.adapter.MenuDisplayAdapter;
 import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.WeatherInfoBean;
+import com.example.chat.events.DragLayoutEvent;
 import com.example.chat.events.LocationEvent;
 import com.example.chat.events.RefreshMenuEvent;
 import com.example.chat.manager.NewLocationManager;
@@ -50,10 +48,10 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.SkinEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.cusotomview.RoundAngleImageView;
-import com.example.commonlibrary.cusotomview.WrappedViewPager;
-import com.example.commonlibrary.cusotomview.draglayout.DragLayout;
-import com.example.commonlibrary.cusotomview.draglayout.OnDragDeltaChangeListener;
+import com.example.commonlibrary.customview.RoundAngleImageView;
+import com.example.commonlibrary.customview.WrappedViewPager;
+import com.example.commonlibrary.customview.draglayout.DragLayout;
+import com.example.commonlibrary.customview.draglayout.OnDragDeltaChangeListener;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -68,7 +66,8 @@ import com.nineoldandroids.view.ViewHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -107,13 +106,6 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
 
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        }
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     protected boolean needSlide() {
@@ -314,12 +306,12 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
                 startSearchLiveWeather(locationEvent.getCity());
             }
         }));
+        addDisposable(RxBusManager.getInstance().registerEvent(DragLayoutEvent.class, dragLayoutEvent -> dragLayout.openMenu()));
     }
 
 
     private void updateUserInfo(UserEntity user) {
-        UserEntity user1 = user;
-        nick.setText(user.getNick());
+        nick.setText(user.getName());
         if (user.getSignature() == null) {
             signature.setText("^_^1设置属于你的个性签名吧^_^");
         } else {
@@ -419,7 +411,9 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
 
     @Override
     public void onDrag(View view, float delta) {
-        ViewHelper.setAlpha(((RecentFragment) fragmentList.get(display.getCurrentItem())).getIcon(), (1 - delta));
+        if (fragmentList.get(display.getCurrentItem()) instanceof RecentFragment) {
+            ViewHelper.setAlpha(((RecentFragment) fragmentList.get(display.getCurrentItem())).getIcon(), (1 - delta));
+        }
     }
 
     @Override
@@ -438,7 +432,9 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
         if (id == R.id.ll_menu_bottom_container) {
             WeatherInfoActivity.start(this, mWeatherInfoBean);
         } else if (id == R.id.rl_menu_head_layout) {
-            UserDetailActivity.start(this, UserManager.getInstance().getCurrentUserObjectId());
+            UserDetailActivity.start(this, UserManager.getInstance().getCurrentUserObjectId(), ActivityOptionsCompat.makeSceneTransitionAnimation(this, Pair.create(avatar, "avatar")
+                    , Pair.create(signature, "signature"), Pair.create(nick, "name")
+            ));
         }
     }
 

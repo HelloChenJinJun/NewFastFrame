@@ -110,7 +110,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                     queryBuilder.limit(10);
                     List<PostCommentEntity> entityList
                             = queryBuilder.build().list();
-                    List<PublicCommentBean>  result=new ArrayList<>(entityList.size());
+                    List<PublicCommentBean> result = new ArrayList<>(entityList.size());
                     for (PostCommentEntity item :
                             entityList) {
                         result.add(MsgManager.getInstance().cover(item));
@@ -165,7 +165,7 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
     }
 
 
-    public void sendCommentData( PublicCommentBean newBean) {
+    public void sendCommentData(PublicCommentBean newBean) {
         newBean.setSendStatus(ConstantUtil.SEND_STATUS_SUCCESS);
         addSubscription(newBean.save(new SaveListener<String>() {
             @Override
@@ -183,9 +183,11 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                         }
                     }));
                     addSubscription(MsgManager.getInstance().sendNotifyCommentInfo(newBean));
-                }else {
+                } else {
                     newBean.setSendStatus(ConstantUtil.SEND_STATUS_FAILED);
-                    ToastUtils.showShortToast("评论失败"+e.toString());
+                    ToastUtils.showShortToast("评论失败" + e.toString());
+                    CommonLogger.e("评论失败" + e.toString());
+                    CommonLogger.e(e.getCause());
                 }
                 UserDBManager.getInstance()
                         .addOrUpdateComment(newBean);
@@ -300,9 +302,9 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                                     if (!publicPostBean
                                             .getAuthor()
                                             .getObjectId().equals(UserManager.getInstance()
-                                            .getCurrentUserObjectId())) {
-                                        addSubscription(MsgManager.getInstance().sendPostNotifyInfo(ConstantUtil.TYPE_LIKE,objectId,UserManager.getInstance()
-                                                .getCurrentUserObjectId(),publicPostBean.getAuthor().getObjectId()));
+                                                    .getCurrentUserObjectId())) {
+                                        addSubscription(MsgManager.getInstance().sendPostNotifyInfo(ConstantUtil.TYPE_LIKE, objectId, UserManager.getInstance()
+                                                .getCurrentUserObjectId(), publicPostBean.getAuthor().getObjectId()));
                                     }
                                 }
                             } else {
@@ -310,10 +312,9 @@ public class CommentListPresenter extends AppBasePresenter<IView<List<PublicComm
                             }
 
 
-
                         }
                     }));
-                }else {
+                } else {
                     iView.hideLoading();
                 }
             }

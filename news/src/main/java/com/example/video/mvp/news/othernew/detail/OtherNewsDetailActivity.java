@@ -2,9 +2,10 @@ package com.example.video.mvp.news.othernew.detail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
 import com.example.commonlibrary.SlideBaseActivity;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.utils.Constant;
@@ -28,6 +29,8 @@ import java.util.Map;
 
 public class OtherNewsDetailActivity extends SlideBaseActivity<OtherNewsDetailBean, OtherNewsDetailPresenter> {
     private RichText content;
+    private String url;
+    private View view;
 
 
     @Override
@@ -56,8 +59,11 @@ public class OtherNewsDetailActivity extends SlideBaseActivity<OtherNewsDetailBe
     @Override
     protected void initView() {
         content = findViewById(R.id.tv_activity_other_news_detail_content);
-        content.setOnRichTextImageClickListener((imageUrls, position) -> {
+        content.setOnRichTextImageClickListener((view, imageUrls, position) -> {
             if (imageUrls != null && imageUrls.size() > 0) {
+                //                OtherNewsDetailActivity.this.view = view;
+                //                url = imageUrls.get(position);
+                //                ImagePreViewActivity.start(OtherNewsDetailActivity.this, new ArrayList<>(Collections.singletonList(url)), 0, view, NewsUtil.NEWS_DETAIL_FLAG);
                 Map<String, Object> map = new HashMap<>();
                 map.put(Constant.POSITION, position);
                 Router.getInstance().deal(new RouterRequest.Builder()
@@ -66,6 +72,19 @@ public class OtherNewsDetailActivity extends SlideBaseActivity<OtherNewsDetailBe
                         .paramMap(map).object(imageUrls).build());
             }
         });
+
+        //        setExitSharedElementCallback(new SharedElementCallback() {
+        //            @Override
+        //            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+        //                sharedElements.clear();
+        //                sharedElements.put(url, view);
+        //            }
+        //        });
+        //        presenter.registerEvent(PhotoPreEvent.class, photoPreEvent -> {
+        //            if (photoPreEvent.getFlag() == NewsUtil.NEWS_DETAIL_FLAG) {
+        //                index = photoPreEvent.getIndex();
+        //            }
+        //        });
     }
 
     @Override
@@ -74,12 +93,7 @@ public class OtherNewsDetailActivity extends SlideBaseActivity<OtherNewsDetailBe
                 .otherNewsDetailModule(new OtherNewsDetailModule(this))
                 .newsComponent(NewsApplication.getNewsComponent())
                 .build().inject(this);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                presenter.getOtherNewsDetailData(getIntent().getStringExtra(NewsUtil.POST_ID));
-            }
-        });
+        runOnUiThread(() -> presenter.getOtherNewsDetailData(getIntent().getStringExtra(NewsUtil.POST_ID)));
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("详情");
         toolBarOption.setNeedNavigation(true);

@@ -6,7 +6,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
 >
-    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+    <com.example.commonlibrary.customview.RoundAngleImageView
         android:id="@+id/riv_edit_share_message_visibility_item_avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"

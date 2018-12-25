@@ -17,9 +17,9 @@ import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.bean.chat.SkinEntity;
-import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
+import com.example.commonlibrary.customview.ToolBarOption;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 
 import java.util.List;
 

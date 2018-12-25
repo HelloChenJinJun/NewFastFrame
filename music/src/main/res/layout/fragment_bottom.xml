@@ -13,7 +13,7 @@
         android:scaleType="centerCrop" />
 
 
-    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+    <com.example.commonlibrary.customview.RoundAngleImageView
         android:id="@+id/riv_fragment_bottom_album"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -21,7 +21,7 @@
         android:scaleType="fitCenter" />
 
 
-    <com.example.commonlibrary.cusotomview.WrappedViewPager
+    <com.example.commonlibrary.customview.WrappedViewPager
         android:id="@+id/wvp_fragment_bottom_display"
         android:layout_width="match_parent"
         android:layout_height="400dp"
@@ -98,7 +98,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_fragment_bottom_next"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -108,7 +108,7 @@
             android:src="@drawable/ic_skip_next_black_24dp"
             android:tag="skin" />
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_fragment_bottom_play"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -119,7 +119,7 @@
             android:src="@drawable/ic_play_arrow_black_24dp"
             android:tag="skin" />
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_fragment_bottom_previous"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -132,7 +132,7 @@
             app:roundHeight="20dp"
             app:roundWidth="20dp" />
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_fragment_bottom_mode"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -145,7 +145,7 @@
             android:tag="skin"
             android:visibility="invisible" />
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_fragment_bottom_list"
             android:layout_width="40dp"
             android:layout_height="40dp"

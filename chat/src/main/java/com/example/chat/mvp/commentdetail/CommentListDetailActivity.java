@@ -19,12 +19,15 @@ import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.customview.ToolBarOption;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 
 /**
  * 项目名称:    NewFastFrame
@@ -48,19 +51,19 @@ public class CommentListDetailActivity extends ChatBaseActivity<List<ReplyDetail
         addOtherData(listDetailBeans);
         if (refresh.isRefreshing()) {
             adapter.refreshData(listDetailBeans);
-        }else {
+        } else {
             adapter.addData(listDetailBeans);
         }
     }
 
     private void addOtherData(List<ReplyDetailContent> listDetailBeans) {
         if (listDetailBeans != null) {
-            int size=listDetailBeans.size();
+            int size = listDetailBeans.size();
             for (int i = 0; i < size; i++) {
-                ReplyDetailContent item=listDetailBeans.get(i);
+                ReplyDetailContent item = listDetailBeans.get(i);
                 if (i % 2 == 0) {
                     item.setMsgType(ReplyDetailContent.TYPE_RIGHT);
-                }else {
+                } else {
                     item.setMsgType(ReplyDetailContent.TYPE_LEFT);
                 }
             }
@@ -103,15 +106,15 @@ public class CommentListDetailActivity extends ChatBaseActivity<List<ReplyDetail
             @Override
             public void onItemChildClick(int position, View view, int id) {
                 if (id == R.id.riv_comment_detail_left_avatar
-                        ||id == R.id.riv_comment_detail_right_avatar) {
+                        || id == R.id.riv_comment_detail_right_avatar) {
                     UserDetailActivity.start(CommentListDetailActivity.this
-                            ,adapter
-                    .getData(position).getUid());
+                            , adapter
+                                    .getData(position).getUid(), ActivityOptionsCompat.makeSceneTransitionAnimation(CommentListDetailActivity.this, Pair.create(view, "avatar")));
                 }
             }
         });
-        runOnUiThread(() -> presenter.getCommentListDetailData(data,true));
-        ToolBarOption toolBarOption=new ToolBarOption();
+        runOnUiThread(() -> presenter.getCommentListDetailData(data, true));
+        ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("对话列表");
         toolBarOption.setNeedNavigation(true);
         setToolBar(toolBarOption);
@@ -149,17 +152,14 @@ public class CommentListDetailActivity extends ChatBaseActivity<List<ReplyDetail
 
     @Override
     public void onRefresh() {
-        presenter.getCommentListDetailData( data,true);
+        presenter.getCommentListDetailData(data, true);
     }
 
     @Override
     public void loadMore() {
-        presenter.getCommentListDetailData(data,false);
+        presenter.getCommentListDetailData(data, false);
 
     }
-
-
-
 
 
 }

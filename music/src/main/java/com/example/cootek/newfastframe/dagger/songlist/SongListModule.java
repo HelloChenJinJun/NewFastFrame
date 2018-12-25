@@ -1,7 +1,7 @@
 package com.example.cootek.newfastframe.dagger.songlist;
 
 import com.example.commonlibrary.mvp.model.DefaultModel;
-import com.example.cootek.newfastframe.adapter.SongListAdapter;
+import com.example.cootek.newfastframe.adapter.RecentPlayListAdapter;
 import com.example.cootek.newfastframe.mvp.songlist.SongListFragment;
 import com.example.cootek.newfastframe.mvp.songlist.SongListPresenter;
 
@@ -23,8 +23,8 @@ public class SongListModule {
 
 
     @Provides
-    public SongListAdapter provideAdapter() {
-        return new SongListAdapter();
+    public RecentPlayListAdapter provideAdapter() {
+        return new RecentPlayListAdapter();
     }
 
     @Provides

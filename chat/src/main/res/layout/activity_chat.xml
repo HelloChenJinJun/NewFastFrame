@@ -6,10 +6,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0.0dp"
-        android:layout_weight="1"
-        android:background="@color/chat_bg">
+        android:layout_weight="1">
 
-        <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
+        <com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout
             android:id="@+id/swl_chat_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -20,14 +19,14 @@
 
             </com.example.commonlibrary.baseadapter.SuperRecyclerView>
 
-        </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+        </com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>
 
         <RelativeLayout
             android:id="@+id/r1_chat_middle_voice_container"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/chat_top_voice_bg"
+            android:background="@color/grey_500"
             android:padding="10dp"
             android:visibility="invisible">
             <ImageView

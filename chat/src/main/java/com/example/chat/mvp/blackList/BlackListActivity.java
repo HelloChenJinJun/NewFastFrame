@@ -14,8 +14,8 @@ import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.cusotomview.ListViewDecoration;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
+import com.example.commonlibrary.customview.ToolBarOption;
 
 
 /**

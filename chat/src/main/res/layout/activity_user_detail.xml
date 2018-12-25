@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/tools"
     android:id="@+id/refresh_activity_user_detail_refresh"
@@ -71,13 +71,13 @@
         </com.google.android.material.appbar.AppBarLayout>
 
 
-        <com.example.commonlibrary.cusotomview.WrappedViewPager
+        <com.example.commonlibrary.customview.WrappedViewPager
             android:id="@+id/vp_activity_user_detail_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </com.example.commonlibrary.cusotomview.WrappedViewPager>
+        </com.example.commonlibrary.customview.WrappedViewPager>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-</com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+</com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>

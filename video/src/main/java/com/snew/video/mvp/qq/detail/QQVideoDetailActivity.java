@@ -6,13 +6,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.BaseBean;
-import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
-import com.example.commonlibrary.cusotomview.ListViewDecoration;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.manager.video.DefaultVideoController;
 import com.example.commonlibrary.manager.video.DefaultVideoPlayer;
 import com.example.commonlibrary.manager.video.ListVideoManager;
@@ -34,6 +34,8 @@ import com.snew.video.util.VideoUtil;
 
 import javax.inject.Inject;
 
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 /**
@@ -142,7 +144,10 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
         mVideoPersonAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                ActorDetailInfoActivity.start(QQVideoDetailActivity.this, mVideoPersonAdapter.getData(position).getUrl());
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(QQVideoDetailActivity.this
+                        , Pair.create(view.findViewById(R.id.riv_item_activity_qq_video_detail_person_avatar), "avatar")
+                        , Pair.create(view.findViewById(R.id.tv_item_activity_qq_video_detail_person_title), "name"));
+                ActorDetailInfoActivity.start(QQVideoDetailActivity.this, mVideoPersonAdapter.getData(position).getUrl(), activityOptionsCompat);
             }
         });
 

@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
 
-    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
+    <com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/refresh_activity_nearby_list_refresh">
@@ -13,6 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/srcv_activity_nearby_list_display"/>
-    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+    </com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>
 
 </LinearLayout>

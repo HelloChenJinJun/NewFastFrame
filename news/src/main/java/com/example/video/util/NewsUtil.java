@@ -22,6 +22,8 @@ public class NewsUtil {
 
     public static final String HEADER_AGENT = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11";
     public static final String CACHE_CONTROL = "Cache-Control: public, max-age=3600";
+    public static final int PHOTO_LIST_FLAG = 20;
+    public static final int NEWS_DETAIL_FLAG = 21;
 
 
     //    http://gank.io/api/data/福利/10/{page}

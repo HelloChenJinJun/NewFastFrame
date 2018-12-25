@@ -10,10 +10,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.example.chat.R;
 import com.example.chat.listener.OnDragDeltaChangeListener;
 import com.example.chat.util.LogUtil;
-import com.example.commonlibrary.cusotomview.draglayout.ContentView;
+import com.example.commonlibrary.customview.draglayout.ContentView;
 import com.nineoldandroids.view.ViewHelper;
 
 import androidx.core.view.ViewCompat;
@@ -160,7 +159,6 @@ public class MainDragLayout extends ViewGroup {
                         ivShadow = new ImageView(getContext());
                         LogUtil.e("这里执行了吗");
                         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-                        ivShadow.setImageResource(R.drawable.shadow);
                         addView(ivShadow, 1, layoutParams);
                 }
                 menu.setClickable(true);

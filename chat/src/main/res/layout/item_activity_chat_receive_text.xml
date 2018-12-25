@@ -3,7 +3,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
-    android:background="@drawable/chat_left_qp"
     android:gravity="center"
     android:lineSpacingExtra="6dp"
     android:maxWidth="225dp"

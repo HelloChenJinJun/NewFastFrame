@@ -22,8 +22,8 @@ import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.cusotomview.RoundAngleImageView;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.RoundAngleImageView;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;

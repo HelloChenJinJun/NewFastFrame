@@ -16,15 +16,14 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_item_fragment_share_info_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/head"
-            app:roundHeight="25dp"
-            app:roundWidth="25dp" />
+            android:background="@drawable/custom_drawable_place_holder"
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -45,7 +44,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="5dp"
-                    android:text="无聊的->人类"
                     android:textColor="@color/custom_color_text_main" />
 
                 <ImageView
@@ -85,7 +83,6 @@
                 android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="无聊的->人类"
                 android:textColor="@color/custom_color_text_sub"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -106,9 +103,9 @@
         android:layout_margin="10dp"
         android:ellipsize="end"
         android:maxLines="5"
-        skin:enable="true"
         android:textColor="@color/custom_color_text_main"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        skin:enable="true" />
 
     <ViewStub
         android:id="@+id/vs_item_fragment_share_info_stub"

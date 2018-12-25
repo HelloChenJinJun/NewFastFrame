@@ -4,9 +4,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.cusotomview.ViewPagerIndicator;
-import com.example.commonlibrary.cusotomview.WrappedViewPager;
+import com.example.commonlibrary.customview.ToolBarOption;
+import com.example.commonlibrary.customview.ViewPagerIndicator;
+import com.example.commonlibrary.customview.WrappedViewPager;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.base.MusicBaseFragment;
 import com.example.cootek.newfastframe.mvp.rank.RankFragment;

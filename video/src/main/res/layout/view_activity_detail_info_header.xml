@@ -16,7 +16,7 @@
         android:textSize="22sp" />
 
 
-    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+    <com.example.commonlibrary.customview.RoundAngleImageView
         android:id="@+id/iv_view_activity_detail_info_header_avatar"
         android:layout_width="80dp"
         android:layout_height="80dp"

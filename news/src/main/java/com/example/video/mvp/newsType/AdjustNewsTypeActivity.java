@@ -11,7 +11,7 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBeanDao;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.video.NewsApplication;

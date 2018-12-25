@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.commonlibrary.adaptScreen.ScreenAdaptManager;
-import com.example.commonlibrary.cusotomview.CommonDialog;
+import com.example.commonlibrary.customview.CommonDialog;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.component.DaggerAppComponent;
 import com.example.commonlibrary.dagger.module.GlobalConfigModule;

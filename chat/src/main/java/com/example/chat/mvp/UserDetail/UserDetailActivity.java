@@ -25,9 +25,9 @@ import com.example.chat.mvp.shareinfo.ShareInfoFragment;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.cusotomview.RoundAngleImageView;
-import com.example.commonlibrary.cusotomview.WrappedViewPager;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.customview.RoundAngleImageView;
+import com.example.commonlibrary.customview.WrappedViewPager;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.BlurBitmapUtil;
 import com.example.commonlibrary.utils.StatusBarUtil;
@@ -122,7 +122,9 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         });
         tabLayout.setupWithViewPager(display);
         ViewCompat.setTransitionName(avatar, "avatar");
-        //        ViewCompat.setTransitionName(name, "name");
+        ViewCompat.setTransitionName(name, "name");
+        ViewCompat.setTransitionName(sex, "sex");
+        ViewCompat.setTransitionName(signature, "signature");
         refresh.setOnRefreshListener(this);
     }
 

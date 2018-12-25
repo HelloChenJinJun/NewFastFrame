@@ -5,9 +5,14 @@
     android:orientation="vertical">
 
 
-    <com.example.commonlibrary.cusotomview.WrappedViewPager
+    <com.example.commonlibrary.customview.DragFrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/wvp_activity_image_preview_display"/>
+        android:layout_height="match_parent"
+        android:id="@+id/dfl_activity_image_preview_drag">
+        <com.example.commonlibrary.customview.WrappedViewPager
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/wvp_activity_image_preview_display"/>
+    </com.example.commonlibrary.customview.DragFrameLayout>
 
 </LinearLayout>

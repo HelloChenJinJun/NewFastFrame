@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.commonlibrary.BaseActivity;
-import com.example.commonlibrary.cusotomview.WrappedViewPager;
+import com.example.commonlibrary.customview.WrappedViewPager;
 import com.example.video.NewsApplication;
 import com.example.video.R;
 import com.example.video.adapter.OtherNewPhotoSetAdapter;

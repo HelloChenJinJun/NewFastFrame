@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
     <ImageView
         android:id="@+id/iv_item_activity_chat_send_image"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginRight="6dp"
-        android:background="@drawable/chat_right_qp"
         android:maxWidth="200dp"
-        android:minHeight="150dp"
         android:minWidth="150dp"
-        android:paddingBottom="5dp"
+        android:minHeight="150dp"
         android:paddingLeft="5dp"
-        android:paddingRight="10dp"
         android:paddingTop="5dp"
-        android:scaleType="centerCrop"/>
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:scaleType="centerCrop" />
 </RelativeLayout>

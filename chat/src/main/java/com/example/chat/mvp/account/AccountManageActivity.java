@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 import com.example.chat.R;
 import com.example.chat.mvp.account.password.PasswordChangeActivity;
 import com.example.chat.base.ChatBaseActivity;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 
 /**
  * 项目名称:    NewFastFrame

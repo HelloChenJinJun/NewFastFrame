@@ -23,7 +23,7 @@
             android:textColor="@color/base_color_text_grey"
             android:textSize="20sp" />
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_user_info_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"

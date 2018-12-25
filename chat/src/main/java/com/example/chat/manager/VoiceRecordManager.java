@@ -41,7 +41,7 @@ public class VoiceRecordManager {
          * 缓存线程池
          */
         private ExecutorService mExecutorService;
-        private Handler updateHandler = new Handler() {
+        private  Handler updateHandler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
                         switch (msg.what) {

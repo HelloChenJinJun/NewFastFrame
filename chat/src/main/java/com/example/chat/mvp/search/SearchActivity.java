@@ -9,7 +9,7 @@ import com.example.chat.R;
 import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import androidx.appcompat.widget.SearchView;

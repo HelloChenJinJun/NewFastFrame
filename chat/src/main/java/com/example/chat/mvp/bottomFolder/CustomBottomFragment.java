@@ -12,7 +12,7 @@ import com.example.chat.events.ImageFolderEvent;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.cusotomview.ListViewDecoration;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.SystemUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;

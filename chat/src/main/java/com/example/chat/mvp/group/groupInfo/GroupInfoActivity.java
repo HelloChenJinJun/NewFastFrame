@@ -22,7 +22,7 @@ import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.cusotomview.RoundAngleImageView;
+import com.example.commonlibrary.customview.RoundAngleImageView;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;

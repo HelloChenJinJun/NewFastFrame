@@ -1,4 +1,4 @@
-<com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/tools"
     android:id="@+id/refresh_activity_actor_detail_info_refresh"
@@ -32,7 +32,7 @@
                     android:layout_height="match_parent"
                     app:layout_collapseMode="parallax">
 
-                    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                    <com.example.commonlibrary.customview.RoundAngleImageView
                         android:id="@+id/riv_activity_actor_detail_info_avatar"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
@@ -41,6 +41,16 @@
                         android:layout_marginRight="10dp"
                         android:layout_marginBottom="10dp"
                         android:scaleType="fitCenter" />
+
+
+                    <TextView
+                        android:id="@+id/tv_activity_actor_detail_info_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
 
 
                 </RelativeLayout>
@@ -76,13 +86,13 @@
         </com.google.android.material.appbar.AppBarLayout>
 
 
-        <com.example.commonlibrary.cusotomview.WrappedViewPager
+        <com.example.commonlibrary.customview.WrappedViewPager
             android:id="@+id/wvp_activity_actor_detail_info_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </com.example.commonlibrary.cusotomview.WrappedViewPager>
+        </com.example.commonlibrary.customview.WrappedViewPager>
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -96,4 +106,4 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-</com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+</com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>

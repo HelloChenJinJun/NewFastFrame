@@ -3,12 +3,12 @@ package com.example.commonlibrary.mvp.base;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.R;
 import com.example.commonlibrary.utils.Constant;
+import com.github.chrisbanes.photoview.PhotoView;
 
 /**
  * 项目名称:    NewFastFrame
@@ -16,7 +16,7 @@ import com.example.commonlibrary.utils.Constant;
  * 创建时间:    2018/12/24     18:15
  */
 public class ImagePreViewFragment extends BaseFragment {
-    private ImageView display;
+    private PhotoView display;
 
     public static ImagePreViewFragment newInstance(String url) {
         Bundle bundle = new Bundle();
@@ -43,7 +43,10 @@ public class ImagePreViewFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-        display = (ImageView) findViewById(R.id.iv_fragment_image_preview_display);
+        display = (PhotoView) findViewById(R.id.pv_fragment_image_preview_display);
+        display.setOnPhotoTapListener((view1, x, y) -> {
+            getActivity().onBackPressed();
+        });
         display.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {

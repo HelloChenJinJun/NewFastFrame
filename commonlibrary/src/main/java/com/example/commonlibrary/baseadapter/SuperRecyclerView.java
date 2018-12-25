@@ -25,7 +25,7 @@ import com.example.commonlibrary.baseadapter.refresh.OnRefreshListener;
 import com.example.commonlibrary.baseadapter.refresh.RefreshHeaderLayout;
 import com.example.commonlibrary.baseadapter.refresh.RefreshTrigger;
 import com.example.commonlibrary.baseadapter.swipeview.SwipeMenuRecyclerView;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;

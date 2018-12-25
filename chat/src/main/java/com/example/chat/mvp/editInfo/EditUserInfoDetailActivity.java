@@ -18,7 +18,7 @@ import com.example.chat.util.LogUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.chat.view.AutoEditText;
 import com.example.chat.view.CustomDatePickerDialog;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 

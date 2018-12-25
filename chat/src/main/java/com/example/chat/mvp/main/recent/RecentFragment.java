@@ -12,6 +12,7 @@ import com.example.chat.adapter.RecentListAdapter;
 import com.example.chat.base.AppBaseFragment;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
+import com.example.chat.events.DragLayoutEvent;
 import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.RecentEvent;
 import com.example.chat.manager.MsgManager;
@@ -25,9 +26,9 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.SkinEntity;
-import com.example.commonlibrary.cusotomview.ListViewDecoration;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
+import com.example.commonlibrary.customview.ToolBarOption;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.commonlibrary.skin.SkinManager;
@@ -159,7 +160,7 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
                 UserDBManager.getInstance().deleteRecentMessage(msg.getId());
                 mAdapter.removeData(msg);
             } else {
-                ToastUtils.showShortToast("1置顶");
+                ToastUtils.showShortToast("置顶");
             }
             return true;
         });
@@ -176,11 +177,18 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
         registerRxBus();
         initSkin();
         initToolBarData();
+
+        getIcon().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RxBusManager.getInstance().post(new DragLayoutEvent());
+            }
+        });
     }
 
     private void initToolBarData() {
         ToolBarOption toolBarOption = new ToolBarOption();
-        toolBarOption.setTitle("");
+        toolBarOption.setTitle("聊天");
         toolBarOption.setAvatar(UserManager.getInstance().getCurrentUser().getAvatar());
         toolBarOption.setNeedNavigation(false);
         setToolBar(toolBarOption);

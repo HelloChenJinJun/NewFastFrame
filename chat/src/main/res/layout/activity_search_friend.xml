@@ -22,7 +22,6 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/btn_search_friend"
-            android:background="@drawable/input_bg"
             android:gravity="center_vertical"
             android:hint="请输入用户名"
             android:paddingLeft="10dp"/>

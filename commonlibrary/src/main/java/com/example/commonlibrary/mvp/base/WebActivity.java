@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 
 import com.example.commonlibrary.R;
 import com.example.commonlibrary.SlideBaseActivity;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.Constant;
 

@@ -5,7 +5,7 @@
               android:layout_height="wrap_content"
               android:gravity="center_horizontal"
               android:orientation="vertical">
-    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+    <com.example.commonlibrary.customview.RoundAngleImageView
         android:id="@+id/riv_group_info_avatar_item_layout_avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"

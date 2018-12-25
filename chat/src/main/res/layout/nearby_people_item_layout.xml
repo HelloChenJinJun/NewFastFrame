@@ -6,7 +6,7 @@
                 android:id="@+id/rl_nearby_people_item_container"
                 android:minHeight="70dp"
                 android:padding="10dp">
-    <com.example.commonlibrary.cusotomview.RoundAngleImageView
+    <com.example.commonlibrary.customview.RoundAngleImageView
         android:id="@+id/riv_nearby_people_avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"

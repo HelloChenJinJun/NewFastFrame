@@ -14,8 +14,8 @@ import com.example.chat.R;
 import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.account.AccountManageActivity;
-import com.example.commonlibrary.cusotomview.RoundAngleImageView;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.RoundAngleImageView;
+import com.example.commonlibrary.customview.ToolBarOption;
 
 import androidx.appcompat.widget.SwitchCompat;
 

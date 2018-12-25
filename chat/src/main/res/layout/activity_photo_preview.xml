@@ -5,16 +5,10 @@
     android:layout_height="match_parent">
 
 
-    <com.example.chat.view.DragFrameLayout
-        android:id="@+id/dfl_activity_photo_preview_container"
+    <com.example.commonlibrary.customview.WrappedViewPager
+        android:id="@+id/vp_activity_photo_preview_display"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.example.commonlibrary.cusotomview.WrappedViewPager
-            android:id="@+id/vp_activity_photo_preview_display"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.example.chat.view.DragFrameLayout>
+        android:layout_height="wrap_content" />
 
 
     <RelativeLayout

@@ -12,7 +12,7 @@ import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.dagger.account.password.DaggerPasswordChangeComponent;
 import com.example.chat.dagger.account.password.PasswordChangeModule;
 import com.example.chat.view.AutoEditText;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 

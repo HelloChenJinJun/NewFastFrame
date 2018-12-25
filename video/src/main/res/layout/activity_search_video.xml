@@ -22,7 +22,7 @@
             app:srcCompat="@drawable/ic_arrow_left_white" />
 
 
-        <com.example.commonlibrary.cusotomview.CustomEditText
+        <com.example.commonlibrary.customview.CustomEditText
             android:id="@+id/cet_activity_search_video_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -44,12 +44,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
+        <com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout
             android:id="@+id/refresh_activity_search_video_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.example.commonlibrary.cusotomview.StickyNavLayout
+            <com.example.commonlibrary.customview.StickyNavLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -82,14 +82,14 @@
                     android:layout_height="wrap_content"
                     app:tabMode="scrollable" />
 
-                <com.example.commonlibrary.cusotomview.WrappedViewPager
+                <com.example.commonlibrary.customview.WrappedViewPager
                     android:id="@id/sticky_display"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
 
-            </com.example.commonlibrary.cusotomview.StickyNavLayout>
-        </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+            </com.example.commonlibrary.customview.StickyNavLayout>
+        </com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>
 
 
         <com.example.commonlibrary.baseadapter.SuperRecyclerView

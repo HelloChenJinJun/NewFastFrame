@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.chat.R;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.base.RandomData;
 import com.example.chat.bean.CustomInstallation;
 import com.example.chat.manager.UserManager;
@@ -17,12 +18,17 @@ import com.example.chat.util.LogUtil;
 import com.example.chat.view.AutoEditText;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.bean.chat.User;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
+import java.util.List;
+
+import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * 项目名称:    HappyChat
@@ -92,6 +98,12 @@ public class RegisterActivity extends BaseActivity {
             //                                与设备ID绑定
             CustomInstallation customInstallation = new CustomInstallation();
             user.setInstallId(customInstallation.getInstallationId());
+
+            User currentUser = new User();
+            currentUser.setObjectId(ConstantUtil.SYSTEM_UID);
+            BmobRelation relation = new BmobRelation();
+            relation.add(user);
+            user.setContacts(relation);
             user.setNick(RandomData.getRandomNick());
             user.setSignature(RandomData.getRandomSignature());
             user.setAvatar(RandomData.getRandomAvatar());
@@ -117,17 +129,38 @@ public class RegisterActivity extends BaseActivity {
                         if (UserManager.getInstance().getCurrentUser() != null) {
                             LogUtil.e("uid：" + UserManager.getInstance().getCurrentUser().getObjectId());
                         }
-                        Intent intent = new Intent();
-                        intent.putExtra("username", name.getText().toString().trim());
-                        intent.putExtra("password", passWord.getText().toString().trim());
-                        setResult(Activity.RESULT_OK, intent);
-                        finish();
+                        UserManager.getInstance().findUserById(ConstantUtil.SYSTEM_UID, new FindListener<User>() {
+                            @Override
+                            public void done(List<User> list, BmobException e) {
+                                if (e == null && list != null && list.size() > 0) {
+                                    BmobRelation bmobRelation = new BmobRelation();
+                                    bmobRelation.add(s);
+                                    list.get(0).setContacts(bmobRelation);
+                                    list.get(0).update(new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            dealFinish();
+                                        }
+                                    });
+                                } else {
+                                    dealFinish();
+                                }
+                            }
+                        });
                     } else {
                         ToastUtils.showShortToast("注册失败" + e.toString());
                     }
                 }
             });
         });
+    }
+
+    private void dealFinish() {
+        Intent intent = new Intent();
+        intent.putExtra("username", name.getText().toString().trim());
+        intent.putExtra("password", passWord.getText().toString().trim());
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
 

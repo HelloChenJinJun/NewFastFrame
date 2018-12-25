@@ -6,7 +6,7 @@ import android.view.View;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.cusotomview.ListViewDecoration;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
 import com.snew.video.R;
 import com.snew.video.adapter.HotVideoAdapter;
 import com.snew.video.base.VideoBaseFragment;

@@ -9,7 +9,7 @@
         android:layout_height="40dp"
         android:id="@+id/tl_fragment_song_detail_tab"/>
 
-    <com.example.commonlibrary.cusotomview.WrappedViewPager
+    <com.example.commonlibrary.customview.WrappedViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/wvp_fragment_song_detail_display"/>

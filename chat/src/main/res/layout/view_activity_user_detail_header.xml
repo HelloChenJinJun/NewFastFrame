@@ -7,49 +7,26 @@
     <RelativeLayout
         android:id="@+id/rl_view_activity_user_detail_header_container"
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_view_activity_user_detail_header_avatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/head"
-            app:roundHeight="30dp"
-            app:roundWidth="30dp" />
+            android:background="@drawable/custom_drawable_place_holder"
+            android:scaleType="centerCrop" />
+
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/riv_view_activity_user_detail_header_avatar"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_view_activity_user_detail_header_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="姓名"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-
-            <TextView
-                android:id="@+id/tv_view_activity_user_detail_header_signature"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="3dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="签名"
-                android:textColor="@color/blue_500"
-                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -57,32 +34,35 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/tv_view_activity_user_detail_header_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/custom_color_text_main" />
+
                 <ImageView
                     android:id="@+id/iv_view_activity_user_detail_header_sex"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:scaleType="centerCrop"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_sex_female" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="双子座"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="等级"
-                    android:textSize="10sp" />
             </LinearLayout>
 
 
+            <TextView
+                android:id="@+id/tv_view_activity_user_detail_header_signature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/blue_500"
+                android:textSize="12sp" />
+
+
         </LinearLayout>
-
-
 
 
     </RelativeLayout>

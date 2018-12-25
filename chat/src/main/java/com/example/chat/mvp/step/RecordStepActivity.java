@@ -11,7 +11,7 @@ import com.example.chat.manager.UserDBManager;
 import com.example.chat.util.TimeUtil;
 import com.example.chat.view.StepArcView;
 import com.example.commonlibrary.bean.chat.StepData;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 
 

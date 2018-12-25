@@ -10,8 +10,6 @@ import android.widget.TextView;
 import com.example.chat.R;
 import com.example.chat.base.AppBaseFragment;
 import com.example.chat.base.ConstantUtil;
-import com.example.chat.mvp.feedback.ChatListActivity;
-import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.dagger.person.DaggerPersonComponent;
 import com.example.chat.dagger.person.PersonModule;
 import com.example.chat.events.UnReadSystemNotifyEvent;
@@ -21,10 +19,12 @@ import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.chat.mvp.commentnotify.CommentNotifyActivity;
 import com.example.chat.mvp.editInfo.EditUserInfoActivity;
+import com.example.chat.mvp.feedback.ChatListActivity;
 import com.example.chat.mvp.notify.SystemNotifyActivity;
 import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
-import com.example.commonlibrary.cusotomview.RoundAngleImageView;
+import com.example.commonlibrary.bean.chat.User;
+import com.example.commonlibrary.customview.RoundAngleImageView;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -32,6 +32,8 @@ import com.example.commonlibrary.utils.SystemUtil;
 
 import java.io.File;
 
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
@@ -159,7 +161,10 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
         } else if (id == R.id.rl_fragment_person_edit) {
             EditUserInfoActivity.start(getActivity(), UserManager.getInstance().getCurrentUserObjectId());
         } else if (id == R.id.rl_fragment_person_index) {
-            UserDetailActivity.start(getActivity(), UserManager.getInstance().getCurrentUserObjectId());
+            UserDetailActivity.start(getActivity(), UserManager.getInstance().getCurrentUserObjectId(),
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(avatar, "avatar")
+                            ,Pair.create(signature,"signature")
+            ));
         } else if (id == R.id.rl_fragment_person_notify) {
             SystemNotifyActivity.start(getActivity());
         } else if (id == R.id.rl_fragment_person_comment) {

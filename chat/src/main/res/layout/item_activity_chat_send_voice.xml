@@ -4,9 +4,8 @@
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
 android:layout_alignParentTop="true"
-android:background="@drawable/chat_right_qp"
 android:minHeight="50dp"
 android:minWidth="80dp"
 android:scaleType="fitCenter"
-android:src="@drawable/voice_left3"
+android:src="@drawable/ic_chat_voice_right_3"
 xmlns:android="http://schemas.android.com/apk/res/android" />

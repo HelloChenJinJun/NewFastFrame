@@ -13,7 +13,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
@@ -26,6 +25,7 @@ public class RichText extends AppCompatTextView implements Drawable.Callback, Vi
 
     private OnRichTextImageClickListener onRichTextImageClickListener;//图片点击回调
     private GlideImageGeter glideImageGeter;
+    private ImageSpan[] imageSpans;
 
     public RichText(Context context) {
         this(context, null);
@@ -39,6 +39,13 @@ public class RichText extends AppCompatTextView implements Drawable.Callback, Vi
         super(context, attrs, defStyleAttr);
 
 
+    }
+
+
+    private ArrayList<String> imageList;
+
+    public ArrayList<String> getImageList() {
+        return imageList;
     }
 
     /**
@@ -56,20 +63,20 @@ public class RichText extends AppCompatTextView implements Drawable.Callback, Vi
             spannableStringBuilder = new SpannableStringBuilder(spanned);
         }
         // 处理图片得点击事件
-        ImageSpan[] imageSpans = spannableStringBuilder.getSpans(0, spannableStringBuilder.length(), ImageSpan.class);
-        final List<String> imageUrls = new ArrayList<>();
+        imageSpans = spannableStringBuilder.getSpans(0, spannableStringBuilder.length(), ImageSpan.class);
+        imageList = new ArrayList<>();
         for (int i = 0, size = imageSpans.length; i < size; i++) {
             ImageSpan imageSpan = imageSpans[i];
             String imageUrl = imageSpan.getSource();
             int start = spannableStringBuilder.getSpanStart(imageSpan);
             int end = spannableStringBuilder.getSpanEnd(imageSpan);
-            imageUrls.add(imageUrl);
+            imageList.add(imageUrl);
             final int finalI = i;
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
                     if (onRichTextImageClickListener != null) {
-                        onRichTextImageClickListener.imageClicked(imageUrls, finalI);
+                        onRichTextImageClickListener.imageClicked(widget, imageList, finalI);
                     }
                 }
             };
@@ -96,7 +103,7 @@ public class RichText extends AppCompatTextView implements Drawable.Callback, Vi
          * @param imageUrls 本篇富文本内容里的全部图片
          * @param position  点击处图片在imageUrls中的位置
          */
-        void imageClicked(List<String> imageUrls, int position);
+        void imageClicked(View view, ArrayList<String> imageUrls, int position);
     }
 
     @Override

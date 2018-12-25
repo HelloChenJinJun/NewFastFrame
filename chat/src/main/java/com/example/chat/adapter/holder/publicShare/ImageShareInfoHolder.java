@@ -11,7 +11,7 @@ import com.example.commonlibrary.baseadapter.adapter.BaseRecyclerAdapter;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
-import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
+import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
 import com.example.commonlibrary.utils.DensityUtil;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -32,6 +32,12 @@ public class ImageShareInfoHolder extends BaseShareInfoViewHolder {
         ViewStub viewStub = itemView.findViewById(R.id.vs_item_fragment_share_info_stub);
         viewStub.setLayoutResource(R.layout.item_fragment_share_info_image);
         display = (SuperRecyclerView) viewStub.inflate();
+        display.setNestedScrollingEnabled(false);
+    }
+
+
+    public SuperRecyclerView getDisplay() {
+        return display;
     }
 
 

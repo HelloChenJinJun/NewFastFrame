@@ -21,7 +21,7 @@ import com.example.chat.events.LocationEvent;
 import com.example.chat.manager.NewLocationManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.LogUtil;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
+import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.AppUtil;
 

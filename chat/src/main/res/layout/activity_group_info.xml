@@ -18,7 +18,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp">
-                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                <com.example.commonlibrary.customview.RoundAngleImageView
                     android:id="@+id/riv_activity_group_info_avatar"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
@@ -98,14 +98,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
-                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                <com.example.commonlibrary.customview.RoundAngleImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     app:roundWidth="25dp"
                     app:roundHeight="25dp"
                     android:id="@+id/riv_activity_group_info_number_avatar_one"
                     android:src="@drawable/head"/>
-                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                <com.example.commonlibrary.customview.RoundAngleImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     app:roundWidth="25dp"
@@ -113,7 +113,7 @@
                     android:layout_marginLeft="10dp"
                     android:id="@+id/riv_activity_group_info_number_avatar_two"
                     android:src="@drawable/head"/>
-                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                <com.example.commonlibrary.customview.RoundAngleImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     app:roundWidth="25dp"
@@ -121,7 +121,7 @@
                     android:layout_marginLeft="10dp"
                     android:id="@+id/riv_activity_group_info_number_avatar_three"
                     android:src="@drawable/head"/>
-                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                <com.example.commonlibrary.customview.RoundAngleImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     app:roundWidth="25dp"
@@ -129,7 +129,7 @@
                     android:layout_marginLeft="10dp"
                     android:id="@+id/riv_activity_group_info_add"
                     android:src="@drawable/chat_add_normal"/>
-                <com.example.commonlibrary.cusotomview.RoundAngleImageView
+                <com.example.commonlibrary.customview.RoundAngleImageView
                     android:id="@+id/riv_activity_group_info_delete"
                     android:layout_width="50dp"
                     android:layout_height="50dp"

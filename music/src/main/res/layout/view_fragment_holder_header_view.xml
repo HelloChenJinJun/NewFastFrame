@@ -15,7 +15,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_list" />
 
-    <com.example.commonlibrary.cusotomview.ViewPagerIndicator
+    <com.example.commonlibrary.customview.ViewPagerIndicator
         android:id="@+id/vpi_view_fragment_holder_header_view_indicator"
         android:layout_width="210dp"
         android:layout_height="match_parent"

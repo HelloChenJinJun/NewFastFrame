@@ -15,7 +15,7 @@ import com.example.chat.adapter.PhotoPreViewAdapter;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.events.PhotoPreViewEvent;
-import com.example.commonlibrary.cusotomview.WrappedViewPager;
+import com.example.commonlibrary.customview.WrappedViewPager;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.StatusBarUtil;

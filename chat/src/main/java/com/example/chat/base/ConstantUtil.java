@@ -76,6 +76,10 @@ public class ConstantUtil {
     public static final String FROM_LOGIN = "from_login";
     public static final String PATH = "path";
     public static final String FIRST_STATUS = "first_login";
+    public static final int SHARE_INFO_FLAG = 11;
+    public static final int CHAT_FLAG = 12;
+    public static final int COMMENT_LIST_FLAG =13 ;
+    public static final String SYSTEM_UID = "3861cb0f0e";
     /**
      * 外部缓存数据的目录
      */

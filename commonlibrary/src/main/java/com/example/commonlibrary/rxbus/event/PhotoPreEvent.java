@@ -7,9 +7,15 @@ package com.example.commonlibrary.rxbus.event;
  */
 public class PhotoPreEvent {
     private int index;
+    private int flag;
 
-    public PhotoPreEvent(int index) {
+    public PhotoPreEvent(int flag, int index) {
         this.index = index;
+        this.flag = flag;
+    }
+
+    public int getFlag() {
+        return flag;
     }
 
     public int getIndex() {

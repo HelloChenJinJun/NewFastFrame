@@ -9,8 +9,8 @@ import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
-import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.mvp.base.ImagePreViewActivity;
 import com.example.commonlibrary.rxbus.event.PhotoPreEvent;
 import com.example.commonlibrary.utils.DensityUtil;
@@ -20,6 +20,7 @@ import com.example.video.adapter.PhotoListAdapter;
 import com.example.video.bean.PictureBean;
 import com.example.video.dagger.news.othernews.photolist.DaggerPhotoListComponent;
 import com.example.video.dagger.news.othernews.photolist.PhotoListModule;
+import com.example.video.util.NewsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +102,7 @@ public class PhotoListFragment extends BaseFragment<PictureBean, PhotoListPresen
                         result.add(item.getUrl());
                     }
 
-                    ImagePreViewActivity.start(getActivity(), result, position, view);
+                    ImagePreViewActivity.start(getActivity(), result, position, view,NewsUtil.PHOTO_LIST_FLAG);
                     //                    Map<String, Object> map = new HashMap<>();
                     //                    map.put(Constant.POSITION, position);
                     //                    map.put(Constant.VIEW, view);
@@ -120,13 +121,16 @@ public class PhotoListFragment extends BaseFragment<PictureBean, PhotoListPresen
                 if (itemView != null) {
                     sharedElements.clear();
                     sharedElements.put(photoListAdapter.getData(index).getUrl(), itemView.findViewById(R.id.iv_item_fragment_photo_list_picture));
+                    index=-1;
                 }
             }
         });
         presenter.registerEvent(PhotoPreEvent.class, new Consumer<PhotoPreEvent>() {
             @Override
             public void accept(PhotoPreEvent photoPreEvent) throws Exception {
-                index = photoPreEvent.getIndex();
+                if (photoPreEvent.getFlag() == NewsUtil.PHOTO_LIST_FLAG) {
+                    index = photoPreEvent.getIndex();
+                }
             }
         });
     }

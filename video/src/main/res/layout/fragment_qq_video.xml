@@ -14,7 +14,7 @@
         app:tabSelectedTextColor="@color/red_500"
         app:tabTextColor="@color/custom_color_text_main" />
 
-    <com.example.commonlibrary.cusotomview.WrappedViewPager
+    <com.example.commonlibrary.customview.WrappedViewPager
         android:id="@+id/wcp_fragment_qq_video_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

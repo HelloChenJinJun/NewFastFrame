@@ -5,7 +5,7 @@
     android:background="#1ADDF9FF"
     android:orientation="vertical">
 
-    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
+    <com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout
         android:id="@+id/refresh_fragment_recent_play_list_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,6 +14,6 @@
             android:id="@+id/srcv_fragment_recent_play_list_display"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+    </com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>
 
 </LinearLayout>

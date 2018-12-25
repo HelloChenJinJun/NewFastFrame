@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout
+    <com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/refresh_fragment_list_video_refresh">
@@ -13,6 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/srcv_fragment_list_video_display"/>
-    </com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout>
+    </com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>
 
 </LinearLayout>

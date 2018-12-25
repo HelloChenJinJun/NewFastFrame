@@ -17,6 +17,7 @@ import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,7 +32,6 @@ import com.example.chat.adapter.holder.publicShare.ImageShareInfoHolder;
 import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.FaceText;
-import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
 import com.example.chat.bean.post.PublicPostBean;
@@ -45,7 +45,6 @@ import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.EditShare.EditShareInfoActivity;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.chat.mvp.commentdetail.CommentListDetailActivity;
-import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.SoftHideBoardUtil;
@@ -54,6 +53,7 @@ import com.example.chat.view.CustomMoveMethod;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.CommonPagerAdapter;
+import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
@@ -61,14 +61,17 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
-import com.example.commonlibrary.cusotomview.GridSpaceDecoration;
-import com.example.commonlibrary.cusotomview.RoundAngleImageView;
-import com.example.commonlibrary.cusotomview.ToolBarOption;
-import com.example.commonlibrary.cusotomview.WrappedViewPager;
-import com.example.commonlibrary.cusotomview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.bean.chat.User;
+import com.example.commonlibrary.customview.RoundAngleImageView;
+import com.example.commonlibrary.customview.ToolBarOption;
+import com.example.commonlibrary.customview.WrappedViewPager;
+import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.manager.video.DefaultVideoPlayer;
+import com.example.commonlibrary.manager.video.ListVideoManager;
+import com.example.commonlibrary.mvp.base.ImagePreViewActivity;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.PhotoPreEvent;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.SystemUtil;
@@ -77,10 +80,15 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.app.SharedElementCallback;
+import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -113,6 +121,12 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
     private WrappedLinearLayoutManager manager;
     private ImageView retry;
     private ProgressBar loading;
+    private RoundAngleImageView headerAvatar;
+    private int index = -1;
+    private SuperRecyclerView headerDisplay;
+    private TextView headerName;
+    private ImageView sex;
+    private View headerView;
 
     @Override
     public void updateData(List<PublicCommentBean> list) {
@@ -121,9 +135,14 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
                 commentListAdapter.removeEndData(commentListAdapter.getData().size() - 10);
             }
             commentListAdapter.addData(0, list);
+            scrollToBottom();
         } else {
             commentListAdapter.addData(list);
         }
+    }
+
+    private void scrollToBottom() {
+        manager.scrollToPositionWithOffset(0, 0);
     }
 
     @Override
@@ -154,7 +173,6 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
         display = findViewById(R.id.srcv_activity_comment_list_display);
         refresh.setOnRefreshListener(this);
         face = findViewById(R.id.btn_comment_bottom_face);
-
         input = findViewById(R.id.et_comment_bottom_input);
         keyboard = findViewById(R.id.btn_comment_bottom_keyboard);
         send = findViewById(R.id.btn_comment_bottom_send);
@@ -244,13 +262,17 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
                     dealBottomInput(true);
                     manager.scrollToPositionWithOffset(currentPosition + commentListAdapter.getItemUpCount(), 0);
                 } else if (id == R.id.riv_item_activity_comment_list_avatar) {
-                    UserDetailActivity.start(CommentListActivity.this, commentListAdapter.getData(position).getUser().getObjectId());
+                    UserDetailActivity.start(CommentListActivity.this, commentListAdapter.getData(position).getUser().getObjectId()
+                            , ActivityOptionsCompat.makeSceneTransitionAnimation(CommentListActivity.this, Pair.create(view, "avatar")
+                            ));
                 } else if (id == R.id.tv_item_activity_comment_list_look) {
                     CommentListDetailActivity.start(CommentListActivity.this, commentListAdapter
                             .getData(position));
                 }
             }
         });
+
+
         display.setAdapter(commentListAdapter);
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setNeedNavigation(true);
@@ -288,6 +310,39 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
             }
         });
         presenter.getCommentListData(postId, true, getRefreshTime(true));
+        initSharedElement();
+    }
+
+    private void initSharedElement() {
+        supportPostponeEnterTransition();
+        ViewCompat.setTransitionName(headerView, "header");
+        headerAvatar.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                headerAvatar.getViewTreeObserver().removeOnPreDrawListener(this);
+                supportStartPostponedEnterTransition();
+                return true;
+            }
+        });
+        setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+
+                View view;
+                view = headerDisplay.getLayoutManager().findViewByPosition(index);
+                if (view != null) {
+                    sharedElements.clear();
+                    sharedElements.put(((ImageShareInfoHolder.ImageShareAdapter) headerDisplay.getAdapter())
+                            .getData(index), view);
+                    index = -1;
+                }
+            }
+        });
+        presenter.registerEvent(PhotoPreEvent.class, photoPreEvent -> {
+            if (photoPreEvent.getFlag() == ConstantUtil.COMMENT_LIST_FLAG) {
+                index = photoPreEvent.getIndex();
+            }
+        });
     }
 
 
@@ -359,7 +414,7 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
     private View getHeaderView(final PublicPostBean data) {
         final PostDataBean postDataBean = BaseApplication.getAppComponent().getGson()
                 .fromJson(data.getContent(), PostDataBean.class);
-        View headerView = getLayoutInflater().inflate(R.layout.item_fragment_share_info, null);
+        headerView = getLayoutInflater().inflate(R.layout.item_fragment_share_info, null);
         headerView.findViewById(R.id.iv_item_fragment_share_info_more).setVisibility(View.GONE);
         share = headerView.findViewById(R.id.tv_item_fragment_share_info_share);
         share.setText(data.getShareCount() == 0 ? "转发" : data.getShareCount() + "");
@@ -382,16 +437,17 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
             }
         });
         updateStatus();
-        RoundAngleImageView avatar = headerView.findViewById(R.id.riv_item_fragment_share_info_avatar);
+        headerAvatar = headerView.findViewById(R.id.riv_item_fragment_share_info_avatar);
         BaseApplication.getAppComponent().getImageLoader()
                 .loadImage(this, new GlideImageLoaderConfig.Builder().url(data.getAuthor()
-                        .getAvatar()).imageView(avatar).build());
-        avatar.setOnClickListener(this);
-        ((TextView) headerView.findViewById(R.id.tv_item_fragment_share_info_main_text))
-                .setText(data.getAuthor().getName());
-        ((ImageView) headerView.findViewById(R.id.iv_item_fragment_share_info_sex))
-                .setImageResource(data.getAuthor().isSex() ? R.drawable.ic_sex_male : R.drawable
-                        .ic_sex_female);
+                        .getAvatar()).imageView(headerAvatar).build());
+        headerAvatar.setOnClickListener(this);
+
+        headerName = headerView.findViewById(R.id.tv_item_fragment_share_info_main_text);
+        headerName.setText(data.getAuthor().getName());
+        sex = headerView.findViewById(R.id.iv_item_fragment_share_info_sex);
+        sex.setImageResource(data.getAuthor().isSex() ? R.drawable.ic_sex_male : R.drawable
+                .ic_sex_female);
         ((TextView) headerView.findViewById(R.id.tv_item_fragment_share_info_sub_text))
                 .setText(getText(data));
         ((TextView) headerView.findViewById(R.id.tv_item_fragment_share_info_normal_text))
@@ -434,20 +490,19 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
 
         ViewStub viewStub = headerView.findViewById(R.id.vs_item_fragment_share_info_stub);
         if (data.getMsgType() == ConstantUtil.EDIT_TYPE_IMAGE) {
-            SuperRecyclerView display = null;
             viewStub.setLayoutResource(R.layout.item_fragment_share_info_image);
-            display = (SuperRecyclerView) viewStub.inflate();
+            headerDisplay = (SuperRecyclerView) viewStub.inflate();
             int size = postDataBean.getImageList().size();
             if (size <= 4) {
-                display.setLayoutManager(new WrappedGridLayoutManager(this, 2));
-                display.addItemDecoration(new GridSpaceDecoration(2, DensityUtil.toDp(5), false));
+                headerDisplay.setLayoutManager(new WrappedGridLayoutManager(this, 2));
+                headerDisplay.addItemDecoration(new GridSpaceDecoration(2, DensityUtil.toDp(5), false));
             } else {
-                display.setLayoutManager(new WrappedGridLayoutManager(this, 3));
-                display.addItemDecoration(new GridSpaceDecoration(3, DensityUtil.toDp(5), false));
+                headerDisplay.setLayoutManager(new WrappedGridLayoutManager(this, 3));
+                headerDisplay.addItemDecoration(new GridSpaceDecoration(3, DensityUtil.toDp(5), false));
             }
 
             final ImageShareInfoHolder.ImageShareAdapter adapter = new ImageShareInfoHolder.ImageShareAdapter();
-            display.setAdapter(adapter);
+            headerDisplay.setAdapter(adapter);
             adapter.setOnItemClickListener(new OnSimpleItemClickListener() {
                 @Override
                 public void onItemClick(int position, View view) {
@@ -460,7 +515,9 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
                             imageItem.setPath(str);
                             result.add(imageItem);
                         }
-                        PhotoPreViewActivity.start(CommentListActivity.this, position, result, false);
+
+                        ImagePreViewActivity.start(CommentListActivity.this, (ArrayList<String>) imageList, position, view, ConstantUtil.COMMENT_LIST_FLAG);
+                        //                        PhotoPreViewActivity.start(CommentListActivity.this, position, result, false);
                     }
                 }
             });
@@ -482,7 +539,6 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
             UserManager.getInstance().findUserById(bean.getUid(), new FindListener<User>() {
                 @Override
                 public void done(List<User> list, BmobException e) {
-                    String nick = null;
                     if (e == null) {
                         if (list != null && list.size() > 0) {
                             shareContent.setText(getSpannerContent(list.get(0).getName(),
@@ -627,9 +683,24 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
     }
 
     public static void start(Activity activity, PublicPostBean data) {
+        start(activity, data, null);
+    }
+
+
+    @Override
+    protected boolean needSlide() {
+        return false;
+    }
+
+    public static void start(Activity activity, PublicPostBean data, ActivityOptionsCompat activityOptionsCompat) {
         Intent intent = new Intent(activity, CommentListActivity.class);
         intent.putExtra("data", data);
-        activity.startActivity(intent);
+        if (activityOptionsCompat != null) {
+            activity.startActivity(intent, activityOptionsCompat.toBundle());
+        } else {
+            activity.startActivity(intent);
+        }
+
     }
 
     @Override
@@ -660,7 +731,9 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
         } else if (id == R.id.tv_item_fragment_share_info_like) {
             dealLike(data);
         } else if (id == R.id.riv_item_fragment_share_info_avatar) {
-            UserDetailActivity.start(this, data.getAuthor().getObjectId());
+            UserDetailActivity.start(this, data.getAuthor().getObjectId()
+                    , ActivityOptionsCompat.makeSceneTransitionAnimation(CommentListActivity.this, Pair.create(headerAvatar, "avatar")
+                    ));
 
         } else if (id == R.id.ll_item_fragment_share_info_share_container) {
             dealShareInfo();
@@ -707,6 +780,14 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
                 .getSharedPreferences().edit()
                 .putString(key, null)
                 .apply();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (data.getMsgType() != ConstantUtil.EDIT_TYPE_VIDEO || !ListVideoManager.getInstance().onBackPressed()) {
+            super.onBackPressed();
+        }
     }
 
     private void dealLike(PublicPostBean bean) {

@@ -50,8 +50,7 @@
                     android:id="@+id/iv_chat_receive_location_item_display"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/location_default"/>
+                    android:scaleType="centerCrop"/>
                 <TextView
                     android:id="@+id/tv_chat_receive_location_item_address"
                     android:layout_width="wrap_content"

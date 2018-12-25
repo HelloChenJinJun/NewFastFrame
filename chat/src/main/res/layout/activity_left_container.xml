@@ -14,7 +14,7 @@
         android:layout_marginTop="30dp"
         android:paddingLeft="30dp">
 
-        <com.example.commonlibrary.cusotomview.RoundAngleImageView
+        <com.example.commonlibrary.customview.RoundAngleImageView
             android:id="@+id/riv_menu_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -38,8 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="昵称"
-                android:textColor="@color/base_color_text_blue"
-                android:textSize="20sp" />
+                android:textColor="@color/custom_color_text_main" />
         </LinearLayout>
 
         <TextView
@@ -48,10 +47,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingLeft="20dp"
-            android:tag="skin"
-            android:textColor="@color/custom_color_text_sub" />
+            android:maxLines="2"
+            android:text="签名"
+            android:textColor="@color/blue_500"
+            android:textSize="12sp" />
     </RelativeLayout>
 
     <View

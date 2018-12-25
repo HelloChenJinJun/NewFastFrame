@@ -3,7 +3,7 @@ package com.example.cootek.newfastframe.mvp.songdetail;
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.bean.music.MusicPlayBeanDao;
-import com.example.commonlibrary.cusotomview.WrappedViewPager;
+import com.example.commonlibrary.customview.WrappedViewPager;
 import com.example.commonlibrary.manager.music.MusicPlayerManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.PlayStateEvent;

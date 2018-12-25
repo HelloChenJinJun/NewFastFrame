@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
 
-    <com.example.commonlibrary.cusotomview.WrappedViewPager
+    <com.example.commonlibrary.customview.WrappedViewPager
         android:id="@+id/wvp_activity_other_new_photo_set_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

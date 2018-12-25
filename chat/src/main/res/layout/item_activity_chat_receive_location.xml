@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/location_default"/>
+           android:background="@drawable/custom_drawable_place_holder"/>
         <TextView
             android:id="@+id/tv_item_activity_chat_receive_location_content"
             android:layout_width="wrap_content"
