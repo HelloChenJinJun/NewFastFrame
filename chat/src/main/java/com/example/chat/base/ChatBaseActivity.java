@@ -8,6 +8,11 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.SlideBaseActivity;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import rx.Subscription;
+
 
 /**
  * 项目名称:    TestChat
@@ -17,6 +22,14 @@ import com.example.commonlibrary.mvp.presenter.BasePresenter;
  */
 
 public abstract class ChatBaseActivity<T, P extends BasePresenter> extends SlideBaseActivity<T, P> {
+
+    protected Set<Subscription> subscriptionSet = new HashSet<>();
+
+    public void addSubscription(Subscription subscription) {
+        if (subscription != null) {
+            subscriptionSet.add(subscription);
+        }
+    }
 
     @Override
     protected void onResume() {

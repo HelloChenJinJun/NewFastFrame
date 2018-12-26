@@ -1,10 +1,12 @@
 package com.example.cootek.newfastframe.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by COOTEK on 2017/8/15.
  */
 
-public class ArtistInfo {
+public class ArtistInfo implements Serializable {
 
     /**
      * weight : 61.00

@@ -1,0 +1,109 @@
+<com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
+    android:id="@+id/refresh_fragment_singer_detail_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/cl_fragment_singer_detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/al_fragment_singer_detail_bar"
+            theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/ctb_fragment_singer_detail_collapsing"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleMarginEnd="64dp"
+                app:expandedTitleMarginStart="48dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_fragment_singer_detail_image_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_collapseMode="parallax">
+
+                    <com.example.commonlibrary.customview.RoundAngleImageView
+                        android:id="@+id/riv_fragment_singer_detail_avatar"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:scaleType="fitCenter" />
+
+
+                    <TextView
+                        android:id="@+id/tv_fragment_singer_detail_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+
+                </RelativeLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/tb_fragment_singer_detail_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/iv_fragment_singer_detail_back"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            app:srcCompat="@drawable/ic_back" />
+                    </RelativeLayout>
+
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tb_fragment_singer_detail_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                app:tabMode="scrollable" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <com.example.commonlibrary.customview.WrappedViewPager
+            android:id="@+id/wvp_fragment_singer_detail_display"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        </com.example.commonlibrary.customview.WrappedViewPager>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_fragment_singer_detail_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="15dp"
+            app:layout_behavior="@string/fab_transformation_scrim_behavior"
+            fab:fab_icon="@drawable/ic_person_info" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>

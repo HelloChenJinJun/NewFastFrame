@@ -1,5 +1,6 @@
 package com.example.cootek.newfastframe.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -188,7 +189,7 @@ public class SearchMusicBean {
         }
     }
 
-    public static class AlbumBean {
+    public static class AlbumBean implements Serializable {
         /**
          * albumname : Hello
          * weight : 5590

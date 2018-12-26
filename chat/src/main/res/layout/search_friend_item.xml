@@ -6,12 +6,12 @@
                 android:paddingRight="15dp"
                 android:paddingTop="5dp">
 
-    <ImageView
-        android:id="@+id/iv_search_friend_item_avatar"
+    <com.example.commonlibrary.customview.RoundAngleImageView
+        android:id="@+id/riv_search_friend_item_avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/head"
+        android:scaleType="centerCrop"
+        android:background="@drawable/custom_drawable_place_holder"
     />
 
     <TextView
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/btn_search_friend_item_look"
-        android:layout_toRightOf="@+id/iv_search_friend_item_avatar"
+        android:layout_toRightOf="@+id/riv_search_friend_item_avatar"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:text="姓名"

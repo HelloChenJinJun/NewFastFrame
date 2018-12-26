@@ -106,11 +106,20 @@ public class SongListFragment extends MusicBaseFragment<Object, SongListPresente
             display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
             display.setOnLoadMoreListener(this);
         }
-        if (from == MusicUtil.FROM_RANK || from == MusicUtil.FROM_ALBUM) {
-            display.addHeaderView(getHeaderView());
-            root.setBackgroundColor(Color.WHITE);
+        if (from == MusicUtil.FROM_RANK || from == MusicUtil.FROM_ALBUM || from == MusicUtil.FROM_SINGER) {
+            if (from != MusicUtil.FROM_SINGER) {
+                display.addHeaderView(getHeaderView());
+            }
+            root.setBackgroundColor(Color.parseColor("#3C5F78"));
         } else {
             root.setBackgroundColor(Color.TRANSPARENT);
+        }
+
+
+        if (from == MusicUtil.FROM_SINGER || from == MusicUtil.FROM_ALBUM) {
+            refresh.setEnabled(false);
+        } else {
+            refresh.setEnabled(true);
         }
         display.addItemDecoration(new ListViewDecoration(DensityUtil.toDp(10)));
         display.setAdapter(mRecentPlayListAdapter);
@@ -172,6 +181,7 @@ public class SongListFragment extends MusicBaseFragment<Object, SongListPresente
         }
     }
 
+
     @Override
     public void updateData(Object object) {
         if (object == null) {
@@ -219,6 +229,8 @@ public class SongListFragment extends MusicBaseFragment<Object, SongListPresente
             presenter.getAlbumInfoData(data, true);
         } else if (from == MusicUtil.FROM_RECOMMEND) {
             presenter.getRecommendData(data, true);
+        } else if (from == MusicUtil.FROM_SINGER) {
+            presenter.getSingerMusicData(data, true);
         }
     }
 
@@ -241,6 +253,8 @@ public class SongListFragment extends MusicBaseFragment<Object, SongListPresente
             presenter.getRankDetailInfo(Integer.parseInt(data), false);
         } else if (from == MusicUtil.FROM_ALBUM || from == MusicUtil.FROM_BOTTOM_ALBUM) {
             presenter.getAlbumInfoData(data, false);
+        } else if (from == MusicUtil.FROM_SINGER) {
+            presenter.getSingerMusicData(data, false);
         }
     }
 

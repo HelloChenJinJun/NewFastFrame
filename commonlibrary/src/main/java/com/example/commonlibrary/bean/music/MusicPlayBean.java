@@ -4,13 +4,18 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.io.Serializable;
+
 import androidx.annotation.Nullable;
 
 /**
  * Created by COOTEK on 2017/8/18.
  */
 @Entity
-public class MusicPlayBean {
+public class MusicPlayBean implements Serializable {
+
+
+    private static final long serialVersionUID = 1L;
     @Id
     private long songId;
     private long albumId;

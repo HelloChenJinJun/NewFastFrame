@@ -42,6 +42,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import cn.bmob.v3.exception.BmobException;
@@ -64,6 +65,7 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
     private RelativeLayout headerBg;
     private AppBarLayout mAppBarLayout;
     private CustomSwipeRefreshLayout refresh;
+    private RelativeLayout container;
 
     @Override
 
@@ -97,8 +99,20 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         initHeaderView();
         TabLayout tabLayout = findViewById(R.id.tl_activity_user_detail_tab);
         display = findViewById(R.id.vp_activity_user_detail_display);
+        container = findViewById(R.id.rl_view_activity_user_detail_container);
         findViewById(R.id.iv_activity_user_detail_back).setOnClickListener(v -> finish());
-        findViewById(R.id.rl_view_activity_user_detail_header_container).setOnClickListener(v -> UserInfoActivity.start(UserDetailActivity.this, user.getUid()));
+        findViewById(R.id.rl_view_activity_user_detail_header_container).setOnClickListener(v ->
+
+                {
+                    ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(UserDetailActivity.this
+                            , Pair.create(signature, "signature"), Pair.create(sex, "sex")
+                            , Pair.create(name, "name"), Pair.create(avatar, "avatar")
+                            , Pair.create(container, "headerContainer"));
+                    UserInfoActivity.start(UserDetailActivity.this, user.getUid(), activityOptionsCompat);
+
+                }
+
+        );
         mToolbar = findViewById(R.id.tb_activity_user_detail_title);
         headerBg = findViewById(R.id.rl_activity_user_detail_header_bg);
         refresh = findViewById(R.id.refresh_activity_user_detail_refresh);
@@ -206,7 +220,7 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
             sex.setImageResource(user.isSex() ? R.drawable.ic_sex_male : R.drawable.ic_sex_female);
             school.setText(user.getSchool());
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(user.getYear()).append("级")
+            stringBuilder.append(user.getYear())
                     .append(user.getMajor());
             major.setText(stringBuilder.toString());
             Glide.with(this).asBitmap().load(user.getTitlePaper()).into(new SimpleTarget<Bitmap>() {

@@ -125,6 +125,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'cn.jzvd:jiaozivideoplayer:6.2.4'
     api files('libs/AMap3DMap_4.1.3_AMapSearch_3.6.1_AMapLocation_3.2.1_20161228.jar')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
 }
 

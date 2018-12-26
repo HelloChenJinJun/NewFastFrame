@@ -147,7 +147,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             mMenu.setVisibility(View.GONE);
         }
         //        initTopBar();
-        presenter.registerEvent(UnReadPostNotifyEvent.class, unReadCommentEvent -> updateInfo(unReadCommentEvent != null ? unReadCommentEvent.getPostNotifyBean().getRelatedUser().getAvatar() : null));
+        presenter.registerEvent(UnReadPostNotifyEvent.class, unReadCommentEvent -> updateInfo(unReadCommentEvent));
         presenter.registerEvent(UserInfoUpdateEvent.class, userInfoUpdateEvent -> getAppComponent().getImageLoader()
                 .loadImage(getContext(), GlideImageLoaderConfig
                         .newBuild().url(UserManager.getInstance().getCurrentUser().getTitleWallPaper())
@@ -359,7 +359,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         int size = shareInfoAdapter.getData().size();
         for (int i = 0; i < size; i++) {
             PublicPostBean publicPostBean = shareInfoAdapter.getData(i);
-            if (publicPostBean.getSendStatus() == ConstantUtil.SEND_STATUS_FAILED) {
+            if (publicPostBean.getSendStatus().equals(ConstantUtil.SEND_STATUS_FAILED)) {
                 publicPostBean.setSendStatus(ConstantUtil.SEND_STATUS_SENDING);
                 shareInfoAdapter.notifyItemChanged(i + shareInfoAdapter.getItemUpCount());
                 if (publicPostBean.getObjectId().contains("-")) {
@@ -421,7 +421,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         presenter.getAllPostData(isPublic, true, userEntity.getUid(), getRefreshTime(true));
     }
 
-    private void updateInfo(String avatar) {
+    private void updateInfo(UnReadPostNotifyEvent unReadPostNotifyEvent) {
         if (!isPublic)
             return;
         unReadPostNotifyList = UserDBManager.getInstance().getUnReadPostNotify();
@@ -432,8 +432,8 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         if (count > 0) {
             unReadContainer.setVisibility(View.VISIBLE);
             unReadCount.setText("你有" + count + "条未读消息");
-            if (avatar != null) {
-                Glide.with(getContext()).load(avatar).into(unReadAvatar);
+            if (unReadPostNotifyEvent != null && unReadPostNotifyEvent.getPostNotifyBean() != null && unReadPostNotifyEvent.getPostNotifyBean().getRelatedUser() != null) {
+                Glide.with(getContext()).load(unReadPostNotifyEvent.getPostNotifyBean().getRelatedUser().getAvatar()).into(unReadAvatar);
             } else {
                 presenter.getFirstPostNotifyBean();
             }

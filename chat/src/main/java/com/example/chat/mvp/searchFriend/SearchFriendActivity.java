@@ -4,25 +4,28 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.chat.R;
 import com.example.chat.adapter.SearchFriendAdapter;
 import com.example.chat.base.ChatBaseActivity;
-import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.UserInfoTask.UserInfoActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
-import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -37,7 +40,7 @@ public class SearchFriendActivity extends ChatBaseActivity implements View.OnCli
     private EditText input;
     //        private SearchFriendAdapter adapter;
     private SuperRecyclerView display;
-    private Button search;
+    private TextView search;
     private SearchFriendAdapter mAdapter;
 
 
@@ -58,9 +61,9 @@ public class SearchFriendActivity extends ChatBaseActivity implements View.OnCli
 
     @Override
     public void initView() {
-        input = (EditText) findViewById(R.id.et_search_friend_input);
-        search = (Button) findViewById(R.id.btn_search_friend);
-        display = (SuperRecyclerView) findViewById(R.id.srcv_search_friend_display);
+        input = findViewById(R.id.et_search_friend_input);
+        search = findViewById(R.id.tv_activity_search_friend_query);
+        display = findViewById(R.id.srcv_search_friend_display);
         display.setLayoutManager(new WrappedLinearLayoutManager(this));
         display.addItemDecoration(new ListViewDecoration());
         search.setOnClickListener(this);
@@ -74,8 +77,13 @@ public class SearchFriendActivity extends ChatBaseActivity implements View.OnCli
         mAdapter.setOnItemClickListener(new OnSimpleItemChildClickListener() {
             @Override
             public void onItemChildClick(int position, View view, int id) {
-                UserInfoActivity.start(SearchFriendActivity.this, mAdapter.getData(position).getObjectId());
-                finish();
+                View itemView = display.getLayoutManager().findViewByPosition(position);
+                View avatar = itemView.findViewById(R.id.riv_search_friend_item_avatar);
+                View name = itemView.findViewById(R.id.tv_search_friend_item_name);
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(SearchFriendActivity.this
+                        , Pair.create(avatar, "avatar"), Pair.create(name, "name"));
+                UserInfoActivity.start(SearchFriendActivity.this, mAdapter.getData(position).getObjectId(), activityOptionsCompat);
+                ActivityCompat.finishAfterTransition(SearchFriendActivity.this);
             }
         });
         display.setAdapter(mAdapter);
@@ -94,10 +102,10 @@ public class SearchFriendActivity extends ChatBaseActivity implements View.OnCli
         showLoadDialog("正在搜索，请稍候.......");
         if (TextUtils.isEmpty(input.getText().toString().trim())) {
             dismissLoadDialog();
-            ToastUtils.showShortToast("请输入用户名进行查询!");
+            ToastUtils.showShortToast("搜索内容不能为空!");
             return;
         }
-        UserManager.getInstance().queryUsers(input.getText().toString().trim(), new FindListener<User>() {
+        addSubscription(UserManager.getInstance().queryUsers(input.getText().toString().trim(), new FindListener<User>() {
                     @Override
                     public void done(List<User> list, BmobException e) {
                         dismissLoadDialog();
@@ -114,15 +122,14 @@ public class SearchFriendActivity extends ChatBaseActivity implements View.OnCli
                         }
                     }
                 }
-        );
+        ));
     }
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.btn_search_friend) {
+        if (i == R.id.tv_activity_search_friend_query) {
             searchUsers();
-
         }
     }
 

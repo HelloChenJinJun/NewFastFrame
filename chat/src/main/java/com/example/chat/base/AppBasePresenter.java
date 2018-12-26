@@ -17,11 +17,13 @@ import rx.Subscription;
  */
 
 public abstract class AppBasePresenter<V extends IView, M extends BaseModel> extends RxBasePresenter<V,M> {
-    protected Set<Subscription> subscriptionSet=new HashSet<>();
     public AppBasePresenter(V iView, M baseModel) {
         super(iView, baseModel);
     }
 
+
+
+    protected Set<Subscription> subscriptionSet=new HashSet<>();
     public   void addSubscription(Subscription subscription){
         if (subscription!=null) {
             subscriptionSet.add(subscription);

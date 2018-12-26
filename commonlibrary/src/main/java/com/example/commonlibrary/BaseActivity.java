@@ -15,11 +15,11 @@ import com.bumptech.glide.Glide;
 import com.example.commonlibrary.adaptScreen.IAdaptScreen;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.ListItemAdapter;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.customview.CommonDialog;
-import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
 import com.example.commonlibrary.customview.RoundAngleImageView;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.dagger.component.AppComponent;
@@ -42,6 +42,7 @@ import javax.inject.Inject;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import io.reactivex.disposables.CompositeDisposable;
@@ -379,13 +380,27 @@ public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppComp
 
 
     protected void addBackStackFragment(Fragment fragment, boolean needAddBackStack) {
+        addBackStackFragment(fragment, needAddBackStack, null);
+    }
+
+
+    protected void addBackStackFragment(Fragment fragment, boolean needAddBackStack, View... views) {
         if (backStackLayoutId == 0) {
             return;
         }
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction
-                .add(backStackLayoutId, fragment)
-                .setCustomAnimations(R.anim.slide_bottom_in, R.anim.slide_bottom_out);
+
+
+        if (views != null && views.length > 0) {
+            fragmentTransaction.replace(backStackLayoutId, fragment);
+            for (View item :
+                    views) {
+                fragmentTransaction.addSharedElement(item, ViewCompat.getTransitionName(item));
+            }
+        } else {
+            fragmentTransaction
+                    .add(backStackLayoutId, fragment);
+        }
         if (needAddBackStack) {
             fragmentTransaction.addToBackStack(null);
         }

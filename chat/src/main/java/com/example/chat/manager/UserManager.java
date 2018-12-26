@@ -168,11 +168,20 @@ public class UserManager {
      * @param name     根据用户名在服务器上查询用户
      * @param listener 回调
      */
-    public void queryUsers(String name, FindListener<User> listener) {
-        BmobQuery<User> query = new BmobQuery<>();
-        query.addWhereEqualTo("username", name);
-        query.order("createdAt");
-        query.findObjects(listener);
+    public Subscription queryUsers(String name, FindListener<User> listener) {
+        BmobQuery<User> eq1 = new BmobQuery<>();
+        eq1.addWhereEqualTo("username", name);
+        BmobQuery<User> eq2 = new BmobQuery<>();
+        eq2.addWhereEqualTo("name", name);
+        BmobQuery<User> eq3 = new BmobQuery<>();
+        eq2.addWhereEqualTo("nick", name);
+        List<BmobQuery<User>> queries = new ArrayList<>();
+        queries.add(eq1);
+        queries.add(eq2);
+        queries.add(eq3);
+        BmobQuery<User> mainQuery = new BmobQuery<>();
+        mainQuery.or(queries);
+        return mainQuery.findObjects(listener);
     }
 
 

@@ -1,267 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/chat_bg"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:visibility="visible">
+
+    <FrameLayout
+        android:id="@+id/fl_activity_user_info_bg"
+        android:layout_width="0dp"
+        android:layout_height="270dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+    <com.example.commonlibrary.customview.RoundAngleImageView
+        android:id="@+id/riv_user_info_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/custom_drawable_place_holder"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/fl_activity_user_info_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_user_info_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp">
+        android:layout_marginTop="16dp"
+        android:text="姓名"
+        android:textColor="@color/base_color_text_blue"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/riv_user_info_avatar"
+        app:layout_constraintStart_toStartOf="@+id/riv_user_info_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/riv_user_info_avatar" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="头像"
-            android:textColor="@color/base_color_text_grey"
-            android:textSize="20sp" />
 
-        <com.example.commonlibrary.customview.RoundAngleImageView
-            android:id="@+id/riv_user_info_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/custom_drawable_place_holder"
-            android:scaleType="centerCrop" />
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/iv_user_info_sex"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_sex_female"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_user_info_name"
+        app:layout_constraintStart_toEndOf="@+id/tv_user_info_name"
+        app:layout_constraintTop_toTopOf="@+id/tv_user_info_name" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@drawable/recycler_divider" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_user_info_username"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="昵称"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/tv_user_info_nick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="姓名"
-            android:textColor="@color/base_color_text_blue"
-            android:textSize="20sp" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@drawable/recycler_divider" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="帐号"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/tv_user_info_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="帐号"
-            android:textColor="@color/base_color_text_blue"
-            android:textSize="20sp" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@drawable/recycler_divider" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="地址"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/tv_user_info_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="地址"
-            android:textColor="@color/base_color_text_blue"
-            android:textSize="20sp" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@drawable/recycler_divider" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="性别"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/tv_user_info_sex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="女"
-            android:textColor="@color/base_color_text_blue"
-            android:textSize="20sp" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@drawable/recycler_divider" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="学校"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/tv_user_info_school"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:textColor="@color/base_color_text_blue"
-            android:textSize="20sp" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@drawable/recycler_divider" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="学院"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/tv_user_info_college"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:textColor="@color/base_color_text_blue"
-            android:textSize="20sp" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@drawable/recycler_divider" />
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="帐号"
+        android:textColor="@color/base_color_text_blue"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <Button
         android:id="@+id/btn_user_info_chat"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="25dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:background="@drawable/btn_login_selector"
         android:gravity="center"
         android:text="开始会话"
         android:textColor="@color/base_color_text_white"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_user_info_add_friend" />
 
     <Button
         android:id="@+id/btn_user_info_add_friend"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginRight="25dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:background="@drawable/btn_login_selector"
         android:gravity="center"
         android:text="添加为好友"
         android:textColor="@color/base_color_text_white"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_user_info_add_black" />
 
     <Button
         android:id="@+id/btn_user_info_add_black"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginRight="25dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:background="@drawable/btn_logout_selector"
         android:gravity="center"
         android:text="添加为黑名单"
         android:textColor="@color/base_color_text_white"
         android:textSize="20sp"
-        android:visibility="gone" />
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fl_activity_user_info_bg" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_activity_user_info_signature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="签名"
+        app:layout_constraintEnd_toEndOf="@+id/riv_user_info_avatar"
+        app:layout_constraintStart_toStartOf="@+id/riv_user_info_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_info_name" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

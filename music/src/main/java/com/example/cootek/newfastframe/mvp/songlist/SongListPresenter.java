@@ -9,6 +9,7 @@ import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.cootek.newfastframe.api.MusicApi;
 import com.example.cootek.newfastframe.bean.AlbumBean;
+import com.example.cootek.newfastframe.bean.ArtistSongsBean;
 import com.example.cootek.newfastframe.bean.DownLoadMusicBean;
 import com.example.cootek.newfastframe.bean.RankListBean;
 import com.example.cootek.newfastframe.bean.RelatedSongBean;
@@ -316,56 +317,72 @@ public class SongListPresenter extends BasePresenter<IView<Object>, DefaultModel
         });
     }
 
-    //    public void getSingerSongs(final String tingId, final boolean isRefresh, final boolean isShowLoading) {
-    //        if (isRefresh) {
-    //            num = 0;
-    //        }
-    //        if (isShowLoading) {
-    //            iView.showLoading("");
-    //        }
-    //        num++;
-    //        baseModel.getRepositoryManager().getApi(MusicApi.class).getArtistSongs(tingId, (num - 1) * 10, 10)
-    //                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-    //                .subscribe(new Observer<ArtistSongsBean>() {
-    //                    @Override
-    //                    public void onSubscribe(@NonNull Disposable d) {
-    //                        addDispose(d);
-    //                    }
-    //
-    //                    @Override
-    //                    public void onNext(@NonNull ArtistSongsBean artistSongsBean) {
-    //                        if (artistSongsBean != null && artistSongsBean.getSonglist() != null) {
-    //                            List<SingerListBean> result = baseModel.getRepositoryManager().getDaoSession().getSingerListBeanDao()
-    //                                    .queryBuilder().where(SingerListBeanDao.Properties.TingId.eq(tingId)).list();
-    //                            if (result.size() > 0) {
-    ////                                更新歌手信息
-    //                                iView.updateData(result.get(0));
-    //                            }
-    ////                            更新歌手歌曲信息
-    //                            for (ArtistSongsBean.SonglistBean bean :
-    //                                    artistSongsBean.getSonglist()) {
-    //                                getMusicDetailInfo(bean.getSong_id());
-    //                            }
-    //                        } else {
-    //                            onError(null);
-    //                        }
-    //                    }
-    //
-    //                    @Override
-    //                    public void onError(@NonNull Throwable e) {
-    //                        iView.showError(null, new EmptyLayout.OnRetryListener() {
-    //                            @Override
-    //                            public void onRetry() {
-    //                                num--;
-    //                                getSingerSongs(tingId, isRefresh, isShowLoading);
-    //                            }
-    //                        });
-    //                    }
-    //
-    //                    @Override
-    //                    public void onComplete() {
-    //                        iView.hideLoading();
-    //                    }
-    //                });
-    //    }
+    public void getSingerMusicData(String uid, boolean isRefresh) {
+        if (isRefresh) {
+            num = 0;
+        }
+        if (isRefresh) {
+            iView.showLoading("");
+        }
+        num++;
+        baseModel.getRepositoryManager().getApi(MusicApi.class)
+                .getArtistSongs(uid, (num - 1) * 10, 10)
+                .subscribeOn(Schedulers.io())
+                .flatMap((Function<ArtistSongsBean, ObservableSource<DownLoadMusicBean>>) artistSongsBean -> {
+                    if (artistSongsBean.getSonglist() != null && artistSongsBean.getSonglist().size() > 0) {
+                        List<Observable<DownLoadMusicBean>> list = new ArrayList<>();
+                        for (int i = 0; i < artistSongsBean.getSonglist().size(); i++) {
+                            list.add(baseModel.getRepositoryManager().getApi(MusicApi.class).getDownLoadMusicInfo(artistSongsBean.getSonglist().get(i).getSong_id())
+                                    .subscribeOn(Schedulers.io()));
+                        }
+                        return Observable.mergeArray(list.toArray(new Observable[]{}));
+                    } else {
+                        return null;
+                    }
+                }).map(downLoadMusicBean -> {
+            MusicPlayBean musicPlayBean = new MusicPlayBean();
+            musicPlayBean.setIsLocal(false);
+            musicPlayBean.setSongId(Long.parseLong(downLoadMusicBean.getSonginfo().getSong_id()));
+            musicPlayBean.setAlbumId(Long.parseLong(downLoadMusicBean.getSonginfo().getAlbum_id()));
+            musicPlayBean.setAlbumName(downLoadMusicBean.getSonginfo().getAlbum_title());
+            if (!TextUtils.isEmpty(downLoadMusicBean.getSonginfo().getPic_huge())) {
+                musicPlayBean.setAlbumUrl(downLoadMusicBean.getSonginfo().getPic_huge());
+            } else if (!TextUtils.isEmpty(downLoadMusicBean.getSonginfo().getPic_premium())) {
+                musicPlayBean.setAlbumUrl(downLoadMusicBean.getSonginfo().getPic_premium());
+            } else if (!TextUtils.isEmpty(downLoadMusicBean.getSonginfo().getPic_big())) {
+                musicPlayBean.setAlbumUrl(downLoadMusicBean.getSonginfo().getPic_big());
+            } else if (!TextUtils.isEmpty(downLoadMusicBean.getSonginfo().getPic_small())) {
+                musicPlayBean.setAlbumUrl(downLoadMusicBean.getSonginfo().getPic_small());
+            } else if (!TextUtils.isEmpty(downLoadMusicBean.getSonginfo().getPic_radio())) {
+                musicPlayBean.setAlbumUrl(downLoadMusicBean.getSonginfo().getPic_radio());
+            }
+            musicPlayBean.setArtistId(downLoadMusicBean.getSonginfo().getArtist_id());
+            musicPlayBean.setArtistName(downLoadMusicBean.getSonginfo().getAuthor());
+            musicPlayBean.setLrcUrl(downLoadMusicBean.getSonginfo().getLrclink());
+            musicPlayBean.setSongUrl(downLoadMusicBean.getBitrate().getFile_link());
+            musicPlayBean.setSongName(downLoadMusicBean.getSonginfo().getTitle());
+            musicPlayBean.setTingId(downLoadMusicBean.getSonginfo().getTing_uid());
+            CommonLogger.e(downLoadMusicBean.toString());
+            return musicPlayBean;
+        }).toList(20).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<List<MusicPlayBean>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                addDispose(d);
+            }
+
+            @Override
+            public void onSuccess(List<MusicPlayBean> musicPlayBeans) {
+                iView.updateData(musicPlayBeans);
+                getBaseModel().getRepositoryManager().getDaoSession()
+                        .getMusicPlayBeanDao().insertOrReplaceInTx(musicPlayBeans);
+                iView.hideLoading();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                iView.showError(e.getMessage(), null);
+                num--;
+            }
+        });
+    }
 }

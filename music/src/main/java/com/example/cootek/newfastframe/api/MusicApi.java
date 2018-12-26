@@ -8,6 +8,7 @@ import com.example.cootek.newfastframe.bean.RankListBean;
 import com.example.cootek.newfastframe.bean.RecommendSongBean;
 import com.example.cootek.newfastframe.bean.RelatedSongBean;
 import com.example.cootek.newfastframe.bean.SearchMusicBean;
+import com.example.cootek.newfastframe.bean.SingerAlbumBean;
 import com.example.cootek.newfastframe.bean.SongMenuBean;
 
 import io.reactivex.Observable;
@@ -99,6 +100,12 @@ public interface MusicApi {
 
     @GET
     public Observable<ResponseBody> getLrcContent(@Url String url);
+
+
+
+//    http://music.taihe.com/data/user/getalbums?start=0&size=12&ting_uid=2517&order=time
+    @GET
+    public Observable<SingerAlbumBean> getSingerAlbumInfo(@Url String url);
 
 
 }

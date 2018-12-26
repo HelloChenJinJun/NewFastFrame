@@ -4,8 +4,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
@@ -15,8 +19,10 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.manager.music.IMusicPlayer;
 import com.example.commonlibrary.manager.music.MusicPlayerManager;
+import com.example.commonlibrary.manager.video.DefaultVideoPlayer;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.PlayStateEvent;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.cootek.newfastframe.ui.MainActivity;
 
@@ -26,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -43,15 +50,121 @@ public class MusicService extends Service {
     private MusicBinder mMusicBinder;
     private RemoteViews remoteViews;
     private Disposable mDisposable;
-
+    private MediaSessionCompat mediaSessionCompat;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mMusicPlayerManager = MusicPlayerManager.getInstance();
         mMusicBinder = new MusicBinder();
-        updateNotification();
-        mDisposable = RxBusManager.getInstance().registerEvent(PlayStateEvent.class, playStateEvent -> updateNotification());
+        setUpMediaSession();
+        updateNotification(null);
+        mDisposable = RxBusManager.getInstance().registerEvent(PlayStateEvent.class, new Consumer<PlayStateEvent>() {
+            @Override
+            public void accept(PlayStateEvent playStateEvent) throws Exception {
+                updateNotification(playStateEvent);
+            }
+        });
+    }
+
+
+    private void setUpMediaSession() {
+        mediaSessionCompat = new MediaSessionCompat(this, "listener");
+        mediaSessionCompat.setCallback(new MediaSessionCompat.Callback() {
+            @Override
+            public void onPlay() {
+                CommonLogger.e("mediaSession:onPlay");
+                mMusicBinder.play(0);
+
+            }
+
+            @Override
+            public void onPause() {
+                CommonLogger.e("mediaSession:onPause");
+                mMusicBinder.pause();
+            }
+
+            @Override
+            public void onSkipToNext() {
+                CommonLogger.e("mediaSession:onSkipToNext");
+                mMusicBinder.next();
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                CommonLogger.e("mediaSession:onSkipToPrevious");
+                mMusicBinder.pre();
+            }
+
+            @Override
+            public void onStop() {
+                mMusicBinder.pause();
+            }
+
+            @Override
+            public void onSeekTo(long pos) {
+                CommonLogger.e("mediaSession:onSeekTo");
+            }
+        });
+        mediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mediaSessionCompat.setActive(true);
+    }
+
+    private void updateMediaSession(PlayStateEvent state) {
+        int playState = PlaybackStateCompat.STATE_PLAYING;
+        if (state.getPlayState() == DefaultVideoPlayer.PLAY_STATE_BUFFERING_PLAYING || state
+                .getPlayState() == DefaultVideoPlayer.PLAY_STATE_PLAYING) {
+            playState = PlaybackStateCompat.STATE_PLAYING;
+        } else if (state.getPlayState() ==
+                DefaultVideoPlayer.PLAY_STATE_BUFFERING_PAUSE || state.getPlayState() == DefaultVideoPlayer.PLAY_STATE_PAUSE) {
+            playState = PlaybackStateCompat.STATE_PAUSED;
+        }
+
+        if (state.getPlayState() == DefaultVideoPlayer.
+                PLAY_STATE_PAUSE || state.getPlayState()
+                == DefaultVideoPlayer.PLAY_STATE_BUFFERING_PAUSE ||
+                state.getPlayState() == DefaultVideoPlayer.PLAY_STATE_BUFFERING_PLAYING ||
+                state.getPlayState() == DefaultVideoPlayer.PLAY_STATE_PLAYING) { //播放状态改变时
+            mediaSessionCompat.setPlaybackState(new PlaybackStateCompat.Builder()
+                    .setState(playState, mMusicBinder.getPosition(), 1.0f)
+                    .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                            PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
+                    .build());
+        } else if (state.getPlayState() == DefaultVideoPlayer.PLAY_STATE_PREPARED) { //当前播放歌曲的信息或者播放队列改变
+            MusicPlayBean musicPlayBean = MusicPlayerManager.getInstance().getMusicPlayBean();
+            if (musicPlayBean.getIsLocal()) {
+                refreshMediaSession(playState, BitmapFactory.decodeResource(getResources(), R.drawable.icon_album_default));
+            } else {
+                Glide.with(BaseApplication.getInstance())
+                        .asBitmap().load(musicPlayBean.getAlbumUrl()).into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        refreshMediaSession(PlaybackStateCompat.STATE_PLAYING, resource);
+                    }
+                });
+            }
+        }
+    }
+
+
+    private void refreshMediaSession(int playState, Bitmap resource) {
+        if (resource == null) {
+            resource = BitmapFactory.decodeResource(getResources(), R.drawable.icon_album_default);
+        }
+        MusicPlayBean musicPlayBean = MusicPlayerManager.getInstance().getMusicPlayBean();
+        mediaSessionCompat.setMetadata(new MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, musicPlayBean.getArtistName())
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, musicPlayBean.getArtistName())
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, musicPlayBean.getAlbumName())
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, musicPlayBean.getSongName())
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, musicPlayBean.getDuration())
+                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, resource)
+                .build());
+        mediaSessionCompat.setPlaybackState(new PlaybackStateCompat.Builder()
+                .setState(playState, mMusicBinder.getPosition(), 1.0f)
+                .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                        PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
+                .build());
     }
 
 
@@ -94,10 +207,14 @@ public class MusicService extends Service {
             mDisposable.dispose();
             mDisposable = null;
         }
+        if (mediaSessionCompat != null) {
+            mediaSessionCompat.setActive(false);
+            mediaSessionCompat.release();
+        }
         MusicPlayerManager.getInstance().release();
     }
 
-    private void updateNotification() {
+    private void updateNotification(PlayStateEvent playStateEvent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(getContentIntent())
@@ -105,6 +222,10 @@ public class MusicService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setOngoing(true);
         startForeground(NOTIFICATION_ID, builder.build());
+        if (playStateEvent != null) {
+            updateMediaSession(playStateEvent);
+        }
+
     }
 
     private RemoteViews getContentView() {
@@ -154,21 +275,25 @@ public class MusicService extends Service {
         return mMusicBinder;
     }
 
+
     public class MusicBinder extends Binder implements IMusicPlayer {
 
 
         @Override
         public void play(MusicPlayBean musicPlayBean, long seekPosition) {
+            mediaSessionCompat.setActive(true);
             mMusicPlayerManager.play(musicPlayBean, seekPosition);
         }
 
         @Override
         public void play(List<MusicPlayBean> musicPlayBeans, int position, long seekPosition) {
+            mediaSessionCompat.setActive(true);
             mMusicPlayerManager.play(musicPlayBeans, position, seekPosition);
         }
 
         @Override
         public void play(long seekPosition) {
+            mediaSessionCompat.setActive(true);
             mMusicPlayerManager.play(seekPosition);
         }
 

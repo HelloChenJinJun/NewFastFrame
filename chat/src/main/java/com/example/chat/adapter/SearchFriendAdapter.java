@@ -16,15 +16,15 @@ import com.example.commonlibrary.baseadapter.viewholder.BaseWrappedViewHolder;
 public class SearchFriendAdapter extends BaseRecyclerAdapter<User, BaseWrappedViewHolder> {
 
 
-        @Override
-        protected int getLayoutId() {
-                return R.layout.search_friend_item;
-        }
+    @Override
+    protected int getLayoutId() {
+        return R.layout.search_friend_item;
+    }
 
-        @Override
-        protected void convert(BaseWrappedViewHolder holder, User data) {
-                holder.setImageUrl(R.id.iv_search_friend_item_avatar, data.getAvatar())
-                        .setText(R.id.tv_search_friend_item_name, data.getNick())
-                        .setOnItemChildClickListener(R.id.btn_search_friend_item_look);
-        }
+    @Override
+    protected void convert(BaseWrappedViewHolder holder, User data) {
+        holder.setImageUrl(R.id.riv_search_friend_item_avatar, data.getAvatar())
+                .setText(R.id.tv_search_friend_item_name, data.getName())
+                .setOnItemChildClickListener(R.id.btn_search_friend_item_look);
+    }
 }

@@ -7,12 +7,16 @@ import android.view.View;
 import com.example.commonlibrary.SlideBaseActivity;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
 import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.cootek.newfastframe.R;
+import com.example.cootek.newfastframe.event.DragEvent;
 import com.example.cootek.newfastframe.ui.fragment.BottomFragment;
 import com.example.cootek.newfastframe.ui.fragment.HolderFragment;
 import com.example.commonlibrary.customview.draglayout.DragLayout;
 import com.example.commonlibrary.customview.draglayout.OnDragDeltaChangeListener;
 import com.example.cootek.newfastframe.view.slide.SlidingPanelLayout;
+
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -63,12 +67,17 @@ public class MainActivity extends SlideBaseActivity implements OnLoadMoreListene
         addOrReplaceFragment(BottomFragment.newInstance(), R.id.fl_activity_main_bottom);
         dragLayout = findViewById(R.id.dl_activity_main_drag);
         dragLayout.setListener(this);
+        addDisposable(RxBusManager.getInstance().registerEvent(DragEvent.class, new Consumer<DragEvent>() {
+            @Override
+            public void accept(DragEvent dragEvent) throws Exception {
+                dragLayout.setIntercept(dragEvent.isIntercepted());
+            }
+        }));
     }
 
     @Override
     protected void initData() {
     }
-
 
 
     @Override
@@ -98,12 +107,6 @@ public class MainActivity extends SlideBaseActivity implements OnLoadMoreListene
         dragLayout.switchMenu();
     }
 
-
-    public void notifyIntercept(boolean isIntercept) {
-        if (dragLayout != null) {
-            dragLayout.setIntercept(isIntercept);
-        }
-    }
 
     @Override
     public void onDrag(View view, float delta) {

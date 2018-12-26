@@ -39,6 +39,7 @@ import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.base.MusicBaseFragment;
 import com.example.cootek.newfastframe.dagger.bottom.BottomFragmentModule;
 import com.example.cootek.newfastframe.dagger.bottom.DaggerBottomFragmentComponent;
+import com.example.cootek.newfastframe.event.DragEvent;
 import com.example.cootek.newfastframe.event.ProgressEvent;
 import com.example.cootek.newfastframe.event.ServiceStateEvent;
 import com.example.cootek.newfastframe.mvp.bottom.BottomPresenter;
@@ -419,13 +420,13 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
             endTime.setVisibility(View.GONE);
         } else if (previousState == SlidingPanelLayout.PanelState.EXPANDED && newState == SlidingPanelLayout.PanelState.DRAGGING) {
             display.setVisibility(View.GONE);
-            ((MainActivity) getActivity()).notifyIntercept(false);
+            RxBusManager.getInstance().post(new DragEvent(false));
             if (display.getCurrentItem() != 1) {
                 display.setCurrentItem(1, false);
             }
         } else if (previousState == SlidingPanelLayout.PanelState.DRAGGING && newState == SlidingPanelLayout.PanelState.EXPANDED) {
             display.setVisibility(View.VISIBLE);
-            ((MainActivity) getActivity()).notifyIntercept(true);
+            RxBusManager.getInstance().post(new DragEvent(true));
             startTime.setVisibility(View.VISIBLE);
             endTime.setVisibility(View.VISIBLE);
         }

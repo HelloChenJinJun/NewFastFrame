@@ -159,7 +159,7 @@ public class EditUserInfoActivity extends ChatBaseActivity implements View.OnCli
         ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setAvatar(null);
         toolBarOption.setRightResId(R.drawable.ic_file_upload_blue_grey_900_24dp);
-        toolBarOption.setTitle("编辑个人资料");
+        toolBarOption.setTitle("个人资料");
         toolBarOption.setRightListener(v -> {
             if (mUser.getAvatar() == null) {
                 ToastUtils.showShortToast("请设置个人头像拉^_^");

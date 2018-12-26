@@ -40,6 +40,10 @@ public class MusicUtil {
     public static final String DATA = "data";
     public static final int FROM_RECOMMEND = 1;
     public static final int FROM_BOTTOM_ALBUM = 3;
+    public static final int BASE_TYPE_SEARCH_CONTENT = 1;
+    public static final int FROM_SINGER = 4;
+    public static final String ARTIST_ID = "ARTIST_ID";
+    public static final int BASE_TYPE_ALBUM_CONTENT = 2;
 
     public static Uri getAlbumArtUri(long paramInt) {
         return ContentUris.withAppendedId(Uri.parse("content://media/exjava.lang.Stringternal/audio/albumart"), paramInt);
@@ -130,10 +134,11 @@ public class MusicUtil {
         sb.append(":");
         long s = (milliSecs % (60 * 1000)) / 1000;
         sb.append(s < 10 ? "0" + s : s);
-        return sb.toString();
+        String content = sb.toString();
+        return content.equals("00:00") ? null : content;
     }
 
-    public static String getRealUrl(String uri,int size) {
+    public static String getRealUrl(String uri, int size) {
         int index = uri.lastIndexOf("@s_");
         if (index > 0) {
             uri = uri.substring(0, index);

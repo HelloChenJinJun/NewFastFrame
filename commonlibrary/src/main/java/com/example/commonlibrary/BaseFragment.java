@@ -50,7 +50,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     protected View root;
     private EmptyLayout mEmptyLayout;
     private boolean hasInit = false;
-    protected View headerLayout;
+    protected ViewGroup headerLayout;
     private ImageView icon;
     private TextView right;
     private TextView title;
@@ -94,7 +94,7 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
             if (isNeedHeadLayout()) {
                 LinearLayout linearLayout = new LinearLayout(getContext());
                 linearLayout.setOrientation(LinearLayout.VERTICAL);
-                headerLayout = LayoutInflater.from(getActivity()).inflate(R.layout.header_layout, linearLayout, false);
+                headerLayout = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.header_layout, linearLayout, false);
                 linearLayout.addView(headerLayout);
                 if (isNeedEmptyLayout()) {
                     FrameLayout frameLayout = new FrameLayout(getActivity());
@@ -488,8 +488,18 @@ public abstract class BaseFragment<T, P extends BasePresenter> extends RxFragmen
     }
 
 
+    protected void addBackStackFragment(Fragment fragment, View... views) {
+        ((BaseActivity) getActivity()).addBackStackFragment(fragment, true, views);
+    }
+
+
     protected void addBackStackFragment(Fragment fragment) {
         ((BaseActivity) getActivity()).addBackStackFragment(fragment, true);
+    }
+
+
+    protected void addBackStackFragment(Fragment fragment, boolean needAddBackStack, View... views) {
+        ((BaseActivity) getActivity()).addBackStackFragment(fragment, needAddBackStack, views);
     }
 
 

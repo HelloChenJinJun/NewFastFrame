@@ -328,8 +328,10 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
             @Override
             public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
 
-                View view;
-                view = headerDisplay.getLayoutManager().findViewByPosition(index);
+                View view = null;
+                if (headerDisplay != null) {
+                    view = headerDisplay.getLayoutManager().findViewByPosition(index);
+                }
                 if (view != null) {
                     sharedElements.clear();
                     sharedElements.put(((ImageShareInfoHolder.ImageShareAdapter) headerDisplay.getAdapter())

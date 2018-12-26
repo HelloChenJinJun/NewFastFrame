@@ -54,7 +54,7 @@ public class BaseBean<D> {
         this.data = data;
     }
 
-    private int code;
+    private int code=200;
     private String desc;
 
     public int getCode() {

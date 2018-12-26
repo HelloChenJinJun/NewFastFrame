@@ -81,11 +81,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation ('org.jsoup:jsoup:1.10.1'){
-        exclude module:"appcompat-v7"
-        exclude module:"support-v4"
 
-    }
 
     implementation files('libs/js.jar')
 }

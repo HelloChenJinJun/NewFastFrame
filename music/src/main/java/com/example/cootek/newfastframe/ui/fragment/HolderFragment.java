@@ -7,9 +7,12 @@ import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.customview.ViewPagerIndicator;
 import com.example.commonlibrary.customview.WrappedViewPager;
+import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.base.MusicBaseFragment;
+import com.example.cootek.newfastframe.event.DragEvent;
 import com.example.cootek.newfastframe.mvp.rank.RankFragment;
+import com.example.cootek.newfastframe.mvp.search.SearchMusicFragment;
 import com.example.cootek.newfastframe.ui.MainActivity;
 import com.example.cootek.newfastframe.view.slide.SlidingPanelLayout;
 import com.nineoldandroids.view.ViewHelper;
@@ -96,9 +99,9 @@ public class HolderFragment extends MusicBaseFragment implements View.OnClickLis
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    ((MainActivity) getActivity()).notifyIntercept(false);
+                    RxBusManager.getInstance().post(new DragEvent(false));
                 } else {
-                    ((MainActivity) getActivity()).notifyIntercept(true);
+                    RxBusManager.getInstance().post(new DragEvent(true));
                 }
             }
 
@@ -124,6 +127,8 @@ public class HolderFragment extends MusicBaseFragment implements View.OnClickLis
     public void onClick(View v) {
         if (v.getId() == R.id.iv_view_Fragment_holder_header_view_expend) {
             ((MainActivity) getActivity()).switchMenu();
+        } else if (v.getId() == R.id.iv_view_Fragment_holder_header_view_search) {
+            addBackStackFragment(SearchMusicFragment.newInstance());
         }
     }
 
@@ -141,9 +146,9 @@ public class HolderFragment extends MusicBaseFragment implements View.OnClickLis
         if (newState == SlidingPanelLayout.PanelState.COLLAPSED) {
             if (display != null) {
                 if (display.getCurrentItem() == 0) {
-                    ((MainActivity) getActivity()).notifyIntercept(false);
+                    RxBusManager.getInstance().post(new DragEvent(false));
                 } else {
-                    ((MainActivity) getActivity()).notifyIntercept(true);
+                    RxBusManager.getInstance().post(new DragEvent(true));
                 }
             }
         }

@@ -3,11 +3,17 @@ package com.example.chat.mvp.UserInfoTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.chat.R;
 import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.base.ConstantUtil;
@@ -24,10 +30,15 @@ import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.customview.RoundAngleImageView;
 import com.example.commonlibrary.customview.ToolBarOption;
+import com.example.commonlibrary.utils.BlurBitmapUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -44,13 +55,14 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
     private Button chat;
     private Button add;
     private TextView userName;
-    private TextView sex;
-    private TextView nick;
+    private ImageView sex;
+    private TextView name;
     private RoundAngleImageView avatar;
-    private TextView address;
     private String uid;
-    private TextView college;
-    private TextView school;
+    private TextView signature;
+
+
+    private FrameLayout headerContainer;
 
 
     @Override
@@ -73,13 +85,12 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
         chat = findViewById(R.id.btn_user_info_chat);
         add = findViewById(R.id.btn_user_info_add_friend);
         avatar = findViewById(R.id.riv_user_info_avatar);
-        nick = findViewById(R.id.tv_user_info_nick);
-        sex = findViewById(R.id.tv_user_info_sex);
-        address = findViewById(R.id.tv_user_info_address);
+        name = findViewById(R.id.tv_user_info_name);
+        sex = findViewById(R.id.iv_user_info_sex);
         userName = findViewById(R.id.tv_user_info_username);
         black = findViewById(R.id.btn_user_info_add_black);
-        college = findViewById(R.id.tv_user_info_college);
-        school = findViewById(R.id.tv_user_info_school);
+        headerContainer = findViewById(R.id.fl_activity_user_info_bg);
+        signature = findViewById(R.id.tv_activity_user_info_signature);
         chat.setOnClickListener(this);
         add.setOnClickListener(this);
         black.setOnClickListener(this);
@@ -119,7 +130,26 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
             }
         }
         updateUserInfo();
+        ViewCompat.setTransitionName(avatar, "avatar");
+        ViewCompat.setTransitionName(sex, "sex");
+        ViewCompat.setTransitionName(name, "name");
+        ViewCompat.setTransitionName(signature, "signature");
+        ViewCompat.setTransitionName(headerContainer, "headerContainer");
+        supportPostponeEnterTransition();
+        name.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                name.getViewTreeObserver().removeOnPreDrawListener(this);
+                supportStartPostponedEnterTransition();
+                return false;
+            }
+        });
+    }
 
+
+    @Override
+    protected boolean needSlide() {
+        return false;
     }
 
     private void loadUserInfo() {
@@ -163,13 +193,17 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
     }
 
     private void updateUserInfo() {
-        sex.setText(userEntity.isSex() ? "男" : "女");
+        sex.setImageResource(userEntity.isSex() ? R.drawable.ic_sex_male : R.drawable.ic_sex_female);
         userName.setText(userEntity.getUserName());
-        nick.setText(userEntity.getName());
-        address.setText(userEntity.getAddress());
-        school.setText(userEntity.getSchool());
-        college.setText(userEntity.getCollege());
+        name.setText(userEntity.getName());
+        signature.setText(userEntity.getSignature());
         Glide.with(this).load(userEntity.getAvatar()).into(avatar);
+        Glide.with(this).asBitmap().load(userEntity.getTitlePaper()).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                headerContainer.setBackground(BlurBitmapUtil.createBlurredImageFromBitmap(resource, UserInfoActivity.this, 20));
+            }
+        });
     }
 
     private void initActionBar() {
@@ -288,8 +322,13 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
 
 
     public static void start(Activity activity, String uid) {
+        start(activity, uid, null);
+    }
+
+
+    public static void start(Activity activity, String uid, ActivityOptionsCompat activityOptionsCompat) {
         Intent intent = new Intent(activity, UserInfoActivity.class);
         intent.putExtra(ConstantUtil.ID, uid);
-        activity.startActivity(intent);
+        activity.startActivity(intent, activityOptionsCompat.toBundle());
     }
 }
