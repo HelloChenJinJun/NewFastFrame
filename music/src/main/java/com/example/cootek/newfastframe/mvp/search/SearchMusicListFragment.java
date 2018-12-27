@@ -83,15 +83,25 @@ public class SearchMusicListFragment extends MusicBaseFragment {
             @Override
             public void accept(SearchResultBean searchResultBean) throws Exception {
                 if (searchResultBean.getMusicPlayBeanList() != null) {
-                    mRecentPlayListAdapter.refreshData(searchResultBean.getMusicPlayBeanList());
+                    if (mRecentPlayListAdapter != null) {
+                        mRecentPlayListAdapter.refreshData(searchResultBean.getMusicPlayBeanList());
+                    }
+                    data = searchResultBean.getMusicPlayBeanList();
                 }
             }
         }));
     }
 
+
+    private List<MusicPlayBean> data = null;
+
     @Override
     protected void updateView() {
-        mRecentPlayListAdapter.refreshData((List<MusicPlayBean>) getArguments().getSerializable(Constant.DATA));
+        if (data == null) {
+            mRecentPlayListAdapter.refreshData((List<MusicPlayBean>) getArguments().getSerializable(Constant.DATA));
+        } else {
+            mRecentPlayListAdapter.refreshData(data);
+        }
     }
 
     @Override

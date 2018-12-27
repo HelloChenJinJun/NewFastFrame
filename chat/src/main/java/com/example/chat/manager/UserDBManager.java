@@ -5,7 +5,6 @@ import com.example.chat.bean.BaseMessage;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.GroupChatMessage;
 import com.example.chat.bean.GroupTableMessage;
-import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.bean.post.CommentDetailBean;
 import com.example.chat.bean.post.PostDataBean;
 import com.example.chat.bean.post.PublicCommentBean;
@@ -34,6 +33,7 @@ import com.example.commonlibrary.bean.chat.StepData;
 import com.example.commonlibrary.bean.chat.StepDataDao;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntityDao;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
 import com.example.commonlibrary.utils.CommonLogger;
@@ -42,6 +42,7 @@ import com.google.gson.Gson;
 import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -425,10 +426,11 @@ public class UserDBManager {
                         .where(ChatMessageEntityDao.Properties.ConversationId.in(uid + "&" +
                                         currentUserId, currentUserId + "&" + uid)
                                 , ChatMessageEntityDao.Properties.MessageType.in(ChatMessage.MESSAGE_TYPE_NORMAL, ChatMessage.MESSAGE_TYPE_AGREE)
-                                , ChatMessageEntityDao.Properties.CreatedTime.gt(time))
-                        .orderAsc(ChatMessageEntityDao.Properties.CreatedTime)
+                                , ChatMessageEntityDao.Properties.CreatedTime.lt(time))
+                        .orderDesc(ChatMessageEntityDao.Properties.CreatedTime)
                         .limit(10)
                         .build().list();
+        Collections.reverse(chatMessageEntityList);
         List<BaseMessage> result = new ArrayList<>(chatMessageEntityList.size());
         for (ChatMessageEntity item :
                 chatMessageEntityList) {
@@ -518,7 +520,7 @@ public class UserDBManager {
     public boolean isFriend(String uid) {
         return daoSession.getUserEntityDao().queryBuilder().where(UserEntityDao.Properties
                         .Uid.eq(uid), UserEntityDao.Properties.IsStranger.eq(Boolean.FALSE)
-                , UserEntityDao.Properties.IsBlack.eq(Boolean.FALSE)).build().list().size() > 0;
+                , UserEntityDao.Properties.IsBlack.eq(Boolean.FALSE)).buildCount().count() > 0;
     }
 
 

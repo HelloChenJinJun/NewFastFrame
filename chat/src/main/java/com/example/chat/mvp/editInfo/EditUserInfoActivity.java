@@ -214,6 +214,9 @@ public class EditUserInfoActivity extends ChatBaseActivity implements View.OnCli
 
         } else if (i == R.id.rl_edit_user_info_major) {
 
+        } else if (i == R.id.rl_edit_user_info_name) {
+            EditUserInfoDetailActivity.start(this, ConstantUtil.NICK
+                    , mUser.getNick(), ConstantUtil.REQUEST_CODE_NAME);
         }
     }
 
@@ -296,9 +299,15 @@ public class EditUserInfoActivity extends ChatBaseActivity implements View.OnCli
                     address.setText(message);
                     mUser.setAddress(message);
                     RxBusManager.getInstance().post(mUser);
+                    break;
                 case ConstantUtil.REQUEST_CODE_PHONE:
                     phone.setText(message);
                     mUser.setPhone(message);
+                    RxBusManager.getInstance().post(mUser);
+                    break;
+                case ConstantUtil.REQUEST_CODE_NAME:
+                    name.setText(message);
+                    mUser.setName(message);
                     RxBusManager.getInstance().post(mUser);
                 default:
                     break;

@@ -36,8 +36,10 @@
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
             android:layout_weight="1"
+            android:background="@null"
             android:minHeight="@dimen/base_chat_bottom_input_height"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/btn_chat_bottom_speak"

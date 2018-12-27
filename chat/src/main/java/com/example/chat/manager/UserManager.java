@@ -13,7 +13,6 @@ import android.content.SharedPreferences;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.CustomInstallation;
-import com.example.commonlibrary.bean.chat.User;
 import com.example.chat.listener.AddBlackCallBackListener;
 import com.example.chat.listener.AddFriendCallBackListener;
 import com.example.chat.listener.CancelBlackCallBlackListener;
@@ -21,8 +20,8 @@ import com.example.chat.listener.OnSendTagMessageListener;
 import com.example.chat.util.LogUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.bean.chat.UserEntity;
-import com.example.commonlibrary.bean.chat.UserEntityDao;
 import com.example.commonlibrary.utils.CommonLogger;
 
 import java.util.ArrayList;
@@ -173,12 +172,9 @@ public class UserManager {
         eq1.addWhereEqualTo("username", name);
         BmobQuery<User> eq2 = new BmobQuery<>();
         eq2.addWhereEqualTo("name", name);
-        BmobQuery<User> eq3 = new BmobQuery<>();
-        eq2.addWhereEqualTo("nick", name);
         List<BmobQuery<User>> queries = new ArrayList<>();
         queries.add(eq1);
         queries.add(eq2);
-        queries.add(eq3);
         BmobQuery<User> mainQuery = new BmobQuery<>();
         mainQuery.or(queries);
         return mainQuery.findObjects(listener);
@@ -654,10 +650,7 @@ public class UserManager {
 
 
     public UserEntity cover(User user) {
-        return cover(user, UserDBManager.getInstance().getDaoSession().getUserEntityDao()
-                .queryBuilder()
-                .where(UserEntityDao.Properties.Uid.eq(user.getObjectId()), UserEntityDao
-                        .Properties.IsStranger.eq(Boolean.FALSE)).buildCount().count() < 0);
+        return cover(user, UserDBManager.getInstance().isStranger(user.getObjectId()));
     }
 
 

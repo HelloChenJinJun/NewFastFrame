@@ -3,7 +3,6 @@ package com.example.chat.mvp.EditShare;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -12,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.chat.R;
 import com.example.chat.adapter.EditShareInfoAdapter;
 import com.example.chat.base.ChatBaseActivity;
@@ -31,15 +32,15 @@ import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
 import com.example.chat.mvp.preview.PhotoPreViewActivity;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.bean.chat.PublicPostEntity;
-import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.manager.video.DefaultVideoController;
 import com.example.commonlibrary.manager.video.DefaultVideoPlayer;
+import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
@@ -47,12 +48,19 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 项目名称:    NewFastFrame
@@ -493,17 +501,23 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
         if (resultCode == RESULT_OK) {
             if (requestCode == SystemUtil.REQUEST_CODE_VIDEO_RECORDER) {
                 record.setVisibility(View.GONE);
-                video.postDelayed(new Runnable() {
+                ToastUtils.showShortToast("正在解析视频，请稍后.....");
+                addDisposable(Observable.timer(6, TimeUnit.SECONDS).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>() {
                     @Override
-                    public void run() {
-                        video.setVisibility(View.VISIBLE);
-                        Bitmap bitmap = SystemUtil.getVideoThumbnail(videoPath, DensityUtil.getScreenWidth(EditShareInfoActivity.this), DensityUtil.getScreenHeight(EditShareInfoActivity.this)
-                                , MediaStore.Images.Thumbnails.MINI_KIND);
-                        thumbImage = SystemUtil.bitmapToFile(bitmap);
-                        ((DefaultVideoController) video.setUp(videoPath, null).getController()).getImageCover()
-                                .setImageBitmap(bitmap);
+                    public void accept(Long aLong) throws Exception {
+                        Glide.with(EditShareInfoActivity.this).asBitmap().load(videoPath)
+                                .into(new SimpleTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                        ToastUtils.showShortToast("解析视频成功");
+                                        video.setVisibility(View.VISIBLE);
+                                        thumbImage = SystemUtil.bitmapToFile(resource);
+                                        ((DefaultVideoController) video.setUp(videoPath, null).getController()).getImageCover()
+                                                .setImageBitmap(resource);
+                                    }
+                                });
                     }
-                }, 2000);
+                }));
             } else if (requestCode == ConstantUtil.REQUEST_CODE_LOCATION) {
                 LocationEvent locationEvent = (LocationEvent) data.getSerializableExtra(ConstantUtil.LOCATION);
                 updateLocation(locationEvent);
@@ -518,5 +532,13 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
         intent.putExtra(ConstantUtil.DATA, data);
         intent.putExtra(ConstantUtil.IS_EDIT, isEdit);
         activity.startActivity(intent);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (!ListVideoManager.getInstance().onBackPressed()) {
+            super.onBackPressed();
+        }
     }
 }

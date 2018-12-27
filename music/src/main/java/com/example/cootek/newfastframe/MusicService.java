@@ -1,8 +1,12 @@
 package com.example.cootek.newfastframe;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
@@ -24,6 +28,7 @@ import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.PlayStateEvent;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
+import com.example.cootek.newfastframe.mvp.lock.LockScreenActivity;
 import com.example.cootek.newfastframe.ui.MainActivity;
 
 import java.util.List;
@@ -32,7 +37,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 
 /**
@@ -46,6 +50,7 @@ public class MusicService extends Service {
     private static final String PLAY_ACTION_PLAY = "com.example.music.PLAY";
     private static final String PLAY_ACTION_NEXT = "com.example.music.NEXT";
     private static final int NOTIFICATION_ID = 10;
+    private static final String PLAY_ACTION_CANCEL = "com.example.music.CANCEL";
     private MusicPlayerManager mMusicPlayerManager;
     private MusicBinder mMusicBinder;
     private RemoteViews remoteViews;
@@ -57,14 +62,41 @@ public class MusicService extends Service {
         super.onCreate();
         mMusicPlayerManager = MusicPlayerManager.getInstance();
         mMusicBinder = new MusicBinder();
-        setUpMediaSession();
-        updateNotification(null);
-        mDisposable = RxBusManager.getInstance().registerEvent(PlayStateEvent.class, new Consumer<PlayStateEvent>() {
-            @Override
-            public void accept(PlayStateEvent playStateEvent) throws Exception {
-                updateNotification(playStateEvent);
+        //        setUpMediaSession();
+        updateNotification();
+        mDisposable = RxBusManager.getInstance().registerEvent(PlayStateEvent.class, playStateEvent -> {
+
+            if (playStateEvent.getPlayState() != MusicPlayerManager.PLAY_STATE_IDLE &&
+                    playStateEvent.getPlayState() != MusicPlayerManager.PLAY_STATE_ERROR) {
+                updateNotification();
             }
+
         });
+        initLockScreen();
+    }
+
+
+    private BroadcastReceiver lockScreenReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                if (mMusicBinder.getUrl() != null) {
+                    LockScreenActivity.start(getBaseContext());
+                }
+            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+
+            }
+
+
+        }
+    };
+
+
+    private void initLockScreen() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(lockScreenReceiver, intentFilter);
     }
 
 
@@ -168,9 +200,12 @@ public class MusicService extends Service {
     }
 
 
+    private int startId = -1;
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        startId = startId;
         String action = intent.getAction();
         if (action != null) {
             switch (action) {
@@ -186,6 +221,9 @@ public class MusicService extends Service {
                     break;
                 case PLAY_ACTION_NEXT:
                     mMusicBinder.next();
+                    break;
+                case PLAY_ACTION_CANCEL:
+                    cancelNotification();
             }
         }
 
@@ -193,9 +231,15 @@ public class MusicService extends Service {
         return START_STICKY;
     }
 
+    private void cancelNotification() {
+        stopForeground(true);
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NOTIFICATION_ID);
+        mMusicBinder.release();
+    }
+
     @Override
     public boolean onUnbind(Intent intent) {
-        RxBusManager.getInstance().post(new PlayStateEvent(MusicPlayerManager.PLAY_STATE_ERROR));
+        CommonLogger.e("service:onUnbind");
         return true;
     }
 
@@ -203,6 +247,7 @@ public class MusicService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        CommonLogger.e("service:onDestroy");
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.dispose();
             mDisposable = null;
@@ -211,20 +256,24 @@ public class MusicService extends Service {
             mediaSessionCompat.setActive(false);
             mediaSessionCompat.release();
         }
+
+        if (lockScreenReceiver != null) {
+            unregisterReceiver(lockScreenReceiver);
+        }
         MusicPlayerManager.getInstance().release();
     }
 
-    private void updateNotification(PlayStateEvent playStateEvent) {
+    private void updateNotification() {
+        CommonLogger.e("updateNotification");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(getContentIntent())
-                .setCustomContentView(getContentView())
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setOngoing(true);
+                .setCustomContentView(getContentView());
         startForeground(NOTIFICATION_ID, builder.build());
-        if (playStateEvent != null) {
-            updateMediaSession(playStateEvent);
-        }
+
+        //        if (playStateEvent != null) {
+        //            updateMediaSession(playStateEvent);
+        //        }
 
     }
 
@@ -234,6 +283,7 @@ public class MusicService extends Service {
             remoteViews.setOnClickPendingIntent(R.id.iv_notification_pre, PendingIntent.getService(this, 0, new Intent(PLAY_ACTION_PRE), 0));
             remoteViews.setOnClickPendingIntent(R.id.iv_notification_play, PendingIntent.getService(this, 0, new Intent(PLAY_ACTION_PLAY), 0));
             remoteViews.setOnClickPendingIntent(R.id.iv_notification_next, PendingIntent.getService(this, 0, new Intent(PLAY_ACTION_NEXT), 0));
+            remoteViews.setOnClickPendingIntent(R.id.iv_notification_cancel, PendingIntent.getService(this, 0, new Intent(PLAY_ACTION_CANCEL), 0));
         } else {
             MusicPlayBean musicPlayBean = MusicPlayerManager.getInstance().getMusicPlayBean();
             if (musicPlayBean != null) {
@@ -281,19 +331,19 @@ public class MusicService extends Service {
 
         @Override
         public void play(MusicPlayBean musicPlayBean, long seekPosition) {
-            mediaSessionCompat.setActive(true);
+            //            mediaSessionCompat.setActive(true);
             mMusicPlayerManager.play(musicPlayBean, seekPosition);
         }
 
         @Override
         public void play(List<MusicPlayBean> musicPlayBeans, int position, long seekPosition) {
-            mediaSessionCompat.setActive(true);
+            //            mediaSessionCompat.setActive(true);
             mMusicPlayerManager.play(musicPlayBeans, position, seekPosition);
         }
 
         @Override
         public void play(long seekPosition) {
-            mediaSessionCompat.setActive(true);
+            //            mediaSessionCompat.setActive(true);
             mMusicPlayerManager.play(seekPosition);
         }
 

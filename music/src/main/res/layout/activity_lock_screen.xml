@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_bg_night">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#70000000" />
+
+    <TextView
+        android:id="@+id/tv_activity_lock_screen_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="39dp"
+        android:layout_marginTop="50dp"
+        android:text="17:30"
+        android:textColor="@color/white"
+        android:textSize="37sp" />
+
+    <TextView
+        android:id="@+id/tv_activity_lock_screen_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_activity_lock_screen_time"
+        android:layout_alignLeft="@+id/tv_activity_lock_screen_time"
+        android:layout_marginTop="5dp"
+        android:text="12月21日 星期三"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_activity_lock_screen_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_activity_lock_screen_week"
+        android:layout_alignLeft="@+id/tv_activity_lock_screen_week"
+        android:layout_marginTop="15dp"
+        android:text="空"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_activity_lock_screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_activity_lock_screen_title"
+        android:layout_alignLeft="@+id/tv_activity_lock_screen_title"
+        android:layout_marginTop="5dp"
+        android:text="什么"
+        android:textColor="@color/white" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_activity_lock_screen_control_container"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_above="@+id/temp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_activity_lock_screen_pre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_skip_previous_black_24dp" />
+
+        <ImageView
+            android:id="@+id/iv_activity_lock_screen_play"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_pause_black_24dp" />
+
+        <ImageView
+            android:id="@+id/iv_activity_lock_screen_next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_skip_next_black_24dp" />
+
+    </LinearLayout>
+
+
+    <com.example.cootek.newfastframe.view.lrc.LrcView
+        android:id="@+id/lv_activity_lock_screen_lrc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_activity_lock_screen_control_container"
+        android:layout_below="@+id/tv_activity_lock_screen_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:textColor="@color/white" />
+
+    <com.example.cootek.newfastframe.view.GradientTextView
+        android:id="@+id/temp"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text=">>> 侧滑解锁"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+</RelativeLayout>

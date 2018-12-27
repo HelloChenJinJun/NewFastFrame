@@ -80,6 +80,7 @@ public class BaseApplication extends Application implements View.OnClickListener
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String serviceName = KeepLiveService.getKeepLiveService(this);
             if (!TextUtils.isEmpty(serviceName)) {
+                CommonLogger.e("serviceName:" + serviceName);
                 JobSchedulerManager.getJobSchedulerManager().startJobScheduler(serviceName);
             }
         }

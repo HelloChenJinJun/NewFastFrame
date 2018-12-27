@@ -19,11 +19,21 @@
         <activity
             android:name=".ui.MainActivity"
             android:launchMode="singleTask" />
+        <activity
+            android:name=".mvp.lock.LockScreenActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.package.name.lockscreen" />
+
         <service android:name=".MusicService">
             <intent-filter>
                 <action android:name="com.example.music.PRE" />
                 <action android:name="com.example.music.PLAY" />
                 <action android:name="com.example.music.NEXT" />
+                <action android:name="com.example.music.CANCEL" />
             </intent-filter>
         </service>
 

@@ -26,6 +26,9 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
     public static final int PLAY_STATE_PREPARING = 1;
 
 
+    public static final int PLAY_STATE_IDLE = 0;
+
+
     //    已经准备好资源
     public static final int PLAY_STATE_PREPARED = 2;
     //    播放中
@@ -141,7 +144,10 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
 
     @Override
     public int getPosition() {
-        return mMediaPlayer.getCurrentPosition();
+        if (mMediaPlayer != null && mMusicPlayBean != null) {
+            return mMediaPlayer.getCurrentPosition();
+        }
+        return 0;
     }
 
     @Override
@@ -184,19 +190,25 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
     @Override
     public void reset() {
         mMediaPlayer.reset();
+
     }
 
     @Override
     public void release() {
         if (mMusicPlayBean != null) {
-            BaseApplication
-                    .getAppComponent().getSharedPreferences()
-                    .edit().putLong(Constant.SEEK, mMediaPlayer.getCurrentPosition())
-                    .putInt(Constant.MUSIC_POSITION, mPlayData.getPosition()).apply();
-            mMediaPlayer.release();
+            if (mMediaPlayer != null) {
+                BaseApplication
+                        .getAppComponent().getSharedPreferences()
+                        .edit().putLong(Constant.SEEK, mMediaPlayer.getCurrentPosition())
+                        .putInt(Constant.MUSIC_POSITION, mPlayData.getPosition()).apply();
+//                todo
+//                mMediaPlayer.reset();
+            }
         }
-        mPlayData = null;
-        mMediaPlayer = null;
+        mState = PLAY_STATE_IDLE;
+        RxBusManager.getInstance().post(new PlayStateEvent(mState));
+        mMusicPlayBean = null;
+        mPlayData.clear();
     }
 
 
@@ -216,6 +228,8 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
     @Override
     public void onPrepared(MediaPlayer mp) {
         mState = PLAY_STATE_PREPARED;
+        BaseApplication.getAppComponent().getSharedPreferences()
+                .edit().putInt(Constant.MUSIC_POSITION, mPlayData.getPosition()).apply();
         RxBusManager.getInstance().post(new PlayStateEvent(mState));
         mMediaPlayer.start();
         mState = PLAY_STATE_PLAYING;

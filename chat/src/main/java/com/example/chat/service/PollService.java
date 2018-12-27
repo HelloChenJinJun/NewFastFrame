@@ -1,10 +1,8 @@
 package com.example.chat.service;
 
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -14,12 +12,16 @@ import android.os.IBinder;
 
 import com.example.chat.R;
 import com.example.chat.base.ConstantUtil;
+import com.example.chat.bean.BaseMessage;
+import com.example.chat.bean.ChatMessage;
 import com.example.chat.bean.PostNotifyBean;
 import com.example.chat.bean.StepBean;
 import com.example.chat.bean.SystemNotifyBean;
+import com.example.chat.events.MessageInfoEvent;
 import com.example.chat.events.StepEvent;
 import com.example.chat.events.UnReadPostNotifyEvent;
 import com.example.chat.events.UnReadSystemNotifyEvent;
+import com.example.chat.listener.OnReceiveListener;
 import com.example.chat.manager.ChatNotificationManager;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
@@ -32,6 +34,7 @@ import com.example.chat.util.TimeUtil;
 import com.example.commonlibrary.bean.chat.PostNotifyInfo;
 import com.example.commonlibrary.bean.chat.StepData;
 import com.example.commonlibrary.bean.chat.SystemNotifyEntity;
+import com.example.commonlibrary.keeplive.service.KeepLiveService;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.CommonLogger;
 
@@ -62,7 +65,7 @@ import io.reactivex.disposables.Disposable;
  * QQ:             1981367757
  */
 
-public class PollService extends Service implements SensorEventListener {
+public class PollService extends KeepLiveService implements SensorEventListener {
 
     private Disposable disposable;
     private StepDetector stepDetector;
@@ -71,12 +74,14 @@ public class PollService extends Service implements SensorEventListener {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        CommonLogger.e("PollService:::onBind");
         return null;
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        CommonLogger.e("PollService:::onStartCommand");
         int time;
         if (intent != null) {
             time = intent.getIntExtra(ConstantUtil.TIME, 30);
@@ -134,8 +139,7 @@ public class PollService extends Service implements SensorEventListener {
 
                     }
                 });
-
-        return super.onStartCommand(intent, START_FLAG_RETRY, startId);
+        return super.onStartCommand(intent, flags, startId);
     }
 
 
@@ -169,24 +173,24 @@ public class PollService extends Service implements SensorEventListener {
     }
 
     private void dealReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
-        intentFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        intentFilter.addAction(Intent.ACTION_SHUTDOWN);
-        intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
-//        registerReceiver(receiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                if (intent.getAction() == null)
-//                    return;
-//                if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)) {
-//                    stepDetector.setStepCount(0);
-//                } else {
-//                    saveStepData();
-//                }
-//            }
-//        }, intentFilter);
+//        IntentFilter intentFilter = new IntentFilter();
+        //        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        //        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        //        intentFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        //        intentFilter.addAction(Intent.ACTION_SHUTDOWN);
+        //        intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
+        //        registerReceiver(receiver = new BroadcastReceiver() {
+        //            @Override
+        //            public void onReceive(Context context, Intent intent) {
+        //                if (intent.getAction() == null)
+        //                    return;
+        //                if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)) {
+        //                    stepDetector.setStepCount(0);
+        //                } else {
+        //                    saveStepData();
+        //                }
+        //            }
+        //        }, intentFilter);
     }
 
     private void saveStepData() {
@@ -233,6 +237,55 @@ public class PollService extends Service implements SensorEventListener {
 
     private void dealWork() {
         LogUtil.e("拉取单聊消息");
+        BmobQuery<ChatMessage> query = new BmobQuery<>();
+        if (UserManager.getInstance().getCurrentUser() != null) {
+            query.addWhereEqualTo(ConstantUtil.TAG_TO_ID, UserManager.getInstance().getCurrentUserObjectId());
+        } else {
+            return;
+        }
+        query.addWhereEqualTo(ConstantUtil.TAG_MESSAGE_SEND_STATUS, ConstantUtil.SEND_STATUS_SUCCESS);
+        query.addWhereEqualTo(ConstantUtil.TAG_MESSAGE_READ_STATUS, ConstantUtil.READ_STATUS_UNREAD);
+        //                按升序进行排序
+        query.setLimit(50);
+        query.order("createdAt");
+        query.findObjects(new FindListener<ChatMessage>() {
+            @Override
+            public void done(List<ChatMessage> list, BmobException e) {
+                if (e == null) {
+                    LogUtil.e("1拉取单聊消息成功");
+                    if (list != null && list.size() > 0) {
+                        for (ChatMessage item :
+                                list) {
+                            MsgManager.getInstance().dealReceiveChatMessage(item, new OnReceiveListener() {
+                                @Override
+                                public void onSuccess(BaseMessage baseMessage) {
+                                    if (baseMessage instanceof ChatMessage) {
+                                        ChatMessage chatMessage = (ChatMessage) baseMessage;
+                                        CommonLogger.e("接受成功");
+                                        LogUtil.e(chatMessage);
+                                        List<ChatMessage> list = new ArrayList<>(1);
+                                        list.add(chatMessage);
+                                        MessageInfoEvent messageInfoEvent = new MessageInfoEvent(MessageInfoEvent.TYPE_PERSON);
+                                        messageInfoEvent.setChatMessageList(list);
+                                        //                        聊天消息
+                                        RxBusManager.getInstance().post(messageInfoEvent);
+                                        ChatNotificationManager.getInstance(getBaseContext()).sendChatMessageNotification(chatMessage, getBaseContext());
+                                    }
+                                }
+
+                                @Override
+                                public void onFailed(BmobException e) {
+                                    LogUtil.e("接受消息失败!>>>>" + e.getMessage() + e.getErrorCode());
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    LogUtil.e("拉取单聊消息失败");
+                    LogUtil.e("在服务器上查询聊天消息失败：" + e.toString());
+                }
+            }
+        });
         MsgManager.getInstance().getPersonChatInfo(getBaseContext());
         BmobQuery<PostNotifyBean> bmobQuery = new BmobQuery<>();
         bmobQuery.addWhereEqualTo("toUser", new BmobPointer(UserManager.getInstance().getCurrentUser()));
@@ -322,10 +375,9 @@ public class PollService extends Service implements SensorEventListener {
     }
 
 
-
-
     @Override
     public void onDestroy() {
+        CommonLogger.e("PollService:::onDestroy");
         if (disposable != null) {
             disposable.dispose();
         }

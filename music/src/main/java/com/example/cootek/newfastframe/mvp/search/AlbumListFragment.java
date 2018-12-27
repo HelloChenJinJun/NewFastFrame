@@ -95,13 +95,13 @@ public class AlbumListFragment extends MusicBaseFragment<BaseBean, AlbumListPres
                 .build().inject(this);
         artistId = getArguments().getString(MusicUtil.ARTIST_ID);
         mAlbumListAdapter = new AlbumListAdapter();
-        display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 3));
+        display.setLayoutManager(new WrappedGridLayoutManager(getContext(), 2));
         if (artistId != null) {
             display.setLoadMoreFooterView(new LoadMoreFooterView(getContext()));
             display.setOnLoadMoreListener(this);
         }
         root.setBackgroundColor(Color.parseColor("#3C5F78"));
-        display.addItemDecoration(new GridSpaceDecoration(3, DensityUtil.toDp(10), true));
+        display.addItemDecoration(new GridSpaceDecoration(2, DensityUtil.toDp(10), true));
         display.setAdapter(mAlbumListAdapter);
         mAlbumListAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
@@ -111,18 +111,29 @@ public class AlbumListFragment extends MusicBaseFragment<BaseBean, AlbumListPres
         });
         addDisposable(RxBusManager.getInstance().registerEvent(SearchResultBean.class, searchResultBean -> {
             if (searchResultBean.getAlbumBeans() != null) {
-                mAlbumListAdapter.refreshData(searchResultBean.getAlbumBeans());
+                if (mAlbumListAdapter != null) {
+                    mAlbumListAdapter.refreshData(searchResultBean.getAlbumBeans());
+                } else {
+                    data = searchResultBean.getAlbumBeans();
+                }
             }
         }));
-
     }
+
+
+    private List<AlbumWrappedBean> data = null;
+
 
     @Override
     protected void updateView() {
         if (artistId != null) {
             presenter.getAlbumListData(true, artistId);
         } else {
-            mAlbumListAdapter.refreshData((List<AlbumWrappedBean>) getArguments().getSerializable(Constant.DATA));
+            if (data == null) {
+                mAlbumListAdapter.refreshData((List<AlbumWrappedBean>) getArguments().getSerializable(Constant.DATA));
+            } else {
+                mAlbumListAdapter.refreshData(data);
+            }
         }
     }
 

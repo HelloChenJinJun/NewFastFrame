@@ -81,8 +81,7 @@
                 android:id="@+id/tb_fragment_singer_detail_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                app:tabMode="scrollable" />
+                android:layout_alignParentBottom="true" />
         </com.google.android.material.appbar.AppBarLayout>
 
 

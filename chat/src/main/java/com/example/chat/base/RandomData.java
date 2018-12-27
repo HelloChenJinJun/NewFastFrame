@@ -239,12 +239,14 @@ public class RandomData {
 
     public static String getRandomName() {
         Random random = new Random();
+        StringBuilder name = new StringBuilder();
         int index = random.nextInt(nameList.size());
         if (index >= 0 && index < nameList.size()) {
-            return nameList.get(index);
+            name.append(nameList.get(index));
         } else {
-            return nameList.get(0);
+            name.append(nameList.get(0));
         }
+        return name.append(random.nextInt(5000)).toString();
     }
 
 

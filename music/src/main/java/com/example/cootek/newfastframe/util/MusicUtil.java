@@ -44,6 +44,8 @@ public class MusicUtil {
     public static final int FROM_SINGER = 4;
     public static final String ARTIST_ID = "ARTIST_ID";
     public static final int BASE_TYPE_ALBUM_CONTENT = 2;
+    public static final int FROM_LOCAL = 1;
+    public static final int FROM_RECENT = 2;
 
     public static Uri getAlbumArtUri(long paramInt) {
         return ContentUris.withAppendedId(Uri.parse("content://media/exjava.lang.Stringternal/audio/albumart"), paramInt);
@@ -146,4 +148,6 @@ public class MusicUtil {
         }
         return uri;
     }
+
+
 }

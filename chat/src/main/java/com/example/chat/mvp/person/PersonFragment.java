@@ -163,8 +163,8 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
         } else if (id == R.id.rl_fragment_person_index) {
             UserDetailActivity.start(getActivity(), UserManager.getInstance().getCurrentUserObjectId(),
                     ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(avatar, "avatar")
-                            ,Pair.create(signature,"signature")
-            ));
+                            , Pair.create(signature, "signature")
+                    ));
         } else if (id == R.id.rl_fragment_person_notify) {
             SystemNotifyActivity.start(getActivity());
         } else if (id == R.id.rl_fragment_person_comment) {

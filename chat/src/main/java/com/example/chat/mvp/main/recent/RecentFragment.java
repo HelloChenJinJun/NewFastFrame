@@ -1,7 +1,9 @@
 package com.example.chat.mvp.main.recent;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
@@ -22,11 +24,11 @@ import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.service.PollService;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.SkinEntity;
-import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -177,13 +179,17 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
         registerRxBus();
         initSkin();
         initToolBarData();
-
-        getIcon().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RxBusManager.getInstance().post(new DragLayoutEvent());
+        getIcon().setOnClickListener(v -> RxBusManager.getInstance().post(new DragLayoutEvent()));
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null) {
+                RxBusManager.getInstance().post(new NetStatusEvent(networkInfo.isConnected(), networkInfo.getType()));
+            } else {
+                CommonLogger.e("当前没有网络连接");
+                RxBusManager.getInstance().post(new NetStatusEvent(false, 0));
             }
-        });
+        }
     }
 
     private void initToolBarData() {

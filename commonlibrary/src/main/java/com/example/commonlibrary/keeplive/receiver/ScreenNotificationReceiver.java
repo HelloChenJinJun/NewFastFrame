@@ -25,6 +25,7 @@ public class ScreenNotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
+        CommonLogger.e("接收到的action" + action);
         if (action == null) {
             return;
         }

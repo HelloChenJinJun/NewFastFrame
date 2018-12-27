@@ -110,11 +110,7 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
         } else {
             userEntity = UserDBManager.getInstance()
                     .getUser(uid);
-            if (userEntity == null) {
-                showLoading("正在加载用户数据.....");
-                loadUserInfo();
-                return;
-            } else if (UserDBManager.getInstance().isFriend(uid)) {
+            if (UserDBManager.getInstance().isFriend(uid)) {
                 add.setVisibility(View.GONE);
                 black.setVisibility(View.VISIBLE);
                 black.setText("添加为黑名单");
@@ -123,7 +119,7 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
                 black.setVisibility(View.VISIBLE);
                 add.setVisibility(View.GONE);
                 isBlack = true;
-            } else {
+            } else{
                 black.setVisibility(View.GONE);
                 add.setVisibility(View.VISIBLE);
                 chat.setVisibility(View.GONE);
@@ -329,6 +325,10 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
     public static void start(Activity activity, String uid, ActivityOptionsCompat activityOptionsCompat) {
         Intent intent = new Intent(activity, UserInfoActivity.class);
         intent.putExtra(ConstantUtil.ID, uid);
-        activity.startActivity(intent, activityOptionsCompat.toBundle());
+        if (activityOptionsCompat != null) {
+            activity.startActivity(intent, activityOptionsCompat.toBundle());
+        } else {
+            activity.startActivity(intent);
+        }
     }
 }

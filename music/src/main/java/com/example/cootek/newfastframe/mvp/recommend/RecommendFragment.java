@@ -1,5 +1,6 @@
 package com.example.cootek.newfastframe.mvp.recommend;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -44,7 +45,7 @@ public class RecommendFragment extends BaseFragment<RecommendSongBean, Recommend
         if (recommendSongBean.getResult() != null) {
             if (recommendSongBean.getResult().getRadio() != null && recommendSongBean.getResult().getRadio()
                     .getResult() != null && recommendSongBean.getResult().getRadio().getResult().size() > 0) {
-                List<RecommendSongBean.ResultBeanXXXXXXXXXXXXXXXX.RadioBean.ResultBeanXXXXXXXXXXX> list =
+                List<RecommendSongBean.ResultBeanXXXXXXXXXXXXXX.RadioBean.ResultBeanXXXXXXXXXX> list =
                         new ArrayList<>();
                 int size = recommendSongBean.getResult().getRadio().getResult().size();
                 for (int i = 0; i < size; i++) {
@@ -58,7 +59,7 @@ public class RecommendFragment extends BaseFragment<RecommendSongBean, Recommend
 
             if (recommendSongBean.getResult().getDiy() != null && recommendSongBean.getResult().getDiy()
                     .getResult() != null && recommendSongBean.getResult().getDiy().getResult().size() > 0) {
-                List<RecommendSongBean.ResultBeanXXXXXXXXXXXXXXXX.DiyBean.ResultBeanXXXXXXXXX> list =
+                List<RecommendSongBean.ResultBeanXXXXXXXXXXXXXX.DiyBean.ResultBeanXXXXXXXXXXXX> list =
                         new ArrayList<>();
                 int size = recommendSongBean.getResult().getDiy().getResult().size();
                 for (int i = 0; i < size; i++) {
@@ -71,7 +72,7 @@ public class RecommendFragment extends BaseFragment<RecommendSongBean, Recommend
             }
             if (recommendSongBean.getResult().getMix_1() != null && recommendSongBean.getResult().getMix_1()
                     .getResult() != null && recommendSongBean.getResult().getMix_1().getResult().size() > 0) {
-                List<RecommendSongBean.ResultBeanXXXXXXXXXXXXXXXX.Mix1Bean.ResultBean> list =
+                List<RecommendSongBean.ResultBeanXXXXXXXXXXXXXX.Mix1Bean.ResultBean> list =
                         new ArrayList<>();
                 int size = recommendSongBean.getResult().getMix_1().getResult().size();
                 for (int i = 0; i < size; i++) {
@@ -161,6 +162,7 @@ public class RecommendFragment extends BaseFragment<RecommendSongBean, Recommend
                 //                startActivity(intent);
             }
         });
+        root.setBackgroundColor(Color.WHITE);
     }
 
     @Override

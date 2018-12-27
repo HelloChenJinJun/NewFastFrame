@@ -80,6 +80,7 @@ public class ConstantUtil {
     public static final int CHAT_FLAG = 12;
     public static final int COMMENT_LIST_FLAG =13 ;
     public static final String SYSTEM_UID = "3861cb0f0e";
+    public static final int REQUEST_CODE_NAME = 123;
     /**
      * 外部缓存数据的目录
      */

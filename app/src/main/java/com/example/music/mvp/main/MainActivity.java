@@ -239,7 +239,6 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
                         break;
                     case 1:
                         ((RadioButton) findViewById(R.id.rb_activity_main_bottom_public)).setChecked(true);
-                        getSupportActionBar().hide();
                         break;
                     case 2:
                         ((RadioButton) findViewById(R.id.rb_activity_main_bottom_center)).setChecked(true);
@@ -333,6 +332,8 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
         if (!ListVideoManager.getInstance().onBackPressed()) {
             if (dragLayout.getCurrentState() == DragLayout.DRAG_STATE_OPEN) {
                 dragLayout.closeMenu();
+            } else if (bottomContainer.getTranslationY() != 0) {
+                show(bottomContainer);
             } else if (System.currentTimeMillis() - mExitTime > 2000) {
                 ToastUtils.showShortToast("再按一次退出程序");
                 mExitTime = System.currentTimeMillis();

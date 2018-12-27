@@ -10,15 +10,15 @@
         android:id="@+id/tv_item_activity_chat_send_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey_500"
-        android:textSize="12sp"/>
+        android:textColor="@color/white"
+        android:textSize="12sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:layout_marginTop="5dp">
+        android:paddingRight="3dp">
 
         <ImageView
             android:id="@+id/iv_item_activity_chat_send_avatar"
@@ -26,7 +26,7 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:scaleType="centerInside"
-            android:src="@drawable/head"/>
+            android:src="@drawable/head" />
 
         <LinearLayout
             android:id="@+id/ll_item_activity_chat_send_content"
@@ -35,45 +35,48 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/iv_item_activity_chat_send_avatar"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tv_item_activity_chat_send_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="姓名"
-                android:textSize="16sp"
-                />
-                <ViewStub
-                    android:id="@+id/vs_item_activity_chat_send_view_stub"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                android:textSize="16sp" />
+
+            <ViewStub
+                android:id="@+id/vs_item_activity_chat_send_view_stub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
+
         <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@+id/ll_item_activity_chat_send_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_toLeftOf="@+id/ll_item_activity_chat_send_content">
+
             <ImageView
                 android:id="@+id/iv_item_activity_chat_send_retry"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_retry"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
+
             <TextView
                 android:id="@+id/tv_item_activity_chat_send_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="已发送"
-                android:textColor="@color/base_color_text_grey"
-                android:textSize="12sp"/>
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
             <ProgressBar
                 android:id="@+id/pb_item_activity_chat_send_loading"
                 android:layout_width="30dp"
-                android:layout_height="30dp"
-                />
+                android:layout_height="30dp" />
 
         </FrameLayout>
     </RelativeLayout>

@@ -90,14 +90,22 @@ public class SingerListFragment extends MusicBaseFragment {
             public void accept(SearchResultBean searchResultBean) throws Exception {
                 if (searchResultBean.getArtistInfoList() != null) {
                     mSingerListAdapter.refreshData(searchResultBean.getArtistInfoList());
+                    data = searchResultBean.getArtistInfoList();
                 }
             }
         }));
     }
 
+
+    private List<ArtistInfo> data;
+
     @Override
     protected void updateView() {
-        mSingerListAdapter.refreshData((List<ArtistInfo>) getArguments().getSerializable(Constant.DATA));
+        if (data == null) {
+            mSingerListAdapter.refreshData((List<ArtistInfo>) getArguments().getSerializable(Constant.DATA));
+        } else {
+            mSingerListAdapter.refreshData(data);
+        }
     }
 
     @Override

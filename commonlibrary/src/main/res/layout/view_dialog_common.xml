@@ -60,8 +60,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:textColor="#ffcf2736"
                     android:textSize="16sp" />
 
@@ -72,8 +72,8 @@
                     android:layout_weight="1"
                     android:background="@drawable/custom_drawable_selector_box_pay_bg"
                     android:gravity="center"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:textColor="#ffffffff"
                     android:textSize="16sp" />
 

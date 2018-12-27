@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -22,17 +22,13 @@
             android:hint="请输入账号或姓名"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tv_activity_search_friend_query"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
             android:layout_marginLeft="10dp"
+            android:id="@+id/btn_activity_search_friend_query"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
             android:background="@drawable/btn_login_selector"
             android:gravity="center"
-            android:paddingLeft="20dp"
-            android:paddingTop="5dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="5dp"
             android:text="查询"
             android:textColor="@color/base_color_bg_gray" />
     </LinearLayout>

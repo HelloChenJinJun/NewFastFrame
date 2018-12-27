@@ -54,8 +54,18 @@ public class JobSchedulerManager {
         } else {
             builder.setPeriodic(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS);
         }
-        // 设置每3秒执行一下任务
-        builder.setPeriodic(3000);
+        if (Build.VERSION.SDK_INT >= 24) {
+            builder.setMinimumLatency(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS); //执行的最小延迟时间
+            builder.setOverrideDeadline(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS);  //执行的最长延时时间
+            builder.setMinimumLatency(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS);
+            builder.setBackoffCriteria(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS, JobInfo.BACKOFF_POLICY_LINEAR);//线性重试方案
+        } else {
+            builder.setPeriodic(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS);
+        }
+        builder.setPersisted(true);  // 设置设备重启时，执行该任务
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
+        builder.setRequiresCharging(true); // 当插入充电器，执行该任务
+
         // 设置设备重启时，执行该任务
         builder.setPersisted(true);
         // 当插入充电器，执行该任务

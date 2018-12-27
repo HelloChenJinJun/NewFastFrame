@@ -87,7 +87,6 @@ public class KeepLiveService extends Service {
     }
 
 
-
     public static String getKeepLiveService(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SERVICES);

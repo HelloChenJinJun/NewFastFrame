@@ -2,7 +2,6 @@ package com.example.chat.mvp.chat;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.Spannable;
@@ -57,7 +55,6 @@ import com.example.chat.util.CommonUtils;
 import com.example.chat.util.FaceTextUtil;
 import com.example.chat.util.FileUtil;
 import com.example.chat.util.LogUtil;
-import com.example.chat.util.SoftHideBoardUtil;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.adapter.CommonPagerAdapter;
@@ -73,26 +70,27 @@ import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.mvp.base.ImagePreViewActivity;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.NetStatusEvent;
-import com.example.commonlibrary.rxbus.event.PhotoPreEvent;
-import com.example.commonlibrary.utils.CommonLogger;
-import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.PermissionPageUtils;
 import com.example.commonlibrary.utils.PermissionUtil;
+import com.example.commonlibrary.utils.SoftHideBoardUtil;
 import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 项目名称:    HappyChat
@@ -139,7 +137,7 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SoftHideBoardUtil.assistActivity(this, isHide -> {
+        SoftHideBoardUtil.assistActivity(findViewById(R.id.ll_activity_chat_container), isHide -> {
             if (!isHide) {
                 scrollToBottom();
             }
@@ -279,7 +277,7 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
                             temp++;
                         }
                     }
-                    ImagePreViewActivity.start(ChatActivity.this, (ArrayList<String>) urlList, currentPosition, view, ConstantUtil.CHAT_FLAG);
+                    ImagePreViewActivity.start(ChatActivity.this, new ArrayList<>(Collections.singletonList(urlList.get(currentPosition))), 0, view, ConstantUtil.CHAT_FLAG);
                     //                    PhotoPreViewActivity.start(ChatActivity.this, currentPosition, list, false);
                 }
             }
@@ -297,42 +295,6 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
         refreshData();
         scrollToBottom();
         registerRxBus();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setExitSharedElementCallback(new SharedElementCallback() {
-                @Override
-                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                    CommonLogger.e("onMapSharedElements");
-                }
-
-
-                @Override
-                public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
-                    CommonLogger.e("onSharedElementStart");
-                }
-
-
-                @Override
-                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
-                    CommonLogger.e("onSharedElementEnd");
-                }
-
-                @Override
-                public void onSharedElementsArrived(List<String> sharedElementNames, List<View> sharedElements, OnSharedElementsReadyListener listener) {
-                    CommonLogger.e("onSharedElementsArrived");
-                }
-
-
-                @Override
-                public void onRejectSharedElements(List<View> rejectedSharedElements) {
-                    CommonLogger.e("onRejectSharedElements");
-                }
-            });
-            presenter.registerEvent(PhotoPreEvent.class, photoPreEvent -> {
-                if (photoPreEvent.getFlag() == ConstantUtil.CHAT_FLAG) {
-                    index = photoPreEvent.getIndex();
-                }
-            });
-        }
         Glide.with(this).load(UserManager.getInstance().getCurrentUser().getWallPaper())
                 .into(new SimpleTarget<Drawable>() {
                     @Override
@@ -455,7 +417,7 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
                 RxBusManager.getInstance().post(new RecentEvent(uid, RecentEvent.ACTION_ADD));
                 RxBusManager.getInstance().post(new RefreshMenuEvent(0));
             }
-            mAdapter.refreshData(UserDBManager.getInstance().getAllChatMessageById(uid, 0L));
+            mAdapter.refreshData(UserDBManager.getInstance().getAllChatMessageById(uid, System.currentTimeMillis()));
         } else {
             if (UserDBManager.getInstance().updateGroupChatReadStatus(groupId, ConstantUtil.READ_STATUS_READED)) {
                 RxBusManager.getInstance().post(new RecentEvent(groupId, RecentEvent.ACTION_ADD));
@@ -469,7 +431,7 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
     @Override
     public void updateData(BaseMessage baseMessage) {
         mAdapter.addData(baseMessage);
-
+        scrollToBottom();
     }
 
     public static void start(Activity activity, String from, String id) {
@@ -562,13 +524,13 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
             if (message != null) {
                 list.addAll(UserDBManager.getInstance().getAllChatMessageById(uid, message.getCreateTime()));
             } else {
-                list.addAll(UserDBManager.getInstance().getAllChatMessageById(uid, 0L));
+                list.addAll(UserDBManager.getInstance().getAllChatMessageById(uid, System.currentTimeMillis()));
             }
         } else {
             if (message != null) {
                 list.addAll(UserDBManager.getInstance().getAllGroupChatMessageById(groupId, message.getCreateTime()));
             } else {
-                list.addAll(UserDBManager.getInstance().getAllGroupChatMessageById(groupId, 0));
+                list.addAll(UserDBManager.getInstance().getAllGroupChatMessageById(groupId, System.currentTimeMillis()));
             }
         }
         int size = list.size();
@@ -687,15 +649,26 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
                     }
                     break;
                 case SystemUtil.REQUEST_CODE_VIDEO_RECORDER:
-                    Bitmap bitmap = SystemUtil.getVideoThumbnail(videoPath, DensityUtil.getScreenWidth(this), DensityUtil.getScreenHeight(this)
-                            , MediaStore.Images.Thumbnails.MINI_KIND);
-                    String thumbImage = SystemUtil.bitmapToFile(bitmap);
-                    MessageContent messageContent = new MessageContent();
-                    List<String> urlList = new ArrayList<>();
-                    urlList.add(thumbImage);
-                    urlList.add(videoPath);
-                    messageContent.setUrlList(urlList);
-                    sendMessage(messageContent, ConstantUtil.TAG_MSG_TYPE_VIDEO);
+                    ToastUtils.showShortToast("正在解析视频...");
+                    l1_more.setVisibility(View.GONE);
+                    addDisposable(Observable.timer(5, TimeUnit.SECONDS).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>() {
+                        @Override
+                        public void accept(Long aLong) throws Exception {
+                            Glide.with(ChatActivity.this).asBitmap().load(videoPath)
+                                    .into(new SimpleTarget<Bitmap>() {
+                                        @Override
+                                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                            ToastUtils.showShortToast("解析视频成功");
+                                            MessageContent messageContent = new MessageContent();
+                                            List<String> urlList = new ArrayList<>();
+                                            urlList.add(SystemUtil.bitmapToFile(resource));
+                                            urlList.add(videoPath);
+                                            messageContent.setUrlList(urlList);
+                                            sendMessage(messageContent, ConstantUtil.TAG_MSG_TYPE_VIDEO);
+                                        }
+                                    });
+                        }
+                    }));
                     break;
                 case ConstantUtil.REQUEST_MAP:
                     if (data != null) {
@@ -711,6 +684,7 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
                         messageContent1.setLatitude(latitude);
                         messageContent1.setAddress(address);
                         sendMessage(messageContent1, ConstantUtil.TAG_MSG_TYPE_LOCATION);
+                        l1_more.setVisibility(View.GONE);
                     }
                     break;
             }

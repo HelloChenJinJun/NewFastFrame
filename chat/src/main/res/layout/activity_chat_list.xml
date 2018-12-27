@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/refresh_activity_chat_list_refresh"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1">
+    android:layout_height="match_parent"
+    android:id="@+id/ll_activity_chat_list_container"
+    android:orientation="vertical">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout
+        android:id="@+id/refresh_activity_chat_list_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
 
         <com.example.commonlibrary.baseadapter.SuperRecyclerView
@@ -18,35 +18,35 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>
 
 
-        <LinearLayout
-            android:id="@+id/ll_activity_chat_list_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="bottom"
-            android:background="#f6f6f6"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            app:layout_behavior="@string/behavior_footer">
+    <LinearLayout
+        android:id="@+id/ll_activity_chat_list_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="#f6f6f6"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
-            <EditText
-                android:id="@+id/et_activity_chat_list_input"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@null"
-                android:hint="说点什么呢........"
-                android:textColorHint="@color/blue_500" />
+        <EditText
+            android:id="@+id/et_activity_chat_list_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="说点什么呢........"
+            android:textColorHint="@color/blue_500" />
 
-            <ImageView
-                android:id="@+id/iv_activity_chat_list_send"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_chat_bottom_send" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/iv_activity_chat_list_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_chat_bottom_send" />
+    </LinearLayout>
 
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>
+</LinearLayout>
+

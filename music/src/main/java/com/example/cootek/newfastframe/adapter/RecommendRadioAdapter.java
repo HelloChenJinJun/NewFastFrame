@@ -9,7 +9,7 @@ import com.example.cootek.newfastframe.bean.RecommendSongBean;
  * Created by COOTEK on 2017/9/1.
  */
 
-public class RecommendRadioAdapter extends BaseRecyclerAdapter<RecommendSongBean.ResultBeanXXXXXXXXXXXXXXXX.RadioBean.ResultBeanXXXXXXXXXXX
+public class RecommendRadioAdapter extends BaseRecyclerAdapter<RecommendSongBean.ResultBeanXXXXXXXXXXXXXX.RadioBean.ResultBeanXXXXXXXXXX
         , BaseWrappedViewHolder> {
     @Override
     protected int getLayoutId() {
@@ -17,7 +17,7 @@ public class RecommendRadioAdapter extends BaseRecyclerAdapter<RecommendSongBean
     }
 
     @Override
-    protected void convert(BaseWrappedViewHolder holder, RecommendSongBean.ResultBeanXXXXXXXXXXXXXXXX.RadioBean.ResultBeanXXXXXXXXXXX data) {
+    protected void convert(BaseWrappedViewHolder holder, RecommendSongBean.ResultBeanXXXXXXXXXXXXXX.RadioBean.ResultBeanXXXXXXXXXX data) {
         holder.setText(R.id.tv_item_fragment_recommend_radio_description, data.getDesc())
                 .setImageUrl(R.id.iv_item_fragment_recommend_radio_image, data.getPic())
                 .setOnItemChildClickListener(R.id.iv_item_fragment_recommend_radio_image);

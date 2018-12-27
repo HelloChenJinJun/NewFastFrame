@@ -15,12 +15,12 @@ import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.bean.ChatBean;
 import com.example.chat.dagger.feedback.ChatListModule;
 import com.example.chat.dagger.feedback.DaggerChatListComponent;
-import com.example.chat.util.SoftHideBoardUtil;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.listener.OnSimpleItemChildLongClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.utils.SoftHideBoardUtil;
 import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 
@@ -60,7 +60,7 @@ public class ChatListActivity extends ChatBaseActivity<List<ChatBean>, ChatListP
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SoftHideBoardUtil.assistActivity(this, isHide -> {
+        SoftHideBoardUtil.assistActivity(findViewById(R.id.ll_activity_chat_list_container), isHide -> {
             if (!isHide) {
                 scrollToBottom();
             }

@@ -81,6 +81,7 @@ public class MusicInfoProvider {
                         MusicPlayBean music = new MusicPlayBean();
                         CommonLogger.e("data", cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATA)));
                         music.setSongId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns._ID)));
+                        music.setSongUrl(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DATA)));
                         music.setSongName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.TITLE)));
                         music.setArtistId(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST_ID)) + "");
                         music.setArtistName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ARTIST)));
@@ -149,4 +150,8 @@ public class MusicInfoProvider {
         }
         return bm;
     }
+
+
+
+
 }

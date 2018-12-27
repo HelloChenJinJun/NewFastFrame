@@ -103,4 +103,11 @@ public class PlayData {
     public int getPosition() {
         return position;
     }
+
+    public void clear() {
+        this.urlList = null;
+        this.position = 0;
+        randomPositionList = null;
+        playMode = PLAY_MODE_ORDER;
+    }
 }

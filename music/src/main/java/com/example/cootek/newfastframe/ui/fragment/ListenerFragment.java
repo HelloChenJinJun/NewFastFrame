@@ -5,6 +5,8 @@ import android.view.View;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.base.MusicBaseFragment;
 import com.example.cootek.newfastframe.mvp.recent.RecentPlayListFragment;
+import com.example.cootek.newfastframe.mvp.recommend.RecommendFragment;
+import com.example.cootek.newfastframe.util.MusicUtil;
 
 /**
  * 项目名称:    NewFastFrame
@@ -14,8 +16,6 @@ import com.example.cootek.newfastframe.mvp.recent.RecentPlayListFragment;
  */
 
 public class ListenerFragment extends MusicBaseFragment implements View.OnClickListener {
-
-
 
 
     @Override
@@ -60,12 +60,12 @@ public class ListenerFragment extends MusicBaseFragment implements View.OnClickL
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.ll_fragment_listener_local_music) {
-            //            LocalMusicActivity.start(getActivity(), 6);
-            //            addBackStackFragment(RankFragment.newInstance());
+            addBackStackFragment(RecentPlayListFragment.newInstance(MusicUtil.FROM_LOCAL));
         } else if (id == R.id.tv_fragment_music_repository) {
+            addBackStackFragment(RecommendFragment.newInstance());
 
-        }else if (id==R.id.tv_fragment_listener_recent){
-            addBackStackFragment(RecentPlayListFragment.newInstance());
+        } else if (id == R.id.tv_fragment_listener_recent) {
+            addBackStackFragment(RecentPlayListFragment.newInstance(MusicUtil.FROM_RECENT));
         }
     }
 

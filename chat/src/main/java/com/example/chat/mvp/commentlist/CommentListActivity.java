@@ -47,7 +47,6 @@ import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.chat.mvp.commentdetail.CommentListDetailActivity;
 import com.example.chat.util.CommonUtils;
 import com.example.chat.util.FaceTextUtil;
-import com.example.chat.util.SoftHideBoardUtil;
 import com.example.chat.util.TimeUtil;
 import com.example.chat.view.CustomMoveMethod;
 import com.example.commonlibrary.BaseApplication;
@@ -74,6 +73,7 @@ import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.PhotoPreEvent;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
+import com.example.commonlibrary.utils.SoftHideBoardUtil;
 import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.google.gson.Gson;
@@ -164,7 +164,7 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SoftHideBoardUtil.assistActivity(this);
+        SoftHideBoardUtil.assistActivity(findViewById(R.id.ll_activity_comment_list_container), null);
     }
 
     @Override

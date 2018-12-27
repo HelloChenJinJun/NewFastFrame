@@ -44,42 +44,12 @@
             android:textSize="12sp" />
     </RelativeLayout>
 
-
     <RelativeLayout
-        android:id="@+id/rl_fragment_person_edit"
+        android:id="@+id/rl_fragment_person_index"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@color/custom_color_app_content_bg"
-        android:padding="10dp"
-        android:tag="skin">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
-            android:drawablePadding="10dp"
-            android:gravity="center"
-            android:tag="skin"
-            android:text="个人资料"
-            android:textColor="@color/custom_color_text_main"
-            android:textSize="16sp" />
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_fragment_person_index"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:background="@color/custom_color_app_content_bg"
         android:padding="10dp"
         android:tag="skin">
@@ -105,9 +75,8 @@
 
     </RelativeLayout>
 
-
     <RelativeLayout
-        android:id="@+id/rl_fragment_person_settings"
+        android:id="@+id/rl_fragment_person_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -122,7 +91,7 @@
             android:drawablePadding="10dp"
             android:gravity="center"
             android:tag="skin"
-            android:text="设置"
+            android:text="个人资料"
             android:textColor="@color/custom_color_text_main"
             android:textSize="16sp" />
 
@@ -229,6 +198,36 @@
             android:gravity="center"
             android:tag="skin"
             android:text="留言反馈"
+            android:textColor="@color/custom_color_text_main"
+            android:textSize="16sp" />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_keyboard_arrow_right_blue_grey_900_24dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_fragment_person_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/custom_color_app_content_bg"
+        android:padding="10dp"
+        android:tag="skin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_settings_blue_grey_900_24dp"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:tag="skin"
+            android:text="设置"
             android:textColor="@color/custom_color_text_main"
             android:textSize="16sp" />
 

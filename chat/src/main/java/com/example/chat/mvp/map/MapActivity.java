@@ -213,6 +213,7 @@ public class MapActivity extends ChatBaseActivity implements View.OnClickListene
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btn_map_send) {
+            send.setEnabled(false);
             mMap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
                 @Override
                 public void onMapScreenShot(Bitmap bitmap) {

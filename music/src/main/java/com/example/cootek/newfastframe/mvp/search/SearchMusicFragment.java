@@ -102,14 +102,14 @@ public class SearchMusicFragment extends MusicBaseFragment<BaseBean, SearchMusic
         if (fragmentList == null) {
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
             fragmentList = new ArrayList<>();
-            fragmentList.add(SearchMusicListFragment.newInstance((ArrayList<MusicPlayBean>) searchResultBean.getMusicPlayBeanList()));
             fragmentList.add(AlbumListFragment.newInstance((ArrayList<AlbumWrappedBean>) searchResultBean.getAlbumBeans()));
+            fragmentList.add(SearchMusicListFragment.newInstance((ArrayList<MusicPlayBean>) searchResultBean.getMusicPlayBeanList()));
             fragmentList.add(SingerListFragment.newInstance((ArrayList<ArtistInfo>) searchResultBean.getArtistInfoList()));
-            viewPagerAdapter.setTitleAndFragments(Arrays.asList("单曲", "专辑", "歌手"), fragmentList);
+            viewPagerAdapter.setTitleAndFragments(Arrays.asList("专辑", "单曲", "歌手"), fragmentList);
             mTabLayout.setupWithViewPager(display);
             display.setAdapter(viewPagerAdapter);
-            display.setCurrentItem(0);
-
+            display.setOffscreenPageLimit(1);
+            display.setCurrentItem(1);
         } else {
             RxBusManager.getInstance().post(searchResultBean);
         }

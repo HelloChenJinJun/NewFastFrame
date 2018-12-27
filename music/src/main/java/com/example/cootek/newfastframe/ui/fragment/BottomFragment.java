@@ -209,6 +209,8 @@ public class BottomFragment extends MusicBaseFragment<Object, BottomPresenter> i
                     getAppComponent().getDaoSession().getMusicPlayBeanDao()
                             .update(musicPlayBean);
                 }
+            } else if (playStateEvent.getPlayState() == MusicPlayerManager.PLAY_STATE_IDLE) {
+                getActivity().finish();
             }
         });
         presenter.registerEvent(ServiceStateEvent.class, serviceStateEvent -> {

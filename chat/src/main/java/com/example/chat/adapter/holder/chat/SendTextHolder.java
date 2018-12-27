@@ -2,7 +2,6 @@ package com.example.chat.adapter.holder.chat;
 
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.TextView;
 
 import com.example.chat.R;
 import com.example.chat.bean.BaseMessage;
@@ -20,19 +19,19 @@ import com.example.commonlibrary.bean.chat.UserEntity;
  */
 
 public class SendTextHolder extends BaseChatHolder {
-        public SendTextHolder(View itemView) {
-                super(itemView);
-                ViewStub viewStub= (ViewStub) getView(R.id.vs_item_activity_chat_send_view_stub);
-                viewStub.setLayoutResource(R.layout.item_activity_chat_send_text);
-                 viewStub.inflate();
-        }
+    public SendTextHolder(View itemView) {
+        super(itemView);
+        ViewStub viewStub = (ViewStub) getView(R.id.vs_item_activity_chat_send_view_stub);
+        viewStub.setLayoutResource(R.layout.item_activity_chat_send_text);
+        viewStub.inflate();
+    }
 
-        @Override
-        public void bindData(BaseMessage baseMessage, UserEntity userEntity) {
-                MessageContent messageContent= BaseApplication
-                        .getAppComponent().getGson().fromJson(baseMessage.getContent(),MessageContent.class);
-                setText(R.id.tv_item_activity_chat_send_text,FaceTextUtil.toSpannableString(getContext(),messageContent.getContent()));
-        }
+    @Override
+    public void bindData(BaseMessage baseMessage, UserEntity userEntity) {
+        MessageContent messageContent = BaseApplication
+                .getAppComponent().getGson().fromJson(baseMessage.getContent(), MessageContent.class);
+        setText(R.id.tv_item_activity_chat_send_text, FaceTextUtil.toSpannableString(getContext(), messageContent.getContent()));
+    }
 
 
 }

@@ -30,7 +30,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <TextView
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:text="姓名"
                 android:textColor="@color/base_color_text_black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_recent_content"
@@ -80,7 +80,7 @@
                 android:maxLines="1"
                 android:text="内容"
                 android:textColor="@color/base_color_text_grey"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </RelativeLayout>
 

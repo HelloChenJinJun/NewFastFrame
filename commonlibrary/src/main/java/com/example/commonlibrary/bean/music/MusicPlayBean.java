@@ -33,6 +33,24 @@ public class MusicPlayBean implements Serializable {
 
     private long updateTime;
 
+    @Override
+    public String toString() {
+        return "MusicPlayBean{" +
+                "songId=" + songId +
+                ", albumId=" + albumId +
+                ", artistId='" + artistId + '\'' +
+                ", songName='" + songName + '\'' +
+                ", albumName='" + albumName + '\'' +
+                ", artistName='" + artistName + '\'' +
+                ", albumUrl='" + albumUrl + '\'' +
+                ", lrcUrl='" + lrcUrl + '\'' +
+                ", songUrl='" + songUrl + '\'' +
+                ", duration=" + duration +
+                ", isLocal=" + isLocal +
+                ", tingId='" + tingId + '\'' +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 
     @Generated(hash = 979128700)
     public MusicPlayBean(long songId, long albumId, String artistId,

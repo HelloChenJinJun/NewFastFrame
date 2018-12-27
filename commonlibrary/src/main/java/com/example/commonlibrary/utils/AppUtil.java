@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
+import android.util.TypedValue;
 
 import com.example.commonlibrary.BaseApplication;
 
@@ -175,9 +176,9 @@ public class AppUtil {
 
     public static boolean isAppAlive() {
         Context context = BaseApplication.getInstance();
-        if (context!=null) {
+        if (context != null) {
             return isAppRunning(context, context.getPackageName()) || isProcessRunning(context, getPackageUid(context));
-        }else {
+        } else {
             return false;
         }
     }
@@ -239,5 +240,13 @@ public class AppUtil {
             }
         }
         return false;
+    }
+
+    public static int getActionBarHeight(Context context) {
+        TypedValue tv = new TypedValue();
+        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
+        }
+        return 0;
     }
 }
