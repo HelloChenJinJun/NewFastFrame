@@ -62,7 +62,7 @@ public class ChatApplication implements IAppLife {
         LogUtil.e("1服务器端初始化完成");
         CustomInstallation customInstallation = new CustomInstallation();
         customInstallation.save();
-        LogUtil.e("设备ID在这里上传了");
+        LogUtil.e("设备ID在这里上传了" + customInstallation.getInstallationId());
         BmobPush.startWork(application);
         LogUtil.e("推送服务初始化完成");
         RandomData.initAllRanDomData();

@@ -5,7 +5,7 @@ def bakPath = file("${buildDir}/bakApk/")
 /**
  * 此处填写每次构建生成的基准包目录
  */
-def baseApkDir = "app-0417-17-05-50"
+def baseApkDir = "app-1228-21-29-07"
 
 /**
  * 对于插件各参数的详细解析请参考
@@ -28,7 +28,7 @@ tinkerSupport {
     // 编译补丁包时，必需指定基线版本的apk，默认值为空
     // 如果为空，则表示不是进行补丁包的编译
     // @{link tinkerPatch.oldApk }
-    baseApk =  "${bakPath}/${baseApkDir}/app-release.apk"
+    baseApk = "${bakPath}/${baseApkDir}/app-release.apk"
 
     // 对应tinker插件applyMapping
     baseApkProguardMapping = "${bakPath}/${baseApkDir}/app-release-mapping.txt"
@@ -37,13 +37,13 @@ tinkerSupport {
     baseApkResourceMapping = "${bakPath}/${baseApkDir}/app-release-R.txt"
 
     // 构建基准包跟补丁包都要修改tinkerId，主要用于区分
-      tinkerId = "1.0.0-patch"
+    tinkerId = "1.0.1-patch-4"
 
     // 打多渠道补丁时指定目录
     // buildAllFlavorsDir = "${bakPath}/${baseApkDir}"
 
     // 是否使用加固模式，默认为false
-    // isProtectedApp = true
+    isProtectedApp = true
 
     // 是否采用反射Application的方式集成，无须改造Application
     enableProxyApplication = true

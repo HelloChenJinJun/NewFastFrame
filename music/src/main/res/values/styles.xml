@@ -17,6 +17,12 @@
     </style>
 
 
+    <style name="LockScreenTheme" parent="CustomTheme">
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
     <style name="AnimationActivity" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_left</item>
         <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>

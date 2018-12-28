@@ -33,6 +33,8 @@
             android:id="@+id/tv_notification_sub_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="子标题"
             android:textColor="@color/grey_200"
             android:textSize="12sp" />
@@ -43,7 +45,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -74,7 +75,7 @@
             android:id="@+id/iv_notification_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/ic_delete_normal" />
 
     </LinearLayout>

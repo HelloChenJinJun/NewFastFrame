@@ -4,16 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
-import com.example.commonlibrary.SlideBaseActivity;
+import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
+import com.example.commonlibrary.customview.draglayout.DragLayout;
+import com.example.commonlibrary.customview.draglayout.OnDragDeltaChangeListener;
 import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.event.DragEvent;
 import com.example.cootek.newfastframe.ui.fragment.BottomFragment;
 import com.example.cootek.newfastframe.ui.fragment.HolderFragment;
-import com.example.commonlibrary.customview.draglayout.DragLayout;
-import com.example.commonlibrary.customview.draglayout.OnDragDeltaChangeListener;
 import com.example.cootek.newfastframe.view.slide.SlidingPanelLayout;
 
 import io.reactivex.functions.Consumer;
@@ -22,7 +22,7 @@ import io.reactivex.functions.Consumer;
 /**
  * Created by COOTEK on 2017/8/7.
  */
-public class MainActivity extends SlideBaseActivity implements OnLoadMoreListener, CustomSwipeRefreshLayout.OnRefreshListener, OnDragDeltaChangeListener {
+public class MainActivity extends BaseActivity implements OnLoadMoreListener, CustomSwipeRefreshLayout.OnRefreshListener, OnDragDeltaChangeListener {
 
     private SlidingPanelLayout mSlidingPanelLayout;
     private DragLayout dragLayout;
@@ -110,7 +110,6 @@ public class MainActivity extends SlideBaseActivity implements OnLoadMoreListene
 
     @Override
     public void onDrag(View view, float delta) {
-        //        ((HolderFragment) currentFragment).onDrag(delta);
         if (mHolderFragment != null) {
             mHolderFragment.onDrag(delta);
         }

@@ -37,8 +37,8 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_main);
         StatusBarUtil.setTranslucentForImageViewInFragment(this, 0, null);
-        time = (TextView) findViewById(R.id.tv_activity_splash_main_time);
-        TextView title = (TextView) findViewById(R.id.tv_activity_splash_main_title);
+        time = findViewById(R.id.tv_activity_splash_main_time);
+        TextView title = findViewById(R.id.tv_activity_splash_main_title);
         Animation animation = AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_top_in);
         animation.setAnimationListener(this);
         title.startAnimation(animation);
@@ -48,9 +48,9 @@ public class SplashActivity extends AppCompatActivity implements Animation.Anima
     @Override
     protected void onResume() {
         super.onResume();
-        Flowable.intervalRange(0, 3, 0, 1, TimeUnit.SECONDS)
+        Flowable.intervalRange(0, 5, 0, 1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(aLong -> time.setText((3 - aLong) + ""))
+                .doOnNext(aLong -> time.setText((5 - aLong) + ""))
                 .doOnComplete(() -> {
                     //                    倒计时完毕置为可点击状态
                     if (BaseApplication.getAppComponent().getSharedPreferences()

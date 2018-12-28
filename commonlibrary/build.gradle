@@ -32,6 +32,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
     sourceSets {
         main {
@@ -139,19 +142,8 @@ dependencies {
         exclude module:"appcompat-v7"
         exclude module:"support-v4"
     }
-
     api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
-//    compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.8.3'
-//    api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
-//    api 'tv.danmaku.ijk.media:ijkplayer-armv5:0.8.3'
-//    compile 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.3'
-
-//    api 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.3'
-//    compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.3'
-
-
     api rootProject.ext.dependencies.greenDao
-    //    compile rootProject.ext.dependencies.okhttp3
     api rootProject.ext.dependencies.gson
     api rootProject.ext.dependencies.glide
     api rootProject.ext.dependencies.dagger2
@@ -160,8 +152,6 @@ dependencies {
     }
     api rootProject.ext.dependencies.retrofit_converter_scalars
     annotationProcessor rootProject.ext.dependencies.dagger2_compiler
-    //    annotationProcessor rootProject.ext.dependencies.butterknife_compiler
-    //    compile rootProject.ext.dependencies.butterknife
     api rootProject.ext.dependencies.transformations
     api 'androidx.multidex:multidex:2.0.0'
     //    api rootProject.ext.dependencies.arouter_api

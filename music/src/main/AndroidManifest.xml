@@ -26,7 +26,8 @@
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.package.name.lockscreen" />
+            android:taskAffinity="com.package.name.lockscreen"
+            android:theme="@style/LockScreenTheme"/>
 
         <service android:name=".MusicService">
             <intent-filter>

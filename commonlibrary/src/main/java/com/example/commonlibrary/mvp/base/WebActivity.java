@@ -13,8 +13,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.R;
-import com.example.commonlibrary.SlideBaseActivity;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.Constant;
@@ -29,7 +29,7 @@ import androidx.annotation.RequiresApi;
  * QQ:             1981367757
  */
 
-public class WebActivity extends SlideBaseActivity implements View.OnClickListener {
+public class WebActivity extends BaseActivity implements View.OnClickListener {
     private WebView display;
     private ProgressBar mProgressBar;
 

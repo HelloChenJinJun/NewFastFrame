@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import com.example.commonlibrary.SlideBaseActivity;
+import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.router.Router;
 import com.example.commonlibrary.router.RouterRequest;
@@ -27,7 +27,7 @@ import java.util.Map;
  * QQ:             1981367757
  */
 
-public class OtherNewsDetailActivity extends SlideBaseActivity<OtherNewsDetailBean, OtherNewsDetailPresenter> {
+public class OtherNewsDetailActivity extends BaseActivity<OtherNewsDetailBean, OtherNewsDetailPresenter> {
     private RichText content;
     private String url;
     private View view;

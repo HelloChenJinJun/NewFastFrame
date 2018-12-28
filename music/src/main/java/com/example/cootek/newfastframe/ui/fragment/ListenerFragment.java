@@ -2,10 +2,10 @@ package com.example.cootek.newfastframe.ui.fragment;
 
 import android.view.View;
 
+import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.base.MusicBaseFragment;
 import com.example.cootek.newfastframe.mvp.recent.RecentPlayListFragment;
-import com.example.cootek.newfastframe.mvp.recommend.RecommendFragment;
 import com.example.cootek.newfastframe.util.MusicUtil;
 
 /**
@@ -62,7 +62,8 @@ public class ListenerFragment extends MusicBaseFragment implements View.OnClickL
         if (id == R.id.ll_fragment_listener_local_music) {
             addBackStackFragment(RecentPlayListFragment.newInstance(MusicUtil.FROM_LOCAL));
         } else if (id == R.id.tv_fragment_music_repository) {
-            addBackStackFragment(RecommendFragment.newInstance());
+            //            addBackStackFragment(RecommendFragment.newInstance());
+            ToastUtils.showShortToast("推荐界面后期开发");
 
         } else if (id == R.id.tv_fragment_listener_recent) {
             addBackStackFragment(RecentPlayListFragment.newInstance(MusicUtil.FROM_RECENT));

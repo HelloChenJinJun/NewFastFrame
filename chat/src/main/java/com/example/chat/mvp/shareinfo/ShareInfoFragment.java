@@ -65,7 +65,6 @@ import androidx.core.app.SharedElementCallback;
 import androidx.core.util.Pair;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
-import cn.jzvd.JZVideoPlayer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
@@ -471,7 +470,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 shareInfoAdapter.removeEndData(shareInfoAdapter.getData().size() - 10);
             }
             shareInfoAdapter.addData(0, publicPostBeans);
-            manager.scrollToPosition(0);
+            manager.scrollToPositionWithOffset(0, 0);
         } else {
             shareInfoAdapter.addData(publicPostBeans);
         }
@@ -531,7 +530,6 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
     @Override
     public void onPause() {
         super.onPause();
-        JZVideoPlayer.releaseAllVideos();
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }

@@ -25,10 +25,7 @@ android {
         exclude 'META-INF/maven/com.google.code.gson/gson/pom.xml'
         exclude 'META-INF/maven/com.google.code.gson/gson/pom.properties'
     }
-//    aaptOptions {
-//        cruncherEnabled = false
-////        useNewCruncher = false
-//    }
+
     signingConfigs {
         config {
             keyAlias 'chen'
@@ -96,4 +93,6 @@ dependencies {
 
 if (!rootProject.ext.isAlone) {
     apply from: 'tinker-support.gradle'
+    apply from: 'multiple-channel.gradle'
+
 }

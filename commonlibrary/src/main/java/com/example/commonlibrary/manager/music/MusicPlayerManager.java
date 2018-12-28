@@ -6,6 +6,7 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.PlayStateEvent;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.Constant;
 
 import java.io.IOException;
@@ -96,6 +97,9 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
     }
 
 
+    private long seekPosition = 0;
+
+
     @Override
     public void play(long seekPosition) {
         if (mState == PLAY_STATE_PAUSE) {
@@ -117,8 +121,9 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
             mMediaPlayer.reset();
             mMediaPlayer.setDataSource(mPlayData.getCurrentItem().getSongUrl());
             mMediaPlayer.prepareAsync();
+            CommonLogger.e("播放的currentPosition:" + seekPosition);
             if (seekPosition != 0) {
-                mMediaPlayer.seekTo((int) seekPosition);
+                this.seekPosition = seekPosition;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -197,12 +202,11 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
     public void release() {
         if (mMusicPlayBean != null) {
             if (mMediaPlayer != null) {
+                CommonLogger.e("保存currentPosition" + mMediaPlayer.getCurrentPosition());
                 BaseApplication
                         .getAppComponent().getSharedPreferences()
-                        .edit().putLong(Constant.SEEK, mMediaPlayer.getCurrentPosition())
-                        .putInt(Constant.MUSIC_POSITION, mPlayData.getPosition()).apply();
-//                todo
-//                mMediaPlayer.reset();
+                        .edit().putLong(Constant.SEEK, mMediaPlayer.getCurrentPosition()).apply();
+                mMediaPlayer.reset();
             }
         }
         mState = PLAY_STATE_IDLE;
@@ -228,10 +232,17 @@ public class MusicPlayerManager implements IMusicPlayer, MediaPlayer.OnPreparedL
     @Override
     public void onPrepared(MediaPlayer mp) {
         mState = PLAY_STATE_PREPARED;
+        CommonLogger.e("保存的位置:" + mPlayData.getPosition());
         BaseApplication.getAppComponent().getSharedPreferences()
                 .edit().putInt(Constant.MUSIC_POSITION, mPlayData.getPosition()).apply();
         RxBusManager.getInstance().post(new PlayStateEvent(mState));
         mMediaPlayer.start();
+        if (seekPosition != 0) {
+            mMediaPlayer.seekTo((int) seekPosition);
+            seekPosition = 0;
+            BaseApplication.getAppComponent().getSharedPreferences()
+                    .edit().putLong(Constant.SEEK, seekPosition).apply();
+        }
         mState = PLAY_STATE_PLAYING;
         RxBusManager.getInstance().post(new PlayStateEvent(mState));
     }

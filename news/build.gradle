@@ -55,15 +55,6 @@ android {
         })
         implementation project(':commonlibrary')
 
-        implementation ('org.jsoup:jsoup:1.10.1'){
-            exclude module:"appcompat-v7"
-            exclude module:"support-v4"
-
-        }
-        implementation ('com.youth.banner:banner:1.4.9'){
-            exclude module:"appcompat-v7"
-            exclude module:"support-v4"
-        }
 
 //        implementation        // LabelView
         implementation ('com.flyco.labelview:FlycoLabelView_Lib:1.0.2@aar'){
@@ -73,11 +64,7 @@ android {
         }
 
 
-        // photoview
-        implementation ('com.github.chrisbanes.photoview:library:1.2.4'){
-            exclude module:"appcompat-v7"
-            exclude module:"support-v4"
-        }
+
         annotationProcessor rootProject.ext.dependencies.dagger2_compiler
         testImplementation 'junit:junit:4.12'
     }

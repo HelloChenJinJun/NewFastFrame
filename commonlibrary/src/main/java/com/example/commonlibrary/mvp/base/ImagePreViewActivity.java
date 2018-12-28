@@ -65,6 +65,12 @@ public class ImagePreViewActivity extends BaseActivity {
         return false;
     }
 
+
+    @Override
+    protected boolean needSlide() {
+        return false;
+    }
+
     @Override
     protected int getContentLayout() {
         return R.layout.activity_image_preview;

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 
 import com.example.chat.base.AppBasePresenter;
 import com.example.chat.base.ConstantUtil;
+import com.example.chat.bean.CustomInstallation;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
@@ -68,6 +69,8 @@ public class LoginPresenter extends AppBasePresenter<IView<Object>, DefaultModel
                                                addSubscription(UserManager.getInstance().checkInstallation(new UpdateListener() {
                                                    @Override
                                                    public void done(BmobException e) {
+                                                       UserManager.getInstance().updateUserInfo(ConstantUtil.INSTALL_ID,new CustomInstallation().getInstallationId()
+                                                       ,null);
                                                        if (e == null) {
                                                            iView.showLoading("正在获取好友资料.........");
                                                            updateUserInfo();

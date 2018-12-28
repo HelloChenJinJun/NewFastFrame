@@ -1,6 +1,7 @@
 package com.example.commonlibrary;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,6 +32,10 @@ import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.komi.slider.ISlider;
+import com.komi.slider.SliderConfig;
+import com.komi.slider.SliderUtils;
+import com.komi.slider.position.SliderPosition;
 import com.trello.rxlifecycle3.LifecycleTransformer;
 import com.trello.rxlifecycle3.components.support.RxAppCompatActivity;
 import com.umeng.analytics.MobclickAgent;
@@ -73,6 +78,36 @@ public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppComp
     protected ImageView back;
     private CompositeDisposable compositeDisposable;
     protected ViewGroup bg;
+
+    protected ISlider iSlider;
+
+
+    protected boolean needSlide() {
+        return true;
+    }
+
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (needSlide()) {
+            SliderConfig mConfig = new SliderConfig.Builder()
+                    .primaryColor(Color.TRANSPARENT)
+                    .secondaryColor(Color.TRANSPARENT)
+                    .position(SliderPosition.LEFT)
+                    .edge(true)
+                    .build();
+            iSlider = SliderUtils.attachActivity(this, mConfig);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (iSlider != null) {
+            iSlider.slideExit();
+        }
+    }
 
 
     //    字体初始化

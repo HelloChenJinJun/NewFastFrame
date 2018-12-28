@@ -758,7 +758,7 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
         @Override
         public void onLoadMore(RecyclerView recyclerView) {
             if (mLoadMoreEnabled && mOnLoadMoreListener != null && !isRefreshing()) {
-                if (mLoadMoreFooterView != null && mLoadMoreFooterView instanceof LoadMoreFooterView
+                if (mLoadMoreFooterView instanceof LoadMoreFooterView
                         && ((LoadMoreFooterView) mLoadMoreFooterView).getStatus() != LoadMoreFooterView.Status.LOADING) {
                     ((LoadMoreFooterView) mLoadMoreFooterView).setStatus(LoadMoreFooterView.Status.LOADING);
                 }
@@ -767,13 +767,39 @@ public class SuperRecyclerView extends SwipeMenuRecyclerView {
         }
     };
 
+
     private boolean isRefreshing() {
+
+
         if (getParent() != null && (getParent() instanceof SwipeRefreshLayout || getParent() instanceof CustomSwipeRefreshLayout)) {
             if (getParent() instanceof SwipeRefreshLayout) {
                 SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) getParent();
                 return refreshLayout.isRefreshing();
             } else {
-                return ((CustomSwipeRefreshLayout) getParent()).isRefreshing();
+
+                CustomSwipeRefreshLayout customSwipeRefreshLayout = (CustomSwipeRefreshLayout) getParent();
+                if (customSwipeRefreshLayout.isEnabled()) {
+                    return ((CustomSwipeRefreshLayout) getParent()).isRefreshing();
+                } else {
+                    int i = 0;
+                    ViewGroup viewGroup = customSwipeRefreshLayout;
+                    while (i < 6) {
+                        i++;
+                        if (viewGroup == null) {
+                            break;
+                        }
+                        if (viewGroup.getParent() instanceof CustomSwipeRefreshLayout) {
+                            viewGroup = (ViewGroup) viewGroup.getParent();
+                            break;
+                        } else {
+                            viewGroup = (ViewGroup) viewGroup.getParent();
+                        }
+                    }
+                    if (viewGroup instanceof CustomSwipeRefreshLayout) {
+                        return ((CustomSwipeRefreshLayout) viewGroup).isRefreshing();
+                    }
+                    return false;
+                }
             }
         } else {
             return mStatus != STATUS_DEFAULT;

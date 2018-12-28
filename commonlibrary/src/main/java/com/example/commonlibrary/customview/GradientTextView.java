@@ -1,4 +1,4 @@
-package com.example.cootek.newfastframe.view;
+package com.example.commonlibrary.customview;
 
 import android.content.Context;
 import android.graphics.Canvas;

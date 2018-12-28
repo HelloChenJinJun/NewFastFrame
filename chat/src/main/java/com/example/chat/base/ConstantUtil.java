@@ -81,6 +81,7 @@ public class ConstantUtil {
     public static final int COMMENT_LIST_FLAG =13 ;
     public static final String SYSTEM_UID = "3861cb0f0e";
     public static final int REQUEST_CODE_NAME = 123;
+    public static final String INSTALL_ID = "install_id";
     /**
      * 外部缓存数据的目录
      */

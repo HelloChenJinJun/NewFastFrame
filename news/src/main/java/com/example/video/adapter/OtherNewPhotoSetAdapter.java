@@ -7,13 +7,12 @@ import android.view.ViewGroup;
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.video.R;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.viewpager.widget.PagerAdapter;
-import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * 项目名称:    NewFastFrame
@@ -23,7 +22,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 
 public class OtherNewPhotoSetAdapter extends PagerAdapter {
-    private List<String>  imageList=new ArrayList<>();
+    private List<String> imageList = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -31,42 +30,37 @@ public class OtherNewPhotoSetAdapter extends PagerAdapter {
     }
 
 
-
-
     public void setImageList(List<String> imageList) {
-        if (imageList!=null) {
+        if (imageList != null) {
             this.imageList = imageList;
         }
     }
 
 
-
-
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
-            View view= LayoutInflater.from(container.getContext())
-                    .inflate(R.layout.item_activity_other_new_photo_set,null);
-        PhotoView photoView=(PhotoView)view.findViewById(R.id.pv_item_activity_other_new_photo_set_display);
-        photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+        View view = LayoutInflater.from(container.getContext())
+                .inflate(R.layout.item_activity_other_new_photo_set, null);
+        PhotoView photoView = view.findViewById(R.id.pv_item_activity_other_new_photo_set_display);
+        photoView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPhotoTap(View view, float x, float y) {
+            public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(view,position);
+                    onItemClickListener.onItemClick(v, position);
                 }
             }
         });
         BaseApplication
                 .getAppComponent().getImageLoader().loadImage(container.getContext()
-        ,new GlideImageLoaderConfig.Builder().imageView(photoView)
-        .url(imageList.get(position)).centerInside().build());
+                , new GlideImageLoaderConfig.Builder().imageView(photoView)
+                        .url(imageList.get(position)).centerInside().build());
         container.addView(view);
         return view;
     }
 
 
-
-    public interface OnItemClickListener{
-        public void onItemClick(View view,int position);
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int position);
     }
 
     @Override
@@ -76,7 +70,7 @@ public class OtherNewPhotoSetAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view==object;
+        return view == object;
     }
 
 

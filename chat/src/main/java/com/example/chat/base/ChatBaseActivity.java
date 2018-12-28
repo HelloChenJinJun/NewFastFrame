@@ -4,8 +4,8 @@ import com.example.chat.ChatApplication;
 import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.login.LoginActivity;
+import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.BaseApplication;
-import com.example.commonlibrary.SlideBaseActivity;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;
 
 import java.util.HashSet;
@@ -21,7 +21,7 @@ import rx.Subscription;
  * QQ:             1981367757
  */
 
-public abstract class ChatBaseActivity<T, P extends BasePresenter> extends SlideBaseActivity<T, P> {
+public abstract class ChatBaseActivity<T, P extends BasePresenter> extends BaseActivity<T, P> {
 
     protected Set<Subscription> subscriptionSet = new HashSet<>();
 

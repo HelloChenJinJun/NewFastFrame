@@ -121,7 +121,7 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
                 //                startActivity(intent);
                 break;
             case "添加好友":
-                ToastUtils.showShortToast("点击了添加好友");
+                ToastUtils.showShortToast("点击了添加好友111");
                 SearchFriendActivity.start(this);
                 break;
             case "建群":
@@ -193,6 +193,7 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
         headLayout.setOnClickListener(this);
         dragLayout.setListener(this);
         bottomContainer.setOnCheckedChangeListener((group, checkedId) -> {
+            ToastUtils.showShortToast("补丁");
             if (checkedId == R.id.rb_activity_main_bottom_index) {
                 display.setCurrentItem(3, false);
             } else if (checkedId == R.id.rb_activity_main_bottom_public) {
@@ -413,7 +414,10 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
     @Override
     public void onDrag(View view, float delta) {
         if (fragmentList.get(display.getCurrentItem()) instanceof RecentFragment) {
-            ViewHelper.setAlpha(((RecentFragment) fragmentList.get(display.getCurrentItem())).getIcon(), (1 - delta));
+            View icon = ((RecentFragment) fragmentList.get(display.getCurrentItem())).getIcon();
+            if (icon != null) {
+                ViewHelper.setAlpha(icon, (1 - delta));
+            }
         }
     }
 

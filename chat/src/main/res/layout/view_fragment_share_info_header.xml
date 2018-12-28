@@ -12,6 +12,7 @@
         android:scaleType="center" />
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/ll_view_fragment_share_info_header_unread"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

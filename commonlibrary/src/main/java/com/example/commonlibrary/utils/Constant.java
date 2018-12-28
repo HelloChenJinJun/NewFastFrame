@@ -17,10 +17,10 @@ public class Constant {
     //    默认Base URL
     //    8990正式服端口、、、、、、、、8992测试服端口
 
-    public static final String BASE_URL = BuildConfig.DEBUG ? "http://120.78.168.113:8992/" : "http://bacao.wawazhuawawa.com:8990/";
+    public static final String BASE_URL = BuildConfig.DEBUG ? "http://www.baidu.com" : "http://www.baidu.com";
     public static final String DESIGNED_WIDTH = "designed_width";
     public static final String DESIGNED_HEIGHT = "designed_height";
-    public static final String UM_KEY = "5bbf0ba6f1f5568e9d000011";
+    public static final String UM_KEY = "5c25a61af1f55630e7000187";
     public static final String WALLPAPER = "wallpaper";
     public static final String DATA = "data";
     public static final String TITLE = "title";

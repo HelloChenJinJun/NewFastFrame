@@ -17,6 +17,7 @@ import com.example.chat.events.UserInfoUpdateEvent;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.UserDetail.UserDetailActivity;
+import com.example.chat.mvp.about.AboutActivity;
 import com.example.chat.mvp.commentnotify.CommentNotifyActivity;
 import com.example.chat.mvp.editInfo.EditUserInfoActivity;
 import com.example.chat.mvp.feedback.ChatListActivity;
@@ -95,6 +96,7 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
         edit.setOnClickListener(this);
         index.setOnClickListener(this);
         notify.setOnClickListener(this);
+        findViewById(R.id.rl_fragment_person_about).setOnClickListener(this);
         findViewById(R.id.rl_fragment_person_feedback).setOnClickListener(this);
         titleBg.setOnLongClickListener(v -> {
             PhotoSelectActivity.start(this, ConstantUtil.TITLE_WALLPAPER, true, false, null);
@@ -171,6 +173,8 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
             CommentNotifyActivity.start(getActivity(), null);
         } else if (id == R.id.rl_fragment_person_feedback) {
             ChatListActivity.start(getActivity());
+        } else if (id == R.id.rl_fragment_person_about) {
+            AboutActivity.start(getActivity());
         }
     }
 

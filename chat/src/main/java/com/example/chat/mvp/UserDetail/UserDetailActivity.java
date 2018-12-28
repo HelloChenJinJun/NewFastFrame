@@ -139,6 +139,7 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         ViewCompat.setTransitionName(name, "name");
         ViewCompat.setTransitionName(sex, "sex");
         ViewCompat.setTransitionName(signature, "signature");
+        ViewCompat.setTransitionName(container, "header");
         refresh.setOnRefreshListener(this);
     }
 

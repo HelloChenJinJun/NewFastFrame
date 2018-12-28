@@ -25,6 +25,7 @@ import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.utils.CommonLogger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -155,7 +156,10 @@ public class UserManager {
      */
     public String getCurrentUserObjectId() {
         if (uid == null) {
-            uid = getCurrentUser().getObjectId();
+            User user = getCurrentUser();
+            if (user != null) {
+                uid = user.getObjectId();
+            }
         }
         return uid;
     }
@@ -273,6 +277,10 @@ public class UserManager {
      * @param findListener 回调
      */
     public Subscription findUserById(String uid, FindListener<User> findListener) {
+        if (uid.equals(UserManager.getInstance().getCurrentUserObjectId())) {
+            findListener.done(Collections.singletonList(UserManager.getInstance().getCurrentUser()), null);
+            return null;
+        }
         UserEntity userEntity = UserDBManager.getInstance().getUser(uid);
         if (userEntity == null) {
             BmobQuery<User> query = new BmobQuery<>();
@@ -450,6 +458,7 @@ public class UserManager {
         BmobQuery<CustomInstallation> query = new BmobQuery<>();
         CommonLogger.e("checkInstallation UID：" + getCurrentUserObjectId());
         query.addWhereEqualTo("uid", getCurrentUserObjectId());
+        query.order("-updatedAt");
         return query.findObjects(new FindListener<CustomInstallation>() {
                                      @Override
                                      public void done(List<CustomInstallation> list, BmobException e) {
@@ -484,7 +493,6 @@ public class UserManager {
                                              listener.done(e);
                                          }
                                      }
-
                                  }
         );
     }
@@ -532,6 +540,8 @@ public class UserManager {
             case ConstantUtil.WALLPAPER:
                 user.setWallPaper(content);
                 break;
+            case ConstantUtil.INSTALL_ID:
+                user.setInstallId(content);
         }
         user.update(new UpdateListener() {
             @Override

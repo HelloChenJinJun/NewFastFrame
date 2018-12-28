@@ -1,7 +1,6 @@
 package com.example.music;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 
 import com.example.commonlibrary.BaseApplication;
@@ -12,8 +11,6 @@ import com.example.commonlibrary.router.RouterRequest;
 import com.example.commonlibrary.router.RouterResult;
 import com.example.commonlibrary.utils.Constant;
 import com.example.music.mvp.main.MainActivity;
-
-import androidx.multidex.MultiDex;
 
 
 /**
@@ -45,11 +42,7 @@ public class App extends BaseApplication {
     }
 
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(base);
-    }
+
 
 
 }

@@ -39,7 +39,8 @@
             android:gravity="start"
             android:hint="这一刻的想法"
             android:lineSpacingExtra="5dp"
-            android:textColorHint="@color/base_color_text_blue" />
+            android:textColorHint="@color/grey_500"
+            android:textSize="14sp" />
     </LinearLayout>
 
 

@@ -2,16 +2,22 @@ package com.example.cootek.newfastframe.mvp.lock;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.commonlibrary.SlideBaseActivity;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.bean.music.MusicPlayBean;
 import com.example.commonlibrary.manager.music.MusicPlayerManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.PlayStateEvent;
+import com.example.commonlibrary.utils.BlurBitmapUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.cootek.newfastframe.MusicManager;
@@ -27,6 +33,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -37,12 +45,13 @@ import io.reactivex.functions.Consumer;
  * 创建人:      陈锦军
  * 创建时间:    2018/12/27     19:47
  */
-public class LockScreenActivity extends SlideBaseActivity implements View.OnClickListener {
+public class LockScreenActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView time, week, title, name;
     private ImageView pre, next, play;
     private LrcView bottomLrc;
     public static boolean is_lock = false;
+    private RelativeLayout container;
 
     public static void start(Context context) {
         if (!is_lock) {
@@ -80,6 +89,7 @@ public class LockScreenActivity extends SlideBaseActivity implements View.OnClic
 
     @Override
     protected void initView() {
+        container = findViewById(R.id.rl_activity_lock_screen_container);
         time = findViewById(R.id.tv_activity_lock_screen_time);
         week = findViewById(R.id.tv_activity_lock_screen_week);
         title = findViewById(R.id.tv_activity_lock_screen_title);
@@ -132,7 +142,7 @@ public class LockScreenActivity extends SlideBaseActivity implements View.OnClic
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mMusicPlayBean = MusicPlayerManager.getInstance().getMusicPlayBean();
         updateContent();
-        addDisposable(Observable.interval(1, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+        addDisposable(Observable.interval(200, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm-MM月dd日 E", Locale.CHINESE);
                     String date[] = simpleDateFormat.format(new Date()).split("-");
@@ -175,6 +185,12 @@ public class LockScreenActivity extends SlideBaseActivity implements View.OnClic
         if (mMusicPlayBean != null) {
             name.setText(mMusicPlayBean.getArtistName());
             title.setText(mMusicPlayBean.getSongName());
+            Glide.with(this).asBitmap().load(mMusicPlayBean.getAlbumUrl()).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    container.setBackground(BlurBitmapUtil.createBlurredImageFromBitmap(resource, LockScreenActivity.this, 20));
+                }
+            });
         }
     }
 

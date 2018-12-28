@@ -97,6 +97,8 @@
         <activity android:name=".mvp.main.invitation.InvitationActivity" />
         <activity android:name=".mvp.main.friends.FriendsActivity" />
         <activity android:name=".mvp.feedback.ChatListActivity" />
+        <activity android:name=".mvp.about.AboutActivity" />
+        <activity android:name=".mvp.developer.DeveloperInfoActivity" />
 
 
         <intent-filter>

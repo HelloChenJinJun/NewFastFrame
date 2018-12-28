@@ -6,6 +6,7 @@ import com.example.commonlibrary.bean.music.MusicPlayBeanDao;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
 import com.example.commonlibrary.mvp.view.IView;
+import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.FileUtil;
 import com.example.cootek.newfastframe.MusicManager;
@@ -101,8 +102,10 @@ public class BottomPresenter extends RxBasePresenter<IView<Object>, DefaultModel
                     .getRepositoryManager().getDaoSession().getMusicPlayBeanDao()
                     .queryBuilder().where(MusicPlayBeanDao.Properties
                             .SongUrl.in(urlList)).build().list();
-            MusicManager.getInstance().play(data, BaseApplication.getAppComponent()
-                            .getSharedPreferences().getInt(Constant.MUSIC_POSITION, 0)
+            int position = BaseApplication.getAppComponent()
+                    .getSharedPreferences().getInt(Constant.MUSIC_POSITION, 0);
+            CommonLogger.e("获取的位置:" + position);
+            MusicManager.getInstance().play(data, position
                     , BaseApplication.getAppComponent().getSharedPreferences()
                             .getLong(Constant.SEEK, 0L));
         }

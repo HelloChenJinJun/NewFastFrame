@@ -16,12 +16,14 @@ import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
 import com.example.commonlibrary.bean.BaseBean;
 import com.example.commonlibrary.customview.WrappedViewPager;
 import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
+import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.BlurBitmapUtil;
 import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.StatusBarUtil;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.base.MusicBaseFragment;
 import com.example.cootek.newfastframe.bean.ArtistInfo;
+import com.example.cootek.newfastframe.event.DragEvent;
 import com.example.cootek.newfastframe.mvp.search.AlbumListFragment;
 import com.example.cootek.newfastframe.mvp.songlist.SongListFragment;
 import com.example.cootek.newfastframe.util.MusicUtil;
@@ -38,6 +40,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.transition.TransitionInflater;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * 项目名称:    NewFastFrame
@@ -159,7 +162,28 @@ public class SingerDetailFragment extends MusicBaseFragment<BaseBean, SingerDeta
         mViewPagerAdapter.setTitleAndFragments(titleList, listFragments);
         mTabLayout.setupWithViewPager(display);
         display.setAdapter(mViewPagerAdapter);
+        display.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    RxBusManager.getInstance().post(new DragEvent(false));
+                } else {
+                    RxBusManager.getInstance().post(new DragEvent(true));
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         display.setCurrentItem(0);
+        RxBusManager.getInstance().post(new DragEvent(false));
     }
 
     @Override

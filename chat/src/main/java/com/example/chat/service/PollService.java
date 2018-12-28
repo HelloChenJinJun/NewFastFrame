@@ -92,7 +92,7 @@ public class PollService extends KeepLiveService implements SensorEventListener 
             disposable.dispose();
         }
 
-        if (UserDBManager.getInstance().getStepData(TimeUtil
+        if (UserManager.getInstance().getCurrentUserObjectId() != null && UserDBManager.getInstance().getStepData(TimeUtil
                 .getTime(System.currentTimeMillis(), "yyyy-MM-dd")) == null) {
             BmobQuery<StepBean> bmobQuery = new BmobQuery<>();
             bmobQuery.addWhereEqualTo("time", TimeUtil
@@ -158,8 +158,11 @@ public class PollService extends KeepLiveService implements SensorEventListener 
         if (sensor == null) {
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         }
-        StepData stepData = UserDBManager.getInstance()
-                .getStepData(TimeUtil.getTime(System.currentTimeMillis(), "yyyy-MM-dd"));
+        StepData stepData = null;
+        if (UserManager.getInstance().getCurrentUserObjectId() != null) {
+            stepData = UserDBManager.getInstance()
+                    .getStepData(TimeUtil.getTime(System.currentTimeMillis(), "yyyy-MM-dd"));
+        }
         int count = 0;
         if (stepData != null) {
             count = stepData.getStepCount();
@@ -173,7 +176,7 @@ public class PollService extends KeepLiveService implements SensorEventListener 
     }
 
     private void dealReceiver() {
-//        IntentFilter intentFilter = new IntentFilter();
+        //        IntentFilter intentFilter = new IntentFilter();
         //        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         //        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         //        intentFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);

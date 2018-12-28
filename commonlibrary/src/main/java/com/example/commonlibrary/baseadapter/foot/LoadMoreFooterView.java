@@ -64,8 +64,7 @@ public class LoadMoreFooterView extends FrameLayout {
                 }
             }
         });
-
-        mStatus = Status.GONE;
+        mStatus = Status.LOADING;
         change();
     }
 
