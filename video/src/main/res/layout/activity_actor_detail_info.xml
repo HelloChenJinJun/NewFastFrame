@@ -102,7 +102,7 @@
             android:layout_gravity="end|bottom"
             android:layout_margin="15dp"
             app:layout_behavior="@string/fab_transformation_scrim_behavior"
-            fab:fab_icon="@drawable/ic_person_info" />
+            app:srcCompat="@drawable/ic_person_info" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

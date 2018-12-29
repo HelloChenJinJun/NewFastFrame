@@ -51,7 +51,7 @@
             fab:fab_colorNormal="@color/pink"
             fab:fab_colorPressed="@color/pink_pressed"
             fab:fab_icon="@drawable/ic_photo_white_24dp"
-            fab:fab_title="图片说说"
+            fab:fab_title="图片"
 
             />
 
@@ -62,7 +62,7 @@
             fab:fab_colorNormal="@color/pink"
             fab:fab_colorPressed="@color/pink_pressed"
             fab:fab_icon="@drawable/ic_mode_edit_blue_grey_900_24dp"
-            fab:fab_title="说说" />
+            fab:fab_title="文本" />
 
 
     </com.example.chat.view.fab.FloatingActionsMenu>

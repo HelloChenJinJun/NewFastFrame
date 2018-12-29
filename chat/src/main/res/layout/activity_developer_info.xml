@@ -13,6 +13,15 @@
             android:layout_width="match_parent"
             android:layout_height="290dp">
 
+
+            <ImageView
+                android:id="@+id/iv_activity_developer_info_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="25dp"
+                android:src="@drawable/ic_back" />
+
             <RelativeLayout
                 android:id="@+id/rl_activity_developer_info_container"
                 android:layout_width="wrap_content"

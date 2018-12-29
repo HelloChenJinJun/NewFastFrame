@@ -32,7 +32,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
 import androidx.multidex.MultiDex;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by COOTEK on 2017/7/28.
@@ -259,10 +258,10 @@ public class BaseApplication extends Application implements View.OnClickListener
     }
 
     private void initFont() {
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/PingFang_Medium.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
+//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+//                .setDefaultFontPath("fonts/PingFang_Medium.ttf")
+//                .setFontAttrId(R.attr.fontPath)
+//                .build());
     }
 
 

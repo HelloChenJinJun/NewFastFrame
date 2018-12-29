@@ -1,9 +1,8 @@
-package com.example.chat.mvp.login;
-
-import android.content.SharedPreferences;
+package com.example.chat.mvp.login.phone;
 
 import com.example.chat.base.AppBasePresenter;
 import com.example.chat.base.ConstantUtil;
+import com.example.chat.base.RandomData;
 import com.example.chat.bean.CustomInstallation;
 import com.example.chat.bean.GroupTableMessage;
 import com.example.chat.manager.MsgManager;
@@ -11,6 +10,7 @@ import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.bean.BaseBean;
 import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
@@ -20,73 +20,117 @@ import com.example.commonlibrary.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobGeoPoint;
+import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * 项目名称:    NewFastFrame
  * 创建人:      陈锦军
- * 创建时间:    2017/12/27     13:50
- * QQ:         1981367757
+ * 创建时间:    2018/12/29     16:18
  */
-
-public class LoginPresenter extends AppBasePresenter<IView<Object>, DefaultModel> {
-
-    public LoginPresenter(IView<Object> iView, DefaultModel baseModel) {
+public class PhoneLoginPresenter extends AppBasePresenter<IView<BaseBean>, DefaultModel> {
+    public PhoneLoginPresenter(IView<BaseBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
 
-    public void login(String account, String password) {
-        iView.showLoading("正在登录......");
-        final User user = new User();
-        user.setUsername(account);
-        user.setPassword(password);
-        SharedPreferences sharedPreferences = BaseApplication.getAppComponent().getSharedPreferences();
-        if (sharedPreferences.getString(ConstantUtil.LONGITUDE, null) != null) {
-            user.setLocation(new BmobGeoPoint(Double.parseDouble(sharedPreferences.getString(ConstantUtil.LONGITUDE, null)),
-                    Double.parseDouble(sharedPreferences.getString(ConstantUtil.LATITUDE, null))));
-        }
-        addSubscription(user.login(new SaveListener<BmobUser>() {
-                                       @Override
-                                       public void done(BmobUser bmobUser, BmobException e) {
-                                           if (e == null) {
-                                               ToastUtils.showShortToast("登录成功");
-                                               LogUtil.e("登录成功");
-                                               BaseApplication.getAppComponent()
-                                                       .getSharedPreferences()
-                                                       .edit().putBoolean(ConstantUtil.LOGIN_STATUS, true)
-                                                       .apply();
-                                               //                                        登录成功之后，
-                                               //                                        检查其他设备绑定的用户，强迫其下线
-                                               LogUtil.e("检查该用户绑定的其他设备.....");
-                                               addSubscription(UserManager.getInstance().checkInstallation(new UpdateListener() {
-                                                   @Override
-                                                   public void done(BmobException e) {
-                                                       UserManager.getInstance().updateUserInfo(ConstantUtil.INSTALL_ID,new CustomInstallation().getInstallationId()
-                                                       ,null);
-                                                       if (e == null) {
-                                                           iView.showLoading("正在获取好友资料.........");
-                                                           updateUserInfo();
-                                                       } else {
-                                                           ToastUtils.showShortToast("登录失败,请重新登录" + e.toString());
-                                                           CommonLogger.e("登录失败" + e.toString());
-                                                           iView.hideLoading();
-                                                       }
-                                                   }
-                                               }));
-                                           } else {
-                                               ToastUtils.showShortToast("登录失败" + e.toString());
-                                               iView.hideLoading();
-                                           }
-                                       }
-                                   }
-        ));
+    public void getVerifyCode(String phone) {
+        BmobSMS.requestSMSCode(phone, "chat", new QueryListener<Integer>() {
+            @Override
+            public void done(Integer smsId, BmobException ex) {
+                BaseBean baseBean = new BaseBean();
+                baseBean.setType(ConstantUtil.BASE_TYPE_SEND_VERIFY_CODE);
+                if (ex == null) {//验证码发送成功
+                    baseBean.setCode(200);
+                    baseBean.setData(smsId);
+                    CommonLogger.e("smile", "短信id：" + smsId);
+                } else {
+                    baseBean.setCode(0);
+                    baseBean.setDesc(ex.getMessage());
+                }
+                iView.updateData(baseBean);
+            }
+        });
+
     }
 
+    public void login(String phone, String code) {
+        iView.showLoading("注册中。。。。。。。");
+        User user = new User();
+        //设置手机号码（必填）
+        user.setMobilePhoneNumber(phone);
+
+
+        //        以下信息只针对注册用户而言，已经注册过得用户，数据不会覆盖
+        //                                默认注册为男性
+        user.setSex(true);
+        //                                 设备类型
+        user.setDeviceType("android");
+        //                                与设备ID绑定
+        CustomInstallation customInstallation = new CustomInstallation();
+        user.setInstallId(customInstallation.getInstallationId());
+        user.setNick(RandomData.getRandomNick());
+        user.setSignature(RandomData.getRandomSignature());
+        user.setAvatar(RandomData.getRandomAvatar());
+        LogUtil.e("用户的头像信息:" + user.getAvatar());
+        //        user.setPassword("");
+        user.setTitleWallPaper(RandomData.getRandomTitleWallPaper());
+        user.setSchool("中国地质大学(武汉)");
+        user.setName(RandomData.getRandomName());
+        user.setCollege(RandomData.getRandomCollege());
+        user.setYear(RandomData.getRandomYear());
+        user.setEducation(RandomData.getRandomEducation());
+        user.setClassNumber(RandomData.getRandomClassNumber());
+        user.setMajor(RandomData.getRandomMajor());
+        user.setWallPaper(RandomData.getRandomWallPaper());
+        addSubscription(user.signOrLogin(code, new SaveListener<User>() {
+
+            @Override
+            public void done(User user, BmobException e) {
+                if (e == null) {
+                    ToastUtils.showShortToast("登录成功");
+                    LogUtil.e("登录成功");
+                    BaseApplication.getAppComponent()
+                            .getSharedPreferences()
+                            .edit().putBoolean(ConstantUtil.LOGIN_STATUS, true)
+                            .apply();
+                    //                                        登录成功之后，
+                    //                                        检查其他设备绑定的用户，强迫其下线
+                    LogUtil.e("检查该用户绑定的其他设备.....");
+                    addSubscription(UserManager.getInstance().checkInstallation(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            UserManager.getInstance().updateUserInfo(ConstantUtil.INSTALL_ID, new CustomInstallation().getInstallationId()
+                                    , null);
+                            if (e == null) {
+                                iView.showLoading("正在获取好友资料.........");
+                                updateUserInfo();
+                            } else {
+                                ToastUtils.showShortToast("登录失败,请重新登录" + e.toString());
+                                CommonLogger.e("登录失败" + e.toString());
+                                failLogin(e);
+                            }
+                        }
+                    }));
+                } else {
+                    ToastUtils.showShortToast("登录失败" + e.toString());
+                    failLogin(e);
+                }
+            }
+        }));
+    }
+
+    private void failLogin(BmobException e) {
+        BaseBean baseBean = new BaseBean();
+        baseBean.setType(ConstantUtil.BASE_TYPE_PHONE_LOGIN);
+        baseBean.setCode(0);
+        baseBean.setDesc(e.getMessage());
+        iView.updateData(baseBean);
+        iView.hideLoading();
+    }
 
     /**
      * 更新用户资料
@@ -140,6 +184,9 @@ public class LoginPresenter extends AppBasePresenter<IView<Object>, DefaultModel
 
     private void jumpToHome() {
         iView.hideLoading();
-        iView.updateData(null);
+        BaseBean baseBean = new BaseBean();
+        baseBean.setType(ConstantUtil.BASE_TYPE_PHONE_LOGIN);
+        baseBean.setCode(200);
+        iView.updateData(baseBean);
     }
 }

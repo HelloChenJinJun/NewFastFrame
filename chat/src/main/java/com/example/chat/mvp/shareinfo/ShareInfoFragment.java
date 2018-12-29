@@ -17,6 +17,7 @@ import com.example.chat.bean.post.PublicPostBean;
 import com.example.chat.dagger.shareinfo.DaggerShareInfoComponent;
 import com.example.chat.dagger.shareinfo.ShareInfoModule;
 import com.example.chat.events.CommentEvent;
+import com.example.chat.events.DeletePostEvent;
 import com.example.chat.events.UnReadPostNotifyEvent;
 import com.example.chat.events.UpdatePostEvent;
 import com.example.chat.events.UserInfoUpdateEvent;
@@ -224,7 +225,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                                             if (e == null) {
                                                 ToastUtils.showShortToast("删除成功");
                                                 CommonLogger.e("删除成功");
-                                                shareInfoAdapter.removeData(position);
+                                                RxBusManager.getInstance().post(new DeletePostEvent(shareInfoAdapter.getData(position)));
                                             } else {
                                                 ToastUtils.showShortToast("删除失败" + e.toString());
                                                 CommonLogger.e("删除失败" + e.toString());
@@ -301,6 +302,11 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         });
 
         presenter.registerEvent(PublicPostBean.class, publicPostBean -> {
+
+            if (!isPublic && !userEntity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                return;
+            }
+
             if (!publicPostBean.getObjectId().contains("-") && shareInfoAdapter.getData().contains(publicPostBean)) {
                 ToastUtils.showLongToast("更新帖子中...........");
                 publicPostBean.setSendStatus(ConstantUtil.SEND_STATUS_SENDING);
@@ -317,7 +323,19 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
 
         //        用于接收更新过后的post
         presenter.registerEvent(UpdatePostEvent.class, updatePostEvent -> {
+            if (!isPublic && !userEntity.getUid().equals(UserManager.getInstance().getCurrentUserObjectId())) {
+                return;
+            }
             shareInfoAdapter.addData(updatePostEvent.getPublicPostBean());
+        });
+
+
+        //        用于接收删除的post
+        presenter.registerEvent(DeletePostEvent.class, new Consumer<DeletePostEvent>() {
+            @Override
+            public void accept(DeletePostEvent deletePostEvent) throws Exception {
+                shareInfoAdapter.removeData(deletePostEvent.getPublicPostBean());
+            }
         });
 
 
@@ -470,7 +488,7 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
                 shareInfoAdapter.removeEndData(shareInfoAdapter.getData().size() - 10);
             }
             shareInfoAdapter.addData(0, publicPostBeans);
-            manager.scrollToPositionWithOffset(0, 0);
+            manager.scrollToPosition(0);
         } else {
             shareInfoAdapter.addData(publicPostBeans);
         }
@@ -541,6 +559,11 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
+    }
+
+
+    public SuperRecyclerView getDisplay() {
+        return display;
     }
 
     @Override

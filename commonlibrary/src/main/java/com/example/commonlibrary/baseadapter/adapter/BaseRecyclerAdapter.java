@@ -405,6 +405,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
     private void notifyLoadMoreChanged() {
         if (data.size() == 0) {
             //            数据为空的时候不要显示脚步布局
+            if (mLoadMoreFooterContainer!=null&&mLoadMoreFooterContainer.getChildAt(0) instanceof LoadMoreFooterView) {
+                ((LoadMoreFooterView) mLoadMoreFooterContainer.getChildAt(0)).setStatus(LoadMoreFooterView.Status.GONE);
+            }
             return;
         }
         if (hasMoreLoadView()) {
@@ -418,6 +421,9 @@ public abstract class BaseRecyclerAdapter<T, K extends BaseWrappedViewHolder> ex
             }
             int position;
             position = getItemUpCount() + getData().size();
+            if (lastVisiblePosition == 0 && getData().size() > 0) {
+                lastVisiblePosition+=getData().size();
+            }
             if (lastVisiblePosition != -1 && lastVisiblePosition == position) {
                 if (mLoadMoreFooterContainer.getChildAt(0) instanceof LoadMoreFooterView) {
                     ((LoadMoreFooterView) mLoadMoreFooterContainer.getChildAt(0)).setStatus(LoadMoreFooterView.Status.THE_END);

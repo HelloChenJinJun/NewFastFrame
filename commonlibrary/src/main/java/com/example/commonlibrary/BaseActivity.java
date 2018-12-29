@@ -161,7 +161,7 @@ public abstract class BaseActivity<T, P extends BasePresenter> extends RxAppComp
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        SkinManager.getInstance().apply(this);
+//        SkinManager.getInstance().apply(this);
         super.onCreate(savedInstanceState);
         UMGameAgent.init(this);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);

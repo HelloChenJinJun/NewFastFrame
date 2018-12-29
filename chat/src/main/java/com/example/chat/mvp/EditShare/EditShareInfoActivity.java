@@ -43,6 +43,7 @@ import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.utils.SystemUtil;
 import com.example.commonlibrary.utils.ToastUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ import io.reactivex.schedulers.Schedulers;
 public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, EditShareInfoPresenter> implements View.OnClickListener {
 
     private EditText input;
-    private TextView location, visibility;
+    private TextView location;
     private DefaultVideoPlayer video;
     private SuperRecyclerView display;
 
@@ -96,7 +97,7 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
     private String videoPath;
     //    视频封面路径
     private String thumbImage;
-    private ImageView record;
+    private FloatingActionButton mFloatingActionButton;
     private Gson gson = BaseApplication.getAppComponent().getGson();
 
 
@@ -128,16 +129,15 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
         shareCover = findViewById(R.id.iv_activity_edit_share_info_cover);
         input = findViewById(R.id.et_activity_edit_share_info_edit);
         video = findViewById(R.id.dvp_activity_edit_share_info_video);
-        record = findViewById(R.id.iv_activity_edit_share_info_video);
+        mFloatingActionButton = findViewById(R.id.fab_activity_edit_share_info_button);
+        mFloatingActionButton.setOnClickListener(this);
         RelativeLayout locationContainer = findViewById(R.id.rl_activity_edit_share_info_location);
         RelativeLayout visibilityContainer = findViewById(R.id.rl_activity_edit_share_info_visibility_container);
         location = findViewById(R.id.tv_activity_edit_share_info_location);
-        visibility = findViewById(R.id.tv_activity_edit_share_info_visibility);
         display = findViewById(R.id.srcv_activity_edit_share_info_display);
         locationContainer.setOnClickListener(this);
         visibilityContainer.setOnClickListener(this);
         shareContainer.setOnClickListener(this);
-        record.setOnClickListener(this);
     }
 
     @Override
@@ -180,7 +180,6 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
             });
             display.setVisibility(View.VISIBLE);
             video.setVisibility(View.GONE);
-            record.setVisibility(View.GONE);
             display.setLayoutManager(new WrappedGridLayoutManager(this, 4));
             display.addItemDecoration(new GridSpaceDecoration(2, 10, true));
             //            设置图片之间拖拽
@@ -222,7 +221,6 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
             });
             itemTouchHelper.attachToRecyclerView(display);
             display.setAdapter(editShareAdapter);
-
             editShareAdapter.setOnItemClickListener(new OnSimpleItemClickListener() {
                 @Override
                 public void onItemClick(int position, View view) {
@@ -297,11 +295,9 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
         } else if (type == ConstantUtil.EDIT_TYPE_VIDEO) {
             display.setVisibility(View.GONE);
             video.setVisibility(View.GONE);
-            record.setVisibility(View.VISIBLE);
-
+            mFloatingActionButton.setVisibility(View.VISIBLE);
             //            赋值
             if (postDataBean != null) {
-                record.setVisibility(View.GONE);
                 video.setVisibility(View.VISIBLE);
                 for (String str :
                         postDataBean.getImageList()) {
@@ -340,13 +336,11 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
             shareTitle.setText(postDataBean.getContent());
             display.setVisibility(View.GONE);
             video.setVisibility(View.GONE);
-            record.setVisibility(View.GONE);
             shareContainer.setVisibility(View.VISIBLE);
         } else if (type == ConstantUtil.EDIT_TYPE_TEXT) {
             //            正常的文本内容
             display.setVisibility(View.GONE);
             video.setVisibility(View.GONE);
-            record.setVisibility(View.GONE);
         }
         initToolBar();
     }
@@ -356,9 +350,9 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
         toolBarOption.setTitle("编辑");
         toolBarOption.setNeedNavigation(true);
         if (isEdit) {
-            toolBarOption.setRightText("更新");
+            toolBarOption.setRightResId(R.drawable.ic_file_upload_blue_grey_900_24dp);
         } else {
-            toolBarOption.setRightText("发送");
+            toolBarOption.setRightResId(R.drawable.ic_send_blue_grey_900_24dp);
         }
         toolBarOption.setRightListener(view -> createOrUpdatePostInfo());
         setToolBar(toolBarOption);
@@ -470,7 +464,7 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
             NearbyListActivity.start(this, currentLocationEvent, ConstantUtil.REQUEST_CODE_LOCATION);
         } else if (id == R.id.rl_activity_edit_share_info_visibility_container) {
 
-        } else if (id == R.id.iv_activity_edit_share_info_video) {
+        } else if (id == R.id.fab_activity_edit_share_info_button) {
             videoPath = SystemUtil.recorderVideo(this, SystemUtil.REQUEST_CODE_VIDEO_RECORDER);
         } else if (id == R.id.cv_activity_edit_share_info_share_container) {
             CommentListActivity.start(this, publicPostBean);
@@ -500,7 +494,6 @@ public class EditShareInfoActivity extends ChatBaseActivity<PublicPostBean, Edit
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SystemUtil.REQUEST_CODE_VIDEO_RECORDER) {
-                record.setVisibility(View.GONE);
                 ToastUtils.showShortToast("正在解析视频，请稍后.....");
                 addDisposable(Observable.timer(6, TimeUnit.SECONDS).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>() {
                     @Override

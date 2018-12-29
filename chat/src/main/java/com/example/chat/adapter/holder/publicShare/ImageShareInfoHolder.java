@@ -65,7 +65,7 @@ public class ImageShareInfoHolder extends BaseShareInfoViewHolder {
                             .onItemChildClick(getAdapterPosition() - getAdapter().getItemUpCount(), view, position);
                 }
             });
-            adapter.addData(data.getImageList());
+            adapter.refreshData(data.getImageList());
         }
     }
 

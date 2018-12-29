@@ -230,10 +230,10 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
                 //                        这里判断网络的连接类型
                 if (netStatusEvent.getType() == ConnectivityManager.TYPE_WIFI) {
                     CommonLogger.e("wife类型的");
-                    bindPollService(10);
+                    bindPollService(30);
                 } else {
                     CommonLogger.e("非wifi类型");
-                    bindPollService(15);
+                    bindPollService(60);
                 }
                 net.setVisibility(View.GONE);
             } else {

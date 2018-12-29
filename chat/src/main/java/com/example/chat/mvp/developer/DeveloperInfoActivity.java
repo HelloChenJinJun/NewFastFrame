@@ -80,6 +80,7 @@ public class DeveloperInfoActivity extends BaseActivity implements View.OnClickL
     protected void initView() {
         headerBg = findViewById(R.id.rl_activity_developer_info_header_bg);
         RelativeLayout headerContainer = findViewById(R.id.rl_activity_developer_info_container);
+        findViewById(R.id.iv_activity_developer_info_back).setOnClickListener(this);
         name = findViewById(R.id.tv_activity_developer_info_name);
         signature = findViewById(R.id.tv_activity_developer_info_signature);
         sex = findViewById(R.id.iv_activity_developer_info_sex);
@@ -152,6 +153,8 @@ public class DeveloperInfoActivity extends BaseActivity implements View.OnClickL
             ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             cm.setPrimaryClip(ClipData.newPlainText("text", qq.getText().toString().trim()));
             ToastUtils.showShortToast("复制QQ号成功");
+        } else if (id == R.id.iv_activity_developer_info_back) {
+            finish();
         }
     }
 }

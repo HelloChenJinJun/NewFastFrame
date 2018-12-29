@@ -1,0 +1,127 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/tv_fragment_phone_login_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:text="密码登录"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical">
+
+
+        <com.example.commonlibrary.customview.CustomEditText
+            android:id="@+id/et_fragment_phone_login_phone"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="bottom"
+            android:hint="@string/login_password_hint"
+            android:inputType="phone"
+            android:maxLines="1"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textSize="15sp" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="11dp"
+            android:background="#E8E8E8" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.example.commonlibrary.customview.CustomEditText
+                android:id="@+id/et_fragment_phone_login_verify_code"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="bottom"
+                android:hint="@string/login_password_hint"
+                android:inputType="number"
+                android:maxLines="1"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textSize="15sp" />
+
+            <TextView
+                android:enabled="false"
+                android:id="@+id/tv_fragment_phone_login_get_verify_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:background="@drawable/custom_drawable_get_verify_code"
+                android:paddingLeft="7dp"
+                android:paddingTop="3dp"
+                android:paddingRight="7dp"
+                android:paddingBottom="3dp"
+                android:text="获取验证码"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="11dp"
+            android:background="#E8E8E8" />
+
+
+        <RelativeLayout
+            android:id="@+id/rl_fragment_phone_login_verify_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_fragment_phone_login_phone_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textColor="#FF999999"
+                android:textSize="8sp" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/tv_fragment_phone_login_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_login_selector"
+            android:gravity="center"
+            android:text="@string/login"
+            android:textColor="@color/base_color_text_white"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

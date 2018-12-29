@@ -70,6 +70,7 @@ public class PollService extends KeepLiveService implements SensorEventListener 
     private Disposable disposable;
     private StepDetector stepDetector;
     private BroadcastReceiver receiver;
+    private static int time = 30;
 
     @Nullable
     @Override
@@ -82,16 +83,17 @@ public class PollService extends KeepLiveService implements SensorEventListener 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         CommonLogger.e("PollService:::onStartCommand");
-        int time;
         if (intent != null) {
             time = intent.getIntExtra(ConstantUtil.TIME, 30);
-        } else {
-            time = 30;
         }
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
 
+
+        if (UserManager.getInstance().getCurrentUserObjectId() == null) {
+            return super.onStartCommand(intent, flags, startId);
+        }
         if (UserManager.getInstance().getCurrentUserObjectId() != null && UserDBManager.getInstance().getStepData(TimeUtil
                 .getTime(System.currentTimeMillis(), "yyyy-MM-dd")) == null) {
             BmobQuery<StepBean> bmobQuery = new BmobQuery<>();
@@ -197,6 +199,9 @@ public class PollService extends KeepLiveService implements SensorEventListener 
     }
 
     private void saveStepData() {
+        if (UserManager.getInstance().getCurrentUserObjectId() == null) {
+            return;
+        }
         String currentTime = TimeUtil.getTime(System.currentTimeMillis(), "yyyy-MM-dd");
         StepData data = UserDBManager.getInstance().getStepData(currentTime);
         if (data != null) {
@@ -209,16 +214,20 @@ public class PollService extends KeepLiveService implements SensorEventListener 
                 stepBean.update(new UpdateListener() {
                     @Override
                     public void done(BmobException e) {
-                        UserDBManager.getInstance().getDaoSession().update(MsgManager.getInstance()
-                                .cover(stepBean));
+                        if (UserManager.getInstance().getCurrentUserObjectId() != null) {
+                            UserDBManager.getInstance().getDaoSession().insert(MsgManager.getInstance()
+                                    .cover(stepBean));
+                        }
                     }
                 });
             } else {
                 stepBean.save(new SaveListener<String>() {
                     @Override
                     public void done(String s, BmobException e) {
-                        UserDBManager.getInstance().getDaoSession().update(MsgManager.getInstance()
-                                .cover(stepBean));
+                        if (UserManager.getInstance().getCurrentUserObjectId() != null) {
+                            UserDBManager.getInstance().getDaoSession().insert(MsgManager.getInstance()
+                                    .cover(stepBean));
+                        }
                     }
                 });
             }
@@ -230,8 +239,10 @@ public class PollService extends KeepLiveService implements SensorEventListener 
             stepBean.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
-                    UserDBManager.getInstance().getDaoSession().insert(MsgManager.getInstance()
-                            .cover(stepBean));
+                    if (UserManager.getInstance().getCurrentUserObjectId() != null) {
+                        UserDBManager.getInstance().getDaoSession().insert(MsgManager.getInstance()
+                                .cover(stepBean));
+                    }
                 }
             });
 
@@ -239,13 +250,12 @@ public class PollService extends KeepLiveService implements SensorEventListener 
     }
 
     private void dealWork() {
-        LogUtil.e("拉取单聊消息");
-        BmobQuery<ChatMessage> query = new BmobQuery<>();
-        if (UserManager.getInstance().getCurrentUser() != null) {
-            query.addWhereEqualTo(ConstantUtil.TAG_TO_ID, UserManager.getInstance().getCurrentUserObjectId());
-        } else {
+        if (UserManager.getInstance().getCurrentUserObjectId() == null) {
             return;
         }
+        LogUtil.e("拉取单聊消息");
+        BmobQuery<ChatMessage> query = new BmobQuery<>();
+        query.addWhereEqualTo(ConstantUtil.TAG_TO_ID, UserManager.getInstance().getCurrentUserObjectId());
         query.addWhereEqualTo(ConstantUtil.TAG_MESSAGE_SEND_STATUS, ConstantUtil.SEND_STATUS_SUCCESS);
         query.addWhereEqualTo(ConstantUtil.TAG_MESSAGE_READ_STATUS, ConstantUtil.READ_STATUS_UNREAD);
         //                按升序进行排序

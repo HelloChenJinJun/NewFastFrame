@@ -66,6 +66,7 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
     private AppBarLayout mAppBarLayout;
     private CustomSwipeRefreshLayout refresh;
     private RelativeLayout container;
+    private List<Fragment> fragments;
 
     @Override
 
@@ -100,7 +101,12 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         TabLayout tabLayout = findViewById(R.id.tl_activity_user_detail_tab);
         display = findViewById(R.id.vp_activity_user_detail_display);
         container = findViewById(R.id.rl_view_activity_user_detail_container);
-        findViewById(R.id.iv_activity_user_detail_back).setOnClickListener(v -> finish());
+        findViewById(R.id.iv_activity_user_detail_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         findViewById(R.id.rl_view_activity_user_detail_header_container).setOnClickListener(v ->
 
                 {
@@ -109,7 +115,6 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
                             , Pair.create(name, "name"), Pair.create(avatar, "avatar")
                             , Pair.create(container, "headerContainer"));
                     UserInfoActivity.start(UserDetailActivity.this, user.getUid(), activityOptionsCompat);
-
                 }
 
         );
@@ -160,7 +165,7 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         sexContent = findViewById(R.id.tv_view_activity_user_detail_header_sex_content);
         school = findViewById(R.id.tv_view_activity_user_detail_header_school);
         major = findViewById(R.id.tv_view_activity_user_detail_header_major);
-        findViewById(R.id.tv_view_activity_user_detail_header_look)
+        findViewById(R.id.fab_activity_user_detail_button)
                 .setOnClickListener(this);
 
     }
@@ -190,6 +195,7 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
                 });
     }
 
+
     @Override
     protected void initData() {
         String uid = getIntent().getStringExtra(ConstantUtil.ID);
@@ -198,7 +204,7 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         List<String> titleList = new ArrayList<>();
         titleList.add("公共说说");
-        List<Fragment> fragments = new ArrayList<>();
+        fragments = new ArrayList<>();
         fragments.add(ShareInfoFragment.newInstance(user.getUid(), false));
         adapter.setTitleAndFragments(titleList, fragments);
         display.setAdapter(adapter);
@@ -257,7 +263,7 @@ public class UserDetailActivity extends ChatBaseActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.tv_view_activity_user_detail_header_look) {
+        if (id == R.id.fab_activity_user_detail_button) {
             EditUserInfoActivity.start(this, user.getUid());
         }
     }

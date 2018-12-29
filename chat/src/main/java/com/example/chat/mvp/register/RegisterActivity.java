@@ -14,9 +14,9 @@ import com.example.chat.base.RandomData;
 import com.example.chat.bean.CustomInstallation;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.LogUtil;
-import com.example.chat.view.AutoEditText;
 import com.example.commonlibrary.BaseActivity;
 import com.example.commonlibrary.bean.chat.User;
+import com.example.commonlibrary.customview.CustomEditText;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -31,9 +31,9 @@ import cn.bmob.v3.listener.SaveListener;
  * QQ:             1981367757
  */
 public class RegisterActivity extends BaseActivity {
-    private AutoEditText name;
-    private AutoEditText passWord;
-    private AutoEditText passWordComfirm;
+    private CustomEditText name;
+    private CustomEditText passWord;
+    private CustomEditText passWordComfirm;
     private Button register;
     private ImageView bg;
 
@@ -92,12 +92,6 @@ public class RegisterActivity extends BaseActivity {
             //                                与设备ID绑定
             CustomInstallation customInstallation = new CustomInstallation();
             user.setInstallId(customInstallation.getInstallationId());
-//
-//            User currentUser = new User();
-//            currentUser.setObjectId(ConstantUtil.SYSTEM_UID);
-//            BmobRelation relation = new BmobRelation();
-//            relation.add(currentUser);
-//            user.setContacts(relation);
             user.setNick(RandomData.getRandomNick());
             user.setSignature(RandomData.getRandomSignature());
             user.setAvatar(RandomData.getRandomAvatar());
@@ -124,34 +118,34 @@ public class RegisterActivity extends BaseActivity {
                             LogUtil.e("uid：" + UserManager.getInstance().getCurrentUser().getObjectId());
                         }
                         dealFinish();
-//                        BmobQuery<User> bmobQuery = new BmobQuery<>();
-//                        bmobQuery.addWhereEqualTo("objectId", ConstantUtil.SYSTEM_UID);
-//                        bmobQuery.findObjects(new FindListener<User>() {
-//                            @Override
-//                            public void done(List<User> list, BmobException e) {
-//                                if (e == null && list != null && list.size() > 0) {
-//                                    BmobRelation bmobRelation = new BmobRelation();
-//                                    bmobRelation.add(s);
-//                                    list.get(0).setContacts(bmobRelation);
-//                                    list.get(0).update(new UpdateListener() {
-//                                        @Override
-//                                        public void done(BmobException e) {
-//                                            CommonLogger.e(e);
-//                                            if (e != null) {
-//                                                ToastUtils.showShortToast(e.getMessage());
-//                                            }
-//                                            dealFinish();
-//                                        }
-//                                    });
-//                                } else {
-//                                    dealFinish();
-//                                    CommonLogger.e(e);
-//                                    if (e != null) {
-//                                        ToastUtils.showShortToast(e.getMessage());
-//                                    }
-//                                }
-//                            }
-//                        });
+                        //                        BmobQuery<User> bmobQuery = new BmobQuery<>();
+                        //                        bmobQuery.addWhereEqualTo("objectId", ConstantUtil.SYSTEM_UID);
+                        //                        bmobQuery.findObjects(new FindListener<User>() {
+                        //                            @Override
+                        //                            public void done(List<User> list, BmobException e) {
+                        //                                if (e == null && list != null && list.size() > 0) {
+                        //                                    BmobRelation bmobRelation = new BmobRelation();
+                        //                                    bmobRelation.add(s);
+                        //                                    list.get(0).setContacts(bmobRelation);
+                        //                                    list.get(0).update(new UpdateListener() {
+                        //                                        @Override
+                        //                                        public void done(BmobException e) {
+                        //                                            CommonLogger.e(e);
+                        //                                            if (e != null) {
+                        //                                                ToastUtils.showShortToast(e.getMessage());
+                        //                                            }
+                        //                                            dealFinish();
+                        //                                        }
+                        //                                    });
+                        //                                } else {
+                        //                                    dealFinish();
+                        //                                    CommonLogger.e(e);
+                        //                                    if (e != null) {
+                        //                                        ToastUtils.showShortToast(e.getMessage());
+                        //                                    }
+                        //                                }
+                        //                            }
+                        //                        });
                     } else {
                         ToastUtils.showShortToast("注册失败" + e.toString());
                     }

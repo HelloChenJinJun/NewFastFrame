@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,37 +12,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-        <RelativeLayout
-            android:id="@+id/rl_activity_edit_share_info_video_container"
+        <com.example.commonlibrary.manager.video.DefaultVideoPlayer
+            android:id="@+id/dvp_activity_edit_share_info_video"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.example.commonlibrary.manager.video.DefaultVideoPlayer
-                android:id="@+id/dvp_activity_edit_share_info_video"
-                android:layout_width="match_parent"
-                android:layout_height="150dp" />
-
-            <ImageView
-                android:id="@+id/iv_activity_edit_share_info_video"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_videocam_blue_grey_900_24dp" />
-        </RelativeLayout>
+            android:layout_height="150dp" />
 
 
         <EditText
             android:id="@+id/et_activity_edit_share_info_edit"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@null"
             android:ellipsize="end"
             android:gravity="start"
             android:hint="这一刻的想法"
             android:lineSpacingExtra="5dp"
+            android:minHeight="150dp"
+            android:padding="10dp"
             android:textColorHint="@color/grey_500"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
 
@@ -88,6 +78,17 @@
     </androidx.cardview.widget.CardView>
 
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_activity_edit_share_info_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="15dp"
+        android:background="@null"
+        android:src="@drawable/ic_videocam_white_900_24dp"
+        android:visibility="gone" />
+
+
     <RelativeLayout
         android:id="@+id/rl_activity_edit_share_info_location"
         android:layout_width="match_parent"
@@ -130,7 +131,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:background="@color/base_color_text_white"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"

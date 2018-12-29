@@ -1,4 +1,4 @@
-package com.example.chat.mvp.login;
+package com.example.chat.mvp.login.pw;
 
 import android.content.SharedPreferences;
 
@@ -11,6 +11,7 @@ import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.bean.BaseBean;
 import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.view.IView;
@@ -30,16 +31,12 @@ import cn.bmob.v3.listener.UpdateListener;
 /**
  * 项目名称:    NewFastFrame
  * 创建人:      陈锦军
- * 创建时间:    2017/12/27     13:50
- * QQ:         1981367757
+ * 创建时间:    2018/12/29     16:06
  */
-
-public class LoginPresenter extends AppBasePresenter<IView<Object>, DefaultModel> {
-
-    public LoginPresenter(IView<Object> iView, DefaultModel baseModel) {
+public class PwLoginPresenter extends AppBasePresenter<IView<BaseBean>,DefaultModel> {
+    public PwLoginPresenter(IView<BaseBean> iView, DefaultModel baseModel) {
         super(iView, baseModel);
     }
-
     public void login(String account, String password) {
         iView.showLoading("正在登录......");
         final User user = new User();
@@ -67,7 +64,7 @@ public class LoginPresenter extends AppBasePresenter<IView<Object>, DefaultModel
                                                    @Override
                                                    public void done(BmobException e) {
                                                        UserManager.getInstance().updateUserInfo(ConstantUtil.INSTALL_ID,new CustomInstallation().getInstallationId()
-                                                       ,null);
+                                                               ,null);
                                                        if (e == null) {
                                                            iView.showLoading("正在获取好友资料.........");
                                                            updateUserInfo();

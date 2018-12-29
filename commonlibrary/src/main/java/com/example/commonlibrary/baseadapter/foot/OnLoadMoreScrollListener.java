@@ -3,6 +3,7 @@ package com.example.commonlibrary.baseadapter.foot;
 import android.view.View;
 
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.utils.CommonLogger;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +12,10 @@ public abstract class OnLoadMoreScrollListener extends RecyclerView.OnScrollList
 
     @Override
     public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
+        if (recyclerView.getLayoutManager().findViewByPosition(0) != null) {
+            CommonLogger.e("top:" + recyclerView.getLayoutManager().findViewByPosition(0).getTop());
+        }
+
     }
 
     @Override

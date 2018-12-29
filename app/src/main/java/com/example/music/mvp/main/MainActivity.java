@@ -55,6 +55,7 @@ import com.example.commonlibrary.customview.draglayout.OnDragDeltaChangeListener
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
+import com.example.commonlibrary.rxbus.event.SkinUpdateEvent;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -70,6 +71,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+import io.reactivex.functions.Consumer;
 
 public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeListener, View.OnClickListener {
 
@@ -85,6 +87,9 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
     private TextView weatherTemperature;
     private MenuDisplayAdapter menuDisplayAdapter;
     private ArrayList<Fragment> fragmentList;
+
+
+    private RadioButton chat, post, center, news, person;
 
 
     @Override
@@ -188,12 +193,16 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
         avatar = findViewById(com.example.chat.R.id.riv_menu_avatar);
         weatherCity = findViewById(com.example.chat.R.id.tv_menu_weather_city);
         weatherTemperature = findViewById(com.example.chat.R.id.tv_menu_weather_temperature);
+        chat = findViewById(R.id.rb_activity_main_bottom_chat);
+        post = findViewById(R.id.rb_activity_main_bottom_public);
+        center = findViewById(R.id.rb_activity_main_bottom_center);
+        news = findViewById(R.id.rb_activity_main_bottom_index);
+        person = findViewById(R.id.rb_activity_main_bottom_person);
         RelativeLayout headLayout = findViewById(com.example.chat.R.id.rl_menu_head_layout);
         findViewById(R.id.ll_menu_bottom_container).setOnClickListener(this);
         headLayout.setOnClickListener(this);
         dragLayout.setListener(this);
         bottomContainer.setOnCheckedChangeListener((group, checkedId) -> {
-            ToastUtils.showShortToast("补丁");
             if (checkedId == R.id.rb_activity_main_bottom_index) {
                 display.setCurrentItem(3, false);
             } else if (checkedId == R.id.rb_activity_main_bottom_public) {
@@ -234,22 +243,22 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
                 dragLayout.setIntercept(true);
                 switch (position) {
                     case 0:
-                        ((RadioButton) findViewById(R.id.rb_activity_main_bottom_chat)).setChecked(true);
+                        chat.setChecked(true);
                         dragLayout.setIntercept(false);
                         show(bottomContainer);
                         break;
                     case 1:
-                        ((RadioButton) findViewById(R.id.rb_activity_main_bottom_public)).setChecked(true);
+                        post.setChecked(true);
                         break;
                     case 2:
-                        ((RadioButton) findViewById(R.id.rb_activity_main_bottom_center)).setChecked(true);
+                        center.setChecked(true);
                         show(bottomContainer);
                         break;
                     case 3:
-                        ((RadioButton) findViewById(R.id.rb_activity_main_bottom_index)).setChecked(true);
+                        news.setChecked(true);
                         break;
                     case 4:
-                        ((RadioButton) findViewById(R.id.rb_activity_main_bottom_person)).setChecked(true);
+                        person.setChecked(true);
                         show(bottomContainer);
                         break;
                 }
@@ -263,6 +272,19 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
             }
         });
         display.setAdapter(viewPagerAdapter);
+        addDisposable(RxBusManager.getInstance().registerEvent(SkinUpdateEvent.class, new Consumer<SkinUpdateEvent>() {
+            @Override
+            public void accept(SkinUpdateEvent skinUpdateEvent) throws Exception {
+                chat.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_five), null, null);
+                post.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_two), null, null);
+                center.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_three), null, null);
+                news.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_one), null, null);
+                person.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_four), null, null);
+
+                bottomContainer.setBackgroundColor(SkinManager.getInstance().getColor(R.color.custom_color_app_title_bg));
+                bg.setBackgroundColor(SkinManager.getInstance().getColor(R.color.custom_color_app_bg));
+            }
+        }));
     }
 
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -180,7 +181,7 @@ public class LrcView extends View implements ILrcView {
         mPaintForHighLightLrc.setAntiAlias(true);
 
         mPaintForOtherLrc = new Paint();
-        mPaintForOtherLrc.setColor(mCurColorForOtherLrc);
+        mPaintForOtherLrc.setColor(Color.WHITE);
         mPaintForOtherLrc.setTextSize(mCurSizeForOtherLrc);
         mPaintForOtherLrc.setAntiAlias(true);
 

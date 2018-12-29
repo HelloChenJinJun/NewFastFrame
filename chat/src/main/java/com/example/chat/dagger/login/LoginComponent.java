@@ -1,7 +1,7 @@
 package com.example.chat.dagger.login;
 
 import com.example.chat.dagger.ChatMainComponent;
-import com.example.chat.mvp.login.LoginActivity;
+import com.example.chat.mvp.login.pw.PwLoginFragment;
 import com.example.commonlibrary.dagger.scope.PerActivity;
 
 import dagger.Component;
@@ -15,5 +15,5 @@ import dagger.Component;
 @PerActivity
 @Component(dependencies = ChatMainComponent.class, modules = LoginModule.class)
 public interface LoginComponent {
-    public void inject(LoginActivity loginActivity);
+    public void inject(PwLoginFragment pwLoginFragment);
 }

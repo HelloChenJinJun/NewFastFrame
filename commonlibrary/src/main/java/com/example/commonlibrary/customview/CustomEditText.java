@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
 
 import com.example.commonlibrary.R;
 import com.example.commonlibrary.utils.DensityUtil;
@@ -52,6 +54,19 @@ public class CustomEditText extends AppCompatEditText {
             }
         }
         return super.onTouchEvent(event);
+    }
+
+
+
+    public static TranslateAnimation getShakeAnimation(int count) {
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, 10, 0, 0);
+        translateAnimation.setInterpolator(new CycleInterpolator(count));
+        translateAnimation.setDuration(1000);
+        return translateAnimation;
+    }
+
+    public void startShakeAnimation() {
+        startAnimation(getShakeAnimation(3));
     }
 
 }

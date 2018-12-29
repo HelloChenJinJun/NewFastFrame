@@ -20,7 +20,6 @@ import com.example.commonlibrary.rxbus.event.PlayStateEvent;
 import com.example.commonlibrary.utils.BlurBitmapUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
-import com.example.cootek.newfastframe.MusicManager;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.util.MusicUtil;
 import com.example.cootek.newfastframe.view.lrc.LrcRow;
@@ -198,11 +197,15 @@ public class LockScreenActivity extends BaseActivity implements View.OnClickList
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.iv_activity_lock_screen_pre) {
-            MusicManager.getInstance().previous();
+            MusicPlayerManager.getInstance().pre();
         } else if (id == R.id.iv_activity_lock_screen_play) {
-            MusicManager.getInstance().playOrPause();
+            if (MusicPlayerManager.getInstance().getCurrentState() == MusicPlayerManager.PLAY_STATE_PLAYING) {
+                MusicPlayerManager.getInstance().pause();
+            } else {
+                MusicPlayerManager.getInstance().play(0);
+            }
         } else if (id == R.id.iv_activity_lock_screen_next) {
-            MusicManager.getInstance().next();
+            MusicPlayerManager.getInstance().next();
 
         }
     }
