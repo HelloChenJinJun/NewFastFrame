@@ -215,7 +215,7 @@ public class PollService extends KeepLiveService implements SensorEventListener 
                     @Override
                     public void done(BmobException e) {
                         if (UserManager.getInstance().getCurrentUserObjectId() != null) {
-                            UserDBManager.getInstance().getDaoSession().insert(MsgManager.getInstance()
+                            UserDBManager.getInstance().getDaoSession().insertOrReplace(MsgManager.getInstance()
                                     .cover(stepBean));
                         }
                     }
@@ -225,7 +225,7 @@ public class PollService extends KeepLiveService implements SensorEventListener 
                     @Override
                     public void done(String s, BmobException e) {
                         if (UserManager.getInstance().getCurrentUserObjectId() != null) {
-                            UserDBManager.getInstance().getDaoSession().insert(MsgManager.getInstance()
+                            UserDBManager.getInstance().getDaoSession().insertOrReplace(MsgManager.getInstance()
                                     .cover(stepBean));
                         }
                     }

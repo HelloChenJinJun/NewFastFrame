@@ -272,19 +272,19 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
             }
         });
         display.setAdapter(viewPagerAdapter);
-        addDisposable(RxBusManager.getInstance().registerEvent(SkinUpdateEvent.class, new Consumer<SkinUpdateEvent>() {
-            @Override
-            public void accept(SkinUpdateEvent skinUpdateEvent) throws Exception {
-                chat.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_five), null, null);
-                post.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_two), null, null);
-                center.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_three), null, null);
-                news.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_one), null, null);
-                person.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_four), null, null);
-
-                bottomContainer.setBackgroundColor(SkinManager.getInstance().getColor(R.color.custom_color_app_title_bg));
-                bg.setBackgroundColor(SkinManager.getInstance().getColor(R.color.custom_color_app_bg));
-            }
-        }));
+//        addDisposable(RxBusManager.getInstance().registerEvent(SkinUpdateEvent.class, new Consumer<SkinUpdateEvent>() {
+//            @Override
+//            public void accept(SkinUpdateEvent skinUpdateEvent) throws Exception {
+//                chat.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_five), null, null);
+//                post.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_two), null, null);
+//                center.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_three), null, null);
+//                news.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_one), null, null);
+//                person.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_four), null, null);
+//
+//                bottomContainer.setBackgroundColor(SkinManager.getInstance().getColor(R.color.custom_color_app_title_bg));
+//                bg.setBackgroundColor(SkinManager.getInstance().getColor(R.color.custom_color_app_bg));
+//            }
+//        }));
     }
 
 

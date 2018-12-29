@@ -4,7 +4,7 @@
     <string name="register_text2">注册</string>
     <string name="login">登录</string>
     <string name="login_password_hint">请输入密码</string>
-    <string name="login_username_hint">请输入用户名</string>
+    <string name="login_username_hint">请输入账号</string>
     <string name="network_tip">当前网络不可用，请检查网络配置</string>
     <string name="register_account">帐号</string>
     <string name="register_account_hint">请输入用户名</string>
