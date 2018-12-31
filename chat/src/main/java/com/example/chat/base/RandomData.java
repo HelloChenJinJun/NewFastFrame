@@ -290,4 +290,9 @@ public class RandomData {
             return classList.get(0);
         }
     }
+
+    public static boolean getRandomSex() {
+        Random random = new Random();
+        return random.nextInt(10)%2==0;
+    }
 }

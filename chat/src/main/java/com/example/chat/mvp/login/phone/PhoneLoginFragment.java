@@ -46,8 +46,6 @@ public class PhoneLoginFragment extends AppBaseFragment<BaseBean, PhoneLoginPres
     private TextView title;
     private Button login;
 
-    private String number;
-
 
     @Override
     protected boolean isNeedHeadLayout() {
@@ -136,7 +134,18 @@ public class PhoneLoginFragment extends AppBaseFragment<BaseBean, PhoneLoginPres
                 verifyCode.startShakeAnimation();
                 return;
             }
-            presenter.login(number, code);
+            String input = phone.getText().toString().trim();
+            if (TextUtils.isEmpty(input)) {
+                ToastUtils.showShortToast("输入手机号不能为空");
+                phone.startShakeAnimation();
+                return;
+            }
+            if (!AppUtil.isPhone(input)) {
+                ToastUtils.showShortToast("输入的手机号格式不对!");
+                return;
+            }
+
+            presenter.login(input, code);
         } else if (id == R.id.tv_fragment_phone_login_get_verify_code) {
             String input = phone.getText().toString().trim();
             if (TextUtils.isEmpty(input)) {
@@ -149,7 +158,6 @@ public class PhoneLoginFragment extends AppBaseFragment<BaseBean, PhoneLoginPres
                 return;
             }
             getVerifyCode.setEnabled(false);
-            number = input;
             presenter.getVerifyCode(input);
         }
     }
@@ -162,8 +170,8 @@ public class PhoneLoginFragment extends AppBaseFragment<BaseBean, PhoneLoginPres
                     ToastUtils.showShortToast("验证码发送成功，请注意查收");
                     verifyContainer.setVisibility(View.VISIBLE);
                     SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-                    SpannableString spannableString = new SpannableString(number);
-                    spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FF303030")), 0, phone.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    SpannableString spannableString = new SpannableString(phone.getText().toString().trim());
+                    spannableString.setSpan(new ForegroundColorSpan(Color.WHITE), 0, phone.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannableStringBuilder.append("已发送验证码至 ").append(spannableString);
                     verifyPhone.setText(spannableStringBuilder);
                     getVerifyCode.setEnabled(false);

@@ -23,6 +23,7 @@ import java.util.List;
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -80,6 +81,7 @@ public class PhoneLoginPresenter extends AppBasePresenter<IView<BaseBean>, Defau
         user.setTitleWallPaper(RandomData.getRandomTitleWallPaper());
         user.setSchool("中国地质大学(武汉)");
         user.setName(RandomData.getRandomName());
+        user.setSex(RandomData.getRandomSex());
         user.setCollege(RandomData.getRandomCollege());
         user.setYear(RandomData.getRandomYear());
         user.setEducation(RandomData.getRandomEducation());
@@ -117,6 +119,7 @@ public class PhoneLoginPresenter extends AppBasePresenter<IView<BaseBean>, Defau
                     }));
                 } else {
                     ToastUtils.showShortToast("登录失败" + e.toString());
+                    CommonLogger.e("登陆失败:" + e.toString());
                     failLogin(e);
                 }
             }

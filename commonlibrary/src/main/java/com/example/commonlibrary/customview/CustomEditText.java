@@ -47,9 +47,9 @@ public class CustomEditText extends AppCompatEditText {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            boolean clearable = event.getX() > (getWidth() - getPaddingRight() - mDrawable.getIntrinsicWidth()) &&
-                    event.getX() < (getWidth() - getCompoundPaddingRight());
-            if (clearable) {
+            boolean touchable = event.getX() > (getWidth() - getTotalPaddingRight())
+                    && (event.getX() < ((getWidth() - getPaddingRight())));
+            if (touchable) {
                 setText("");
             }
         }

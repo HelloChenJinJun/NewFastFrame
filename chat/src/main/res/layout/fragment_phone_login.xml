@@ -30,7 +30,6 @@
             android:background="@null"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:gravity="bottom"
             android:hint="@string/login_password_hint"
             android:inputType="phone"
             android:maxLines="1"
@@ -42,7 +41,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginTop="11dp"
             android:background="#E8E8E8" />
 
 
@@ -61,7 +59,6 @@
                 android:background="@null"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:gravity="bottom"
                 android:hint="@string/login_password_hint"
                 android:inputType="number"
                 android:maxLines="1"
@@ -89,7 +86,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginTop="11dp"
             android:background="#E8E8E8" />
 
 
@@ -105,8 +101,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:textColor="#FF999999"
-                android:textSize="8sp" />
+                android:textColor="@color/white"
+                android:textSize="15sp" />
 
         </RelativeLayout>
 
