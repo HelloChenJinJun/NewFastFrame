@@ -71,7 +71,7 @@ public class SettingsActivity extends ChatBaseActivity implements View.OnClickLi
 
     @Override
     public void initData() {
-        nick.setText(UserManager.getInstance().getCurrentUser().getNick());
+        nick.setText(UserManager.getInstance().getCurrentUser().getName());
         account.setText("帐号：" + UserManager.getInstance().getCurrentUser().getUsername());
         Glide.with(this).load(UserManager.getInstance().getCurrentUser().getAvatar()).into(avatar);
         initActionBar();

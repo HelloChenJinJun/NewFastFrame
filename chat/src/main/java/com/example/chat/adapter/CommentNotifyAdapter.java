@@ -63,7 +63,7 @@ public class CommentNotifyAdapter extends BaseRecyclerAdapter<PostNotifyBean,Bas
         holder.setImageUrl(R.id.riv_item_activity_comment_notify_avatar
                 ,data.getRelatedUser().getAvatar())
                 .setText(R.id.tv_item_activity_comment_notify_name,data
-                        .getRelatedUser().getNick())
+                        .getRelatedUser().getName())
                 .setText(R.id.tv_item_activity_comment_notify_time,data.getCreatedAt())
                 .setOnItemClickListener();
         PublicPostBean temp=data.getPublicPostBean();

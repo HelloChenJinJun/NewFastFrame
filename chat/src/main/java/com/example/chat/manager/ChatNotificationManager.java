@@ -73,21 +73,21 @@ public class ChatNotificationManager {
                 if (list != null && list.size() > 0) {
                     if (messageType == ChatMessage.MESSAGE_TYPE_NORMAL) {
                         if (chatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_IMAGE)) {
-                            showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[图片]", HomeActivity.class);
+                            showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getName(), R.mipmap.ic_launcher, "[图片]", HomeActivity.class);
                         } else if (chatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_LOCATION)) {
-                            showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[位置]", HomeActivity.class);
+                            showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getName(), R.mipmap.ic_launcher, "[位置]", HomeActivity.class);
                         } else if (chatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_VOICE)) {
-                            showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[语音]", HomeActivity.class);
+                            showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getName(), R.mipmap.ic_launcher, "[语音]", HomeActivity.class);
                         } else if (chatMessage.getContentType().equals(ConstantUtil.TAG_MSG_TYPE_VIDEO)) {
-                            showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, "[视频]", HomeActivity.class);
+                            showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getName(), R.mipmap.ic_launcher, "[视频]", HomeActivity.class);
                         } else {
                             String content = BaseApplication.getAppComponent().getGson().fromJson(chatMessage.getContent(), MessageContent.class).getContent();
-                            showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getNick(), R.mipmap.ic_launcher, FaceTextUtil.toSpannableString(context, content), HomeActivity.class);
+                            showNotification(ConstantUtil.NOTIFICATION_TAG_MESSAGE, context, list.get(0).getName(), R.mipmap.ic_launcher, FaceTextUtil.toSpannableString(context, content), HomeActivity.class);
                         }
                     } else if (messageType == ChatMessage.MESSAGE_TYPE_AGREE) {
-                        showNotification(ConstantUtil.NOTIFICATION_TAG_AGREE, context, list.get(0).getNick(), R.mipmap.ic_launcher, list.get(0).getName() + "已同意添加你为好友", HomeActivity.class);
+                        showNotification(ConstantUtil.NOTIFICATION_TAG_AGREE, context, list.get(0).getName(), R.mipmap.ic_launcher, list.get(0).getName() + "已同意添加你为好友", HomeActivity.class);
                     } else if (messageType == ChatMessage.MESSAGE_TYPE_ADD) {
-                        showNotification(ConstantUtil.NOTIFICATION_TAG_ADD, context, list.get(0).getNick(), R.mipmap.ic_launcher, list.get(0).getName() + "请求添加你为好友", InvitationActivity.class);
+                        showNotification(ConstantUtil.NOTIFICATION_TAG_ADD, context, list.get(0).getName(), R.mipmap.ic_launcher, list.get(0).getName() + "请求添加你为好友", InvitationActivity.class);
                     }
                 }
             }

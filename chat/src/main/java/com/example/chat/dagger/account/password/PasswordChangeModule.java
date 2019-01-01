@@ -1,6 +1,5 @@
 package com.example.chat.dagger.account.password;
 
-import com.example.chat.MainRepositoryManager;
 import com.example.chat.mvp.account.password.PasswordChangePresenter;
 import com.example.chat.mvp.account.password.PasswordChangeActivity;
 import com.example.commonlibrary.mvp.model.DefaultModel;

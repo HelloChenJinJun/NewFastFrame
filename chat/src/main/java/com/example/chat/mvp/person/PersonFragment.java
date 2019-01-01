@@ -25,6 +25,7 @@ import com.example.chat.mvp.notify.SystemNotifyActivity;
 import com.example.chat.mvp.photoSelect.PhotoSelectActivity;
 import com.example.chat.mvp.settings.SettingsActivity;
 import com.example.commonlibrary.bean.chat.User;
+import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.customview.RoundAngleImageView;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -52,7 +53,7 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
     private TextView signature;
     private RoundAngleImageView avatar;
     private ImageView titleBg;
-    private User user;
+    private UserEntity user;
     private TextView systemCount;
 
     @Override
@@ -114,11 +115,11 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
                 .personModule(new PersonModule(this))
                 .build().inject(this);
         presenter.registerEvent(UnReadSystemNotifyEvent.class, unReadSystemNotifyEvent -> updateSystemNotifyCount());
-        presenter.registerEvent(User.class, user -> {
+        presenter.registerEvent(UserEntity.class, user -> {
             PersonFragment.this.user = user;
             updateUserInfo();
         });
-        user = UserManager.getInstance().getCurrentUser();
+        user = UserManager.getInstance().cover(UserManager.getInstance().getCurrentUser());
     }
 
     private void updateUserInfo() {
@@ -131,7 +132,7 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
             getAppComponent()
                     .getImageLoader()
                     .loadImage(getContext(), GlideImageLoaderConfig
-                            .newBuild().imageView(titleBg).url(user.getTitleWallPaper()).build());
+                            .newBuild().imageView(titleBg).url(user.getTitlePaper()).build());
         }
     }
 
@@ -200,17 +201,11 @@ public class PersonFragment extends AppBaseFragment<Object, PersonPresenter> imp
                                         if (e == null) {
                                             CommonLogger.e("更新用户信息成功");
                                             if (from.equals(ConstantUtil.TITLE_WALLPAPER)) {
-                                                getAppComponent()
-                                                        .getImageLoader()
-                                                        .loadImage(getContext(), GlideImageLoaderConfig
-                                                                .newBuild().imageView(titleBg).url(bmobFile.getFileUrl()).build());
+                                                user.setTitlePaper(bmobFile.getFileUrl());
                                             } else {
-                                                getAppComponent()
-                                                        .getImageLoader()
-                                                        .loadImage(getContext(), GlideImageLoaderConfig
-                                                                .newBuild().imageView(avatar).url(bmobFile.getFileUrl()).build());
+                                                user.setAvatar(bmobFile.getFileUrl());
                                             }
-                                            RxBusManager.getInstance().post(new UserInfoUpdateEvent());
+                                            RxBusManager.getInstance().post(UserManager.getInstance().cover(user));
                                         } else {
                                             CommonLogger.e("更新用户信息失败" + e.toString());
                                         }

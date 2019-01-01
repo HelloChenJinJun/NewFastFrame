@@ -152,7 +152,7 @@
             </intent-filter>
         </receiver>
         <meta-data
-            android:name="com.example.chat.ChatApplication"
+            android:name="com.example.chat.base.ChatApplication"
             android:value="IModuleConfig" />
         <!--推送服务-->
     </application>

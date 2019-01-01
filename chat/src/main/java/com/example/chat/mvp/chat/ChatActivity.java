@@ -814,7 +814,13 @@ public class ChatActivity extends ChatBaseActivity<BaseMessage, ChatPresenter> i
     @Override
     public void onBackPressed() {
         if (!ListVideoManager.getInstance().onBackPressed()) {
-            super.onBackPressed();
+            if (l1_more.getVisibility() == View.VISIBLE) {
+                l1_more.setVisibility(View.GONE);
+            }else if (r1_emotion.getVisibility()==View.VISIBLE){
+                r1_emotion.setVisibility(View.GONE);
+            }else {
+                super.onBackPressed();
+            }
         }
     }
 

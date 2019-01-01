@@ -215,8 +215,8 @@ public class EditUserInfoActivity extends ChatBaseActivity implements View.OnCli
         } else if (i == R.id.rl_edit_user_info_major) {
 
         } else if (i == R.id.rl_edit_user_info_name) {
-            EditUserInfoDetailActivity.start(this, ConstantUtil.NICK
-                    , mUser.getNick(), ConstantUtil.REQUEST_CODE_NAME);
+            EditUserInfoDetailActivity.start(this, ConstantUtil.NAME
+                    , mUser.getName(), ConstantUtil.REQUEST_CODE_NAME);
         }
     }
 

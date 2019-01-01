@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.chat.ChatApplication;
+import com.example.chat.base.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.dagger.login.DaggerLoginComponent;

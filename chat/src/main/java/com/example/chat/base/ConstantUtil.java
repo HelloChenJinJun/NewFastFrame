@@ -84,6 +84,7 @@ public class ConstantUtil {
     public static final String INSTALL_ID = "install_id";
     public static final int BASE_TYPE_SEND_VERIFY_CODE = 1;
     public static final int BASE_TYPE_PHONE_LOGIN = 2;
+    public static final String NAME = "name";
     /**
      * 外部缓存数据的目录
      */

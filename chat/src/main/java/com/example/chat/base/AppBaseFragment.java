@@ -2,7 +2,6 @@ package com.example.chat.base;
 
 
 
-import com.example.chat.ChatApplication;
 import com.example.chat.dagger.ChatMainComponent;
 import com.example.commonlibrary.BaseFragment;
 import com.example.commonlibrary.mvp.presenter.BasePresenter;

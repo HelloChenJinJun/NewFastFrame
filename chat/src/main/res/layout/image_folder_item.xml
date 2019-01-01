@@ -13,7 +13,7 @@
         android:layout_height="70dp"
         android:layout_margin="8dp"
         android:scaleType="centerCrop"
-        android:src="@mipmap/default_image"/>
+        android:background="@drawable/custom_drawable_place_holder"/>
 
 
     <LinearLayout

@@ -1,4 +1,4 @@
-package com.example.cootek.newfastframe.ui.fragment;
+package com.example.cootek.newfastframe.mvp.main;
 
 import android.view.View;
 

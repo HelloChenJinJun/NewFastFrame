@@ -1,7 +1,5 @@
 package com.example.chat.dagger;
 
-import com.example.chat.MainRepositoryManager;
-import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.component.AppComponent;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.commonlibrary.repository.DefaultRepositoryManager;

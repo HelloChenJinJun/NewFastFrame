@@ -1,4 +1,4 @@
-package com.example.cootek.newfastframe.ui.fragment;
+package com.example.cootek.newfastframe.mvp.bottom;
 
 import android.animation.FloatEvaluator;
 import android.animation.IntEvaluator;
@@ -42,10 +42,9 @@ import com.example.cootek.newfastframe.dagger.bottom.DaggerBottomFragmentCompone
 import com.example.cootek.newfastframe.event.DragEvent;
 import com.example.cootek.newfastframe.event.ProgressEvent;
 import com.example.cootek.newfastframe.event.ServiceStateEvent;
-import com.example.cootek.newfastframe.mvp.bottom.BottomPresenter;
 import com.example.cootek.newfastframe.mvp.lrc.LrcListFragment;
 import com.example.cootek.newfastframe.mvp.songdetail.SongDetailFragment;
-import com.example.cootek.newfastframe.ui.MainActivity;
+import com.example.cootek.newfastframe.mvp.main.MainActivity;
 import com.example.cootek.newfastframe.util.MusicUtil;
 import com.example.cootek.newfastframe.view.lrc.LrcRow;
 import com.example.cootek.newfastframe.view.lrc.LrcView;

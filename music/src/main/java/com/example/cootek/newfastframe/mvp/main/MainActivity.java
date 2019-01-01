@@ -1,4 +1,4 @@
-package com.example.cootek.newfastframe.ui;
+package com.example.cootek.newfastframe.mvp.main;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,8 +12,7 @@ import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.cootek.newfastframe.R;
 import com.example.cootek.newfastframe.event.DragEvent;
-import com.example.cootek.newfastframe.ui.fragment.BottomFragment;
-import com.example.cootek.newfastframe.ui.fragment.HolderFragment;
+import com.example.cootek.newfastframe.mvp.bottom.BottomFragment;
 import com.example.cootek.newfastframe.view.slide.SlidingPanelLayout;
 
 import io.reactivex.functions.Consumer;

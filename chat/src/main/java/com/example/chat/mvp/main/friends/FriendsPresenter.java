@@ -40,7 +40,7 @@ public class FriendsPresenter extends AppBasePresenter<IView<List<UserEntity>>,D
                     List<UserEntity>  userEntityList=new ArrayList<>(list.size());
                     for (User item :
                             list) {
-                        userEntityList.add(UserManager.getInstance().cover(item));
+                        userEntityList.add(UserManager.getInstance().cover(item,false));
                     }
                     UserDBManager.getInstance().addOrUpdateUser(userEntityList);
                     iView.updateData(userEntityList);

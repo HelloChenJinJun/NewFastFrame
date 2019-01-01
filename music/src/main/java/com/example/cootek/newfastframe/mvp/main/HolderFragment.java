@@ -1,4 +1,4 @@
-package com.example.cootek.newfastframe.ui.fragment;
+package com.example.cootek.newfastframe.mvp.main;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,6 @@ import com.example.cootek.newfastframe.base.MusicBaseFragment;
 import com.example.cootek.newfastframe.event.DragEvent;
 import com.example.cootek.newfastframe.mvp.rank.RankFragment;
 import com.example.cootek.newfastframe.mvp.search.SearchMusicFragment;
-import com.example.cootek.newfastframe.ui.MainActivity;
 import com.example.cootek.newfastframe.view.slide.SlidingPanelLayout;
 import com.nineoldandroids.view.ViewHelper;
 

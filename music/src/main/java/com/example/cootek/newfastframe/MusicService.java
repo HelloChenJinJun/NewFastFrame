@@ -29,7 +29,7 @@ import com.example.commonlibrary.rxbus.event.PlayStateEvent;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.example.cootek.newfastframe.mvp.lock.LockScreenActivity;
-import com.example.cootek.newfastframe.ui.MainActivity;
+import com.example.cootek.newfastframe.mvp.main.MainActivity;
 
 import java.util.List;
 

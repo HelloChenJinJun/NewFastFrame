@@ -103,7 +103,7 @@ public class CommentNotifyActivity extends ChatBaseActivity<List<PostNotifyBean>
             }
         });
         ToolBarOption toolBarOption = new ToolBarOption();
-        toolBarOption.setTitle("留言");
+        toolBarOption.setTitle("消息");
         toolBarOption.setNeedNavigation(true);
         setToolBar(toolBarOption);
         if (data != null) {

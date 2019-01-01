@@ -100,7 +100,7 @@ public class UserDBManager {
         List<UserEntity> userEntityList = new ArrayList<>();
         for (User user :
                 friend) {
-            userEntityList.add(UserManager.getInstance().cover(user));
+            userEntityList.add(UserManager.getInstance().cover(user,false));
         }
         daoSession.getUserEntityDao()
                 .insertOrReplaceInTx(userEntityList);

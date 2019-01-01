@@ -167,7 +167,7 @@
         </receiver>
         <!--推送服务-->
         <meta-data
-            android:name="com.example.chat.ChatApplication"
+            android:name="com.example.chat.base.ChatApplication"
             android:value="IModuleConfig" />
     </application>
 </manifest>

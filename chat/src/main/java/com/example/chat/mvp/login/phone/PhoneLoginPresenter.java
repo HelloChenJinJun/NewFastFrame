@@ -39,7 +39,7 @@ public class PhoneLoginPresenter extends AppBasePresenter<IView<BaseBean>, Defau
     }
 
     public void getVerifyCode(String phone) {
-        BmobSMS.requestSMSCode(phone, "chat", new QueryListener<Integer>() {
+        BmobSMS.requestSMSCode(phone, "login", new QueryListener<Integer>() {
             @Override
             public void done(Integer smsId, BmobException ex) {
                 BaseBean baseBean = new BaseBean();
@@ -59,7 +59,7 @@ public class PhoneLoginPresenter extends AppBasePresenter<IView<BaseBean>, Defau
     }
 
     public void login(String phone, String code) {
-        iView.showLoading("注册中。。。。。。。");
+        iView.showLoading("登陆中...");
         User user = new User();
         //设置手机号码（必填）
         user.setMobilePhoneNumber(phone);

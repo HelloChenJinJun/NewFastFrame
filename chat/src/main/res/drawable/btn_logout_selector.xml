@@ -4,9 +4,11 @@
 
     <solid android:color="@color/red_500"/>
 
-    <corners android:radius="5dp"/>
+    <corners android:radius="32dp"/>
 
-
+    <item
+        android:width="260dp"
+        android:height="64dp" />
 
 
 

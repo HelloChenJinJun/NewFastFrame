@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.chat.ChatApplication;
+import com.example.chat.base.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.dagger.account.password.DaggerPasswordChangeComponent;

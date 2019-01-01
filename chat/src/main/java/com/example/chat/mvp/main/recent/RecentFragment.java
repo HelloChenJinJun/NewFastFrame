@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.chat.R;
 import com.example.chat.adapter.RecentListAdapter;
 import com.example.chat.base.AppBaseFragment;
@@ -29,6 +30,7 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.chat.RecentMessageEntity;
 import com.example.commonlibrary.bean.chat.SkinEntity;
+import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.rxbus.RxBusManager;
@@ -40,6 +42,7 @@ import com.example.commonlibrary.utils.ToastUtils;
 import java.util.List;
 
 import androidx.appcompat.widget.PopupMenu;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -238,6 +241,15 @@ public class RecentFragment extends AppBaseFragment implements CustomSwipeRefres
                 net.setVisibility(View.GONE);
             } else {
                 net.setVisibility(View.VISIBLE);
+            }
+        }));
+        addDisposable(RxBusManager.getInstance().registerEvent(UserEntity.class, new Consumer<UserEntity>() {
+            @Override
+            public void accept(UserEntity userEntity) throws Exception {
+                if (getIcon() != null) {
+                    Glide.with(getContext()).load(userEntity.getAvatar())
+                            .into(getIcon());
+                }
             }
         }));
     }

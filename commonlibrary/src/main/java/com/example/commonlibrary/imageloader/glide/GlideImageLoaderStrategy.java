@@ -73,7 +73,9 @@ public class GlideImageLoaderStrategy implements BaseImageLoaderStrategy<GlideIm
             drawableRequestBuilder.apply(options).into(new SimpleTarget<Drawable>() {
                 @Override
                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                    config.getView().setBackground(resource);
+                    if (config.getView()!=null) {
+                        config.getView().setBackground(resource);
+                    }
                 }
             });
         }

@@ -542,6 +542,10 @@ public class UserManager {
                 break;
             case ConstantUtil.INSTALL_ID:
                 user.setInstallId(content);
+                break;
+            case ConstantUtil.NAME:
+                user.setName(content);
+                break;
         }
         user.update(new UpdateListener() {
             @Override

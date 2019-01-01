@@ -1,4 +1,4 @@
-package com.example.chat;
+package com.example.chat.base;
 
 import android.app.Activity;
 import android.app.Application;

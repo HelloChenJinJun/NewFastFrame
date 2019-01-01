@@ -41,7 +41,7 @@ public class ChatListAdapter extends BaseMultipleRecyclerAdapter<ChatBean, BaseW
             }
             User user = UserManager.getInstance().getCurrentUser();
             holder.setImageUrl(R.id.riv_item_activity_chat_list_right_avatar, user.getAvatar())
-                    .setText(R.id.tv_item_activity_chat_list_right_name, user.getNick())
+                    .setText(R.id.tv_item_activity_chat_list_right_name, user.getName())
                     .setText(R.id.tv_item_activity_chat_list_right_content, data.getContent())
                     .setOnItemChildLongClickListener(R.id.tv_item_activity_chat_list_right_content);
         }

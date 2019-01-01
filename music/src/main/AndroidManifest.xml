@@ -17,7 +17,7 @@
         android:supportsRtl="true">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".mvp.main.MainActivity"
             android:launchMode="singleTask" />
         <activity
             android:name=".mvp.lock.LockScreenActivity"

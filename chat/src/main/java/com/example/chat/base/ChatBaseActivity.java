@@ -1,6 +1,5 @@
 package com.example.chat.base;
 
-import com.example.chat.ChatApplication;
 import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.login.LoginActivity;

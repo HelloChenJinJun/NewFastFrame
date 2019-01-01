@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
-import com.example.chat.ChatApplication;
+import com.example.chat.base.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.CommentDetailAdapter;
 import com.example.chat.base.ChatBaseActivity;

@@ -1,8 +1,10 @@
 package com.example.chat.mvp.commentlist;
 
 import android.app.Activity;
+import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Selection;
 import android.text.Spannable;
@@ -24,7 +26,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.chat.ChatApplication;
+import com.example.chat.base.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.CommentListAdapter;
 import com.example.chat.adapter.EmotionViewAdapter;
@@ -86,7 +88,6 @@ import javax.inject.Inject;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.app.SharedElementCallback;
 import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -258,7 +259,7 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
             public void onItemChildClick(int position, View view, int id) {
                 if (id == R.id.iv_item_activity_comment_list_comment) {
                     currentPosition = position;
-                    input.setHint("回复@" + commentListAdapter.getData(position).getUser().getNick() + ":");
+                    input.setHint("回复@" + commentListAdapter.getData(position).getUser().getName() + ":");
                     dealBottomInput(true);
                     manager.scrollToPositionWithOffset(currentPosition + commentListAdapter.getItemUpCount(), 0);
                 } else if (id == R.id.riv_item_activity_comment_list_avatar) {
@@ -324,22 +325,24 @@ public class CommentListActivity extends ChatBaseActivity<List<PublicCommentBean
                 return true;
             }
         });
-        setExitSharedElementCallback(new SharedElementCallback() {
-            @Override
-            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setExitSharedElementCallback(new SharedElementCallback() {
+                @Override
+                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
 
-                View view = null;
-                if (headerDisplay != null) {
-                    view = headerDisplay.getLayoutManager().findViewByPosition(index);
+                    View view = null;
+                    if (headerDisplay != null) {
+                        view = headerDisplay.getLayoutManager().findViewByPosition(index);
+                    }
+                    if (view != null) {
+                        sharedElements.clear();
+                        sharedElements.put(((ImageShareInfoHolder.ImageShareAdapter) headerDisplay.getAdapter())
+                                .getData(index), view);
+                        index = -1;
+                    }
                 }
-                if (view != null) {
-                    sharedElements.clear();
-                    sharedElements.put(((ImageShareInfoHolder.ImageShareAdapter) headerDisplay.getAdapter())
-                            .getData(index), view);
-                    index = -1;
-                }
-            }
-        });
+            });
+        }
         presenter.registerEvent(PhotoPreEvent.class, photoPreEvent -> {
             if (photoPreEvent.getFlag() == ConstantUtil.COMMENT_LIST_FLAG) {
                 index = photoPreEvent.getIndex();

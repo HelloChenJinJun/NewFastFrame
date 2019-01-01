@@ -1,5 +1,7 @@
 package com.example.chat.mvp.shareinfo;
 
+import android.app.SharedElementCallback;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -7,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.chat.ChatApplication;
+import com.example.chat.base.ChatApplication;
 import com.example.chat.R;
 import com.example.chat.adapter.ShareInfoAdapter;
 import com.example.chat.adapter.holder.publicShare.ImageShareInfoHolder;
@@ -62,7 +64,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.app.SharedElementCallback;
 import androidx.core.util.Pair;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
@@ -272,26 +273,28 @@ public class ShareInfoFragment extends BaseFragment<List<PublicPostBean>, ShareI
             }
         });
 
-        getActivity().setExitSharedElementCallback(new SharedElementCallback() {
-            @Override
-            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                ImageShareInfoHolder imageShareInfoHolder = null;
-                if (currentImageIndex != -1) {
-                    imageShareInfoHolder = (ImageShareInfoHolder) display.findViewHolderForAdapterPosition(currentImageIndex + shareInfoAdapter.getItemUpCount());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getActivity().setExitSharedElementCallback(new SharedElementCallback() {
+                @Override
+                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                    ImageShareInfoHolder imageShareInfoHolder = null;
+                    if (currentImageIndex != -1) {
+                        imageShareInfoHolder = (ImageShareInfoHolder) display.findViewHolderForAdapterPosition(currentImageIndex + shareInfoAdapter.getItemUpCount());
+                    }
+                    View view = null;
+                    if (imageShareInfoHolder != null) {
+                        view = imageShareInfoHolder.getDisplay().getLayoutManager().findViewByPosition(index);
+                    }
+                    if (view != null) {
+                        sharedElements.clear();
+                        sharedElements.put(((ImageShareInfoHolder.ImageShareAdapter) imageShareInfoHolder.getDisplay().getAdapter())
+                                .getData(index), view);
+                        index = -1;
+                        currentImageIndex = -1;
+                    }
                 }
-                View view = null;
-                if (imageShareInfoHolder != null) {
-                    view = imageShareInfoHolder.getDisplay().getLayoutManager().findViewByPosition(index);
-                }
-                if (view != null) {
-                    sharedElements.clear();
-                    sharedElements.put(((ImageShareInfoHolder.ImageShareAdapter) imageShareInfoHolder.getDisplay().getAdapter())
-                            .getData(index), view);
-                    index = -1;
-                    currentImageIndex = -1;
-                }
-            }
-        });
+            });
+        }
         presenter.registerEvent(PhotoPreEvent.class, new Consumer<PhotoPreEvent>() {
             @Override
             public void accept(PhotoPreEvent photoPreEvent) throws Exception {

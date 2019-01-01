@@ -16,6 +16,7 @@ import com.example.chat.events.UserEvent;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
 import com.example.chat.mvp.NearByPeople.NearbyPeopleActivity;
+import com.example.chat.mvp.UserInfoTask.UserInfoActivity;
 import com.example.chat.mvp.blackList.BlackListActivity;
 import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.mvp.group.groupList.GroupListActivity;
@@ -65,10 +66,10 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
             tempList.addAll(users);
         }
         if (users != null && users.size() > 1) {
-            Collections.sort(users, (user, t1) -> AppUtil.getSortedKey(user.getName()).compareTo(AppUtil.getSortedKey(t1.getNick())));
+            Collections.sort(users, (user, t1) -> AppUtil.getSortedKey(user.getName()).compareTo(AppUtil.getSortedKey(t1.getName())));
         }
         adapter.refreshData(users);
-    }
+  }
 
     @Override
     protected boolean isNeedHeadLayout() {
@@ -133,8 +134,9 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
         adapter.setOnItemClickListener(new OnSimpleItemClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                ChatActivity.start(getActivity(), ConstantUtil.TYPE_PERSON, adapter
-                        .getData(position).getUid());
+//                ChatActivity.start(getActivity(), ConstantUtil.TYPE_PERSON, adapter
+//                        .getData(position).getUid());和，
+                UserInfoActivity.start(getActivity(),adapter.getData(position).getUid());
             }
         });
         presenter.registerEvent(UserEntity.class, user -> {
@@ -145,7 +147,7 @@ public class FriendsFragment extends AppBaseFragment<List<UserEntity>, FriendsPr
                 List<UserEntity> list = adapter.getData();
                 int size = list.size();
                 for (int i = 0; i < size; i++) {
-                    if (AppUtil.getSortedKey(user.getName()).compareTo(AppUtil.getSortedKey(list.get(i).getNick())) == 0) {
+                    if (AppUtil.getSortedKey(user.getName()).compareTo(AppUtil.getSortedKey(list.get(i).getName())) == 0) {
                         adapter.addData(i, user);
                         return;
                     }

@@ -2,7 +2,7 @@ package com.example.cootek.newfastframe.dagger.bottom;
 
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.cootek.newfastframe.mvp.bottom.BottomPresenter;
-import com.example.cootek.newfastframe.ui.fragment.BottomFragment;
+import com.example.cootek.newfastframe.mvp.bottom.BottomFragment;
 
 import dagger.Module;
 import dagger.Provides;

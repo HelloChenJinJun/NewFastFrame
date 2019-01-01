@@ -1,7 +1,7 @@
 package com.example.chat.dagger;
 
 
-import com.example.chat.ChatInterceptor;
+import com.example.chat.base.ChatInterceptor;
 import com.example.chat.base.ConstantUtil;
 import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;

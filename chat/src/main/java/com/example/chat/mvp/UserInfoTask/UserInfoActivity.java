@@ -24,6 +24,7 @@ import com.example.chat.listener.OnSendTagMessageListener;
 import com.example.chat.manager.MsgManager;
 import com.example.chat.manager.UserDBManager;
 import com.example.chat.manager.UserManager;
+import com.example.chat.mvp.UserDetail.UserDetailActivity;
 import com.example.chat.mvp.chat.ChatActivity;
 import com.example.chat.util.LogUtil;
 import com.example.commonlibrary.bean.chat.User;
@@ -38,6 +39,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -94,6 +96,7 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
         chat.setOnClickListener(this);
         add.setOnClickListener(this);
         black.setOnClickListener(this);
+        avatar.setOnClickListener(this);
     }
 
     @Override
@@ -226,6 +229,10 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
             } else {
                 showCancelBlackDialog();
             }
+        } else if (i == R.id.riv_user_info_avatar) {
+            UserDetailActivity.start(this,userEntity.getUid(), ActivityOptionsCompat.makeSceneTransitionAnimation(this, Pair.create(avatar, "avatar")
+                    , Pair.create(name, "name")
+                    , Pair.create(sex, "sex")));
         }
     }
 
@@ -260,23 +267,24 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
         builder.setMessage("确定要添加对方为黑名单吗？，添加后将不能接受对方发来的消息");
         builder.setPositiveButton("确定", (dialog, which) -> {
             dialog.dismiss();
-            showLoadDialog("正在添加....请稍候");
-            UserManager.getInstance().addToBlack(uid, new AddBlackCallBackListener() {
-                @Override
-                public void onSuccess() {
-                    dismissLoadDialog();
-                    isBlack = true;
-                    ToastUtils.showShortToast("添加黑名单成功");
-                    LogUtil.e("添加黑名单成功");
-                    black.setText("取消黑名单");
-                }
-
-                @Override
-                public void onFailed(BmobException e) {
-                    ToastUtils.showShortToast("添加黑名单失败");
-                    LogUtil.e("添加黑名单失败" + e.getMessage() + e.getErrorCode());
-                }
-            });
+            ToastUtils.showLongToast("黑名单该版本不支持");
+//            showLoadDialog("正在添加....请稍候");
+//            UserManager.getInstance().addToBlack(uid, new AddBlackCallBackListener() {
+//                @Override
+//                public void onSuccess() {
+//                    dismissLoadDialog();
+//                    isBlack = true;
+//                    ToastUtils.showShortToast("添加黑名单成功");
+//                    LogUtil.e("添加黑名单成功");
+//                    black.setText("取消黑名单");
+//                }
+//
+//                @Override
+//                public void onFailed(BmobException e) {
+//                    ToastUtils.showShortToast("添加黑名单失败");
+//                    LogUtil.e("添加黑名单失败" + e.getMessage() + e.getErrorCode());
+//                }
+//            });
         });
         builder.setNegativeButton("取消", (dialog, which) -> dialog.cancel());
         builder.show();

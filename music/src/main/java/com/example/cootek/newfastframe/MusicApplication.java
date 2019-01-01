@@ -14,7 +14,7 @@ import com.example.commonlibrary.router.RouterResult;
 import com.example.cootek.newfastframe.dagger.main.DaggerMainComponent;
 import com.example.cootek.newfastframe.dagger.main.MainComponent;
 import com.example.cootek.newfastframe.dagger.main.MainModule;
-import com.example.cootek.newfastframe.ui.MainActivity;
+import com.example.cootek.newfastframe.mvp.main.MainActivity;
 
 
 /**
