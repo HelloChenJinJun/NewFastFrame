@@ -30,47 +30,73 @@ http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/500896504036b3728040c51c2b11e53b
 
 ## screenshots
 ### 新闻模块
-<image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_1.jpg
+<image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_1.png
  width=250 height=450>
- <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_2.jpg
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_2.png
  width=250 height=450>
- <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_3.jpg
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_3.png
  width=250 height=450>
- <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_4.jpg
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_4.png
  width=250 height=450>
- <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_5.jpg
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_5.png
  width=250 height=450>
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/new_6.png
+  width=250 height=450>
  ### 音乐模块
-  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_1.jpg
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_1.png
  width=250 height=450>
-  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_2.jpg
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_2.png
  width=250 height=450>
-  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_3.jpg
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_3.png
  width=250 height=450>
- <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_4.jpg
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_4.png
  width=250 height=450>
-  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_5.jpg
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_5.png
  width=250 height=450>
-  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_6.jpg
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_6.png
  width=250 height=450>
-  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_7.jpg
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_7.png
  width=250 height=450>
- <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_8.jpg
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_8.png
  width=250 height=450>
- <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_9.jpg
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_9.png
  width=250 height=450>
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_10.png
+  width=250 height=450>
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_11.png
+   width=250 height=450>
+   <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_12.png
+    width=250 height=450>
+    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_13.png
+     width=250 height=450>
+     <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_14.png
+      width=250 height=450>
+      <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/music_15.png
+       width=250 height=450>
  ### 直播模块
-  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/live_1.jpg
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/live_1.png
  width=250 height=450>
-  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/live_2.jpg
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/live_2.png
  width=250 height=450>
-  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/live_3.jpg
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/live_3.png
  width=250 height=450>
-  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/live_4.jpg
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/live_4.png
  width=250 height=450>
+ ### 视频模块
+   <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/video_1.png
+  width=250 height=450>
+    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/video_2.png
+   width=250 height=450>
+     <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/video_3.png
+    width=250 height=450>
+      <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/video_4.png
+     width=250 height=450>
+       <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/video_5.png
+      width=250 height=450>
+
+
  ### 聊天模块
- 独立项目github地址:https://github.com/HelloChenJinJun/TestChat
- 
+ 独立项目github地址:https://github.com/HelloChenJinJun/TestChat(该项目包括群聊功能的实现)
  聊天项目详解地址:http://www.jianshu.com/p/2d76430617ae
  
    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_1.png
@@ -87,8 +113,48 @@ http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/500896504036b3728040c51c2b11e53b
  width=400 height=250>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_7.png
  width=400 height=250>
- <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_9.png
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_8.png
  width=400 height=250>
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_9.png
+  width=400 height=250>
+   <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_10.png
+   width=400 height=250>
+    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_11.png
+    width=400 height=250>
+     <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_12.png
+     width=400 height=250>
+      <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_13.png
+      width=400 height=250>
+       <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_14.png
+       width=400 height=250>
+        <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_15.png
+        width=400 height=250>
+         <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_16.png
+         width=400 height=250>
+          <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_17.png
+          width=400 height=250>
+           <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_18.png
+           width=400 height=250>
+            <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_19.png
+            width=400 height=250>
+             <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_20.png
+             width=400 height=250>
+              <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_21.png
+              width=400 height=250>
+               <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_22.png
+                width=400 height=250>
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_23.png
+ width=400 height=250>
+   <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_24.png
+ width=400 height=250>
+  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_25.png
+ width=400 height=250>
+     <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_26.png
+  width=400 height=250>
+    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/module/screenshots/chat_27.png
+    width=400 height=250>
+
+
  
  ## 参考的项目
 MVPArms
