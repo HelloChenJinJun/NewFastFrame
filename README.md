@@ -102,59 +102,59 @@ http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/500896504036b3728040c51c2b11e53b
  聊天项目详解地址:http://www.jianshu.com/p/2d76430617ae
  
    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_1.png
- width=400 height=250>
+ width=250 height=450>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_2.png
- width=400 height=250>
+ width=250 height=450>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_3.png
- width=400 height=250>
+ width=250 height=450>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_4.png
- width=400 height=250>
+ width=250 height=450>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_5.png
- width=400 height=250>
+ width=250 height=450>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_6.png
- width=400 height=250>
+ width=250 height=450>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_7.png
- width=400 height=250>
+ width=250 height=450>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_8.png
- width=400 height=250>
+ width=250 height=450>
   <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_9.png
-  width=400 height=250>
+  width=250 height=450>
    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_10.png
-   width=400 height=250>
+   width=250 height=450>
     <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_11.png
-    width=400 height=250>
+    width=250 height=450>
      <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_12.png
-     width=400 height=250>
+     width=250 height=450>
       <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_13.png
-      width=400 height=250>
+      width=250 height=450>
        <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_14.png
-       width=400 height=250>
+       width=250 height=450>
         <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_15.png
-        width=400 height=250>
+        width=250 height=450>
          <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_16.png
-         width=400 height=250>
+         width=250 height=450>
           <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_17.png
-          width=400 height=250>
+          width=250 height=450>
            <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_18.png
-           width=400 height=250>
+           width=250 height=450>
             <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_19.png
-            width=400 height=250>
+            width=250 height=450>
              <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_20.png
-             width=400 height=250>
+             width=250 height=450>
               <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_21.png
-              width=400 height=250>
+              width=250 height=450>
                <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_22.png
-                width=400 height=250>
+                width=250 height=450>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_23.png
- width=400 height=250>
+ width=250 height=450>
    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_24.png
- width=400 height=250>
+ width=250 height=450>
   <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_25.png
- width=400 height=250>
+ width=250 height=450>
      <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_26.png
-  width=400 height=250>
+  width=250 height=450>
     <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_27.png
-    width=400 height=250>
+    width=250 height=450>
 
 
  
