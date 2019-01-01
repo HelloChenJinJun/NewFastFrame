@@ -90,9 +90,11 @@ http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/500896504036b3728040c51c2b11e53b
      <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/video_3.png
     width=250 height=450>
       <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/video_4.png
-     width=250 height=450>
+     width=450 height=250>
        <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/video_5.png
       width=250 height=450>
+         <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/video_6.png
+            width=250 height=450>
 
 
  ### 聊天模块
