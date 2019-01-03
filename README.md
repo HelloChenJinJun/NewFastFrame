@@ -12,24 +12,10 @@
 https://juejin.im/entry/5a1cca70f265da432652923f
 
 http://www.jianshu.com/p/e6eb9c8d120f
+## screenshots & Video
+### 新闻模块 
+视频展示地址：http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-13-57-37-115.mp4
 
-视频地址:
-
-第一部分：http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/7fe9d6f1407eb280806b55d1aab13453.mp4
-
-第二部分：http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/9c9c05d840aaf93380a7bea1b5268ba3.mp4
-
-第三部分：http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/fcd3dc20402c374180a0d3e572bec726.mp4
-
-apk下载地址：
-
-http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/500896504036b3728040c51c2b11e53b.apk
-
-### 视频效果以及apkDemo中的效果可能有时候跟开发进度匹配不上，想看最新效果的，请从最新源码中编译运行观看。
-
-
-## screenshots
-### 新闻模块
 <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/new_1.png
  width=250 height=450>
  <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/new_2.png
@@ -42,7 +28,11 @@ http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/500896504036b3728040c51c2b11e53b
  width=250 height=450>
   <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/new_6.png
   width=250 height=450>
- ### 音乐模块
+ ### 音乐模块(由于为了展示锁屏音乐播放界面，因此录制了两端视频)
+第一部分：http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-13-43-34-35.mp4
+
+第二部分：http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-13-45-10-119.mp4
+
   <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/music_1.png
  width=250 height=450>
   <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/music_2.png
@@ -82,7 +72,9 @@ http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/500896504036b3728040c51c2b11e53b
  width=250 height=450>
   <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/live_4.png
  width=250 height=450>
- ### 视频模块
+ ### vip电影视频模块
+ 视频展示地址：http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-15-39-39-135.mp4
+   
    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/video_1.png
   width=250 height=450>
     <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/video_2.png
@@ -99,7 +91,23 @@ http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/500896504036b3728040c51c2b11e53b
 
  ### 聊天模块
  独立项目github地址:https://github.com/HelloChenJinJun/TestChat(该项目包括群聊功能的实现)
+ 
  聊天项目详解地址:http://www.jianshu.com/p/2d76430617ae
+ 
+ 
+ #### 帖子模块：
+http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-14-50-02-348.mp4
+
+#### 聊天模块:
+第一部分：http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-15-16-36-145.mp4
+
+第二部分：http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-15-18-28-177%280%29.mp4
+
+第三部分：http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-15-24-56-962.mp4
+
+#### 皮肤插件模块：
+http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-15-37-24-991.mp4
+ 
  
    <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_1.png
  width=250 height=450>
@@ -156,6 +164,7 @@ http://bmob-cdn-17771.b0.upaiyun.com/2018/07/29/500896504036b3728040c51c2b11e53b
     <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/chat_27.png
     width=250 height=450>
 
+### 视频效果以及apkDemo中的效果可能有时候跟开发进度匹配不上，想看最新效果的，请从最新源码中编译运行观看。
 
  
  ## 参考的项目
