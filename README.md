@@ -98,7 +98,7 @@ http://www.jianshu.com/p/e6eb9c8d120f
  #### 帖子模块：
 http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-14-50-02-348.mp4
 
-#### 聊天模块:
+#### 主模块:
 第一部分：http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-15-16-36-145.mp4
 
 第二部分：http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-15-18-28-177%280%29.mp4
@@ -165,6 +165,9 @@ http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-15-37-24-991.mp4
     width=250 height=450>
 
 ### 视频效果以及apkDemo中的效果可能有时候跟开发进度匹配不上，想看最新效果的，请从最新源码中编译运行观看。
+
+ ### bmob后台系统通知管理模块
+ 
 
  
  ## 参考的项目
