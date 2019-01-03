@@ -9,7 +9,13 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/chat" />
             <option value="$PROJECT_DIR$/commonlibrary" />
+            <option value="$PROJECT_DIR$/manager" />
+            <option value="$PROJECT_DIR$/music" />
+            <option value="$PROJECT_DIR$/news" />
+            <option value="$PROJECT_DIR$/skin" />
+            <option value="$PROJECT_DIR$/video" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
