@@ -3,6 +3,7 @@ package com.example.music.mvp.main;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,7 +56,6 @@ import com.example.commonlibrary.customview.draglayout.OnDragDeltaChangeListener
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderConfig;
 import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
-import com.example.commonlibrary.rxbus.event.SkinUpdateEvent;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.ToastUtils;
@@ -63,15 +63,16 @@ import com.example.music.R;
 import com.example.music.mvp.center.CenterFragment;
 import com.example.video.mvp.index.IndexFragment;
 import com.nineoldandroids.view.ViewHelper;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import io.reactivex.functions.Consumer;
 
 public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeListener, View.OnClickListener {
 
@@ -100,6 +101,12 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
         }
     }
 
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MobclickAgent.onProfileSignIn(UserManager.getInstance().getCurrentUserObjectId());
+    }
 
     @Override
     protected boolean needStatusPadding() {
@@ -272,19 +279,19 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
             }
         });
         display.setAdapter(viewPagerAdapter);
-//        addDisposable(RxBusManager.getInstance().registerEvent(SkinUpdateEvent.class, new Consumer<SkinUpdateEvent>() {
-//            @Override
-//            public void accept(SkinUpdateEvent skinUpdateEvent) throws Exception {
-//                chat.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_five), null, null);
-//                post.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_two), null, null);
-//                center.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_three), null, null);
-//                news.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_one), null, null);
-//                person.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_four), null, null);
-//
-//                bottomContainer.setBackgroundColor(SkinManager.getInstance().getColor(R.color.custom_color_app_title_bg));
-//                bg.setBackgroundColor(SkinManager.getInstance().getColor(R.color.custom_color_app_bg));
-//            }
-//        }));
+        //        addDisposable(RxBusManager.getInstance().registerEvent(SkinUpdateEvent.class, new Consumer<SkinUpdateEvent>() {
+        //            @Override
+        //            public void accept(SkinUpdateEvent skinUpdateEvent) throws Exception {
+        //                chat.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_five), null, null);
+        //                post.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_two), null, null);
+        //                center.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_three), null, null);
+        //                news.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_one), null, null);
+        //                person.setCompoundDrawablesRelativeWithIntrinsicBounds(null, SkinManager.getInstance().getDrawable(R.drawable.ic_demo_four), null, null);
+        //
+        //                bottomContainer.setBackgroundColor(SkinManager.getInstance().getColor(R.color.custom_color_app_title_bg));
+        //                bg.setBackgroundColor(SkinManager.getInstance().getColor(R.color.custom_color_app_bg));
+        //            }
+        //        }));
     }
 
 

@@ -23,6 +23,7 @@ import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -201,6 +202,7 @@ public class UserManager {
         edit.apply();
         uid = null;
         User.logOut();
+        MobclickAgent.onProfileSignOff();
     }
 
     /**
