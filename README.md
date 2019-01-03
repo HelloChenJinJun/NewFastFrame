@@ -15,7 +15,9 @@ https://juejin.im/entry/5a1cca70f265da432652923f
 
 http://www.jianshu.com/p/e6eb9c8d120f
 
-## 本次更新内容：
+https://juejin.im/post/5c2d8fe46fb9a049c30b5d4b
+
+## 本次更新内容(2019-1-3)：
 #### 1.内部更新编译SDK版本到28.0.0，google的support库迁移到androidx；
 #### 2.在线下载皮肤插件，无需重启更新全局。
 #### 3.基类库集成字体库、友盟页面数据统计、bugly（bug监控、升级和热修复）等功能。
