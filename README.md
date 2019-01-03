@@ -3,7 +3,7 @@
 
 
 ## 简介
-该项目目前集成现在主流的开发框架和技术，包括okhttp3、rxjava2、retrofit2、glide、greendao3.0、dagger2、mvp、md风格、皮肤插件、热修复tinker,bugly和组件化等。
+该项目目前集成现在主流的开发框架和技术，包括okhttp、rxjava、retrofit、glide、greendao、dagger、mvp、md风格、皮肤插件、热修复tinker,bugly、友盟数据统计和组件化等。
 
 采用组件化开发框架，可以使模块单独编译调试，可以有效地减少编译的时间，更好地进行并发开发，从而极大的提高了并行开发效率。
 
@@ -189,6 +189,10 @@ https://github.com/youlookwhat/CloudReader
 
 非常感谢以上开源项目的作者！谢谢！
 
+## 以上的vip电影、音乐和新闻资源都是从网上收集过来的，只用于提供学习交流，切勿商用!!!如有侵权，请联系作者将其删除。
+
+QQ：1981367757
+WX：chen17771420070
  
  
  
