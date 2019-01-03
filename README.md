@@ -189,10 +189,27 @@ https://github.com/youlookwhat/CloudReader
 
 非常感谢以上开源项目的作者！谢谢！
 
-## 以上的vip电影、音乐和新闻资源都是从网上收集过来的，只用于提供学习交流，切勿商用!!!如有侵权，请联系作者将其删除。
+# License
 
-QQ：1981367757
-WX：chen17771420070
+
+    Copyright 2018, chenjinjun       
+  
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at 
+ 
+       http://www.apache.org/licenses/LICENSE-2.0 
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+## 以上的vip电影、音乐和新闻模块上的资源都是从网上收集过来的，只用于提供学习交流，切勿商用!!!如有侵权，请联系作者将其删除。
+
+  QQ：1981367757
+  WX：chen17771420070
  
  
  
