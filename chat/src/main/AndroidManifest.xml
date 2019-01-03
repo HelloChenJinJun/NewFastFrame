@@ -99,6 +99,7 @@
         <activity android:name=".mvp.feedback.ChatListActivity" />
         <activity android:name=".mvp.about.AboutActivity" />
         <activity android:name=".mvp.developer.DeveloperInfoActivity" />
+        <activity android:name=".mvp.about.protocol.ProtocolActivity" />
 
 
         <intent-filter>

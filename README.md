@@ -166,7 +166,12 @@ http://pkqddsu1y.bkt.clouddn.com/Screenrecorder-2019-01-01-15-37-24-991.mp4
 
 ### 视频效果以及apkDemo中的效果可能有时候跟开发进度匹配不上，想看最新效果的，请从最新源码中编译运行观看。
 
- ### bmob后台系统通知管理模块
+### bmob后台系统通知管理模块
+ <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/manager_1.png
+    width=250 height=450>
+     <image src=https://github.com/HelloChenJinJun/NewFastFrame/blob/common/screenshots/manager_2.png
+        width=450 height=225>
+
  
 
  

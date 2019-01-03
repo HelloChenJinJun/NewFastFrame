@@ -31,4 +31,9 @@
     <string name="bottom_preview">预览(0)</string>
     <string name="image_folder_count">一共有%1$d张图片</string>
     <string name="login_main">进去瞧瞧</string>
+    <string name="protocol">该App的vip电影、音乐和新闻模块上的资源都是从网上收集过来的，只用于提供学习交流，切勿商用！！！如有侵权，请联系作者将其删除。
+        \n
+        QQ：1981367757
+        \n
+        WX：chen17771420070</string>
 </resources>

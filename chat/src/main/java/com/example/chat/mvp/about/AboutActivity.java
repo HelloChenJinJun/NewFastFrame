@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.chat.R;
 import com.example.chat.base.ChatBaseActivity;
+import com.example.chat.mvp.about.protocol.ProtocolActivity;
 import com.example.chat.mvp.developer.DeveloperInfoActivity;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.utils.AppUtil;
@@ -90,7 +91,7 @@ public class AboutActivity extends ChatBaseActivity implements View.OnClickListe
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.rl_activity_about_protocol) {
-            //                ProtocolActivity.start(this);
+                            ProtocolActivity.start(this);
         } else if (id == R.id.rl_activity_about_policy) {
         } else if (id == R.id.rl_activity_about_encourage) {
         } else if (id == R.id.rl_activity_about_check_up_grade) {
