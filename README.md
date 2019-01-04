@@ -41,7 +41,7 @@ https://juejin.im/post/5c2d8fe46fb9a049c30b5d4b
 #### 21....太多了，列举不了这么多，具体效果请看app。
 
 ## app下载地址：
-http://bmob-cdn-17771.b0.upaiyun.com/2019/01/03/cb2acab44035b7de80fc2e814f77eaf8.apk
+http://bmob-cdn-17771.b0.upaiyun.com/2019/01/04/e97fd73e40819993806c379e2a6bc79f.apk
 
 
 #### 由于该项目是本人一个人独立开发的，所以我这边不仅仅考虑技术上的问题，还得考虑UI设计等方面，由于我用的三方bmob后台，所以不需要考虑后台的开发，但任务还是挺繁重的，接下去要做的事情还有很多，主要有如下：
