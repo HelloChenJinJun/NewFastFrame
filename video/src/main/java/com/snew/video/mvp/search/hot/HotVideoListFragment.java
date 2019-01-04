@@ -12,6 +12,7 @@ import com.snew.video.adapter.HotVideoAdapter;
 import com.snew.video.base.VideoBaseFragment;
 import com.snew.video.bean.CommonVideoBean;
 import com.snew.video.bean.HotVideoItemBean;
+import com.snew.video.mvp.actor.ActorDetailInfoActivity;
 import com.snew.video.mvp.qq.detail.QQVideoDetailActivity;
 import com.snew.video.util.VideoUtil;
 
@@ -73,12 +74,16 @@ public class HotVideoListFragment extends VideoBaseFragment {
             @Override
             public void onItemClick(int position, View view) {
                 HotVideoItemBean hotVideoItemBean = mHotVideoAdapter.getData(position);
-                CommonVideoBean commonVideoBean = new CommonVideoBean();
-                commonVideoBean.setId(hotVideoItemBean.getId());
-                commonVideoBean.setVideoType(hotVideoItemBean.getVideoType());
-                commonVideoBean.setTitle(hotVideoItemBean.getTitle());
-                commonVideoBean.setUrl(hotVideoItemBean.getUrl());
-                QQVideoDetailActivity.start(getActivity(), commonVideoBean);
+                if (hotVideoItemBean.getVideoType()!=VideoUtil.VIDEO_TYPE_QQ_STAR) {
+                    CommonVideoBean commonVideoBean = new CommonVideoBean();
+                    commonVideoBean.setId(hotVideoItemBean.getId());
+                    commonVideoBean.setVideoType(hotVideoItemBean.getVideoType());
+                    commonVideoBean.setTitle(hotVideoItemBean.getTitle());
+                    commonVideoBean.setUrl(hotVideoItemBean.getUrl());
+                    QQVideoDetailActivity.start(getActivity(), commonVideoBean);
+                }else {
+                    ActorDetailInfoActivity.start(getActivity(),hotVideoItemBean.getUrl(),null);
+                }
             }
         });
     }

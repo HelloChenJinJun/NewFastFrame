@@ -45,6 +45,10 @@ public class VideoUtil {
     public static final int VIDEO_TYPE_QQ_MV = 11;
 
 
+//    明星
+    public static final int VIDEO_TYPE_QQ_STAR=17;
+
+
     public static String getSignedValue(String md5) {
         JSEngine jsEngine = new JSEngine("vip.js");
         return jsEngine.runScript(md5, "sign");

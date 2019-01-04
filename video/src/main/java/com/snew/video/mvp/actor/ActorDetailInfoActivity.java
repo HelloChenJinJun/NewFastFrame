@@ -71,7 +71,11 @@ public class ActorDetailInfoActivity extends VideoBaseActivity<BaseBean, ActorDe
     public static void start(Activity activity, String data, ActivityOptionsCompat activityOptionsCompat) {
         Intent intent = new Intent(activity, ActorDetailInfoActivity.class);
         intent.putExtra(VideoUtil.DATA, data);
-        activity.startActivity(intent, activityOptionsCompat.toBundle());
+        if (activityOptionsCompat != null) {
+            activity.startActivity(intent, activityOptionsCompat.toBundle());
+        } else {
+            activity.startActivity(intent);
+        }
     }
 
 

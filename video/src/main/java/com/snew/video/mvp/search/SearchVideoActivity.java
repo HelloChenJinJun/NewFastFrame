@@ -367,19 +367,20 @@ public class SearchVideoActivity extends VideoBaseActivity<BaseBean, SearchVideo
         //        fragmentList.add(HotVideoListFragment.newInstance(list));
         //
         //
-        //        //       556
-        //        titleList.add(hotVideoBean.getData().getMapResult().get_$556().getChannelTitle());
-        //        list = new ArrayList<>();
-        //        for (HotVideoBean.DataBean.MapResultBean._$556Bean.ListInfoBeanXXXXXXXXXX item :
-        //                hotVideoBean.getData().getMapResult().get_$556().getListInfo()) {
-        //            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
-        //            hotVideoItemBean.setId(item.getId());
-        //            hotVideoItemBean.setTitle(item.getTitle());
-        //            hotVideoItemBean.setVideoType(item.getDataType());
-        //            hotVideoItemBean.setUrl(VideoUtil.getParseUrl(item.getId(), VideoUtil.VIDEO_URL_TYPE_QQ));
-        //            list.add(hotVideoItemBean);
-        //        }
-        //        fragmentList.add(HotVideoListFragment.newInstance(list));
+        //       556
+        titleList.add(hotVideoBean.getData().getMapResult().get_$556().getChannelTitle());
+        list = new ArrayList<>();
+        for (HotVideoBean.DataBean.MapResultBean._$556Bean.ListInfoBeanXXXXXXXXXX item :
+                hotVideoBean.getData().getMapResult().get_$556().getListInfo()) {
+            HotVideoItemBean hotVideoItemBean = new HotVideoItemBean();
+            hotVideoItemBean.setId(item.getId());
+            hotVideoItemBean.setTitle(item.getTitle());
+            hotVideoItemBean.setVideoType(item.getDataType());
+            //                    http://v.qq.com/x/star/72862
+            hotVideoItemBean.setUrl(("http://v.qq.com/x/star/" + item.getId()).trim());
+            list.add(hotVideoItemBean);
+        }
+        fragmentList.add(HotVideoListFragment.newInstance(list));
         //
         //
         //        //        10001
