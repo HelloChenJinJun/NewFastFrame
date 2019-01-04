@@ -338,7 +338,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
         }
         mState = PLAY_STATE_IDLE;
         mVideoController.onPlayStateChanged(mState);
-        mMediaPlayer = null;
+
     }
 
     @Override

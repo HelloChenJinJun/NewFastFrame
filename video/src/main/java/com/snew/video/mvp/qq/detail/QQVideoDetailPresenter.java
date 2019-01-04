@@ -176,7 +176,7 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
     private Observable<String> getDetailDataForOne(String url) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), "url=" + url);
         return baseModel.getRepositoryManager().getApi(VideoApi.class)
-                .postUrlInfo("http://api.bbbbbb.me/zy/api.php", requestBody).subscribeOn(Schedulers.io())
+                .postUrlInfo("http://api.bbbbbb.me/zy/sigu.php", requestBody).subscribeOn(Schedulers.io())
                 .flatMap((Function<QQVideoDetailBean, ObservableSource<String>>) qqVideoDetailBean -> {
                     if (qqVideoDetailBean.getCode() == 0) {
                         String tempUrl = null;
@@ -189,11 +189,9 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
                             Uri uri;
                             String key;
                             String type;
-                            String cid;
                             uri = Uri.parse(tempUrl);
                             key = uri.getQueryParameter("url");
                             type = uri.getQueryParameter("type");
-                            cid = uri.getQueryParameter("cid");
                             CommonLogger.e("url:" + uri.toString());
                             if (key != null && (key.contains(".mp4") || key.contains(".m3u8"))) {
                                 return Observable.just(key);
@@ -204,9 +202,7 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
                             if (tempUrl.contains("jiexi/")) {
                                 return getDetailDataForThree(url);
                             } else if (tempUrl.contains("yunjxs") || tempUrl.contains("qqmtv")) {
-                                if (tempUrl.contains("qqmtv")) {
-                                    md5 = VideoUtil.getSignedValue(md5);
-                                }
+                                md5 = VideoUtil.getSignedValue(md5);
                                 body.append("id=").append(key).append("&type=").append(TextUtils.isEmpty(type) ? "auto" : type).append("&siteuser=&md5=").append(md5)
                                         .append("&hd=&lg=");
                             } else if (tempUrl.contains("anlehe")) {
