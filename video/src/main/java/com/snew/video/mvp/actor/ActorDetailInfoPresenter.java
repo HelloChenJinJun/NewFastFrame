@@ -52,6 +52,17 @@ public class ActorDetailInfoPresenter extends RxBasePresenter<IView<BaseBean>, D
                     }
                     actorDetailInfoBean.setName(img.attr("alt"));
                     Elements videoList = document.select(".figure_list._content_list");
+                    if (videoList.size() == 0) {
+
+                        //                        之前的：http://v.qq.com/x/star/76698
+                        //                        http://v.qq.com/doki/star?dataonly=1&id=133698&fantuanid=14555
+                        StringBuilder stringBuilder = new StringBuilder("http://v.qq.com/doki/star?dataonly=1&fantuanid=14555&tabid=1");
+                        stringBuilder.append("&id=").append(url.substring(url.lastIndexOf("/") + 1, url.length()));
+                        document = Jsoup.connect(stringBuilder.toString().trim()).get();
+                        videoList = document.select(".figure_list._content_list");
+                    }
+
+
                     if (videoList.size() > 0) {
                         List<ActorDetailInfoBean.ActorVideoWrappedDetailBean> wrappedDetailBeans = new ArrayList<>();
                         for (Element item :
@@ -76,6 +87,8 @@ public class ActorDetailInfoPresenter extends RxBasePresenter<IView<BaseBean>, D
                             }
                         }
                         actorDetailInfoBean.setActorVideoWrappedDetailBeanList(wrappedDetailBeans);
+                    } else {
+
                     }
                     return actorDetailInfoBean;
                 }).observeOn(AndroidSchedulers.mainThread())

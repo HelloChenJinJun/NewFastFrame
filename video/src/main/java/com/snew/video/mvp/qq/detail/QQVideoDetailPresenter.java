@@ -212,7 +212,8 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
                             return baseModel.getRepositoryManager().getApi(VideoApi.class)
                                     .postUrlInfo(tempUrl.substring(0, tempUrl.indexOf("?")) + "api.php", requestBody1)
                                     .map(qqVideoDetailBean1 -> qqVideoDetailBean1.getUrl()).subscribeOn(Schedulers.io());
-                        } else if (qqVideoDetailBean.getPlay().equals("normal")) {
+                        } else if (qqVideoDetailBean.getPlay().equals("normal")
+                                ||qqVideoDetailBean.getPlay().equals("hls")) {
                             return Observable.just(qqVideoDetailBean.getUrl());
                         }
                     }

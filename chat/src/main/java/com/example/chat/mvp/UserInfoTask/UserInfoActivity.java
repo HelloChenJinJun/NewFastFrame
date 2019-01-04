@@ -18,7 +18,6 @@ import com.example.chat.R;
 import com.example.chat.base.ChatBaseActivity;
 import com.example.chat.base.ConstantUtil;
 import com.example.chat.bean.ChatMessage;
-import com.example.chat.listener.AddBlackCallBackListener;
 import com.example.chat.listener.CancelBlackCallBlackListener;
 import com.example.chat.listener.OnSendTagMessageListener;
 import com.example.chat.manager.MsgManager;
@@ -232,7 +231,8 @@ public class UserInfoActivity extends ChatBaseActivity implements View.OnClickLi
         } else if (i == R.id.riv_user_info_avatar) {
             UserDetailActivity.start(this,userEntity.getUid(), ActivityOptionsCompat.makeSceneTransitionAnimation(this, Pair.create(avatar, "avatar")
                     , Pair.create(name, "name")
-                    , Pair.create(sex, "sex")));
+                    , Pair.create(sex, "sex")
+            ,Pair.create(signature,"signature")));
         }
     }
 
