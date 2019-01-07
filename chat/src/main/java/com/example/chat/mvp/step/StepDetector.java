@@ -1,7 +1,14 @@
 package com.example.chat.mvp.step;
 
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+
+import com.example.chat.base.ConstantUtil;
+import com.example.chat.manager.UserManager;
+import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.bean.chat.StepData;
+import com.example.commonlibrary.utils.TimeUtil;
 
 
 public class StepDetector {
@@ -43,13 +50,37 @@ public class StepDetector {
 
     private CallBack callBack;
 
-    public StepDetector(int stepCount, CallBack callBack) {
-        this.callBack = callBack;
-        this.stepCount = stepCount;
+    public StepDetector(CallBack callBack) {
+        this.callBack = new CallBack() {
+            @Override
+            public void countStep(int stepCount) {
+                SharedPreferences sharedPreferences = BaseApplication.getAppComponent().getSharedPreferences();
+                String day = TimeUtil.getTime(System.currentTimeMillis(), "yyyy-MM-dd");
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                if (sharedPreferences.getBoolean(day, true)) {
+                    editor.putBoolean(day, false).putInt(ConstantUtil.STEP, 0).apply();
+                    StepData stepData = new StepData();
+                    stepData.setTime(TimeUtil.getTime(System.currentTimeMillis() - 24 * 60 * 60 * 1000L, "yyyy-MM-dd"));
+                    stepData.setUid(UserManager.getInstance().getCurrentUserObjectId());
+                    stepData.setStepCount(StepDetector.this.stepCount);
+                    BaseApplication.getAppComponent().getDaoSession().getStepDataDao().insertOrReplace(stepData);
+                    StepDetector.this.stepCount = 0;
+                    StepDetector.this.systemStepCount = 0;
+                    StepDetector.this.tempStep = 0;
+                    stepCount = 0;
+                } else {
+                    editor.putInt(ConstantUtil.STEP, stepCount).apply();
+                }
+                if (callBack != null) {
+                    callBack.countStep(stepCount);
+                }
+            }
+        };
+        this.stepCount = BaseApplication.getAppComponent().getSharedPreferences().getInt(ConstantUtil.STEP, 0);
     }
 
 
-    private int stepCount = 0;
+    private int stepCount;
 
 
     public void setStepCount(int stepCount) {
@@ -63,6 +94,8 @@ public class StepDetector {
     }
 
     private int systemStepCount;
+    private int tempStep = 0;
+
 
     public void dealSensorEvent(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -72,7 +105,9 @@ public class StepDetector {
             if (systemStepCount == 0) {
                 systemStepCount = step;
             } else {
-                stepCount = step - systemStepCount;
+                int add = step - systemStepCount - tempStep;
+                stepCount += add;
+                tempStep = step - systemStepCount;
                 callBack.countStep(stepCount);
             }
         } else if (sensorEvent.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {

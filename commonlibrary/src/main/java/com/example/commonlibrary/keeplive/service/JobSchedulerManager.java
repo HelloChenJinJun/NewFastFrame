@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.PersistableBundle;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.utils.CommonLogger;
 
 import androidx.annotation.RequiresApi;
 
@@ -54,14 +55,6 @@ public class JobSchedulerManager {
         } else {
             builder.setPeriodic(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS);
         }
-        if (Build.VERSION.SDK_INT >= 24) {
-            builder.setMinimumLatency(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS); //执行的最小延迟时间
-            builder.setOverrideDeadline(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS);  //执行的最长延时时间
-            builder.setMinimumLatency(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS);
-            builder.setBackoffCriteria(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS, JobInfo.BACKOFF_POLICY_LINEAR);//线性重试方案
-        } else {
-            builder.setPeriodic(JobInfo.DEFAULT_INITIAL_BACKOFF_MILLIS);
-        }
         builder.setPersisted(true);  // 设置设备重启时，执行该任务
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
         builder.setRequiresCharging(true); // 当插入充电器，执行该任务
@@ -75,7 +68,12 @@ public class JobSchedulerManager {
         builder.setExtras(persistableBundle);
         JobInfo info = builder.build();
         //开始定时执行该系统任务
-        jobScheduleer.schedule(info);
+        int result = jobScheduleer.schedule(info);
+        if (result == JobScheduler.RESULT_FAILURE) {
+            CommonLogger.e("jobService启动失败");
+        } else {
+            CommonLogger.e("jobService启动成功");
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

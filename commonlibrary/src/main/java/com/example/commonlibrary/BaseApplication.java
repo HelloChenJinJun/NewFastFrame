@@ -21,6 +21,7 @@ import com.example.commonlibrary.utils.DataCleanUtil;
 import com.example.commonlibrary.utils.TimeUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.meituan.android.walle.WalleChannelReader;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
@@ -63,6 +64,12 @@ public class BaseApplication extends Application implements View.OnClickListener
     @Override
     public void onCreate() {
         super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
         instance = this;
         initDagger();
         initFont();

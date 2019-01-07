@@ -167,6 +167,11 @@ dependencies {
     api files('libs/rxjava-1.1.6.jar')
     api files('libs/BmobSDK_3.5.8_20171013.jar')
     api files('libs/Bmob_Push_1.0.1_20170907.jar')
+
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
 }
 
 

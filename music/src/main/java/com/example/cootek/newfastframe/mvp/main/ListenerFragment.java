@@ -63,6 +63,7 @@ public class ListenerFragment extends MusicBaseFragment implements View.OnClickL
             addBackStackFragment(RecentPlayListFragment.newInstance(MusicUtil.FROM_LOCAL));
         } else if (id == R.id.tv_fragment_music_repository) {
             //            addBackStackFragment(RecommendFragment.newInstance());
+//            addBackStackFragment(SingerListFragment.newInstance(null));
             ToastUtils.showShortToast("推荐界面后期开发");
 
         } else if (id == R.id.tv_fragment_listener_recent) {

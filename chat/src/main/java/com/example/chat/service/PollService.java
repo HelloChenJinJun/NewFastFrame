@@ -160,16 +160,7 @@ public class PollService extends KeepLiveService implements SensorEventListener 
         if (sensor == null) {
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         }
-        StepData stepData = null;
-        if (UserManager.getInstance().getCurrentUserObjectId() != null) {
-            stepData = UserDBManager.getInstance()
-                    .getStepData(TimeUtil.getTime(System.currentTimeMillis(), "yyyy-MM-dd"));
-        }
-        int count = 0;
-        if (stepData != null) {
-            count = stepData.getStepCount();
-        }
-        stepDetector = new StepDetector(count, stepCount -> {
+        stepDetector = new StepDetector(stepCount -> {
             CommonLogger.e("step:" + stepCount);
             RxBusManager.getInstance().post(new StepEvent(stepCount));
         });
@@ -253,7 +244,7 @@ public class PollService extends KeepLiveService implements SensorEventListener 
         if (UserManager.getInstance().getCurrentUserObjectId() == null) {
             return;
         }
-        LogUtil.e("拉取单聊消息");
+        CommonLogger.e("拉取单聊消息");
         BmobQuery<ChatMessage> query = new BmobQuery<>();
         query.addWhereEqualTo(ConstantUtil.TAG_TO_ID, UserManager.getInstance().getCurrentUserObjectId());
         query.addWhereEqualTo(ConstantUtil.TAG_MESSAGE_SEND_STATUS, ConstantUtil.SEND_STATUS_SUCCESS);
@@ -265,7 +256,7 @@ public class PollService extends KeepLiveService implements SensorEventListener 
             @Override
             public void done(List<ChatMessage> list, BmobException e) {
                 if (e == null) {
-                    LogUtil.e("1拉取单聊消息成功");
+                    LogUtil.e("拉取单聊消息成功");
                     if (list != null && list.size() > 0) {
                         for (ChatMessage item :
                                 list) {

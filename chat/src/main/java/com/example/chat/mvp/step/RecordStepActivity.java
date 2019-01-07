@@ -5,12 +5,11 @@ import android.content.Intent;
 
 import com.example.chat.R;
 import com.example.chat.base.ChatBaseActivity;
+import com.example.chat.base.ConstantUtil;
 import com.example.chat.events.StepEvent;
 import com.example.chat.manager.MsgManager;
-import com.example.chat.manager.UserDBManager;
-import com.example.chat.util.TimeUtil;
 import com.example.chat.view.StepArcView;
-import com.example.commonlibrary.bean.chat.StepData;
+import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.rxbus.RxBusManager;
 
@@ -54,16 +53,13 @@ public class RecordStepActivity extends ChatBaseActivity {
 
     @Override
     protected void initData() {
-            addDisposable(RxBusManager.getInstance().registerEvent(StepEvent.class
-                    , stepEvent -> stepArcView.setCurrentCount(10000,stepEvent.getStepCount())));
-        StepData stepData= UserDBManager.getInstance().getStepData(TimeUtil
-        .getTime(System.currentTimeMillis(),"yyyy-MM-dd"));
-        if (stepData != null) {
-            stepArcView.setCurrentCount(10000,stepData.getStepCount());
-        }else {
-            stepArcView.setCurrentCount(10000,0);
-        }
-        ToolBarOption toolBarOption=new ToolBarOption();
+        addDisposable(RxBusManager.getInstance().registerEvent(StepEvent.class
+                , stepEvent -> stepArcView.setCurrentCount(10000, stepEvent.getStepCount())));
+        //        StepData stepData= UserDBManager.getInstance().getStepData(TimeUtil
+        //        .getTime(System.currentTimeMillis(),"yyyy-MM-dd"));
+        stepArcView.setCurrentCount(10000, BaseApplication.getAppComponent()
+                .getSharedPreferences().getInt(ConstantUtil.STEP, 0));
+        ToolBarOption toolBarOption = new ToolBarOption();
         toolBarOption.setTitle("计步器");
         toolBarOption.setNeedNavigation(true);
         setToolBar(toolBarOption);
@@ -76,8 +72,8 @@ public class RecordStepActivity extends ChatBaseActivity {
         MsgManager.getInstance().saveCurrentStep(stepArcView.getStepNumber());
     }
 
-    public static void start(Activity activity){
-        Intent intent=new Intent(activity,RecordStepActivity.class);
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, RecordStepActivity.class);
         activity.startActivity(intent);
     }
 }

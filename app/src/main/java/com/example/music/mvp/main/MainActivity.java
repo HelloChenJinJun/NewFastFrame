@@ -58,6 +58,8 @@ import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.skin.SkinManager;
 import com.example.commonlibrary.utils.CommonLogger;
+import com.example.commonlibrary.utils.PermissionPageUtils;
+import com.example.commonlibrary.utils.PermissionUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.example.music.R;
 import com.example.music.mvp.center.CenterFragment;
@@ -464,7 +466,29 @@ public class MainActivity extends ChatBaseActivity implements OnDragDeltaChangeL
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.ll_menu_bottom_container) {
-            WeatherInfoActivity.start(this, mWeatherInfoBean);
+
+            PermissionUtil.requestLocation(new PermissionUtil.RequestPermissionCallBack() {
+                @Override
+                public void onRequestPermissionSuccess() {
+                    WeatherInfoActivity.start(MainActivity.this, mWeatherInfoBean);
+                    CommonLogger.e("onRequestPermissionSuccess");
+                    ToastUtils.showShortToast("授权成功");
+                }
+
+                @Override
+                public void onRequestPermissionFailure() {
+                    CommonLogger.e("onRequestPermissionFailure");
+                    ToastUtils.showShortToast("授权失败");
+                    showBaseDialog("权限跳转", "是否需要跳转到界面开启权限", "取消", "跳转"
+                            , null, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    PermissionPageUtils.jumpPermissionPage(MainActivity.this);
+                                }
+                            }
+                    );
+                }
+            }, this);
         } else if (id == R.id.rl_menu_head_layout) {
             UserDetailActivity.start(this, UserManager.getInstance().getCurrentUserObjectId(), ActivityOptionsCompat.makeSceneTransitionAnimation(this, Pair.create(avatar, "avatar")
                     , Pair.create(signature, "signature"), Pair.create(nick, "name")
