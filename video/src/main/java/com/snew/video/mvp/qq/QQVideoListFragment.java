@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
+import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
+import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
 import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.baseadapter.foot.LoadMoreFooterView;
 import com.example.commonlibrary.baseadapter.foot.OnLoadMoreListener;
@@ -11,10 +13,9 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.BaseBean;
-import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
-import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
 import com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout;
 import com.example.commonlibrary.manager.video.ListVideoManager;
+import com.example.commonlibrary.rxbus.event.NetStatusEvent;
 import com.example.commonlibrary.utils.DensityUtil;
 import com.snew.video.R;
 import com.snew.video.adapter.QQVideoListAdapter;
@@ -31,6 +32,8 @@ import com.snew.video.util.VideoUtil;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * 项目名称:    NewFastFrame
@@ -78,7 +81,7 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
 
     @Override
     protected boolean isNeedEmptyLayout() {
-        return false;
+        return true;
     }
 
 
@@ -126,13 +129,23 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
                 } else {
                     id = resultsBean.getId();
                 }
-                CommonVideoBean commonVideoBean=new CommonVideoBean();
+                CommonVideoBean commonVideoBean = new CommonVideoBean();
                 commonVideoBean.setVideoType(videoType);
                 commonVideoBean.setId(id);
                 commonVideoBean.setTitle(resultsBean.getFields().getTitle());
                 commonVideoBean.setImage(resultsBean.getFields().getHorizontal_pic_url());
-                commonVideoBean.setUrl(VideoUtil.getParseUrl(resultsBean.getId(),videoUrlType));
-                QQVideoDetailActivity.start(getActivity(),commonVideoBean);
+                commonVideoBean.setUrl(VideoUtil.getParseUrl(resultsBean.getId(), videoUrlType));
+                QQVideoDetailActivity.start(getActivity(), commonVideoBean);
+            }
+        });
+        presenter.registerEvent(NetStatusEvent.class, new Consumer<NetStatusEvent>() {
+            @Override
+            public void accept(NetStatusEvent netStatusEvent) throws Exception {
+                if (netStatusEvent.isConnected()) {
+                    if (getLayoutStatus() == EmptyLayout.STATUS_NO_NET) {
+                        updateView();
+                    }
+                }
             }
         });
 
@@ -261,7 +274,7 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
 
     @Override
     public void showLoading(String loadingMsg) {
-        super.showLoading(loadingMsg);
+        //        super.showLoading(loadingMsg);
         refresh.setRefreshing(true);
     }
 
@@ -273,7 +286,11 @@ public class QQVideoListFragment extends VideoBaseFragment<BaseBean, QQVideoList
 
     @Override
     public void showError(String errorMsg, EmptyLayout.OnRetryListener listener) {
-        super.showError(errorMsg, listener);
+        if (refresh.isRefreshing()) {
+            super.showError(errorMsg, listener);
+        } else {
+            ((LoadMoreFooterView) display.getLoadMoreFooterView()).setStatus(LoadMoreFooterView.Status.ERROR);
+        }
         refresh.setRefreshing(false);
     }
 

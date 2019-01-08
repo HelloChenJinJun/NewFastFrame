@@ -313,7 +313,6 @@ public class DefaultVideoController extends VideoController implements View.OnCl
     }
 
     private void updateProgress() {
-        CommonLogger.e("updateProgress");
         long currentPosition = mIVideoPlayer.getPosition();
         long duration = mIVideoPlayer.getDuration();
         int buffered = mIVideoPlayer.getBufferedPercentage();
@@ -521,7 +520,8 @@ public class DefaultVideoController extends VideoController implements View.OnCl
             clarityContainer.setVisibility(GONE);
         } else if (id == R.id.tv_view_video_control_error_retry) {
             if (AppUtil.isNetworkAvailable()) {
-                mIVideoPlayer.start();
+                mIVideoPlayer.reset();
+                mIVideoPlayer.prepareAsync();
             } else {
                 ToastUtils.showShortToast("网络连接失败，请检查网络配置");
             }

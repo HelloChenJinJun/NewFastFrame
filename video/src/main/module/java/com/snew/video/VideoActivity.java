@@ -1,7 +1,9 @@
 package com.snew.video;
 
+import com.example.commonlibrary.manager.video.ListVideoManager;
 import com.snew.video.base.VideoBaseActivity;
-import com.snew.video.mvp.video.VideoFragment;
+import com.snew.video.mvp.qq.QQVideoFragment;
+import com.snew.video.util.VideoUtil;
 
 /**
  * 项目名称:    NewFastFrame
@@ -39,7 +41,7 @@ public class VideoActivity extends VideoBaseActivity {
 
     @Override
     protected void initData() {
-        addOrReplaceFragment(VideoFragment.newInstance(), R.id.fl_activity_video_container);
+        addOrReplaceFragment(QQVideoFragment.newInstance(VideoUtil.VIDEO_URL_TYPE_QQ), R.id.fl_activity_video_container);
     }
 
     @Override

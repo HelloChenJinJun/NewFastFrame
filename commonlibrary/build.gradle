@@ -56,6 +56,10 @@ dependencies {
     api(rootProject.ext.dependencies.support_v4) {
         exclude module: "support-annotations"
     }
+
+
+    api 'com.danikula:videocache:2.7.1'
+
     api rootProject.ext.dependencies.annotations
     api rootProject.ext.dependencies.rxjava2
     api(rootProject.ext.dependencies.rxjava2_android) {

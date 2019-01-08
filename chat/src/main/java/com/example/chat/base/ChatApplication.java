@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
-import com.example.chat.base.ConstantUtil;
-import com.example.chat.base.RandomData;
 import com.example.chat.bean.CustomInstallation;
 import com.example.chat.dagger.ChatMainComponent;
 import com.example.chat.dagger.ChatMainModule;
@@ -29,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import cn.bmob.push.BmobPush;
-import cn.bmob.v3.Bmob;
 
 /**
  * 项目名称:    NewFastFrame
@@ -57,7 +54,6 @@ public class ChatApplication implements IAppLife {
     public void onCreate(Application application) {
         chatMainComponent = DaggerChatMainComponent.builder().appComponent(BaseApplication.getAppComponent())
                 .chatMainModule(new ChatMainModule()).build();
-        Bmob.initialize(application, ConstantUtil.KEY);
         //        AppStat.i(ConstantUtil.KEY, null);
         LogUtil.e("1服务器端初始化完成");
         CustomInstallation customInstallation = new CustomInstallation();

@@ -33,6 +33,7 @@ public interface IVideoPlayer {
 
     long getDuration();
 
+    void prepareAsync();
 
     String getTitle();
 

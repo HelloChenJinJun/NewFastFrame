@@ -1,7 +1,7 @@
 package com.snew.video.mvp.video;
 
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
-import com.example.commonlibrary.bean.news.VideoTabBean;
+import com.example.commonlibrary.bean.video.VideoTabBean;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.customview.WrappedViewPager;
 import com.google.android.material.tabs.TabLayout;

@@ -20,17 +20,20 @@
         android:theme="@style/CustomTheme">
 
 
-        <activity android:name=".VideoActivity">
+        <activity android:name=".VideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".mvp.qq.detail.QQVideoDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />
-
+        <activity android:name=".mvp.search.SearchVideoActivity" />
+        <activity android:name=".mvp.actor.ActorDetailInfoActivity" />
         <meta-data
             android:name="com.snew.video.base.VideoApplication"
             android:value="IModuleConfig" />

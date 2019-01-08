@@ -14,7 +14,6 @@ import com.example.commonlibrary.mvp.view.IView;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.snew.video.api.VideoApi;
 import com.snew.video.bean.NorVideoDetailBean;
-import com.snew.video.bean.QQTVVideoDetailBean;
 import com.snew.video.bean.QQVideoDetailBean;
 import com.snew.video.bean.TVPlayBean;
 import com.snew.video.bean.VarietyDetailResult;
@@ -53,73 +52,73 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
     }
 
 
-    public Observable<String> commonParseUrl(String url) {
-        //http://api.bbbbbb.me/yunjx/?url=
-        return Observable.just(url).subscribeOn(Schedulers.io())
-                .flatMap(new Function<String, Observable<String>>() {
-                    @Override
-                    public Observable<String> apply(String s) throws Exception {
-                        StringBuilder stringBuilder = new StringBuilder("http://api.bbbbbb.me/yunjxs/?url=").append(s);
-                        Document document = Jsoup.connect(stringBuilder.toString()).get();
-                        String content = document.outerHtml();
-                        String parseContent = VideoUtil.getMd5Value(content);
-                        StringBuilder body = new StringBuilder();
-                        body.append("id=").append(s).append("&type=auto&siteuser=&md5=").append(parseContent)
-                                .append("&hd=&lg=");
-                        RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), body.toString());
-                        return baseModel.getRepositoryManager().getApi(VideoApi.class)
-                                .postQQTVUrlInfo("http://api.bbbbbb.me/yunjxs/api.php", requestBody1)
-                                .flatMap(new Function<QQTVVideoDetailBean, Observable<String>>() {
-                                    @Override
-                                    public Observable<String> apply(QQTVVideoDetailBean qqtvVideoDetailBean) throws Exception {
-                                        String ext = qqtvVideoDetailBean.getExt();
-                                        if (ext != null && (ext.equals("mp4") || ext.equals("m3u8"))) {
-                                            return Observable.just(qqtvVideoDetailBean.getUrl());
-                                        } else if (ext != null && ext.equals("link")) {
-                                            String realUrl = qqtvVideoDetailBean.getUrl().substring(qqtvVideoDetailBean.getUrl().indexOf("url=") + 4);
+//    public Observable<String> commonParseUrl(String url) {
+//        //http://api.bbbbbb.me/yunjx/?url=
+//        return Observable.just(url).subscribeOn(Schedulers.io())
+//                .flatMap(new Function<String, Observable<String>>() {
+//                    @Override
+//                    public Observable<String> apply(String s) throws Exception {
+//                        StringBuilder stringBuilder = new StringBuilder("http://api.bbbbbb.me/yunjxs/?url=").append(s);
+//                        Document document = Jsoup.connect(stringBuilder.toString()).get();
+//                        String content = document.outerHtml();
+//                        String parseContent = VideoUtil.getMd5Value(content);
+//                        StringBuilder body = new StringBuilder();
+//                        body.append("id=").append(s).append("&type=auto&siteuser=&md5=").append(parseContent)
+//                                .append("&hd=&lg=");
+//                        RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), body.toString());
+//                        return baseModel.getRepositoryManager().getApi(VideoApi.class)
+//                                .postQQTVUrlInfo("http://api.bbbbbb.me/yunjxs/api.php", requestBody1)
+//                                .flatMap(new Function<QQTVVideoDetailBean, Observable<String>>() {
+//                                    @Override
+//                                    public Observable<String> apply(QQTVVideoDetailBean qqtvVideoDetailBean) throws Exception {
+//                                        String ext = qqtvVideoDetailBean.getExt();
+//                                        if (ext != null && (ext.equals("mp4") || ext.equals("m3u8"))) {
+//                                            return Observable.just(qqtvVideoDetailBean.getUrl());
+//                                        } else if (ext != null && ext.equals("link")) {
+//                                            String realUrl = qqtvVideoDetailBean.getUrl().substring(qqtvVideoDetailBean.getUrl().indexOf("url=") + 4);
+//
+//                                            return commonParseUrl(realUrl);
+//                                        }
+//                                        return null;
+//                                    }
+//                                })
+//                                .subscribeOn(Schedulers.io());
+//                    }
+//                });
+//    }
 
-                                            return commonParseUrl(realUrl);
-                                        }
-                                        return null;
-                                    }
-                                })
-                                .subscribeOn(Schedulers.io());
-                    }
-                });
-    }
 
-
-    public void getData(String url) {
-        commonParseUrl(url).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        addDispose(d);
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                        String decoderUrl = URLDecoder.decode(s);
-                        BaseBean baseBean = new BaseBean();
-                        baseBean.setType(VideoUtil.BASE_TYPE_VIDEO_DETAIL_URL);
-                        baseBean.setData(decoderUrl);
-                        //                                用于标识当前请求的url
-                        baseBean.setExtraInfo(url);
-                        baseBean.setCode(200);
-                        iView.updateData(baseBean);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        iView.showError(e.getMessage(), null);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        iView.hideLoading();
-                    }
-                });
-    }
+//    public void getData(String url) {
+//        commonParseUrl(url).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<String>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//                        addDispose(d);
+//                    }
+//
+//                    @Override
+//                    public void onNext(String s) {
+//                        String decoderUrl = URLDecoder.decode(s);
+//                        BaseBean baseBean = new BaseBean();
+//                        baseBean.setType(VideoUtil.BASE_TYPE_VIDEO_DETAIL_URL);
+//                        baseBean.setData(decoderUrl);
+//                        //                                用于标识当前请求的url
+//                        baseBean.setExtraInfo(url);
+//                        baseBean.setCode(200);
+//                        iView.updateData(baseBean);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        iView.showError(e.getMessage(), null);
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        iView.hideLoading();
+//                    }
+//                });
+//    }
 
 
     public void getDetailData(String url, boolean isSwitch) {
@@ -142,12 +141,12 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
 
                     @Override
                     public void onNext(String string) {
-                        CommonLogger.e("最终url" + string);
                         BaseBean baseBean = new BaseBean();
                         baseBean.setType(VideoUtil.BASE_TYPE_VIDEO_DETAIL_URL);
                         if (string != null) {
                             string = URLDecoder.decode(string);
                         }
+                        CommonLogger.e("最终url" + string);
                         baseBean.setData(string);
                         baseBean.setCode(200);
                         baseBean.setExtraInfo(url);
@@ -174,51 +173,67 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
     }
 
     private Observable<String> getDetailDataForOne(String url) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), "url=" + url);
-        return baseModel.getRepositoryManager().getApi(VideoApi.class)
-                .postUrlInfo("http://api.bbbbbb.me/zy/sigu.php", requestBody).subscribeOn(Schedulers.io())
-                .flatMap((Function<QQVideoDetailBean, ObservableSource<String>>) qqVideoDetailBean -> {
-                    if (qqVideoDetailBean.getCode() == 0) {
-                        String tempUrl = null;
-                        if (qqVideoDetailBean.getPlay().equals("url")) {
-                            if (URLUtil.isValidUrl(qqVideoDetailBean.getUrl())) {
-                                tempUrl = qqVideoDetailBean.getUrl();
-                            } else {
-                                tempUrl = "http://api.bbbbbb.me" + qqVideoDetailBean.getUrl();
-                            }
-                            Uri uri;
-                            String key;
-                            String type;
-                            uri = Uri.parse(tempUrl);
-                            key = uri.getQueryParameter("url");
-                            type = uri.getQueryParameter("type");
-                            CommonLogger.e("url:" + uri.toString());
-                            if (key != null && (key.contains(".mp4") || key.contains(".m3u8"))) {
-                                return Observable.just(key);
-                            }
 
-                            String md5 = VideoUtil.getMd5Value(Jsoup.connect(tempUrl).get().outerHtml());
-                            StringBuilder body = new StringBuilder();
-                            if (tempUrl.contains("jiexi/")) {
-                                return getDetailDataForThree(url);
-                            } else if (tempUrl.contains("yunjxs") || tempUrl.contains("qqmtv")) {
-                                md5 = VideoUtil.getSignedValue(md5);
-                                body.append("id=").append(key).append("&type=").append(TextUtils.isEmpty(type) ? "auto" : type).append("&siteuser=&md5=").append(md5)
-                                        .append("&hd=&lg=");
-                            } else if (tempUrl.contains("anlehe")) {
-                                return getDetailDataForThree(url);
+        return Observable.just(url).subscribeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(String s) throws Exception {
+//                https://api.bbbbbb.me/zy/?url=https://v.qq.com/x/cover/2j5kilwvtepehti.html
+                StringBuilder stringBuilder=new StringBuilder("https://api.bbbbbb.me/zy/?url=");
+                stringBuilder.append(s);
+                Document document=Jsoup.connect(stringBuilder.toString().trim()).get();
+//         start  :  url":"       end:  ","type
+                String start="url\":\"";
+                String end="\",\"type";
+                String content = document.outerHtml();
+                int startIndex = content.indexOf(start);
+                String url1 = content.substring(startIndex + start.length(), content.lastIndexOf(end)).trim();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), "url=" + url1);
+               return baseModel.getRepositoryManager().getApi(VideoApi.class)
+                        .postUrlInfo("http://api.bbbbbb.me/zy/sigu.php", requestBody).subscribeOn(Schedulers.io())
+                        .flatMap((Function<QQVideoDetailBean, ObservableSource<String>>) qqVideoDetailBean -> {
+                            if (qqVideoDetailBean.getCode() == 0) {
+                                String tempUrl = null;
+                                if (qqVideoDetailBean.getPlay().equals("url")) {
+                                    if (URLUtil.isValidUrl(qqVideoDetailBean.getUrl())) {
+                                        tempUrl = qqVideoDetailBean.getUrl();
+                                    } else {
+                                        tempUrl = "http://api.bbbbbb.me" + qqVideoDetailBean.getUrl();
+                                    }
+                                    Uri uri;
+                                    String key;
+                                    String type;
+                                    uri = Uri.parse(tempUrl);
+                                    key = uri.getQueryParameter("url");
+                                    type = uri.getQueryParameter("type");
+                                    CommonLogger.e("url:" + uri.toString());
+                                    if (key != null && (key.contains(".mp4") || key.contains(".m3u8"))) {
+                                        return Observable.just(key);
+                                    }
+
+                                    String md5 = VideoUtil.getMd5Value(Jsoup.connect(tempUrl).get().outerHtml());
+                                    StringBuilder body = new StringBuilder();
+                                    if (tempUrl.contains("jiexi/")) {
+                                        return getDetailDataForThree(url);
+                                    } else if (tempUrl.contains("yunjxs") || tempUrl.contains("qqmtv")) {
+                                        md5 = VideoUtil.getSignedValue(md5);
+                                        body.append("id=").append(key).append("&type=").append(TextUtils.isEmpty(type) ? "auto" : type).append("&siteuser=&md5=").append(md5)
+                                                .append("&hd=&lg=");
+                                    } else if (tempUrl.contains("anlehe")) {
+                                        return getDetailDataForThree(url);
+                                    }
+                                    RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), body.toString());
+                                    return baseModel.getRepositoryManager().getApi(VideoApi.class)
+                                            .postUrlInfo(tempUrl.substring(0, tempUrl.indexOf("?")) + "api.php", requestBody1)
+                                            .map(qqVideoDetailBean1 -> qqVideoDetailBean1.getUrl()).subscribeOn(Schedulers.io());
+                                } else if (qqVideoDetailBean.getPlay().equals("normal")
+                                        || qqVideoDetailBean.getPlay().equals("hls")) {
+                                    return Observable.just(qqVideoDetailBean.getUrl());
+                                }
                             }
-                            RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), body.toString());
-                            return baseModel.getRepositoryManager().getApi(VideoApi.class)
-                                    .postUrlInfo(tempUrl.substring(0, tempUrl.indexOf("?")) + "api.php", requestBody1)
-                                    .map(qqVideoDetailBean1 -> qqVideoDetailBean1.getUrl()).subscribeOn(Schedulers.io());
-                        } else if (qqVideoDetailBean.getPlay().equals("normal")
-                                ||qqVideoDetailBean.getPlay().equals("hls")) {
-                            return Observable.just(qqVideoDetailBean.getUrl());
-                        }
-                    }
-                    return getDetailDataForThree(url);
-                });
+                            return getDetailDataForThree(url);
+                        });
+            }
+        });
     }
 
     private Observable<String> getDetailDataForTwo(String url) {
@@ -476,7 +491,6 @@ public class QQVideoDetailPresenter extends RxBasePresenter<IView<BaseBean>, Def
                     VarietyDetailResult varietyDetailResult
                             = BaseApplication.getAppComponent().getGson().fromJson(body.substring(0, body.length() - 1)
                             , VarietyDetailResult.class);
-
                     if (varietyDetailResult.getJsonvalue() != null &&
                             varietyDetailResult.getJsonvalue().getResults() != null
                             && varietyDetailResult.getJsonvalue().getResults().size() > 0) {

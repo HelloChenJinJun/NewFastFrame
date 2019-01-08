@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.danikula.videocache.HttpProxyCacheServer;
 import com.example.commonlibrary.adaptScreen.ScreenAdaptManager;
 import com.example.commonlibrary.customview.CommonDialog;
 import com.example.commonlibrary.dagger.component.AppComponent;
@@ -15,13 +16,14 @@ import com.example.commonlibrary.dagger.component.DaggerAppComponent;
 import com.example.commonlibrary.dagger.module.GlobalConfigModule;
 import com.example.commonlibrary.keeplive.service.JobSchedulerManager;
 import com.example.commonlibrary.keeplive.service.KeepLiveService;
+import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.DataCleanUtil;
+import com.example.commonlibrary.utils.FileUtil;
 import com.example.commonlibrary.utils.TimeUtil;
 import com.example.commonlibrary.utils.ToastUtils;
 import com.meituan.android.walle.WalleChannelReader;
-import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
@@ -32,7 +34,10 @@ import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
+import java.io.File;
+
 import androidx.multidex.MultiDex;
+import cn.bmob.v3.Bmob;
 
 /**
  * Created by COOTEK on 2017/7/28.
@@ -64,12 +69,12 @@ public class BaseApplication extends Application implements View.OnClickListener
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
+        //        if (LeakCanary.isInAnalyzerProcess(this)) {
+        //            // This process is dedicated to LeakCanary for heap analysis.
+        //            // You should not init your app in this process.
+        //            return;
+        //        }
+        //        LeakCanary.install(this);
         instance = this;
         initDagger();
         initFont();
@@ -77,7 +82,30 @@ public class BaseApplication extends Application implements View.OnClickListener
         initScreenAdapt();
         initBugly();
         initKeepLive();
+        initBmob();
+        initVideoCache();
         applicationDelegate.onCreate(this);
+    }
+
+    private void initVideoCache() {
+        proxy = new HttpProxyCacheServer.Builder(BaseApplication.getInstance())
+                .maxCacheSize(1024 * 1024 * 1024 * 10L)       // 10 Gb for cache
+                .cacheDirectory(new File(FileUtil.getDefaultCacheFile(this), "video_cache"))
+                .fileNameGenerator(AppUtil::md5)
+                .build();
+        //        proxy = new HttpProxyCacheServer(BaseApplication.getInstance());
+    }
+
+
+    private static HttpProxyCacheServer proxy;
+
+    public static HttpProxyCacheServer getVideoProxy() {
+        return proxy;
+    }
+
+
+    private void initBmob() {
+        Bmob.initialize(this, Constant.KEY);
     }
 
 
@@ -265,10 +293,10 @@ public class BaseApplication extends Application implements View.OnClickListener
     }
 
     private void initFont() {
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/PingFang_Medium.ttf")
-//                .setFontAttrId(R.attr.fontPath)
-//                .build());
+        //        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+        //                .setDefaultFontPath("fonts/PingFang_Medium.ttf")
+        //                .setFontAttrId(R.attr.fontPath)
+        //                .build());
     }
 
 

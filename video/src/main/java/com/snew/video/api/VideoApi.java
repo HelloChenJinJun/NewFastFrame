@@ -1,17 +1,17 @@
 package com.snew.video.api;
 
 import com.snew.video.bean.HotVideoBean;
-import com.snew.video.bean.OtherVideoDetailBean;
-import com.snew.video.bean.QQTVVideoDetailBean;
 import com.snew.video.bean.QQVideoDetailBean;
 import com.snew.video.bean.VideoDetailBean;
 import com.snew.video.bean.VideoListBean;
+import com.snew.video.interceptor.CacheControlInterceptor;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Url;
 
@@ -32,6 +32,8 @@ public interface VideoApi {
     @GET
     Observable<ResponseBody> getCookie(@Url String url);
 
+
+    @Headers(CacheControlInterceptor.CACHE_CONTROL_NET)
     @GET
     Observable<ResponseBody> getContent(@Url String url);
 
@@ -40,6 +42,7 @@ public interface VideoApi {
     Observable<ResponseBody> getOtherCookie(@Url String url, @Body RequestBody requestBody);
 
 
+    @Headers(CacheControlInterceptor.CACHE_CONTROL_NET)
     @GET
     Observable<ResponseBody> getQQVideoListBean(@Url String url);
 
@@ -48,23 +51,26 @@ public interface VideoApi {
     Observable<QQVideoDetailBean> postUrlInfo(@Url String url, @Body RequestBody requestBody);
 
 
-    @POST
-        //    $.post("api.php", {"id": "1006_43dc5ba04ae343ff97111d83b437f2f4","type": "qqmtv","siteuser": '',"md5": sign($('#hdMd5').val()),"hd":"","lg":""},
-    Observable<QQTVVideoDetailBean> postQQTVUrlInfo(@Url String url, @Body RequestBody requestBody);
+    //    @POST
+    //    $.post("api.php", {"id": "1006_43dc5ba04ae343ff97111d83b437f2f4","type": "qqmtv","siteuser": '',"md5": sign($('#hdMd5').val()),"hd":"","lg":""},
+    //    Observable<QQTVVideoDetailBean> postQQTVUrlInfo(@Url String url, @Body RequestBody requestBody);
 
+
+    @Headers(CacheControlInterceptor.CACHE_CONTROL_NET)
     @GET
     Observable<ResponseBody> getVideoListHeaderData(@Url String url);
 
+    @Headers(CacheControlInterceptor.CACHE_CONTROL_NET)
     @GET
     Observable<HotVideoBean> getHotVideoData(@Url String url);
 
+
+    @Headers(CacheControlInterceptor.CACHE_CONTROL_NET)
     @GET
     Observable<ResponseBody> searchVideo(@Url String url);
 
 
-    @POST
-    Observable<OtherVideoDetailBean> postBaiYuUrl(@Url String url, @Body RequestBody requestBody);
-
+    @Headers(CacheControlInterceptor.CACHE_CONTROL_NET)
     @GET
     Observable<ResponseBody> getVarietyDetailInfo(@Url String url);
 }

@@ -16,12 +16,15 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.danikula.videocache.CacheListener;
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.bean.video.VideoInfoBean;
 import com.example.commonlibrary.manager.IVideoPlayer;
 import com.example.commonlibrary.utils.AppUtil;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.example.commonlibrary.utils.DensityUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +42,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  * 创建人:      陈锦军
  * 创建时间:    2018/11/22     11:04
  */
-public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, TextureView.SurfaceTextureListener, IMediaPlayer.OnPreparedListener, IMediaPlayer.OnInfoListener, IMediaPlayer.OnCompletionListener, IMediaPlayer.OnErrorListener, IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnVideoSizeChangedListener {
+public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, TextureView.SurfaceTextureListener, IMediaPlayer.OnPreparedListener, IMediaPlayer.OnInfoListener, IMediaPlayer.OnCompletionListener, IMediaPlayer.OnErrorListener, IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnVideoSizeChangedListener, CacheListener {
 
     private static final int MAX_SWITCH_NUM = 1;
     IMediaPlayer mMediaPlayer;
@@ -123,6 +126,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
         switchNum = 0;
         this.url = url;
         this.headers = headers;
+        BaseApplication.getVideoProxy().unregisterCacheListener(this);
         return this;
     }
 
@@ -338,16 +342,16 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
         }
         mState = PLAY_STATE_IDLE;
         mVideoController.onPlayStateChanged(mState);
-
+        if (mSurfaceTexture != null) {
+            mSurfaceTexture.release();
+            mSurfaceTexture = null;
+        }
+        BaseApplication.getVideoProxy().unregisterCacheListener(this);
     }
 
     @Override
     public void release() {
         reset();
-        if (mSurfaceTexture != null) {
-            mSurfaceTexture.release();
-            mSurfaceTexture = null;
-        }
         container.removeView(defaultTextureView);
     }
 
@@ -385,15 +389,24 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
         }
     }
 
-    private void prepareAsync() {
-        if (mMediaPlayer == null)
+    @Override
+    public void prepareAsync() {
+        if (mMediaPlayer == null || url == null)
             return;
         container.setKeepScreenOn(true);
         try {
             mState = PLAY_STATE_PREPARING;
             mVideoController.onPlayStateChanged(mState);
             if (AppUtil.isNetworkAvailable()) {
-                mMediaPlayer.setDataSource(getContext(), Uri.parse(url), headers);
+                String realUrl;
+                if (url.startsWith("http")) {
+                    realUrl = BaseApplication.getVideoProxy().getProxyUrl(url);
+                    CommonLogger.e("proxyUrl:" + realUrl);
+                    BaseApplication.getVideoProxy().registerCacheListener(this, url);
+                }else {
+                    realUrl=url;
+                }
+                mMediaPlayer.setDataSource(getContext(), Uri.parse(realUrl), headers);
                 mMediaPlayer.prepareAsync();
             } else {
                 mState = PLAY_STATE_ERROR;
@@ -492,8 +505,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
         //        1extra -2147483648
         if ((what == 1 && extra == -2147483648) && !url.contains(".mp4") && !url.contains(".m3u8") && switchNum < MAX_SWITCH_NUM) {
             switchNum++;
-            switchMediaPlayer(false);
-            return true;
+            //            switchMediaPlayer(false);
         }
         mState = PLAY_STATE_ERROR;
         mVideoController.onPlayStateChanged(mState);
@@ -514,7 +526,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
 
     @Override
     public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
-        mBufferedPercent = percent;
+        //        mBufferedPercent = percent;
     }
 
     @Override
@@ -528,5 +540,21 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
 
     public void setSwitchFlag(boolean isSwitch) {
         this.isSwitch = isSwitch;
+    }
+
+    @Override
+    public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
+        CommonLogger.e("缓存文件:" + cacheFile.getAbsolutePath() + "\n" +
+                "缓存url:" + url + "\n"
+                + "缓存进度：" + percentsAvailable);
+        mBufferedPercent = percentsAvailable;
+        if (percentsAvailable == 100) {
+            VideoInfoBean videoInfoBean = new VideoInfoBean();
+            videoInfoBean.setUrl(url);
+            videoInfoBean.setPath(cacheFile.getAbsolutePath());
+            videoInfoBean.setName(getTitle());
+            BaseApplication.getAppComponent().getDaoSession()
+                    .getVideoInfoBeanDao().insertOrReplace(videoInfoBean);
+        }
     }
 }

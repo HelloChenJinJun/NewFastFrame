@@ -1,6 +1,7 @@
 package com.snew.video.mvp.qq;
 
 import com.example.commonlibrary.BaseApplication;
+import com.example.commonlibrary.baseadapter.empty.EmptyLayout;
 import com.example.commonlibrary.bean.BaseBean;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.mvp.presenter.RxBasePresenter;
@@ -207,6 +208,7 @@ public class QQVideoListPresenter extends RxBasePresenter<IView<BaseBean>, Defau
 
 
     public void getHeaderListData(int videoUrlType, int videoType) {
+        iView.showLoading(null);
         Observable<QQVideoTabListBean> observable;
         if (videoUrlType == VideoUtil.VIDEO_URL_TYPE_QQ) {
             observable = getQQHeaderData(videoType);
@@ -230,7 +232,12 @@ public class QQVideoListPresenter extends RxBasePresenter<IView<BaseBean>, Defau
 
             @Override
             public void onError(Throwable e) {
-                iView.showError(e.getMessage(), null);
+                iView.showError(e.getMessage(), new EmptyLayout.OnRetryListener() {
+                    @Override
+                    public void onRetry() {
+                        getHeaderListData(videoUrlType, videoType);
+                    }
+                });
             }
 
             @Override

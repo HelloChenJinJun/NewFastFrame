@@ -18,7 +18,8 @@ import okhttp3.Response;
 
 public class CacheControlInterceptor implements Interceptor {
     private static final long CACHE_STALE_SEC = 60 * 60 * 24L;
-    public static final String CACHE_CONTROL_CACHE = "only-if-cached, max-stale=" + CACHE_STALE_SEC;
+    public static final String CACHE_CONTROL_NOT_NET = "only-if-cached, max-stale=" + CACHE_STALE_SEC;
+    public static final String CACHE_CONTROL_NET="Cache-Control: public, max-age=3600";
 
     @Override
     public Response intercept(Chain chain) throws IOException {
@@ -32,7 +33,7 @@ public class CacheControlInterceptor implements Interceptor {
                     .build();
         } else {
             return response.newBuilder()
-                    .header("Cache-Control", "public, " + CACHE_CONTROL_CACHE)
+                    .header("Cache-Control", "public, " + CACHE_CONTROL_NOT_NET)
                     .removeHeader("Pragma")
                     .build();
         }

@@ -109,7 +109,6 @@ public class ConstantUtil {
     public static final int REQUEST_CODE_SELECT_FROM_LOCAL = 1;
     public static final int REQUEST_CODE_LOCATION = 5;
     //        4de21dc60adabe2dff4e81a3a592459f
-    public static final String KEY = "06cefecaee1c01cac71cb2f7de18dc9c";
     /**
      * 系统通知ID
      */

@@ -6,7 +6,7 @@ import android.content.Context;
 
 import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.bean.news.OtherNewsTypeBean;
-import com.example.commonlibrary.bean.news.VideoTabBean;
+import com.example.commonlibrary.bean.video.VideoTabBean;
 import com.example.commonlibrary.module.IAppLife;
 import com.example.commonlibrary.router.BaseAction;
 import com.example.commonlibrary.router.Router;
@@ -47,6 +47,7 @@ public class VideoApplication implements IAppLife {
         initRouter();
         initDB(application);
     }
+
 
     private void initDB(Application application) {
         if (mMainComponent.getRepositoryManager()

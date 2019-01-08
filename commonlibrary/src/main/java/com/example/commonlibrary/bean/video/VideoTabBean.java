@@ -1,4 +1,4 @@
-package com.example.commonlibrary.bean.news;
+package com.example.commonlibrary.bean.video;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;

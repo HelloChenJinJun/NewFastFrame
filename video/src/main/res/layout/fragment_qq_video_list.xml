@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/refresh_fragment_qq_video_list_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout
-        android:id="@+id/refresh_fragment_qq_video_list_refresh"
+    <com.example.commonlibrary.baseadapter.SuperRecyclerView
+        android:id="@+id/srcv_fragment_qq_video_list_display"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.example.commonlibrary.baseadapter.SuperRecyclerView
-            android:id="@+id/srcv_fragment_qq_video_list_display"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>
+        android:layout_height="match_parent" />
+</com.example.commonlibrary.customview.swipe.CustomSwipeRefreshLayout>
 
 
-</LinearLayout>

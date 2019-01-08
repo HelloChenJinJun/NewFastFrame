@@ -170,7 +170,7 @@ public class ScreenAdaptManager {
     }
 
 
-    private void resetScreen(Activity activity) {
+    public void resetScreen(Activity activity) {
         update(activity, adaptInfoMap.get(getKey(true, designedWidth)));
     }
 
@@ -203,6 +203,13 @@ public class ScreenAdaptManager {
         }
 
 
+    }
+
+    private static ScreenAdaptManager sInstance;
+
+
+    public static ScreenAdaptManager getInstance() {
+        return sInstance;
     }
 
     private static class AdaptInfo {
@@ -258,7 +265,8 @@ public class ScreenAdaptManager {
         }
 
         public ScreenAdaptManager build() {
-            return new ScreenAdaptManager(this);
+            sInstance = new ScreenAdaptManager(this);
+            return sInstance;
         }
     }
 }
