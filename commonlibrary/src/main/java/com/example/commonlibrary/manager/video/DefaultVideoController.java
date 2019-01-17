@@ -512,7 +512,6 @@ public class DefaultVideoController extends VideoController implements View.OnCl
         } else if (id == R.id.ll_view_video_control_restart) {
             finishContainer.setVisibility(GONE);
             mIVideoPlayer.release();
-            mIVideoPlayer.setState(DefaultVideoPlayer.PLAY_STATE_PREPARING);
             mIVideoPlayer.start();
         } else if (id == R.id.ll_view_video_control_share) {
             ToastUtils.showShortToast("分享功能");
@@ -520,8 +519,8 @@ public class DefaultVideoController extends VideoController implements View.OnCl
             clarityContainer.setVisibility(GONE);
         } else if (id == R.id.tv_view_video_control_error_retry) {
             if (AppUtil.isNetworkAvailable()) {
-                mIVideoPlayer.reset();
-                mIVideoPlayer.prepareAsync();
+                mIVideoPlayer.release();
+                mIVideoPlayer.start();
             } else {
                 ToastUtils.showShortToast("网络连接失败，请检查网络配置");
             }

@@ -15,7 +15,6 @@ import com.example.commonlibrary.net.NetManager;
 import com.example.commonlibrary.net.download.DownloadListener;
 import com.example.commonlibrary.rxbus.RxBusManager;
 import com.example.commonlibrary.rxbus.event.SkinUpdateEvent;
-import com.example.commonlibrary.utils.CommonLogger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -84,7 +83,7 @@ public class SkinManager {
 
     public void updateSkin(String path,SkinUpdateListener skinUpdateListener) {
         try {
-            CommonLogger.e("path:" +path);
+
             PackageInfo packageInfo = context.getPackageManager().getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
             packageName = packageInfo.packageName;
             isLocal = false;
@@ -158,7 +157,6 @@ public class SkinManager {
 
     public ColorStateList getColorStateList(int resId) {
         if (isLocal) {
-            CommonLogger.e("放回本地");
             return ContextCompat.getColorStateList(context, resId);
         }
         int id = resources.getIdentifier(context.getResources().getResourceEntryName(resId), "color", packageName);

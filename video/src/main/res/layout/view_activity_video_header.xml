@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:paddingTop="10dp"
+    android:paddingRight="20dp">
+
+
+    <com.example.commonlibrary.customview.ViewPagerIndicator
+        android:layout_alignParentBottom="true"
+        android:id="@+id/vpi_view_activity_video_header_view_indicator"
+        android:layout_width="210dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_vertical"
+        app:tabNormalColor="@color/black"
+        app:tabSelectedColor="@color/orange_500"
+        app:visibleTabCount="2" />
+
+    <ImageView
+        android:layout_marginTop="13dp"
+        android:id="@+id/iv_view_activity_video_header_view_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        app:srcCompat="@drawable/ic_news_search" />
+</RelativeLayout>

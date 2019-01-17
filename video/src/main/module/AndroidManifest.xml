@@ -34,6 +34,7 @@
             android:launchMode="singleTask" />
         <activity android:name=".mvp.search.SearchVideoActivity" />
         <activity android:name=".mvp.actor.ActorDetailInfoActivity" />
+
         <meta-data
             android:name="com.snew.video.base.VideoApplication"
             android:value="IModuleConfig" />

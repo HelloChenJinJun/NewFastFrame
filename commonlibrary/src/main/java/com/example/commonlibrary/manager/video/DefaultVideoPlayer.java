@@ -140,6 +140,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
 
     @Override
     public void start() {
+        CommonLogger.e("start");
         ListVideoManager.getInstance().setCurrentPlayer(this);
         if (mState == PLAY_STATE_IDLE || mState == PLAY_STATE_PREPARING) {
             initMediaPlayer();
@@ -153,7 +154,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
             innerStart(mMediaPlayer.getCurrentPosition());
         } else if (getCurrentState() == PLAY_STATE_ERROR || getCurrentState() == PLAY_STATE_FINISH) {
             reset();
-            prepareAsync();
+            start();
         } else if (getCurrentState() == PLAY_STATE_PLAYING || getCurrentState() == PLAY_STATE_BUFFERING_PLAYING) {
 
         }
@@ -353,6 +354,10 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
     public void release() {
         reset();
         container.removeView(defaultTextureView);
+        if (mMediaPlayer != null) {
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 
     @Override
@@ -391,6 +396,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
 
     @Override
     public void prepareAsync() {
+        CommonLogger.e("prepareAsync");
         if (mMediaPlayer == null || url == null)
             return;
         container.setKeepScreenOn(true);
@@ -398,15 +404,16 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
             mState = PLAY_STATE_PREPARING;
             mVideoController.onPlayStateChanged(mState);
             if (AppUtil.isNetworkAvailable()) {
-                String realUrl;
-                if (url.startsWith("http")) {
-                    realUrl = BaseApplication.getVideoProxy().getProxyUrl(url);
-                    CommonLogger.e("proxyUrl:" + realUrl);
-                    BaseApplication.getVideoProxy().registerCacheListener(this, url);
-                }else {
-                    realUrl=url;
-                }
-                mMediaPlayer.setDataSource(getContext(), Uri.parse(realUrl), headers);
+                //                String realUrl;
+                //                if (url.startsWith("http")) {
+                //                    realUrl = BaseApplication.getVideoProxy().getProxyUrl(url);
+                //                    CommonLogger.e("proxyUrl:" + realUrl);
+                //                    BaseApplication.getVideoProxy().registerCacheListener(this, url);
+                //                } else {
+                //                    realUrl = url;
+                //                    mBufferedPercent = 100;
+                //                }
+                mMediaPlayer.setDataSource(getContext(), Uri.parse(url), headers);
                 mMediaPlayer.prepareAsync();
             } else {
                 mState = PLAY_STATE_ERROR;
@@ -443,6 +450,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
 
     @Override
     public void onPrepared(IMediaPlayer iMediaPlayer) {
+        CommonLogger.e("onPrepared");
         mState = PLAY_STATE_PREPARED;
         mVideoController.onPlayStateChanged(mState);
         long position = 0;
@@ -505,7 +513,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
         //        1extra -2147483648
         if ((what == 1 && extra == -2147483648) && !url.contains(".mp4") && !url.contains(".m3u8") && switchNum < MAX_SWITCH_NUM) {
             switchNum++;
-            //            switchMediaPlayer(false);
+            switchMediaPlayer(false);
         }
         mState = PLAY_STATE_ERROR;
         mVideoController.onPlayStateChanged(mState);
@@ -526,7 +534,7 @@ public class DefaultVideoPlayer extends FrameLayout implements IVideoPlayer, Tex
 
     @Override
     public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
-        //        mBufferedPercent = percent;
+        mBufferedPercent = percent;
     }
 
     @Override

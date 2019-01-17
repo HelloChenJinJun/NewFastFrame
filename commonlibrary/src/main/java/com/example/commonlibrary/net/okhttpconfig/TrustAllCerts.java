@@ -1,4 +1,4 @@
-package com.example.commonlibrary.net;
+package com.example.commonlibrary.net.okhttpconfig;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;

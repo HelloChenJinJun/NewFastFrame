@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.commonlibrary.BaseApplication;
 import com.example.commonlibrary.baseadapter.SuperRecyclerView;
 import com.example.commonlibrary.baseadapter.decoration.GridSpaceDecoration;
 import com.example.commonlibrary.baseadapter.decoration.ListViewDecoration;
@@ -13,8 +12,6 @@ import com.example.commonlibrary.baseadapter.listener.OnSimpleItemClickListener;
 import com.example.commonlibrary.baseadapter.manager.WrappedGridLayoutManager;
 import com.example.commonlibrary.baseadapter.manager.WrappedLinearLayoutManager;
 import com.example.commonlibrary.bean.BaseBean;
-import com.example.commonlibrary.bean.video.VideoInfoBean;
-import com.example.commonlibrary.bean.video.VideoInfoBeanDao;
 import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.manager.video.DefaultVideoController;
 import com.example.commonlibrary.manager.video.DefaultVideoPlayer;
@@ -34,8 +31,6 @@ import com.snew.video.dagger.qq.detail.QQVideoDetailModule;
 import com.snew.video.manager.VideoUpLoadManager;
 import com.snew.video.mvp.actor.ActorDetailInfoActivity;
 import com.snew.video.util.VideoUtil;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -211,7 +206,9 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
         if (data.getUrl() != null) {
             presenter.getDetailData(data.getUrl(), ((DefaultVideoController) display.getController()).isSwitchUrl());
         }
-        presenter.getDetailInfo(data.getId());
+        if (data.getId() != null) {
+            presenter.getDetailInfo(data.getId());
+        }
     }
 
 
@@ -259,19 +256,19 @@ public class QQVideoDetailActivity extends VideoBaseActivity<BaseBean, QQVideoDe
             } else {
 
                 //                使用缓存播放
-                if (o.getExtraInfo() != null && o.getExtraInfo().equals(data.getUrl())) {
-                    List<VideoInfoBean> list = BaseApplication.getAppComponent().getDaoSession()
-                            .getVideoInfoBeanDao().queryBuilder().where(VideoInfoBeanDao.Properties
-                                    .Name.eq(title.getText().toString().trim())).build().list();
-                    if (list.size() > 0) {
-                        display.setUp(list.get(0).getPath(), null);
-                        display.start();
-                    } else {
-                        display.setState(DefaultVideoPlayer.PLAY_STATE_ERROR);
-                    }
-                } else {
-                    display.setState(DefaultVideoPlayer.PLAY_STATE_ERROR);
-                }
+//                if (o.getExtraInfo() != null && o.getExtraInfo().equals(data.getUrl())) {
+//                    List<VideoInfoBean> list = BaseApplication.getAppComponent().getDaoSession()
+//                            .getVideoInfoBeanDao().queryBuilder().where(VideoInfoBeanDao.Properties
+//                                    .Name.eq(data.getTitle())).build().list();
+//                    if (list.size() > 0) {
+//                        display.setUp(list.get(0).getPath(), null);
+//                        display.start();
+//                    } else {
+//                        display.setState(DefaultVideoPlayer.PLAY_STATE_ERROR);
+//                    }
+//                } else {
+//                    display.setState(DefaultVideoPlayer.PLAY_STATE_ERROR);
+//                }
 
             }
         }

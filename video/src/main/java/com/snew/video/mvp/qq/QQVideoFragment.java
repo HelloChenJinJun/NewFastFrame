@@ -1,16 +1,13 @@
 package com.snew.video.mvp.qq;
 
 import android.os.Bundle;
-import android.view.View;
 
 import com.example.commonlibrary.baseadapter.adapter.ViewPagerAdapter;
-import com.example.commonlibrary.customview.ToolBarOption;
 import com.example.commonlibrary.customview.WrappedViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.snew.video.R;
 import com.snew.video.base.VideoBaseFragment;
 import com.snew.video.bean.QQVideoTabBean;
-import com.snew.video.mvp.search.SearchVideoActivity;
 import com.snew.video.util.VideoUtil;
 
 import java.util.ArrayList;
@@ -39,11 +36,16 @@ public class QQVideoFragment extends VideoBaseFragment {
 
     @Override
     protected boolean isNeedHeadLayout() {
-        return true;
+        return false;
     }
 
     @Override
     protected boolean isNeedEmptyLayout() {
+        return false;
+    }
+
+    @Override
+    protected boolean needStatusPadding() {
         return false;
     }
 
@@ -65,21 +67,16 @@ public class QQVideoFragment extends VideoBaseFragment {
     protected void initData() {
         type = getArguments().getInt(VideoUtil.VIDEO_URL_TYPE, VideoUtil.VIDEO_URL_TYPE_QQ);
         init();
-        ToolBarOption toolBarOption = new ToolBarOption();
-        if (type == VideoUtil.VIDEO_URL_TYPE_QQ) {
-            toolBarOption.setTitle("腾讯视频");
-        } else {
-            toolBarOption.setTitle("天天更新");
-        }
-        toolBarOption.setNeedNavigation(false);
-        toolBarOption.setRightResId(R.drawable.ic_news_search);
-        toolBarOption.setRightListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SearchVideoActivity.start(getActivity());
-            }
-        });
-        setToolBar(toolBarOption);
+        //        ToolBarOption toolBarOption = new ToolBarOption();
+        //        if (type == VideoUtil.VIDEO_URL_TYPE_QQ) {
+        //            toolBarOption.setTitle("腾讯视频");
+        //        } else {
+        //            toolBarOption.setTitle("天天更新");
+        //        }
+        //        toolBarOption.setNeedNavigation(false);
+        //        toolBarOption.setRightResId(R.drawable.ic_news_search);
+        //        toolBarOption.setRightListener(v -> SearchVideoActivity.start(getActivity()));
+        //        setToolBar(toolBarOption);
     }
 
     private void init() {

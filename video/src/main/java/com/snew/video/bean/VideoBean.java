@@ -38,6 +38,10 @@ public class VideoBean implements Serializable {
         this(title, 0, null, url);
     }
 
+    public VideoBean() {
+
+    }
+
 
     @Override
     public boolean equals(@Nullable Object obj) {
