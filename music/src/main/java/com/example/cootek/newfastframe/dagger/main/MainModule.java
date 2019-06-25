@@ -1,9 +1,9 @@
 package com.example.cootek.newfastframe.dagger.main;
 
 
-import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.commonlibrary.net.download.DaoSession;
 import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.example.cootek.newfastframe.interceptor.MusicInterceptor;
 import com.example.cootek.newfastframe.util.MusicUtil;
@@ -19,12 +19,6 @@ import retrofit2.Retrofit;
  */
 @Module
 public class MainModule {
-
-
-
-
-
-
 
     @Provides
     public DefaultRepositoryManager provideRepositoryManager(@Named("music") Retrofit retrofit, DaoSession daoSession) {

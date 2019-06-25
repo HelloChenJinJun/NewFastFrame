@@ -1,11 +1,10 @@
 package com.example.chat.dagger;
 
-
 import com.example.chat.base.ChatInterceptor;
 import com.example.chat.base.ConstantUtil;
-import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.commonlibrary.net.download.DaoSession;
 import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import javax.inject.Named;
 

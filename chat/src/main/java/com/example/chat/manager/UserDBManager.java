@@ -14,8 +14,6 @@ import com.example.commonlibrary.bean.chat.ChatMessageEntity;
 import com.example.commonlibrary.bean.chat.ChatMessageEntityDao;
 import com.example.commonlibrary.bean.chat.CommentNotifyEntity;
 import com.example.commonlibrary.bean.chat.CommentNotifyEntityDao;
-import com.example.commonlibrary.bean.chat.DaoMaster;
-import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.bean.chat.GroupChatEntity;
 import com.example.commonlibrary.bean.chat.GroupChatEntityDao;
 import com.example.commonlibrary.bean.chat.GroupTableEntity;
@@ -36,6 +34,8 @@ import com.example.commonlibrary.bean.chat.SystemNotifyEntityDao;
 import com.example.commonlibrary.bean.chat.User;
 import com.example.commonlibrary.bean.chat.UserEntity;
 import com.example.commonlibrary.bean.chat.UserEntityDao;
+import com.example.commonlibrary.net.download.DaoMaster;
+import com.example.commonlibrary.net.download.DaoSession;
 import com.example.commonlibrary.utils.CommonLogger;
 import com.google.gson.Gson;
 

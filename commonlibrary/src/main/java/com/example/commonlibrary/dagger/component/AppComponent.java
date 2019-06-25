@@ -2,11 +2,10 @@ package com.example.commonlibrary.dagger.component;
 
 import android.content.SharedPreferences;
 
-import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.module.GlobalConfigModule;
 import com.example.commonlibrary.imageloader.ImageLoader;
 import com.example.commonlibrary.manager.ActivityManager;
-import com.example.commonlibrary.repository.DefaultRepositoryManager;
+import com.example.commonlibrary.net.download.DaoSession;
 import com.google.gson.Gson;
 
 import java.io.File;
