@@ -4,8 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.commonlibrary.bean.chat.DaoMaster;
-import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.imageloader.base.BaseImageLoaderStrategy;
 import com.example.commonlibrary.imageloader.glide.GlideImageLoaderStrategy;
 import com.example.commonlibrary.interceptor.LogInterceptor;
@@ -14,6 +12,8 @@ import com.example.commonlibrary.manager.ActivityManager;
 import com.example.commonlibrary.mvp.model.DefaultModel;
 import com.example.commonlibrary.net.OkHttpGlobalHandler;
 import com.example.commonlibrary.net.TrustAllCerts;
+import com.example.commonlibrary.net.download.DaoMaster;
+import com.example.commonlibrary.net.download.DaoSession;
 import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.example.commonlibrary.utils.Constant;
 import com.example.commonlibrary.utils.FileUtil;

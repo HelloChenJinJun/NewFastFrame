@@ -1,8 +1,8 @@
 package com.snew.video.dagger;
 
-import com.example.commonlibrary.bean.chat.DaoSession;
 import com.example.commonlibrary.dagger.scope.PerApplication;
 import com.example.commonlibrary.mvp.model.DefaultModel;
+import com.example.commonlibrary.net.download.DaoSession;
 import com.example.commonlibrary.repository.DefaultRepositoryManager;
 import com.snew.video.interceptor.CacheControlInterceptor;
 import com.snew.video.interceptor.IndexInterceptor;

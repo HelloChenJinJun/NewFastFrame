@@ -1,10 +1,6 @@
 package com.example.chat.base;
 
-
-
-
-
-import com.example.commonlibrary.bean.chat.DaoSession;
+import com.example.commonlibrary.net.download.DaoSession;
 import com.example.commonlibrary.repository.BaseRepositoryManager;
 
 import retrofit2.Retrofit;
